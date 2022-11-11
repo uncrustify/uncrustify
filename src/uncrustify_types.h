@@ -217,7 +217,6 @@ struct cp_data_t
    int               check_fail_cnt;       //! total failure count
    bool              if_changed;
 
-   UINT32            error_count;       //! counts how many errors occurred so far
    std::string       filename;
 
    file_mem          file_hdr;          // for cmt_insert_file_header

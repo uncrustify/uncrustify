@@ -420,8 +420,7 @@ bool keywords_are_sorted()
          // coveralls will always complain.
          // these lines are only needed for the developer.
          log_flush(true);
-         cpd.error_count++;
-         return(false);
+         exit(EX_SOFTWARE);
       }
    }
 
@@ -531,8 +530,7 @@ int load_keyword_file(const char *filename)
    {
       LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
               __func__, filename, strerror(errno), errno);
-      cpd.error_count++;
-      return(EX_IOERR);
+      exit(EX_IOERR);
    }
    const int max_line_length = 256;
    const int max_arg_count   = 2;
@@ -567,7 +565,7 @@ int load_keyword_file(const char *filename)
          {
             LOG_FMT(LWARN, "%s:%zu Invalid line (starts with '%s')\n",
                     filename, line_no, args[0]);
-            cpd.error_count++;
+            exit(EX_SOFTWARE);
          }
       }
       else

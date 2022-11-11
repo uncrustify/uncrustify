@@ -63,8 +63,7 @@ Chunk *search_for_colon(Chunk *pc_local)
    {
       LOG_FMT(LWARN, "%s(%d): %zu: Error: Expected a colon\n",
               __func__, __LINE__, pc_local->GetOrigLine());
-      cpd.error_count++;
-      return(nullptr);
+      exit(EX_SOFTWARE);
    }
    LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '?'\n",
            __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->level);
@@ -106,8 +105,7 @@ void mark_question_colon()
          {
             LOG_FMT(LWARN, "%s(%d): %zu: Error: Expected a colon\n",
                     __func__, __LINE__, pc->GetOrigLine());
-            cpd.error_count++;
-            return;
+            exit(EX_SOFTWARE);
          }
       }
    }
