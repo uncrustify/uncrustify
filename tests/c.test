@@ -82,6 +82,7 @@
 00123  c/cmt_reflow.cfg                           c/cmt_reflow.c
 
 00130  c/ben_070.cfg                              c/minus-minus.c
+00131  c/Issue_3873.cfg                           c/Issue_3873.c
 00135  c/nepenthes.cfg                            c/br_cmt.c
 
 00140  c/ben_071.cfg                              c/global-vars.c
