@@ -60,7 +60,7 @@ void align_init_brace(Chunk *start)
       }
    } while (  pc != nullptr
            && pc->IsNotNullChunk()
-           && pc->level > start->level);
+           && pc->GetLevel() > start->GetLevel());
 
    // debug dump the current frame
    align_log_al(LALBR, start->GetOrigLine());
@@ -202,5 +202,5 @@ void align_init_brace(Chunk *start)
       }
       pc = pc->GetNext();
    } while (  pc->IsNotNullChunk()
-           && pc->level > start->level);
+           && pc->GetLevel() > start->GetLevel());
 } // align_init_brace

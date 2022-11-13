@@ -439,7 +439,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          {
             tmp->SetParentType(CT_DELEGATE);
 
-            if (tmp->level == tmp->GetBraceLevel())
+            if (tmp->GetLevel() == tmp->GetBraceLevel())
             {
                tmp->SetFlagBits(PCF_VAR_1ST_DEF);
             }
@@ -687,7 +687,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             }
 
             if (  tmp->Is(CT_SQUARE_CLOSE)
-               && next->level == tmp->level)
+               && next->GetLevel() == tmp->GetLevel())
             {
                tmp->SetFlagBits(PCF_ONE_LINER);
                next->SetFlagBits(PCF_ONE_LINER);
@@ -804,15 +804,15 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       // In this case we don't need to run the parser since we are not declaring an enum.
       if (pc->IsEnum())
       {
-         const size_t level = pc->level;
+         const size_t level = pc->GetLevel();
          Chunk        *tmp  = pc;
 
-         while (tmp->level == level && tmp->IsNotNullChunk())
+         while (tmp->GetLevel() == level && tmp->IsNotNullChunk())
          {
             tmp = tmp->GetNextNcNnl();
          }
 
-         if (tmp->level < level)
+         if (tmp->GetLevel() < level)
          {
             return;
          }
@@ -979,7 +979,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
          if (!is_byref_array)
          {
-            tmp = next->GetNextType(CT_PAREN_CLOSE, next->level);
+            tmp = next->GetNextType(CT_PAREN_CLOSE, next->GetLevel());
 
             if (tmp->IsNotNullChunk())
             {
@@ -1208,17 +1208,17 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             || (  next->Is(CT_NUMBER)
                && next->IsString("0"))))
       {
-         const size_t level        = pc->level;
+         const size_t level        = pc->GetLevel();
          bool         found_status = false;
          Chunk        *pprev       = pc->GetPrev();
 
          for ( ; (  pprev->IsNotNullChunk()
-                 && pprev->level >= level
+                 && pprev->GetLevel() >= level
                  && pprev->IsNot(CT_SEMICOLON)
                  && pprev->IsNot(CT_ACCESS_COLON))
                ; pprev = pprev->GetPrev())
          {
-            if (pprev->level != level)
+            if (pprev->GetLevel() != level)
             {
                continue;
             }
@@ -1687,7 +1687,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          {
             // look for the opening parenthesis
             // Issue 1403
-            Chunk *tmp = pc->GetPrevType(CT_FPAREN_OPEN, pc->level - 1);
+            Chunk *tmp = pc->GetPrevType(CT_FPAREN_OPEN, pc->GetLevel() - 1);
 
             if (  tmp->IsNotNullChunk()
                && tmp->GetParentType() != CT_FUNC_CTOR_VAR)
@@ -1816,7 +1816,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          pc->SetType(CT_BYREF);
       }
       // look next, is there a "assign" before the ";"
-      Chunk *semi = pc->GetNextType(CT_SEMICOLON, pc->level);                // Issue #2688
+      Chunk *semi = pc->GetNextType(CT_SEMICOLON, pc->GetLevel());                // Issue #2688
 
       if (semi->IsNotNullChunk())
       {
@@ -2046,12 +2046,12 @@ void fix_symbols()
       {
          if (pc->Is(CT_SQUARE_OPEN))
          {
-            square_level = pc->level;
+            square_level = pc->GetLevel();
          }
       }
       else
       {
-         if (pc->level <= static_cast<size_t>(square_level))
+         if (pc->GetLevel() <= static_cast<size_t>(square_level))
          {
             square_level = -1;
          }
@@ -2101,7 +2101,7 @@ void fix_symbols()
       {
          LOG_FMT(LFCNR, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', look for CT_BRACE_OPEN\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
-         pc = pc->GetNextType(CT_BRACE_CLOSE, pc->level);
+         pc = pc->GetNextType(CT_BRACE_CLOSE, pc->GetLevel());
       }
       /*
        * A variable definition is possible after at the start of a statement
@@ -2214,7 +2214,7 @@ static Chunk *process_return_or_throw(Chunk *pc)
    if (next->Is(CT_PAREN_OPEN))
    {
       // See if the return/throw is fully paren'd
-      cpar = next->GetNextType(CT_PAREN_CLOSE, next->level);
+      cpar = next->GetNextType(CT_PAREN_CLOSE, next->GetLevel());
 
       if (cpar->IsNullChunk())
       {
@@ -2240,14 +2240,14 @@ static Chunk *process_return_or_throw(Chunk *pc)
             // lower the level of everything
             for (temp = next; temp != cpar; temp = temp->GetNext())
             {
-               if (temp->level == 0)
+               if (temp->GetLevel() == 0)
                {
-                  fprintf(stderr, "%s(%d): temp->level is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                  fprintf(stderr, "%s(%d): temp->GetLevel() is ZERO, cannot be decremented, at line %zu, column %zu\n",
                           __func__, __LINE__, temp->GetOrigLine(), temp->GetOrigCol());
                   log_flush(true);
                   exit(EX_SOFTWARE);
                }
-               temp->level--;
+               temp->SetLevel(temp->GetLevel() - 1);
             }
 
             // delete the parenthesis
@@ -2311,13 +2311,13 @@ static Chunk *process_return_or_throw(Chunk *pc)
             break;
          }
 
-         if (semi->level < pc->level)
+         if (semi->GetLevel() < pc->GetLevel())
          {
             return(semi);
          }
 
          if (  semi->IsSemicolon()
-            && pc->level == semi->level)
+            && pc->GetLevel() == semi->GetLevel())
          {
             break;
          }
@@ -2327,13 +2327,13 @@ static Chunk *process_return_or_throw(Chunk *pc)
    {
       while ((semi = semi->GetNext())->IsNotNullChunk())
       {
-         if (semi->level < pc->level)
+         if (semi->GetLevel() < pc->GetLevel())
          {
             return(semi);
          }
 
          if (  semi->IsSemicolon()
-            && pc->level == semi->level)
+            && pc->GetLevel() == semi->GetLevel())
          {
             break;
          }
@@ -2345,8 +2345,8 @@ static Chunk *process_return_or_throw(Chunk *pc)
       // add the parenthesis
       chunk.SetType(CT_PAREN_OPEN);
       chunk.SetParentType(pc->GetType());
-      chunk.str   = "(";
-      chunk.level = pc->level;
+      chunk.str = "(";
+      chunk.SetLevel(pc->GetLevel());
       chunk.SetPpLevel(pc->GetPpLevel());
       chunk.SetBraceLevel(pc->GetBraceLevel());
       chunk.SetOrigLine(pc->GetOrigLine());
@@ -2365,7 +2365,7 @@ static Chunk *process_return_or_throw(Chunk *pc)
 
       for (temp = next; temp != cpar; temp = temp->GetNext())
       {
-         temp->level++;
+         temp->SetLevel(temp->GetLevel() + 1);
       }
    }
    return(semi);
@@ -2437,7 +2437,7 @@ static void handle_cpp_template(Chunk *pc)
    }
    tmp->SetParentType(CT_TEMPLATE);
 
-   size_t level = tmp->level;
+   size_t level = tmp->GetLevel();
 
    tmp = tmp->GetNext();
 
@@ -2449,7 +2449,7 @@ static void handle_cpp_template(Chunk *pc)
          tmp->SetType(CT_TYPE);
       }
       else if (  tmp->Is(CT_ANGLE_CLOSE)
-              && tmp->level == level)
+              && tmp->GetLevel() == level)
       {
          tmp->SetParentType(CT_TEMPLATE);
          break;
@@ -2474,7 +2474,7 @@ static void handle_cpp_template(Chunk *pc)
          tmp->SetParentType(CT_TEMPLATE);
 
          // REVISIT: This may be a bit risky - might need to track the { };
-         tmp = tmp->GetNextType(CT_SEMICOLON, tmp->level);
+         tmp = tmp->GetNextType(CT_SEMICOLON, tmp->GetLevel());
 
          if (tmp->IsNotNullChunk())
          {
@@ -2568,7 +2568,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
    {
       ret = br_o;
       // REVISIT: really should check the stuff we are skipping
-      br_o = br_o->GetNextType(CT_BRACE_OPEN, br_o->level);
+      br_o = br_o->GetNextType(CT_BRACE_OPEN, br_o->GetLevel());
    }
 
    // skip possible CT_NOEXCEPT
@@ -2576,7 +2576,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
    {
       ret = br_o;
       // REVISIT: really should check the stuff we are skipping
-      br_o = br_o->GetNextType(CT_BRACE_OPEN, br_o->level);
+      br_o = br_o->GetNextType(CT_BRACE_OPEN, br_o->GetLevel());
    }
 
    if (br_o->IsNullChunk())
@@ -2726,7 +2726,7 @@ static void handle_d_template(Chunk *pc)
    tmp = tmp->GetNextNcNnl();
 
    while (  tmp->IsNotNullChunk()
-         && tmp->level > po->level)
+         && tmp->GetLevel() > po->GetLevel())
    {
       if (  tmp->Is(CT_WORD)
          && chunkstack_match(cs, tmp))
@@ -2752,7 +2752,7 @@ Chunk *skip_template_next(Chunk *ang_open)
 
    if (ang_open->Is(CT_ANGLE_OPEN))
    {
-      Chunk *pc = ang_open->GetNextType(CT_ANGLE_CLOSE, ang_open->level);
+      Chunk *pc = ang_open->GetNextType(CT_ANGLE_CLOSE, ang_open->GetLevel());
 
       if (pc->IsNullChunk())
       {
@@ -2875,7 +2875,7 @@ static void handle_oc_class(Chunk *pc)
       {
          as = angle_state_e::CLOSE;
          tmp->SetParentType(CT_OC_CLASS);
-         tmp = tmp->GetNextType(CT_BRACE_CLOSE, tmp->level);
+         tmp = tmp->GetNextType(CT_BRACE_CLOSE, tmp->GetLevel());
 
          if (  tmp->IsNotNullChunk()
             && tmp->GetParentType() != CT_ASSIGN)
@@ -2924,7 +2924,7 @@ static void handle_oc_class(Chunk *pc)
 
    if (tmp->Is(CT_BRACE_OPEN))
    {
-      tmp = tmp->GetNextType(CT_BRACE_CLOSE, tmp->level);
+      tmp = tmp->GetNextType(CT_BRACE_CLOSE, tmp->GetLevel());
 
       if (tmp->IsNotNullChunk())
       {
@@ -2970,7 +2970,7 @@ static void handle_oc_block_literal(Chunk *pc)
       if (tmp->IsString("<"))
       {
          Chunk *ao = tmp;
-         Chunk *ac = ao->GetNextString(">", 1, ao->level);
+         Chunk *ac = ao->GetNextString(">", 1, ao->GetLevel());
 
          if (ac->IsNotNullChunk())
          {
@@ -2981,7 +2981,7 @@ static void handle_oc_block_literal(Chunk *pc)
 
             for (tmp = ao->GetNext(); tmp != ac; tmp = tmp->GetNext())
             {
-               tmp->level += 1;
+               tmp->SetLevel(tmp->GetLevel() + 1);
                tmp->SetParentType(CT_OC_PROTO_LIST);
             }
 
@@ -2994,14 +2994,14 @@ static void handle_oc_block_literal(Chunk *pc)
       }
       LOG_FMT(LOCBLK, " '%s'", tmp->Text());
 
-      if (  tmp->level < pc->level
+      if (  tmp->GetLevel() < pc->GetLevel()
          || tmp->Is(CT_SEMICOLON))
       {
          LOG_FMT(LOCBLK, "[DONE]");
          break;
       }
 
-      if (tmp->level == pc->level)
+      if (tmp->GetLevel() == pc->GetLevel())
       {
          if (tmp->IsParenOpen())
          {
@@ -3210,7 +3210,7 @@ static void handle_oc_message_decl(Chunk *pc)
 
    while ((tmp = tmp->GetNext())->IsNotNullChunk())
    {
-      if (tmp->level < pc->level)
+      if (tmp->GetLevel() < pc->GetLevel())
       {
          // should not happen
          return;
@@ -3336,7 +3336,7 @@ static void handle_oc_message_send(Chunk *os)
    }
 
    while (  cs->IsNotNullChunk()
-         && cs->level > os->level)
+         && cs->GetLevel() > os->GetLevel())
    {
       cs = cs->GetNext();
    }
@@ -3431,7 +3431,7 @@ static void handle_oc_message_send(Chunk *os)
    if (tmp->IsString("<"))
    {
       Chunk *ao = tmp;
-      Chunk *ac = ao->GetNextString(">", 1, ao->level);
+      Chunk *ac = ao->GetNextString(">", 1, ao->GetLevel());
 
       if (ac->IsNotNullChunk())
       {
@@ -3442,7 +3442,7 @@ static void handle_oc_message_send(Chunk *os)
 
          for (tmp = ao->GetNext(); tmp != ac; tmp = tmp->GetNext())
          {
-            tmp->level += 1;
+            tmp->SetLevel(tmp->GetLevel() + 1);
             tmp->SetParentType(CT_OC_PROTO_LIST);
          }
 
@@ -3477,7 +3477,7 @@ static void handle_oc_message_send(Chunk *os)
             Chunk *tcs = tmp->GetNextNcNnl();
 
             while (  tcs->IsNotNullChunk()
-                  && tcs->level > tmp->level)
+                  && tcs->GetLevel() > tmp->GetLevel())
             {
                tcs = tcs->GetNextNcNnl();
             }
@@ -3516,7 +3516,7 @@ static void handle_oc_message_send(Chunk *os)
    {
       tmp->SetFlagBits(PCF_IN_OC_MSG);
 
-      if (tmp->level == cs->level + 1)
+      if (tmp->GetLevel() == cs->GetLevel() + 1)
       {
          if (  tmp->Is(CT_COLON)
             || tmp->Is(CT_ACCESS_COLON))
@@ -3775,8 +3775,8 @@ static void handle_oc_property_decl(Chunk *os)
                Chunk endchunk;
                endchunk.SetType(CT_COMMA);
                endchunk.SetParentType(curr_chunk->GetParentType());
-               endchunk.str   = ",";
-               endchunk.level = curr_chunk->level;
+               endchunk.str = ",";
+               endchunk.SetLevel(curr_chunk->GetLevel());
                endchunk.SetPpLevel(curr_chunk->GetPpLevel());
                endchunk.SetBraceLevel(curr_chunk->GetBraceLevel());
                endchunk.SetOrigLine(curr_chunk->GetOrigLine());
@@ -3825,7 +3825,7 @@ static void handle_cs_square_stmt(Chunk *os)
    Chunk *cs = os->GetNext();
 
    while (  cs->IsNotNullChunk()
-         && cs->level > os->level)
+         && cs->GetLevel() > os->GetLevel())
    {
       cs = cs->GetNext();
    }
@@ -3870,7 +3870,7 @@ static void handle_cs_property(Chunk *bro)
 
    while ((pc = pc->GetPrevNcNnlNi())->IsNotNullChunk()) // Issue #2279
    {
-      if (pc->level == bro->level)
+      if (pc->GetLevel() == bro->GetLevel())
       {
          //prevent scanning back past 'new' in expressions like new List<int> {1,2,3}
          // Issue # 1620, UNI-24090.cs
@@ -4069,7 +4069,7 @@ static void handle_java_assert(Chunk *pc)
 
    while ((tmp = tmp->GetNext())->IsNotNullChunk())
    {
-      if (tmp->level == pc->level)
+      if (tmp->GetLevel() == pc->GetLevel())
       {
          if (  !did_colon
             && tmp->Is(CT_COLON))

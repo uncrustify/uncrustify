@@ -46,14 +46,14 @@ void align_eigen_comma_init()
          as.NewLines(pc->GetNlCount());
       }
       else if (  start->IsNotNullChunk()
-              && pc->level < start->level)
+              && pc->GetLevel() < start->GetLevel())
       {
          // A drop in level restarts the aligning
          as.Flush();
          start = Chunk::NullChunkPtr;
       }
       else if (  start->IsNotNullChunk()
-              && pc->level > start->level)
+              && pc->GetLevel() > start->GetLevel())
       {
          // Ignore any deeper levels when aligning
       }

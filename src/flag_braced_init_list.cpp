@@ -20,7 +20,7 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
    if (pc->Is(CT_COLON))
    {
       // check if we have a case before
-      Chunk *switch_before = pc->GetPrevType(CT_CASE, pc->level);
+      Chunk *switch_before = pc->GetPrevType(CT_CASE, pc->GetLevel());
 
       if (switch_before->IsNotNullChunk())
       {

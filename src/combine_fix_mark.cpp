@@ -311,7 +311,7 @@ void fix_fcn_def_params(Chunk *start)
       return;
    }
    LOG_FMT(LFCNP, "%s(%d): Text() '%s', type is %s, on orig line %zu, level is %zu\n",
-           __func__, __LINE__, start->Text(), get_token_name(start->GetType()), start->GetOrigLine(), start->level);
+           __func__, __LINE__, start->Text(), get_token_name(start->GetType()), start->GetOrigLine(), start->GetLevel());
 
    while (  start->IsNotNullChunk()
          && !start->IsParenOpen())
@@ -328,24 +328,24 @@ void fix_fcn_def_params(Chunk *start)
          && (start->str[0] == '('));
 
    ChunkStack cs;
-   size_t     level = start->level + 1;
+   size_t     level = start->GetLevel() + 1;
    Chunk      *pc   = start->GetNextNcNnl();
 
    while (pc->IsNotNullChunk())
    {
       if (  (  (start->Len() == 1)
             && (start->str[0] == ')'))
-         || pc->level < level)
+         || pc->GetLevel() < level)
       {
          LOG_FMT(LFCNP, "%s(%d): bailed on Text() '%s', on orig line %zu\n",
                  __func__, __LINE__, pc->Text(), pc->GetOrigLine());
          break;
       }
       LOG_FMT(LFCNP, "%s(%d): %s, Text() '%s' on orig line %zu, level %zu\n",
-              __func__, __LINE__, (pc->level > level) ? "skipping" : "looking at",
-              pc->Text(), pc->GetOrigLine(), pc->level);
+              __func__, __LINE__, (pc->GetLevel() > level) ? "skipping" : "looking at",
+              pc->Text(), pc->GetOrigLine(), pc->GetLevel());
 
-      if (pc->level > level)
+      if (pc->GetLevel() > level)
       {
          pc = pc->GetNextNcNnl();
          continue;
@@ -409,9 +409,9 @@ void fix_type_cast(Chunk *start)
    pc = pc->GetNextNcNnl();
 
    while (  pc->IsNotNullChunk()
-         && pc->level >= start->level)
+         && pc->GetLevel() >= start->GetLevel())
    {
-      if (  pc->level == start->level
+      if (  pc->GetLevel() == start->GetLevel()
          && pc->Is(CT_ANGLE_CLOSE))
       {
          pc = pc->GetNextNcNnl();
@@ -452,12 +452,12 @@ void fix_typedef(Chunk *start)
     * function type
     */
    for (Chunk *next = start->GetNextNcNnl(E_Scope::PREPROC)
-        ; next->IsNotNullChunk() && next->level >= start->level
+        ; next->IsNotNullChunk() && next->GetLevel() >= start->GetLevel()
         ; next = next->GetNextNcNnl(E_Scope::PREPROC))
    {
       next->SetFlagBits(PCF_IN_TYPEDEF);
 
-      if (start->level == next->level)
+      if (start->GetLevel() == next->GetLevel())
       {
          if (next->IsSemicolon())
          {
@@ -593,7 +593,7 @@ void fix_typedef(Chunk *start)
    if (next->Is(CT_BRACE_OPEN))
    {
       // Skip to the closing brace
-      Chunk *br_c = next->GetNextType(CT_BRACE_CLOSE, next->level, E_Scope::PREPROC);
+      Chunk *br_c = next->GetNextType(CT_BRACE_CLOSE, next->GetLevel(), E_Scope::PREPROC);
 
       if (br_c->IsNotNullChunk())
       {
@@ -836,7 +836,7 @@ void mark_cpp_constructor(Chunk *pc)
 
    while (  tmp->IsNotNullChunk()
          && (  tmp->IsNot(CT_BRACE_OPEN)
-            || tmp->level != paren_open->level)
+            || tmp->GetLevel() != paren_open->GetLevel())
          && !tmp->IsSemicolon())
    {
       LOG_FMT(LFTOR, "%s(%d): tmp is '%s', orig line is %zu, orig col is %zu\n",
@@ -845,7 +845,7 @@ void mark_cpp_constructor(Chunk *pc)
       tmp = tmp->GetNextNcNnl();
 
       if (  tmp->IsString(":")
-         && tmp->level == paren_open->level)
+         && tmp->GetLevel() == paren_open->GetLevel())
       {
          tmp->SetType(CT_CONSTR_COLON);
          hit_colon = true;
@@ -854,7 +854,7 @@ void mark_cpp_constructor(Chunk *pc)
       if (  hit_colon
          && (  tmp->IsParenOpen()
             || tmp->IsBraceOpen())
-         && tmp->level == paren_open->level)
+         && tmp->GetLevel() == paren_open->GetLevel())
       {
          var = skip_template_prev(tmp->GetPrevNcNnlNi());   // Issue #2279
 
@@ -902,7 +902,7 @@ void mark_cpp_lambda(Chunk *square_open)
    if (  square_open->Is(CT_SQUARE_OPEN)
       && square_open->GetParentType() == CT_CPP_LAMBDA)
    {
-      auto *brace_close = square_open->GetNextType(CT_BRACE_CLOSE, square_open->level);
+      auto *brace_close = square_open->GetNextType(CT_BRACE_CLOSE, square_open->GetLevel());
 
       if (brace_close->GetParentType() == CT_CPP_LAMBDA)
       {
@@ -1007,7 +1007,7 @@ void mark_exec_sql(Chunk *pc)
         tmp->IsNotNullChunk() && tmp->IsNot(CT_SQL_END);
         tmp = tmp->GetNext())
    {
-      tmp->level++;
+      tmp->SetLevel(tmp->GetLevel() + 1);
    }
 } // mark_exec_sql
 
@@ -1104,7 +1104,7 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
          //template angles should keep parent type CT_TEMPLATE
          if (pc->Is(CT_ANGLE_OPEN))
          {
-            pc = pc->GetNextType(CT_ANGLE_CLOSE, pc->level);
+            pc = pc->GetNextType(CT_ANGLE_CLOSE, pc->GetLevel());
 
             if (pc == start)
             {
@@ -1176,7 +1176,7 @@ void mark_function(Chunk *pc)
       LOG_FMT(LFCN, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
       log_pcf_flags(LGUY, pc->GetFlags());
-      Chunk *pc_op = pc->GetPrevType(CT_OPERATOR, pc->level);
+      Chunk *pc_op = pc->GetPrevType(CT_OPERATOR, pc->GetLevel());
 
       if (  pc_op->IsNotNullChunk()
          && pc_op->TestFlags(PCF_EXPR_START))
@@ -1275,9 +1275,9 @@ void mark_function(Chunk *pc)
    LOG_FMT(LFCN, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s, type is %s, parent type is %s\n",
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(),
            get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
-   LOG_FMT(LFCN, "   level is %zu, brace level is %zu, next->Text() '%s', next->GetType() is %s, next->level is %zu\n",
-           pc->level, pc->GetBraceLevel(),
-           next->Text(), get_token_name(next->GetType()), next->level);
+   LOG_FMT(LFCN, "   level is %zu, brace level is %zu, next->Text() '%s', next->GetType() is %s, next->GetLevel() is %zu\n",
+           pc->GetLevel(), pc->GetBraceLevel(),
+           next->Text(), get_token_name(next->GetType()), next->GetLevel());
 
    if (pc->TestFlags(PCF_IN_CONST_ARGS))
    {
@@ -1307,8 +1307,8 @@ void mark_function(Chunk *pc)
       return;
    }
    // Find the open and close parenthesis
-   paren_open  = pc->GetNextString("(", 1, pc->level);
-   paren_close = paren_open->GetNextString(")", 1, pc->level);
+   paren_open  = pc->GetNextString("(", 1, pc->GetLevel());
+   paren_close = paren_open->GetNextString(")", 1, pc->GetLevel());
 
    if (  paren_open->IsNullChunk()
       || paren_close->IsNullChunk())
@@ -1423,7 +1423,7 @@ void mark_function(Chunk *pc)
       LOG_FMT(LFCN, "%s(%d): examine: Text() is '%s', orig line is %zu, orig col is %zu, type is %s\n",
               __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
       // look for an assignment. Issue #575
-      Chunk *temp = pc->GetNextType(CT_ASSIGN, pc->level);
+      Chunk *temp = pc->GetNextType(CT_ASSIGN, pc->GetLevel());
 
       if (temp->IsNotNullChunk())
       {
@@ -1525,8 +1525,8 @@ void mark_function(Chunk *pc)
     * wrapped in a macro: "MACRO(void foo(void));"
     */
    if (  pc->Is(CT_FUNC_CALL)
-      && (  pc->level == pc->GetBraceLevel()
-         || pc->level == 1)
+      && (  pc->GetLevel() == pc->GetBraceLevel()
+         || pc->GetLevel() == 1)
       && !pc->TestFlags(PCF_IN_ARRAY_ASSIGN))
    {
       bool isa_def  = false;
@@ -1802,7 +1802,7 @@ void mark_function(Chunk *pc)
                && tmp != prev)
          {
             if (  tmp->Is(CT_COMMA)
-               && tmp->level == prev->level + 1)
+               && tmp->GetLevel() == prev->GetLevel() + 1)
             {
                LOG_FMT(LFCN, "%s(%d): -- overriding call due to tuple return type -- prev is '%s', type is %s\n",
                        __func__, __LINE__, prev->Text(), get_token_name(prev->GetType()));
@@ -1868,14 +1868,14 @@ void mark_function(Chunk *pc)
    while (tmp->IsNotNullChunk())
    {
       // Only care about brace or semicolon on the same level
-      if (tmp->level < pc->level)
+      if (tmp->GetLevel() < pc->GetLevel())
       {
          // No semicolon - guess that it is a prototype
          pc->ResetFlagBits(PCF_VAR_1ST_DEF);
          pc->SetType(CT_FUNC_PROTO);
          break;
       }
-      else if (tmp->level == pc->level)
+      else if (tmp->GetLevel() == pc->GetLevel())
       {
          if (tmp->Is(CT_BRACE_OPEN))
          {
@@ -1955,7 +1955,7 @@ void mark_function(Chunk *pc)
          tmp2 = tmp->GetNextNcNnl();
 
          if (  tmp->Is(CT_COMMA)
-            && (tmp->level == (paren_open->level + 1)))
+            && (tmp->GetLevel() == (paren_open->GetLevel() + 1)))
          {
             if (!can_be_full_param(ref, tmp))
             {
@@ -2338,7 +2338,7 @@ void mark_lvalue(Chunk *pc)
         prev->IsNotNullChunk();
         prev = prev->GetPrevNcNnlNi())       // Issue #2279
    {
-      if (  prev->level < pc->level
+      if (  prev->GetLevel() < pc->GetLevel()
          || prev->Is(CT_ACCESS_COLON)
          || prev->Is(CT_ASSIGN)
          || prev->Is(CT_BOOL)
@@ -2356,7 +2356,7 @@ void mark_lvalue(Chunk *pc)
       }
       prev->SetFlagBits(PCF_LVALUE);
 
-      if (  prev->level == pc->level
+      if (  prev->GetLevel() == pc->GetLevel()
          && prev->IsString("&"))
       {
          make_type(prev);
@@ -2371,8 +2371,8 @@ void mark_struct_union_body(Chunk *start)
    Chunk *pc = start;
 
    while (  pc->IsNotNullChunk()
-         && pc->level >= start->level
-         && !(  pc->level == start->level
+         && pc->GetLevel() >= start->GetLevel()
+         && !(  pc->GetLevel() == start->GetLevel()
              && pc->Is(CT_BRACE_CLOSE)))
    {
       if (  pc->Is(CT_BRACE_OPEN)
@@ -2418,7 +2418,7 @@ void mark_template_func(Chunk *pc, Chunk *pc_next)
    LOG_FUNC_ENTRY();
 
    // We know angle_close must be there...
-   Chunk *angle_close = pc_next->GetNextType(CT_ANGLE_CLOSE, pc->level);
+   Chunk *angle_close = pc_next->GetNextType(CT_ANGLE_CLOSE, pc->GetLevel());
    Chunk *after       = angle_close->GetNextNcNnl();
 
    if (after->IsNotNullChunk())

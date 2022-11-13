@@ -16,5 +16,5 @@ bool cs_top_is_question(ChunkStack &cs, size_t level)
    Chunk *pc = cs.Empty() ? Chunk::NullChunkPtr : cs.Top()->m_pc;
 
    return(  pc->Is(CT_QUESTION)
-         && pc->level == level);
+         && pc->GetLevel() == level);
 }

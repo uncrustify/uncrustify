@@ -131,7 +131,7 @@ static bool paren_multiline_before_brace(Chunk *brace)
    const auto paren_t = CT_SPAREN_CLOSE;
 
    // find parenthesis pair of the if/for/while/...
-   auto paren_close = brace->GetPrevType(paren_t, brace->level, E_Scope::ALL);
+   auto paren_close = brace->GetPrevType(paren_t, brace->GetLevel(), E_Scope::ALL);
    auto paren_open  = paren_close->SkipToMatchRev();
 
    if (  paren_close->IsNullChunk()
@@ -191,7 +191,7 @@ void do_braces()
          }
 
          if (  tmp->Is(brc_type)
-            && br_open->level == tmp->level)
+            && br_open->GetLevel() == tmp->GetLevel())
          {
             flag_series(br_open, tmp, PCF_ONE_LINER);
             break;
@@ -323,7 +323,7 @@ static bool should_add_braces(Chunk *vbopen)
    Chunk  *pc = Chunk::NullChunkPtr;
 
    for (pc = vbopen->GetNextNc(E_Scope::PREPROC);
-        (pc->IsNotNullChunk() && pc->level > vbopen->level);
+        (pc->IsNotNullChunk() && pc->GetLevel() > vbopen->GetLevel());
         pc = pc->GetNextNc(E_Scope::PREPROC))
    {
       if (pc->IsNewline())
@@ -362,7 +362,7 @@ static bool can_remove_braces(Chunk *bopen)
       // Can't remove empty statement
       return(false);
    }
-   const size_t level = bopen->level + 1;
+   const size_t level = bopen->GetLevel() + 1;
 
    log_rule_B("mod_full_brace_nl");
    const size_t nl_max = options::mod_full_brace_nl();
@@ -379,7 +379,7 @@ static bool can_remove_braces(Chunk *bopen)
            __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
 
    while (  pc->IsNotNullChunk()
-         && pc->level >= level)
+         && pc->GetLevel() >= level)
    {
       LOG_FMT(LBRDEL, "%s(%d): test token '%s', orig line is %zu, orig col is %zu\n",
               __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
@@ -419,7 +419,7 @@ static bool can_remove_braces(Chunk *bopen)
             }
             br_count--;
 
-            if (pc->level == level)
+            if (pc->GetLevel() == level)
             {
                // mean a statement in a braces { stmt; }
                // as a statement with a semicolon { stmt; };
@@ -434,7 +434,7 @@ static bool can_remove_braces(Chunk *bopen)
             if_count++;
          }
 
-         if (pc->level == level)
+         if (pc->GetLevel() == level)
          {
             if (  semi_count > 0
                && hit_semi)
@@ -511,10 +511,10 @@ static bool can_remove_braces(Chunk *bopen)
 static void examine_brace(Chunk *bopen)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LBRDEL, "%s(%d): start on orig line %zu, bopen->level is %zu\n",
-           __func__, __LINE__, bopen->GetOrigLine(), bopen->level);
+   LOG_FMT(LBRDEL, "%s(%d): start on orig line %zu, bopen->GetLevel() is %zu\n",
+           __func__, __LINE__, bopen->GetOrigLine(), bopen->GetLevel());
 
-   const size_t level = bopen->level + 1;
+   const size_t level = bopen->GetLevel() + 1;
 
    log_rule_B("mod_full_brace_nl");
    const size_t nl_max = options::mod_full_brace_nl();
@@ -529,7 +529,7 @@ static void examine_brace(Chunk *bopen)
    Chunk        *pc = bopen->GetNextNc();
 
    while (  pc->IsNotNullChunk()
-         && pc->level >= level)
+         && pc->GetLevel() >= level)
    {
       if (pc->Is(CT_NEWLINE))
       {
@@ -563,18 +563,18 @@ static void examine_brace(Chunk *bopen)
       }
       else
       {
-         LOG_FMT(LBRDEL, "%s(%d): for pc->Text() '%s', pc->level is %zu,  bopen->level is %zu\n",
-                 __func__, __LINE__, pc->Text(), pc->level, bopen->level);
+         LOG_FMT(LBRDEL, "%s(%d): for pc->Text() '%s', pc->GetLevel() is %zu,  bopen->GetLevel() is %zu\n",
+                 __func__, __LINE__, pc->Text(), pc->GetLevel(), bopen->GetLevel());
 
          if (  pc->Is(CT_BRACE_OPEN)
-            && pc->level == bopen->level)
+            && pc->GetLevel() == bopen->GetLevel())
          {
             br_count++;
-            LOG_FMT(LBRDEL, "%s(%d): br_count is now %d, pc->level is %zu,  bopen->level is %zu\n",
-                    __func__, __LINE__, br_count, pc->level, bopen->level);
+            LOG_FMT(LBRDEL, "%s(%d): br_count is now %d, pc->GetLevel() is %zu,  bopen->GetLevel() is %zu\n",
+                    __func__, __LINE__, br_count, pc->GetLevel(), bopen->GetLevel());
          }
          else if (  pc->Is(CT_BRACE_CLOSE)
-                 && pc->level == bopen->level)
+                 && pc->GetLevel() == bopen->GetLevel())
          {
             if (br_count == 0)
             {
@@ -584,8 +584,8 @@ static void examine_brace(Chunk *bopen)
                exit(EX_SOFTWARE);
             }
             br_count--;
-            LOG_FMT(LBRDEL, "%s(%d): br_count is now %d, pc->level is %zu,  bopen->level is %zu\n",
-                    __func__, __LINE__, br_count, pc->level, bopen->level);
+            LOG_FMT(LBRDEL, "%s(%d): br_count is now %d, pc->GetLevel() is %zu,  bopen->GetLevel() is %zu\n",
+                    __func__, __LINE__, br_count, pc->GetLevel(), bopen->GetLevel());
 
             if (br_count == 0)
             {
@@ -605,10 +605,10 @@ static void examine_brace(Chunk *bopen)
          {
             if_count++;
          }
-         LOG_FMT(LBRDEL, "%s(%d): pc->level is %zu, level is %zu\n",
-                 __func__, __LINE__, pc->level, level);
+         LOG_FMT(LBRDEL, "%s(%d): pc->GetLevel() is %zu, level is %zu\n",
+                 __func__, __LINE__, pc->GetLevel(), level);
 
-         if (pc->level == level)
+         if (pc->GetLevel() == level)
          {
             if (  semi_count > 0
                && hit_semi)
@@ -637,8 +637,8 @@ static void examine_brace(Chunk *bopen)
                LOG_FMT(LBRDEL, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', prev is a null chunk\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
             }
-            LOG_FMT(LBRDEL, "%s(%d): for pc->Text() '%s', pc->level is %zu,  bopen->level is %zu\n",
-                    __func__, __LINE__, pc->Text(), pc->level, bopen->level);
+            LOG_FMT(LBRDEL, "%s(%d): for pc->Text() '%s', pc->GetLevel() is %zu,  bopen->GetLevel() is %zu\n",
+                    __func__, __LINE__, pc->Text(), pc->GetLevel(), bopen->GetLevel());
 
             if (  pc->IsSemicolon()
                || pc->Is(CT_IF)
@@ -649,10 +649,10 @@ static void examine_brace(Chunk *bopen)
                || pc->Is(CT_SWITCH)
                || pc->Is(CT_USING_STMT)
                || (  pc->Is(CT_BRACE_OPEN)
-                  && pc->level == bopen->level)) // Issue #1758
+                  && pc->GetLevel() == bopen->GetLevel())) // Issue #1758
             {
                LOG_FMT(LBRDEL, "%s(%d): pc->Text() '%s', orig line is %zu, orig col is %zu, level is %zu\n",
-                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->level);
+                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
                hit_semi |= pc->IsSemicolon();
                semi_count++;
                LOG_FMT(LBRDEL, "%s(%d): semi_count is %zu\n",
@@ -822,7 +822,7 @@ static void convert_brace(Chunk *br)
 
             if (brace->IsNullChunk())
             {
-               brace = br->GetPrevType(CT_BRACE_OPEN, br->level);
+               brace = br->GetPrevType(CT_BRACE_OPEN, br->GetLevel());
             }
          }
 
@@ -1104,7 +1104,7 @@ void add_long_closebrace_comment()
          }
 
          // handle only matching closing braces, skip other chunks
-         if (  tmp->level != br_open->level
+         if (  tmp->GetLevel() != br_open->GetLevel()
             || tmp->IsNot(CT_BRACE_CLOSE))
          {
             continue;
@@ -1301,7 +1301,7 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
 
    // Find the matching brace close
    Chunk *next     = br_open->GetNextNcNnl(E_Scope::PREPROC);
-   Chunk *br_close = br_open->GetNextType(CT_BRACE_CLOSE, br_open->level, E_Scope::PREPROC);
+   Chunk *br_close = br_open->GetNextType(CT_BRACE_CLOSE, br_open->GetLevel(), E_Scope::PREPROC);
 
    if (br_close->IsNullChunk())
    {
@@ -1328,7 +1328,7 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
         tmp_pc != br_close;
         tmp_pc = tmp_pc->GetNextNcNnl(E_Scope::PREPROC))
    {
-      if (  tmp_pc->level == (br_open->level + 1)
+      if (  tmp_pc->GetLevel() == (br_open->GetLevel() + 1)
          && tmp_pc->TestFlags(PCF_VAR_DEF))
       {
          LOG_FMT(LMCB, "%s(%d):  - vardef on line %zu: '%s'\n",
@@ -1353,14 +1353,14 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
       }
       tmp_pc->SetBraceLevel(tmp_pc->GetBraceLevel() - 1);
 
-      if (tmp_pc->level == 0)
+      if (tmp_pc->GetLevel() == 0)
       {
-         fprintf(stderr, "%s(%d): tmp_pc->level is ZERO, cannot be decremented, at line %zu, column %zu\n",
+         fprintf(stderr, "%s(%d): tmp_pc->GetLevel() is ZERO, cannot be decremented, at line %zu, column %zu\n",
                  __func__, __LINE__, tmp_pc->GetOrigLine(), tmp_pc->GetOrigCol());
          log_flush(true);
          exit(EX_SOFTWARE);
       }
-      tmp_pc->level--;
+      tmp_pc->SetLevel(tmp_pc->GetLevel() - 1);
    }
 
    next = br_open->GetPrev(E_Scope::PREPROC);
@@ -1381,11 +1381,11 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    Chunk *pc   = cl_colon;
    Chunk *last = Chunk::NullChunkPtr;
    // look for the case token to the colon
-   Chunk *cas_ = cl_colon->GetPrevType(CT_CASE, cl_colon->level);
+   Chunk *cas_ = cl_colon->GetPrevType(CT_CASE, cl_colon->GetLevel());
    // look for the parent
    Chunk *swit = cas_->GetParent();
    // look for the opening brace of the switch
-   Chunk *open = swit->GetNextType(CT_BRACE_OPEN, swit->level);
+   Chunk *open = swit->GetNextType(CT_BRACE_OPEN, swit->GetLevel());
    // look for the closing brace of the switch
    Chunk *clos = open->SkipToMatch();
 
@@ -1397,7 +1397,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
       LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig col is %zu, pp level is %zu\n",
               __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetPpLevel());
 
-      if (pc->level == cl_colon->level)
+      if (pc->GetLevel() == cl_colon->GetLevel())
       {
          if (pc->Is(CT_CASE))
          {
@@ -1407,7 +1407,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
             break;
          }
       }
-      else if (pc->level == cl_colon->level - 1)
+      else if (pc->GetLevel() == cl_colon->GetLevel() - 1)
       {
          if (pc == clos)
          {
@@ -1440,7 +1440,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    chunk.SetParentType(CT_CASE);
    chunk.SetOrigLine(cl_colon->GetOrigLine());
    chunk.SetOrigCol(cl_colon->GetOrigCol());
-   chunk.level = cl_colon->level;
+   chunk.SetLevel(cl_colon->GetLevel());
    chunk.SetPpLevel(cl_colon->GetPpLevel());
    chunk.SetBraceLevel(cl_colon->GetBraceLevel());
    chunk.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
@@ -1457,7 +1457,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
         pc != br_close;
         pc = pc->GetNext(E_Scope::PREPROC))
    {
-      pc->level++;
+      pc->SetLevel(pc->GetLevel() + 1);
       pc->SetBraceLevel(pc->GetBraceLevel() + 1);
    }
 

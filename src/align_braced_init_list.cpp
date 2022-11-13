@@ -26,7 +26,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
       // see https://en.wikipedia.org/wiki/Robustness_principle
       return(nullptr);
    }
-   size_t my_level = first->level;
+   size_t my_level = first->GetLevel();
 
    char   copy[1000];
 

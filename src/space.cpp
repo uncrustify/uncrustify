@@ -654,7 +654,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          && (  second->Is(CT_FPAREN_CLOSE)
             || second->Is(CT_COMMA)))
       {
-         if (second->level == QT_SIGNAL_SLOT_level)
+         if (second->GetLevel() == QT_SIGNAL_SLOT_level)
          {
             restoreValues = true;
          }
@@ -1895,7 +1895,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       // check for initializers and add space or ignore based on the option.
       if (first->GetParentType() == CT_FUNC_CALL)
       {
-         Chunk *tmp = first->GetPrevType(first->GetParentType(), first->level);
+         Chunk *tmp = first->GetPrevType(first->GetParentType(), first->GetLevel());
          tmp = tmp->GetPrevNcNnl();
 
          if (tmp->Is(CT_NEW))
@@ -2331,8 +2331,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (first->Is(CT_CLASS_COLON))
    {
       if (  first->GetParentType() == CT_OC_CLASS
-         && (  first->GetPrevType(CT_OC_INTF, first->level, E_Scope::ALL)->IsNullChunk()
-            && first->GetPrevType(CT_OC_IMPL, first->level, E_Scope::ALL)->IsNullChunk()))
+         && (  first->GetPrevType(CT_OC_INTF, first->GetLevel(), E_Scope::ALL)->IsNullChunk()
+            && first->GetPrevType(CT_OC_IMPL, first->GetLevel(), E_Scope::ALL)->IsNullChunk()))
       {
          if (options::sp_after_oc_colon() != IARF_IGNORE)
          {
@@ -2356,11 +2356,11 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    {
       if (  language_is_set(LANG_OC)
          && second->GetParentType() == CT_OC_CLASS
-         && (  second->GetPrevType(CT_OC_INTF, second->level, E_Scope::ALL)->IsNullChunk()
-            && second->GetPrevType(CT_OC_IMPL, second->level, E_Scope::ALL)->IsNullChunk()))
+         && (  second->GetPrevType(CT_OC_INTF, second->GetLevel(), E_Scope::ALL)->IsNullChunk()
+            && second->GetPrevType(CT_OC_IMPL, second->GetLevel(), E_Scope::ALL)->IsNullChunk()))
       {
          if (  second->GetParentType() == CT_OC_CLASS
-            && second->GetPrevType(CT_OC_INTF, second->level, E_Scope::ALL)->IsNullChunk())
+            && second->GetPrevType(CT_OC_INTF, second->GetLevel(), E_Scope::ALL)->IsNullChunk())
          {
             if (options::sp_before_oc_colon() != IARF_IGNORE)
             {
@@ -3307,7 +3307,7 @@ void space_text()
          pc->SetFlagBits(PCF_IN_QT_MACRO); // flag the chunk for a second processing
 
          // save the values
-         save_set_options_for_QT(pc->level);
+         save_set_options_for_QT(pc->GetLevel());
       }
 
       // Bug # 637
@@ -3612,7 +3612,7 @@ void space_text_balance_nested_parens()
          space_add_after(first, 1);
 
          // test after the closing parens   Issue #1703
-         Chunk *closing = first->GetNextType((E_Token)(first->GetType() + 1), first->level);
+         Chunk *closing = first->GetNextType((E_Token)(first->GetType() + 1), first->GetLevel());
 
          if (closing->GetOrigCol() == closing->GetPrev()->GetOrigColEnd())
          {
@@ -3626,7 +3626,7 @@ void space_text_balance_nested_parens()
          space_add_after(first, 1);
 
          // test after the opening parens   Issue #1703
-         Chunk *opening = next->GetPrevType((E_Token)(next->GetType() - 1), next->level);
+         Chunk *opening = next->GetPrevType((E_Token)(next->GetType() - 1), next->GetLevel());
 
          if (opening->GetOrigColEnd() == opening->GetNext()->GetOrigCol())
          {
@@ -3770,7 +3770,7 @@ void space_add_after(Chunk *pc, size_t count)
    sp.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
    sp.str = "                ";         // 16 spaces
    sp.str.resize(count);
-   sp.level = pc->level;
+   sp.SetLevel(pc->GetLevel());
    sp.SetBraceLevel(pc->GetBraceLevel());
    sp.SetPpLevel(pc->GetPpLevel());
    sp.SetColumn(pc->GetColumn() + pc->Len());

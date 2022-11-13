@@ -526,13 +526,13 @@ void output_parsed(FILE *pfile, bool withOptions)
               eol_marker, (int)pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               (int)pc->GetColumn(), (int)pc->GetOrigCol(), (int)pc->GetOrigColEnd(), (int)pc->GetOrigPrevSp(),
-              (int)pc->GetBraceLevel(), (int)pc->level, (int)pc->GetPpLevel(), (int)pc->GetNlCount(), pc->GetAfterTab());
+              (int)pc->GetBraceLevel(), (int)pc->GetLevel(), (int)pc->GetPpLevel(), (int)pc->GetNlCount(), pc->GetAfterTab());
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3zu][%zu/%zu/%zu]",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigColEnd(), pc->GetOrigPrevSp(),
-              pc->GetBraceLevel(), pc->level, pc->GetPpLevel());
+              pc->GetBraceLevel(), pc->GetLevel(), pc->GetPpLevel());
       // Print pc flags in groups of 4 hex characters
       char flag_string[20];
       sprintf(flag_string, "%12llx", static_cast<T_PcfFlags::int_t>(pc->GetFlags()));
@@ -588,7 +588,7 @@ void output_parsed_csv(FILE *pfile)
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigColEnd(), pc->GetOrigPrevSp(),
-              pc->GetBraceLevel(), pc->level, pc->GetPpLevel());
+              pc->GetBraceLevel(), pc->GetLevel(), pc->GetPpLevel());
 
       auto pcf_flag_str = pcf_flags_str(E_PcfFlag(pc->GetFlags()));
 #ifdef WIN32
@@ -3063,13 +3063,13 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
    }
    else
    {
-      fpo = fcn->GetNextType(CT_FPAREN_OPEN, fcn->level);
+      fpo = fcn->GetNextType(CT_FPAREN_OPEN, fcn->GetLevel());
 
       if (fpo->IsNullChunk())
       {
          return(true);
       }
-      fpc = fpo->GetNextType(CT_FPAREN_CLOSE, fcn->level);
+      fpc = fpo->GetNextType(CT_FPAREN_CLOSE, fcn->GetLevel());
 
       if (fpc->IsNullChunk())
       {
@@ -3170,8 +3170,8 @@ static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt)
    if (fcn->TestFlags(PCF_IN_CLASS))
    {
       // if inside a class, we need to find to the class name
-      Chunk *tmp = fcn->GetPrevType(CT_BRACE_OPEN, fcn->level - 1);
-      tmp = tmp->GetPrevType(CT_CLASS, tmp->level);
+      Chunk *tmp = fcn->GetPrevType(CT_BRACE_OPEN, fcn->GetLevel() - 1);
+      tmp = tmp->GetPrevType(CT_CLASS, tmp->GetLevel());
 
       if (tmp->IsNullChunk())
       {

@@ -34,11 +34,11 @@ void align_asm_colon()
       cas.Reset();
 
       pc = pc->GetNextNcNnl(E_Scope::PREPROC);
-      size_t level = pc ? pc->level : 0;
+      size_t level = pc->IsNotNullChunk() ? pc->GetLevel() : 0;
       did_nl = true;
 
       while (  pc->IsNotNullChunk()
-            && pc->level >= level)
+            && pc->GetLevel() >= level)
       {
          if (pc->IsNewline())
          {

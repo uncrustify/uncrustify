@@ -33,7 +33,7 @@ void align_oc_msg_colon(Chunk *so)
 
    cas.Start(span);
 
-   size_t level = so->level;
+   size_t level = so->GetLevel();
    Chunk  *pc   = so->GetNextNcNnl(E_Scope::PREPROC);
 
    bool   did_line   = false;
@@ -42,9 +42,9 @@ void align_oc_msg_colon(Chunk *so)
    bool   first_line = true;
 
    while (  pc->IsNotNullChunk()
-         && pc->level > level)
+         && pc->GetLevel() > level)
    {
-      if (pc->level > (level + 1))
+      if (pc->GetLevel() > (level + 1))
       {
          // do nothing
       }
@@ -150,7 +150,7 @@ void align_oc_msg_colon(Chunk *so)
       chunk.SetParentType(CT_NONE);
       chunk.SetOrigLine(longest->GetOrigLine());
       chunk.SetOrigCol(longest->GetOrigCol());
-      chunk.level = longest->level;
+      chunk.SetLevel(longest->GetLevel());
       chunk.SetBraceLevel(longest->GetBraceLevel());
       chunk.SetFlags(longest->GetFlags() & PCF_COPY_FLAGS);
 

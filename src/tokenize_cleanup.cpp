@@ -202,7 +202,7 @@ void tokenize_trailing_return_types()
          }
          else if (tmp->Is(CT_PAREN_CLOSE))
          {
-            open_paren = tmp->GetPrevType(CT_PAREN_OPEN, tmp->level);
+            open_paren = tmp->GetPrevType(CT_PAREN_OPEN, tmp->GetLevel());
             tmp        = open_paren->GetPrevNcNnl();
 
             if (tmp->Is(CT_NOEXCEPT))
@@ -989,7 +989,7 @@ void tokenize_cleanup()
          {
             tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
          }
-         tmp = pc->GetNextType(CT_OC_END, pc->level);
+         tmp = pc->GetNextType(CT_OC_END, pc->GetLevel());
 
          if (tmp->IsNotNullChunk())
          {
@@ -1045,7 +1045,7 @@ void tokenize_cleanup()
                tmp->SetParentType(pc->GetParentType());
             }
          }
-         tmp = pc->GetNextType(CT_PAREN_CLOSE, pc->level);
+         tmp = pc->GetNextType(CT_PAREN_CLOSE, pc->GetLevel());
 
          if (tmp->IsNotNullChunk())
          {
@@ -1687,7 +1687,7 @@ static void cleanup_objc_property(Chunk *start)
 {
    assert(start->Is(CT_OC_PROPERTY));
 
-   Chunk *open_paren = start->GetNextType(CT_PAREN_OPEN, start->level);
+   Chunk *open_paren = start->GetNextType(CT_PAREN_OPEN, start->GetLevel());
 
    if (open_paren->IsNullChunk())
    {
@@ -1696,7 +1696,7 @@ static void cleanup_objc_property(Chunk *start)
    }
    open_paren->SetParentType(start->GetType());
 
-   Chunk *tmp = start->GetNextType(CT_PAREN_CLOSE, start->level);
+   Chunk *tmp = start->GetNextType(CT_PAREN_CLOSE, start->GetLevel());
 
    if (tmp->IsNotNullChunk())
    {
@@ -1707,7 +1707,7 @@ static void cleanup_objc_property(Chunk *start)
       {
          tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
 
-         tmp = tmp->GetNextType(CT_SEMICOLON, start->level);
+         tmp = tmp->GetNextType(CT_SEMICOLON, start->GetLevel());
 
          if (tmp->IsNotNullChunk())
          {

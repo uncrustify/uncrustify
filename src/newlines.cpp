@@ -342,7 +342,7 @@ static bool can_increase_nl(Chunk *nl)
       if (  pp_start->IsNotNullChunk()
          && (  pp_start->GetParentType() == CT_PP_IF
             || pp_start->GetParentType() == CT_PP_ELSE)
-         && (  pp_start->level > 0
+         && (  pp_start->GetLevel() > 0
             || options::nl_squeeze_ifdef_top_level()))
       {
          log_rule_B("nl_squeeze_ifdef_top_level");
@@ -355,7 +355,7 @@ static bool can_increase_nl(Chunk *nl)
       if (  next->Is(CT_PREPROC)
          && (  next->GetParentType() == CT_PP_ELSE
             || next->GetParentType() == CT_PP_ENDIF)
-         && (  next->level > 0
+         && (  next->GetLevel() > 0
             || options::nl_squeeze_ifdef_top_level()))
       {
          log_rule_B("nl_squeeze_ifdef_top_level");
@@ -472,7 +472,7 @@ static void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
    undo_one_liner(prev);
 
    nl->SetOrigLine(prev->GetOrigLine());
-   nl->level = prev->level;
+   nl->SetLevel(prev->GetLevel());
    nl->SetPpLevel(prev->GetPpLevel());
    nl->SetBraceLevel(prev->GetBraceLevel());
    nl->SetPpLevel(prev->GetPpLevel());
@@ -894,7 +894,7 @@ void newlines_sparens()
         sparen_open->IsNotNullChunk();
         sparen_open = sparen_open->GetNextType(CT_SPAREN_OPEN, ANY_LEVEL))
    {
-      Chunk *sparen_close = sparen_open->GetNextType(CT_SPAREN_CLOSE, sparen_open->level);
+      Chunk *sparen_close = sparen_open->GetNextType(CT_SPAREN_CLOSE, sparen_open->GetLevel());
 
       if (sparen_close->IsNullChunk())
       {
@@ -955,7 +955,7 @@ static bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt)
 
    if (pc->Is(CT_SPAREN_OPEN))
    {
-      Chunk *close_paren = pc->GetNextType(CT_SPAREN_CLOSE, pc->level);
+      Chunk *close_paren = pc->GetNextType(CT_SPAREN_CLOSE, pc->GetLevel());
       Chunk *brace_open  = close_paren->GetNextNcNnl();
 
       if (  (  brace_open->Is(CT_BRACE_OPEN)
@@ -982,7 +982,7 @@ static bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt)
             if (nl_opt & IARF_ADD)
             {
                newline_iarf_pair(close_paren, brace_open->GetNextNcNnl(), nl_opt);
-               pc = brace_open->GetNextType(CT_VBRACE_CLOSE, brace_open->level);
+               pc = brace_open->GetNextType(CT_VBRACE_CLOSE, brace_open->GetLevel());
 
                if (  !pc->GetPrevNc()->IsNewline()
                   && !pc->GetNextNc()->IsNewline())
@@ -1002,7 +1002,7 @@ static bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt)
                newline_add_between(brace_open, brace_open->GetNextNcNnl());
             }
             // Make sure nothing is cuddled with the closing brace
-            pc = brace_open->GetNextType(CT_BRACE_CLOSE, brace_open->level);
+            pc = brace_open->GetNextType(CT_BRACE_CLOSE, brace_open->GetLevel());
             newline_add_between(pc, pc->GetNextNcNnlNet());
             retval = true;
          }
@@ -1036,7 +1036,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
     */
    for (Chunk *pc = start->GetPrev(); pc->IsNotNullChunk(); pc = pc->GetPrev())
    {
-      size_t level    = start->level;
+      size_t level    = start->GetLevel();
       bool   do_add   = (nl_opt & IARF_ADD) != IARF_IGNORE;  // forcing value to bool
       Chunk  *last_nl = nullptr;
 
@@ -1078,7 +1078,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
          }
       }
       else if (  pc->IsBraceOpen()
-              || pc->level < level)
+              || pc->GetLevel() < level)
       {
          return;
       }
@@ -1389,19 +1389,19 @@ static Chunk *get_closing_brace(Chunk *start)
    LOG_FUNC_ENTRY();
 
    Chunk  *pc;
-   size_t level = start->level;
+   size_t level = start->GetLevel();
 
    for (pc = start; (pc = pc->GetNext())->IsNotNullChunk();)
    {
       if (  (pc->IsBraceClose())
-         && pc->level == level)
+         && pc->GetLevel() == level)
       {
          return(pc);
       }
 
       // for some reason, we can have newlines between if and opening brace that are lower level than either
       if (  !pc->IsNewline()
-         && pc->level < level)
+         && pc->GetLevel() < level)
       {
          return(nullptr);
       }
@@ -1502,7 +1502,7 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
    if (start->Is(CT_DO))
    {
       // point to the next semicolon
-      if ((pc = pc->GetNextType(CT_SEMICOLON, start->level))->IsNullChunk())
+      if ((pc = pc->GetNextType(CT_SEMICOLON, start->GetLevel()))->IsNullChunk())
       {
          return;
       }
@@ -1694,13 +1694,13 @@ static void newlines_struct_union(Chunk *start, iarf_e nl_opt, bool leave_traili
     * step past any junk between the keyword and the open brace
     * Quit if we hit a semicolon or '=', which are not expected.
     */
-   size_t level = start->level;
+   size_t level = start->GetLevel();
    Chunk  *pc   = start->GetNextNcNnl();
 
    while (  pc->IsNotNullChunk()
-         && pc->level >= level)
+         && pc->GetLevel() >= level)
    {
-      if (  pc->level == level
+      if (  pc->GetLevel() == level
          && (  pc->Is(CT_BRACE_OPEN)
             || pc->IsSemicolon()
             || pc->Is(CT_ASSIGN)))
@@ -1795,13 +1795,13 @@ static void newlines_enum(Chunk *start)
     * step past any junk between the keyword and the open brace
     * Quit if we hit a semicolon or '=', which are not expected.
     */
-   size_t level = start->level;
+   size_t level = start->GetLevel();
    Chunk  *pc   = start->GetNextNcNnl();
 
    while (  pc->IsNotNullChunk()
-         && pc->level >= level)
+         && pc->GetLevel() >= level)
    {
-      if (  pc->level == level
+      if (  pc->GetLevel() == level
          && (  pc->Is(CT_BRACE_OPEN)
             || pc->IsSemicolon()
             || pc->Is(CT_ASSIGN)))
@@ -1857,7 +1857,7 @@ static void newlines_namespace(Chunk *start)
    {
       return;
    }
-   Chunk *braceOpen = start->GetNextType(CT_BRACE_OPEN, start->level);
+   Chunk *braceOpen = start->GetNextType(CT_BRACE_OPEN, start->GetLevel());
 
    LOG_FMT(LNEWLINE, "%s(%d): braceOpen orig line is %zu, orig col is %zu, Text() is '%s'\n",
            __func__, __LINE__, braceOpen->GetOrigLine(), braceOpen->GetOrigCol(), braceOpen->Text());
@@ -1931,7 +1931,7 @@ static void newlines_do_else(Chunk *start, iarf_e nl_opt)
          if (nl_opt & IARF_ADD)
          {
             newline_iarf_pair(start, next->GetNextNcNnl(), nl_opt);
-            Chunk *tmp = next->GetNextType(CT_VBRACE_CLOSE, next->level);
+            Chunk *tmp = next->GetNextType(CT_VBRACE_CLOSE, next->GetLevel());
 
             if (  !tmp->GetNextNc()->IsNewline()
                && !tmp->GetPrevNc()->IsNewline())
@@ -2034,8 +2034,8 @@ static Chunk *newline_var_def_blk(Chunk *start)
    }
 
    while (  pc->IsNotNullChunk()
-         && (  pc->level >= start->level
-            || pc->level == 0))
+         && (  pc->GetLevel() >= start->GetLevel()
+            || pc->GetLevel() == 0))
    {
       LOG_CHUNK(LTOK, pc);
 
@@ -2079,13 +2079,13 @@ static Chunk *newline_var_def_blk(Chunk *start)
       // skip vbraces
       if (pc->Is(CT_VBRACE_OPEN))
       {
-         pc = pc->GetNextType(CT_VBRACE_CLOSE, pc->level);
+         pc = pc->GetNextType(CT_VBRACE_CLOSE, pc->GetLevel());
          pc = pc->GetNext();
          continue;
       }
 
       // Ignore stuff inside parenthesis/squares/angles
-      if (pc->level > pc->GetBraceLevel())
+      if (pc->GetLevel() > pc->GetBraceLevel())
       {
          pc = pc->GetNext();
          continue;
@@ -2102,8 +2102,8 @@ static Chunk *newline_var_def_blk(Chunk *start)
       if (  !did_this_line
          && pc->IsNot(CT_FUNC_CLASS_DEF)
          && pc->IsNot(CT_FUNC_CLASS_PROTO)
-         && (  (pc->level == (start->level + 1))
-            || pc->level == 0))
+         && (  (pc->GetLevel() == (start->GetLevel() + 1))
+            || pc->GetLevel() == 0))
       {
          Chunk *next = pc->GetNextNcNnl();
          LOG_FMT(LVARDFBLK, "%s(%d): next orig line is %zu, orig col is %zu, Text() is '%s'\n",
@@ -2139,12 +2139,12 @@ static Chunk *newline_var_def_blk(Chunk *start)
          if (!(  prev->IsBraceOpen()
               || prev->IsBraceClose()))
          {
-            prev = pc->GetPrevType(CT_SEMICOLON, pc->level);
+            prev = pc->GetPrevType(CT_SEMICOLON, pc->GetLevel());
          }
 
          if (prev->IsNullChunk())
          {
-            prev = pc->GetPrevType(CT_BRACE_OPEN, pc->level - 1);      // Issue #2692
+            prev = pc->GetPrevType(CT_BRACE_OPEN, pc->GetLevel() - 1);      // Issue #2692
          }
 
          if (  prev->Is(CT_STRING)
@@ -2209,7 +2209,7 @@ static Chunk *newline_var_def_blk(Chunk *start)
                   }
                }
             }
-            pc      = pc->GetNextType(CT_SEMICOLON, pc->level);
+            pc      = pc->GetNextType(CT_SEMICOLON, pc->GetLevel());
             var_blk = true;
          }
          else if (var_blk)
@@ -2279,9 +2279,9 @@ static Chunk *newline_var_def_blk(Chunk *start)
       pc = pc->GetNext();
    }
    LOG_FMT(LVARDFBLK, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', level is %zu\n",
-           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->level);
+           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetLevel());
    LOG_FMT(LVARDFBLK, "%s(%d): start orig line is %zu, orig col is %zu, Text() is '%s', level is %zu\n",
-           __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol(), start->Text(), start->level);
+           __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol(), start->Text(), start->GetLevel());
    //prot_the_line(__func__, __LINE__, 15, 4);
    return(pc);
 } // newline_var_def_blk
@@ -2650,7 +2650,7 @@ static void newlines_brace_pair(Chunk *br_open)
       newline_add_between(br_open, pc);
    }
    // Grab the matching brace close
-   Chunk *br_close = br_open->GetNextType(CT_BRACE_CLOSE, br_open->level);
+   Chunk *br_close = br_open->GetNextType(CT_BRACE_CLOSE, br_open->GetLevel());
 
    if (br_close->IsNullChunk())
    {
@@ -2831,7 +2831,7 @@ static void newline_after_return(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *semi  = start->GetNextType(CT_SEMICOLON, start->level);
+   Chunk *semi  = start->GetNextType(CT_SEMICOLON, start->GetLevel());
    Chunk *after = semi->GetNextNcNnlNet();
 
    // If we hit a brace or an 'else', then a newline isn't needed
@@ -2977,7 +2977,7 @@ static void newline_func_multi_line(Chunk *start)
    Chunk *pc = start->GetNextNcNnl();
 
    while (  pc->IsNotNullChunk()
-         && pc->level > start->level)
+         && pc->GetLevel() > start->GetLevel())
    {
       pc = pc->GetNextNcNnl();
    }
@@ -3038,11 +3038,11 @@ static void newline_func_multi_line(Chunk *start)
          // process the function in reverse and leave the first comma if the option to leave trailing closure
          // is on. nl_func_call_args_multi_line_ignore_trailing_closure
          for (pc = start->GetNextNcNnl();
-              pc->IsNotNullChunk() && pc->level > start->level;
+              pc->IsNotNullChunk() && pc->GetLevel() > start->GetLevel();
               pc = pc->GetNextNcNnl())
          {
             if (  pc->Is(CT_COMMA)
-               && (pc->level == (start->level + 1)))
+               && (pc->GetLevel() == (start->GetLevel() + 1)))
             {
                Chunk *tmp = pc->GetNext();
 
@@ -3108,7 +3108,7 @@ static void newline_template(Chunk *start)
    Chunk *pc = start->GetNextNcNnl();
 
    while (  pc->IsNotNullChunk()
-         && pc->level > start->level)
+         && pc->GetLevel() > start->GetLevel())
    {
       pc = pc->GetNextNcNnl();
    }
@@ -3130,11 +3130,11 @@ static void newline_template(Chunk *start)
          Chunk *pc_1;
 
          for (pc_1 = start->GetNextNcNnl();
-              pc_1->IsNotNullChunk() && pc_1->level > start->level;
+              pc_1->IsNotNullChunk() && pc_1->GetLevel() > start->GetLevel();
               pc_1 = pc_1->GetNextNcNnl())
          {
             if (  pc_1->Is(CT_COMMA)
-               && (pc_1->level == (start->level + 1)))
+               && (pc_1->GetLevel() == (start->GetLevel() + 1)))
             {
                Chunk *tmp = pc_1->GetNext();
 
@@ -3385,11 +3385,11 @@ static void newline_func_def_or_call(Chunk *start)
    Chunk  *pc;
 
    for (pc = start->GetNextNcNnl();
-        pc->IsNotNullChunk() && pc->level > start->level;
+        pc->IsNotNullChunk() && pc->GetLevel() > start->GetLevel();
         pc = pc->GetNextNcNnl())
    {
       if (  pc->Is(CT_COMMA)
-         && (pc->level == (start->level + 1)))
+         && (pc->GetLevel() == (start->GetLevel() + 1)))
       {
          comma_count++;
          tmp = pc->GetNext();
@@ -3492,12 +3492,12 @@ static void newline_oc_msg(Chunk *start)
 
    for (Chunk *pc = start->GetNextNcNnl(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      if (pc->level <= start->level)
+      if (pc->GetLevel() <= start->GetLevel())
       {
          break;
       }
 
-      if (pc->Is(CT_OC_COLON) && pc->level - 1 == start->level)
+      if (pc->Is(CT_OC_COLON) && pc->GetLevel() - 1 == start->GetLevel())
       {
          parameter_count++;
       }
@@ -3515,7 +3515,7 @@ static void newline_oc_msg(Chunk *start)
 
    for (Chunk *pc = start->GetNextNcNnl(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      if (pc->level <= start->level)
+      if (pc->GetLevel() <= start->GetLevel())
       {
          break;
       }
@@ -3549,12 +3549,12 @@ static void newline_oc_msg(Chunk *start)
 
    for (Chunk *pc = start->GetNextNcNnl(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      if (pc->level <= start->level)
+      if (pc->GetLevel() <= start->GetLevel())
       {
          break;
       }
 
-      if (pc->Is(CT_OC_MSG_NAME) && pc->level - 1 == start->level)
+      if (pc->Is(CT_OC_MSG_NAME) && pc->GetLevel() - 1 == start->GetLevel())
       {
          newline_add_before(pc);
       }
@@ -3581,7 +3581,7 @@ static bool one_liner_nl_ok(Chunk *pc)
    if (br_open->IsBraceClose())
    {
       br_open = br_open->GetPrevType(br_open->Is(CT_BRACE_CLOSE) ? CT_BRACE_OPEN : CT_VBRACE_OPEN,
-                                     br_open->level, E_Scope::ALL);
+                                     br_open->GetLevel(), E_Scope::ALL);
    }
    else
    {
@@ -3817,7 +3817,7 @@ static void nl_create_list_liner(Chunk *brace_open)
    {
       return;
    }
-   Chunk *closing = brace_open->GetNextType(CT_BRACE_CLOSE, brace_open->level);
+   Chunk *closing = brace_open->GetNextType(CT_BRACE_CLOSE, brace_open->GetLevel());
    Chunk *tmp     = brace_open;
 
    do
@@ -4141,7 +4141,7 @@ void newlines_cleanup_braces(bool first)
 
          case CT_CLASS:
          {
-            if (pc->level == pc->GetBraceLevel())
+            if (pc->GetLevel() == pc->GetBraceLevel())
             {
                log_rule_B("nl_class_brace");
                log_ruleNL("nl_class_brace", pc->GetPrevNnl());
@@ -4152,7 +4152,7 @@ void newlines_cleanup_braces(bool first)
 
          case CT_OC_CLASS:
          {
-            if (pc->level == pc->GetBraceLevel())
+            if (pc->GetLevel() == pc->GetBraceLevel())
             {
                // Request #126
                // introduce two new options
@@ -4280,7 +4280,7 @@ void newlines_cleanup_braces(bool first)
             }
             // Handle nl_after_brace_open
             else if (  (  pc->GetParentType() == CT_CPP_LAMBDA
-                       || pc->level == pc->GetBraceLevel())
+                       || pc->GetLevel() == pc->GetBraceLevel())
                     && options::nl_after_brace_open())
             {
                log_rule_B("nl_after_brace_open");
@@ -4334,7 +4334,7 @@ void newlines_cleanup_braces(bool first)
 
          // Handle nl_before_brace_open
          if (  pc->Is(CT_BRACE_OPEN)
-            && pc->level == pc->GetBraceLevel()
+            && pc->GetLevel() == pc->GetBraceLevel()
             && options::nl_before_brace_open())
          {
             log_rule_B("nl_before_brace_open");
@@ -4606,7 +4606,7 @@ void newlines_cleanup_braces(bool first)
                for (Chunk *temp = pc; temp != end; temp = temp->GetNext())
                {
                   LOG_FMT(LNEWLINE, "%s(%d): Text() is '%s', type is %s, level is %zu\n",
-                          __func__, __LINE__, temp->Text(), get_token_name(temp->GetType()), temp->level);
+                          __func__, __LINE__, temp->Text(), get_token_name(temp->GetType()), temp->GetLevel());
                   // produces much more log output. Use it only debugging purpose
                   //log_pcf_flags(LNEWLINE, temp->GetFlags());
                   temp->ResetFlagBits(PCF_ONE_LINER);
@@ -4905,9 +4905,9 @@ void newlines_cleanup_braces(bool first)
             Chunk *next = pc->GetNextNcNnl();
 
             if (  next->IsNotNullChunk()
-               && next->level == next->GetBraceLevel())
+               && next->GetLevel() == next->GetBraceLevel())
             {
-               Chunk *tmp = pc->GetPrevType(CT_ANGLE_OPEN, pc->level)->GetPrevNcNnlNi();   // Issue #2279
+               Chunk *tmp = pc->GetPrevType(CT_ANGLE_OPEN, pc->GetLevel())->GetPrevNcNnlNi();   // Issue #2279
 
                if (tmp->Is(CT_TEMPLATE))
                {
@@ -4992,7 +4992,7 @@ void newlines_cleanup_braces(bool first)
             {
                // Issue #1235
                // Issue #2186
-               Chunk *braceOpen = pc->GetNextType(CT_BRACE_OPEN, pc->level);
+               Chunk *braceOpen = pc->GetNextType(CT_BRACE_OPEN, pc->GetLevel());
 
                if (braceOpen->IsNullChunk())
                {
@@ -5036,7 +5036,7 @@ void newlines_cleanup_braces(bool first)
 
             if (tmp->IsNewline())
             {
-               tmp = pc->GetNextType(CT_SQUARE_CLOSE, pc->level);
+               tmp = pc->GetNextType(CT_SQUARE_CLOSE, pc->GetLevel());
 
                if (tmp->IsNotNullChunk())
                {
@@ -5194,7 +5194,7 @@ static bool is_class_one_liner(Chunk *pc)
       && pc->TestFlags(PCF_IN_CLASS))
    {
       // Find opening brace
-      pc = pc->GetNextType(CT_BRACE_OPEN, pc->level);
+      pc = pc->GetNextType(CT_BRACE_OPEN, pc->GetLevel());
       return(  pc->IsNotNullChunk()
             && pc->TestFlags(PCF_ONE_LINER));
    }
@@ -5317,12 +5317,12 @@ void newlines_functions_remove_extra_blank_lines()
       {
          continue;
       }
-      const size_t startMoveLevel = pc->level;
+      const size_t startMoveLevel = pc->GetLevel();
 
       while (pc->IsNotNullChunk())
       {
          if (  pc->Is(CT_BRACE_CLOSE)
-            && pc->level == startMoveLevel)
+            && pc->GetLevel() == startMoveLevel)
          {
             break;
          }
@@ -5355,7 +5355,7 @@ void newlines_squeeze_ifdef()
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
       if (  pc->Is(CT_PREPROC)
-         && (  pc->level > 0
+         && (  pc->GetLevel() > 0
             || options::nl_squeeze_ifdef_top_level()))
       {
          log_rule_B("nl_squeeze_ifdef_top_level");
@@ -5869,7 +5869,7 @@ void newlines_class_colon_pos(E_Token tok)
          {
             LOG_FMT(LBLANKD, "%s(%d): pc orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
-            Chunk *paren_vor_value = pc->GetNextType(CT_FPAREN_OPEN, pc->level);
+            Chunk *paren_vor_value = pc->GetNextType(CT_FPAREN_OPEN, pc->GetLevel());
 
             if (  with_acv
                && paren_vor_value->IsNotNullChunk())
@@ -5946,11 +5946,11 @@ void newlines_class_colon_pos(E_Token tok)
          }
 
          if (  pc->Is(CT_COMMA)
-            && pc->level == ccolon->level)
+            && pc->GetLevel() == ccolon->GetLevel())
          {
             LOG_FMT(LBLANKD, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
-            Chunk *paren_vor_value = pc->GetNextType(CT_FPAREN_OPEN, pc->level);
+            Chunk *paren_vor_value = pc->GetNextType(CT_FPAREN_OPEN, pc->GetLevel());
 
             if (  with_acv
                && paren_vor_value->IsNotNullChunk())
@@ -6098,7 +6098,7 @@ bool is_func_proto_group(Chunk *pc, E_Token one_liner_type)
       else
       {
          // Find opening brace
-         pc = pc->GetNextType(CT_BRACE_OPEN, pc->level);
+         pc = pc->GetNextType(CT_BRACE_OPEN, pc->GetLevel());
          return(  pc->IsNotNullChunk()
                && pc->TestFlags(PCF_ONE_LINER));
       }
@@ -6244,13 +6244,13 @@ void do_blank_lines()
             || prev->GetParentType() == CT_STRUCT))
       {
          E_Token parent_type = prev->GetParentType();
-         Chunk   *start      = prev->GetPrevType(parent_type, prev->level);
+         Chunk   *start      = prev->GetPrevType(parent_type, prev->GetLevel());
          Chunk   *tmp        = start;
 
          // Is this a class/struct template?
          if (tmp->GetParentType() == CT_TEMPLATE)
          {
-            tmp = tmp->GetPrevType(CT_TEMPLATE, prev->level);
+            tmp = tmp->GetPrevType(CT_TEMPLATE, prev->GetLevel());
             tmp = tmp->GetPrevNc();
          }
          else
@@ -6296,7 +6296,7 @@ void do_blank_lines()
          && prev->GetParentType() == CT_NAMESPACE)
       {
          // Control blanks before a namespace
-         Chunk *tmp = prev->GetPrevType(CT_NAMESPACE, prev->level);
+         Chunk *tmp = prev->GetPrevType(CT_NAMESPACE, prev->GetLevel());
          tmp = tmp->GetPrevNc();
 
          while (  tmp->Is(CT_NEWLINE)
@@ -6461,7 +6461,7 @@ void do_blank_lines()
 
             while ((tmp = tmp->GetPrev())->IsNotNullChunk())
             {
-               if (tmp->level > pc->level)
+               if (tmp->GetLevel() > pc->GetLevel())
                {
                   continue;
                }
@@ -6706,9 +6706,9 @@ static void newlines_enum_entries(Chunk *open_brace, iarf_e av)
    }
 
    while (  (pc = pc->GetNextNc())->IsNotNullChunk()
-         && pc->level > open_brace->level)
+         && pc->GetLevel() > open_brace->GetLevel())
    {
-      if (  (pc->level != (open_brace->level + 1))
+      if (  (pc->GetLevel() != (open_brace->GetLevel() + 1))
          || pc->IsNot(CT_COMMA)
          || (  pc->Is(CT_COMMA)
             && pc->GetNext()->IsNotNullChunk()
@@ -6735,9 +6735,9 @@ static void newlines_double_space_struct_enum_union(Chunk *open_brace)
    }
 
    while (  (pc = pc->GetNextNc())->IsNotNullChunk()
-         && pc->level > open_brace->level)
+         && pc->GetLevel() > open_brace->GetLevel())
    {
-      if (  pc->level != (open_brace->level + 1)
+      if (  pc->GetLevel() != (open_brace->GetLevel() + 1)
          || pc->IsNot(CT_NEWLINE))
       {
          continue;

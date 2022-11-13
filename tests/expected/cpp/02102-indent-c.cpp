@@ -195,10 +195,10 @@ static void indent_pse_push(struct parse_frame& frm, Chunk *pc)
     memset(&frm.pse[frm.pse_tos], 0, sizeof(frm.pse[frm.pse_tos]));
 
     LOG_FMT(LINDPSE, "%4d] OPEN  [%d,%s] level=%d\n",
-            pc->GetOrigLine(), frm.pse_tos, get_token_name(pc->GetType()), pc->level);
+            pc->GetOrigLine(), frm.pse_tos, get_token_name(pc->GetType()), pc->GetLevel());
 
     frm.pse[frm.pse_tos].type       = pc->GetType();
-    frm.pse[frm.pse_tos].level      = pc->level;
+    frm.pse[frm.pse_tos].level      = pc->GetLevel();
     frm.pse[frm.pse_tos].open_line  = pc->GetOrigLine();
     frm.pse[frm.pse_tos].ref        = ++ref;
     frm.pse[frm.pse_tos].in_preproc = (pc->GetFlags() & PCF_IN_PREPROC) != 0;
@@ -224,7 +224,7 @@ static void indent_pse_pop(struct parse_frame& frm, Chunk *pc)
               get_token_name(pc->GetType()),
               frm.pse[frm.pse_tos].open_line,
               frm.pse[frm.pse_tos].level,
-              pc->level);
+              pc->GetLevel());
       }
     else
       {
@@ -325,7 +325,7 @@ void indent_text(void)
 
     if ((cout_col > 0) &&
         (pc->IsSemicolon() ||
-         (pc->level < cout_level)))
+         (pc->GetLevel() < cout_level)))
       {
       cout_col   = 0;
       cout_level = 0;
@@ -347,10 +347,10 @@ void indent_text(void)
       if (!pc->IsNewline() &&
           !pc->IsComment() &&
           ((pc->GetFlags() & PCF_IN_PREPROC) == 0) &&
-          (frm.pse[frm.pse_tos].level > pc->level))
+          (frm.pse[frm.pse_tos].level > pc->GetLevel()))
         indent_pse_pop(frm, pc);
 
-      if (frm.pse[frm.pse_tos].level == pc->level)
+      if (frm.pse[frm.pse_tos].level == pc->GetLevel())
         {
           /* process virtual braces closes (no text output) */
         if ((pc->GetType() == CT_VBRACE_CLOSE) &&
@@ -632,7 +632,7 @@ void indent_text(void)
     else if (pc->GetType() == CT_RETURN)
       {
         /* don't count returns inside a () or [] */
-      if (pc->level == pc->GetBraceLevel())
+      if (pc->GetLevel() == pc->GetBraceLevel())
         {
         indent_pse_push(frm, pc);
         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + pc->len + 1;
@@ -644,7 +644,7 @@ void indent_text(void)
       if (cout_col == 0)
         {
         cout_col   = pc->GetColumn();
-        cout_level = pc->level;
+        cout_level = pc->GetLevel();
         }
       }
     else
@@ -852,7 +852,7 @@ static void indent_comment(Chunk *pc, int col)
   Chunk *prev;
 
   LOG_FMT(LCMTIND, "%s: line %d, col %d, level %d: ", __func__,
-          pc->GetOrigLine(), pc->GetOrigCol(), pc->level);
+          pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
 
     /* force column 1 comment to column 1 if not changing them */
   if ((pc->GetOrigCol() == 1) && !cpd.settings[UO_indent_col1_comment].b)
@@ -865,7 +865,7 @@ static void indent_comment(Chunk *pc, int col)
   nl = pc->GetPrev();
 
     /* outside of any expression or statement? */
-  if (pc->level == 0)
+  if (pc->GetLevel() == 0)
     {
     if ((nl != NULL) && (nl->GetNlCount() > 1))
       {

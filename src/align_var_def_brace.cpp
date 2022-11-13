@@ -66,7 +66,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       LOG_FMT(LAVDB, "%s(%d): start->Text() '%s', type is %s, on orig line %zu (abort due to assign)\n",
               __func__, __LINE__, start->Text(), get_token_name(start->GetType()), start->GetOrigLine());
 
-      Chunk *pc = start->GetNextType(CT_BRACE_CLOSE, start->level);
+      Chunk *pc = start->GetNextType(CT_BRACE_CLOSE, start->GetLevel());
       return(pc->GetNextNcNnl());
    }
    char copy[1000];
@@ -114,14 +114,14 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    bool  fp_active = options::align_mix_var_proto();
    Chunk *pc       = start->GetNext();
    LOG_FMT(LAVDB, "%s(%d): start->Text() is '%s', level is %zu, brace level is %zu\n",
-           __func__, __LINE__, start->IsNewline() ? "Newline" : start->Text(), start->level, start->GetBraceLevel());
+           __func__, __LINE__, start->IsNewline() ? "Newline" : start->Text(), start->GetLevel(), start->GetBraceLevel());
 
    while (pc->IsNotNullChunk())
    {
       LOG_CHUNK(LAVDB, pc);
 
-      if (  pc->level < start->level
-         && pc->level != 0
+      if (  pc->GetLevel() < start->GetLevel()
+         && pc->GetLevel() != 0
          && !pc->IsPreproc())
       {
          LOG_FMT(LAVDB, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s, PRE is %s\n",
@@ -140,7 +140,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          }
          pc = pc->GetNext();
          LOG_FMT(LAVDB, "%s(%d): pc->Text() is '%s', level is %zu, brace level is %zu\n",
-                 __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->level, pc->GetBraceLevel());
+                 __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->GetLevel(), pc->GetBraceLevel());
          continue;
       }
 
@@ -155,7 +155,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
                && options::align_single_line_func()))
          {
             LOG_FMT(LAVDB, "%s(%d): add = '%s', orig line is %zu, orig col is %zu, level is %zu\n",
-                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->level);
+                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
 
             Chunk *toadd;
 
@@ -213,7 +213,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       {
          pc = pc->GetNext();
          LOG_FMT(LAVDB, "%s(%d): pc->Text() is '%s', level is %zu, brace level is %zu\n",
-                 __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->level, pc->GetBraceLevel());
+                 __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->GetLevel(), pc->GetBraceLevel());
          break;
       }
 
@@ -232,7 +232,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          }
       }
       LOG_FMT(LAVDB, "%s(%d): pc->Text() is '%s', level is %zu, brace level is %zu\n",
-              __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->level, pc->GetBraceLevel());
+              __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->GetLevel(), pc->GetBraceLevel());
 
       if (!pc->IsNewline())
       {
@@ -247,11 +247,11 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       }
 
       // don't align stuff inside parenthesis/squares/angles
-      if (pc->level > pc->GetBraceLevel())
+      if (pc->GetLevel() > pc->GetBraceLevel())
       {
          pc = pc->GetNext();
          LOG_FMT(LAVDB, "%s(%d): pc->Text() is '%s', level is %zu, brace level is %zu\n",
-                 __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->level, pc->GetBraceLevel());
+                 __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->GetLevel(), pc->GetBraceLevel());
          continue;
       }
 
@@ -261,14 +261,14 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          && pc->IsNot(CT_FUNC_CLASS_PROTO)
          && ((pc->GetFlags() & align_mask) == PCF_VAR_1ST)
          && pc->IsNot(CT_FUNC_DEF)                                   // Issue 1452
-         && (  (pc->level == (start->level + 1))
-            || pc->level == 0)
+         && (  (pc->GetLevel() == (start->GetLevel() + 1))
+            || pc->GetLevel() == 0)
          && pc->GetPrev()->IsNot(CT_MEMBER))
       {
          LOG_FMT(LAVDB, "%s(%d): a-did_this_line is %s\n",
                  __func__, __LINE__, did_this_line ? "TRUE" : "FALSE");
          LOG_FMT(LAVDB, "%s(%d): Text() is '%s', orig line is %zu, orig col is %zu, level is %zu\n",
-                 __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->level);
+                 __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
 
          if (!did_this_line)
          {
@@ -287,7 +287,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
                }
                pc = prev_local->GetNext();
                LOG_FMT(LAVDB, "%s(%d): pc->Text() is '%s', level is %zu, brace level is %zu\n",
-                       __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->level, pc->GetBraceLevel());
+                       __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->GetLevel(), pc->GetBraceLevel());
             }
             // we must look after the previous token
             Chunk *prev_local = pc->GetPrev();
@@ -295,7 +295,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
             if (prev_local->IsNot(CT_DEREF))                    // Issue #2971
             {
                LOG_FMT(LAVDB, "%s(%d): add = '%s', orig line is %zu, orig col is %zu, level is %zu\n",
-                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->level);
+                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
 
                as.Add(step_back_over_member(pc));
             }
@@ -305,7 +305,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
             {
                next = pc->GetNextNc();
                LOG_FMT(LAVDB, "%s(%d): pc->Text() is '%s', level is %zu, brace level is %zu\n",
-                       __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->level, pc->GetBraceLevel());
+                       __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->GetLevel(), pc->GetBraceLevel());
 
                if (next->Is(CT_BIT_COLON))
                {
@@ -351,7 +351,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       }
       pc = pc->GetNext();
       LOG_FMT(LAVDB, "%s(%d): pc->Text() is '%s', level is %zu, brace level is %zu\n",
-              __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->level, pc->GetBraceLevel());
+              __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->GetLevel(), pc->GetBraceLevel());
    }
    as.End();
    as_bc.End();
