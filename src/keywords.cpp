@@ -214,6 +214,7 @@ static chunk_tag_t keywords[] =
    { "endscript",                       CT_PP_ENDINPUT,      LANG_PAWN | FLAG_PP                                                         },
    { "enum",                            CT_ENUM,             LANG_ALL                                                                    },
    { "error",                           CT_PP_ERROR,         LANG_PAWN | FLAG_PP                                                         },
+   { "errordomain",                     CT_ENUM,             LANG_VALA                                                                   },
    { "event",                           CT_TYPE,             LANG_CS                                                                     },
    { "exit",                            CT_FUNCTION,         LANG_PAWN                                                                   },
    { "explicit",                        CT_QUALIFIER,        LANG_CPP | LANG_CS                                                          },
