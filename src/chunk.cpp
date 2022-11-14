@@ -26,60 +26,62 @@ Chunk *const Chunk::NullChunkPtr(&Chunk::NullChunk);
 
 void Chunk::CopyFrom(const Chunk &o)
 {
-   m_next          = Chunk::NullChunkPtr;
-   m_prev          = Chunk::NullChunkPtr;
-   m_parent        = Chunk::NullChunkPtr;
-   m_alignmentData = o.m_alignmentData;
-   m_indentData    = o.m_indentData;
-   m_type          = o.m_type;
-   m_parentType    = o.m_parentType;
-
+   m_type         = o.m_type;
+   m_parentType   = o.m_parentType;
    m_origLine     = o.m_origLine;
    m_origCol      = o.m_origCol;
    m_origColEnd   = o.m_origColEnd;
    m_origPrevSp   = o.m_origPrevSp;
-   m_flags        = o.m_flags;
    m_column       = o.m_column;
    m_columnIndent = o.m_columnIndent;
+   m_nlCount      = o.m_nlCount;
+   m_nlColumn     = o.m_nlColumn;
+   m_level        = o.m_level;
+   m_braceLevel   = o.m_braceLevel;
+   m_ppLevel      = o.m_ppLevel;
+   m_afterTab     = o.m_afterTab;
 
-   m_nlCount  = o.m_nlCount;
-   m_nlColumn = o.m_nlColumn;
-   m_level    = o.m_level;
+   m_flags         = o.m_flags;
+   m_alignmentData = o.m_alignmentData;
+   m_indentData    = o.m_indentData;
 
-   m_braceLevel = o.m_braceLevel;
-   m_ppLevel    = o.m_ppLevel;
-   m_afterTab   = o.m_afterTab;
-   str          = o.str;
+   m_next   = Chunk::NullChunkPtr;
+   m_prev   = Chunk::NullChunkPtr;
+   m_parent = Chunk::NullChunkPtr;
 
+   str      = o.str;
    tracking = o.tracking;
 }
 
 
 void Chunk::Reset()
 {
-   memset(&m_alignmentData, 0, sizeof(m_alignmentData));
-   memset(&m_indentData, 0, sizeof(m_indentData));
-   m_next         = Chunk::NullChunkPtr;
-   m_prev         = Chunk::NullChunkPtr;
-   m_parent       = Chunk::NullChunkPtr;
    m_type         = CT_NONE;
    m_parentType   = CT_NONE;
    m_origLine     = 0;
    m_origCol      = 0;
    m_origColEnd   = 0;
    m_origPrevSp   = 0;
-   m_flags        = PCF_NONE;
    m_column       = 0;
    m_columnIndent = 0;
    m_nlCount      = 0;
    m_nlColumn     = 0;
    m_level        = 0;
    m_braceLevel   = 0;
-   m_ppLevel      = 999;                                // use a big value to find some errors
+   m_ppLevel      = 999;            // use a big value to find some errors
    m_afterTab     = false;
+
+   m_flags = PCF_NONE;
+   memset(&m_alignmentData, 0, sizeof(m_alignmentData));
+   memset(&m_indentData, 0, sizeof(m_indentData));
+
+   m_next   = Chunk::NullChunkPtr;
+   m_prev   = Chunk::NullChunkPtr;
+   m_parent = Chunk::NullChunkPtr;
+
    // for debugging purpose only
-   tracking = nullptr;
    str.clear();
+   tracking = nullptr;
 }
 
 
