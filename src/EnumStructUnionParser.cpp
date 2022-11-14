@@ -564,7 +564,7 @@ static std::pair<Chunk *, Chunk *> match_variable_end(Chunk *pc, std::size_t lev
        */
       while (  pc != nullptr
             && pc->IsNotNullChunk()
-            && pc->level > level)
+            && pc->GetLevel() > level)
       {
          pc = pc->GetNextNcNnl();
       }
@@ -676,7 +676,7 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
        */
 
       while (  pc->IsNotNullChunk()
-            && pc->level > level)
+            && pc->GetLevel() > level)
       {
          pc = pc->GetPrevNcNnlNi();
       }
@@ -962,7 +962,7 @@ void EnumStructUnionParser::analyze_identifiers()
 
    while (chunk_is_between(pc, m_start, m_end, false))
    {
-      auto match       = match_variable(pc, m_start->level);
+      auto match       = match_variable(pc, m_start->GetLevel());
       auto *start      = std::get<0>(match);
       auto *identifier = std::get<1>(match);
       auto *end        = std::get<2>(match);
@@ -1148,7 +1148,7 @@ Chunk *EnumStructUnionParser::get_inheritance_end() const
 
       if (brace_open == nullptr)
       {
-         brace_open = inheritance_start->GetNextType(CT_BRACE_OPEN, m_start->level, E_Scope::ALL);
+         brace_open = inheritance_start->GetNextType(CT_BRACE_OPEN, m_start->GetLevel(), E_Scope::ALL);
       }
    }
    return(brace_open);
@@ -1238,7 +1238,7 @@ Chunk *EnumStructUnionParser::get_where_end() const
 
       if (brace_open == nullptr)
       {
-         brace_open = where_start->GetNextType(CT_BRACE_OPEN, m_start->level, E_Scope::ALL);
+         brace_open = where_start->GetNextType(CT_BRACE_OPEN, m_start->GetLevel(), E_Scope::ALL);
       }
    }
    return(brace_open);
@@ -1300,7 +1300,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
       || parse_error_detected()
       || (  (  pc->IsSemicolon()
             || pc->Is(CT_BRACE_CLOSE))
-         && pc->level == m_start->level))
+         && pc->GetLevel() == m_start->GetLevel()))
    {
       LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
@@ -1324,7 +1324,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
     * end of a cast terminated by a closing paren
     */
    if (  (  pc->IsParenClose() // Issue #3538
-         && pc->level < m_start->level)
+         && pc->GetLevel() < m_start->GetLevel())
       || (start_in_funcdef ^ pc_in_funcdef).test_any()
       || (start_in_preproc ^ pc_in_preproc).test_any())
    {
@@ -1360,13 +1360,13 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
    if (  (  pc_in_funccall.test_any()
          && start_in_funccall.test_any()
          && pc->Is(CT_COMMA)
-         && pc->level == m_start->level)
+         && pc->GetLevel() == m_start->GetLevel())
       || (  pc_in_funcdef.test_any()
          && (  (  pc->Is(CT_FPAREN_CLOSE)
-               && pc->level < m_start->level)
+               && pc->GetLevel() < m_start->GetLevel())
             || (  (  pc->Is(CT_ASSIGN)
                   || pc->Is(CT_COMMA))
-               && pc->level == m_start->level))))
+               && pc->GetLevel() == m_start->GetLevel()))))
    {
       LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
@@ -1492,7 +1492,7 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
       else if (  (  next->Is(CT_BRACE_OPEN)
                  || (  next->Is(CT_COMMA)
                     && !is_within_where_clause(next)))
-              && next->level == m_start->level)
+              && next->GetLevel() == m_start->GetLevel())
       {
          /**
           * just in case it's a templated type
@@ -1650,7 +1650,7 @@ void EnumStructUnionParser::mark_constructors()
           */
          if (  prev->IsNotNullChunk()
             && std::strcmp(prev->Text(), name) == 0
-            && prev->level == level
+            && prev->GetLevel() == level
             && next->IsParenOpen())
          {
             prev->SetType(CT_FUNC_CLASS_DEF);
@@ -2123,7 +2123,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
       {
          next = next->GetNextNcNnl();
       } while (  next->IsNotNullChunk()
-              && next->level > m_start->level);
+              && next->GetLevel() > m_start->GetLevel());
    }
    /**
     * identify the type and/or variable(s)
@@ -2137,7 +2137,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
 
    if (  prev->IsNotNullChunk()
       && prev->IsSemicolon()
-      && prev->level == m_start->level
+      && prev->GetLevel() == m_start->GetLevel()
       && !prev->TestFlags(PCF_IN_FOR))
    {
       prev->SetParentType(m_start->GetType());
@@ -2434,7 +2434,7 @@ void EnumStructUnionParser::record_question_operator(Chunk *question)
 void EnumStructUnionParser::record_top_level_comma(Chunk *comma)
 {
    if (  comma != nullptr
-      && comma->level == m_start->level
+      && comma->GetLevel() == m_start->GetLevel()
       && !is_within_conditional(comma)
       && !is_within_inheritance_list(comma))
    {
@@ -2482,7 +2482,7 @@ Chunk *EnumStructUnionParser::refine_end_chunk(Chunk *pc)
             {
                next = next->GetNextNcNnl();
             }
-            auto match       = match_variable(next, m_start->level);
+            auto match       = match_variable(next, m_start->GetLevel());
             auto *start      = std::get<0>(match);
             auto *identifier = std::get<1>(match);
             auto *end        = std::get<2>(match);
@@ -2649,7 +2649,7 @@ Chunk *EnumStructUnionParser::try_find_end_chunk(Chunk *pc)
                  __unqualified_func__, __LINE__,
                  pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
       } while (  pc->IsNotNullChunk()
-              && pc->level > m_start->level);
+              && pc->GetLevel() > m_start->GetLevel());
 
       if (pc->IsNullChunk())
       {
@@ -2701,7 +2701,7 @@ void EnumStructUnionParser::try_post_identify_macro_calls()
                || prev->Is(CT_FUNCTION)
                || prev->Is(CT_FUNC_DEF))
             && !prev->GetFlags().test_any(PCF_VAR_DEF | PCF_VAR_1ST | PCF_VAR_INLINE)
-            && prev->level == m_start->level)
+            && prev->GetLevel() == m_start->GetLevel())
          {
             if (pc->IsParenOpen())
             {
@@ -2877,7 +2877,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
          while (  chunk_is_between(next, m_start, m_end)
                && (  (  next->IsNot(CT_ASSIGN)
                      && next->IsNot(CT_COMMA))
-                  || next->level != m_start->level)
+                  || next->GetLevel() != m_start->GetLevel())
                && !next->IsSemicolon())
          {
             prev = next;

@@ -15,9 +15,9 @@ using namespace uncrustify;
 Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
 {
    LOG_FMT(LMCB, "%s(%d): cl_colon->Text() is '%s', orig line %zu, orig col is %zu, level is %zu\n",
-           __func__, __LINE__, cl_colon->Text(), cl_colon->GetOrigLine(), cl_colon->GetOrigCol(), cl_colon->level);
+           __func__, __LINE__, cl_colon->Text(), cl_colon->GetOrigLine(), cl_colon->GetOrigCol(), cl_colon->GetLevel());
    LOG_FMT(LMCB, "%s(%d): pc->Text()       is '%s', orig line %zu, orig col is %zu, level is %zu\n",
-           __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->level);
+           __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
    // end of block is reached
    // look back over newline, preprocessor BUT NOT #endif
 
@@ -30,11 +30,11 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
 
    if (pc->Is(CT_BRACE_CLOSE))
    {
-      check_level = pc->level + 1;
+      check_level = pc->GetLevel() + 1;
    }
    else
    {
-      check_level = pc->level;
+      check_level = pc->GetLevel();
    }
    size_t erst_found      = 0;
    Chunk  *is_brace_close = Chunk::NullChunkPtr;
@@ -54,14 +54,14 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
          break;
       }
 
-      if (back->level == check_level)
+      if (back->GetLevel() == check_level)
       {
          if (back->IsBraceClose())
          {
             // brace_close found
             is_brace_close = back;
             LOG_FMT(LMCB, "%s(%d): BRACE_CLOSE: line is %zu, col is %zu, level is %zu\n",
-                    __func__, __LINE__, is_brace_close->GetOrigLine(), is_brace_close->GetOrigCol(), is_brace_close->level);
+                    __func__, __LINE__, is_brace_close->GetOrigLine(), is_brace_close->GetOrigCol(), is_brace_close->GetLevel());
             erst_found = 3;
          }
 
@@ -70,7 +70,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
             // semicolon found
             is_semicolon = back;
             LOG_FMT(LMCB, "%s(%d): SEMICOLON:   line is %zu, col is %zu, level is %zu\n",
-                    __func__, __LINE__, is_semicolon->GetOrigLine(), is_semicolon->GetOrigCol(), is_semicolon->level);
+                    __func__, __LINE__, is_semicolon->GetOrigLine(), is_semicolon->GetOrigCol(), is_semicolon->GetLevel());
             erst_found = 4;
          }
 
@@ -79,7 +79,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
             // comment found
             is_comment = back;
             LOG_FMT(LMCB, "%s(%d): COMMENT:     line is %zu, col is %zu, level is %zu\n",
-                    __func__, __LINE__, back->GetOrigLine(), back->GetOrigCol(), back->level);
+                    __func__, __LINE__, back->GetOrigLine(), back->GetOrigCol(), back->GetLevel());
          }
       }
       back = back->GetPrev();

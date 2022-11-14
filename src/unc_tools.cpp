@@ -336,9 +336,9 @@ void dump_out(unsigned int type)
             fprintf(D_file, "  nl_count %zu\n", pc->GetNlCount());
          }
 
-         if (pc->level != 0)
+         if (pc->GetLevel() != 0)
          {
-            fprintf(D_file, "  level %zu\n", pc->level);
+            fprintf(D_file, "  level %zu\n", pc->GetLevel());
          }
 
          if (pc->GetBraceLevel() != 0)

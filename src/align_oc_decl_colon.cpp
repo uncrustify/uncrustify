@@ -40,13 +40,13 @@ void align_oc_decl_colon()
       nas.Reset();
       cas.Reset();
 
-      size_t level = pc->level;
+      size_t level = pc->GetLevel();
       pc = pc->GetNextNcNnl(E_Scope::PREPROC);
 
       did_line = false;
 
       while (  pc->IsNotNullChunk()
-            && pc->level >= level)
+            && pc->GetLevel() >= level)
       {
          // The declaration ends with an open brace or semicolon
          if (  pc->Is(CT_BRACE_OPEN)

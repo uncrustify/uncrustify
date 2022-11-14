@@ -25,7 +25,7 @@ Chunk *align_func_param(Chunk *start)
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Candidate is '%s': orig line is %zu, column is %zu, type is %s, level is %zu\n",
            __func__, __LINE__, start->Text(), start->GetOrigLine(), start->GetColumn(),
-           get_token_name(start->GetType()), start->level);
+           get_token_name(start->GetType()), start->GetLevel());
    // Defaults, if the align_func_params = true
    size_t myspan   = 2;
    size_t mythresh = 0;
@@ -74,7 +74,7 @@ Chunk *align_func_param(Chunk *start)
 
          if (after->Is(CT_PAREN_CLOSE))
          {
-            Chunk *before = after->GetPrevType(CT_PAREN_OPEN, after->level);
+            Chunk *before = after->GetPrevType(CT_PAREN_OPEN, after->GetLevel());
 
             if (before->IsNotNullChunk())
             {
@@ -82,12 +82,12 @@ Chunk *align_func_param(Chunk *start)
                // change the types and the level
                before->SetType(CT_PPAREN_OPEN);
                after->SetType(CT_PPAREN_CLOSE);
-               pc->level = before->level;
+               pc->SetLevel(before->GetLevel());
                Chunk *tmp = pc->GetPrevNc();
 
                if (tmp->Is(CT_PTR_TYPE))
                {
-                  tmp->level = before->level;
+                  tmp->SetLevel(before->GetLevel());
                }
             }
          }
@@ -97,9 +97,9 @@ Chunk *align_func_param(Chunk *start)
       {
          comma_count = 0;
          chunk_count = 0;
-         many_as[pc->level].NewLines(pc->GetNlCount());
+         many_as[pc->GetLevel()].NewLines(pc->GetNlCount());
       }
-      else if (pc->level <= start->level)
+      else if (pc->GetLevel() <= start->GetLevel())
       {
          break;
       }
@@ -107,7 +107,7 @@ Chunk *align_func_param(Chunk *start)
       {
          if (chunk_count > 1)
          {
-            if (pc->level > HOW_MANY_AS)
+            if (pc->GetLevel() > HOW_MANY_AS)
             {
                fprintf(stderr, "%s(%d): Not enough memory for Stack\n",
                        __func__, __LINE__);
@@ -116,8 +116,8 @@ Chunk *align_func_param(Chunk *start)
                log_flush(true);
                exit(EX_SOFTWARE);
             }
-            max_level_is = max(max_level_is, pc->level);
-            many_as[pc->level].Add(pc);
+            max_level_is = max(max_level_is, pc->GetLevel());
+            many_as[pc->GetLevel()].Add(pc);
          }
       }
       else if (comma_count > 0)

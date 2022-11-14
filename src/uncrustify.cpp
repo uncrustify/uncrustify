@@ -1736,7 +1736,7 @@ static void add_func_header(E_Token type, file_mem &fm)
             ref = ref->GetNext();
 
             if (  ref->Is(CT_SEMICOLON)
-               && ref->level == pc->level)
+               && ref->GetLevel() == pc->GetLevel())
             {
                continue;
             }
@@ -1778,7 +1778,7 @@ static void add_func_header(E_Token type, file_mem &fm)
             && ref->IsNotNullChunk())
       {
          // Bail if we change level or find an access specifier colon
-         if (  ref->level != pc->level
+         if (  ref->GetLevel() != pc->GetLevel()
             || ref->Is(CT_ACCESS_COLON))
          {
             do_insert = true;
@@ -1788,14 +1788,14 @@ static void add_func_header(E_Token type, file_mem &fm)
          // If we hit an angle close, back up to the angle open
          if (ref->Is(CT_ANGLE_CLOSE))
          {
-            ref = ref->GetPrevType(CT_ANGLE_OPEN, ref->level, E_Scope::PREPROC);
+            ref = ref->GetPrevType(CT_ANGLE_OPEN, ref->GetLevel(), E_Scope::PREPROC);
             continue;
          }
 
          // Bail if we hit a preprocessor and cmt_insert_before_preproc is false
          if (ref->TestFlags(PCF_IN_PREPROC))
          {
-            tmp = ref->GetPrevType(CT_PREPROC, ref->level);
+            tmp = ref->GetPrevType(CT_PREPROC, ref->GetLevel());
 
             if (  tmp->IsNotNullChunk()
                && tmp->GetParentType() == CT_PP_IF)
@@ -1819,7 +1819,7 @@ static void add_func_header(E_Token type, file_mem &fm)
             break;
          }
 
-         if (  ref->level == pc->level
+         if (  ref->GetLevel() == pc->GetLevel()
             && (  ref->TestFlags(PCF_IN_PREPROC)
                || ref->Is(CT_SEMICOLON)
                || ref->Is(CT_BRACE_CLOSE)))
@@ -1848,7 +1848,7 @@ static void add_func_header(E_Token type, file_mem &fm)
 
          for (tmp = ref->GetNext(); tmp != after; tmp = tmp->GetNext())
          {
-            tmp->level = after->level;
+            tmp->SetLevel(after->GetLevel());
          }
       }
    }
@@ -1879,7 +1879,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
       while ((ref = ref->GetPrev())->IsNotNullChunk())
       {
          // ignore the CT_TYPE token that is the result type
-         if (  ref->level != pc->level
+         if (  ref->GetLevel() != pc->GetLevel()
             && (  ref->Is(CT_TYPE)
                || ref->Is(CT_PTR_TYPE)))
          {
@@ -1889,14 +1889,14 @@ static void add_msg_header(E_Token type, file_mem &fm)
          // If we hit a parentheses around return type, back up to the open parentheses
          if (ref->Is(CT_PAREN_CLOSE))
          {
-            ref = ref->GetPrevType(CT_PAREN_OPEN, ref->level, E_Scope::PREPROC);
+            ref = ref->GetPrevType(CT_PAREN_OPEN, ref->GetLevel(), E_Scope::PREPROC);
             continue;
          }
 
          // Bail if we hit a preprocessor and cmt_insert_before_preproc is false
          if (ref->TestFlags(PCF_IN_PREPROC))
          {
-            tmp = ref->GetPrevType(CT_PREPROC, ref->level);
+            tmp = ref->GetPrevType(CT_PREPROC, ref->GetLevel());
 
             if (  tmp->IsNotNullChunk()
                && tmp->GetParentType() == CT_PP_IF)
@@ -1913,7 +1913,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
             }
          }
 
-         if (  ref->level == pc->level
+         if (  ref->GetLevel() == pc->GetLevel()
             && (  ref->TestFlags(PCF_IN_PREPROC)
                || ref->Is(CT_OC_SCOPE)))
          {
@@ -1941,7 +1941,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
 
          for (tmp = ref->GetNext(); tmp != after; tmp = tmp->GetNext())
          {
-            tmp->level = after->level;
+            tmp->SetLevel(after->GetLevel());
          }
       }
    }

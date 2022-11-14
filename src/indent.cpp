@@ -337,7 +337,7 @@ void reindent_line(Chunk *pc, size_t column)
          if (pc->TestFlags(PCF_IN_QT_MACRO))
          {
             LOG_FMT(LINDLINE, "FLAGS is set: PCF_IN_QT_MACRO\n");
-            save_set_options_for_QT(pc->level);
+            save_set_options_for_QT(pc->GetLevel());
          }
       }
       Chunk *next = pc->GetNext();
@@ -432,7 +432,7 @@ static size_t token_indent(E_Token type)
 static size_t get_indent_first_continue(Chunk *pc)
 {
    log_rule_B("indent_ignore_first_continue");
-   Chunk *continuation = pc->GetNextType(CT_NEWLINE, pc->level);
+   Chunk *continuation = pc->GetNextType(CT_NEWLINE, pc->GetLevel());
 
    if (continuation->IsNotNullChunk())
    {
@@ -950,7 +950,7 @@ void indent_text()
                      else if (  tmp->Is(CT_FUNC_CALL)
                              || tmp->Is(CT_FPAREN_OPEN))
                      {
-                        tmp = tmp->GetNextType(CT_FPAREN_CLOSE, tmp->level);
+                        tmp = tmp->GetNextType(CT_FPAREN_CLOSE, tmp->GetLevel());
 
                         if (tmp->IsNotNullChunk())
                         {
@@ -1108,14 +1108,14 @@ void indent_text()
 
          // End anything that drops a level
          if (  !pc->IsCommentOrNewline()
-            && frm.top().level > pc->level)
+            && frm.top().level > pc->GetLevel())
          {
             LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
             frm.pop(__func__, __LINE__, pc);
          }
 
-         if (frm.top().level >= pc->level)
+         if (frm.top().level >= pc->GetLevel())
          {
             // process virtual braces closes (no text output)
             if (  pc->Is(CT_VBRACE_CLOSE)
@@ -1233,7 +1233,7 @@ void indent_text()
             if (  language_is_set(LANG_OC)
                && pc->Is(CT_SQUARE_CLOSE)
                && pc->GetParentType() == CT_OC_AT
-               && frm.top().level >= pc->level)
+               && frm.top().level >= pc->GetLevel())
             {
                size_t count = 1;
                Chunk  *next = pc->GetNextNc();
@@ -1394,7 +1394,7 @@ void indent_text()
             // Pop OC msg selector stack
             if (  options::indent_oc_inside_msg_sel()
                && (frm.top().type != CT_SQUARE_OPEN)
-               && frm.top().level >= pc->level
+               && frm.top().level >= pc->GetLevel()
                && (  pc->Is(CT_OC_MSG_FUNC)
                   || pc->Is(CT_OC_MSG_NAME))) // Issue #2658
             {
@@ -1517,7 +1517,7 @@ void indent_text()
          if (language_is_set(LANG_OC))
          {
             if (  frm.top().type == CT_BRACE_OPEN
-               && frm.top().level >= pc->level)
+               && frm.top().level >= pc->GetLevel())
             {
                size_t count = 1;
                Chunk  *next = pc->GetNextNc();
@@ -1676,11 +1676,11 @@ void indent_text()
                      && target->IsNotNullChunk())
                {
                   if (  target->IsSemicolon()
-                     && target->level == match->level)
+                     && target->GetLevel() == match->GetLevel())
                   {
                      tail = target;
                   }
-                  else if (target->level < match->level)
+                  else if (target->GetLevel() < match->GetLevel())
                   {
                      break;
                   }
@@ -1700,7 +1700,7 @@ void indent_text()
                   continue;
                }
 
-               if (it->pc->level < tail->level)
+               if (it->pc->GetLevel() < tail->GetLevel())
                {
                   toplevel = false;
                   break;
@@ -1833,8 +1833,8 @@ void indent_text()
          {
             log_rule_B("indent_paren_open_brace");
             // Issue #1165
-            LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, brace level is %zu, for '%s', pc->level is %zu, pc(-1)->level is %zu\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->GetBraceLevel(), pc->Text(), pc->level, frm.prev().pc->level);
+            LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, brace level is %zu, for '%s', pc->GetLevel() is %zu, pc(-1)->GetLevel() is %zu\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetBraceLevel(), pc->Text(), pc->GetLevel(), frm.prev().pc->GetLevel());
             frm.top().brace_indent = 1 + ((pc->GetBraceLevel() + 1) * indent_size);
             indent_column_set(frm.top().brace_indent);
             frm.top().indent = frm.prev().indent_tmp;
@@ -1850,8 +1850,8 @@ void indent_text()
                  && pc->GetNextNc()->IsNewline())
          {
             log_rule_B("indent_paren_open_brace");
-            LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, brace level is %zu, for '%s', pc->level is %zu, pc(-1)->level is %zu\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->GetBraceLevel(), pc->Text(), pc->level, frm.prev().pc->level);
+            LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, brace level is %zu, for '%s', pc->GetLevel() is %zu, pc(-1)->GetLevel() is %zu\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetBraceLevel(), pc->Text(), pc->GetLevel(), frm.prev().pc->GetLevel());
             // FIXME: I don't know how much of this is necessary, but it seems to work
             frm.top().brace_indent = 1 + (pc->GetBraceLevel() * indent_size);
             indent_column_set(frm.top().brace_indent);
@@ -2892,7 +2892,7 @@ void indent_text()
             }
             log_indent();
 
-            if (  pc->level == pc->GetBraceLevel()
+            if (  pc->GetLevel() == pc->GetBraceLevel()
                && !options::indent_ignore_first_continue()
                && (  pc->Is(CT_FPAREN_OPEN)
                   || pc->Is(CT_SPAREN_OPEN)
@@ -2998,7 +2998,7 @@ void indent_text()
          {
             if (tmp->Is(CT_FUNC_CALL))
             {
-               tmp = tmp->GetNextType(CT_FPAREN_CLOSE, tmp->level);
+               tmp = tmp->GetNextType(CT_FPAREN_CLOSE, tmp->GetLevel());
                tmp = tmp->GetNextNcNnlNpp();
             }
             else if (  tmp->Is(CT_WORD)
@@ -3100,7 +3100,7 @@ void indent_text()
                frm.top().indent = frm.prev().indent;
                log_indent();
 
-               if (  pc->level == pc->GetBraceLevel()
+               if (  pc->GetLevel() == pc->GetBraceLevel()
                   && (  pc->IsNot(CT_ASSIGN)
                      || (  pc->GetParentType() != CT_FUNC_PROTO
                         && pc->GetParentType() != CT_FUNC_DEF)))
@@ -3162,7 +3162,7 @@ void indent_text()
                  && pc->GetParentType() == CT_NONE))
       {
          // don't count returns inside a () or []
-         if (  pc->level == pc->GetBraceLevel()
+         if (  pc->GetLevel() == pc->GetBraceLevel()
             || pc->TestFlags(PCF_IN_LAMBDA))
          {
             Chunk *next = pc->GetNext();
@@ -3372,7 +3372,7 @@ void indent_text()
          && pc->GetParentType() != CT_OPERATOR
          && !pc->IsComment()
          && pc->IsNot(CT_BRACE_OPEN)
-         && pc->level > 0
+         && pc->GetLevel() > 0
          && !pc->IsEmptyText())
       {
          bool in_shift    = false;
@@ -3580,7 +3580,7 @@ void indent_text()
          bool  do_vardefcol = false;
 
          if (  vardefcol > 0
-            && pc->level == pc->GetBraceLevel()
+            && pc->GetLevel() == pc->GetBraceLevel()
             && (  prev->Is(CT_COMMA)
                || prev->Is(CT_TYPE)
                || prev->Is(CT_PTR_TYPE)
@@ -4109,7 +4109,7 @@ void indent_text()
                      && pc->GetTypeOfParent() == CT_SWITCH)
                   {
                      // look for a case before Issue #2735
-                     Chunk *whereIsCase = pc->GetPrevType(CT_CASE, pc->level);
+                     Chunk *whereIsCase = pc->GetPrevType(CT_CASE, pc->GetLevel());
 
                      if (whereIsCase->IsNotNullChunk())
                      {
@@ -4466,7 +4466,7 @@ static void indent_comment(Chunk *pc, size_t col)
    char copy[1000];
 
    LOG_FMT(LCMTIND, "%s(%d): pc->Text() is '%s', orig line %zu, orig col %zu, level %zu\n",
-           __func__, __LINE__, pc->ElidedText(copy), pc->GetOrigLine(), pc->GetOrigCol(), pc->level);
+           __func__, __LINE__, pc->ElidedText(copy), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
 
    // force column 1 comment to column 1 if not changing them
    log_rule_B("indent_col1_comment");
@@ -4484,7 +4484,7 @@ static void indent_comment(Chunk *pc, size_t col)
    if (nl->IsNotNullChunk())
    {
       LOG_FMT(LCMTIND, "%s(%d): nl->Text() is '%s', orig line %zu, orig col %zu, level %zu\n",
-              __func__, __LINE__, nl->Text(), nl->GetOrigLine(), nl->GetOrigCol(), nl->level);
+              __func__, __LINE__, nl->Text(), nl->GetOrigLine(), nl->GetOrigCol(), nl->GetLevel());
    }
 
    if (pc->GetOrigCol() > 1)
@@ -4494,7 +4494,7 @@ static void indent_comment(Chunk *pc, size_t col)
       if (prev->IsNotNullChunk())
       {
          LOG_FMT(LCMTIND, "%s(%d): prev->Text() is '%s', orig line %zu, orig col %zu, level %zu\n",
-                 __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->GetOrigCol(), prev->level);
+                 __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->GetOrigCol(), prev->GetLevel());
          log_pcf_flags(LCMTIND, prev->GetFlags());
       }
 

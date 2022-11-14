@@ -44,7 +44,7 @@ void Chunk::CopyFrom(const Chunk &o)
 
    m_nlCount  = o.m_nlCount;
    m_nlColumn = o.m_nlColumn;
-   level      = o.level;
+   m_level    = o.m_level;
 
    m_braceLevel = o.m_braceLevel;
    m_ppLevel    = o.m_ppLevel;
@@ -73,7 +73,7 @@ void Chunk::Reset()
    m_columnIndent = 0;
    m_nlCount      = 0;
    m_nlColumn     = 0;
-   level          = 0;
+   m_level        = 0;
    m_braceLevel   = 0;
    m_ppLevel      = 999;                                // use a big value to find some errors
    m_afterTab     = false;
@@ -234,7 +234,7 @@ bool Chunk::IsOnSameLine(const Chunk *end) const
 
 
 Chunk *Chunk::SearchTypeLevel(const E_Token type, const E_Scope scope,
-                              const E_Direction dir, const int cLevel) const
+                              const E_Direction dir, const int level) const
 {
    T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
    Chunk         *pc         = const_cast<Chunk *>(this);
@@ -242,14 +242,14 @@ Chunk *Chunk::SearchTypeLevel(const E_Token type, const E_Scope scope,
    do                                                // loop over the chunk list
    {
       pc = (pc->*searchFnPtr)(scope);                // in either direction while
-   } while (  pc->IsNotNullChunk()                  // the end of the list was not reached yet
-           && (!pc->IsTypeAndLevel(type, cLevel))); // and the chunk was not found either
+   } while (  pc->IsNotNullChunk()                 // the end of the list was not reached yet
+           && (!pc->IsTypeAndLevel(type, level))); // and the chunk was not found either
 
-   return(pc);                                      // the latest chunk is the searched one
+   return(pc);                                     // the latest chunk is the searched one
 }
 
 
-Chunk *Chunk::SearchStringLevel(const char *cStr, const size_t len, int cLevel,
+Chunk *Chunk::SearchStringLevel(const char *cStr, const size_t len, int level,
                                 const E_Scope scope, const E_Direction dir) const
 {
    T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
@@ -258,10 +258,10 @@ Chunk *Chunk::SearchStringLevel(const char *cStr, const size_t len, int cLevel,
    do                                                          // loop over the chunk list
    {
       pc = (pc->*searchFnPtr)(scope);                          // in either direction while
-   } while (  pc->IsNotNullChunk()                             // the end of the list was not reached yet
-           && !pc->IsStringAndLevel(cStr, len, true, cLevel)); // and the demanded chunk was not found either
+   } while (  pc->IsNotNullChunk()                            // the end of the list was not reached yet
+           && !pc->IsStringAndLevel(cStr, len, true, level)); // and the demanded chunk was not found either
 
-   return(pc);                                                 // the latest chunk is the searched one
+   return(pc);                                                // the latest chunk is the searched one
 }
 
 
@@ -768,10 +768,10 @@ bool Chunk::IsOCForinOpenParen() const
 
 
 bool Chunk::IsStringAndLevel(const char *cStr, const size_t len,
-                             bool caseSensitive, const int cLevel) const
+                             bool caseSensitive, const int level) const
 {
-   return(  (  cLevel < 0
-            || level == static_cast<size_t>(cLevel))
+   return(  (  level < 0
+            || m_level == static_cast<size_t>(level))
          && Len() == len                                    // the length is as expected
          && (  (  caseSensitive
                && memcmp(Text(), cStr, len) == 0)
@@ -791,7 +791,7 @@ Chunk *Chunk::SkipToMatch(E_Scope scope) const
       || Is(CT_ANGLE_OPEN)
       || Is(CT_SQUARE_OPEN))
    {
-      return(GetNextType((E_Token)(m_type + 1), level, scope));
+      return(GetNextType((E_Token)(m_type + 1), m_level, scope));
    }
    return(const_cast<Chunk *>(this));
 }
@@ -808,7 +808,7 @@ Chunk *Chunk::SkipToMatchRev(E_Scope scope) const
       || Is(CT_ANGLE_CLOSE)
       || Is(CT_SQUARE_CLOSE))
    {
-      return(GetPrevType((E_Token)(m_type - 1), level, scope));
+      return(GetPrevType((E_Token)(m_type - 1), m_level, scope));
    }
    return(const_cast<Chunk *>(this));
 }

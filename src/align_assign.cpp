@@ -28,7 +28,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
       // see https://en.wikipedia.org/wiki/Robustness_principle
       return(nullptr);
    }
-   size_t my_level = first->level;
+   size_t my_level = first->GetLevel();
 
    char   copy[1000];
 

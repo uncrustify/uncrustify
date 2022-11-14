@@ -476,7 +476,7 @@ Chunk *get_d_template_types(ChunkStack &cs, Chunk *open_paren)
    bool  maybe_type = true;
 
    while (  tmp->IsNullChunk()
-         && tmp->level > open_paren->level)
+         && tmp->GetLevel() > open_paren->GetLevel())
    {
       if (  tmp->Is(CT_TYPE)
          || tmp->Is(CT_WORD))
@@ -502,7 +502,7 @@ bool go_on(Chunk *pc, Chunk *start)
 {
    if (  pc == nullptr
       || pc->IsNullChunk()
-      || pc->level != start->level)
+      || pc->GetLevel() != start->GetLevel())
    {
       return(false);
    }

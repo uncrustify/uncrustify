@@ -163,7 +163,7 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
    ContainerType new_entry = {};
 
    new_entry.type      = pc->GetType();
-   new_entry.level     = pc->level;
+   new_entry.level     = pc->GetLevel();
    new_entry.open_line = pc->GetOrigLine();
    new_entry.open_colu = pc->GetOrigCol();
    new_entry.pc        = pc;
@@ -185,13 +185,13 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
    LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d) Add is %4zu: orig line is %4zu, orig col is %4zu, type is %12s, "
            "brace level is %2zu, level is %2zu, pse_tos: %2zu -> %2zu\n",
            func, line, (size_t)this, pc->GetOrigLine(), pc->GetOrigCol(),
-           get_token_name(pc->GetType()), pc->GetBraceLevel(), pc->level,
+           get_token_name(pc->GetType()), pc->GetBraceLevel(), pc->GetLevel(),
            (pse.size() - 2), (pse.size() - 1));
 #else /* DEBUG_PUSH_POP */
    LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d): orig line is %4zu, orig col is %4zu, type is %12s, "
            "brace level is %2zu, level is %2zu, pse_tos: %2zu -> %2zu\n",
            func, line, pc->GetOrigLine(), pc->GetOrigCol(),
-           get_token_name(pc->GetType()), pc->GetBraceLevel(), pc->level,
+           get_token_name(pc->GetType()), pc->GetBraceLevel(), pc->GetLevel(),
            (pse.size() - 2), (pse.size() - 1));
 #endif /* DEBUG_PUSH_POP */
 }

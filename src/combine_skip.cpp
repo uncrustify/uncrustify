@@ -21,7 +21,7 @@ Chunk *skip_align(Chunk *start)
 
       if (pc->Is(CT_PAREN_OPEN))
       {
-         pc = pc->GetNextType(CT_PAREN_CLOSE, pc->level);
+         pc = pc->GetNextType(CT_PAREN_CLOSE, pc->GetLevel());
 
          if (pc->IsNotNullChunk())
          {
@@ -61,18 +61,18 @@ static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(Chunk::*GetNextFn)(E_Sc
 
    if (prev->IsNotNullChunk())
    {
-      std::size_t level         = prev->level;
+      std::size_t level         = prev->GetLevel();
       Chunk       *next         = prev;
       std::size_t template_nest = get_cpp_template_angle_nest_level(prev);
 
       while (  next->IsNotNullChunk()
-            && next->level >= level)
+            && next->GetLevel() >= level)
       {
          /**
           * if we encounter a comma or semicolon at the level of the starting chunk,
           * return the current chunk
           */
-         if (  next->level == level
+         if (  next->GetLevel() == level
             && (  next->Is(CT_COMMA)
                || next->IsSemicolon()))
          {
@@ -130,7 +130,7 @@ Chunk *skip_template_prev(Chunk *ang_close)
 {
    if (ang_close->Is(CT_ANGLE_CLOSE))
    {
-      Chunk *pc = ang_close->GetPrevType(CT_ANGLE_OPEN, ang_close->level);
+      Chunk *pc = ang_close->GetPrevType(CT_ANGLE_OPEN, ang_close->GetLevel());
       return(pc->GetPrevNcNnlNi());   // Issue #2279
    }
    return(ang_close);
@@ -163,7 +163,7 @@ Chunk *skip_attribute(Chunk *attr)
 
       if (pc->Is(CT_FPAREN_OPEN))
       {
-         pc = pc->GetNextType(CT_FPAREN_CLOSE, pc->level);
+         pc = pc->GetNextType(CT_FPAREN_CLOSE, pc->GetLevel());
       }
    }
    return(pc);
@@ -197,7 +197,7 @@ Chunk *skip_attribute_prev(Chunk *fp_close)
       if (  pc->Is(CT_FPAREN_CLOSE)
          && pc->GetParentType() == CT_ATTRIBUTE)
       {
-         pc = pc->GetPrevType(CT_ATTRIBUTE, pc->level);
+         pc = pc->GetPrevType(CT_ATTRIBUTE, pc->GetLevel());
       }
       else if (pc->IsNot(CT_ATTRIBUTE))
       {

@@ -268,6 +268,17 @@ public:
    void SetNlColumn(size_t col);
 
    /**
+    * @brief Returns the level of the chunk
+    */
+   size_t GetLevel() const;
+
+   /**
+    * @brief Sets the level of the chunk
+    * @param col the level of the chunk
+    */
+   void SetLevel(size_t level);
+
+   /**
     * @brief Returns the brace level of the chunk
     */
    size_t GetBraceLevel() const;
@@ -469,16 +480,16 @@ public:
    /**
     * @brief returns the next chunk of the given type at the level.
     * @param type    the type to look for
-    * @param cLevel  the level to match or ANY_LEVEL
+    * @param level  the level to match or ANY_LEVEL
     * @param scope   code region to search in
     * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetNextType(const E_Token type, const int cLevel = ANY_LEVEL, const E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNextType(const E_Token type, const int level = ANY_LEVEL, const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the prev chunk of the given type at the level.
     * @param type    the type to look for
-    * @param cLevel  the level to match or ANY_LEVEL
+    * @param level  the level to match or ANY_LEVEL
     * @param scope   code region to search in
     * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
@@ -488,21 +499,21 @@ public:
     * @brief returns the next chunk that holds a given string at a given level.
     * @param cStr   string to search for
     * @param len    length of string
-    * @param cLevel the level to match or ANY_LEVEL
+    * @param level the level to match or ANY_LEVEL
     * @param scope  code region to search in
     * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetNextString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNextString(const char *cStr, const size_t len, const int level, const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the prev chunk that holds a given string at a given level.
     * @param cStr   string to search for
     * @param len    length of string
-    * @param cLevel the level to match or ANY_LEVEL
+    * @param level the level to match or ANY_LEVEL
     * @param scope  code region to search in
     * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetPrevString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetPrevString(const char *cStr, const size_t len, const int level, const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the next chunk that is not part of balanced square brackets.
@@ -604,10 +615,10 @@ public:
     * @param type   category to search for
     * @param scope  code parts to consider for search
     * @param dir    search direction
-    * @param cLevel nesting level to match or ANY_LEVEL
+    * @param level nesting level to match or ANY_LEVEL
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *SearchTypeLevel(const E_Token type, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const int cLevel = ANY_LEVEL) const;
+   Chunk *SearchTypeLevel(const E_Token type, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const int level = ANY_LEVEL) const;
 
    /**
     * @brief searches a chunk that holds a specific string
@@ -618,12 +629,12 @@ public:
     *
     * @param  cStr   string that searched chunk needs to have
     * @param  len    length of the string
-    * @param  cLevel nesting level of the searched chunk, ignored when negative
+    * @param  level nesting level of the searched chunk, ignored when negative
     * @param  scope  code parts to consider for search
     * @param  dir    search direction
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *SearchStringLevel(const char *cStr, const size_t len, const int cLevel, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD) const;
+   Chunk *SearchStringLevel(const char *cStr, const size_t len, const int level, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD) const;
 
    /**
     * @brief skip to the closing match for the current paren/brace/square.
@@ -758,17 +769,17 @@ public:
     * @param level nesting level to match
     * @return true if the chunk matches a given type and level
     */
-   bool IsTypeAndLevel(const E_Token type, const int cLevel) const;
+   bool IsTypeAndLevel(const E_Token type, const int level) const;
 
    /**
     * @brief checks whether the chunk matches a given string and level
     * @param cStr   the expected string
     * @param len    length of the string
     * @param caseSensitive whether to do a case sensitive or insensitive comparison
-    * @param cLevel nesting level of the searched chunk, ignored when negative
+    * @param level nesting level of the searched chunk, ignored when negative
     * @return true if the chunk matches a given string and level
     */
-   bool IsStringAndLevel(const char *cStr, const size_t len, bool caseSensitive, const int cLevel) const;
+   bool IsStringAndLevel(const char *cStr, const size_t len, bool caseSensitive, const int level) const;
 
    /**
     * @brief checks whether the chunk is a star/asterisk
@@ -985,7 +996,6 @@ public:
 
 
    // --------- Data members
-   size_t   level;                           /** nest level in {, (, or [. Only to help vim command } */
    unc_text str;                             //! the token text
 
    // for debugging purpose only
@@ -1035,6 +1045,7 @@ protected:
                                               //! be less than the real column used to indent with tabs
    size_t       m_nlCount;                    //! number of newlines in CT_NEWLINE
    size_t       m_nlColumn;                   //! column of the subsequent newline entries(all of them should have the same column)
+   size_t       m_level;                      //! nest level in {, (, or [. Only to help vim command }
    size_t       m_braceLevel;                 //! nest level in braces only
    size_t       m_ppLevel;                    //! nest level in preprocessor
    bool         m_afterTab;                   //! whether this token was after a tab
@@ -1277,6 +1288,18 @@ inline void Chunk::SetNlColumn(size_t col)
 }
 
 
+inline size_t Chunk::GetLevel() const
+{
+   return(m_level);
+}
+
+
+inline void Chunk::SetLevel(size_t level)
+{
+   m_level = level;
+}
+
+
 inline size_t Chunk::GetBraceLevel() const
 {
    return(m_braceLevel);
@@ -1415,27 +1438,27 @@ inline Chunk *Chunk::GetNextNisq(const E_Scope scope) const
 }
 
 
-inline Chunk *Chunk::GetNextType(const E_Token type, const int cLevel, const E_Scope scope) const
+inline Chunk *Chunk::GetNextType(const E_Token type, const int level, const E_Scope scope) const
 {
-   return(SearchTypeLevel(type, scope, E_Direction::FORWARD, cLevel));
+   return(SearchTypeLevel(type, scope, E_Direction::FORWARD, level));
 }
 
 
-inline Chunk *Chunk::GetPrevType(const E_Token type, const int cLevel, const E_Scope scope) const
+inline Chunk *Chunk::GetPrevType(const E_Token type, const int level, const E_Scope scope) const
 {
-   return(SearchTypeLevel(type, scope, E_Direction::BACKWARD, cLevel));
+   return(SearchTypeLevel(type, scope, E_Direction::BACKWARD, level));
 }
 
 
-inline Chunk *Chunk::GetNextString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope) const
+inline Chunk *Chunk::GetNextString(const char *cStr, const size_t len, const int level, const E_Scope scope) const
 {
-   return(SearchStringLevel(cStr, len, cLevel, scope, E_Direction::FORWARD));
+   return(SearchStringLevel(cStr, len, level, scope, E_Direction::FORWARD));
 }
 
 
-inline Chunk *Chunk::GetPrevString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope) const
+inline Chunk *Chunk::GetPrevString(const char *cStr, const size_t len, const int level, const E_Scope scope) const
 {
-   return(SearchStringLevel(cStr, len, cLevel, scope, E_Direction::BACKWARD));
+   return(SearchStringLevel(cStr, len, level, scope, E_Direction::BACKWARD));
 }
 
 
@@ -1451,10 +1474,10 @@ inline Chunk *Chunk::GetPrevNvb(const E_Scope scope) const
 }
 
 
-inline bool Chunk::IsTypeAndLevel(const E_Token type, const int cLevel) const
+inline bool Chunk::IsTypeAndLevel(const E_Token type, const int level) const
 {
-   return(  (  cLevel < 0
-            || level == static_cast<size_t>(cLevel))
+   return(  (  level < 0
+            || m_level == static_cast<size_t>(level))
          && m_type == type);
 }
 

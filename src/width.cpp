@@ -314,7 +314,7 @@ static void try_split_here(cw_entry &ent, Chunk *pc)
    bool change = false;
 
    if (  ent.pc == nullptr
-      || pc->level < ent.pc->level)
+      || pc->GetLevel() < ent.pc->GetLevel())
    {
       LOG_FMT(LSPLIT, "%s(%d):\n", __func__, __LINE__);
       change = true;
@@ -387,7 +387,7 @@ static bool split_line(Chunk *start)
     */
    else if (  start->TestFlags(PCF_IN_FCN_DEF)
            || start->GetParentType() == CT_FUNC_PROTO            // Issue #1169
-           || (  (start->level == (start->GetBraceLevel() + 1))
+           || (  (start->GetLevel() == (start->GetBraceLevel() + 1))
               && start->TestFlags(PCF_IN_FCN_CALL)))
    {
       LOG_FMT(LSPLIT, " ** FUNC SPLIT **\n");
@@ -642,7 +642,7 @@ static void split_for_stmt(Chunk *start)
    while ((pc = pc->GetNext()) != start)
    {
       if (  pc->Is(CT_COMMA)
-         && (pc->level == (open_paren->level + 1)))
+         && (pc->GetLevel() == (open_paren->GetLevel() + 1)))
       {
          split_before_chunk(pc->GetNext());
 
@@ -658,7 +658,7 @@ static void split_for_stmt(Chunk *start)
    while ((pc = pc->GetNext()) != start)
    {
       if (  pc->Is(CT_ASSIGN)
-         && (pc->level == (open_paren->level + 1)))
+         && (pc->GetLevel() == (open_paren->GetLevel() + 1)))
       {
          split_before_chunk(pc->GetNext());
 
@@ -685,10 +685,10 @@ static void split_fcn_params_full(Chunk *start)
    while ((fpo = fpo->GetPrev())->IsNotNullChunk())
    {
       LOG_FMT(LSPLIT, "%s(%d): %s, orig col is %zu, level is %zu\n",
-              __func__, __LINE__, fpo->Text(), fpo->GetOrigCol(), fpo->level);
+              __func__, __LINE__, fpo->Text(), fpo->GetOrigCol(), fpo->GetLevel());
 
       if (  fpo->Is(CT_FPAREN_OPEN)
-         && (fpo->level == start->level - 1))
+         && (fpo->GetLevel() == start->GetLevel() - 1))
       {
          break;  // opening parenthesis found. Issue #1020
       }
@@ -698,12 +698,12 @@ static void split_fcn_params_full(Chunk *start)
 
    while (pc->IsNotNullChunk())
    {
-      if (pc->level <= fpo->level)
+      if (pc->GetLevel() <= fpo->GetLevel())
       {
          break;
       }
 
-      if (  (pc->level == (fpo->level + 1))
+      if (  (pc->GetLevel() == (fpo->GetLevel() + 1))
          && pc->Is(CT_COMMA))
       {
          split_before_chunk(pc->GetNext());
@@ -731,7 +731,7 @@ static void split_fcn_params(Chunk *start)
       {
          // do nothing
          LOG_FMT(LSPLIT, "%s(%d): '%s', orig col is %zu, level is %zu\n",
-                 __func__, __LINE__, fpo->Text(), fpo->GetOrigCol(), fpo->level);
+                 __func__, __LINE__, fpo->Text(), fpo->GetOrigCol(), fpo->GetLevel());
       }
    }
    Chunk  *pc     = fpo->GetNextNcNnl();
@@ -798,14 +798,14 @@ static void split_fcn_params(Chunk *start)
    Chunk *prev = pc;
 
    LOG_FMT(LSPLIT, "%s(%d): back up until the prev is a comma, begin is '%s', level is %zu\n",
-           __func__, __LINE__, prev->Text(), prev->level);
+           __func__, __LINE__, prev->Text(), prev->GetLevel());
 
    while ((prev = prev->GetPrev())->IsNotNullChunk())
    {
       LOG_FMT(LSPLIT, "%s(%d): prev->Text() is '%s', orig line is %zu, orig col is %zu\n",
               __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->GetOrigCol());
-      LOG_FMT(LSPLIT, "%s(%d): prev->level is %zu, prev '%s', prev->GetType() is %s\n",
-              __func__, __LINE__, prev->level, prev->Text(), get_token_name(prev->GetType()));
+      LOG_FMT(LSPLIT, "%s(%d): prev->GetLevel() is %zu, prev '%s', prev->GetType() is %s\n",
+              __func__, __LINE__, prev->GetLevel(), prev->Text(), get_token_name(prev->GetType()));
 
       if (  prev->IsNewline()
          || prev->Is(CT_COMMA))

@@ -90,7 +90,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Candidate is '%s': orig line is %zu, column is %zu, type is %s, level is %zu\n",
-           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->GetColumn(), get_token_name(start->GetType()), start->level);
+           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->GetColumn(), get_token_name(start->GetType()), start->GetLevel());
    LOG_FMT(LAS, "AlignStack::%s(%d): seqnum is %zu\n", __func__, __LINE__, seqnum);
 
    // Assign a seqnum if needed
@@ -248,10 +248,10 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
          if (next->IsNotNullChunk())
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): next orig line is %zu, orig col is %zu, Text() '%s', level is %zu, type is %s\n",
-                    __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text(), next->level, get_token_name(next->GetType()));
+                    __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text(), next->GetLevel(), get_token_name(next->GetType()));
             tmp_col += space_col_align(tmp, next);
             LOG_FMT(LAS, "AlignStack::%s(%d): next column is %zu, level is %zu, tmp_col is %zu\n",
-                    __func__, __LINE__, next->GetColumn(), next->level, tmp_col);
+                    __func__, __LINE__, next->GetColumn(), next->GetLevel(), tmp_col);
 
             if (next->GetColumn() != tmp_col)
             {
@@ -316,12 +316,12 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       if (ali->Is(CT_PTR_TYPE))
       {
          LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s][%s]: ali orig line is %zu, column is %zu, type is %s, level is %zu\n",
-                 __func__, __LINE__, ali->Text(), start->Text(), ali->GetOrigLine(), ali->GetColumn(), get_token_name(ali->GetType()), ali->level);
+                 __func__, __LINE__, ali->Text(), start->Text(), ali->GetOrigLine(), ali->GetColumn(), get_token_name(ali->GetType()), ali->GetLevel());
       }
       else
       {
          LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s]: ali orig line is %zu, column is %zu, type is %s, level is %zu\n",
-                 __func__, __LINE__, ali->Text(), ali->GetOrigLine(), ali->GetColumn(), get_token_name(ali->GetType()), ali->level);
+                 __func__, __LINE__, ali->Text(), ali->GetOrigLine(), ali->GetColumn(), get_token_name(ali->GetType()), ali->GetLevel());
       }
       LOG_FMT(LAS, "AlignStack::%s(%d):    ali alignment col_adj is %d, ref '%s', endcol is %zu\n",
               __func__, __LINE__, ali->GetAlignmentData().col_adj, ref->Text(), endcol);
@@ -412,7 +412,7 @@ void AlignStack::Flush()
    {
       // check if we have *one* typedef in the line
       Chunk *pc   = m_aligned.Get(0)->m_pc;
-      Chunk *temp = pc->GetPrevType(CT_TYPEDEF, pc->level);
+      Chunk *temp = pc->GetPrevType(CT_TYPEDEF, pc->GetLevel());
 
       if (temp->IsNotNullChunk())
       {
@@ -632,12 +632,12 @@ void AlignStack::Debug()
          if (pc->Is(CT_PTR_TYPE))
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s][%s]: orig line is %zu, orig col is %zu, type is %s, level is %zu, brace level is %zu\n",
-                    __func__, __LINE__, idx, pc->Text(), pc->GetNext()->Text(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->level, pc->GetBraceLevel());
+                    __func__, __LINE__, idx, pc->Text(), pc->GetNext()->Text(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->GetLevel(), pc->GetBraceLevel());
          }
          else
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s]: orig line is %zu, orig col is %zu, type is %s, level is %zu, brace level is %zu\n",
-                    __func__, __LINE__, idx, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->level, pc->GetBraceLevel());
+                    __func__, __LINE__, idx, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->GetLevel(), pc->GetBraceLevel());
          }
       }
    }

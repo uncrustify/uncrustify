@@ -139,7 +139,7 @@ void align_same_func_call_params()
          LOG_FMT(LASFCP, "%s(%d):align_root is not nullptr\n", __func__, __LINE__);
 
          if (  align_root->GetBraceLevel() == pc->GetBraceLevel()
-            && align_root->level == pc->level
+            && align_root->GetLevel() == pc->GetLevel()
             && align_fcn_name.equals(align_root_name))
          {
             fcn_as.Add(pc);
@@ -255,19 +255,19 @@ void align_params(Chunk *start, deque<Chunk *> &chunks)
    chunks.clear();
 
    bool  hit_comma = true;
-   Chunk *pc       = start->GetNextType(CT_FPAREN_OPEN, start->level);
+   Chunk *pc       = start->GetNextType(CT_FPAREN_OPEN, start->GetLevel());
 
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
       if (  pc->IsNewline()
          || pc->Is(CT_SEMICOLON)
          || (  pc->Is(CT_FPAREN_CLOSE)
-            && pc->level == start->level))
+            && pc->GetLevel() == start->GetLevel()))
       {
          break;
       }
 
-      if (pc->level == (start->level + 1))
+      if (pc->GetLevel() == (start->GetLevel() + 1))
       {
          if (hit_comma)
          {

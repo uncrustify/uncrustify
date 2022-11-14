@@ -24,7 +24,7 @@ void parameter_pack_cleanup()
       // look for template
       if (pc->Is(CT_TEMPLATE))                 // Issue #3309
       {
-         Chunk *template_end = pc->GetNextType(CT_SEMICOLON, pc->level);
+         Chunk *template_end = pc->GetNextType(CT_SEMICOLON, pc->GetLevel());
 
          // look for a parameter pack
          while (pc->IsNotNullChunk())

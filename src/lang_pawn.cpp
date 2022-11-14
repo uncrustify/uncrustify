@@ -129,7 +129,7 @@ static bool pawn_continued(Chunk *pc, size_t br_level)
       return(false);
    }
 
-   if (  pc->level > br_level
+   if (  pc->GetLevel() > br_level
       || pc->Is(CT_ARITH)
       || pc->Is(CT_SHIFT)
       || pc->Is(CT_CARET)
@@ -183,7 +183,7 @@ void pawn_prescan()
       if (  did_nl
          && pc->IsNot(CT_PREPROC)
          && !pc->IsNewline()
-         && pc->level == 0)
+         && pc->GetLevel() == 0)
       {
          // pc now points to the start of a line
          pc = pawn_process_line(pc);
@@ -226,7 +226,7 @@ static Chunk *pawn_process_line(Chunk *start)
          && pc->IsNot(CT_ASSIGN)
          && pc->IsNot(CT_NEWLINE))
    {
-      if (  pc->level == 0
+      if (  pc->GetLevel() == 0
          && (  pc->Is(CT_FUNCTION)
             || pc->Is(CT_WORD)
             || pc->Is(CT_OPERATOR_VAL)))
@@ -251,7 +251,7 @@ static Chunk *pawn_process_line(Chunk *start)
 
    if (start->Is(CT_ENUM))
    {
-      pc = start->GetNextType(CT_BRACE_CLOSE, start->level);
+      pc = start->GetNextType(CT_BRACE_CLOSE, start->GetLevel());
       return(pc);
    }
    //LOG_FMT(LSYS, "%s: Don't understand line %d, starting with '%s' [%s]\n",
@@ -276,7 +276,7 @@ static Chunk *pawn_process_variable(Chunk *start)
    {
       if (  pc->Is(CT_NEWLINE)
          && prev->IsNotNullChunk()
-         && !pawn_continued(prev, start->level))
+         && !pawn_continued(prev, start->GetLevel()))
       {
          if (!prev->IsSemicolon())
          {
@@ -336,7 +336,7 @@ static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
    // handle prototypes
    if (start == fcn)
    {
-      Chunk *last = fcn->GetNextType(CT_PAREN_CLOSE, fcn->level)->GetNext();
+      Chunk *last = fcn->GetNextType(CT_PAREN_CLOSE, fcn->GetLevel())->GetNext();
 
       if (last->Is(CT_SEMICOLON))
       {
@@ -421,7 +421,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
    if (last->Is(CT_BRACE_OPEN))
    {
       last->SetParentType(CT_FUNC_DEF);
-      last = last->GetNextType(CT_BRACE_CLOSE, last->level);
+      last = last->GetNextType(CT_BRACE_CLOSE, last->GetLevel());
 
       if (last->IsNotNullChunk())
       {
@@ -452,10 +452,10 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       do
       {
          LOG_FMT(LPFUNC, "%s:%zu] check %s, level %zu\n",
-                 __func__, prev->GetOrigLine(), get_token_name(prev->GetType()), prev->level);
+                 __func__, prev->GetOrigLine(), get_token_name(prev->GetType()), prev->GetLevel());
 
          if (  prev->Is(CT_NEWLINE)
-            && prev->level == 0)
+            && prev->GetLevel() == 0)
          {
             Chunk *next = prev->GetNextNcNnl();
 
@@ -466,7 +466,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
                break;
             }
          }
-         prev->level++;
+         prev->SetLevel(prev->GetLevel() + 1);
          prev->SetBraceLevel(prev->GetBraceLevel() + 1);
          last = prev;
       } while ((prev = prev->GetNext())->IsNotNullChunk());
@@ -475,14 +475,14 @@ static Chunk *pawn_process_func_def(Chunk *pc)
          && last->IsNotNullChunk())
       {
          LOG_FMT(LPFUNC, "%s:%zu] ended on %s, level %zu\n",
-                 __func__, last->GetOrigLine(), get_token_name(last->GetType()), last->level);
+                 __func__, last->GetOrigLine(), get_token_name(last->GetType()), last->GetLevel());
       }
       chunk = *last;
       chunk.str.clear();
       chunk.SetType(CT_VBRACE_CLOSE);
       chunk.SetParentType(CT_FUNC_DEF);
       chunk.SetColumn(chunk.GetColumn() + last->Len());
-      chunk.level = 0;
+      chunk.SetLevel(0);
       chunk.SetBraceLevel(0);
       last = chunk.CopyAndAddAfter(last);
    }
@@ -502,7 +502,7 @@ Chunk *pawn_check_vsemicolon(Chunk *pc)
     * Don't do anything if:
     *  - the only thing previous is the V-Brace open
     *  - in a preprocessor
-    *  - level > (vb_open->level + 1) -- ie, in () or []
+    *  - level > (vb_open->GetLevel() + 1) -- ie, in () or []
     *  - it is something that needs a continuation
     *    + arith, assign, bool, comma, compare
     */
@@ -511,7 +511,7 @@ Chunk *pawn_check_vsemicolon(Chunk *pc)
    if (  prev->IsNullChunk()
       || prev == vb_open
       || prev->TestFlags(PCF_IN_PREPROC)
-      || pawn_continued(prev, vb_open->level + 1))
+      || pawn_continued(prev, vb_open->GetLevel() + 1))
    {
       if (prev->IsNotNullChunk())
       {

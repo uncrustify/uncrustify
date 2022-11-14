@@ -159,7 +159,7 @@ void combine_labels()
       }
       else if (  next->Is(CT_COLON)
               || (  next->Is(CT_OC_COLON)
-                 && cs_top_is_question(cs, next->level)))
+                 && cs_top_is_question(cs, next->GetLevel())))
       {
          if (cur->Is(CT_DEFAULT))
          {
@@ -167,7 +167,7 @@ void combine_labels()
             hit_case = true;
          }
 
-         if (  cs_top_is_question(cs, next->level)
+         if (  cs_top_is_question(cs, next->GetLevel())
             && !cur->Is(CT_OC_MSG_NAME)
             && next->TestFlags(PCF_IN_CONDITIONAL))             // Issue #3558
          {
@@ -184,7 +184,7 @@ void combine_labels()
             if (tmp->Is(CT_BRACE_OPEN))
             {
                tmp->SetParentType(CT_CASE);
-               tmp = tmp->GetNextType(CT_BRACE_CLOSE, tmp->level);
+               tmp = tmp->GetNextType(CT_BRACE_CLOSE, tmp->GetLevel());
 
                if (tmp->IsNotNullChunk())
                {
@@ -370,7 +370,7 @@ void combine_labels()
                   next->SetType(CT_CLASS_COLON);
                }
             }
-            else if (next->level > next->GetBraceLevel())
+            else if (next->GetLevel() > next->GetBraceLevel())
             {
                // ignore it, as it is inside a paren
             }
@@ -432,7 +432,7 @@ void combine_labels()
                              cpd.filename.c_str(), next->GetOrigLine(), next->GetOrigCol(),
                              get_token_name(next->GetParentType()),
                              get_token_name(cur->GetParentType()),
-                             next->level, next->GetBraceLevel());
+                             next->GetLevel(), next->GetBraceLevel());
                      exit(EX_SOFTWARE);
                   }
                }
