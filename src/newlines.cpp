@@ -782,21 +782,25 @@ Chunk *newline_add_between(Chunk *start, Chunk *end)
                Chunk *pc2 = pc1->GetPrev();
                pc = pc2;
             }
-         }
 
-         if (end == pc)
-         {
-            LOG_FMT(LNEWLINE, "%s(%d): pc1 and pc are identical\n",
-                    __func__, __LINE__);
+            if (end == pc)
+            {
+               LOG_FMT(LNEWLINE, "%s(%d): pc1 and pc are identical\n",
+                       __func__, __LINE__);
+            }
+            else
+            {
+               // Move the open brace to after the newline
+               end->MoveAfter(pc);
+            }
+            LOG_FMT(LNEWLINE, "%s(%d):\n", __func__, __LINE__);
+            newline_add_after(end);
+            return(pc);
          }
-         else
+         else                  // Issue #3873
          {
-            // Move the open brace to after the newline
-            end->MoveAfter(pc);
+            LOG_FMT(LNEWLINE, "%s(%d):\n", __func__, __LINE__);
          }
-         LOG_FMT(LNEWLINE, "%s(%d):\n", __func__, __LINE__);
-         newline_add_after(end);
-         return(pc);
       }
       else
       {
