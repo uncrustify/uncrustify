@@ -1387,10 +1387,11 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
       if (  next->IsNotNullChunk()
          && (  next->Is(CT_COMMA)
+            || next->Is(CT_PAREN_CLOSE)                            // Issue #3691
             || next->Is(CT_FPAREN_CLOSE)
             || next->Is(CT_SEMICOLON)))
       {
-         if (options::sp_before_unnamed_byref() != IARF_IGNORE)
+         if (options::sp_before_unnamed_byref() != IARF_IGNORE)    // Issue #3691
          {
             // Add or remove space before a reference sign '&' that isn't followed by a
             // variable name. If set to 'ignore', sp_before_byref is used instead.
