@@ -1538,12 +1538,15 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
    if (pc->Is(CT_AMP))
    {
+      Chunk *prevNext = prev->GetNext();
+
       if (prev->Is(CT_DELETE))
       {
          pc->SetType(CT_ADDR);
       }
       else if (  prev->Is(CT_TYPE)
-              || prev->Is(CT_QUALIFIER))
+              || prev->Is(CT_QUALIFIER)
+              || prevNext->Is(CT_QUALIFIER))
       {
          pc->SetType(CT_BYREF);
       }
