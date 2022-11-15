@@ -213,6 +213,7 @@
 
 30250  cpp/align_fcall.cfg                                  cpp/align_fcall.cpp
 30251  cpp/align_fcall-2.cfg                                cpp/align_fcall.cpp
+30252  common/empty.cfg                                     cpp/Issue_3691.h
 30253  common/empty.cfg                                     cpp/align_left_shift.cpp
 30254  common/empty.cfg                                     cpp/align_left_shift2.cpp
 30255  cpp/ben_018.cfg                                      cpp/align_constr.cpp
