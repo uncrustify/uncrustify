@@ -1031,11 +1031,8 @@ protected:
 
 
    // --------- Data members
-   Chunk        *m_next;                      //! pointer to next chunk in list
-   Chunk        *m_prev;                      //! pointer to previous chunk in list
-   Chunk        *m_parent;                    //! pointer to parent chunk (not always set)
-   align_ptr_t  m_alignmentData;              //! alignment data of the chunk
-   indent_ptr_t m_indentData;                 //! indentation data of the chunk
+   E_Token      m_type;                       //! type of the chunk itself
+   E_Token      m_parentType;                 //! type of the parent chunk usually CT_NONE
    size_t       m_origLine;                   //! line number of chunk in input file
    size_t       m_origCol;                    //! column where chunk started in the input file, is always > 0
    size_t       m_origColEnd;                 //! column where chunk ended in the input file, is always > 1
@@ -1049,9 +1046,14 @@ protected:
    size_t       m_braceLevel;                 //! nest level in braces only
    size_t       m_ppLevel;                    //! nest level in preprocessor
    bool         m_afterTab;                   //! whether this token was after a tab
-   E_Token      m_type;                       //! type of the chunk itself
-   E_Token      m_parentType;                 //! type of the parent chunk usually CT_NONE
+
    T_PcfFlags   m_flags;                      //! see PCF_xxx
+   align_ptr_t  m_alignmentData;              //! alignment data of the chunk
+   indent_ptr_t m_indentData;                 //! indentation data of the chunk
+
+   Chunk        *m_next;                      //! pointer to next chunk in list
+   Chunk        *m_prev;                      //! pointer to previous chunk in list
+   Chunk        *m_parent;                    //! pointer to parent chunk (not always set)
 
 
 private:
