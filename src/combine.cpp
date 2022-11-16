@@ -1584,7 +1584,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          }
          else if (  pc->TestFlags(PCF_IN_PREPROC) // Issue #3559
                  && pc->Is(CT_AMP)
-                 && next->Is(CT_WORD))
+                 && next->Is(CT_WORD)
+                 && !pc->TestFlags(PCF_IN_SPAREN))
          {
             //LOG_FMT(LGUY, " ++++++++++ pc->GetFlags(): ");
             //log_pcf_flags(LGUY, pc->GetFlags());

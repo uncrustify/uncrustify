@@ -29,3 +29,5 @@ MyThing* MyClass::my_function()
 
 // Shouldn't change
 EXPECT_EQ(static_cast<int>(MyEnumm::Last & MyEnumm::MyValue));
+#define SOME_MACRO(type, sss) if(n & type) { if(!k.doofer()) { k += "| "; } k += sss; }
+#define SOME_OTHER_MACRO(ttt, sss) (&ttt, &sss)
