@@ -2,7 +2,7 @@ void output_text(FILE *pfile)
 {
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (pc->tracking != nullptr)
+      if (pc->GetTrackingData() != nullptr)
       {
          if (many > 1)
          {

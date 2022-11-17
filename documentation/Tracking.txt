@@ -10,7 +10,7 @@ The command option is:
 uncrustify --tracking Track.html -c config-FILE -f source-FILE -L A 2>A.txt
 
 Tracking puts a red "M" in the source to show where the options are working.
-A tracking number is used and writen in the Track.html file and the output file A.txt
+A tracking number is used and written in the Track.html file and the output file A.txt
 to make possible to link the changes together.
 
 An example:

@@ -138,6 +138,16 @@ public:
    indent_ptr_t &IndentData();
 
    /**
+    * @brief Returns the tracking data of the chunk as a const reference
+    */
+   const track_list *GetTrackingData() const;
+
+   /**
+    * @brief Returns the tracking data of the chunk as a modifiable reference
+    */
+   track_list * &TrackingData();
+
+   /**
     * @brief Returns the type of the parent chunk
     */
    E_Token GetTypeOfParent() const;
@@ -998,9 +1008,6 @@ public:
    // --------- Data members
    unc_text str;                             //! the token text
 
-   // for debugging purpose only
-   track_list *tracking;
-
 
 protected:
    // --------- Protected util functions
@@ -1055,9 +1062,11 @@ protected:
    Chunk        *m_prev;                      //! pointer to previous chunk in list
    Chunk        *m_parent;                    //! pointer to parent chunk (not always set)
 
+   track_list   *m_trackingData;              //! for debugging purpose only
+
 
 private:
-   const bool null_chunk;                      //! true for null chunks
+   const bool null_chunk;                     //! true for null chunks
 };
 
 
@@ -1133,6 +1142,18 @@ inline const indent_ptr_t &Chunk::GetIndentData() const
 inline indent_ptr_t &Chunk::IndentData()
 {
    return(m_indentData);
+}
+
+
+inline const track_list *Chunk::GetTrackingData() const
+{
+   return(m_trackingData);
+}
+
+
+inline track_list * &Chunk::TrackingData()
+{
+   return(m_trackingData);
 }
 
 
