@@ -122,17 +122,17 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
                log_pcf_flags(LGUY, pc->GetFlags());
             }
 
-            if (pc->tracking != nullptr)
+            if (pc->GetTrackingData() != nullptr)
             {
                LOG_FMT(LGUY, " Tracking info are: \n");
-               LOG_FMT(LGUY, "  number of track(s) %zu\n", pc->tracking->size());
+               LOG_FMT(LGUY, "  number of track(s) %zu\n", pc->GetTrackingData()->size());
 
-               for (size_t track = 0; track < pc->tracking->size(); track++)
+               for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
                {
-                  track_list *A       = pc->tracking;
-                  Track_nr   B        = A->at(track);
-                  size_t     Bfirst   = B.first;
-                  char       *Bsecond = B.second;
+                  const track_list *A       = pc->GetTrackingData();
+                  const Track_nr   B        = A->at(track);
+                  size_t           Bfirst   = B.first;
+                  char             *Bsecond = B.second;
 
                   LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
                   LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
