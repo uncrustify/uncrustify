@@ -33,6 +33,7 @@ public:
    size_t     m_seqnum;
    size_t     m_nl_seqnum;
    size_t     m_gap;
+   size_t     m_star_gap;
    bool       m_right_align;
    bool       m_absolute_thresh;
    StarStyle  m_star_style;
@@ -49,6 +50,7 @@ public:
       , m_seqnum(0)
       , m_nl_seqnum(0)
       , m_gap(0)
+      , m_star_gap(0)
       , m_right_align(false)
       , m_absolute_thresh(false)
       , m_star_style(SS_IGNORE)
@@ -70,6 +72,7 @@ public:
       , m_seqnum(ref.m_seqnum)
       , m_nl_seqnum(ref.m_nl_seqnum)
       , m_gap(ref.m_gap)
+      , m_star_gap(ref.m_star_gap)
       , m_right_align(ref.m_right_align)
       , m_absolute_thresh(ref.m_absolute_thresh)
       , m_star_style(ref.m_star_style)

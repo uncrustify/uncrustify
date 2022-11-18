@@ -3159,6 +3159,12 @@ align_func_params_thresh;
 extern BoundedOption<unsigned, 0, 16>
 align_func_params_gap;
 
+// A minimum additional gap between parameter type and '*'s in function parameter
+// definitions.
+// Note, align_var_def_star_style must be set to 2 for this option to have any affect.
+extern BoundedOption<unsigned, 0, 16>
+align_func_params_star_gap;
+
 // The span for aligning constructor value.
 //
 // 0: Don't align (default).
