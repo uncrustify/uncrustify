@@ -139,7 +139,7 @@ void reindent_line(Chunk *pc, int column)
    int min_col;
 
    LOG_FMT(LINDLINE, "%s: %d] col %d on %.*s [%s] => %d\n",
-           __func__, pc->GetOrigLine(), pc->GetColumn(), pc->len, pc->str,
+           __func__, pc->GetOrigLine(), pc->GetColumn(), pc->len, pc->GetStr(),
            get_token_name(pc->GetType()), column);
 
    if (column == pc->GetColumn())
@@ -422,7 +422,7 @@ void indent_text(void)
       if (!pc->IsNewline() && !pc->IsComment())
       {
          LOG_FMT(LINDPC, " -=[ %.*s ]=- top=%d %s %d/%d\n",
-                 pc->len, pc->str,
+                 pc->len, pc->GetStr(),
                  frm.pse_tos,
                  get_token_name(frm.pse[frm.pse_tos].type),
                  frm.pse[frm.pse_tos].indent_tmp,
@@ -751,7 +751,7 @@ void indent_text(void)
             if (pc->GetColumn() != indent_column)
             {
                LOG_FMT(LINDENT, "%s: %d] indent => %d [%.*s]\n",
-                       __func__, pc->GetOrigLine(), indent_column, pc->len, pc->str);
+                       __func__, pc->GetOrigLine(), indent_column, pc->len, pc->GetStr());
                reindent_line(pc, indent_column);
             }
          }
@@ -949,7 +949,7 @@ static void indent_comment(Chunk *pc, int col)
 
 /**
  * Put spaces on either side of the preproc (#) symbol.
- * This is done by pointing pc->str into pp_str and adjusting the
+ * This is done by pointing pc->GetStr() into pp_str and adjusting the
  * length.
  */
 void indent_preproc(void)
@@ -1035,11 +1035,11 @@ void indent_preproc(void)
       if (pc->len == 2)
       {
          /* alternate token crap */
-         pc->str = &alt_str[16];
+         pc->Str() = &alt_str[16];
       }
       else
       {
-         pc->str = &pp_str[16];
+         pc->Str() = &pp_str[16];
       }
 
       pp_level = pc->GetPpLevel() - pp_level_sub;
@@ -1056,13 +1056,13 @@ void indent_preproc(void)
       if ((cpd.settings[UO_pp_indent].a & AV_ADD) != 0)
       {
          /* Need to add some spaces */
-         pc->str -= pp_level;
+         pc->Str() -= pp_level;
          pc->len += pp_level;
       }
       else if (cpd.settings[UO_pp_indent].a == AV_IGNORE)
       {
          tmp      = (pc->GetOrigCol() <= 16) ? pc->GetOrigCol() - 1 : 16;
-         pc->str -= tmp;
+         pc->Str() -= tmp;
          pc->len += tmp;
       }
 

@@ -73,7 +73,7 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
 
    chunk.SetType(CT_VSEMICOLON);
    chunk.SetParentType(CT_NONE);
-   chunk.str = options::mod_pawn_semicolon() ? ";" : "";
+   chunk.Str() = options::mod_pawn_semicolon() ? ";" : "";
    chunk.SetColumn(pc->GetColumn() + pc->Len());
 
    LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %zu, prev='%s' [%s]\n",
@@ -113,7 +113,7 @@ void pawn_scrub_vsemi()
             || prev->GetParentType() == CT_CASE
             || prev->GetParentType() == CT_WHILE_OF_DO)
          {
-            pc->str.clear();
+            pc->Str().clear();
          }
       }
    }
@@ -439,7 +439,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
          return(last);
       }
       Chunk chunk = *last;
-      chunk.str.clear();
+      chunk.Str().clear();
       chunk.SetType(CT_VBRACE_OPEN);
       chunk.SetParentType(CT_FUNC_DEF);
 
@@ -478,7 +478,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
                  __func__, last->GetOrigLine(), get_token_name(last->GetType()), last->GetLevel());
       }
       chunk = *last;
-      chunk.str.clear();
+      chunk.Str().clear();
       chunk.SetType(CT_VBRACE_CLOSE);
       chunk.SetParentType(CT_FUNC_DEF);
       chunk.SetColumn(chunk.GetColumn() + last->Len());

@@ -117,18 +117,18 @@ void rewrite_loop_keyword(Chunk *keyword, E_Token new_type)
    {
    case CT_DO:
       keyword->SetOrigColEnd(keyword->GetOrigColEnd() + strlen("do") - keyword->Len());
-      keyword->str = "do";
+      keyword->Str() = "do";
       break;
 
    case CT_WHILE:
    case CT_WHILE_OF_DO:
       keyword->SetOrigColEnd(keyword->GetOrigColEnd() + strlen("while") - keyword->Len());
-      keyword->str = "while";
+      keyword->Str() = "while";
       break;
 
    case CT_FOR:
       keyword->SetOrigColEnd(keyword->GetOrigColEnd() + strlen("for") - keyword->Len());
-      keyword->str = "for";
+      keyword->Str() = "for";
       break;
 
    default:
@@ -167,14 +167,14 @@ static void rewrite_loop_condition(Chunk * &source, Chunk * &destination,
    {
       source->SetType(CT_SEMICOLON);
       source->SetParentType(CT_FOR);
-      source->str = ";";
+      source->Str() = ";";
       move_one_token(source, destination, desired_type);
       destination = (destination)->CopyAndAddAfter(destination);
    }
    else
    {
       source->SetType(CT_WORD);
-      source->str = desired_condition;
+      source->Str() = desired_condition;
       move_one_token(source, destination, desired_type);
    }
 
@@ -325,7 +325,7 @@ void rewrite_infinite_loops()
             // Add the final semicolon
             bottom = bottom->CopyAndAddAfter(bottom);
             bottom->SetType(CT_SEMICOLON);
-            bottom->str = ";";
+            bottom->Str() = ";";
 
             // Update the braces' parent types
             start_brace->SetParentType(CT_DO);

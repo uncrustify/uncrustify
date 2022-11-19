@@ -99,7 +99,7 @@ static Chunk *handle_double_angle_close(Chunk *pc)
          && (pc->GetOrigColEnd() + 1) == next->GetOrigCol()
          && next->GetParentType() == CT_NONE)
       {
-         pc->str.append('>');
+         pc->Str().append('>');
          pc->SetType(CT_SHIFT);
          pc->SetOrigColEnd(next->GetOrigColEnd());
 
@@ -127,12 +127,12 @@ void split_off_angle_close(Chunk *pc)
    }
    Chunk nc = *pc;
 
-   pc->str.resize(1);
+   pc->Str().resize(1);
    pc->SetOrigColEnd(pc->GetOrigCol() + 1);
    pc->SetType(CT_ANGLE_CLOSE);
 
    nc.SetType(ct->type);
-   nc.str.pop_front();
+   nc.Str().pop_front();
    nc.SetOrigCol(nc.GetOrigCol() + 1);
    nc.SetColumn(nc.GetColumn() + 1);
    nc.CopyAndAddAfter(pc);
@@ -278,11 +278,11 @@ void tokenize_trailing_return_types()
 
                if (next->Is(CT_ARITH))
                {
-                  if (next->str[0] == '*')
+                  if (next->GetStr()[0] == '*')
                   {
                      next->SetType(CT_PTR_TYPE);
                   }
-                  else if (next->str[0] == '&')                       // Issue #3407
+                  else if (next->GetStr()[0] == '&')                       // Issue #3407
                   {
                      next->SetType(CT_BYREF);
                   }
@@ -324,7 +324,7 @@ void tokenize_cleanup()
          {
             // Change '[' + ']' into '[]'
             pc->SetType(CT_TSQUARE);
-            pc->str = "[]";
+            pc->Str() = "[]";
             /*
              * bug #664: The original m_origColEnd of CT_SQUARE_CLOSE is
              * stored at m_origColEnd of CT_TSQUARE.
@@ -355,7 +355,7 @@ void tokenize_cleanup()
          {
             // Change ':' + '=' into ':='
             pc->SetType(CT_SQL_ASSIGN);
-            pc->str = ":=";
+            pc->Str() = ":=";
             pc->SetOrigColEnd(next->GetOrigColEnd());
             Chunk::Delete(next);
          }
@@ -582,8 +582,8 @@ void tokenize_cleanup()
             && prev->IsString("static"))
          {
             // delete PREV and merge with IF
-            pc->str.insert(0, ' ');
-            pc->str.insert(0, prev->str);
+            pc->Str().insert(0, ' ');
+            pc->Str().insert(0, prev->GetStr());
             pc->SetOrigCol(prev->GetOrigCol());
             pc->SetOrigLine(prev->GetOrigLine());
             Chunk *to_be_deleted = prev;
@@ -653,7 +653,7 @@ void tokenize_cleanup()
        * likewise, 'class' may be a member name in Java.
        */
       if (  pc->Is(CT_CLASS)
-         && !CharTable::IsKw1(next->str[0]))
+         && !CharTable::IsKw1(next->GetStr()[0]))
       {
          if (  next->IsNot(CT_DC_MEMBER)
             && next->IsNot(CT_ATTRIBUTE))                       // Issue #2570
@@ -706,7 +706,7 @@ void tokenize_cleanup()
 
             if (tmp->Is(CT_PAREN_CLOSE))
             {
-               next->str = "()";
+               next->Str() = "()";
                next->SetType(CT_OPERATOR_VAL);
                Chunk::Delete(tmp);
                next->SetOrigColEnd(next->GetOrigColEnd() + 1);
@@ -716,7 +716,7 @@ void tokenize_cleanup()
                  && tmp2->Is(CT_ANGLE_CLOSE)
                  && tmp2->GetOrigCol() == next->GetOrigColEnd())
          {
-            next->str.append('>');
+            next->Str().append('>');
             next->SetOrigColEnd(next->GetOrigColEnd() + 1);
             next->SetType(CT_OPERATOR_VAL);
             Chunk::Delete(tmp2);
@@ -754,9 +754,9 @@ void tokenize_cleanup()
 
                while (num_sp-- > 0)
                {
-                  next->str.append(" ");
+                  next->Str().append(" ");
                }
-               next->str.append(tmp->str);
+               next->Str().append(tmp->GetStr());
                tmp2 = tmp;
             }
 
@@ -810,19 +810,19 @@ void tokenize_cleanup()
       // Look for <newline> 'EXEC' 'SQL'
       if (  (  pc->IsString("EXEC", false)
             && next->IsString("SQL", false))
-         || (  (*pc->str.c_str() == '$')
+         || (  (*pc->GetStr().c_str() == '$')
             && pc->IsNot(CT_SQL_WORD)
                /* but avoid breaking tokenization for C# 6 interpolated strings. */
             && (  !language_is_set(LANG_CS)
                || (  pc->Is(CT_STRING)
-                  && (!pc->str.startswith("$\""))
-                  && (!pc->str.startswith("$@\""))))))
+                  && (!pc->GetStr().startswith("$\""))
+                  && (!pc->GetStr().startswith("$@\""))))))
       {
          Chunk *tmp = pc->GetPrev();
 
          if (tmp->IsNewline())
          {
-            if (*pc->str.c_str() == '$')
+            if (*pc->GetStr().c_str() == '$')
             {
                pc->SetType(CT_SQL_EXEC);
 
@@ -832,11 +832,11 @@ void tokenize_cleanup()
                   Chunk nc;
 
                   nc = *pc;
-                  pc->str.resize(1);
+                  pc->Str().resize(1);
                   pc->SetOrigColEnd(pc->GetOrigCol() + 1);
 
                   nc.SetType(CT_SQL_WORD);
-                  nc.str.pop_front();
+                  nc.Str().pop_front();
                   nc.SetOrigCol(nc.GetOrigCol() + 1);
                   nc.SetColumn(nc.GetColumn() + 1);
                   nc.CopyAndAddAfter(pc);
@@ -868,8 +868,8 @@ void tokenize_cleanup()
                }
 
                if (  (tmp->Len() > 0)
-                  && (  unc_isalpha(*tmp->str.c_str())
-                     || (*tmp->str.c_str() == '$')))
+                  && (  unc_isalpha(*tmp->GetStr().c_str())
+                     || (*tmp->GetStr().c_str() == '$')))
                {
                   tmp->SetType(CT_SQL_WORD);
                }
@@ -884,8 +884,8 @@ void tokenize_cleanup()
          && (next == pc->GetNext()))
       {
          // merge the two with a space between
-         pc->str.append(' ');
-         pc->str += next->str;
+         pc->Str().append(' ');
+         pc->Str() += next->GetStr();
          pc->SetOrigColEnd(next->GetOrigColEnd());
          Chunk::Delete(next);
          next = pc->GetNextNcNnl();
@@ -1111,11 +1111,11 @@ void tokenize_cleanup()
       if (  pc->Is(CT_PP_PRAGMA)
          && next->Is(CT_PREPROC_BODY))
       {
-         if (  (strncmp(next->str.c_str(), "region", 6) == 0)
-            || (strncmp(next->str.c_str(), "endregion", 9) == 0))
+         if (  (strncmp(next->GetStr().c_str(), "region", 6) == 0)
+            || (strncmp(next->GetStr().c_str(), "endregion", 9) == 0))
          // TODO: probably better use strncmp
          {
-            pc->SetType((*next->str.c_str() == 'r') ? CT_PP_REGION : CT_PP_ENDREGION);
+            pc->SetType((*next->GetStr().c_str() == 'r') ? CT_PP_REGION : CT_PP_ENDREGION);
 
             prev->SetParentType(pc->GetType());
          }
@@ -1240,10 +1240,10 @@ static void check_template(Chunk *start, bool in_type_cast)
          LOG_FMT(LTEMPL, "%s(%d): type is %s, level is %zu\n",
                  __func__, __LINE__, get_token_name(pc->GetType()), level);
 
-         if (  (pc->str[0] == '>')
+         if (  (pc->GetStr()[0] == '>')
             && (pc->Len() > 1))
          {
-            if (pc->str[1] == '=')                         // Issue #1462 and #2565
+            if (pc->GetStr()[1] == '=')                         // Issue #1462 and #2565
             {
                LOG_FMT(LTEMPL, "%s(%d): do not split '%s' at orig line %zu, orig col %zu\n",
                        __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
@@ -1415,7 +1415,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          }
 
          if (  (tokens[num_tokens - 1] == CT_ANGLE_OPEN)
-            && (pc->str[0] == '>')
+            && (pc->GetStr()[0] == '>')
             && (pc->Len() > 1)
             && (  options::tok_split_gte()
                || (  (  pc->IsString(">>")

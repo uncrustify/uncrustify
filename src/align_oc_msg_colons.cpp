@@ -103,7 +103,7 @@ void align_oc_msg_colon(Chunk *so)
 
       if (tmp != nullptr)
       {
-         size_t tlen = tmp->str.size();
+         size_t tlen = tmp->GetStr().size();
 
          if (tlen > mlen)
          {
@@ -157,7 +157,7 @@ void align_oc_msg_colon(Chunk *so)
       // start at one since we already indent for the '['
       for (size_t idx = 1; idx < len; idx++)
       {
-         chunk.str.append(' ');
+         chunk.Str().append(' ');
       }
 
       chunk.CopyAndAddBefore(longest);

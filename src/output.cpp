@@ -866,9 +866,9 @@ void output_text(FILE *pfile)
               || pc->Is(CT_IGNORED))
       {
          LOG_FMT(LOUTIND, "%s(%d): orig line is %zu, orig col is %zu,\npc->Text() >%s<, pc->str.size() is %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->str.size());
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetStr().size());
          // do not adjust the column for junk
-         add_text(pc->str, true);
+         add_text(pc->GetStr(), true);
       }
       else if (pc->Len() == 0)
       {
@@ -972,27 +972,27 @@ void output_text(FILE *pfile)
             {
                if (tracking)
                {
-                  if (pc->str[0] == '<')
+                  if (pc->GetStr()[0] == '<')
                   {
                      add_text("&lt;", false, false);
-                     size_t lang = pc->str.size();
+                     size_t lang = pc->GetStr().size();
 
                      for (size_t idx = 1; idx < lang - 1; idx++)
                      {
-                        int ch = pc->str[idx];
+                        int ch = pc->GetStr()[idx];
                         add_char(ch);
                      }
 
                      add_text("&gt;", false, false);
                   }
                }
-               add_text(pc->str, false, pc->Is(CT_STRING));
+               add_text(pc->GetStr(), false, pc->Is(CT_STRING));
             }
             write_in_tracking = false;
          }
          else
          {
-            add_text(pc->str, false, pc->Is(CT_STRING));
+            add_text(pc->GetStr(), false, pc->Is(CT_STRING));
          }
 
          if (pc->Is(CT_PP_DEFINE))  // Issue #876
@@ -1914,13 +1914,13 @@ static Chunk *output_comment_c(Chunk *first)
          add_text("//");
 
          unc_text tmp;
-         tmp.set(first->str, 2, first->Len() - 4);
+         tmp.set(first->GetStr(), 2, first->Len() - 4);
          cmt_trim_whitespace(tmp, false);
          add_comment_text(tmp, cmt, false);
       }
       else
       {
-         add_comment_text(first->str, cmt, false);
+         add_comment_text(first->GetStr(), cmt, false);
       }
       return(first);
    }
@@ -1943,7 +1943,7 @@ static Chunk *output_comment_c(Chunk *first)
    {
       LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s'\n",
               __func__, __LINE__, pc->Text());
-      tmp.set(pc->str, 2, pc->Len() - 4);
+      tmp.set(pc->GetStr(), 2, pc->Len() - 4);
 
       if (  cpd.last_char == '*'
          && tmp[0] != ' ')                 // Issue #1908
@@ -1963,7 +1963,7 @@ static Chunk *output_comment_c(Chunk *first)
       pc = pc->GetNext();
       pc = pc->GetNext();
    }
-   tmp.set(pc->str, 2, pc->Len() - 4);
+   tmp.set(pc->GetStr(), 2, pc->Len() - 4);
 
    if (  cpd.last_char == '*'
       && tmp[0] == '/')
@@ -2038,7 +2038,7 @@ static Chunk *output_comment_cpp(Chunk *first)
 
    if (options::sp_cmt_cpp_qttr())
    {
-      const int c = first->str[2];
+      const int c = first->GetStr()[2];
 
       if (  c == ':'
          || c == '='
@@ -2052,7 +2052,7 @@ static Chunk *output_comment_cpp(Chunk *first)
 
    if (!options::cmt_cpp_to_c())
    {
-      auto const *cmt_text = first->str.c_str() + 2;
+      auto const *cmt_text = first->GetStr().c_str() + 2;
       // Add or remove space after the opening of a C++ comment,
       // i.e. '// A' vs. '//A'.
       auto *sp_cmt = &options::sp_cmt_cpp_start;
@@ -2095,15 +2095,15 @@ static Chunk *output_comment_cpp(Chunk *first)
 
       if ((*sp_cmt)() == IARF_IGNORE)
       {
-         add_comment_text(first->str, cmt, false);
+         add_comment_text(first->GetStr(), cmt, false);
       }
       else
       {
          size_t   iLISz = leadin.size();
-         unc_text tmp(first->str, 0, iLISz);
+         unc_text tmp(first->GetStr(), 0, iLISz);
          add_comment_text(tmp, cmt, false);
 
-         tmp.set(first->str, iLISz, first->Len() - iLISz);
+         tmp.set(first->GetStr(), iLISz, first->Len() - iLISz);
 
          // Add or remove space after the opening of a C++ comment,
          // i.e. '// A' vs. '//A'.
@@ -2158,12 +2158,12 @@ static Chunk *output_comment_cpp(Chunk *first)
       // i.e. '// A' vs. '//A'.
       log_rule_B("sp_cmt_cpp_start");
 
-      if (  !unc_isspace(first->str[2])
+      if (  !unc_isspace(first->GetStr()[2])
          && (options::sp_cmt_cpp_start() & IARF_ADD))
       {
          add_char(' ');
       }
-      tmp.set(first->str, 2, first->Len() - 2);
+      tmp.set(first->GetStr(), 2, first->Len() - 2);
       add_comment_text(tmp, cmt, true);
       add_text(" */");
       return(first);
@@ -2185,8 +2185,8 @@ static Chunk *output_comment_cpp(Chunk *first)
 
    while (can_combine_comment(pc, cmt))
    {
-      offs = unc_isspace(pc->str[2]) ? 1 : 0;
-      tmp.set(pc->str, 2 + offs, pc->Len() - (2 + offs));
+      offs = unc_isspace(pc->GetStr()[2]) ? 1 : 0;
+      tmp.set(pc->GetStr(), 2 + offs, pc->Len() - (2 + offs));
 
       if (  cpd.last_char == '*'
          && tmp[0] == '/')
@@ -2197,8 +2197,8 @@ static Chunk *output_comment_cpp(Chunk *first)
       add_comment_text("\n", cmt, false);
       pc = pc->GetNext()->GetNext();
    }
-   offs = unc_isspace(pc->str[2]) ? 1 : 0;
-   tmp.set(pc->str, 2 + offs, pc->Len() - (2 + offs));
+   offs = unc_isspace(pc->GetStr()[2]) ? 1 : 0;
+   tmp.set(pc->GetStr(), 2 + offs, pc->Len() - (2 + offs));
    add_comment_text(tmp, cmt, true);
 
    log_rule_B("cmt_cpp_nl_end");
@@ -2322,7 +2322,7 @@ static void output_comment_multi(Chunk *pc)
    size_t cmt_col  = cmt.base_col;
    int    col_diff = pc->GetOrigCol() - cmt.base_col;
 
-   calculate_comment_body_indent(cmt, pc->str);
+   calculate_comment_body_indent(cmt, pc->GetStr());
 
    log_rule_B("cmt_indent_multi");
    log_rule_B("cmt_star_cont");
@@ -2330,8 +2330,8 @@ static void output_comment_multi(Chunk *pc)
                    (options::cmt_star_cont() ? "* " : "  ");
    LOG_CONTTEXT();
 
-   std::wstring pc_wstring(pc->str.get().cbegin(),
-                           pc->str.get().cend());
+   std::wstring pc_wstring(pc->GetStr().get().cbegin(),
+                           pc->GetStr().get().cend());
 
    size_t doxygen_javadoc_param_name_indent    = 0;
    size_t doxygen_javadoc_continuation_indent  = 0;
@@ -2364,19 +2364,19 @@ static void output_comment_multi(Chunk *pc)
     * check for enable/disable processing comment strings that may
     * both be embedded within the same multi-line comment
     */
-   auto disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->str);
-   auto enable_processing_cmt_idx  = find_enable_processing_comment_marker(pc->str);
+   auto disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->GetStr());
+   auto enable_processing_cmt_idx  = find_enable_processing_comment_marker(pc->GetStr());
 
    while (cmt_idx < pc->Len())
    {
-      int ch = pc->str[cmt_idx];
+      int ch = pc->GetStr()[cmt_idx];
       cmt_idx++;
 
       if (  cmt_idx > std::size_t(disable_processing_cmt_idx)
          && enable_processing_cmt_idx > disable_processing_cmt_idx)
       {
          auto     length = enable_processing_cmt_idx - disable_processing_cmt_idx;
-         unc_text verbatim_text(pc->str,
+         unc_text verbatim_text(pc->GetStr(),
                                 disable_processing_cmt_idx,
                                 length);
 
@@ -2388,9 +2388,9 @@ static void output_comment_multi(Chunk *pc)
           * check for additional enable/disable processing comment strings that may
           * both be embedded within the same multi-line comment
           */
-         disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->str,
+         disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->GetStr(),
                                                                              enable_processing_cmt_idx);
-         enable_processing_cmt_idx = find_enable_processing_comment_marker(pc->str,
+         enable_processing_cmt_idx = find_enable_processing_comment_marker(pc->GetStr(),
                                                                            enable_processing_cmt_idx);
 
          /**
@@ -2406,7 +2406,7 @@ static void output_comment_multi(Chunk *pc)
          ch = '\n';
 
          if (  cmt_idx < pc->Len()
-            && pc->str[cmt_idx] == '\n')
+            && pc->GetStr()[cmt_idx] == '\n')
          {
             cmt_idx++;
          }
@@ -2444,8 +2444,8 @@ static void output_comment_multi(Chunk *pc)
          {
             doxygen_javadoc_indent_align = true;
 
-            std::string match(pc->str.get().cbegin() + start_idx,
-                              pc->str.get().cbegin() + end_idx);
+            std::string match(pc->GetStr().get().cbegin() + start_idx,
+                              pc->GetStr().get().cbegin() + end_idx);
 
             match.erase(std::remove_if(match.begin(),
                                        match.end(),
@@ -2491,14 +2491,14 @@ static void output_comment_multi(Chunk *pc)
 
                while (true)
                {
-                  cmt_idx = eat_line_whitespace(pc->str,
+                  cmt_idx = eat_line_whitespace(pc->GetStr(),
                                                 cmt_idx);
 
                   while (  cmt_idx < pc->Len()
-                        && !unc_isspace(pc->str[cmt_idx])
-                        && pc->str[cmt_idx] != ',')
+                        && !unc_isspace(pc->GetStr()[cmt_idx])
+                        && pc->GetStr()[cmt_idx] != ',')
                   {
-                     line.append(pc->str[cmt_idx++]);
+                     line.append(pc->Str()[cmt_idx++]);
                   }
 
                   if (!is_param_tag)
@@ -2508,10 +2508,10 @@ static void output_comment_multi(Chunk *pc)
                   /**
                    * check for the possibility that comma-separated parameter names are present
                    */
-                  cmt_idx = eat_line_whitespace(pc->str,
+                  cmt_idx = eat_line_whitespace(pc->GetStr(),
                                                 cmt_idx);
 
-                  if (pc->str[cmt_idx] != ',')
+                  if (pc->GetStr()[cmt_idx] != ',')
                   {
                      break;
                   }
@@ -2519,7 +2519,7 @@ static void output_comment_multi(Chunk *pc)
                   line.append(", ");
                }
             }
-            cmt_idx = eat_line_whitespace(pc->str,
+            cmt_idx = eat_line_whitespace(pc->GetStr(),
                                           cmt_idx);
             indent = int(doxygen_javadoc_continuation_indent) - int(line.size());
 
@@ -2529,9 +2529,9 @@ static void output_comment_multi(Chunk *pc)
             }
 
             while (  cmt_idx < pc->Len()
-                  && !unc_isspace(pc->str[cmt_idx]))
+                  && !unc_isspace(pc->GetStr()[cmt_idx]))
             {
-               line.append(pc->str[cmt_idx++]);
+               line.append(pc->Str()[cmt_idx++]);
             }
             continue;
          }
@@ -2570,17 +2570,17 @@ static void output_comment_multi(Chunk *pc)
 
          for (size_t nxt_idx = cmt_idx;
               (  nxt_idx < pc->Len()
-              && pc->str[nxt_idx] != '\r'
-              && pc->str[nxt_idx] != '\n');
+              && pc->GetStr()[nxt_idx] != '\r'
+              && pc->GetStr()[nxt_idx] != '\n');
               nxt_idx++)
          {
             if (  next_nonempty_line < 0
-               && !unc_isspace(pc->str[nxt_idx])
-               && pc->str[nxt_idx] != '*'
+               && !unc_isspace(pc->GetStr()[nxt_idx])
+               && pc->GetStr()[nxt_idx] != '*'
                && (pc->TestFlags(PCF_IN_PREPROC)
-                   ? (  pc->str[nxt_idx] != '\\'
-                     || (  pc->str[nxt_idx + 1] != '\r'
-                        && pc->str[nxt_idx + 1] != '\n'))
+                   ? (  pc->GetStr()[nxt_idx] != '\\'
+                     || (  pc->GetStr()[nxt_idx + 1] != '\r'
+                        && pc->GetStr()[nxt_idx + 1] != '\n'))
                    : true))
             {
                next_nonempty_line = nxt_idx;  // first non-whitespace char in the next line
@@ -2597,7 +2597,7 @@ static void output_comment_multi(Chunk *pc)
             int cmt_star_indent = 0;
 
             while (  next_nonempty_line > cmt_star_indent
-                  && pc->str[next_nonempty_line - cmt_star_indent - 1] != '*')
+                  && pc->GetStr()[next_nonempty_line - cmt_star_indent - 1] != '*')
             {
                ++cmt_star_indent;
             }
@@ -2639,8 +2639,8 @@ static void output_comment_multi(Chunk *pc)
          {
             std::wstring prev_line(line.get().cbegin(),
                                    line.get().cend());
-            std::wstring next_line(pc->str.get().cbegin() + next_nonempty_line,
-                                   pc->str.get().cend());
+            std::wstring next_line(pc->GetStr().get().cbegin() + next_nonempty_line,
+                                   pc->GetStr().get().cend());
 
             for (auto &&cmt_reflow_regex_map_entry : cmt_reflow_regex_map)
             {
@@ -2901,7 +2901,7 @@ static bool kw_fcn_class(Chunk *cmt, unc_text &out_txt)
 
    if (tmp->IsNotNullChunk())
    {
-      out_txt.append(tmp->str);
+      out_txt.append(tmp->GetStr());
 
       while ((tmp = tmp->GetNext())->IsNotNullChunk())
       {
@@ -2914,7 +2914,7 @@ static bool kw_fcn_class(Chunk *cmt, unc_text &out_txt)
          if (tmp->IsNotNullChunk())
          {
             out_txt.append("::");
-            out_txt.append(tmp->str);
+            out_txt.append(tmp->GetStr());
          }
       }
       return(true);
@@ -2931,7 +2931,7 @@ static bool kw_fcn_message(Chunk *cmt, unc_text &out_txt)
    {
       return(false);
    }
-   out_txt.append(fcn->str);
+   out_txt.append(fcn->GetStr());
 
    Chunk *tmp  = fcn->GetNextNcNnl();
    Chunk *word = Chunk::NullChunkPtr;
@@ -2948,7 +2948,7 @@ static bool kw_fcn_message(Chunk *cmt, unc_text &out_txt)
       {
          if (word->IsNotNullChunk())
          {
-            out_txt.append(word->str);
+            out_txt.append(word->GetStr());
             word = Chunk::NullChunkPtr;
          }
          out_txt.append(":");
@@ -2971,7 +2971,7 @@ static bool kw_fcn_category(Chunk *cmt, unc_text &out_txt)
    if (category->IsNotNullChunk())
    {
       out_txt.append('(');
-      out_txt.append(category->str);
+      out_txt.append(category->GetStr());
       out_txt.append(')');
    }
    return(true);
@@ -2984,7 +2984,7 @@ static bool kw_fcn_scope(Chunk *cmt, unc_text &out_txt)
 
    if (scope->IsNotNullChunk())
    {
-      out_txt.append(scope->str);
+      out_txt.append(scope->GetStr());
       return(true);
    }
    return(false);
@@ -3006,7 +3006,7 @@ static bool kw_fcn_function(Chunk *cmt, unc_text &out_txt)
       {
          out_txt.append('~');
       }
-      out_txt.append(fcn->str);
+      out_txt.append(fcn->GetStr());
       return(true);
    }
    return(false);
@@ -3048,7 +3048,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
             need_nl = true;
             out_txt.append("@param");
             out_txt.append(" ");
-            out_txt.append(tmp->str);
+            out_txt.append(tmp->GetStr());
             out_txt.append(" TODO");
          }
          has_param = false;
@@ -3117,7 +3117,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
             if (prev->IsNotNullChunk())
             {
                out_txt.append(" ");
-               out_txt.append(prev->str);
+               out_txt.append(prev->GetStr());
                out_txt.append(" TODO");
             }
             prev = Chunk::NullChunkPtr;
@@ -3191,7 +3191,7 @@ static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt)
 
       if (tmp->IsNotNullChunk())
       {
-         out_txt.append(tmp->str);
+         out_txt.append(tmp->GetStr());
          return(true);
       }
    }
@@ -3210,7 +3210,7 @@ static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt)
             || tmp->Is(CT_MEMBER)))
       {
          tmp = tmp->GetPrevNcNnl();
-         out_txt.append(tmp->str);
+         out_txt.append(tmp->GetStr());
          return(true);
       }
    }
@@ -3253,7 +3253,7 @@ static void do_kw_subst(Chunk *pc)
 {
    for (const auto &kw : kw_subst_table)
    {
-      int idx = pc->str.find(kw.tag);
+      int idx = pc->GetStr().find(kw.tag);
 
       if (idx < 0)
       {
@@ -3267,7 +3267,7 @@ static void do_kw_subst(Chunk *pc)
          // if the replacement contains '\n' we need to fix the lead
          if (tmp_txt.find("\n") >= 0)
          {
-            size_t nl_idx = pc->str.rfind("\n", idx);
+            size_t nl_idx = pc->GetStr().rfind("\n", idx);
 
             if (nl_idx > 0)
             {
@@ -3277,14 +3277,14 @@ static void do_kw_subst(Chunk *pc)
                nl_idx++;
 
                while (  (nl_idx < static_cast<size_t>(idx))
-                     && !unc_isalnum(pc->str[nl_idx]))
+                     && !unc_isalnum(pc->GetStr()[nl_idx]))
                {
-                  nl_txt.append(pc->str[nl_idx++]);
+                  nl_txt.append(pc->Str()[nl_idx++]);
                }
                tmp_txt.replace("\n", nl_txt);
             }
          }
-         pc->str.replace(kw.tag, tmp_txt);
+         pc->Str().replace(kw.tag, tmp_txt);
       }
    }
 } // do_kw_subst
@@ -3324,8 +3324,8 @@ static void output_comment_multi_simple(Chunk *pc)
     * check for enable/disable processing comment strings that may
     * both be embedded within the same multi-line comment
     */
-   auto     disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->str);
-   auto     enable_processing_cmt_idx  = find_enable_processing_comment_marker(pc->str);
+   auto     disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->GetStr());
+   auto     enable_processing_cmt_idx  = find_enable_processing_comment_marker(pc->GetStr());
 
    unc_text line;
    size_t   line_count  = 0;
@@ -3334,14 +3334,14 @@ static void output_comment_multi_simple(Chunk *pc)
 
    while (cmt_idx < pc->Len())
    {
-      int ch = pc->str[cmt_idx];
+      int ch = pc->GetStr()[cmt_idx];
       cmt_idx++;
 
       if (  cmt_idx > std::size_t(disable_processing_cmt_idx)
          && enable_processing_cmt_idx > disable_processing_cmt_idx)
       {
          auto     length = enable_processing_cmt_idx - disable_processing_cmt_idx;
-         unc_text verbatim_text(pc->str,
+         unc_text verbatim_text(pc->GetStr(),
                                 disable_processing_cmt_idx,
                                 length);
 
@@ -3353,9 +3353,9 @@ static void output_comment_multi_simple(Chunk *pc)
           * check for additional enable/disable processing comment strings that may
           * both be embedded within the same multi-line comment
           */
-         disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->str,
+         disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->GetStr(),
                                                                              enable_processing_cmt_idx);
-         enable_processing_cmt_idx = find_enable_processing_comment_marker(pc->str,
+         enable_processing_cmt_idx = find_enable_processing_comment_marker(pc->GetStr(),
                                                                            enable_processing_cmt_idx);
 
          line.clear();
@@ -3392,7 +3392,7 @@ static void output_comment_multi_simple(Chunk *pc)
          ch = '\n';
 
          if (  (cmt_idx < pc->Len())
-            && (pc->str[cmt_idx] == '\n'))
+            && (pc->GetStr()[cmt_idx] == '\n'))
          {
             cmt_idx++;
          }
@@ -3482,7 +3482,7 @@ static void generate_if_conditional_as_text(unc_text &dst, Chunk *ifdef)
             column++;
          }
 
-         dst.append(pc->str);
+         dst.append(pc->GetStr());
          column += pc->Len();
       }
    }

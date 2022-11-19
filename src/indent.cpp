@@ -1084,8 +1084,8 @@ void indent_text()
          {
             if (  pc->Len() > 4
                && xml_indent > 0
-               && pc->str[1] == '<'
-               && pc->str[2] == '/')
+               && pc->GetStr()[1] == '<'
+               && pc->GetStr()[2] == '/')
             {
                log_rule_B("indent_xml_string");
                xml_indent -= options::indent_xml_string();
@@ -4275,9 +4275,9 @@ void indent_text()
       if (  options::indent_xml_string() > 0
          && pc->Is(CT_STRING)
          && pc->Len() > 4
-         && pc->str[1] == '<'
-         && pc->str[2] != '/'
-         && pc->str[pc->Len() - 3] != '/')
+         && pc->GetStr()[1] == '<'
+         && pc->GetStr()[2] != '/'
+         && pc->GetStr()[pc->Len() - 3] != '/')
       {
          if (xml_indent <= 0)
          {

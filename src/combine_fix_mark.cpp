@@ -143,8 +143,8 @@ void fix_casts(Chunk *start)
       verb = "guessed";
 
       if (  (last->Len() > 3)
-         && (last->str[last->Len() - 2] == '_')
-         && (last->str[last->Len() - 1] == 't'))
+         && (last->GetStr()[last->Len() - 2] == '_')
+         && (last->GetStr()[last->Len() - 1] == 't'))
       {
          detail = " -- '_t'";
       }
@@ -325,7 +325,7 @@ void fix_fcn_def_params(Chunk *start)
    }
    // ensure start chunk holds a single '(' character
    assert(  (start->Len() == 1)
-         && (start->str[0] == '('));
+         && (start->GetStr()[0] == '('));
 
    ChunkStack cs;
    size_t     level = start->GetLevel() + 1;
@@ -334,7 +334,7 @@ void fix_fcn_def_params(Chunk *start)
    while (pc->IsNotNullChunk())
    {
       if (  (  (start->Len() == 1)
-            && (start->str[0] == ')'))
+            && (start->GetStr()[0] == ')'))
          || pc->GetLevel() < level)
       {
          LOG_FMT(LFCNP, "%s(%d): bailed on Text() '%s', on orig line %zu\n",
@@ -484,7 +484,7 @@ void fix_typedef(Chunk *start)
          }
          next->ResetFlagBits(PCF_VAR_1ST_DEF);
 
-         if (*next->str.c_str() == '(')
+         if (*next->GetStr().c_str() == '(')
          {
             last_op = next;
          }
@@ -1498,7 +1498,7 @@ void mark_function(Chunk *pc)
          if (  prev->Is(CT_WORD)
             || prev->Is(CT_TYPE))
          {
-            if (pc->str.equals(prev->str))
+            if (pc->GetStr().equals(prev->GetStr()))
             {
                LOG_FMT(LFCN, "%s(%d): pc->Text() is '%s', orig line is %zu, orig col is %zu, type is %s\n",
                        __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(),
@@ -1936,7 +1936,7 @@ void mark_function(Chunk *pc)
          tmp = tmp->GetPrevNcNnlNi();   // Issue #2279
       }
       const bool is_extern = (  tmp->IsNotNullChunk()
-                             && tmp->str.equals("extern"));
+                             && tmp->GetStr().equals("extern"));
 
       /*
        * Scan the parameters looking for:
@@ -2286,7 +2286,7 @@ bool mark_function_type(Chunk *pc)
               get_token_name(tmp->GetType()), tmp->Text(),
               tmp->GetOrigLine(), tmp->GetOrigCol());
 
-      if (*tmp->str.c_str() == '(')
+      if (*tmp->GetStr().c_str() == '(')
       {
          if (!pc->TestFlags(PCF_IN_TYPEDEF))
          {

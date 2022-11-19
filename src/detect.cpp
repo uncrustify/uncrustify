@@ -249,7 +249,7 @@ static void detect_space_options()
             vote_sp_before_ptr_star.vote(prev, pc);
          }
 
-         if (CharTable::IsKw1(next->str[0]))
+         if (CharTable::IsKw1(next->GetStr()[0]))
          {
             vote_sp_after_ptr_star.vote(pc, next);
          }
@@ -298,7 +298,7 @@ static void detect_space_options()
             vote_sp_angle_paren.vote(prev, pc);
          }
          else if (  next->Is(CT_WORD)
-                 || CharTable::IsKw1(next->str[0]))
+                 || CharTable::IsKw1(next->GetStr()[0]))
          {
             vote_sp_angle_word.vote(prev, pc);
          }

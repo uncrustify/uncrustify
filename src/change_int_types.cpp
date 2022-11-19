@@ -129,7 +129,7 @@ static void add_or_remove_int_keyword(Chunk *pc, Chunk *sibling, iarf_e action, 
          {
             int_keyword = pc->CopyAndAddAfter(pc);
          }
-         int_keyword->str = "int";
+         int_keyword->Str() = "int";
       }
    }
 } // add_or_remove_int_keyword
