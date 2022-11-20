@@ -91,14 +91,14 @@ class Chunk; //forward declaration
  * indent of another chunk. This is needed, as that chunk may be aligned and
  * so the indent cannot be determined in the indent code.
  */
-struct indent_ptr_t
+struct T_IndentData
 {
    Chunk *ref;
    int   delta;
 };
 
 
-struct align_ptr_t
+struct T_AlignData
 {
    Chunk  *next;       //! nullptr or the chunk that should be under this one
    bool   right_align; //! AlignStack.m_right_align

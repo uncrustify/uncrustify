@@ -52,9 +52,6 @@ class Chunk
    friend ChunkListManager;
 
 public:
-   static Chunk        NullChunk;                       // Null Chunk
-   static Chunk *const NullChunkPtr;                    // Pointer to the Null Chunk
-
    //! constructors
    Chunk(bool null_c = false);                    // default
    Chunk(const Chunk &o);                         // !!! partial copy: chunk is not linked to others
@@ -111,22 +108,22 @@ public:
    /**
     * @brief Returns the alignment data of the chunk as a const reference
     */
-   const align_ptr_t &GetAlignmentData() const;
+   const T_AlignData &GetAlignmentData() const;
 
    /**
     * @brief Returns the alignment data of the chunk as a modifiable reference
     */
-   align_ptr_t &AlignmentData();
+   T_AlignData &AlignmentData();
 
    /**
     * @brief Returns the indentation data of the chunk as a const reference
     */
-   const indent_ptr_t &GetIndentData() const;
+   const T_IndentData &GetIndentData() const;
 
    /**
     * @brief Returns the indentation data of the chunk as a modifiable reference
     */
-   indent_ptr_t &IndentData();
+   T_IndentData &IndentData();
 
    /**
     * @brief Returns the text data of the chunk as a const reference
@@ -1067,8 +1064,8 @@ protected:
    bool         m_afterTab;                   //! whether this token was after a tab
 
    T_PcfFlags   m_flags;                      //! see PCF_xxx
-   align_ptr_t  m_alignmentData;              //! alignment data of the chunk
-   indent_ptr_t m_indentData;                 //! indentation data of the chunk
+   T_AlignData  m_alignmentData;              //! alignment data of the chunk
+   T_IndentData m_indentData;                 //! indentation data of the chunk
 
    Chunk        *m_next;                      //! pointer to next chunk in list
    Chunk        *m_prev;                      //! pointer to previous chunk in list
@@ -1080,6 +1077,11 @@ protected:
 
 private:
    const bool null_chunk;                     //! true for null chunks
+
+
+public:
+   static Chunk        NullChunk;             //! Null Chunk
+   static Chunk *const NullChunkPtr;          //! Pointer to the Null Chunk
 };
 
 
@@ -1134,25 +1136,25 @@ inline void Chunk::SetParent(Chunk *parent)
 }
 
 
-inline const align_ptr_t &Chunk::GetAlignmentData() const
+inline const T_AlignData &Chunk::GetAlignmentData() const
 {
    return(m_alignmentData);
 }
 
 
-inline align_ptr_t &Chunk::AlignmentData()
+inline T_AlignData &Chunk::AlignmentData()
 {
    return(m_alignmentData);
 }
 
 
-inline const indent_ptr_t &Chunk::GetIndentData() const
+inline const T_IndentData &Chunk::GetIndentData() const
 {
    return(m_indentData);
 }
 
 
-inline indent_ptr_t &Chunk::IndentData()
+inline T_IndentData &Chunk::IndentData()
 {
    return(m_indentData);
 }
@@ -1712,6 +1714,7 @@ inline bool Chunk::IsParenOpen() const
 {
    return(  Is(CT_PAREN_OPEN)
          || Is(CT_SPAREN_OPEN)
+         || Is(CT_PPAREN_OPEN)
          || Is(CT_TPAREN_OPEN)
          || Is(CT_FPAREN_OPEN)
          || Is(CT_LPAREN_OPEN));
@@ -1722,8 +1725,10 @@ inline bool Chunk::IsParenClose() const
 {
    return(  Is(CT_PAREN_CLOSE)
          || Is(CT_SPAREN_CLOSE)
+         || Is(CT_PPAREN_CLOSE)
          || Is(CT_TPAREN_CLOSE)
-         || Is(CT_FPAREN_CLOSE));
+         || Is(CT_FPAREN_CLOSE)
+         || Is(CT_LPAREN_CLOSE));
 }
 
 

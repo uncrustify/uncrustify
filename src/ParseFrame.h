@@ -33,7 +33,7 @@ struct paren_stack_entry_t
    bool          in_preproc;   //! whether this was created in a preprocessor
    size_t        ns_cnt;       //! Number of consecutive namespace levels
    bool          non_vardef;   //! Hit a non-vardef line
-   indent_ptr_t  ip;
+   T_IndentData  ip;
    Chunk         *pop_pc;
 };
 
