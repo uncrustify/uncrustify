@@ -662,7 +662,7 @@ Chunk *Chunk::GetNextNbsb() const
    {
       if (pc->Is(CT_SQUARE_OPEN))
       {
-         pc = pc->SkipToMatch();
+         pc = pc->GetClosingParen();
       }
       pc = pc->GetNextNcNnl();
    }
@@ -679,7 +679,7 @@ Chunk *Chunk::GetPrevNbsb() const
    {
       if (pc->Is(CT_SQUARE_CLOSE))
       {
-         pc = pc->SkipToMatchRev();
+         pc = pc->GetOpeningParen();
       }
       pc = pc->GetPrevNcNnl();
    }
@@ -782,7 +782,7 @@ bool Chunk::IsStringAndLevel(const char *cStr, const size_t len,
 }
 
 
-Chunk *Chunk::SkipToMatch(E_Scope scope) const
+Chunk *Chunk::GetClosingParen(E_Scope scope) const
 {
    if (  Is(CT_PAREN_OPEN)
       || Is(CT_SPAREN_OPEN)
@@ -799,7 +799,7 @@ Chunk *Chunk::SkipToMatch(E_Scope scope) const
 }
 
 
-Chunk *Chunk::SkipToMatchRev(E_Scope scope) const
+Chunk *Chunk::GetOpeningParen(E_Scope scope) const
 {
    if (  Is(CT_PAREN_CLOSE)
       || Is(CT_SPAREN_CLOSE)

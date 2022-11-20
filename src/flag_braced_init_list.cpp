@@ -60,7 +60,7 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
             || brace_open->GetParentType() == CT_BRACED_INIT_LIST))
       {
          log_pcf_flags(LFCNR, brace_open->GetFlags());
-         auto brace_close = next->SkipToMatch();
+         auto brace_close = next->GetClosingParen();
 
          if (brace_close->Is(CT_BRACE_CLOSE))
          {
@@ -75,7 +75,7 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
 void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
 {
    Chunk *brace_open  = pc->GetNextNcNnl();
-   Chunk *brace_close = next->SkipToMatch();
+   Chunk *brace_close = next->GetClosingParen();
 
    brace_open->SetParentType(CT_BRACED_INIT_LIST);
    brace_close->SetParentType(CT_BRACED_INIT_LIST);
@@ -89,7 +89,7 @@ void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
       // Flag call operator
       if (tmp->Is(CT_PAREN_OPEN))
       {
-         Chunk *c = tmp->SkipToMatch();
+         Chunk *c = tmp->GetClosingParen();
 
          if (c->IsNotNullChunk())
          {

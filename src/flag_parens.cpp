@@ -15,7 +15,7 @@ Chunk *flag_parens(Chunk *po, T_PcfFlags flags, E_Token opentype, E_Token parent
    LOG_FUNC_ENTRY();
    Chunk *paren_close;
 
-   paren_close = po->SkipToMatch(E_Scope::PREPROC);
+   paren_close = po->GetClosingParen(E_Scope::PREPROC);
 
    if (paren_close->IsNullChunk())
    {

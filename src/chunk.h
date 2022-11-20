@@ -660,18 +660,18 @@ public:
    Chunk *SearchStringLevel(const char *cStr, const size_t len, const int level, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD) const;
 
    /**
-    * @brief skip to the closing match for the current paren/brace/square.
+    * @brief returns the closing match for the current paren/brace/square.
     * @param scope chunk section to consider
     * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *SkipToMatch(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetClosingParen(E_Scope scope = E_Scope::ALL) const;
 
    /**
-    * @brief skip to the opening match for the current paren/brace/square.
+    * @brief returns the opening match for the current paren/brace/square.
     * @param scope chunk section to consider
     * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *SkipToMatchRev(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetOpeningParen(E_Scope scope = E_Scope::ALL) const;
 
 
    // --------- Is* functions
