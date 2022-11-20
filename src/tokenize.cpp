@@ -382,11 +382,11 @@ static bool d_parse_string(tok_ctx &ctx, Chunk &pc)
    ctx.save();
    int cnt;
 
-   pc.str.clear();
+   pc.Str().clear();
 
    while (ctx.peek() == '\\')
    {
-      pc.str.append(ctx.get());
+      pc.Str().append(ctx.get());
 
       // Check for end of file
       switch (ctx.peek())
@@ -396,7 +396,7 @@ static bool d_parse_string(tok_ctx &ctx, Chunk &pc)
 
          while (cnt--)
          {
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
          }
          break;
 
@@ -405,7 +405,7 @@ static bool d_parse_string(tok_ctx &ctx, Chunk &pc)
 
          while (cnt--)
          {
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
          }
          break;
 
@@ -414,7 +414,7 @@ static bool d_parse_string(tok_ctx &ctx, Chunk &pc)
 
          while (cnt--)
          {
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
          }
          break;
 
@@ -427,46 +427,46 @@ static bool d_parse_string(tok_ctx &ctx, Chunk &pc)
       case '6':
       case '7':
          // handle up to 3 octal digits
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
          ch = ctx.peek();
 
          if (  (ch >= '0')
             && (ch <= '7'))
          {
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
             ch = ctx.peek();
 
             if (  (ch >= '0')
                && (ch <= '7'))
             {
-               pc.str.append(ctx.get());
+               pc.Str().append(ctx.get());
             }
          }
          break;
 
       case '&':
          // \& NamedCharacterEntity ;
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
 
          while (unc_isalpha(ctx.peek()))
          {
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
          }
 
          if (ctx.peek() == ';')
          {
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
          }
          break;
 
       default:
          // Everything else is a single character
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
          break;
       } // switch
    }
 
-   if (pc.str.size() < 1)
+   if (pc.GetStr().size() < 1)
    {
       ctx.restore();
       return(false);
@@ -515,10 +515,10 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
    ctx.save();
 
    // account for opening two chars
-   pc.str = ctx.get();   // opening '/'
+   pc.Str() = ctx.get();   // opening '/'
    size_t ch = ctx.get();
 
-   pc.str.append(ch);    // second char
+   pc.Str().append(ch);    // second char
 
    if (ch == '/')
    {
@@ -547,7 +547,7 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
             {
                bs_cnt = 0;
             }
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
          }
 
          /*
@@ -562,12 +562,12 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
 
          if (ctx.peek() == '\r')
          {
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
          }
 
          if (ctx.peek() == '\n')
          {
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
          }
          pc.SetNlCount(pc.GetNlCount() + 1);
          cpd.did_newline = true;
@@ -590,8 +590,8 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
          if (  (ctx.peek() == '+')
             && (ctx.peek(1) == '/'))
          {
-            pc.str.append(ctx.get());  // store the '+'
-            pc.str.append(ctx.get());  // store the '/'
+            pc.Str().append(ctx.get());  // store the '+'
+            pc.Str().append(ctx.get());  // store the '/'
             d_level--;
             continue;
          }
@@ -599,13 +599,13 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
          if (  (ctx.peek() == '/')
             && (ctx.peek(1) == '+'))
          {
-            pc.str.append(ctx.get());  // store the '/'
-            pc.str.append(ctx.get());  // store the '+'
+            pc.Str().append(ctx.get());  // store the '/'
+            pc.Str().append(ctx.get());  // store the '+'
             d_level++;
             continue;
          }
          ch = ctx.get();
-         pc.str.append(ch);
+         pc.Str().append(ch);
 
          if (  (ch == '\n')
             || (ch == '\r'))
@@ -618,7 +618,7 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
                if (ctx.peek() == '\n')
                {
                   ++LE_COUNT(CRLF);
-                  pc.str.append(ctx.get());  // store the '\n'
+                  pc.Str().append(ctx.get());  // store the '\n'
                }
                else
                {
@@ -641,18 +641,18 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
          if (  (ctx.peek() == '*')
             && (ctx.peek(1) == '/'))
          {
-            pc.str.append(ctx.get());  // store the '*'
-            pc.str.append(ctx.get());  // store the '/'
+            pc.Str().append(ctx.get());  // store the '*'
+            pc.Str().append(ctx.get());  // store the '/'
 
             tok_info ss;
             ctx.save(ss);
-            size_t   oldsize = pc.str.size();
+            size_t   oldsize = pc.GetStr().size();
 
             // If there is another C comment right after this one, combine them
             while (  (ctx.peek() == ' ')
                   || (ctx.peek() == '\t'))
             {
-               pc.str.append(ctx.get());
+               pc.Str().append(ctx.get());
             }
 
             if (  (ctx.peek() != '/')
@@ -660,12 +660,12 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
             {
                // undo the attempt to join
                ctx.restore(ss);
-               pc.str.resize(oldsize);
+               pc.Str().resize(oldsize);
                break;
             }
          }
          ch = ctx.get();
-         pc.str.append(ch);
+         pc.Str().append(ch);
 
          if (  (ch == '\n')
             || (ch == '\r'))
@@ -678,7 +678,7 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
                if (ctx.peek() == '\n')
                {
                   ++LE_COUNT(CRLF);
-                  pc.str.append(ctx.get());  // store the '\n'
+                  pc.Str().append(ctx.get());  // store the '\n'
                }
                else
                {
@@ -695,7 +695,7 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
 
    if (cpd.unc_off)
    {
-      bool found_enable_marker = (find_enable_processing_comment_marker(pc.str) >= 0);
+      bool found_enable_marker = (find_enable_processing_comment_marker(pc.GetStr()) >= 0);
 
       if (found_enable_marker)
       {
@@ -708,7 +708,7 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
    }
    else
    {
-      auto position_disable_processing_cmt = find_disable_processing_comment_marker(pc.str);
+      auto position_disable_processing_cmt = find_disable_processing_comment_marker(pc.GetStr());
       bool found_disable_marker            = (position_disable_processing_cmt >= 0);
 
       if (found_disable_marker)
@@ -718,7 +718,7 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
           * in which case we'll handle at a late time. Check to see if processing
           * is re-enabled elsewhere in this comment
           */
-         auto position_enable_processing_cmt = find_enable_processing_comment_marker(pc.str);
+         auto position_enable_processing_cmt = find_enable_processing_comment_marker(pc.GetStr());
 
          if (position_enable_processing_cmt < position_disable_processing_cmt)
          {
@@ -746,8 +746,8 @@ static bool parse_code_placeholder(tok_ctx &ctx, Chunk &pc)
    ctx.save();
 
    // account for opening two chars '<#'
-   pc.str = ctx.get();
-   pc.str.append(ctx.get());
+   pc.Str() = ctx.get();
+   pc.Str().append(ctx.get());
 
    // grab everything until '#>', fail if not found.
    size_t last1 = 0;
@@ -756,7 +756,7 @@ static bool parse_code_placeholder(tok_ctx &ctx, Chunk &pc)
    {
       size_t last2 = last1;
       last1 = ctx.get();
-      pc.str.append(last1);
+      pc.Str().append(last1);
 
       if (  (last2 == '#')
          && (last1 == '>'))
@@ -775,7 +775,7 @@ static void parse_suffix(tok_ctx &ctx, Chunk &pc, bool forstring = false)
    if (CharTable::IsKw1(ctx.peek()))
    {
       size_t slen    = 0;
-      size_t oldsize = pc.str.size();
+      size_t oldsize = pc.GetStr().size();
 
       // don't add the suffix if we see L" or L' or S"
       size_t p1 = ctx.peek();
@@ -797,16 +797,16 @@ static void parse_suffix(tok_ctx &ctx, Chunk &pc, bool forstring = false)
             && CharTable::IsKw2(ctx.peek()))
       {
          slen++;
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
       }
 
       if (  forstring
          && slen >= 4
-         && (  pc.str.startswith("PRI", oldsize)
-            || pc.str.startswith("SCN", oldsize)))
+         && (  pc.GetStr().startswith("PRI", oldsize)
+            || pc.GetStr().startswith("SCN", oldsize)))
       {
          ctx.restore(ss);
-         pc.str.resize(oldsize);
+         pc.Str().resize(oldsize);
       }
    }
 }
@@ -910,8 +910,8 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
       size_t ch;
       Chunk  pc_temp;
 
-      pc.str.append(ctx.get());  // store the '0'
-      pc_temp.str.append('0');
+      pc.Str().append(ctx.get());  // store the '0'
+      pc_temp.Str().append('0');
 
       // MS constant might have an "h" at the end. Look for it
       ctx.save();
@@ -920,9 +920,9 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
             && CharTable::IsKw2(ctx.peek()))
       {
          ch = ctx.get();
-         pc_temp.str.append(ch);
+         pc_temp.Str().append(ch);
       }
-      ch = pc_temp.str[pc_temp.Len() - 1];
+      ch = pc_temp.GetStr()[pc_temp.Len() - 1];
       ctx.restore();
       LOG_FMT(LGUY, "%s(%d): pc_temp:%s\n", __func__, __LINE__, pc_temp.Text());
 
@@ -934,10 +934,10 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
 
          do
          {
-            pc.str.append(ctx.get()); // store the rest
+            pc.Str().append(ctx.get()); // store the rest
          } while (is_hex_(ctx.peek()));
 
-         pc.str.append(ctx.get());    // store the h
+         pc.Str().append(ctx.get());    // store the h
          LOG_FMT(LGUY, "%s(%d): pc:%s\n", __func__, __LINE__, pc.Text());
       }
       else
@@ -949,7 +949,7 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
 
             do
             {
-               pc.str.append(ctx.get());  // store the 'x' and then the rest
+               pc.Str().append(ctx.get());  // store the 'x' and then the rest
             } while (is_hex_(ctx.peek()));
 
             break;
@@ -958,7 +958,7 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
 
             do
             {
-               pc.str.append(ctx.get());  // store the 'b' and then the rest
+               pc.Str().append(ctx.get());  // store the 'b' and then the rest
             } while (is_bin_(ctx.peek()));
 
             break;
@@ -976,7 +976,7 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
 
             do
             {
-               pc.str.append(ctx.get());
+               pc.Str().append(ctx.get());
             } while (is_oct_(ctx.peek()));
 
             break;
@@ -992,7 +992,7 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
       // Regular int or float
       while (is_dec_(ctx.peek()))
       {
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
       }
    }
 
@@ -1021,21 +1021,21 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
       {
          ctx.restore(ss);
       }
-      pc.str.append(ctx.get());
+      pc.Str().append(ctx.get());
       is_float = true;
 
       if (did_hex)
       {
          while (is_hex_(ctx.peek()))
          {
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
          }
       }
       else
       {
          while (is_dec_(ctx.peek()))
          {
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
          }
       }
    }
@@ -1051,17 +1051,17 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
       || (tmp == 'P'))
    {
       is_float = true;
-      pc.str.append(ctx.get());
+      pc.Str().append(ctx.get());
 
       if (  (ctx.peek() == '+')
          || (ctx.peek() == '-'))
       {
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
       }
 
       while (is_dec_(ctx.peek()))
       {
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
       }
    }
 
@@ -1093,7 +1093,7 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
       {
          break;
       }
-      pc.str.append(ctx.get());
+      pc.Str().append(ctx.get());
    }
 
    // skip the Microsoft-specific '32' and '64' suffix
@@ -1102,8 +1102,8 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
       || (  (ctx.peek() == '6')
          && (ctx.peek(1) == '4')))
    {
-      pc.str.append(ctx.get());
-      pc.str.append(ctx.get());
+      pc.Str().append(ctx.get());
+      pc.Str().append(ctx.get());
    }
    pc.SetType(is_float ? CT_NUMBER_FP : CT_NUMBER);
 
@@ -1130,16 +1130,16 @@ static bool parse_string(tok_ctx &ctx, Chunk &pc, size_t quote_idx, bool allow_e
                                    && options::string_replace_tab_chars()
                                    && language_is_set(LANG_ALLC));
 
-   pc.str.clear();
+   pc.Str().clear();
 
    while (quote_idx-- > 0)
    {
-      pc.str.append(ctx.get());
+      pc.Str().append(ctx.get());
    }
    pc.SetType(CT_STRING);
    const size_t termination_character = CharTable::Get(ctx.peek()) & 0xff;
 
-   pc.str.append(ctx.get());                          // store the "
+   pc.Str().append(ctx.get());                          // store the "
 
    bool escaped = false;
 
@@ -1153,11 +1153,11 @@ static bool parse_string(tok_ctx &ctx, Chunk &pc, size_t quote_idx, bool allow_e
       {
          const size_t lastcol = ctx.c.col - 1;
          ctx.c.col = lastcol + 2;
-         pc.str.append(escape_char);
-         pc.str.append('t');
+         pc.Str().append(escape_char);
+         pc.Str().append('t');
          continue;
       }
-      pc.str.append(ch);
+      pc.Str().append(ch);
 
       if (ch == '\n')
       {
@@ -1167,7 +1167,7 @@ static bool parse_string(tok_ctx &ctx, Chunk &pc, size_t quote_idx, bool allow_e
       else if (  ch == '\r'
               && ctx.peek() != '\n')
       {
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
          pc.SetNlCount(pc.GetNlCount() + 1);
          pc.SetType(CT_STRING_MULTI);
       }
@@ -1244,7 +1244,7 @@ static cs_string_t parse_cs_string_start(tok_ctx &ctx, Chunk &pc)
 
       for (int i = 0; i <= offset; ++i)
       {
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
       }
    }
    else
@@ -1301,11 +1301,11 @@ static bool parse_cs_string(tok_ctx &ctx, Chunk &pc)
 
          if (ctx.peek() == '}')
          {
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
 
             if (ctx.peek() == '}')
             {
-               pc.str.append(ctx.get()); // in interpolated string, `}}` is escape'd `}`
+               pc.Str().append(ctx.get()); // in interpolated string, `}}` is escape'd `}`
             }
             else
             {
@@ -1324,7 +1324,7 @@ static bool parse_cs_string(tok_ctx &ctx, Chunk &pc)
       int lastcol = ctx.c.col;
       int ch      = ctx.get();
 
-      pc.str.append(ch);
+      pc.Str().append(ch);
 
       if (ch == '\n')
       {
@@ -1369,8 +1369,8 @@ static bool parse_cs_string(tok_ctx &ctx, Chunk &pc)
          else
          {
             ctx.c.col = lastcol + 2;
-            pc.str.pop_back(); // remove \t
-            pc.str.append("\\t");
+            pc.Str().pop_back(); // remove \t
+            pc.Str().append("\\t");
 
             continue;
          }
@@ -1382,7 +1382,7 @@ static bool parse_cs_string(tok_ctx &ctx, Chunk &pc)
          if (  ctx.peek() == '"'
             || ctx.peek() == '\\')
          {
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
          }
       }
       else if (ch == '"')
@@ -1391,7 +1391,7 @@ static bool parse_cs_string(tok_ctx &ctx, Chunk &pc)
             && (ctx.peek() == '"'))
          {
             // in verbatim string, `""` is escape'd `"`
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
          }
          else
          {
@@ -1410,7 +1410,7 @@ static bool parse_cs_string(tok_ctx &ctx, Chunk &pc)
          {
             if (ctx.peek() == '{')
             {
-               pc.str.append(ctx.get()); // in interpolated string, `{{` is escape'd `{`
+               pc.Str().append(ctx.get()); // in interpolated string, `{{` is escape'd `{`
             }
             else
             {
@@ -1428,22 +1428,22 @@ static void parse_verbatim_string(tok_ctx &ctx, Chunk &pc)
    pc.SetType(CT_STRING);
 
    // consume the initial """
-   pc.str = ctx.get();
-   pc.str.append(ctx.get());
-   pc.str.append(ctx.get());
+   pc.Str() = ctx.get();
+   pc.Str().append(ctx.get());
+   pc.Str().append(ctx.get());
 
    // go until we hit a zero (end of file) or a """
    while (ctx.more())
    {
       size_t ch = ctx.get();
-      pc.str.append(ch);
+      pc.Str().append(ch);
 
       if (  (ch == '"')
          && (ctx.peek() == '"')
          && (ctx.peek(1) == '"'))
       {
-         pc.str.append(ctx.get());
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
+         pc.Str().append(ctx.get());
          break;
       }
 
@@ -1481,12 +1481,12 @@ static bool parse_cr_string(tok_ctx &ctx, Chunk &pc, size_t q_idx)
    ctx.save();
 
    // Copy the prefix + " to the string
-   pc.str.clear();
+   pc.Str().clear();
    int cnt = q_idx + 1;
 
    while (cnt--)
    {
-      pc.str.append(ctx.get());
+      pc.Str().append(ctx.get());
    }
 
    // Add the tag and get the length of the tag
@@ -1494,7 +1494,7 @@ static bool parse_cr_string(tok_ctx &ctx, Chunk &pc, size_t q_idx)
          && (ctx.peek() != '('))
    {
       tag_len++;
-      pc.str.append(ctx.get());
+      pc.Str().append(ctx.get());
    }
 
    if (ctx.peek() != '(')
@@ -1514,7 +1514,7 @@ static bool parse_cr_string(tok_ctx &ctx, Chunk &pc, size_t q_idx)
 
          while (cnt--)
          {
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
          }
          parse_suffix(ctx, pc);
          return(true);
@@ -1522,13 +1522,13 @@ static bool parse_cr_string(tok_ctx &ctx, Chunk &pc, size_t q_idx)
 
       if (ctx.peek() == '\n')
       {
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
          pc.SetNlCount(pc.GetNlCount() + 1);
          pc.SetType(CT_STRING_MULTI);
       }
       else
       {
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
       }
    }
    ctx.restore();
@@ -1548,8 +1548,8 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
    static unc_text intr_txt("@interface");
 
    // The first character is already valid
-   pc.str.clear();
-   pc.str.append(ctx.get());
+   pc.Str().clear();
+   pc.Str().append(ctx.get());
 
    while (ctx.more())
    {
@@ -1557,13 +1557,13 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
 
       if (CharTable::IsKw2(ch))
       {
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
       }
       else if (  (ch == '\\')
               && (unc_tolower(ctx.peek(1)) == 'u'))
       {
-         pc.str.append(ctx.get());
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
+         pc.Str().append(ctx.get());
          skipcheck = true;
       }
       else
@@ -1612,8 +1612,8 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
    {
       // '@interface' is reserved, not an interface itself
       if (  language_is_set(LANG_JAVA)
-         && pc.str.startswith("@")
-         && !pc.str.equals(intr_txt))
+         && pc.GetStr().startswith("@")
+         && !pc.GetStr().equals(intr_txt))
       {
          pc.SetType(CT_ANNOTATION);
       }
@@ -1621,7 +1621,7 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
       {
          // Turn it into a keyword now
          // Issue #1460 will return "COMMENT_CPP"
-         pc.SetType(find_keyword_type(pc.Text(), pc.str.size()));
+         pc.SetType(find_keyword_type(pc.Text(), pc.GetStr().size()));
 
          /* Special pattern: if we're trying to redirect a preprocessor directive to PP_IGNORE,
           * then ensure we're actually part of a preprocessor before doing the swap, or we'll
@@ -1631,7 +1631,7 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
          if (  pc.GetType() == CT_PP_IGNORE
             && !cpd.in_preproc)
          {
-            pc.SetType(find_keyword_type(pc.Text(), pc.str.size()));
+            pc.SetType(find_keyword_type(pc.Text(), pc.GetStr().size()));
          }
          else if (pc.GetType() == CT_COMMENT_CPP)   // Issue #1460
          {
@@ -1662,7 +1662,7 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
                   {
                      bs_cnt = 0;
                   }
-                  pc.str.append(ctx.get());
+                  pc.Str().append(ctx.get());
                }
 
                /*
@@ -1677,12 +1677,12 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
 
                if (ctx.peek() == '\r')
                {
-                  pc.str.append(ctx.get());
+                  pc.Str().append(ctx.get());
                }
 
                if (ctx.peek() == '\n')
                {
-                  pc.str.append(ctx.get());
+                  pc.Str().append(ctx.get());
                }
                pc.SetNlCount(pc.GetNlCount() + 1);
                cpd.did_newline = true;
@@ -1777,11 +1777,11 @@ static size_t parse_attribute_specifier_sequence(tok_ctx &ctx)
 
 static bool extract_attribute_specifier_sequence(tok_ctx &ctx, Chunk &pc, size_t length)
 {
-   pc.str.clear();
+   pc.Str().clear();
 
    while (length--)
    {
-      pc.str.append(ctx.get());
+      pc.Str().append(ctx.get());
    }
    pc.SetType(CT_ATTRIBUTE);
    return(true);
@@ -1840,7 +1840,7 @@ static bool parse_whitespace(tok_ctx &ctx, Chunk &pc)
 
    if (ch != 0)
    {
-      pc.str.clear();
+      pc.Str().clear();
       pc.SetType(nl_count ? CT_NEWLINE : CT_WHITESPACE);
       pc.SetNlCount(nl_count);
       pc.SetAfterTab((ctx.c.last_ch == '\t'));
@@ -1870,7 +1870,7 @@ static bool parse_bs_newline(tok_ctx &ctx, Chunk &pc)
             ctx.expect('\n');
          }
          pc.SetType(CT_NL_CONT);
-         pc.str = "\\";
+         pc.Str() = "\\";
          pc.SetNlCount(1);
          return(true);
       }
@@ -1908,7 +1908,7 @@ static bool parse_newline(tok_ctx &ctx)
 
 static void parse_pawn_pattern(tok_ctx &ctx, Chunk &pc, E_Token tt)
 {
-   pc.str.clear();
+   pc.Str().clear();
    pc.SetType(tt);
 
    while (!unc_isspace(ctx.peek()))
@@ -1924,7 +1924,7 @@ static void parse_pawn_pattern(tok_ctx &ctx, Chunk &pc, E_Token tt)
             break;
          }
       }
-      pc.str.append(ctx.get());
+      pc.Str().append(ctx.get());
    }
 }
 
@@ -1961,7 +1961,7 @@ static bool parse_macro(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       return(true);
    }
    ctx.save();
-   pc.str.clear();
+   pc.Str().clear();
 
    if (prev_pc == nullptr)
    {
@@ -1982,7 +1982,7 @@ static bool parse_macro(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       if (  (  nl_cont
             || (  continued
                && nl))
-         && pc.str.size() > 0)
+         && pc.GetStr().size() > 0)
       {
          pc.SetType(CT_PP_IGNORE);
          return(true);
@@ -1991,9 +1991,9 @@ static bool parse_macro(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       {
          break;
       }
-      pc.str.append(ctx.get());
+      pc.Str().append(ctx.get());
    }
-   pc.str.clear();
+   pc.Str().clear();
    ctx.restore();
    return(false);
 } // parse_macro
@@ -2007,31 +2007,31 @@ static bool parse_ignored(tok_ctx &ctx, Chunk &pc)
    }
    // See if the UO_enable_processing_cmt or #pragma endasm / #endasm text is on this line
    ctx.save();
-   pc.str.clear();
+   pc.Str().clear();
 
    while (  ctx.more()
          && (ctx.peek() != '\r')
          && (ctx.peek() != '\n'))
    {
-      pc.str.append(ctx.get());
+      pc.Str().append(ctx.get());
    }
 
-   if (pc.str.size() == 0)
+   if (pc.GetStr().size() == 0)
    {
       // end of file?
       return(false);
    }
 
    // HACK: turn on if we find '#endasm' or '#pragma' and 'endasm' separated by blanks
-   if (  (  (  (pc.str.find("#pragma ") >= 0)
-            || (pc.str.find("#pragma	") >= 0))
-         && (  (pc.str.find(" endasm") >= 0)
-            || (pc.str.find("	endasm") >= 0)))
-      || (pc.str.find("#endasm") >= 0))
+   if (  (  (  (pc.GetStr().find("#pragma ") >= 0)
+            || (pc.GetStr().find("#pragma	") >= 0))
+         && (  (pc.GetStr().find(" endasm") >= 0)
+            || (pc.GetStr().find("	endasm") >= 0)))
+      || (pc.GetStr().find("#endasm") >= 0))
    {
       cpd.unc_off = false;
       ctx.restore();
-      pc.str.clear();
+      pc.Str().clear();
       return(false);
    }
    // Note that we aren't actually making sure this is in a comment, yet
@@ -2045,8 +2045,8 @@ static bool parse_ignored(tok_ctx &ctx, Chunk &pc)
       if (  ontext != UNCRUSTIFY_ON_TEXT
          && options::processing_cmt_as_regex())
       {
-         std::wstring pc_wstring(pc.str.get().cbegin(),
-                                 pc.str.get().cend());
+         std::wstring pc_wstring(pc.GetStr().get().cbegin(),
+                                 pc.GetStr().get().cend());
          std::wregex  criteria(std::wstring(ontext.cbegin(),
                                             ontext.cend()));
 
@@ -2056,7 +2056,7 @@ static bool parse_ignored(tok_ctx &ctx, Chunk &pc)
       }
       else
       {
-         found_enable_pattern = (pc.str.find(ontext.c_str()) >= 0);
+         found_enable_pattern = (pc.GetStr().find(ontext.c_str()) >= 0);
       }
 
       if (!found_enable_pattern)
@@ -2081,16 +2081,16 @@ static bool parse_ignored(tok_ctx &ctx, Chunk &pc)
       return(true);
    }
    // Reset the chunk & scan to until a newline
-   pc.str.clear();
+   pc.Str().clear();
 
    while (  ctx.more()
          && (ctx.peek() != '\r')
          && (ctx.peek() != '\n'))
    {
-      pc.str.append(ctx.get());
+      pc.Str().append(ctx.get());
    }
 
-   if (pc.str.size() > 0)
+   if (pc.GetStr().size() > 0)
    {
       pc.SetType(CT_IGNORED);
       return(true);
@@ -2142,7 +2142,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
    if (  cpd.in_preproc > CT_PP_BODYCHUNK
       && cpd.in_preproc <= CT_PP_OTHER)
    {
-      pc.str.clear();
+      pc.Str().clear();
       tok_info ss;
       ctx.save(ss);
       // Chunk to a newline or comment
@@ -2169,7 +2169,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
             if (last == '\\')
             {
                ctx.restore(ss);
-               pc.str.pop_back();
+               pc.Str().pop_back();
             }
             break;
          }
@@ -2184,10 +2184,10 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
          last = ch;
          ctx.save(ss);
 
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
       }
 
-      if (pc.str.size() > 0)
+      if (pc.GetStr().size() > 0)
       {
          return(true);
       }
@@ -2328,9 +2328,9 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
          && (ctx.peek() == '%')
          && unc_isdigit(ctx.peek(1)))
       {
-         pc.str.clear();
-         pc.str.append(ctx.get());
-         pc.str.append(ctx.get());
+         pc.Str().clear();
+         pc.Str().append(ctx.get());
+         pc.Str().append(ctx.get());
          pc.SetType(CT_WORD);
          return(true);
       }
@@ -2447,7 +2447,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
          && (nc <= '9'))
       {
          // literal number
-         pc.str.append(ctx.get());  // store the '@'
+         pc.Str().append(ctx.get());  // store the '@'
          parse_number(ctx, pc);
          return(true);
       }
@@ -2497,7 +2497,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
 
       while (cnt--)
       {
-         pc.str.append(ctx.get());
+         pc.Str().append(ctx.get());
       }
       pc.SetType(punc->type);
       pc.SetFlagBits(PCF_PUNCTUATOR);
@@ -2523,7 +2523,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
 
          while (cnt--)
          {
-            pc.str.append(ctx.get());
+            pc.Str().append(ctx.get());
          }
          pc.SetType(punc->type);
          pc.SetFlagBits(PCF_PUNCTUATOR);
@@ -2532,10 +2532,10 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
    }
    // throw away this character
    pc.SetType(CT_UNKNOWN);
-   pc.str.append(ctx.get());
+   pc.Str().append(ctx.get());
 
    LOG_FMT(LWARN, "%s:%zu Garbage in col %zu: %x\n",
-           cpd.filename.c_str(), pc.GetOrigLine(), ctx.c.col, pc.str[0]);
+           cpd.filename.c_str(), pc.GetOrigLine(), ctx.c.col, pc.GetStr()[0]);
    exit(EX_SOFTWARE);
 } // parse_next
 
@@ -2694,13 +2694,13 @@ void tokenize(const deque<int> &data, Chunk *ref)
       {
          last_was_tab = chunk.GetAfterTab();
          chunk.SetAfterTab(false);
-         chunk.str.clear();
+         chunk.Str().clear();
       }
       else if (chunk.GetType() == CT_NL_CONT)
       {
          last_was_tab = chunk.GetAfterTab();
          chunk.SetAfterTab(false);
-         chunk.str = "\\\n";
+         chunk.Str() = "\\\n";
       }
       else
       {
@@ -2713,18 +2713,18 @@ void tokenize(const deque<int> &data, Chunk *ref)
       {
          // Issue #1338
          // Strip trailing whitespace (for CPP comments and PP blocks)
-         while (  (chunk.str.size() > 0)
-               && (  (chunk.str[chunk.str.size() - 1] == ' ')
-                  || (chunk.str[chunk.str.size() - 1] == '\t')))
+         while (  (chunk.GetStr().size() > 0)
+               && (  (chunk.GetStr()[chunk.GetStr().size() - 1] == ' ')
+                  || (chunk.GetStr()[chunk.GetStr().size() - 1] == '\t')))
          {
             // If comment contains backslash '\' followed by whitespace chars, keep last one;
             // this will prevent it from turning '\' into line continuation.
-            if (  (chunk.str.size() > 1)
-               && (chunk.str[chunk.str.size() - 2] == '\\'))
+            if (  (chunk.GetStr().size() > 1)
+               && (chunk.GetStr()[chunk.GetStr().size() - 2] == '\\'))
             {
                break;
             }
-            chunk.str.pop_back();
+            chunk.Str().pop_back();
             num_stripped++;                    // Issue #1966
          }
       }

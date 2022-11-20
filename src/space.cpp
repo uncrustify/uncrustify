@@ -199,7 +199,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    if (  first->Is(CT_CASE)
-      && ((  CharTable::IsKw1(second->str[0])
+      && ((  CharTable::IsKw1(second->GetStr()[0])
           || second->Is(CT_NUMBER))))
    {
       // Fix the spacing between 'case' and the label. Only 'ignore' and 'force' make
@@ -605,7 +605,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  (  first->Is(CT_WORD)
             || first->Is(CT_TYPE)
             || first->Is(CT_PAREN_CLOSE)
-            || CharTable::IsKw1(first->str[0]))
+            || CharTable::IsKw1(first->GetStr()[0]))
          && (strcmp(first->Text(), "void") != 0)) // Issue 1249
       {
          // Add or remove space before the '::' operator.
@@ -750,7 +750,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          return(options::sp_ellipsis_parameter_pack());
       }
 
-      if (CharTable::IsKw1(second->str[0]))
+      if (CharTable::IsKw1(second->GetStr()[0]))
       {
          log_rule("FORCE");
          return(IARF_FORCE);
@@ -1283,7 +1283,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (first->Is(CT_ANGLE_CLOSE))
    {
       if (  second->Is(CT_WORD)
-         || CharTable::IsKw1(second->str[0]))
+         || CharTable::IsKw1(second->GetStr()[0]))
       {
          // Add or remove space between '>' and a word as in 'List<byte> m;' or
          // 'template <typename T> static ...'.
@@ -1361,7 +1361,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          log_rule("sp_after_byref_func");                          // byref 2
          return(options::sp_after_byref_func());
       }
-      else if (  CharTable::IsKw1(second->str[0])
+      else if (  CharTable::IsKw1(second->GetStr()[0])
               && (  options::sp_after_byref() != IARF_IGNORE
                  || (  !second->Is(CT_FUNC_PROTO)
                     && !second->Is(CT_FUNC_DEF))))
@@ -2440,7 +2440,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          auto arith_char = (  first->Is(CT_ARITH)
                            || first->Is(CT_SHIFT)
                            || first->Is(CT_CARET))
-                           ? first->str[0] : second->str[0];
+                           ? first->GetStr()[0] : second->GetStr()[0];
 
          if (  arith_char == '+'
             || arith_char == '-')
@@ -2536,7 +2536,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
             return(options::sp_after_ptr_star_func());
          }
       }
-      else if (CharTable::IsKw1(second->str[0]))
+      else if (CharTable::IsKw1(second->GetStr()[0]))
       {
          Chunk *prev = first->GetPrev();
 
@@ -3323,8 +3323,8 @@ void space_text()
          {
             LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, Skip %s (%zu+%zu)\n",
                     __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()),
-                    pc->GetColumn(), pc->str.size());
-            next->SetColumn(pc->GetColumn() + pc->str.size());
+                    pc->GetColumn(), pc->GetStr().size());
+            next->SetColumn(pc->GetColumn() + pc->GetStr().size());
             next = next->GetNext();
          }
       }
@@ -3388,7 +3388,7 @@ void space_text()
             && !pc->IsString("{{")
             && !pc->IsString("}}")
             && !pc->IsString("()")
-            && !pc->str.startswith("@\""))
+            && !pc->GetStr().startswith("@\""))
          {
             // Find the next non-empty chunk on this line
             Chunk *tmp = next;
@@ -3403,8 +3403,8 @@ void space_text()
             if (  tmp->IsNotNullChunk()
                && tmp->Len() > 0)
             {
-               bool kw1 = CharTable::IsKw2(pc->str[pc->Len() - 1]);
-               bool kw2 = CharTable::IsKw1(next->str[0]);
+               bool kw1 = CharTable::IsKw2(pc->GetStr()[pc->Len() - 1]);
+               bool kw2 = CharTable::IsKw1(next->GetStr()[0]);
 
                if (  kw1
                   && kw2)
@@ -3760,7 +3760,7 @@ void space_add_after(Chunk *pc, size_t count)
       {
          while (next->Len() < count)
          {
-            next->str.append(' ');
+            next->Str().append(' ');
          }
       }
       return;
@@ -3769,8 +3769,8 @@ void space_add_after(Chunk *pc, size_t count)
 
    sp.SetType(CT_SPACE);
    sp.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
-   sp.str = "                ";         // 16 spaces
-   sp.str.resize(count);
+   sp.Str() = "                ";         // 16 spaces
+   sp.Str().resize(count);
    sp.SetLevel(pc->GetLevel());
    sp.SetBraceLevel(pc->GetBraceLevel());
    sp.SetPpLevel(pc->GetPpLevel());

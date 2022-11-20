@@ -490,12 +490,12 @@ static void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
    if (nl->TestFlags(PCF_IN_PREPROC))
    {
       nl->SetType(CT_NL_CONT);
-      nl->str = "\\\n";
+      nl->Str() = "\\\n";
    }
    else
    {
       nl->SetType(CT_NEWLINE);
-      nl->str = "\n";
+      nl->Str() = "\n";
    }
 } // setup_newline_add
 
@@ -659,12 +659,12 @@ static void newline_end_newline(Chunk *br_close)
       if (nl.TestFlags(PCF_IN_PREPROC))
       {
          nl.SetType(CT_NL_CONT);
-         nl.str = "\\\n";
+         nl.Str() = "\\\n";
       }
       else
       {
          nl.SetType(CT_NEWLINE);
-         nl.str = "\n";
+         nl.Str() = "\n";
       }
       MARK_CHANGE();
       LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline after '%s'\n",
@@ -3970,7 +3970,7 @@ void newlines_cleanup_braces(bool first)
          log_rule_B("nl_oc_brace_catch");
 
          if (  language_is_set(LANG_OC)
-            && (pc->str[0] == '@')
+            && (pc->GetStr()[0] == '@')
             && (options::nl_oc_brace_catch() != IARF_IGNORE))
          {
             newlines_cuddle_uncuddle(pc, options::nl_oc_brace_catch());

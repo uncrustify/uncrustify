@@ -49,7 +49,7 @@ void Chunk::CopyFrom(const Chunk &o)
    m_prev   = Chunk::NullChunkPtr;
    m_parent = Chunk::NullChunkPtr;
 
-   str            = o.str;
+   m_str          = o.m_str;
    m_trackingData = o.m_trackingData;
 }
 
@@ -80,7 +80,7 @@ void Chunk::Reset()
    m_parent = Chunk::NullChunkPtr;
 
    // for debugging purpose only
-   str.clear();
+   m_str.clear();
    m_trackingData = nullptr;
 }
 
@@ -400,7 +400,7 @@ bool Chunk::IsAddress() const
    if (  IsNotNullChunk()
       && (  Is(CT_BYREF)
          || (  Len() == 1
-            && str[0] == '&'
+            && m_str[0] == '&'
             && IsNot(CT_OPERATOR_VAL))))
    {
       Chunk *prevc = GetPrev();

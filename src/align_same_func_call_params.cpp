@@ -120,10 +120,10 @@ void align_same_func_call_params()
 
       while (prev != pc)
       {
-         align_fcn_name += prev->str;
+         align_fcn_name += prev->GetStr();
          prev            = prev->GetNext();
       }
-      align_fcn_name += pc->str;
+      align_fcn_name += pc->GetStr();
       LOG_FMT(LASFCP, "%s(%d): Func Call found at orig line is %zu, orig col is %zu, c_str() '%s'\n",
               __func__, __LINE__, align_fcn->GetOrigLine(),
               align_fcn->GetOrigCol(),

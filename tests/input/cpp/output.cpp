@@ -135,7 +135,7 @@ void output_parsed(FILE *pfile)
          {
             fprintf(pfile, " ");
          }
-         fprintf(pfile, "%.*s", pc->len, pc->str);
+         fprintf(pfile, "%.*s", pc->len, pc->GetStr());
       }
    }
    fprintf(pfile, "\n-=====-\n");
@@ -261,7 +261,7 @@ void output_text(FILE *pfile)
          }
 
          output_to_column(pc->GetColumn(), allow_tabs);
-         add_text_len(pc->str, pc->len);
+         add_text_len(pc->GetStr(), pc->len);
          cpd.did_newline = pc->IsNewline();
       }
    }
@@ -409,7 +409,7 @@ Chunk *output_comment_cpp(Chunk *first)
 
    if (!cpd.settings[UO_cmt_cpp_to_c].b)
    {
-      add_text_len(first->str, first->len);
+      add_text_len(first->GetStr(), first->len);
       return(first);
    }
 
@@ -445,11 +445,11 @@ Chunk *output_comment_cpp(Chunk *first)
    {
       /* nothing to group: just output a single line */
       add_text_len("/*", 2);
-      if ((first->str[2] != ' ') && (first->str[2] != '\t'))
+      if ((first->GetStr()[2] != ' ') && (first->GetStr()[2] != '\t'))
       {
          add_char(' ');
       }
-      add_text_len(&first->str[2], first->len - 2);
+      add_text_len(&first->GetStr()[2], first->len - 2);
       add_text_len(" */", 3);
       return(first);
    }
@@ -490,11 +490,11 @@ cpp_newline:
          add_char(' ');
          add_char(cpd.settings[UO_cmt_star_cont].b ? '*' : ' ');
 cpp_addline:
-         if ((pc->str[2] != ' ') && (pc->str[2] != '\t'))
+         if ((pc->GetStr()[2] != ' ') && (pc->GetStr()[2] != '\t'))
          {
             add_char(' ');
          }
-         add_text_len(&pc->str[2], pc->len - 2);
+         add_text_len(&pc->GetStr()[2], pc->len - 2);
       }
    }
 
@@ -534,11 +534,11 @@ void output_comment_multi(Chunk *pc)
    //   fprintf(stderr, "Indenting1 line %d to col %d (orig=%d) col_diff=%d\n",
    //           pc->GetOrigLine(), cmt_col, pc->GetOrigCol(), col_diff);
 
-   xtra = calculate_comment_body_indent(pc->str, pc->len, pc->GetColumn());
+   xtra = calculate_comment_body_indent(pc->GetStr(), pc->len, pc->GetColumn());
 
    ccol      = 1;
    remaining = pc->len;
-   cmt_str   = pc->str;
+   cmt_str   = pc->GetStr();
    line_len  = 0;
    while (remaining > 0)
    {

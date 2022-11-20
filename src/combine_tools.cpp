@@ -402,7 +402,7 @@ bool chunkstack_match(ChunkStack &cs, Chunk *pc)
    {
       Chunk *tmp = cs.GetChunk(idx);
 
-      if (pc->str.equals(tmp->str))
+      if (pc->GetStr().equals(tmp->GetStr()))
       {
          return(true);
       }

@@ -201,9 +201,9 @@ static unc_text chunk_sort_str(Chunk *pc)
 {
    if (pc->GetParentType() == CT_PP_INCLUDE)
    {
-      return(unc_text{ pc->str, 0, pc->Len() - 1 });
+      return(unc_text{ pc->GetStr(), 0, pc->Len() - 1 });
    }
-   return(pc->str);
+   return(pc->GetStr());
 }
 
 
@@ -517,9 +517,9 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
 
    for (size_t idx = 0; idx < num_chunks; idx++)
    {
-      if (chunks[idx]->str.size() > 0)
+      if (chunks[idx]->GetStr().size() > 0)
       {
-         c_idx = chunks[idx]->str.at(0);
+         c_idx = chunks[idx]->GetStr().at(0);
       }
       else
       {
@@ -540,7 +540,7 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
 
    for (size_t idx = 0; idx < num_chunks; idx++)
    {
-      chunk_has_dot = has_dot(chunks[idx]->str);
+      chunk_has_dot = has_dot(chunks[idx]->GetStr());
 
       if (  chunk_last_has_dot != chunk_has_dot
          && idx > 0)

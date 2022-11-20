@@ -259,7 +259,7 @@ void brace_cleanup()
       {
          braceState.consumed = false;
          parse_cleanup(braceState, frm, pc);
-         print_stack(LBCSAFTER, (pc->Is(CT_VBRACE_CLOSE)) ? "Virt-}\n" : pc->str.c_str(), frm);
+         print_stack(LBCSAFTER, (pc->Is(CT_VBRACE_CLOSE)) ? "Virt-}\n" : pc->GetStr().c_str(), frm);
       }
       pc = pc->GetNext();
    }
@@ -646,7 +646,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
                parentType = frm.top().type;
             }
             else if (  prev->Is(CT_ASSIGN)
-                    && (prev->str[0] == '='))
+                    && (prev->GetStr()[0] == '='))
             {
                parentType = CT_ASSIGN;
             }
@@ -1297,7 +1297,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    chunk.SetPpLevel(frm.pp_level);
    chunk.SetBraceLevel(frm.brace_level);
    chunk.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
-   chunk.str = "";
+   chunk.Str() = "";
 
    if (after)
    {

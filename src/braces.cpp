@@ -771,7 +771,7 @@ static void convert_brace(Chunk *br)
    if (br->Is(CT_BRACE_OPEN))
    {
       br->SetType(CT_VBRACE_OPEN);
-      br->str.clear();
+      br->Str().clear();
       tmp = br->GetPrev();
 
       if (tmp->IsNullChunk())
@@ -782,7 +782,7 @@ static void convert_brace(Chunk *br)
    else if (br->Is(CT_BRACE_CLOSE))
    {
       br->SetType(CT_VBRACE_CLOSE);
-      br->str.clear();
+      br->Str().clear();
       tmp = br->GetNext();
 
       if (tmp->IsNullChunk())
@@ -852,7 +852,7 @@ static void convert_vbrace(Chunk *vbr)
    if (vbr->Is(CT_VBRACE_OPEN))
    {
       vbr->SetType(CT_BRACE_OPEN);
-      vbr->str = "{";
+      vbr->Str() = "{";
 
       /*
        * If the next chunk is a preprocessor, then move the open brace after the
@@ -870,7 +870,7 @@ static void convert_vbrace(Chunk *vbr)
    else if (vbr->Is(CT_VBRACE_CLOSE))
    {
       vbr->SetType(CT_BRACE_CLOSE);
-      vbr->str = "}";
+      vbr->Str() = "}";
 
       /*
        * If the next chunk is a comment, followed by a newline, then
@@ -977,22 +977,22 @@ Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type,
 
    new_cmt.SetFlags(ref->GetFlags() & PCF_COPY_FLAGS);
    new_cmt.SetType(cmt_type);
-   new_cmt.str.clear();
+   new_cmt.Str().clear();
 
    if (cmt_type == CT_COMMENT_CPP)
    {
-      new_cmt.str.append("// ");
-      new_cmt.str.append(cmt_text);
+      new_cmt.Str().append("// ");
+      new_cmt.Str().append(cmt_text);
    }
    else
    {
       if (ref->Is(CT_PP_ELSE))
       {  // make test c/ 02501 stable
-         new_cmt.str.append(" ");
+         new_cmt.Str().append(" ");
       }
-      new_cmt.str.append("/* ");
-      new_cmt.str.append(cmt_text);
-      new_cmt.str.append(" */");
+      new_cmt.Str().append("/* ");
+      new_cmt.Str().append(cmt_text);
+      new_cmt.Str().append(" */");
    }
    // TODO: expand comment type to cover other comment styles?
 
@@ -1027,7 +1027,7 @@ static void append_tag_name(unc_text &txt, Chunk *pc)
          break;
       }
    }
-   txt += pc->str;
+   txt += pc->GetStr();
    LOG_FMT(LMCB, "%s(%d): txt is '%s'\n",
            __func__, __LINE__, txt.c_str());
 
@@ -1040,14 +1040,14 @@ static void append_tag_name(unc_text &txt, Chunk *pc)
       {
          break;
       }
-      txt += pc->str;
+      txt += pc->GetStr();
       LOG_FMT(LMCB, "%s(%d): txt is '%s'\n",
               __func__, __LINE__, txt.c_str());
       pc = pc->GetNextNcNnl();
 
       if (pc->IsNotNullChunk())
       {
-         txt += pc->str;
+         txt += pc->GetStr();
          LOG_FMT(LMCB, "%s(%d): txt is '%s'\n",
                  __func__, __LINE__, txt.c_str());
       }
@@ -1153,7 +1153,7 @@ void add_long_closebrace_comment()
             log_rule_B("mod_add_long_switch_closebrace_comment");
             nl_min = options::mod_add_long_switch_closebrace_comment();
             tag_pc = sw_pc;
-            xstr   = sw_pc->str;
+            xstr   = sw_pc->GetStr();
             LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
                     __func__, __LINE__, xstr.c_str());
          }
@@ -1163,7 +1163,7 @@ void add_long_closebrace_comment()
             log_rule_B("mod_add_long_namespace_closebrace_comment");
             nl_min = options::mod_add_long_namespace_closebrace_comment();
             tag_pc = ns_pc;
-            xstr   = tag_pc->str;    // add 'namespace' to the string
+            xstr   = tag_pc->GetStr();    // add 'namespace' to the string
             LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
                     __func__, __LINE__, xstr.c_str());
 
@@ -1189,7 +1189,7 @@ void add_long_closebrace_comment()
             log_rule_B("mod_add_long_class_closebrace_comment");
             nl_min = options::mod_add_long_class_closebrace_comment();
             tag_pc = cl_pc;
-            xstr   = tag_pc->str;
+            xstr   = tag_pc->GetStr();
             LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
                     __func__, __LINE__, xstr.c_str());
 
@@ -1444,13 +1444,13 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    chunk.SetPpLevel(cl_colon->GetPpLevel());
    chunk.SetBraceLevel(cl_colon->GetBraceLevel());
    chunk.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
-   chunk.str = "{";
+   chunk.Str() = "{";
    Chunk *br_open = chunk.CopyAndAddAfter(cl_colon);
 
    chunk.SetType(CT_BRACE_CLOSE);
    chunk.SetOrigLine(last->GetOrigLine());
    chunk.SetOrigCol(last->GetOrigCol());
-   chunk.str = "}";
+   chunk.Str() = "}";
    Chunk *br_close = chunk.CopyAndAddAfter(last);
 
    for (pc = br_open->GetNext(E_Scope::PREPROC);

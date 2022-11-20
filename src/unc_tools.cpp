@@ -451,7 +451,7 @@ void dump_in(unsigned int type)
             {
                if (chunk.GetType() != CT_NEWLINE)
                {
-                  chunk.str = parts[1];
+                  chunk.Str() = parts[1];
                }
             }
             else

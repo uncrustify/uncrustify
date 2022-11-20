@@ -70,7 +70,7 @@ void enum_cleanup()
                      comma.SetNlCount(0);
                      comma.SetPpLevel(0);
                      comma.SetFlags(PCF_NONE);
-                     comma.str = ",";
+                     comma.Str() = ",";
 
                      if (prev->Is(CT_PP_ENDIF))                // Issue #3604
                      {

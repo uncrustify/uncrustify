@@ -290,12 +290,12 @@ static void flag_asm(Chunk *pc)
 
             nc = *tmp;
 
-            tmp->str.resize(1);
+            tmp->Str().resize(1);
             tmp->SetOrigColEnd(tmp->GetOrigCol() + 1);
             tmp->SetType(CT_ASM_COLON);
 
             nc.SetType(tmp->GetType());
-            nc.str.pop_front();
+            nc.Str().pop_front();
             nc.SetOrigCol(nc.GetOrigCol() + 1);
             nc.SetColumn(nc.GetColumn() + 1);
             nc.CopyAndAddAfter(tmp);
@@ -1899,12 +1899,12 @@ static void check_double_brace_init(Chunk *bo1)
          {
             LOG_FMT(LJDBI, " - end, orig line is %zu, orig col is %zu\n", bc2->GetOrigLine(), bc2->GetOrigCol());
             // delete bo2 and bc1
-            bo1->str += bo2->str;
+            bo1->Str() += bo2->GetStr();
             bo1->SetOrigColEnd(bo2->GetOrigColEnd());
             Chunk::Delete(bo2);
             bo1->SetParentType(CT_DOUBLE_BRACE);
 
-            bc2->str += bc1->str;
+            bc2->Str() += bc1->GetStr();
             bc2->SetOrigColEnd(bc1->GetOrigColEnd());
             Chunk::Delete(bc1);
             bc2->SetParentType(CT_DOUBLE_BRACE);
@@ -2345,7 +2345,7 @@ static Chunk *process_return_or_throw(Chunk *pc)
       // add the parenthesis
       chunk.SetType(CT_PAREN_OPEN);
       chunk.SetParentType(pc->GetType());
-      chunk.str = "(";
+      chunk.Str() = "(";
       chunk.SetLevel(pc->GetLevel());
       chunk.SetPpLevel(pc->GetPpLevel());
       chunk.SetBraceLevel(pc->GetBraceLevel());
@@ -2355,7 +2355,7 @@ static Chunk *process_return_or_throw(Chunk *pc)
       chunk.CopyAndAddBefore(next);
 
       chunk.SetType(CT_PAREN_CLOSE);
-      chunk.str = ")";
+      chunk.Str() = ")";
       chunk.SetOrigLine(semi->GetOrigLine());
       chunk.SetOrigCol(semi->GetOrigCol() - 1);
       cpar = chunk.CopyAndAddBefore(semi);
@@ -2610,7 +2610,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
 
       nc = *sq_o;
       sq_o->SetType(CT_SQUARE_OPEN);
-      sq_o->str.resize(1);
+      sq_o->Str().resize(1);
       /*
        * bug # 664
        *
@@ -2624,7 +2624,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
       sq_o->SetOrigColEnd(sq_o->GetOrigCol() + 1);
 
       nc.SetType(CT_SQUARE_CLOSE);
-      nc.str.pop_front();
+      nc.Str().pop_front();
       sq_c = nc.CopyAndAddAfter(sq_o);
    }
    sq_o->SetParentType(CT_CPP_LAMBDA);
@@ -3775,7 +3775,7 @@ static void handle_oc_property_decl(Chunk *os)
                Chunk endchunk;
                endchunk.SetType(CT_COMMA);
                endchunk.SetParentType(curr_chunk->GetParentType());
-               endchunk.str = ",";
+               endchunk.Str() = ",";
                endchunk.SetLevel(curr_chunk->GetLevel());
                endchunk.SetPpLevel(curr_chunk->GetPpLevel());
                endchunk.SetBraceLevel(curr_chunk->GetBraceLevel());
@@ -3961,12 +3961,12 @@ static void handle_wrap(Chunk *pc)
       const char *psp = (pav & IARF_ADD) ? " " : "";
       const char *fsp = (av & IARF_ADD) ? " " : "";
 
-      pc->str.append(psp);
-      pc->str.append("(");
-      pc->str.append(fsp);
-      pc->str.append(name->str);
-      pc->str.append(fsp);
-      pc->str.append(")");
+      pc->Str().append(psp);
+      pc->Str().append("(");
+      pc->Str().append(fsp);
+      pc->Str().append(name->GetStr());
+      pc->Str().append(fsp);
+      pc->Str().append(")");
 
       pc->SetType(pc->Is(CT_FUNC_WRAP) ? CT_FUNCTION : CT_TYPE);
 

@@ -426,7 +426,7 @@ static bool chunk_is_macro_reference(Chunk *pc)
       while (next->IsNotNullChunk())
       {
          if (  next->TestFlags(PCF_IN_PREPROC)
-            && std::strcmp(pc->str.c_str(), next->str.c_str()) == 0)
+            && std::strcmp(pc->GetStr().c_str(), next->GetStr().c_str()) == 0)
          {
             return(true);
          }
@@ -2104,7 +2104,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
       }
       else if (  next->Is(CT_QUALIFIER)
               && language_is_set(LANG_JAVA)
-              && std::strncmp(next->str.c_str(), "implements", 10) == 0)
+              && std::strncmp(next->GetStr().c_str(), "implements", 10) == 0)
       {
          mark_base_classes(next);
       }
@@ -2922,7 +2922,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
       pc = pc->GetPrevNcNnlNi(E_Scope::PREPROC);
 
       if (  pc->Is(CT_QUALIFIER)
-         && std::strncmp(pc->str.c_str(), "final", 5) == 0)
+         && std::strncmp(pc->GetStr().c_str(), "final", 5) == 0)
       {
          pc = pc->GetPrevNcNnlNi(E_Scope::PREPROC);
       }

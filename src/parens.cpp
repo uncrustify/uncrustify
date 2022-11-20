@@ -236,7 +236,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
    pc.SetType(CT_PAREN_OPEN);
    pc.SetOrigLine(first_n->GetOrigLine());
    pc.SetOrigCol(first_n->GetOrigCol());
-   pc.str = "(";
+   pc.Str() = "(";
    pc.SetFlags(first_n->GetFlags() & PCF_COPY_FLAGS);
    pc.SetLevel(first_n->GetLevel());
    pc.SetPpLevel(first_n->GetPpLevel());
@@ -249,7 +249,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
    pc.SetType(CT_PAREN_CLOSE);
    pc.SetOrigLine(last_p->GetOrigLine());
    pc.SetOrigCol(last_p->GetOrigCol());
-   pc.str = ")";
+   pc.Str() = ")";
    pc.SetFlags(last_p->GetFlags() & PCF_COPY_FLAGS);
    pc.SetLevel(last_p->GetLevel());
    pc.SetPpLevel(last_p->GetPpLevel());
