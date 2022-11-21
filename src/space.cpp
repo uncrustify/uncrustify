@@ -1749,7 +1749,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          || second->GetParentType() == CT_UNION)
       {
          // Fix for issue #1240  adding space in struct initializers
-         Chunk *tmp = second->SkipToMatchRev()->GetPrevNcNnl();
+         Chunk *tmp = second->GetOpeningParen()->GetPrevNcNnl();
 
          if (tmp->Is(CT_ASSIGN))
          {
@@ -2837,7 +2837,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
       if (second->Is(CT_WORD))
       {
-         Chunk *open_paren = first->SkipToMatchRev();
+         Chunk *open_paren = first->GetOpeningParen();
          Chunk *type       = open_paren->GetPrev()->GetPrev();
 
          if (type->Is(CT_TYPE))

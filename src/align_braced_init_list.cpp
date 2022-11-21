@@ -59,7 +59,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
          LOG_FMT(LALASS, "%s(%d)OK: Don't check inside SPAREN, PAREN or SQUARE groups, type is %s\n",
                  __func__, __LINE__, get_token_name(pc->GetType()));
          tmp = pc->GetOrigLine();
-         pc  = pc->SkipToMatch();
+         pc  = pc->GetClosingParen();
 
          if (pc->IsNotNullChunk())
          {

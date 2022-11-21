@@ -253,7 +253,7 @@ void rewrite_infinite_loops()
       if (pc->Is(CT_DO))
       {
          Chunk *start_brace   = find_start_brace(pc);
-         Chunk *end_brace     = start_brace->SkipToMatch();
+         Chunk *end_brace     = start_brace->GetClosingParen();
          Chunk *while_keyword = end_brace->GetNextNcNnl();
 
          if (  !while_keyword->Is(CT_WHILE_OF_DO)
@@ -299,7 +299,7 @@ void rewrite_infinite_loops()
                  && for_needs_rewrite(pc, desired_type)))
       {
          Chunk *start_brace = find_start_brace(pc);
-         Chunk *end_brace   = start_brace->SkipToMatch();
+         Chunk *end_brace   = start_brace->GetClosingParen();
 
          if (desired_type == CT_WHILE_OF_DO)
          {

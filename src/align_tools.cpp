@@ -17,7 +17,7 @@ Chunk *skip_c99_array(Chunk *sq_open)
 {
    if (sq_open->Is(CT_SQUARE_OPEN))
    {
-      Chunk *tmp = sq_open->SkipToMatch()->GetNextNc();
+      Chunk *tmp = sq_open->GetClosingParen()->GetNextNc();
 
       if (tmp->Is(CT_ASSIGN))
       {

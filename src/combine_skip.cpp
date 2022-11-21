@@ -222,7 +222,7 @@ Chunk *skip_declspec(Chunk *pc)
 
       if (pc->Is(CT_PAREN_OPEN))
       {
-         pc = pc->SkipToMatch();
+         pc = pc->GetClosingParen();
       }
    }
    return(pc);

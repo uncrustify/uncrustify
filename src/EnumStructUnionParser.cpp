@@ -58,7 +58,7 @@ static bool adj_tokens_match_qualified_identifier_pattern(Chunk *prev, Chunk *ne
           * templated type, just check to see if there's a matching closing
           * angle
           */
-         return(prev->SkipToMatch(E_Scope::PREPROC)->IsNotNullChunk());
+         return(prev->GetClosingParen(E_Scope::PREPROC)->IsNotNullChunk());
 
       case CT_DC_MEMBER:
          /**
@@ -128,7 +128,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * templated type, just check to see if there's a matching closing
           * angle
           */
-         return(prev->SkipToMatch(E_Scope::PREPROC)->IsNotNullChunk());
+         return(prev->GetClosingParen(E_Scope::PREPROC)->IsNotNullChunk());
 
       case CT_BRACE_CLOSE:
          /**
@@ -151,7 +151,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * start of a braced initializer list - skip ahead to find a matching
           * closing brace
           */
-         return(prev->SkipToMatch(E_Scope::PREPROC)->IsNotNullChunk());
+         return(prev->GetClosingParen(E_Scope::PREPROC)->IsNotNullChunk());
 
       case CT_BYREF:
          /**
@@ -201,7 +201,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * start of a constructor call parameter list - skip ahead to find a
           * matching closing paren
           */
-         next = prev->SkipToMatch(E_Scope::PREPROC);
+         next = prev->GetClosingParen(E_Scope::PREPROC);
 
          if (next->IsNotNullChunk())
          {
@@ -247,7 +247,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * if the previous token is an opening bracket, it may indicate an
           * array declaration - skip ahead to find a matching closing bracket
           */
-         return(prev->SkipToMatch(E_Scope::PREPROC)->IsNotNullChunk());
+         return(prev->GetClosingParen(E_Scope::PREPROC)->IsNotNullChunk());
 
       case CT_STAR:
          /**
@@ -578,7 +578,7 @@ static std::pair<Chunk *, Chunk *> match_variable_end(Chunk *pc, std::size_t lev
          || pc->IsParenOpen()
          || pc->Is(CT_SQUARE_OPEN))
       {
-         pc = pc->SkipToMatch(E_Scope::PREPROC);
+         pc = pc->GetClosingParen(E_Scope::PREPROC);
       }
       /**
        * call a separate function to validate adjacent tokens as potentially
@@ -690,7 +690,7 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
          || pc->IsParenClose()
          || pc->Is(CT_SQUARE_CLOSE))
       {
-         pc = pc->SkipToMatchRev(E_Scope::PREPROC);
+         pc = pc->GetOpeningParen(E_Scope::PREPROC);
       }
       /**
        * call a separate function to validate adjacent tokens as potentially
@@ -769,7 +769,7 @@ static Chunk *skip_scope_resolution_and_nested_name_specifiers(Chunk *pc)
           */
          if (pc->Is(CT_ANGLE_OPEN))
          {
-            pc = pc->SkipToMatch(E_Scope::PREPROC);
+            pc = pc->GetClosingParen(E_Scope::PREPROC);
          }
          Chunk *next = pc->GetNextNcNnl();
 
@@ -815,7 +815,7 @@ static Chunk *skip_scope_resolution_and_nested_name_specifiers_rev(Chunk *pc)
           */
          if (pc->Is(CT_ANGLE_CLOSE))
          {
-            pc = pc->SkipToMatchRev(E_Scope::PREPROC);
+            pc = pc->GetOpeningParen(E_Scope::PREPROC);
          }
          Chunk *prev = pc->GetPrevNcNnlNi();
 
@@ -1568,7 +1568,7 @@ void EnumStructUnionParser::mark_braces(Chunk *brace_open)
    }
    brace_open->SetParentType(m_start->GetType());
 
-   auto *brace_close = brace_open->SkipToMatch(E_Scope::PREPROC);
+   auto *brace_close = brace_open->GetClosingParen(E_Scope::PREPROC);
 
    if (brace_close->IsNotNullChunk())
    {
@@ -1788,7 +1788,7 @@ void EnumStructUnionParser::mark_nested_name_specifiers(Chunk *pc)
              * the template may have already been previously marked elsewhere...
              */
             auto *angle_open  = next;
-            auto *angle_close = angle_open->SkipToMatch(E_Scope::PREPROC);
+            auto *angle_close = angle_open->GetClosingParen(E_Scope::PREPROC);
 
             if (angle_close->IsNullChunk())
             {
@@ -1857,7 +1857,7 @@ void EnumStructUnionParser::mark_template(Chunk *start) const
    }
    start->SetParentType(CT_TEMPLATE);
 
-   auto *end = start->SkipToMatch(E_Scope::PREPROC);
+   auto *end = start->GetClosingParen(E_Scope::PREPROC);
 
    if (end->IsNotNullChunk())
    {
@@ -2100,7 +2100,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
          {
             mark_template(next);
          }
-         next = next->SkipToMatch(E_Scope::PREPROC);
+         next = next->GetClosingParen(E_Scope::PREPROC);
       }
       else if (  next->Is(CT_QUALIFIER)
               && language_is_set(LANG_JAVA)
@@ -2159,7 +2159,7 @@ Chunk *EnumStructUnionParser::parse_angles(Chunk *angle_open)
       /**
        * check to see if there's a matching closing angle bracket
        */
-      auto *angle_close = angle_open->SkipToMatch(E_Scope::PREPROC);
+      auto *angle_close = angle_open->GetClosingParen(E_Scope::PREPROC);
 
       if (angle_close->IsNullChunk())
       {
@@ -2231,7 +2231,7 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
     */
 
    auto *pc          = brace_open;
-   auto *brace_close = pc->SkipToMatch(E_Scope::PREPROC);
+   auto *brace_close = pc->GetClosingParen(E_Scope::PREPROC);
 
    if (brace_close->IsNotNullChunk())
    {
@@ -2280,7 +2280,7 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
          auto *paren_close = prev;
 
          // skip in reverse to the matching open paren
-         auto *paren_open = paren_close->SkipToMatchRev();
+         auto *paren_open = paren_close->GetOpeningParen();
 
          if (paren_open->IsNotNullChunk())
          {
@@ -2706,7 +2706,7 @@ void EnumStructUnionParser::try_post_identify_macro_calls()
             if (pc->IsParenOpen())
             {
                auto *paren_open  = pc;
-               auto *paren_close = paren_open->SkipToMatch(E_Scope::PREPROC);
+               auto *paren_close = paren_open->GetClosingParen(E_Scope::PREPROC);
 
                if (paren_close->IsNotNullChunk())
                {
@@ -2897,7 +2897,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
             if (  next->IsSquareBracket()                       // Issue #3601
                || next->IsParenOpen())
             {
-               prev = next->SkipToMatch(E_Scope::PREPROC);
+               prev = next->GetClosingParen(E_Scope::PREPROC);
                next = prev->GetNextNcNnl(E_Scope::PREPROC);
             }
 
@@ -2930,7 +2930,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
       if (  language_is_set(LANG_D)
          && pc->IsParenClose())
       {
-         pc = pc->SkipToMatchRev();
+         pc = pc->GetOpeningParen();
          pc = pc->GetPrevNcNnlNi();
       }
 

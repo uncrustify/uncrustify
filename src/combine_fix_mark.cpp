@@ -509,7 +509,7 @@ void fix_typedef(Chunk *start)
 
       if (the_type->IsParenClose())
       {
-         open_paren = the_type->SkipToMatchRev();
+         open_paren = the_type->GetOpeningParen();
          mark_function_type(the_type);
          the_type = the_type->GetPrevNcNnlNi(E_Scope::PREPROC);   // Issue #2279
 
@@ -1072,7 +1072,7 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
       if (  pc->Is(CT_PAREN_CLOSE)
          && !pc->TestFlags(PCF_IN_PREPROC))
       {
-         first           = pc->SkipToMatchRev();
+         first           = pc->GetOpeningParen();
          is_return_tuple = true;
       }
       pc = first;
@@ -1368,7 +1368,7 @@ void mark_function(Chunk *pc)
       // Issue #3852
       while (tmp3->IsString("("))
       {
-         tmp3 = tmp3->SkipToMatch();
+         tmp3 = tmp3->GetClosingParen();
          tmp3 = tmp3->GetNextNcNnl();
       }
 
@@ -1604,7 +1604,7 @@ void mark_function(Chunk *pc)
 
          if (prev->GetParentType() == CT_DECLSPEC)  // Issue 1289
          {
-            prev = prev->SkipToMatchRev();
+            prev = prev->GetOpeningParen();
 
             if (prev->IsNotNullChunk())
             {
@@ -1796,7 +1796,7 @@ void mark_function(Chunk *pc)
          && prev->Is(CT_PAREN_CLOSE)
          && prev->GetNextNcNnl() == pc)
       {
-         tmp = prev->SkipToMatchRev();
+         tmp = prev->GetOpeningParen();
 
          while (  tmp->IsNotNullChunk() // Issue #2315
                && tmp != prev)
@@ -2093,7 +2093,7 @@ void mark_function(Chunk *pc)
          LOG_FMT(LFCN, "%s(%d): (14) SET TO CT_FUNC_DEF: orig line is %zu, orig col is %zu, Text() '%s'\n",
                  __func__, __LINE__, tmp->GetOrigLine(), tmp->GetOrigCol(), tmp->Text());
          tmp->SetParentType(CT_FUNC_DEF);
-         tmp = tmp->SkipToMatch();
+         tmp = tmp->GetClosingParen();
 
          if (tmp->IsNotNullChunk())
          {
@@ -2152,11 +2152,11 @@ bool mark_function_type(Chunk *pc)
    {
       return(false);
    }
-   apc = apo->SkipToMatch();
+   apc = apo->GetClosingParen();
 
    if (  apc->IsNotNullChunk()
       && (  !apo->IsParenOpen()
-         || ((apc = apo->SkipToMatch())->IsNullChunk())))
+         || ((apc = apo->GetClosingParen())->IsNullChunk())))
    {
       LOG_FMT(LFTYPE, "%s(%d): not followed by parens\n", __func__, __LINE__);
       goto nogo_exit;

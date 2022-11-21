@@ -506,7 +506,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    // Skip to open paren in ':^TYPE *(ARGS) {'
    if (tmp->IsParenClose())
    {
-      tmp = tmp->SkipToMatchRev()->GetPrevNc();
+      tmp = tmp->GetOpeningParen()->GetPrevNc();
    }
 
    // // Check for star in ':^TYPE *(ARGS) {'. Issue 2477
@@ -1655,7 +1655,7 @@ void indent_text()
             Chunk *tail     = Chunk::NullChunkPtr;
             Chunk *frm_prev = frm.prev().pc;
             bool  enclosure = (  frm_prev->GetParentType() != CT_FUNC_DEF           // Issue #3407
-                              && frm_prev != frm_prev->SkipToMatch());
+                              && frm_prev != frm_prev->GetClosingParen());
             bool  linematch = true;
 
             for (auto it = frm.rbegin(); it != frm.rend() && tail->IsNullChunk(); ++it)
@@ -1664,7 +1664,7 @@ void indent_text()
                {
                   linematch &= it->pc->IsOnSameLine(head);
                }
-               Chunk *match = it->pc->SkipToMatch();
+               Chunk *match = it->pc->GetClosingParen();
 
                if (match->IsNullChunk())
                {
@@ -1712,7 +1712,7 @@ void indent_text()
             // 2a. If it's an assignment, check that both sides of the assignment operator are on the same line
             // 2b. If it's inside some closure, check that all the frames are on the same line,
             //     and it is in the top level closure, and indent_continue is non-zero
-            bool sameLine = frm.top().pc->SkipToMatch()->IsOnSameLine(tail);
+            bool sameLine = frm.top().pc->GetClosingParen()->IsOnSameLine(tail);
 
             bool isAssignSameLine =
                !enclosure
@@ -1726,7 +1726,7 @@ void indent_text()
                && enclosure
                && linematch
                && toplevel
-               && frm.top().pc->SkipToMatch()->IsOnSameLine(frm.top().pc);
+               && frm.top().pc->GetClosingParen()->IsOnSameLine(frm.top().pc);
 
             if (sameLine && ((isAssignSameLine) || (closureSameLineTopLevel)))
             {
@@ -1916,7 +1916,7 @@ void indent_text()
 
                   if (options::indent_oc_block_msg_xcode_style())
                   {
-                     Chunk *bbc           = pc->SkipToMatch(); // block brace close '}'
+                     Chunk *bbc           = pc->GetClosingParen(); // block brace close '}'
                      Chunk *bbc_next_ncnl = bbc->GetNextNcNnl();
 
                      if (  bbc_next_ncnl->GetType() == CT_OC_MSG_NAME
@@ -2568,7 +2568,7 @@ void indent_text()
               && options::indent_ignore_asm_block())
       {
          log_rule_B("indent_ignore_asm_block");
-         Chunk *tmp = pc->SkipToMatch();
+         Chunk *tmp = pc->GetClosingParen();
 
          int   move = 0;
 
@@ -3789,7 +3789,7 @@ void indent_text()
                            || searchNext->GetType() == CT_NEWLINE)
                         {
                            LOG_FMT(LINDLINE, "%s(%d):\n", __func__, __LINE__);
-                           search = search->SkipToMatchRev();
+                           search = search->GetOpeningParen();
 
                            if (  options::indent_oc_inside_msg_sel()
                               && search->GetPrevNcNnl()->Is(CT_OC_COLON)

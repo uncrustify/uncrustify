@@ -1367,7 +1367,7 @@ static void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
       {
          LOG_FMT(LNLFUNCT, "%s(%d):\n", __func__, __LINE__);
          // skip template stuff to add newlines before it
-         pc = pc->SkipToMatchRev();
+         pc = pc->GetOpeningParen();
 
          if (pc->IsNotNullChunk())
          {
@@ -1959,7 +1959,7 @@ static bool is_var_def(Chunk *pc, Chunk *next)
       && next->Is(CT_PAREN_OPEN))
    {
       // If current token starts a decltype expression, skip it
-      next = next->SkipToMatch();
+      next = next->GetClosingParen();
       next = next->GetNextNcNnl();
    }
    else if (!pc->IsTypeDefinition())
@@ -1975,7 +1975,7 @@ static bool is_var_def(Chunk *pc, Chunk *next)
    else if (next->Is(CT_ANGLE_OPEN))
    {
       // If we have a template type, skip it
-      next = next->SkipToMatch();
+      next = next->GetClosingParen();
       next = next->GetNextNcNnl();
    }
    bool is = (  (  next->IsTypeDefinition()
@@ -2027,7 +2027,7 @@ static Chunk *newline_var_def_blk(Chunk *start)
          && prev->IsNotNullChunk()
          && prev->Is(CT_ASSIGN))
       {
-         Chunk *tmp = start->SkipToMatch();
+         Chunk *tmp = start->GetClosingParen();
          return(tmp->GetNextNcNnl());
       }
       // check if we're at the top of a function definition, or function call with a
@@ -2324,7 +2324,7 @@ static void newlines_brace_pair(Chunk *br_open)
       && (br_open->GetParentType() == CT_NAMESPACE)
       && br_open->GetPrev()->IsNewline())
    {
-      Chunk *chunk_brace_close = br_open->SkipToMatch();
+      Chunk *chunk_brace_close = br_open->GetClosingParen();
 
       if (chunk_brace_close->IsNotNullChunk())
       {
@@ -2353,7 +2353,7 @@ static void newlines_brace_pair(Chunk *br_open)
       && options::nl_create_func_def_one_liner()
       && !br_open->TestFlags(PCF_NOT_POSSIBLE))          // Issue #2795
    {
-      Chunk *br_close = br_open->SkipToMatch();
+      Chunk *br_close = br_open->GetClosingParen();
       Chunk *tmp      = br_open->GetPrevNcNnlNi(); // Issue #2279
 
       if (  br_close->IsNotNullChunk()             // Issue #2594
@@ -2591,7 +2591,7 @@ static void newlines_brace_pair(Chunk *br_open)
 
    if (br_open->Is(CT_BRACE_OPEN))
    {
-      Chunk *chunk_closing_brace = br_open->SkipToMatch();
+      Chunk *chunk_closing_brace = br_open->GetClosingParen();
 
       if (chunk_closing_brace->IsNotNullChunk())
       {
@@ -3277,7 +3277,7 @@ static void newline_func_def_or_call(Chunk *start)
 
          if (tmp_next->IsNot(CT_FUNC_CLASS_DEF))
          {
-            Chunk  *closing = tmp->SkipToMatch();
+            Chunk  *closing = tmp->GetClosingParen();
             Chunk  *brace   = closing->GetNextNcNnl();
             iarf_e a;                                            // Issue #2561
 
@@ -3477,7 +3477,7 @@ static void newline_oc_msg(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *sq_c = start->SkipToMatch();
+   Chunk *sq_c = start->GetClosingParen();
 
    if (sq_c->IsNullChunk())
    {
@@ -5442,8 +5442,8 @@ void newlines_squeeze_paren_close()
          && next->IsParenClose()
          && prev->IsParenClose())
       {
-         Chunk *prev_op = prev->SkipToMatchRev();
-         Chunk *next_op = next->SkipToMatchRev();
+         Chunk *prev_op = prev->GetOpeningParen();
+         Chunk *next_op = next->GetOpeningParen();
          bool  flag     = true;
 
          Chunk *tmp = prev;
@@ -6782,7 +6782,7 @@ void annotations_newlines()
       if (next->IsParenOpen())
       {
          // TODO: control newline between annotation and '(' ?
-         ae = next->SkipToMatch();
+         ae = next->GetClosingParen();
       }
       else
       {

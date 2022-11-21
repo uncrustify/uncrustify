@@ -323,7 +323,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       }
       else if (pc->IsParenOpen())
       {
-         Chunk *next = pc->SkipToMatch();
+         Chunk *next = pc->GetClosingParen();
 
          if (next->IsNotNullChunk())
          {
@@ -336,7 +336,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
               || pc->Is(CT_ANGLE_OPEN))
       {
          // Skip [], {}, and <>
-         pc = pc->SkipToMatch();
+         pc = pc->GetClosingParen();
       }
    }
 

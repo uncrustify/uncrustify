@@ -1408,7 +1408,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          if (pc->Is(CT_BRACE_OPEN))                     // Issue #2886
          {
             // look for the closing brace
-            Chunk *A = pc->SkipToMatch();
+            Chunk *A = pc->GetClosingParen();
             LOG_FMT(LTEMPL, "%s(%d): A orig line is %zu, orig col is %zu, type is %s\n",
                     __func__, __LINE__, A->GetOrigLine(), A->GetOrigCol(), get_token_name(A->GetType()));
             pc = A->GetNext();
@@ -1472,7 +1472,7 @@ static void check_template(Chunk *start, bool in_type_cast)
                break;
             }
             auto brace_open  = pc->GetNextNcNnl();
-            auto brace_close = brace_open->SkipToMatch();
+            auto brace_close = brace_open->GetClosingParen();
 
             brace_open->SetParentType(CT_BRACED_INIT_LIST);
             brace_close->SetParentType(CT_BRACED_INIT_LIST);

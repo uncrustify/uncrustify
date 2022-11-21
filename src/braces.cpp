@@ -132,7 +132,7 @@ static bool paren_multiline_before_brace(Chunk *brace)
 
    // find parenthesis pair of the if/for/while/...
    auto paren_close = brace->GetPrevType(paren_t, brace->GetLevel(), E_Scope::ALL);
-   auto paren_open  = paren_close->SkipToMatchRev();
+   auto paren_open  = paren_close->GetOpeningParen();
 
    if (  paren_close->IsNullChunk()
       || paren_open->IsNullChunk()
@@ -818,7 +818,7 @@ static void convert_brace(Chunk *br)
          }
          else if (br->Is(CT_VBRACE_CLOSE))
          {
-            brace = br->SkipToMatchRev();
+            brace = br->GetOpeningParen();
 
             if (brace->IsNullChunk())
             {
@@ -1387,7 +1387,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    // look for the opening brace of the switch
    Chunk *open = swit->GetNextType(CT_BRACE_OPEN, swit->GetLevel());
    // look for the closing brace of the switch
-   Chunk *clos = open->SkipToMatch();
+   Chunk *clos = open->GetClosingParen();
 
    // find the end of the case-block
    pc = pc->GetNextNcNnl(E_Scope::PREPROC);
@@ -1566,7 +1566,7 @@ static void process_if_chain(Chunk *br_start)
          must_have_braces = true;
       }
       braces.push_back(pc);
-      Chunk *br_close = pc->SkipToMatch(E_Scope::PREPROC);
+      Chunk *br_close = pc->GetClosingParen(E_Scope::PREPROC);
 
       if (br_close->IsNullChunk())
       {

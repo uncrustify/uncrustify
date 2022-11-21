@@ -77,7 +77,7 @@ void remove_extra_semicolons()
             if (  closing_brace != nullptr
                && closing_brace->IsNotNullChunk())
             {
-               Chunk *opening_brace = closing_brace->SkipToMatchRev();
+               Chunk *opening_brace = closing_brace->GetOpeningParen();
 
                if (  opening_brace != nullptr
                   && opening_brace->IsNotNullChunk())
