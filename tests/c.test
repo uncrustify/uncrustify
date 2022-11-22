@@ -156,6 +156,9 @@
 00404  c/align-3.cfg                              c/align-var.c
 00405  c/align-3.cfg                              c/bits.c
 00406  c/bug_i_771.cfg                            c/bug_i_771.c
+00407  c/star-style-0.cfg                         c/star-style.c
+00408  c/star-style-1.cfg                         c/star-style.c
+00409  c/star-style-2.cfg                         c/star-style.c
 
 00411  c/align_typedef_gap-3_span-5.cfg           c/align-typedef.c
 00412  c/align_typedef_gap-3_span-5.cfg           c/align-typedef.c
