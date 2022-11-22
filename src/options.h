@@ -3136,6 +3136,9 @@ extern Option<bool>
 align_func_params;
 
 // The span for aligning parameter definitions in function on parameter name.
+// Note this option applies separately to each function parameter list encountered.
+// It does not attempt to align multiple parameter lists from multiple function
+// definitions together.
 //
 // 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 16>
@@ -3148,7 +3151,11 @@ align_func_params_span;
 extern BoundedOption<signed, -1000, 5000>
 align_func_params_thresh;
 
-// The gap for aligning function parameter definitions.
+// The minumum gap between parameter type and parameter name in function parameter
+// definitions. The actual gap may be somewhat bigger if align_var_def_star_style
+// is set to 1 and a parameter is a pointer type.
+// Note, align_func_params must be true and align_func_params_span must be at least
+// 1 for this option to have any effect.
 extern BoundedOption<unsigned, 0, 16>
 align_func_params_gap;
 
@@ -3194,12 +3201,16 @@ align_same_func_call_params_thresh;
 extern BoundedOption<unsigned, 0, 5000>
 align_var_def_span;
 
-// How to consider (or treat) the '*' in the alignment of variable definitions.
+// How to consider (or treat) the '*' in the alignment of variable definitions
+// and function parameters.
 //
 // 0: Part of the type     'void *   foo;' (default)
 // 1: Part of the variable 'void     *foo;'
 // 2: Dangling             'void    *foo;'
-// Dangling: the '*' will not be taken into account when aligning.
+//
+// Note: when align_var_def_star_style=2 (Dangling), '*'s will not be taken into
+// account when performing alignment, instead they will be placed right justified
+// into the configured gap (see align_var_def_gap and align_func_params_gap)
 extern BoundedOption<unsigned, 0, 2>
 align_var_def_star_style;
 
