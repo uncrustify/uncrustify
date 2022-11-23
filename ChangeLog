@@ -1,3 +1,47 @@
+Change highlights in uncrustify-0.76.0 (November 2022)
+-------------------------------------------------------------------------------
+   1aea3d1fcb55dc2ca40dfe2b1d548685a415ef3a
+     Added   : nl_collapse_empty_body_functions     Apr 29 2022
+   c7f5df072f56bb0e3a9b897e16b8e5fc283f3bcf
+     Added   : set_numbering_for_html_output        May 29 2022
+   92e4a36a5a78d9af523008aeb71e7acfe199269a
+     Added   : mod_infinite_loop                    Jun 22 2022
+   6e807bcec01382b164562c8ae5939d2b5ee76877
+     Added   : mod_short_int                        Jun 28 2022
+     Added   : mod_long_int                         Jun 28 2022
+     Added   : mod_unsigned_int                     Jun 28 2022
+     Added   : mod_signed_int                       Jun 28 2022
+   baad5db83faf5fb771cea8898760ad582227ccda
+     Added   : mod_int_prefer_int_on_left           Jul  6 2022
+     Added   : mod_int_long                         Jul  6 2022
+     Added   : mod_int_signed                       Jul  6 2022
+     Added   : mod_int_unsigned                     Jul  6 2022
+     Added   : mod_int_short                        Jul  6 2022
+   e6a5458d32ca26c8b7d24f514115ebc36fce2348
+     Added   : nl_oc_msg_args_min_params            Jul  9 2022
+   862369a315763ce1286732da3713414cd2533227
+     Added   : pp_space_after                       Jul 14 2022
+     Added   : pp_space_before                      Jul 14 2022
+     Removed : pp_space                             Jul 14 2022
+   be0d1664f901d1cbfa7bf7697a883adf4b709444
+     Added   : nl_throw_expr                        Jul 19 2022
+     Added   : mod_paren_on_throw                   Jul 19 2022
+   9e65feefa2d66c5d08049e53468cae682f66800d
+     Added   : debug_sort_the_tracks                Aug  2 2022
+   b58f1298a3ddcd256ecb0688f6b18ca7c623f594
+     Removed : pp_space_before                      Aug  6 2022
+   a31e5c100de768b4fec45a3e1c2d1e008824b2c6
+     Added   : nl_var_def_blk_end_func_top          Aug 11 2022
+     Removed : nl_func_var_def_blk                  Aug 11 2022
+   56e2159b29c372ebd1e240d427c842b5bb0b2147
+     Added   : pp_indent_with_tabs                  Sep  6 2022
+   35075d50967014dd7127640d2505bca5dc21dfe5
+     Added   : pp_multiline_define_body_indent      Sep 15 2022
+   5b88110f5bb685a9b298b247207e32c305366d18
+     Added   : nl_oc_msg_args_max_code_width        Sep 20 2022
+   0c8e5e827d3b5a007247ef3d5ed937cf18378680
+     Added   : debug_decode_the_flags               Oct  9 2022
+
 Change highlights in uncrustify-0.75.0 (May 2022)
 -------------------------------------------------------------------------------
   52131d9fa22fd0c655ae2510563ff85306d4bd27

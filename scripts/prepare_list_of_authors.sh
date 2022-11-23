@@ -2,7 +2,7 @@
 #
 # Prepare the list of authors
 # guy maurel
-# 2020-11-05
+# 2022-11-22
 #
 LIST_1="TheListOfAuthors.txt"
 echo "Author:"                    > ${LIST_1}
@@ -10,9 +10,10 @@ echo "2005 - 2016 : Ben Gardner" >> ${LIST_1}
 echo ""                          >> ${LIST_1}
 echo "Maintenance:"              >> ${LIST_1}
 echo "Guy Maurel"                >> ${LIST_1}
+echo "Michele Calgaro"           >> ${LIST_1}
 echo "Matthew Woehlke"           >> ${LIST_1}
 echo ""                          >> ${LIST_1}
-echo "until 2020-11-05:"         >> ${LIST_1}
+echo "until 2022-11-22:"         >> ${LIST_1}
 echo "Other collaborators:"      >> ${LIST_1}
 git log --format='%aN' \
    | sort -u \
@@ -26,12 +27,17 @@ git log --format='%aN' \
    | grep -v "^brmqk3$" \
    | grep -v "^csobeski$" \
    | grep -v "^dbeard$" \
+   | grep -v "^dundargoc$" \
+   | grep -v "^fwojcik$" \
    | grep -v "^gmaurel$" \
    | grep -v "^hdwobben$" \
    | grep -v "^ipaterson$" \
    | grep -v "^jlee975$" \
    | grep -v "^logan.gauthier@metova.com$" \
+   | grep -v "^micheleCTDE$" \
+   | grep -v "^micheleCTDEAdmin$" \
    | grep -v "^nivekkagicom$" \
+   | grep -v "^Pawel Benetkiewicz$" \
    | grep -v "^popipo$" \
    | grep -v "^raefaldhia$" \
    | grep -v "^rdan$" \
