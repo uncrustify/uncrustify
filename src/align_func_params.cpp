@@ -49,12 +49,14 @@ Chunk *align_func_param(Chunk *start)
 
    log_rule_B("align_var_def_star_style");
    log_rule_B("align_var_def_amp_style");
+   log_rule_B("align_func_params_star_gap");
 
    for (size_t idx = 0; idx <= HOW_MANY_AS; idx++)
    {
       many_as[idx].Start(myspan, mythresh);
       many_as[idx].m_gap        = mygap;
       many_as[idx].m_star_style = static_cast<AlignStack::StarStyle>(options::align_var_def_star_style());
+      many_as[idx].m_star_gap   = options::align_func_params_star_gap();
       many_as[idx].m_amp_style  = static_cast<AlignStack::StarStyle>(options::align_var_def_amp_style());
    }
 

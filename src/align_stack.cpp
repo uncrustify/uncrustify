@@ -15,6 +15,9 @@
 #include "space.h"
 #include "unc_tools.h"                   // to get stackID and get_A_Number()
 
+#ifdef WIN32
+#include <algorithm>                   // to get max
+#endif // ifdef WIN32
 
 constexpr static auto LCURRENT = LAS;
 
@@ -51,6 +54,7 @@ void AlignStack::Start(size_t span, int thresh)
    m_nl_seqnum   = 0;
    m_seqnum      = 0;
    m_gap         = 0;
+   m_star_gap    = 0;
    m_right_align = false;
    m_star_style  = SS_IGNORE;
    m_amp_style   = SS_IGNORE;
@@ -396,6 +400,9 @@ void AlignStack::NewLines(size_t cnt)
 
 void AlignStack::Flush()
 {
+   size_t max_stars = 0;
+   size_t star_gap  = 0;
+
    // produces much more log output. Use it only debugging purpose
    //WITH_STACKID_DEBUG;
 
@@ -444,8 +451,9 @@ void AlignStack::Flush()
       Chunk *pc = m_aligned.Get(idx)->m_pc;
 
       // Set the column adjust and gap
-      size_t col_adj = 0;
-      size_t gap     = 0;
+      size_t col_adj   = 0;
+      size_t gap       = 0;
+      size_t extra_gap = 0;
 
       if (pc != pc->GetAlignmentData().ref)
       {
@@ -460,7 +468,21 @@ void AlignStack::Flush()
          {
             col_adj = pc->GetAlignmentData().start->GetColumn() - pc->GetColumn();
             gap     = pc->GetAlignmentData().start->GetColumn() - (pc->GetAlignmentData().ref->GetColumn() + pc->GetAlignmentData().ref->Len());
+
+            if (m_star_gap > 0)
+            {
+               if (col_adj + m_star_gap > gap)
+               {
+                  extra_gap += col_adj + m_star_gap - gap;
+               }
+               max_stars = max(max_stars, col_adj);
+            }
          }
+      }
+
+      if (m_gap > gap)
+      {
+         extra_gap += m_gap - gap;
       }
 
       if (m_right_align)
@@ -485,8 +507,7 @@ void AlignStack::Flush()
       pc->AlignmentData().col_adj = col_adj;
 
       // See if this pushes out the max_col
-      const size_t endcol = pc->GetColumn() + col_adj
-                            + (gap < m_gap ? m_gap - gap : 0);
+      const size_t endcol = pc->GetColumn() + col_adj + extra_gap;
 
       if (endcol > m_max_col)
       {
@@ -494,6 +515,10 @@ void AlignStack::Flush()
       }
    }
 
+   if (max_stars + m_star_gap > m_gap)
+   {
+      star_gap = max_stars + m_star_gap - m_gap;
+   }
    log_rule_B("align_on_tabstop");
 
    if (  options::align_on_tabstop()
@@ -539,7 +564,7 @@ void AlignStack::Flush()
          pc->AlignmentData().amp_style   = m_amp_style;
          pc->AlignmentData().star_style  = m_star_style;
       }
-      pc->AlignmentData().gap  = m_gap;
+      pc->AlignmentData().gap  = m_gap + star_gap;
       pc->AlignmentData().next = m_aligned.GetChunk(idx + 1);
 
       // Indent the token, taking col_adj into account

@@ -2555,6 +2555,9 @@ align_keep_extra_space          = false    # true/false
 align_func_params               = false    # true/false
 
 # The span for aligning parameter definitions in function on parameter name.
+# Note this option applies separately to each function parameter list encountered.
+# It does not attempt to align multiple parameter lists from multiple function
+# definitions together.
 #
 # 0: Don't align (default).
 align_func_params_span          = 0        # unsigned number
@@ -2565,8 +2568,17 @@ align_func_params_span          = 0        # unsigned number
 # 0: No limit (default).
 align_func_params_thresh        = 0        # number
 
-# The gap for aligning function parameter definitions.
+# The minumum gap between parameter type and parameter name in function parameter
+# definitions. The actual gap may be somewhat bigger if align_var_def_star_style
+# is set to 1 and a parameter is a pointer type.
+# Note, align_func_params must be true and align_func_params_span must be at least
+# 1 for this option to have any effect.
 align_func_params_gap           = 0        # unsigned number
+
+# A minimum additional gap between parameter type and '*'s in function parameter
+# definitions.
+# Note, align_var_def_star_style must be set to 2 for this option to have any affect.
+align_func_params_star_gap      = 0        # unsigned number
 
 # The span for aligning constructor value.
 #
@@ -2603,12 +2615,16 @@ align_same_func_call_params_thresh = 0        # number
 # 0: Don't align (default).
 align_var_def_span              = 0        # unsigned number
 
-# How to consider (or treat) the '*' in the alignment of variable definitions.
+# How to consider (or treat) the '*' in the alignment of variable definitions
+# and function parameters.
 #
 # 0: Part of the type     'void *   foo;' (default)
 # 1: Part of the variable 'void     *foo;'
 # 2: Dangling             'void    *foo;'
-# Dangling: the '*' will not be taken into account when aligning.
+#
+# Note: when align_var_def_star_style=2 (Dangling), '*'s will not be taken into
+# account when performing alignment, instead they will be placed right justified
+# into the configured gap (see align_var_def_gap and align_func_params_gap)
 align_var_def_star_style        = 0        # unsigned number
 
 # How to consider (or treat) the '&' in the alignment of variable definitions.
