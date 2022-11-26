@@ -4,7 +4,7 @@
 
 .. Update the date in the next line when editing this document!
 
-*This document was last updated on 2022-05-5, for Uncrustify 0.75.0.*
+*This document was last updated on 2022-11-22, for Uncrustify 0.76.0.*
 
 This document uses "0.1.2" throughout as an example version number.
 Whenever you see this, you should substitute the version number
@@ -44,7 +44,7 @@ Preparing a Candidate
 
 The first step, obviously, is deciding to make a release.
 Prior to making a release, verify that the repository is in a stable state
-and that all CI (continuous integration - Travis and AppVeyor) has passed.
+and that all CI (continuous integration - AppVeyor) has passed.
 This should ensure all tests pass and building
 (including cross-compiling) for Windows is working.
 
