@@ -1538,12 +1538,15 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
    if (pc->Is(CT_AMP))
    {
+      Chunk *prevNext = prev->GetNext();
+
       if (prev->Is(CT_DELETE))
       {
          pc->SetType(CT_ADDR);
       }
       else if (  prev->Is(CT_TYPE)
-              || prev->Is(CT_QUALIFIER))
+              || prev->Is(CT_QUALIFIER)
+              || prevNext->Is(CT_QUALIFIER))
       {
          pc->SetType(CT_BYREF);
       }
@@ -1581,7 +1584,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          }
          else if (  pc->TestFlags(PCF_IN_PREPROC) // Issue #3559
                  && pc->Is(CT_AMP)
-                 && next->Is(CT_WORD))
+                 && next->Is(CT_WORD)
+                 && !pc->TestFlags(PCF_IN_SPAREN))
          {
             //LOG_FMT(LGUY, " ++++++++++ pc->GetFlags(): ");
             //log_pcf_flags(LGUY, pc->GetFlags());
@@ -1616,7 +1620,23 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                   }
                   else if (tmp->Is(CT_DC_MEMBER))
                   {
-                     prev->SetType(CT_TYPE);
+                     // Issue #2103 & Issue #3865: partial fix
+                     // No easy way to tell between an enum and a type with
+                     // a namespace qualifier. Compromise: if we're in a
+                     // function def or call, assume it's a ref.
+                     Chunk *nextNext = next->GetNext();
+
+                     if (  nextNext->IsNot(CT_DC_MEMBER)
+                        && (  pc->TestFlags(PCF_IN_FCN_CALL)
+                           || pc->TestFlags(PCF_IN_FCN_CTOR)
+                           || pc->TestFlags(PCF_IN_FCN_DEF)))
+                     {
+                        pc->SetType(CT_BYREF);
+                     }
+                     else
+                     {
+                        prev->SetType(CT_TYPE);
+                     }
                   }
                }
             }
