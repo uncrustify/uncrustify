@@ -59,8 +59,8 @@ public:
    Chunk &operator=(const Chunk &o);              // !!! partial copy: chunk is not linked to others
 
    //! whether this is a null Chunk or not
-   bool IsNullChunk() const { return(null_chunk); }
-   bool IsNotNullChunk() const { return(!null_chunk); }
+   bool IsNullChunk() const { return(m_nullChunk); }
+   bool IsNotNullChunk() const { return(!m_nullChunk); }
 
    //! sets all elements of the struct to their default value
    void Reset();
@@ -108,32 +108,32 @@ public:
    /**
     * @brief Returns the alignment data of the chunk as a const reference
     */
-   const T_AlignData &GetAlignmentData() const;
+   const AlignmentData &GetAlignData() const;
 
    /**
     * @brief Returns the alignment data of the chunk as a modifiable reference
     */
-   T_AlignData &AlignmentData();
+   AlignmentData &AlignData();
 
    /**
     * @brief Returns the indentation data of the chunk as a const reference
     */
-   const T_IndentData &GetIndentData() const;
+   const IndentationData &GetIndentData() const;
 
    /**
     * @brief Returns the indentation data of the chunk as a modifiable reference
     */
-   T_IndentData &IndentData();
+   IndentationData &IndentData();
 
    /**
     * @brief Returns the text data of the chunk as a const reference
     */
-   const unc_text &GetStr() const;
+   const UncText &GetStr() const;
 
    /**
     * @brief Returns the text data of the chunk as a modifiable reference
     */
-   unc_text &Str();
+   UncText &Str();
 
    /**
     * @brief returns the number of characters in the chunk text	string
@@ -153,12 +153,12 @@ public:
    /**
     * @brief Returns the tracking data of the chunk as a const reference
     */
-   const track_list *GetTrackingData() const;
+   const TrackList *GetTrackingData() const;
 
    /**
     * @brief Returns the tracking data of the chunk as a modifiable reference
     */
-   track_list * &TrackingData();
+   TrackList * &TrackingData();
 
    /**
     * @brief Returns the type of the parent chunk
@@ -168,39 +168,39 @@ public:
    /**
     * @brief Returns the chunk flags
     */
-   T_PcfFlags GetFlags() const;
+   PcfFlags GetFlags() const;
 
    /**
     * @brief Sets the chunk flags
     * @param flags the new chunk flags
     */
-   void SetFlags(T_PcfFlags flags);
+   void SetFlags(PcfFlags flags);
 
    /**
     * @brief Tests if some chunk flags are set
     * @param flags the flag bits to test
     * @return true if the specified bits are set, false otherwise
     */
-   bool TestFlags(T_PcfFlags flags) const;
+   bool TestFlags(PcfFlags flags) const;
 
    /**
     * @brief Resets some of the chunk flag bits
     * @param resetBits the flag bits to reset
     */
-   void ResetFlagBits(T_PcfFlags resetBits);
+   void ResetFlagBits(PcfFlags resetBits);
 
    /**
     * @brief Sets some of the chunk flag bits
     * @param setBits the flag bits to set
     */
-   void SetFlagBits(T_PcfFlags setBits);
+   void SetFlagBits(PcfFlags setBits);
 
    /**
     * @brief Sets and reset some of the chunk flag bits
     * @param resetBits the flag bits to reset
     * @param setBits the flag bits to set
     */
-   void UpdateFlagBits(T_PcfFlags resetBits, T_PcfFlags setBits);
+   void UpdateFlagBits(PcfFlags resetBits, PcfFlags setBits);
 
    /**
     * @brief Returns the line number of the chunk in the input file
@@ -520,23 +520,23 @@ public:
 
    /**
     * @brief returns the next chunk that holds a given string at a given level.
-    * @param cStr   string to search for
+    * @param str    string to search for
     * @param len    length of string
-    * @param level the level to match or ANY_LEVEL
+    * @param level  the level to match or ANY_LEVEL
     * @param scope  code region to search in
     * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetNextString(const char *cStr, const size_t len, const int level, const E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNextString(const char *str, const size_t len, const int level, const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the prev chunk that holds a given string at a given level.
-    * @param cStr   string to search for
+    * @param str    string to search for
     * @param len    length of string
-    * @param level the level to match or ANY_LEVEL
+    * @param level  the level to match or ANY_LEVEL
     * @param scope  code region to search in
     * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetPrevString(const char *cStr, const size_t len, const int level, const E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetPrevString(const char *str, const size_t len, const int level, const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the next chunk that is not part of balanced square brackets.
@@ -650,14 +650,14 @@ public:
     * with the provided string was found. Additionally a nesting level can be
     * provided to narrow down the search.
     *
-    * @param  cStr   string that searched chunk needs to have
+    * @param  str    string that searched chunk needs to have
     * @param  len    length of the string
-    * @param  level nesting level of the searched chunk, ignored when negative
+    * @param  level  nesting level of the searched chunk, ignored when negative
     * @param  scope  code parts to consider for search
     * @param  dir    search direction
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *SearchStringLevel(const char *cStr, const size_t len, const int level, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD) const;
+   Chunk *SearchStringLevel(const char *str, const size_t len, const int level, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD) const;
 
    /**
     * @brief returns the closing match for the current paren/brace/square.
@@ -685,11 +685,11 @@ public:
 
    /**
     * @brief checks whether the chunk token name is a specific string
-    * @param cStr string to compare token name with
+    * @param str string to compare token name with
     * @param caseSensitive whether to do a case sensitive or insensitive comparison
     * @return true if the chunk token name matches the specified string, false otherwise
     */
-   bool IsString(const char *cStr, bool caseSensitive = true) const;
+   bool IsString(const char *str, bool caseSensitive = true) const;
 
    /**
     * @brief checks whether the chunk is not a specific token
@@ -796,13 +796,13 @@ public:
 
    /**
     * @brief checks whether the chunk matches a given string and level
-    * @param cStr   the expected string
+    * @param str    the expected string
     * @param len    length of the string
     * @param caseSensitive whether to do a case sensitive or insensitive comparison
     * @param level nesting level of the searched chunk, ignored when negative
     * @return true if the chunk matches a given string and level
     */
-   bool IsStringAndLevel(const char *cStr, const size_t len, bool caseSensitive, const int level) const;
+   bool IsStringAndLevel(const char *str, const size_t len, bool caseSensitive, const int level) const;
 
    /**
     * @brief checks whether the chunk is a star/asterisk
@@ -1043,40 +1043,40 @@ protected:
     * @param setBits the flag bits to set
     * @param resetBits the flag bits to reset
     */
-   void SetResetFlags(T_PcfFlags resetBits, T_PcfFlags setBits);
+   void SetResetFlags(PcfFlags resetBits, PcfFlags setBits);
 
 
    // --------- Data members
-   E_Token      m_type;                       //! type of the chunk itself
-   E_Token      m_parentType;                 //! type of the parent chunk usually CT_NONE
-   size_t       m_origLine;                   //! line number of chunk in input file
-   size_t       m_origCol;                    //! column where chunk started in the input file, is always > 0
-   size_t       m_origColEnd;                 //! column where chunk ended in the input file, is always > 1
-   size_t       m_origPrevSp;                 //! whitespace before this token
-   size_t       m_column;                     //! column of the chunk
-   size_t       m_columnIndent;               //! if 1st chunk on a line, set to the 'indent' column, which may
-                                              //! be less than the real column used to indent with tabs
-   size_t       m_nlCount;                    //! number of newlines in CT_NEWLINE
-   size_t       m_nlColumn;                   //! column of the subsequent newline entries(all of them should have the same column)
-   size_t       m_level;                      //! nest level in {, (, or [. Only to help vim command }
-   size_t       m_braceLevel;                 //! nest level in braces only
-   size_t       m_ppLevel;                    //! nest level in preprocessor
-   bool         m_afterTab;                   //! whether this token was after a tab
+   E_Token         m_type;                  //! type of the chunk itself
+   E_Token         m_parentType;            //! type of the parent chunk usually CT_NONE
+   size_t          m_origLine;              //! line number of chunk in input file
+   size_t          m_origCol;               //! column where chunk started in the input file, is always > 0
+   size_t          m_origColEnd;            //! column where chunk ended in the input file, is always > 1
+   size_t          m_origPrevSp;            //! whitespace before this token
+   size_t          m_column;                //! column of the chunk
+   size_t          m_columnIndent;          //! if 1st chunk on a line, set to the 'indent' column, which may
+                                            //! be less than the real column used to indent with tabs
+   size_t          m_nlCount;               //! number of newlines in CT_NEWLINE
+   size_t          m_nlColumn;              //! column of the subsequent newline entries(all of them should have the same column)
+   size_t          m_level;                 //! nest level in {, (, or [. Only to help vim command }
+   size_t          m_braceLevel;            //! nest level in braces only
+   size_t          m_ppLevel;               //! nest level in preprocessor
+   bool            m_afterTab;              //! whether this token was after a tab
 
-   T_PcfFlags   m_flags;                      //! see PCF_xxx
-   T_AlignData  m_alignmentData;              //! alignment data of the chunk
-   T_IndentData m_indentData;                 //! indentation data of the chunk
+   PcfFlags        m_flags;                 //! see PCF_xxx
+   AlignmentData   m_alignmentData;         //! alignment data of the chunk
+   IndentationData m_indentationData;       //! indentation data of the chunk
 
-   Chunk        *m_next;                      //! pointer to next chunk in list
-   Chunk        *m_prev;                      //! pointer to previous chunk in list
-   Chunk        *m_parent;                    //! pointer to parent chunk (not always set)
+   Chunk           *m_next;                 //! pointer to next chunk in list
+   Chunk           *m_prev;                 //! pointer to previous chunk in list
+   Chunk           *m_parent;               //! pointer to parent chunk (not always set)
 
-   unc_text     m_str;                        //! the token text
-   track_list   *m_trackingData;              //! for debugging purpose only
+   UncText         m_str;                   //! the token text
+   TrackList       *m_trackingList;         //! for debugging purpose only
 
 
 private:
-   const bool null_chunk;                     //! true for null chunks
+   const bool m_nullChunk;                    //! true for null chunks
 
 
 public:
@@ -1086,14 +1086,14 @@ public:
 
 
 inline Chunk::Chunk(bool null_c)
-   : null_chunk(null_c)
+   : m_nullChunk(null_c)
 {
    Reset();
 }
 
 
 inline Chunk::Chunk(const Chunk &o)
-   : null_chunk(o.null_chunk)
+   : m_nullChunk(o.m_nullChunk)
 {
    CopyFrom(o);
 }
@@ -1136,51 +1136,51 @@ inline void Chunk::SetParent(Chunk *parent)
 }
 
 
-inline const T_AlignData &Chunk::GetAlignmentData() const
+inline const AlignmentData &Chunk::GetAlignData() const
 {
    return(m_alignmentData);
 }
 
 
-inline T_AlignData &Chunk::AlignmentData()
+inline AlignmentData &Chunk::AlignData()
 {
    return(m_alignmentData);
 }
 
 
-inline const T_IndentData &Chunk::GetIndentData() const
+inline const IndentationData &Chunk::GetIndentData() const
 {
-   return(m_indentData);
+   return(m_indentationData);
 }
 
 
-inline T_IndentData &Chunk::IndentData()
+inline IndentationData &Chunk::IndentData()
 {
-   return(m_indentData);
+   return(m_indentationData);
 }
 
 
-inline const unc_text &Chunk::GetStr() const
+inline const UncText &Chunk::GetStr() const
 {
    return(m_str);
 }
 
 
-inline unc_text &Chunk::Str()
+inline UncText &Chunk::Str()
 {
    return(m_str);
 }
 
 
-inline const track_list *Chunk::GetTrackingData() const
+inline const TrackList *Chunk::GetTrackingData() const
 {
-   return(m_trackingData);
+   return(m_trackingList);
 }
 
 
-inline track_list * &Chunk::TrackingData()
+inline TrackList * &Chunk::TrackingData()
 {
-   return(m_trackingData);
+   return(m_trackingList);
 }
 
 
@@ -1206,37 +1206,37 @@ inline E_Token Chunk::GetTypeOfParent() const
 }
 
 
-inline T_PcfFlags Chunk::GetFlags() const
+inline PcfFlags Chunk::GetFlags() const
 {
    return(m_flags);
 }
 
 
-inline void Chunk::SetFlags(T_PcfFlags flags)
+inline void Chunk::SetFlags(PcfFlags flags)
 {
    m_flags = flags;
 }
 
 
-inline bool Chunk::TestFlags(T_PcfFlags flags) const
+inline bool Chunk::TestFlags(PcfFlags flags) const
 {
    return(m_flags.test(flags));
 }
 
 
-inline void Chunk::ResetFlagBits(T_PcfFlags resetBits)
+inline void Chunk::ResetFlagBits(PcfFlags resetBits)
 {
    SetResetFlags(resetBits, PCF_NONE);
 }
 
 
-inline void Chunk::SetFlagBits(T_PcfFlags setBits)
+inline void Chunk::SetFlagBits(PcfFlags setBits)
 {
    SetResetFlags(PCF_NONE, setBits);
 }
 
 
-inline void Chunk::UpdateFlagBits(T_PcfFlags resetBits, T_PcfFlags setBits)
+inline void Chunk::UpdateFlagBits(PcfFlags resetBits, PcfFlags setBits)
 {
    SetResetFlags(resetBits, setBits);
 }
@@ -1500,15 +1500,15 @@ inline Chunk *Chunk::GetPrevType(const E_Token type, const int level, const E_Sc
 }
 
 
-inline Chunk *Chunk::GetNextString(const char *cStr, const size_t len, const int level, const E_Scope scope) const
+inline Chunk *Chunk::GetNextString(const char *str, const size_t len, const int level, const E_Scope scope) const
 {
-   return(SearchStringLevel(cStr, len, level, scope, E_Direction::FORWARD));
+   return(SearchStringLevel(str, len, level, scope, E_Direction::FORWARD));
 }
 
 
-inline Chunk *Chunk::GetPrevString(const char *cStr, const size_t len, const int level, const E_Scope scope) const
+inline Chunk *Chunk::GetPrevString(const char *str, const size_t len, const int level, const E_Scope scope) const
 {
-   return(SearchStringLevel(cStr, len, level, scope, E_Direction::BACKWARD));
+   return(SearchStringLevel(str, len, level, scope, E_Direction::BACKWARD));
 }
 
 
@@ -1539,9 +1539,9 @@ inline bool Chunk::Is(E_Token token) const
 }
 
 
-inline bool Chunk::IsString(const char *cStr, bool caseSensitive) const
+inline bool Chunk::IsString(const char *str, bool caseSensitive) const
 {
-   return(IsStringAndLevel(cStr, strlen(cStr), caseSensitive, ANY_LEVEL));
+   return(IsStringAndLevel(str, strlen(str), caseSensitive, ANY_LEVEL));
 }
 
 

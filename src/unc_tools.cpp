@@ -129,10 +129,10 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
 
                for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
                {
-                  const track_list *A       = pc->GetTrackingData();
-                  const Track_nr   B        = A->at(track);
-                  size_t           Bfirst   = B.first;
-                  char             *Bsecond = B.second;
+                  const TrackList   *A       = pc->GetTrackingData();
+                  const TrackNumber B        = A->at(track);
+                  size_t            Bfirst   = B.first;
+                  char              *Bsecond = B.second;
 
                   LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
                   LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);

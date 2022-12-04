@@ -21,7 +21,7 @@ void write_bom();
 void write_char(int ch);
 
 
-void write_string(const unc_text &text);
+void write_string(const UncText &text);
 
 
 //! Figure out the encoding and convert to an int sequence

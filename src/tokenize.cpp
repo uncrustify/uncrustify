@@ -1545,7 +1545,7 @@ static bool parse_cr_string(tok_ctx &ctx, Chunk &pc, size_t q_idx)
  */
 static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
 {
-   static unc_text intr_txt("@interface");
+   static UncText intr_txt("@interface");
 
    // The first character is already valid
    pc.Str().clear();
@@ -2540,8 +2540,8 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
 } // parse_next
 
 
-int find_disable_processing_comment_marker(const unc_text &text,
-                                           std::size_t    start_idx)
+int find_disable_processing_comment_marker(const UncText &text,
+                                           std::size_t   start_idx)
 {
    log_rule_B("disable_processing_cmt");
    const auto &offtext = options::disable_processing_cmt();
@@ -2593,8 +2593,8 @@ int find_disable_processing_comment_marker(const unc_text &text,
 } // find_disable_processing_comment_marker
 
 
-int find_enable_processing_comment_marker(const unc_text &text,
-                                          std::size_t    start_idx)
+int find_enable_processing_comment_marker(const UncText &text,
+                                          std::size_t   start_idx)
 {
    log_rule_B("enable_processing_cmt");
    const auto &ontext = options::enable_processing_cmt();

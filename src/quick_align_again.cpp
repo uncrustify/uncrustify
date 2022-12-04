@@ -23,25 +23,25 @@ void quick_align_again()
       LOG_FMT(LALAGAIN, "%s(%d): orig line is %zu, orig col is %zu, column is %zu, Text() '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetColumn(), pc->ElidedText(copy));
 
-      if (  pc->GetAlignmentData().next != nullptr
+      if (  pc->GetAlignData().next != nullptr
          && pc->TestFlags(PCF_ALIGN_START))
       {
          AlignStack as;
          as.Start(100, 0);
-         as.m_right_align = pc->GetAlignmentData().right_align;
-         as.m_star_style  = static_cast<AlignStack::StarStyle>(pc->GetAlignmentData().star_style);
-         as.m_amp_style   = static_cast<AlignStack::StarStyle>(pc->GetAlignmentData().amp_style);
-         as.m_gap         = pc->GetAlignmentData().gap;
+         as.m_right_align = pc->GetAlignData().right_align;
+         as.m_star_style  = static_cast<AlignStack::StarStyle>(pc->GetAlignData().star_style);
+         as.m_amp_style   = static_cast<AlignStack::StarStyle>(pc->GetAlignData().amp_style);
+         as.m_gap         = pc->GetAlignData().gap;
 
          LOG_FMT(LALAGAIN, "%s(%d):   pc->Text() is '%s', orig line is %zu\n",
                  __func__, __LINE__, pc->Text(), pc->GetOrigLine());
-         as.Add(pc->GetAlignmentData().start);
+         as.Add(pc->GetAlignData().start);
          pc->SetFlagBits(PCF_WAS_ALIGNED);
 
-         for (Chunk *tmp = pc->GetAlignmentData().next; tmp != nullptr; tmp = tmp->GetAlignmentData().next)
+         for (Chunk *tmp = pc->GetAlignData().next; tmp != nullptr; tmp = tmp->GetAlignData().next)
          {
             tmp->SetFlagBits(PCF_WAS_ALIGNED);
-            as.Add(tmp->GetAlignmentData().start);
+            as.Add(tmp->GetAlignData().start);
             LOG_FMT(LALAGAIN, "%s(%d):    => tmp->Text() is '%s', orig line is %zu\n",
                     __func__, __LINE__, tmp->Text(), tmp->GetOrigLine());
          }

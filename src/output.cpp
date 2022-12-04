@@ -32,14 +32,14 @@ using namespace uncrustify;
 
 struct cmt_reflow
 {
-   Chunk    *pc         = nullptr;
-   size_t   column      = 0;   //! Column of the comment start
-   size_t   brace_col   = 0;   //! Brace column (for indenting with tabs)
-   size_t   base_col    = 0;   //! Base column (for indenting with tabs)
-   size_t   word_count  = 0;   //! number of words on this line
-   size_t   xtra_indent = 0;   //! extra indent of non-first lines (0 or 1)
-   unc_text cont_text;         //! fixed text to output at the start of a line (0 to 3 chars)
-   bool     reflow = false;    //! reflow the current line
+   Chunk   *pc         = nullptr;
+   size_t  column      = 0;   //! Column of the comment start
+   size_t  brace_col   = 0;   //! Brace column (for indenting with tabs)
+   size_t  base_col    = 0;   //! Base column (for indenting with tabs)
+   size_t  word_count  = 0;   //! number of words on this line
+   size_t  xtra_indent = 0;   //! extra indent of non-first lines (0 or 1)
+   UncText cont_text;         //! fixed text to output at the start of a line (0 to 3 chars)
+   bool    reflow = false;    //! reflow the current line
 };
 
 
@@ -89,22 +89,22 @@ void print_numbering()
 static void output_comment_multi(Chunk *pc);
 
 
-static bool kw_fcn_filename(Chunk *cmt, unc_text &out_txt);
+static bool kw_fcn_filename(Chunk *cmt, UncText &out_txt);
 
 
-static bool kw_fcn_class(Chunk *cmt, unc_text &out_txt);
+static bool kw_fcn_class(Chunk *cmt, UncText &out_txt);
 
 
-static bool kw_fcn_message(Chunk *cmt, unc_text &out_txt);
+static bool kw_fcn_message(Chunk *cmt, UncText &out_txt);
 
 
-static bool kw_fcn_category(Chunk *cmt, unc_text &out_txt);
+static bool kw_fcn_category(Chunk *cmt, UncText &out_txt);
 
 
-static bool kw_fcn_scope(Chunk *cmt, unc_text &out_txt);
+static bool kw_fcn_scope(Chunk *cmt, UncText &out_txt);
 
 
-static bool kw_fcn_function(Chunk *cmt, unc_text &out_txt);
+static bool kw_fcn_function(Chunk *cmt, UncText &out_txt);
 
 
 /**
@@ -113,13 +113,13 @@ static bool kw_fcn_function(Chunk *cmt, unc_text &out_txt);
  * If the arg list is '()' or '(void)', then no @params are added.
  * Likewise, if the return value is 'void', then no @return is added.
  */
-static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt);
+static bool kw_fcn_javaparam(Chunk *cmt, UncText &out_txt);
 
 
-static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt);
+static bool kw_fcn_fclass(Chunk *cmt, UncText &out_txt);
 
 
-static bool kw_fcn_year(Chunk *cmt, unc_text &out_txt);
+static bool kw_fcn_year(Chunk *cmt, UncText &out_txt);
 
 
 /**
@@ -134,10 +134,10 @@ static void output_comment_multi_simple(Chunk *pc);
 /**
  * This renders the #if condition to a string buffer.
  *
- * @param[out] dst    unc_text buffer to be filled
+ * @param[out] dst    UncText buffer to be filled
  * @param[in]  ifdef  if conditional as chunk list
  */
-static void generate_if_conditional_as_text(unc_text &dst, Chunk *ifdef);
+static void generate_if_conditional_as_text(UncText &dst, Chunk *ifdef);
 
 
 /**
@@ -155,14 +155,14 @@ static void add_char(UINT32 ch, bool is_literal = false);
 static void add_text(const char *ascii_text);
 
 
-static void add_text(const unc_text &text, bool is_ignored, bool is_literal);
+static void add_text(const UncText &text, bool is_ignored, bool is_literal);
 
 
 /**
  * Count the number of characters to the end of the next chunk of text.
  * If it exceeds the limit, return true.
  */
-static bool next_word_exceeds_limit(const unc_text &text, size_t idx);
+static bool next_word_exceeds_limit(const UncText &text, size_t idx);
 
 
 /**
@@ -186,7 +186,7 @@ static void cmt_output_indent(size_t brace_col, size_t base_col, size_t column);
  *
  * @return 0: not present, >0: number of chars that are part of the lead
  */
-static size_t cmt_parse_lead(const unc_text &line, bool is_last);
+static size_t cmt_parse_lead(const UncText &line, bool is_last);
 
 
 /**
@@ -216,10 +216,10 @@ static size_t cmt_parse_lead(const unc_text &line, bool is_last);
  *
  * @return cmt.xtra_indent is set to 0 or 1
  */
-static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str);
+static void calculate_comment_body_indent(cmt_reflow &cmt, const UncText &str);
 
 
-static int next_up(const unc_text &text, size_t idx, const unc_text &tag);
+static int next_up(const UncText &text, size_t idx, const UncText &tag);
 
 
 /**
@@ -240,7 +240,7 @@ static Chunk *output_comment_c(Chunk *pc);
 static Chunk *output_comment_cpp(Chunk *pc);
 
 
-static void cmt_trim_whitespace(unc_text &line, bool in_preproc);
+static void cmt_trim_whitespace(UncText &line, bool in_preproc);
 
 
 /**
@@ -255,7 +255,7 @@ static void cmt_trim_whitespace(unc_text &line, bool in_preproc);
  * If the last char on a line is a ':' or '.', then the next line won't be
  * combined.
  */
-static void add_comment_text(const unc_text &text, cmt_reflow &cmt, bool esc_close, size_t continuation_indent = 0);
+static void add_comment_text(const UncText &text, cmt_reflow &cmt, bool esc_close, size_t continuation_indent = 0);
 
 
 static void output_cmt_start(cmt_reflow &cmt, Chunk *pc);
@@ -391,7 +391,7 @@ static void add_text(const char *ascii_text)
 }
 
 
-static void add_text(const unc_text &text, bool is_ignored = false, bool is_literal = false)
+static void add_text(const UncText &text, bool is_ignored = false, bool is_literal = false)
 {
    for (size_t idx = 0; idx < text.size(); idx++)
    {
@@ -409,7 +409,7 @@ static void add_text(const unc_text &text, bool is_ignored = false, bool is_lite
 }
 
 
-static bool next_word_exceeds_limit(const unc_text &text, size_t idx)
+static bool next_word_exceeds_limit(const UncText &text, size_t idx)
 {
    LOG_FMT(LCONTTEXT, "%s(%d): idx is %zu\n",
            __func__, __LINE__, idx);
@@ -535,7 +535,7 @@ void output_parsed(FILE *pfile, bool withOptions)
               pc->GetBraceLevel(), pc->GetLevel(), pc->GetPpLevel());
       // Print pc flags in groups of 4 hex characters
       char flag_string[24];
-      sprintf(flag_string, "%16llx", static_cast<T_PcfFlags::int_t>(pc->GetFlags()));
+      sprintf(flag_string, "%16llx", static_cast<PcfFlags::int_t>(pc->GetFlags()));
       fprintf(pfile, "[%.4s %.4s %.4s %.4s]", flag_string, flag_string + 4, flag_string + 8, flag_string + 12);
       fprintf(pfile, "[%zu-%d]",
               pc->GetNlCount(), pc->GetAfterTab());
@@ -639,7 +639,7 @@ void output_parsed_csv(FILE *pfile)
 
 
 // Compares two tracks according to second in descending order.
-bool compareTrack(Track_nr t1, Track_nr t2)
+bool compareTrack(TrackNumber t1, TrackNumber t2)
 {
    char *t1s          = t1.second;
    char *t2s          = t2.second;
@@ -1025,10 +1025,10 @@ void output_text(FILE *pfile)
             // protocol before sort
             for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
             {
-               const track_list *A       = pc->GetTrackingData();
-               const Track_nr   B        = A->at(track);
-               size_t           Bfirst   = B.first;
-               char             *Bsecond = B.second;
+               const TrackList   *A       = pc->GetTrackingData();
+               const TrackNumber B        = A->at(track);
+               size_t            Bfirst   = B.first;
+               char              *Bsecond = B.second;
 
                LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
                LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
@@ -1037,17 +1037,17 @@ void output_text(FILE *pfile)
 
             if (options::debug_sort_the_tracks())
             {
-               track_list *A1 = pc->TrackingData();
+               TrackList *A1 = pc->TrackingData();
                sort(A1->begin(), A1->end(), compareTrack);
             }
 #ifdef EXTRA_LOG
             // protocol after sort
             for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
             {
-               const track_list *A       = pc->GetTrackingData();
-               const Track_nr   B        = A->at(track);
-               size_t           Bfirst   = B.first;
-               char             *Bsecond = B.second;
+               const TrackList   *A       = pc->GetTrackingData();
+               const TrackNumber B        = A->at(track);
+               size_t            Bfirst   = B.first;
+               char              *Bsecond = B.second;
 
                LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
                LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
@@ -1058,11 +1058,11 @@ void output_text(FILE *pfile)
 
          for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
          {
-            const track_list *A         = pc->GetTrackingData();
-            const Track_nr   B          = A->at(track);
-            size_t           Bfirst     = B.first;
-            char             *Bsecond   = B.second;
-            bool             first_text = true;
+            const TrackList   *A         = pc->GetTrackingData();
+            const TrackNumber B          = A->at(track);
+            size_t            Bfirst     = B.first;
+            char              *Bsecond   = B.second;
+            bool              first_text = true;
 
             if (  old_one == nullptr
                || strcmp(old_one, Bsecond) != 0)
@@ -1151,7 +1151,7 @@ void dump_step(const char *filename, const char *step_description)
 } // dump_step
 
 
-static size_t cmt_parse_lead(const unc_text &line, bool is_last)
+static size_t cmt_parse_lead(const UncText &line, bool is_last)
 {
    size_t len = 0;
 
@@ -1422,7 +1422,7 @@ static void calculate_doxygen_javadoc_indent_alignment(const std::wstring &str,
 } // calculate_doxygen_javadoc_indent_alignment
 
 
-static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
+static void calculate_comment_body_indent(cmt_reflow &cmt, const UncText &str)
 {
    cmt.xtra_indent = 0;
 
@@ -1601,7 +1601,7 @@ static Chunk *get_prev_oc_class(Chunk *pc)
 }
 
 
-static int next_up(const unc_text &text, size_t idx, const unc_text &tag)
+static int next_up(const UncText &text, size_t idx, const UncText &tag)
 {
    size_t offs = 0;
 
@@ -1620,10 +1620,10 @@ static int next_up(const unc_text &text, size_t idx, const unc_text &tag)
 }
 
 
-static void add_comment_text(const unc_text &text,
-                             cmt_reflow     &cmt,
-                             bool           esc_close,
-                             size_t         continuation_indent)
+static void add_comment_text(const UncText &text,
+                             cmt_reflow    &cmt,
+                             bool          esc_close,
+                             size_t        continuation_indent)
 {
    bool   was_star  = false;
    bool   was_slash = false;
@@ -1913,7 +1913,7 @@ static Chunk *output_comment_c(Chunk *first)
       {
          add_text("//");
 
-         unc_text tmp;
+         UncText tmp;
          tmp.set(first->GetStr(), 2, first->Len() - 4);
          cmt_trim_whitespace(tmp, false);
          add_comment_text(tmp, cmt, false);
@@ -1936,8 +1936,8 @@ static Chunk *output_comment_c(Chunk *first)
    {
       add_comment_text("\n", cmt, false);
    }
-   Chunk    *pc = first;
-   unc_text tmp;
+   Chunk   *pc = first;
+   UncText tmp;
 
    while (can_combine_comment(pc, cmt))
    {
@@ -1995,7 +1995,7 @@ static Chunk *output_comment_cpp(Chunk *first)
    log_rule_B("cmt_reflow_mode");
    cmt.reflow = (options::cmt_reflow_mode() != 1);
 
-   unc_text leadin = "//";             // default setting to keep previous behaviour
+   UncText leadin = "//";             // default setting to keep previous behaviour
 
    // If true, space is added with sp_cmt_cpp_start will be added after doxygen
    // sequences like '///', '///<', '//!' and '//!<'.
@@ -2099,8 +2099,8 @@ static Chunk *output_comment_cpp(Chunk *first)
       }
       else
       {
-         size_t   iLISz = leadin.size();
-         unc_text tmp(first->GetStr(), 0, iLISz);
+         size_t  iLISz = leadin.size();
+         UncText tmp(first->GetStr(), 0, iLISz);
          add_comment_text(tmp, cmt, false);
 
          tmp.set(first->GetStr(), iLISz, first->Len() - iLISz);
@@ -2142,7 +2142,7 @@ static Chunk *output_comment_cpp(Chunk *first)
    cmt.cont_text = options::cmt_star_cont() ? " * " : "   ";
    LOG_CONTTEXT();
 
-   unc_text tmp;
+   UncText tmp;
 
    // See if we can combine this comment with the next comment
    log_rule_B("cmt_cpp_group");
@@ -2214,7 +2214,7 @@ static Chunk *output_comment_cpp(Chunk *first)
 } // output_comment_cpp
 
 
-static void cmt_trim_whitespace(unc_text &line, bool in_preproc)
+static void cmt_trim_whitespace(UncText &line, bool in_preproc)
 {
    // Remove trailing whitespace on the line
    while (  line.size() > 0
@@ -2341,12 +2341,12 @@ static void output_comment_multi(Chunk *pc)
                                               doxygen_javadoc_param_name_indent,
                                               doxygen_javadoc_continuation_indent);
 
-   size_t   line_count                   = 0;
-   size_t   ccol                         = pc->GetColumn(); // the col of subsequent comment lines
-   size_t   cmt_idx                      = 0;
-   bool     nl_end                       = false;
-   bool     doxygen_javadoc_indent_align = false;
-   unc_text line;
+   size_t  line_count                   = 0;
+   size_t  ccol                         = pc->GetColumn();  // the col of subsequent comment lines
+   size_t  cmt_idx                      = 0;
+   bool    nl_end                       = false;
+   bool    doxygen_javadoc_indent_align = false;
+   UncText line;
 
    /*
     * Get a map of regex pairs that define expressions to match at both the end
@@ -2375,10 +2375,10 @@ static void output_comment_multi(Chunk *pc)
       if (  cmt_idx > std::size_t(disable_processing_cmt_idx)
          && enable_processing_cmt_idx > disable_processing_cmt_idx)
       {
-         auto     length = enable_processing_cmt_idx - disable_processing_cmt_idx;
-         unc_text verbatim_text(pc->GetStr(),
-                                disable_processing_cmt_idx,
-                                length);
+         auto    length = enable_processing_cmt_idx - disable_processing_cmt_idx;
+         UncText verbatim_text(pc->GetStr(),
+                               disable_processing_cmt_idx,
+                               length);
 
          add_text(verbatim_text);
 
@@ -2746,7 +2746,7 @@ static void output_comment_multi(Chunk *pc)
                   }
                   // multiline comments can have empty lines with some spaces in them for alignment
                   // while adding * symbol and aligning them we don't want to keep these trailing spaces
-                  unc_text tmp = unc_text(cmt.cont_text);
+                  UncText tmp = UncText(cmt.cont_text);
                   cmt_trim_whitespace(tmp, false);
                   add_text(tmp);
                }
@@ -2863,7 +2863,7 @@ static void output_comment_multi(Chunk *pc)
 } // output_comment_multi
 
 
-static bool kw_fcn_filename(Chunk *cmt, unc_text &out_txt)
+static bool kw_fcn_filename(Chunk *cmt, UncText &out_txt)
 {
    UNUSED(cmt);
    out_txt.append(path_basename(cpd.filename.c_str()));
@@ -2871,7 +2871,7 @@ static bool kw_fcn_filename(Chunk *cmt, unc_text &out_txt)
 }
 
 
-static bool kw_fcn_class(Chunk *cmt, unc_text &out_txt)
+static bool kw_fcn_class(Chunk *cmt, UncText &out_txt)
 {
    Chunk *tmp = Chunk::NullChunkPtr;
 
@@ -2923,7 +2923,7 @@ static bool kw_fcn_class(Chunk *cmt, unc_text &out_txt)
 } // kw_fcn_class
 
 
-static bool kw_fcn_message(Chunk *cmt, unc_text &out_txt)
+static bool kw_fcn_message(Chunk *cmt, UncText &out_txt)
 {
    Chunk *fcn = get_next_function(cmt);
 
@@ -2964,7 +2964,7 @@ static bool kw_fcn_message(Chunk *cmt, unc_text &out_txt)
 } // kw_fcn_message
 
 
-static bool kw_fcn_category(Chunk *cmt, unc_text &out_txt)
+static bool kw_fcn_category(Chunk *cmt, UncText &out_txt)
 {
    Chunk *category = get_prev_category(cmt);
 
@@ -2978,7 +2978,7 @@ static bool kw_fcn_category(Chunk *cmt, unc_text &out_txt)
 } // kw_fcn_category
 
 
-static bool kw_fcn_scope(Chunk *cmt, unc_text &out_txt)
+static bool kw_fcn_scope(Chunk *cmt, UncText &out_txt)
 {
    Chunk *scope = get_next_scope(cmt);
 
@@ -2991,7 +2991,7 @@ static bool kw_fcn_scope(Chunk *cmt, unc_text &out_txt)
 } // kw_fcn_scope
 
 
-static bool kw_fcn_function(Chunk *cmt, unc_text &out_txt)
+static bool kw_fcn_function(Chunk *cmt, UncText &out_txt)
 {
    Chunk *fcn = get_next_function(cmt);
 
@@ -3013,7 +3013,7 @@ static bool kw_fcn_function(Chunk *cmt, unc_text &out_txt)
 }
 
 
-static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
+static bool kw_fcn_javaparam(Chunk *cmt, UncText &out_txt)
 {
    Chunk *fcn = get_next_function(cmt);
 
@@ -3158,7 +3158,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
 } // kw_fcn_javaparam
 
 
-static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt)
+static bool kw_fcn_fclass(Chunk *cmt, UncText &out_txt)
 {
    Chunk *fcn = get_next_function(cmt);
 
@@ -3218,7 +3218,7 @@ static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt)
 } // kw_fcn_fclass
 
 
-static bool kw_fcn_year(Chunk *cmt, unc_text &out_txt)
+static bool kw_fcn_year(Chunk *cmt, UncText &out_txt)
 {
    UNUSED(cmt);
    time_t now = time(nullptr);
@@ -3231,7 +3231,7 @@ static bool kw_fcn_year(Chunk *cmt, unc_text &out_txt)
 struct kw_subst_t
 {
    const char *tag;
-   bool       (*func)(Chunk *cmt, unc_text &out_txt);
+   bool       (*func)(Chunk *cmt, UncText &out_txt);
 };
 
 
@@ -3259,7 +3259,7 @@ static void do_kw_subst(Chunk *pc)
       {
          continue;
       }
-      unc_text tmp_txt;
+      UncText tmp_txt;
       tmp_txt.clear();
 
       if (kw.func(pc, tmp_txt))
@@ -3272,7 +3272,7 @@ static void do_kw_subst(Chunk *pc)
             if (nl_idx > 0)
             {
                // idx and nl_idx are both positive
-               unc_text nl_txt;
+               UncText nl_txt;
                nl_txt.append("\n");
                nl_idx++;
 
@@ -3324,13 +3324,13 @@ static void output_comment_multi_simple(Chunk *pc)
     * check for enable/disable processing comment strings that may
     * both be embedded within the same multi-line comment
     */
-   auto     disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->GetStr());
-   auto     enable_processing_cmt_idx  = find_enable_processing_comment_marker(pc->GetStr());
+   auto    disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->GetStr());
+   auto    enable_processing_cmt_idx  = find_enable_processing_comment_marker(pc->GetStr());
 
-   unc_text line;
-   size_t   line_count  = 0;
-   size_t   line_column = pc->GetColumn();
-   size_t   cmt_idx     = 0;
+   UncText line;
+   size_t  line_count  = 0;
+   size_t  line_column = pc->GetColumn();
+   size_t  cmt_idx     = 0;
 
    while (cmt_idx < pc->Len())
    {
@@ -3340,10 +3340,10 @@ static void output_comment_multi_simple(Chunk *pc)
       if (  cmt_idx > std::size_t(disable_processing_cmt_idx)
          && enable_processing_cmt_idx > disable_processing_cmt_idx)
       {
-         auto     length = enable_processing_cmt_idx - disable_processing_cmt_idx;
-         unc_text verbatim_text(pc->GetStr(),
-                                disable_processing_cmt_idx,
-                                length);
+         auto    length = enable_processing_cmt_idx - disable_processing_cmt_idx;
+         UncText verbatim_text(pc->GetStr(),
+                               disable_processing_cmt_idx,
+                               length);
 
          add_text(verbatim_text);
 
@@ -3446,7 +3446,7 @@ static void output_comment_multi_simple(Chunk *pc)
 } // output_comment_multi_simple
 
 
-static void generate_if_conditional_as_text(unc_text &dst, Chunk *ifdef)
+static void generate_if_conditional_as_text(UncText &dst, Chunk *ifdef)
 {
    int column = -1;
 
@@ -3575,7 +3575,7 @@ void add_long_preprocessor_conditional_block_comment()
                   E_Token style = (language_is_set(LANG_CPP)) ?
                                   CT_COMMENT_CPP : CT_COMMENT;
 
-                  unc_text str;
+                  UncText str;
                   generate_if_conditional_as_text(str, br_open);
 
                   LOG_FMT(LPPIF, "#if / %s section over threshold %zu (new line count=%zu) --> insert comment after the %s: %s\n",
