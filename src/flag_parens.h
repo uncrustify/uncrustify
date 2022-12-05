@@ -22,7 +22,7 @@
  *
  * @return The token after the close paren
  */
-Chunk *flag_parens(Chunk *po, T_PcfFlags flags, E_Token opentype, E_Token parenttype, bool parent_all);
+Chunk *flag_parens(Chunk *po, PcfFlags flags, E_Token opentype, E_Token parenttype, bool parent_all);
 
 
 #endif /* FLAG_PARENS_H_INCLUDED */

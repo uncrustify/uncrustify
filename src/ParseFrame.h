@@ -18,23 +18,23 @@
 //! Structure for counting nested level
 struct paren_stack_entry_t
 {
-   E_Token       type;         //! the type that opened the entry
-   size_t        level;        //! Level of opening type
-   size_t        open_line;    //! line that open symbol is on, only for logging purposes
-   size_t        open_colu;    //! column that open symbol is on, only for logging purposes
-   Chunk         *pc;          //! Chunk that opened the level, TODO: make const
-   size_t        brace_indent; //! indent for braces - may not relate to indent
-   size_t        indent;       //! indent level (depends on use)
-   size_t        indent_tmp;   //! temporary indent level (depends on use)
-   size_t        indent_tab;   //! the 'tab' indent (always <= real column)
-   bool          indent_cont;  //! indent_continue was applied
-   E_Token       parent;       //! if, for, function, etc
-   brace_stage_e stage;        //! used to check progression of complex statements.
-   bool          in_preproc;   //! whether this was created in a preprocessor
-   size_t        ns_cnt;       //! Number of consecutive namespace levels
-   bool          non_vardef;   //! Hit a non-vardef line
-   T_IndentData  ip;
-   Chunk         *pop_pc;
+   E_Token         type;         //! the type that opened the entry
+   size_t          level;        //! Level of opening type
+   size_t          open_line;    //! line that open symbol is on, only for logging purposes
+   size_t          open_colu;    //! column that open symbol is on, only for logging purposes
+   Chunk           *pc;          //! Chunk that opened the level, TODO: make const
+   size_t          brace_indent; //! indent for braces - may not relate to indent
+   size_t          indent;       //! indent level (depends on use)
+   size_t          indent_tmp;   //! temporary indent level (depends on use)
+   size_t          indent_tab;   //! the 'tab' indent (always <= real column)
+   bool            indent_cont;  //! indent_continue was applied
+   E_Token         parent;       //! if, for, function, etc
+   brace_stage_e   stage;        //! used to check progression of complex statements.
+   bool            in_preproc;   //! whether this was created in a preprocessor
+   size_t          ns_cnt;       //! Number of consecutive namespace levels
+   bool            non_vardef;   //! Hit a non-vardef line
+   IndentationData ip;
+   Chunk           *pop_pc;
 };
 
 class ParseFrame

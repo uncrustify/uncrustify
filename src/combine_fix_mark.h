@@ -190,7 +190,7 @@ void mark_variable_stack(ChunkStack &cs, log_sev_t sev);
  * TODO: add doc cmt
  *
  */
-T_PcfFlags mark_where_chunk(Chunk *pc, E_Token parent_type, T_PcfFlags flags);
+PcfFlags mark_where_chunk(Chunk *pc, E_Token parent_type, PcfFlags flags);
 
 
 #endif /* COMBINE_FIX_MARK_H_INCLUDED */

@@ -77,7 +77,7 @@ static bool should_add_braces(Chunk *vbopen);
  * Collect the text into txt that contains the full tag name.
  * Mainly for collecting namespace 'a.b.c' or function 'foo::bar()' names.
  */
-static void append_tag_name(unc_text &txt, Chunk *pc);
+static void append_tag_name(UncText &txt, Chunk *pc);
 
 
 //! Remove the case brace, if allowable.
@@ -969,7 +969,7 @@ static void convert_vbrace_to_brace()
 
 
 Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type,
-                            const unc_text &cmt_text)
+                            const UncText &cmt_text)
 {
    LOG_FUNC_ENTRY();
 
@@ -1003,7 +1003,7 @@ Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type,
 }
 
 
-static void append_tag_name(unc_text &txt, Chunk *pc)
+static void append_tag_name(UncText &txt, Chunk *pc)
 {
    LOG_FUNC_ENTRY();
    Chunk *tmp = pc->GetPrevNcNnl();
@@ -1129,9 +1129,9 @@ void add_long_closebrace_comment()
          {
             break;
          }
-         size_t   nl_min  = 0;
-         Chunk    *tag_pc = Chunk::NullChunkPtr;
-         unc_text xstr;
+         size_t  nl_min  = 0;
+         Chunk   *tag_pc = Chunk::NullChunkPtr;
+         UncText xstr;
 
          if (  br_open->GetParentType() == CT_FUNC_DEF
             || br_open->GetParentType() == CT_OC_MSG_DECL)

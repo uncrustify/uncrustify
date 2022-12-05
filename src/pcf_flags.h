@@ -86,13 +86,13 @@ enum E_PcfFlag : decltype ( 0ULL )
    PCF_OC_IN_BLOCK     = pcf_bit(49),  //! inside OC block function
 };
 
-UNC_DECLARE_FLAGS(T_PcfFlags, E_PcfFlag);
-UNC_DECLARE_OPERATORS_FOR_FLAGS(T_PcfFlags);
+UNC_DECLARE_FLAGS(PcfFlags, E_PcfFlag);
+UNC_DECLARE_OPERATORS_FOR_FLAGS(PcfFlags);
 
-std::string pcf_flags_str(T_PcfFlags flags);
+std::string pcf_flags_str(PcfFlags flags);
 
 
-void log_pcf_flags(log_sev_t sev, T_PcfFlags flags);
+void log_pcf_flags(log_sev_t sev, PcfFlags flags);
 
 
 #endif /* PCF_FLAGS_STR_INCLUDED */

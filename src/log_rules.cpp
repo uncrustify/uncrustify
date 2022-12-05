@@ -61,15 +61,15 @@ void log_rule4(const char *rule, Chunk *first)
 
    if (first->GetTrackingData() == nullptr)
    {
-      first->TrackingData() = new track_list;
+      first->TrackingData() = new TrackList;
    }
    // copy the rule
    size_t length = strlen(rule) + 1;
    char   *r     = (char *)malloc(length);
 
    strcpy(r, rule);
-   size_t   a_number = get_A_Number();
-   Track_nr A        = make_pair(a_number, r);
+   size_t      a_number = get_A_Number();
+   TrackNumber A        = make_pair(a_number, r);
 
    first->TrackingData()->push_back(A);
    size_t sizeOfTrack = first->GetTrackingData()->size();
@@ -88,15 +88,15 @@ void log_ruleNL(const char *rule, Chunk *pc)
 
    if (pc->GetTrackingData() == nullptr)
    {
-      pc->TrackingData() = new track_list;
+      pc->TrackingData() = new TrackList;
    }
    // copy the rule
    size_t length = strlen(rule) + 1;
    char   *r     = (char *)malloc(length);
 
    strcpy(r, rule);
-   size_t   a_number = get_A_Number();
-   Track_nr A        = make_pair(a_number, r);
+   size_t      a_number = get_A_Number();
+   TrackNumber A        = make_pair(a_number, r);
 
    pc->TrackingData()->push_back(A);
    size_t sizeOfTrack = pc->GetTrackingData()->size();

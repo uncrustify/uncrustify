@@ -21,7 +21,7 @@
  * @return           returns a non-negative position index that points to the beginning
  *                   of the line containing the marker, if found
  */
-int find_disable_processing_comment_marker(const unc_text &text, std::size_t start_idx = 0);
+int find_disable_processing_comment_marker(const UncText &text, std::size_t start_idx = 0);
 
 
 /**
@@ -33,7 +33,7 @@ int find_disable_processing_comment_marker(const unc_text &text, std::size_t sta
  * @return           returns a non-negative position index that points to the end
  *                   of the line containing the marker, if found
  */
-int find_enable_processing_comment_marker(const unc_text &text, std::size_t start_idx = 0);
+int find_enable_processing_comment_marker(const UncText &text, std::size_t start_idx = 0);
 
 
 /**

@@ -91,14 +91,14 @@ class Chunk; //forward declaration
  * indent of another chunk. This is needed, as that chunk may be aligned and
  * so the indent cannot be determined in the indent code.
  */
-struct T_IndentData
+struct IndentationData
 {
    Chunk *ref;
    int   delta;
 };
 
 
-struct T_AlignData
+struct AlignmentData
 {
    Chunk  *next;       //! nullptr or the chunk that should be under this one
    bool   right_align; //! AlignStack.m_right_align
@@ -118,8 +118,8 @@ struct T_AlignData
 
 
 // for debugging purpose only
-typedef std::pair<size_t, char *>   Track_nr;         // track for "trackNumber" and "rule"
-typedef std::vector<Track_nr>       track_list;       // liste for many tracks
+typedef std::pair<size_t, char *>   TrackNumber;   // track for "trackNumber" and "rule"
+typedef std::vector<TrackNumber>    TrackList;     // list of tracks
 
 //! list of all programming languages Uncrustify supports
 enum lang_flag_e
@@ -242,7 +242,7 @@ struct cp_data_t
 
    // stuff to auto-detect line endings
    UINT32            le_counts[uncrustify::line_end_styles];
-   unc_text          newline;
+   UncText           newline;
 
    bool              did_newline;       //! flag indicates if a newline was added or converted
    E_Token           in_preproc;

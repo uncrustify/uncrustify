@@ -145,7 +145,7 @@ static void handle_oc_available(Chunk *pc);
  *
  * @return the chunk after the type
  */
-static Chunk *handle_oc_md_type(Chunk *paren_open, E_Token ptype, T_PcfFlags flags, bool &did_it);
+static Chunk *handle_oc_md_type(Chunk *paren_open, E_Token ptype, PcfFlags flags, bool &did_it);
 
 /**
  * Process an C# [] thingy:
@@ -1681,7 +1681,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          // compare text with "C" to find extern "C" instructions
          if (pcPrev->Is(CT_STRING))
          {
-            if (unc_text::compare(pcPrev->Text(), "\"C\"") == 0)
+            if (UncText::compare(pcPrev->Text(), "\"C\"") == 0)
             {
                if (pcPrev->GetPrev()->Is(CT_EXTERN))
                {
@@ -3180,7 +3180,7 @@ static void handle_oc_block_type(Chunk *pc)
 } // handle_oc_block_type
 
 
-static Chunk *handle_oc_md_type(Chunk *paren_open, E_Token ptype, T_PcfFlags flags, bool &did_it)
+static Chunk *handle_oc_md_type(Chunk *paren_open, E_Token ptype, PcfFlags flags, bool &did_it)
 {
    Chunk *paren_close;
 
