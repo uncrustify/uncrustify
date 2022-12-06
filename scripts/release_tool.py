@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
 import argparse
-import git
+import git  # /usr/lib/python3/dist-packages/git/__init__.py
 import os
-import re
+import re  # Support for regular expressions (RE).
 import sys
+
+# use the variable DEBUG to get more output
+DEBUG = 1
 
 if sys.version_info[0] < 3:
     input = raw_input
@@ -24,10 +27,15 @@ def fatal(msg):
 # -----------------------------------------------------------------------------
 def get_version_str(repo, candidate=True, required=True):
     if candidate:
+        if DEBUG:
+            print('git.symbolic-ref("-q", "--short", "HEAD")')
         b = repo.git.symbolic_ref('-q', '--short', 'HEAD')
         m = re_branch.match(b)
         if m:
             return m.group(1)
+
+    if DEBUG:
+        print('git.describe("HEAD")')
 
     d = repo.git.describe('HEAD')
     m = re_desc.match(d)
@@ -97,8 +105,14 @@ def cmd_init(repo, args):
         else:
             v = input('Version to be created? ')
 
+    if DEBUG:
+        print('The value for version is', v)
+
     if not re_version.match(v):
         fatal('Bad version number, \'{}\''.format(v))
+    if DEBUG:
+        s = 'git.checkout(-b, "uncrustify-RC-{}")'.format(v)
+        print(s)
 
     repo.git.checkout('-b', 'uncrustify-RC-{}'.format(v))
 
@@ -146,6 +160,18 @@ def cmd_commit(repo, args):
 # -----------------------------------------------------------------------------
 def cmd_tag(repo, args):
     import uuid
+
+    # user_name = repo.config_reader().get_value('user', 'name')
+    url = repo.config_reader().get_value('remote "origin"', 'url')
+    print('The user account is', url)
+    print('you need an "admin" account')
+    v = input('Do you really want to use this account? (yes/no) ')
+    if len(v) == 0:
+        fatal("0 End")
+    else:
+        print(v)
+        if v != "yes":
+            fatal("2 End")
 
     # Determine location of remote repository
     if args.ssh:
