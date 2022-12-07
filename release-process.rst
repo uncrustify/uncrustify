@@ -62,6 +62,11 @@ To start the release process, first check that:
 - Your build is up to date
 - check the list of authors with scripts/prepare_list_of_authors.sh
 
+You might need a new PAT for your account, for your admin-account.
+See:
+https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/
+https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+
 Then, run::
 
    $ scripts/release_tool.py init
@@ -176,9 +181,10 @@ Submit and Tag the Release
 
 Push the release candidate branch to GitHub, and create a pull request.
 Once the pull request is merged, tag the release using:
-Make sure, the file .git/config has the right value:
+Make sure, the file .git/config has the right 'admin' value:
 [remote "origin"]
-        url = https://github.com/uncrustify/uncrustify.git
+        url = https://<admin account>:<PAT>@github.com/uncrustify/uncrustify.git
+
 
 .. code::
 
