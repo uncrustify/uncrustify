@@ -184,7 +184,8 @@ Once the pull request is merged, tag the release using:
 Make sure, the file .git/config has the right 'admin' value:
 [remote "origin"]
         url = https://<admin account>:<PAT>@github.com/uncrustify/uncrustify.git
-
+Check it with:
+$ git config --local --get remote.origin.url
 
 .. code::
 
