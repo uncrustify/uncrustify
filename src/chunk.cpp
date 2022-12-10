@@ -241,9 +241,9 @@ Chunk *Chunk::SearchTypeLevel(const E_Token type, const E_Scope scope,
    T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
    Chunk         *pc         = const_cast<Chunk *>(this);
 
-   do                                                // loop over the chunk list
+   do                                              // loop over the chunk list
    {
-      pc = (pc->*searchFnPtr)(scope);                // in either direction while
+      pc = (pc->*searchFnPtr)(scope);              // in either direction while
    } while (  pc->IsNotNullChunk()                 // the end of the list was not reached yet
            && (!pc->IsTypeAndLevel(type, level))); // and the chunk was not found either
 
@@ -257,9 +257,9 @@ Chunk *Chunk::SearchStringLevel(const char *str, const size_t len, int level,
    T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
    Chunk         *pc         = const_cast<Chunk *>(this);
 
-   do                                                          // loop over the chunk list
+   do                                                        // loop over the chunk list
    {
-      pc = (pc->*searchFnPtr)(scope);                          // in either direction while
+      pc = (pc->*searchFnPtr)(scope);                        // in either direction while
    } while (  pc->IsNotNullChunk()                           // the end of the list was not reached yet
            && !pc->IsStringAndLevel(str, len, true, level)); // and the demanded chunk was not found either
 
