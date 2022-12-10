@@ -23,14 +23,18 @@ using namespace uncrustify;
  * - fparen = function parenthesis
  */
 
-struct cw_entry
+struct SplitEntry
 {
    Chunk  *pc;
    size_t pri;
+
+   SplitEntry()
+      : pc(Chunk::NullChunkPtr)
+      , pri(0) {}
 };
 
 
-struct token_pri
+struct TokenPriority
 {
    E_Token tok;
    size_t  pri;
@@ -63,7 +67,7 @@ static size_t get_split_pri(E_Token tok);
  *  - ? :
  *  - function open paren not followed by close paren
  */
-static void try_split_here(cw_entry &ent, Chunk *pc);
+static void try_split_here(SplitEntry &ent, Chunk *pc);
 
 
 /**
@@ -189,7 +193,7 @@ void do_code_width()
 }
 
 
-static const token_pri pri_table[] =
+static const TokenPriority pri_table[] =
 {
    { CT_SEMICOLON,    1 },
    { CT_COMMA,        2 },
@@ -229,7 +233,7 @@ static size_t get_split_pri(E_Token tok)
 }
 
 
-static void try_split_here(cw_entry &ent, Chunk *pc)
+static void try_split_here(SplitEntry &ent, Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -313,7 +317,7 @@ static void try_split_here(cw_entry &ent, Chunk *pc)
    // Check levels first
    bool change = false;
 
-   if (  ent.pc == nullptr
+   if (  ent.pc->IsNullChunk()
       || pc->GetLevel() < ent.pc->GetLevel())
    {
       LOG_FMT(LSPLIT, "%s(%d):\n", __func__, __LINE__);
@@ -418,14 +422,13 @@ static bool split_line(Chunk *start)
    }
    LOG_FMT(LSPLIT, "%s(%d):\n", __func__, __LINE__);
    // Try to find the best spot to split the line
-   cw_entry ent;
+   SplitEntry ent;
+   Chunk      *pc = start;
+   Chunk      *prev;
 
-   memset(&ent, 0, sizeof(ent));
-   Chunk *pc = start;
-   Chunk *prev;
+   pc = pc->GetPrev();
 
-   while (  ((pc = pc->GetPrev()) != nullptr)
-         && pc->IsNotNullChunk()
+   while (  pc->IsNotNullChunk()
          && !pc->IsNewline())
    {
       LOG_FMT(LSPLIT, "%s(%d): at %s, orig line is %zu, orig col is %zu\n",
@@ -438,15 +441,16 @@ static bool split_line(Chunk *start)
          // break at maximum line length
          log_rule_B("ls_code_width");
 
-         if (  ent.pc != nullptr
+         if (  ent.pc->IsNotNullChunk()
             && (options::ls_code_width()))
          {
             break;
          }
       }
+      pc = pc->GetPrev();
    }
 
-   if (ent.pc == nullptr)
+   if (ent.pc->IsNullChunk())
    {
       LOG_FMT(LSPLIT, "%s(%d):    TRY_SPLIT yielded NO SOLUTION for orig line %zu at '%s' [%s]\n",
               __func__, __LINE__, start->GetOrigLine(), start->Text(), get_token_name(start->GetType()));
@@ -460,9 +464,9 @@ static bool split_line(Chunk *start)
    }
 
    // Break before the token instead of after it according to the pos_xxx rules
-   if (ent.pc == nullptr)
+   if (ent.pc->IsNullChunk())
    {
-      pc = nullptr;
+      pc = Chunk::NullChunkPtr;
    }
    else
    {
@@ -498,8 +502,7 @@ static bool split_line(Chunk *start)
               __func__, __LINE__, pc->Text(), pc->GetOrigCol());
    }
 
-   if (  pc == nullptr
-      || pc->IsNullChunk())
+   if (pc->IsNullChunk())
    {
       pc = start;
 
@@ -558,7 +561,7 @@ static void split_for_stmt(Chunk *start)
    // how many semicolons (1 or 2) do we need to find
    log_rule_B("ls_for_split_full");
    size_t max_cnt     = options::ls_for_split_full() ? 2 : 1;
-   Chunk  *open_paren = nullptr;
+   Chunk  *open_paren = Chunk::NullChunkPtr;
    size_t nl_cnt      = 0;
 
    LOG_FMT(LSPLIT, "%s: starting on %s, line %zu\n",
@@ -581,7 +584,7 @@ static void split_for_stmt(Chunk *start)
       }
    }
 
-   if (open_paren == nullptr)
+   if (open_paren->IsNullChunk())
    {
       LOG_FMT(LSPLIT, "No open paren\n");
       return;
@@ -725,13 +728,15 @@ static void split_fcn_params(Chunk *start)
       // Find the opening function parenthesis
       LOG_FMT(LSPLIT, "%s(%d): Find the opening function parenthesis\n", __func__, __LINE__);
 
-      while (  ((fpo = fpo->GetPrev()) != nullptr)
-            && fpo->IsNotNullChunk()
+      fpo = fpo->GetPrev();
+
+      while (  fpo->IsNotNullChunk()
             && fpo->IsNot(CT_FPAREN_OPEN))
       {
          // do nothing
          LOG_FMT(LSPLIT, "%s(%d): '%s', orig col is %zu, level is %zu\n",
                  __func__, __LINE__, fpo->Text(), fpo->GetOrigCol(), fpo->GetLevel());
+         fpo = fpo->GetPrev();
       }
    }
    Chunk  *pc     = fpo->GetNextNcNnl();

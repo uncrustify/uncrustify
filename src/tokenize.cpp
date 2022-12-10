@@ -27,9 +27,9 @@ using namespace std;
 using namespace uncrustify;
 
 
-struct tok_info
+struct TokenInfo
 {
-   tok_info()
+   TokenInfo()
       : last_ch(0)
       , idx(0)
       , row(1)
@@ -44,9 +44,9 @@ struct tok_info
 };
 
 
-struct tok_ctx
+struct TokenContext
 {
-   tok_ctx(const deque<int> &d)
+   TokenContext(const deque<int> &d)
       : data(d)
    {
    }
@@ -59,7 +59,7 @@ struct tok_ctx
    }
 
 
-   void save(tok_info &info)
+   void save(TokenInfo &info)
    {
       info = c;
    }
@@ -72,7 +72,7 @@ struct tok_ctx
    }
 
 
-   void restore(const tok_info &info)
+   void restore(const TokenInfo &info)
    {
       c = info;
    }
@@ -147,8 +147,8 @@ struct tok_ctx
 
 
    const deque<int> &data;
-   tok_info         c; //! current
-   tok_info         s; //! saved
+   TokenInfo        c; //! current
+   TokenInfo        s; //! saved
 };
 
 
@@ -161,7 +161,7 @@ struct tok_ctx
  *
  * @return Whether a string was parsed
  */
-static bool parse_string(tok_ctx &ctx, Chunk &pc, size_t quote_idx, bool allow_escape);
+static bool parse_string(TokenContext &ctx, Chunk &pc, size_t quote_idx, bool allow_escape);
 
 
 /**
@@ -172,7 +172,7 @@ static bool parse_string(tok_ctx &ctx, Chunk &pc, size_t quote_idx, bool allow_e
  *
  * @return Whether a string was parsed
  */
-static bool parse_cs_string(tok_ctx &ctx, Chunk &pc);
+static bool parse_cs_string(TokenContext &ctx, Chunk &pc);
 
 
 /**
@@ -180,7 +180,7 @@ static bool parse_cs_string(tok_ctx &ctx, Chunk &pc);
  *
  * @param pc  The structure to update, str is an input.
  */
-static void parse_verbatim_string(tok_ctx &ctx, Chunk &pc);
+static void parse_verbatim_string(TokenContext &ctx, Chunk &pc);
 
 
 static bool tag_compare(const deque<int> &d, size_t a_idx, size_t b_idx, size_t len);
@@ -192,7 +192,7 @@ static bool tag_compare(const deque<int> &d, size_t a_idx, size_t b_idx, size_t 
  *
  * @param pc  structure to update, str is an input.
  */
-static bool parse_cr_string(tok_ctx &ctx, Chunk &pc, size_t q_idx);
+static bool parse_cr_string(TokenContext &ctx, Chunk &pc, size_t q_idx);
 
 
 /**
@@ -202,7 +202,7 @@ static bool parse_cr_string(tok_ctx &ctx, Chunk &pc, size_t q_idx);
  *
  * @return Whether whitespace was parsed
  */
-static bool parse_whitespace(tok_ctx &ctx, Chunk &pc);
+static bool parse_whitespace(TokenContext &ctx, Chunk &pc);
 
 
 /**
@@ -212,7 +212,7 @@ static bool parse_whitespace(tok_ctx &ctx, Chunk &pc);
  *
  * @param pc  structure to update, str is an input
  */
-static bool parse_bs_newline(tok_ctx &ctx, Chunk &pc);
+static bool parse_bs_newline(TokenContext &ctx, Chunk &pc);
 
 
 /**
@@ -221,7 +221,7 @@ static bool parse_bs_newline(tok_ctx &ctx, Chunk &pc);
  * This is not the same as parse_whitespace() because it only consumes until
  * a single newline is encountered.
  */
-static bool parse_newline(tok_ctx &ctx);
+static bool parse_newline(TokenContext &ctx);
 
 
 /**
@@ -233,10 +233,10 @@ static bool parse_newline(tok_ctx &ctx);
  *
  * @param pc  structure to update, str is an input
  */
-static void parse_pawn_pattern(tok_ctx &ctx, Chunk &pc, E_Token tt);
+static void parse_pawn_pattern(TokenContext &ctx, Chunk &pc, E_Token tt);
 
 
-static bool parse_ignored(tok_ctx &ctx, Chunk &pc);
+static bool parse_ignored(TokenContext &ctx, Chunk &pc);
 
 
 /**
@@ -252,7 +252,7 @@ static bool parse_ignored(tok_ctx &ctx, Chunk &pc);
  *
  * @return true/false - whether anything was parsed
  */
-static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc);
+static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc);
 
 
 /**
@@ -277,7 +277,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc);
  *
  * @return Whether a string was parsed
  */
-static bool d_parse_string(tok_ctx &ctx, Chunk &pc);
+static bool d_parse_string(TokenContext &ctx, Chunk &pc);
 
 
 /**
@@ -292,7 +292,7 @@ static bool d_parse_string(tok_ctx &ctx, Chunk &pc);
  *
  * @return Whether a comment was parsed
  */
-static bool parse_comment(tok_ctx &ctx, Chunk &pc);
+static bool parse_comment(TokenContext &ctx, Chunk &pc);
 
 
 /**
@@ -303,7 +303,7 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc);
  *
  * @return Whether a placeholder was parsed.
  */
-static bool parse_code_placeholder(tok_ctx &ctx, Chunk &pc);
+static bool parse_code_placeholder(TokenContext &ctx, Chunk &pc);
 
 
 /**
@@ -311,7 +311,7 @@ static bool parse_code_placeholder(tok_ctx &ctx, Chunk &pc);
  * If for a string, explicitly exclude common format and scan specifiers, ie,
  * PRIx32 and SCNx64.
  */
-static void parse_suffix(tok_ctx &ctx, Chunk &pc, bool forstring);
+static void parse_suffix(TokenContext &ctx, Chunk &pc, bool forstring);
 
 
 //! check if a symbol holds a boolean value
@@ -350,10 +350,10 @@ static bool is_hex_(int ch);
  *
  * @return Whether a number was parsed
  */
-static bool parse_number(tok_ctx &ctx, Chunk &pc);
+static bool parse_number(TokenContext &ctx, Chunk &pc);
 
 
-static bool d_parse_string(tok_ctx &ctx, Chunk &pc)
+static bool d_parse_string(TokenContext &ctx, Chunk &pc)
 {
    size_t ch = ctx.peek();
 
@@ -497,7 +497,7 @@ static const char *str_search(const char *needle, const char *haystack, int hays
 #endif
 
 
-static bool parse_comment(tok_ctx &ctx, Chunk &pc)
+static bool parse_comment(TokenContext &ctx, Chunk &pc)
 {
    bool   is_d    = language_is_set(LANG_D);
    bool   is_cs   = language_is_set(LANG_CS);
@@ -644,9 +644,9 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
             pc.Str().append(ctx.get());  // store the '*'
             pc.Str().append(ctx.get());  // store the '/'
 
-            tok_info ss;
+            TokenInfo ss;
             ctx.save(ss);
-            size_t   oldsize = pc.GetStr().size();
+            size_t    oldsize = pc.GetStr().size();
 
             // If there is another C comment right after this one, combine them
             while (  (ctx.peek() == ' ')
@@ -736,7 +736,7 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
 } // parse_comment
 
 
-static bool parse_code_placeholder(tok_ctx &ctx, Chunk &pc)
+static bool parse_code_placeholder(TokenContext &ctx, Chunk &pc)
 {
    if (  (ctx.peek() != '<')
       || (ctx.peek(1) != '#'))
@@ -770,7 +770,7 @@ static bool parse_code_placeholder(tok_ctx &ctx, Chunk &pc)
 }
 
 
-static void parse_suffix(tok_ctx &ctx, Chunk &pc, bool forstring = false)
+static void parse_suffix(TokenContext &ctx, Chunk &pc, bool forstring = false)
 {
    if (CharTable::IsKw1(ctx.peek()))
    {
@@ -790,7 +790,7 @@ static void parse_suffix(tok_ctx &ctx, Chunk &pc, bool forstring = false)
       {
          return;
       }
-      tok_info ss;
+      TokenInfo ss;
       ctx.save(ss);
 
       while (  ctx.more()
@@ -877,7 +877,7 @@ static bool is_hex_(int ch)
 }
 
 
-static bool parse_number(tok_ctx &ctx, Chunk &pc)
+static bool parse_number(TokenContext &ctx, Chunk &pc)
 {
    /*
     * A number must start with a digit or a dot, followed by a digit
@@ -1001,7 +1001,7 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
       && (ctx.peek(1) != '.'))
    {
       // Issue #1265, 5.clamp()
-      tok_info ss;
+      TokenInfo ss;
       ctx.save(ss);
 
       while (  ctx.more()
@@ -1117,7 +1117,7 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
 } // parse_number
 
 
-static bool parse_string(tok_ctx &ctx, Chunk &pc, size_t quote_idx, bool allow_escape)
+static bool parse_string(TokenContext &ctx, Chunk &pc, size_t quote_idx, bool allow_escape)
 {
    log_rule_B("string_escape_char");
    const size_t escape_char = options::string_escape_char();
@@ -1219,7 +1219,7 @@ static cs_string_t operator|=(cs_string_t &value, cs_string_t other)
 }
 
 
-static cs_string_t parse_cs_string_start(tok_ctx &ctx, Chunk &pc)
+static cs_string_t parse_cs_string_start(TokenContext &ctx, Chunk &pc)
 {
    cs_string_t stringType = CS_STRING_NONE;
    int         offset     = 0;
@@ -1272,7 +1272,7 @@ struct CsStringParseState
 /**
  * C# strings are complex enough (mostly due to interpolation and nesting) that they need a custom parser.
  */
-static bool parse_cs_string(tok_ctx &ctx, Chunk &pc)
+static bool parse_cs_string(TokenContext &ctx, Chunk &pc)
 {
    cs_string_t stringType = parse_cs_string_start(ctx, pc);
 
@@ -1423,7 +1423,7 @@ static bool parse_cs_string(tok_ctx &ctx, Chunk &pc)
 } // parse_cs_string
 
 
-static void parse_verbatim_string(tok_ctx &ctx, Chunk &pc)
+static void parse_verbatim_string(TokenContext &ctx, Chunk &pc)
 {
    pc.SetType(CT_STRING);
 
@@ -1473,7 +1473,7 @@ static bool tag_compare(const deque<int> &d, size_t a_idx, size_t b_idx, size_t 
 }
 
 
-static bool parse_cr_string(tok_ctx &ctx, Chunk &pc, size_t q_idx)
+static bool parse_cr_string(TokenContext &ctx, Chunk &pc, size_t q_idx)
 {
    size_t tag_idx = ctx.c.idx + q_idx + 1;
    size_t tag_len = 0;
@@ -1543,7 +1543,7 @@ static bool parse_cr_string(tok_ctx &ctx, Chunk &pc, size_t q_idx)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a word was parsed (always true)
  */
-static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
+static bool parse_word(TokenContext &ctx, Chunk &pc, bool skipcheck)
 {
    static UncText intr_txt("@interface");
 
@@ -1696,7 +1696,7 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
 } // parse_word
 
 
-static size_t parse_attribute_specifier_sequence(tok_ctx &ctx)
+static size_t parse_attribute_specifier_sequence(TokenContext &ctx)
 {
    size_t nested = 0;
    size_t offset = 0;
@@ -1775,7 +1775,7 @@ static size_t parse_attribute_specifier_sequence(tok_ctx &ctx)
 } // parse_attribute_specifier_sequence
 
 
-static bool extract_attribute_specifier_sequence(tok_ctx &ctx, Chunk &pc, size_t length)
+static bool extract_attribute_specifier_sequence(TokenContext &ctx, Chunk &pc, size_t length)
 {
    pc.Str().clear();
 
@@ -1788,7 +1788,7 @@ static bool extract_attribute_specifier_sequence(tok_ctx &ctx, Chunk &pc, size_t
 } // extract_attribute_specifier_sequence
 
 
-static bool parse_whitespace(tok_ctx &ctx, Chunk &pc)
+static bool parse_whitespace(TokenContext &ctx, Chunk &pc)
 {
    size_t nl_count = 0;
    size_t ch       = 0;
@@ -1850,7 +1850,7 @@ static bool parse_whitespace(tok_ctx &ctx, Chunk &pc)
 } // parse_whitespace
 
 
-static bool parse_bs_newline(tok_ctx &ctx, Chunk &pc)
+static bool parse_bs_newline(TokenContext &ctx, Chunk &pc)
 {
    ctx.save();
    ctx.get(); // skip the '\'
@@ -1880,7 +1880,7 @@ static bool parse_bs_newline(tok_ctx &ctx, Chunk &pc)
 }
 
 
-static bool parse_newline(tok_ctx &ctx)
+static bool parse_newline(TokenContext &ctx)
 {
    ctx.save();
 
@@ -1906,7 +1906,7 @@ static bool parse_newline(tok_ctx &ctx)
 }
 
 
-static void parse_pawn_pattern(tok_ctx &ctx, Chunk &pc, E_Token tt)
+static void parse_pawn_pattern(TokenContext &ctx, Chunk &pc, E_Token tt)
 {
    pc.Str().clear();
    pc.SetType(tt);
@@ -1929,7 +1929,7 @@ static void parse_pawn_pattern(tok_ctx &ctx, Chunk &pc, E_Token tt)
 }
 
 
-static bool parse_off_newlines(tok_ctx &ctx, Chunk &pc)
+static bool parse_off_newlines(TokenContext &ctx, Chunk &pc)
 {
    size_t nl_count = 0;
 
@@ -1949,7 +1949,7 @@ static bool parse_off_newlines(tok_ctx &ctx, Chunk &pc)
 }
 
 
-static bool parse_macro(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
+static bool parse_macro(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
 {
    if (parse_off_newlines(ctx, pc))
    {
@@ -1963,7 +1963,7 @@ static bool parse_macro(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
    ctx.save();
    pc.Str().clear();
 
-   if (prev_pc == nullptr)
+   if (prev_pc->IsNullChunk())
    {
       return(false);
    }
@@ -1999,7 +1999,7 @@ static bool parse_macro(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
 } // parse_macro
 
 
-static bool parse_ignored(tok_ctx &ctx, Chunk &pc)
+static bool parse_ignored(TokenContext &ctx, Chunk &pc)
 {
    if (parse_off_newlines(ctx, pc))
    {
@@ -2099,7 +2099,7 @@ static bool parse_ignored(tok_ctx &ctx, Chunk &pc)
 } // parse_ignored
 
 
-static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
+static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
 {
    if (!ctx.more())
    {
@@ -2143,7 +2143,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       && cpd.in_preproc <= CT_PP_OTHER)
    {
       pc.Str().clear();
-      tok_info ss;
+      TokenInfo ss;
       ctx.save(ss);
       // Chunk to a newline or comment
       pc.SetType(CT_PREPROC_BODY);
@@ -2469,7 +2469,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       && ctx.peek() == '[')
    {
       if (  !language_is_set(LANG_OC)
-         || (  prev_pc != nullptr
+         || (  prev_pc->IsNotNullChunk()
             && !prev_pc->Is(CT_OC_AT)))
       {
          if (auto length = parse_attribute_specifier_sequence(ctx))
@@ -2651,13 +2651,13 @@ int find_enable_processing_comment_marker(const UncText &text,
 
 void tokenize(const deque<int> &data, Chunk *ref)
 {
-   tok_ctx ctx(data);
-   Chunk   chunk;
-   Chunk   *pc          = nullptr;
-   Chunk   *rprev       = nullptr;
-   bool    last_was_tab = false;
-   size_t  prev_sp      = 0;
-   int     num_stripped = 0;                    // Issue #1966
+   TokenContext ctx(data);
+   Chunk        chunk;
+   Chunk        *pc          = Chunk::NullChunkPtr;
+   Chunk        *rprev       = Chunk::NullChunkPtr;
+   bool         last_was_tab = false;
+   size_t       prev_sp      = 0;
+   int          num_stripped = 0;               // Issue #1966
 
    cpd.unc_stage = unc_stage_e::TOKENIZE;
 
@@ -2737,7 +2737,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
       // Add the chunk to the list
       rprev = pc;
 
-      if (rprev != nullptr)
+      if (rprev->IsNotNullChunk())
       {
          pc->SetFlagBits(rprev->GetFlags() & PCF_COPY_FLAGS);
 
@@ -2748,7 +2748,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
          }
       }
 
-      if (ref != nullptr)
+      if (ref->IsNotNullChunk())
       {
          chunk.SetFlagBits(PCF_INSERTED);
       }
@@ -2825,7 +2825,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
       {
          // Check for a preprocessor start
          if (  pc->Is(CT_POUND)
-            && (  rprev == nullptr
+            && (  rprev->IsNullChunk()
                || rprev->Is(CT_NEWLINE)))
          {
             pc->SetType(CT_PREPROC);
