@@ -2056,7 +2056,7 @@ void mark_function(Chunk *pc)
          || (pc->Is(CT_FUNC_PROTO))))
    {
       tmp = paren_close->GetNextNcNnl();
-      T_PcfFlags in_where_spec_flags = PCF_NONE;
+      PcfFlags in_where_spec_flags = PCF_NONE;
 
       while (  tmp->IsNotNullChunk()
             && tmp->IsNot(CT_BRACE_OPEN)
@@ -2472,8 +2472,8 @@ Chunk *mark_variable_definition(Chunk *start)
    {
       return(nullptr);
    }
-   Chunk      *pc   = start;
-   T_PcfFlags flags = PCF_VAR_1ST_DEF;
+   Chunk    *pc   = start;
+   PcfFlags flags = PCF_VAR_1ST_DEF;
 
    LOG_FMT(LVARDEF, "%s(%d): orig line %zu, orig col %zu, Text() '%s', type is %s\n",
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(),
@@ -2587,7 +2587,7 @@ void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
 } // mark_variable_stack
 
 
-T_PcfFlags mark_where_chunk(Chunk *pc, E_Token parent_type, T_PcfFlags flags)
+PcfFlags mark_where_chunk(Chunk *pc, E_Token parent_type, PcfFlags flags)
 {
    /* TODO: should have options to control spacing around the ':' as well as newline ability for the
     * constraint clauses (should it break up a 'where A : B where C : D' on the same line? wrap? etc.) */

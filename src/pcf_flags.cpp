@@ -62,7 +62,7 @@ static const char *pcf_names[] =
 };
 
 
-std::string pcf_flags_str(T_PcfFlags flags)
+std::string pcf_flags_str(PcfFlags flags)
 {
    char buffer[64];
 
@@ -98,7 +98,7 @@ std::string pcf_flags_str(T_PcfFlags flags)
 }
 
 
-void log_pcf_flags(log_sev_t sev, T_PcfFlags flags)
+void log_pcf_flags(log_sev_t sev, PcfFlags flags)
 {
    if (!log_sev_on(sev))
    {

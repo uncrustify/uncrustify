@@ -1033,7 +1033,7 @@ void process_option_line(const std::string &config_line, const char *filename,
       else if (is_path_relative(include_path))
       {
          // include is a relative path to the current config file
-         unc_text ut = std::string{ filename };
+         UncText ut = std::string{ filename };
          ut.resize(static_cast<unsigned>(path_dirname_len(filename)));
          ut.append(include_path);
          UNUSED(load_option_file(ut.c_str(), compat_level));

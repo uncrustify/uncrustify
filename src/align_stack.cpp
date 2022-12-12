@@ -306,9 +306,9 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       const size_t endcol = ali->GetColumn() + col_adj
                             + (gap < m_gap ? m_gap - gap : 0);
 
-      ali->AlignmentData().col_adj = col_adj;
-      ali->AlignmentData().ref     = ref;
-      ali->AlignmentData().start   = start;
+      ali->AlignData().col_adj = col_adj;
+      ali->AlignData().ref     = ref;
+      ali->AlignData().start   = start;
       m_aligned.Push_Back(ali, seqnum);
       m_last_added = 1;
 
@@ -324,7 +324,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
                  __func__, __LINE__, ali->Text(), ali->GetOrigLine(), ali->GetColumn(), get_token_name(ali->GetType()), ali->GetLevel());
       }
       LOG_FMT(LAS, "AlignStack::%s(%d):    ali alignment col_adj is %d, ref '%s', endcol is %zu\n",
-              __func__, __LINE__, ali->GetAlignmentData().col_adj, ref->Text(), endcol);
+              __func__, __LINE__, ali->GetAlignData().col_adj, ref->Text(), endcol);
 
       if (m_min_col > endcol)
       {
@@ -435,7 +435,7 @@ void AlignStack::Flush()
    {
       Chunk *pc = m_aligned.Get(idx)->m_pc;
       LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, pc->Text() is '%s', pc alignment col_adj is %d\n",
-              __func__, __LINE__, idx, pc->Text(), pc->GetAlignmentData().col_adj);
+              __func__, __LINE__, idx, pc->Text(), pc->GetAlignData().col_adj);
    }
 
    // Recalculate the max_col - it may have shifted since the last Add()
@@ -447,9 +447,9 @@ void AlignStack::Flush()
       size_t col_adj = 0;
       size_t gap     = 0;
 
-      if (pc != pc->GetAlignmentData().ref)
+      if (pc != pc->GetAlignData().ref)
       {
-         gap = pc->GetColumn() - (pc->GetAlignmentData().ref->GetColumn() + pc->GetAlignmentData().ref->Len());
+         gap = pc->GetColumn() - (pc->GetAlignData().ref->GetColumn() + pc->GetAlignData().ref->Len());
       }
 
       if (m_star_style == SS_DANGLE)
@@ -458,21 +458,21 @@ void AlignStack::Flush()
 
          if (tmp->IsPointerOperator())
          {
-            col_adj = pc->GetAlignmentData().start->GetColumn() - pc->GetColumn();
-            gap     = pc->GetAlignmentData().start->GetColumn() - (pc->GetAlignmentData().ref->GetColumn() + pc->GetAlignmentData().ref->Len());
+            col_adj = pc->GetAlignData().start->GetColumn() - pc->GetColumn();
+            gap     = pc->GetAlignData().start->GetColumn() - (pc->GetAlignData().ref->GetColumn() + pc->GetAlignData().ref->Len());
          }
       }
 
       if (m_right_align)
       {
          // Adjust the width for signed numbers
-         if (pc->GetAlignmentData().start != nullptr)
+         if (pc->GetAlignData().start != nullptr)
          {
-            size_t start_len = pc->GetAlignmentData().start->Len();
+            size_t start_len = pc->GetAlignData().start->Len();
 
-            if (pc->GetAlignmentData().start->GetType() == CT_NEG)
+            if (pc->GetAlignData().start->GetType() == CT_NEG)
             {
-               Chunk *next = pc->GetAlignmentData().start->GetNext();
+               Chunk *next = pc->GetAlignData().start->GetNext();
 
                if (next->Is(CT_NUMBER))
                {
@@ -482,7 +482,7 @@ void AlignStack::Flush()
             col_adj += start_len;
          }
       }
-      pc->AlignmentData().col_adj = col_adj;
+      pc->AlignData().col_adj = col_adj;
 
       // See if this pushes out the max_col
       const size_t endcol = pc->GetColumn() + col_adj
@@ -510,7 +510,7 @@ void AlignStack::Flush()
    {
       ce = m_aligned.Get(idx);
       LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, ce->m_pc->Text() is '%s', orig line is %zu, orig col is %zu, alignment col_adj is %d\n",
-              __func__, __LINE__, idx, ce->m_pc->Text(), ce->m_pc->GetOrigLine(), ce->m_pc->GetOrigCol(), ce->m_pc->GetAlignmentData().col_adj);
+              __func__, __LINE__, idx, ce->m_pc->Text(), ce->m_pc->GetOrigLine(), ce->m_pc->GetOrigCol(), ce->m_pc->GetAlignData().col_adj);
    }
 
    for (size_t idx = 0; idx < Len(); idx++)
@@ -518,7 +518,7 @@ void AlignStack::Flush()
       ce = m_aligned.Get(idx);
       Chunk        *pc = ce->m_pc;
 
-      const size_t tmp_col = m_max_col - pc->GetAlignmentData().col_adj;
+      const size_t tmp_col = m_max_col - pc->GetAlignData().col_adj;
 
       if (idx == 0)
       {
@@ -535,16 +535,16 @@ void AlignStack::Flush()
          }
          pc->SetFlagBits(PCF_ALIGN_START);
 
-         pc->AlignmentData().right_align = m_right_align;
-         pc->AlignmentData().amp_style   = m_amp_style;
-         pc->AlignmentData().star_style  = m_star_style;
+         pc->AlignData().right_align = m_right_align;
+         pc->AlignData().amp_style   = m_amp_style;
+         pc->AlignData().star_style  = m_star_style;
       }
-      pc->AlignmentData().gap  = m_gap;
-      pc->AlignmentData().next = m_aligned.GetChunk(idx + 1);
+      pc->AlignData().gap  = m_gap;
+      pc->AlignData().next = m_aligned.GetChunk(idx + 1);
 
       // Indent the token, taking col_adj into account
       LOG_FMT(LAS, "AlignStack::%s(%d): orig line is %zu, orig col is %zu, Text() '%s', set to col %zu (adj is %d)\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), tmp_col, pc->GetAlignmentData().col_adj);
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), tmp_col, pc->GetAlignData().col_adj);
       align_to_column(pc, tmp_col);
    }
 

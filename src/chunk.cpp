@@ -41,16 +41,16 @@ void Chunk::CopyFrom(const Chunk &o)
    m_ppLevel      = o.m_ppLevel;
    m_afterTab     = o.m_afterTab;
 
-   m_flags         = o.m_flags;
-   m_alignmentData = o.m_alignmentData;
-   m_indentData    = o.m_indentData;
+   m_flags           = o.m_flags;
+   m_alignmentData   = o.m_alignmentData;
+   m_indentationData = o.m_indentationData;
 
    m_next   = Chunk::NullChunkPtr;
    m_prev   = Chunk::NullChunkPtr;
    m_parent = Chunk::NullChunkPtr;
 
    m_str          = o.m_str;
-   m_trackingData = o.m_trackingData;
+   m_trackingList = o.m_trackingList;
 }
 
 
@@ -73,7 +73,7 @@ void Chunk::Reset()
 
    m_flags = PCF_NONE;
    memset(&m_alignmentData, 0, sizeof(m_alignmentData));
-   memset(&m_indentData, 0, sizeof(m_indentData));
+   memset(&m_indentationData, 0, sizeof(m_indentationData));
 
    m_next   = Chunk::NullChunkPtr;
    m_prev   = Chunk::NullChunkPtr;
@@ -81,7 +81,7 @@ void Chunk::Reset()
 
    // for debugging purpose only
    m_str.clear();
-   m_trackingData = nullptr;
+   m_trackingList = nullptr;
 }
 
 
@@ -241,9 +241,9 @@ Chunk *Chunk::SearchTypeLevel(const E_Token type, const E_Scope scope,
    T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
    Chunk         *pc         = const_cast<Chunk *>(this);
 
-   do                                                // loop over the chunk list
+   do                                              // loop over the chunk list
    {
-      pc = (pc->*searchFnPtr)(scope);                // in either direction while
+      pc = (pc->*searchFnPtr)(scope);              // in either direction while
    } while (  pc->IsNotNullChunk()                 // the end of the list was not reached yet
            && (!pc->IsTypeAndLevel(type, level))); // and the chunk was not found either
 
@@ -251,19 +251,19 @@ Chunk *Chunk::SearchTypeLevel(const E_Token type, const E_Scope scope,
 }
 
 
-Chunk *Chunk::SearchStringLevel(const char *cStr, const size_t len, int level,
+Chunk *Chunk::SearchStringLevel(const char *str, const size_t len, int level,
                                 const E_Scope scope, const E_Direction dir) const
 {
    T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
    Chunk         *pc         = const_cast<Chunk *>(this);
 
-   do                                                          // loop over the chunk list
+   do                                                        // loop over the chunk list
    {
-      pc = (pc->*searchFnPtr)(scope);                          // in either direction while
-   } while (  pc->IsNotNullChunk()                            // the end of the list was not reached yet
-           && !pc->IsStringAndLevel(cStr, len, true, level)); // and the demanded chunk was not found either
+      pc = (pc->*searchFnPtr)(scope);                        // in either direction while
+   } while (  pc->IsNotNullChunk()                           // the end of the list was not reached yet
+           && !pc->IsStringAndLevel(str, len, true, level)); // and the demanded chunk was not found either
 
-   return(pc);                                                // the latest chunk is the searched one
+   return(pc);                                               // the latest chunk is the searched one
 }
 
 
@@ -525,12 +525,12 @@ void Chunk::SwapLines(Chunk *other)
 } // Chunk::SwapLines
 
 
-void Chunk::SetResetFlags(T_PcfFlags resetBits, T_PcfFlags setBits)
+void Chunk::SetResetFlags(PcfFlags resetBits, PcfFlags setBits)
 {
    if (IsNotNullChunk())
    {
       LOG_FUNC_ENTRY();
-      const T_PcfFlags newFlags = (m_flags & ~resetBits) | setBits;
+      const PcfFlags newFlags = (m_flags & ~resetBits) | setBits;
 
       if (m_flags != newFlags)
       {
@@ -538,9 +538,9 @@ void Chunk::SetResetFlags(T_PcfFlags resetBits, T_PcfFlags setBits)
                  "%s(%d): %016llx^%016llx=%016llx\n"
                  "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s,",
                  __func__, __LINE__,
-                 static_cast<T_PcfFlags::int_t>(m_flags),
-                 static_cast<T_PcfFlags::int_t>(m_flags ^ newFlags),
-                 static_cast<T_PcfFlags::int_t>(newFlags),
+                 static_cast<PcfFlags::int_t>(m_flags),
+                 static_cast<PcfFlags::int_t>(m_flags ^ newFlags),
+                 static_cast<PcfFlags::int_t>(newFlags),
                  __func__, __LINE__, m_origLine, m_origCol, Text(), get_token_name(m_type));
          LOG_FMT(LSETFLG, "  parent type is %s,\n",
                  get_token_name(m_parentType));
@@ -769,16 +769,16 @@ bool Chunk::IsOCForinOpenParen() const
 }
 
 
-bool Chunk::IsStringAndLevel(const char *cStr, const size_t len,
+bool Chunk::IsStringAndLevel(const char *str, const size_t len,
                              bool caseSensitive, const int level) const
 {
    return(  (  level < 0
             || m_level == static_cast<size_t>(level))
          && Len() == len                                    // the length is as expected
          && (  (  caseSensitive
-               && memcmp(Text(), cStr, len) == 0)
+               && memcmp(Text(), str, len) == 0)
             || (  !caseSensitive
-               && strncasecmp(Text(), cStr, len) == 0)));   // the strings are equal
+               && strncasecmp(Text(), str, len) == 0)));   // the strings are equal
 }
 
 

@@ -28,8 +28,8 @@ void align_same_func_call_params()
    size_t            span        = 3;
    size_t            thresh;
    Chunk             *align_fcn;
-   unc_text          align_fcn_name;
-   unc_text          align_root_name;
+   UncText           align_fcn_name;
+   UncText           align_root_name;
    deque<Chunk *>    chunks;
    deque<AlignStack> array_of_AlignStack;
    AlignStack        fcn_as;
@@ -143,7 +143,7 @@ void align_same_func_call_params()
             && align_fcn_name.equals(align_root_name))
          {
             fcn_as.Add(pc);
-            align_cur->AlignmentData().next = pc;
+            align_cur->AlignData().next = pc;
             align_cur = pc;
             align_len++;
             add_str = "  Add";

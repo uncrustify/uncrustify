@@ -77,7 +77,7 @@ static bool should_add_braces(Chunk *vbopen);
  * Collect the text into txt that contains the full tag name.
  * Mainly for collecting namespace 'a.b.c' or function 'foo::bar()' names.
  */
-static void append_tag_name(unc_text &txt, Chunk *pc);
+static void append_tag_name(UncText &txt, Chunk *pc);
 
 
 //! Remove the case brace, if allowable.
@@ -102,8 +102,7 @@ static void process_if_chain(Chunk *br_start);
  *
  * @param brace  the brace chunk whose predecessing parenthesis will be checked
  *
- * @pre   the brace chunk cannot be a nullptr,
- *        it needs to be of type CT_BRACE_OPEN or CT_BRACE_CLOSE,
+ * @pre   it needs to be of type CT_BRACE_OPEN or CT_BRACE_CLOSE,
  *        its parent type needs to be one of this types:
  *            CT_IF, CT_ELSEIF, CT_FOR, CT_USING_STMT, CT_WHILE,
  *            CT_FUNC_CLASS_DEF, CT_FUNC_DEF
@@ -115,8 +114,7 @@ static void process_if_chain(Chunk *br_start);
  */
 static bool paren_multiline_before_brace(Chunk *brace)
 {
-   if (  brace == nullptr
-      || (  brace->IsNot(CT_BRACE_OPEN)
+   if (  (  brace->IsNot(CT_BRACE_OPEN)
          && brace->IsNot(CT_BRACE_CLOSE))
       || (  brace->GetParentType() != CT_IF
          && brace->GetParentType() != CT_ELSEIF
@@ -673,7 +671,7 @@ static void examine_brace(Chunk *bopen)
 
    if (pc->IsNullChunk())
    {
-      LOG_FMT(LBRDEL, "%s(%d): pc is nullptr\n", __func__, __LINE__);
+      LOG_FMT(LBRDEL, "%s(%d): pc is a null chunk\n", __func__, __LINE__);
       return;
    }
    LOG_FMT(LBRDEL, "%s(%d):  - end on '%s' on line %zu. if_count is %zu, semi_count is %zu\n",
@@ -761,8 +759,7 @@ static void convert_brace(Chunk *br)
 {
    LOG_FUNC_ENTRY();
 
-   if (  br == nullptr
-      || br->TestFlags(PCF_KEEP_BRACE))
+   if (br->TestFlags(PCF_KEEP_BRACE))
    {
       return;
    }
@@ -843,11 +840,6 @@ static void convert_brace(Chunk *br)
 static void convert_vbrace(Chunk *vbr)
 {
    LOG_FUNC_ENTRY();
-
-   if (vbr == nullptr)
-   {
-      return;
-   }
 
    if (vbr->Is(CT_VBRACE_OPEN))
    {
@@ -969,7 +961,7 @@ static void convert_vbrace_to_brace()
 
 
 Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type,
-                            const unc_text &cmt_text)
+                            const UncText &cmt_text)
 {
    LOG_FUNC_ENTRY();
 
@@ -1003,7 +995,7 @@ Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type,
 }
 
 
-static void append_tag_name(unc_text &txt, Chunk *pc)
+static void append_tag_name(UncText &txt, Chunk *pc)
 {
    LOG_FUNC_ENTRY();
    Chunk *tmp = pc->GetPrevNcNnl();
@@ -1129,9 +1121,9 @@ void add_long_closebrace_comment()
          {
             break;
          }
-         size_t   nl_min  = 0;
-         Chunk    *tag_pc = Chunk::NullChunkPtr;
-         unc_text xstr;
+         size_t  nl_min  = 0;
+         Chunk   *tag_pc = Chunk::NullChunkPtr;
+         UncText xstr;
 
          if (  br_open->GetParentType() == CT_FUNC_DEF
             || br_open->GetParentType() == CT_OC_MSG_DECL)
@@ -1148,7 +1140,7 @@ void add_long_closebrace_comment()
             }
          }
          else if (  br_open->GetParentType() == CT_SWITCH
-                 && sw_pc != nullptr)
+                 && sw_pc->IsNotNullChunk())
          {
             log_rule_B("mod_add_long_switch_closebrace_comment");
             nl_min = options::mod_add_long_switch_closebrace_comment();
@@ -1158,7 +1150,7 @@ void add_long_closebrace_comment()
                     __func__, __LINE__, xstr.c_str());
          }
          else if (  br_open->GetParentType() == CT_NAMESPACE
-                 && ns_pc != nullptr)
+                 && ns_pc->IsNotNullChunk())
          {
             log_rule_B("mod_add_long_namespace_closebrace_comment");
             nl_min = options::mod_add_long_namespace_closebrace_comment();
@@ -1319,7 +1311,7 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
          && pc->IsNot(CT_BRACE_CLOSE)))
    {
       LOG_FMT(LMCB, "%s(%d):  - after '%s'\n",
-              __func__, __LINE__, (pc == nullptr) ? "<null>" : get_token_name(pc->GetType()));
+              __func__, __LINE__, (pc->IsNullChunk()) ? "null chuck" : get_token_name(pc->GetType()));
       return(next);
    }
 
@@ -1477,8 +1469,7 @@ static void mod_case_brace()
       pc = pc->GetNextNcNnlNpp();
    }
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
 
@@ -1527,8 +1518,7 @@ static void process_if_chain(Chunk *br_start)
 
    Chunk *pc = br_start;
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       LOG_CHUNK(LTOK, pc);
 

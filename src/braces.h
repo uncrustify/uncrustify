@@ -27,7 +27,7 @@ void add_long_closebrace_comment();
  * Adds a comment after the ref chunk
  * Returns the added chunk or nullptr
  */
-Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type, const unc_text &cmt_text);
+Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type, const UncText &cmt_text);
 
 
 #endif /* BRACES_H_INCLUDED */

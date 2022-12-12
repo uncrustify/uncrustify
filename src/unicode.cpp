@@ -571,7 +571,7 @@ void write_char(int ch)
 }
 
 
-void write_string(const unc_text &text)
+void write_string(const UncText &text)
 {
    for (size_t idx = 0; idx < text.size(); idx++)
    {

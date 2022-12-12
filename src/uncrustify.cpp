@@ -1695,7 +1695,7 @@ static void add_file_footer()
          LOG_FMT(LSYS, "Adding a newline at the end of the file\n");
          newline_add_after(pc);
       }
-      tokenize(cpd.file_ftr.data, nullptr);
+      tokenize(cpd.file_ftr.data, Chunk::NullChunkPtr);
    }
 }
 
@@ -1951,7 +1951,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
 static void uncrustify_start(const deque<int> &data)
 {
    // Parse the text into chunks
-   tokenize(data, nullptr);
+   tokenize(data, Chunk::NullChunkPtr);
    PROT_THE_LINE
 
    cpd.unc_stage = unc_stage_e::HEADER;

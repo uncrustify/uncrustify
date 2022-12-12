@@ -169,10 +169,10 @@ static bool text_contains_filename_without_ext(const char *text)
 /**
  * Get chunk text without the extension.
  */
-static unc_text get_text_without_ext(const unc_text &chunk_text)
+static UncText get_text_without_ext(const UncText &chunk_text)
 {
-   unc_text result = chunk_text;
-   int      idx    = result.rfind(".", result.size() - 1);
+   UncText result = chunk_text;
+   int     idx    = result.rfind(".", result.size() - 1);
 
    if (idx == -1)
    {
@@ -184,9 +184,9 @@ static unc_text get_text_without_ext(const unc_text &chunk_text)
 
 
 /**
- * Returns true if unc_text has "." which implies extension.
+ * Returns true if UncText has "." which implies extension.
  */
-static bool has_dot(const unc_text &chunk_text)
+static bool has_dot(const UncText &chunk_text)
 {
    int idx = chunk_text.rfind(".", chunk_text.size() - 1);
 
@@ -197,11 +197,11 @@ static bool has_dot(const unc_text &chunk_text)
 /**
  * Returns chunk string required for sorting.
  */
-static unc_text chunk_sort_str(Chunk *pc)
+static UncText chunk_sort_str(Chunk *pc)
 {
    if (pc->GetParentType() == CT_PP_INCLUDE)
    {
-      return(unc_text{ pc->GetStr(), 0, pc->Len() - 1 });
+      return(UncText{ pc->GetStr(), 0, pc->Len() - 1 });
    }
    return(pc->GetStr());
 }
@@ -294,7 +294,7 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
 
-      int ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), tcare);
+      int ret_val = UncText::compare(s1, s2, std::min(s1.size(), s2.size()), tcare);
       LOG_FMT(LSORT, "%s(%d): ret_val is %d\n",
               __func__, __LINE__, ret_val);
 
@@ -480,7 +480,7 @@ static void dedupe_imports(Chunk **chunks, size_t num_chunks)
       {
          continue;
       }
-      int ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), options::mod_sort_case_sensitive());
+      int ret_val = UncText::compare(s1, s2, std::min(s1.size(), s2.size()), options::mod_sort_case_sensitive());
 
       if (ret_val == 0)
       {
