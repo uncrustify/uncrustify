@@ -26,6 +26,7 @@
 #include "indent.h"
 #include "keywords.h"
 #include "lang_pawn.h"
+#include "mark_question_colon.h"
 #include "newlines.h"
 #include "output.h"
 #include "parameter_pack_cleanup.h"
