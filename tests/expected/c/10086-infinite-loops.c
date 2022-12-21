@@ -31,13 +31,13 @@ int main(void)
 	for (;;) {
 	}
 
-	for(;;)     {
+	for(;;) {
 	}
 
 	for(;;) {
 	}
 
-	for(;;)  {
+	for(;;) {
 	}
 
 	for(;;) {
@@ -48,11 +48,11 @@ int main(void)
 
 	for (;;) {}
 
-	for(;;)     {}
+	for(;;) {}
 
 	for(;;) {}
 
-	for(;;)  {}
+	for(;;) {}
 
 	for(;;) {}
 
@@ -63,7 +63,7 @@ int main(void)
 		x++;
 	}
 
-	for(;;)   {
+	for(;;) {
 		x++;
 	}
 
@@ -84,7 +84,7 @@ int main(void)
 
 	for (;;) {x++;}
 
-	for(;;)   {x++;}
+	for(;;) {x++;}
 
 	for(;;) {x++;}
 

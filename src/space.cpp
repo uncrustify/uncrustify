@@ -101,6 +101,33 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    min_sp = 1;
 
+   if (  first->Is(CT_VBRACE_OPEN)
+      && first->GetPrev()->Is(CT_SPAREN_CLOSE)
+      && second->IsNot(CT_SEMICOLON))
+   {
+      // Add or remove space after ')' of control statements.
+      log_rule("sp_after_sparen");
+      return(options::sp_after_sparen());
+   }
+
+   if (first->Is(CT_SPAREN_CLOSE))
+   {
+      if (second->Is(CT_VBRACE_OPEN))
+      {
+         // Fix spacing between SPAREN_CLOSE and VBRACE_OPEN tokens as we don't want the default behavior (which is ADD).
+         log_rule("REMOVE");
+         return(IARF_REMOVE);
+      }
+
+      if (  options::sp_sparen_brace() == IARF_IGNORE
+         && second->Is(CT_BRACE_OPEN))
+      {
+         // Do sp_after_sparen if sp_sparen_brace is ignored. No need for VBRACE_OPEN spacing.
+         log_rule("sp_after_sparen");
+         return(options::sp_after_sparen());
+      }
+   }
+
    if (  first->Is(CT_PP_IGNORE)
       && second->Is(CT_PP_IGNORE))
    {
@@ -1442,14 +1469,6 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
             log_rule("sp_sparen_brace");
             return(options::sp_sparen_brace());
          }
-      }
-
-      if (  !second->IsComment()
-         && (options::sp_after_sparen() != IARF_IGNORE))
-      {
-         // Add or remove space after ')' of control statements.
-         log_rule("sp_after_sparen");
-         return(options::sp_after_sparen());
       }
    }
 
@@ -3477,6 +3496,21 @@ void space_text()
          case IARF_ADD:
          {
             int delta = min_sp;
+
+            // Handle the condition of a CT_VBRACE_OPEN with more complicated spacing mechanics.
+            if (  pc->Is(CT_VBRACE_OPEN)
+               && next->GetOrigCol() >= pc->GetPrev()->GetOrigCol())
+            {
+               delta = next->GetOrigCol() - pc->GetPrev()->GetOrigCol();
+
+               if ((delta - 1) < min_sp)
+               {
+                  column += min_sp;
+                  break;
+               }
+               column += (delta - 1);
+               break;
+            }
 
             if (  next->GetOrigCol() >= pc->GetOrigColEnd()
                && pc->GetOrigColEnd() != 0)
