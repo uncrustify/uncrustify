@@ -420,7 +420,7 @@
 09594  common/indent_columns-3.cfg                c/sf594.c
 09588  common/empty.cfg                           c/sf588.c
 
-09601  c/sp_after_sparen.cfg                      c/sp_after_sparen.c
+09601  common/bug_637.cfg                         c/bug_637.c
 09602  common/bug_671.cfg                         c/bug_671.c
 09603  common/indent_ternary_operator-1.cfg       c/indent_ternary-1.c
 09604  common/indent_ternary_operator-2.cfg       c/indent_ternary-2.c
@@ -548,3 +548,8 @@
 10111  c/mod_int-remove-left.cfg                  c/int-types.c
 10112  c/mod_int-remove-right.cfg                 c/int-types.c
 10113  c/mod_int-remove-all.cfg                   c/int-types.c
+
+10120  c/sp_after_sparen-i.cfg                    c/sp_after_sparen.c
+10121  c/sp_after_sparen-a.cfg                    c/sp_after_sparen.c
+10122  c/sp_after_sparen-r.cfg                    c/sp_after_sparen.c
+10123  c/sp_after_sparen-f.cfg                    c/sp_after_sparen.c
