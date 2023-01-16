@@ -78,11 +78,11 @@ static void add_or_remove_int_keyword(Chunk *pc, Chunk *sibling, iarf_e action, 
       {
          if (sibling == int_keyword)
          {
-            int_keyword = nullptr;
+            int_keyword = Chunk::NullChunkPtr;
          }
          Chunk::Delete(sibling);
       }
-      else if (  int_keyword != nullptr
+      else if (  int_keyword->IsNotNullChunk()
               && int_keyword != sibling)
       {
          // We added an int keyword, but now we see that there already was one.
@@ -107,7 +107,7 @@ static void add_or_remove_int_keyword(Chunk *pc, Chunk *sibling, iarf_e action, 
       if (  action == IARF_ADD
          || action == IARF_FORCE)
       {
-         if (int_keyword)
+         if (int_keyword->IsNotNullChunk())
          {
             // There was already an int keyword. Either keep it and don't add a
             // new one or delete it to make way for the new one.
@@ -141,7 +141,7 @@ void change_int_types()
 
    Chunk *prev;
    Chunk *next;
-   Chunk *int_keyword = nullptr;
+   Chunk *int_keyword = Chunk::NullChunkPtr;
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
@@ -180,7 +180,7 @@ void change_int_types()
       else if (  strcmp(pc->Text(), "int") != 0
               && !is_storage_keyword(pc))
       {
-         int_keyword = nullptr; // We are no longer in a variable declaration
+         int_keyword = Chunk::NullChunkPtr; // We are no longer in a variable declaration
       }
    }
 } // change_int_types

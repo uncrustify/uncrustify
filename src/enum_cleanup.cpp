@@ -37,8 +37,7 @@ void enum_cleanup()
                  __func__, __LINE__, pc->GetOrigLine(), get_token_name(pc->GetType()));
          Chunk *prev = pc->GetPrevNcNnl();                           // Issue #3604
 
-         if (  prev != nullptr
-            && prev->IsNotNullChunk())
+         if (prev->IsNotNullChunk())
          {
             if (prev->Is(CT_COMMA))
             {

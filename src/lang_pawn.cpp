@@ -124,7 +124,7 @@ static bool pawn_continued(Chunk *pc, size_t br_level)
 {
    LOG_FUNC_ENTRY();
 
-   if (pc == nullptr)
+   if (pc->IsNullChunk())
    {
       return(false);
    }
@@ -177,8 +177,7 @@ void pawn_prescan()
    bool  did_nl = true;
    Chunk *pc    = Chunk::GetHead();
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (  did_nl
          && pc->IsNot(CT_PREPROC)
@@ -190,8 +189,7 @@ void pawn_prescan()
       }
 
       // note that continued lines are ignored
-      if (  pc != nullptr
-         && pc->IsNotNullChunk())
+      if (pc->IsNotNullChunk())
       {
          did_nl = (pc->Is(CT_NEWLINE));
       }
@@ -213,7 +211,7 @@ static Chunk *pawn_process_line(Chunk *start)
       return(pawn_process_variable(start));
    }
    // if a open paren is found before an assign, then this is a function
-   Chunk *fcn = nullptr;
+   Chunk *fcn = Chunk::NullChunkPtr;
 
    if (start->Is(CT_WORD))
    {
@@ -243,7 +241,7 @@ static Chunk *pawn_process_line(Chunk *start)
       }
    }
 
-   if (fcn != nullptr)
+   if (fcn->IsNotNullChunk())
    {
       //LOG_FMT(LSYS, "FUNCTION: %s\n", fcn->Text());
       return(pawn_mark_function0(start, fcn));
@@ -265,8 +263,7 @@ static Chunk *pawn_process_variable(Chunk *start)
    LOG_FUNC_ENTRY();
    Chunk *pc = Chunk::NullChunkPtr;
 
-   if (  start != nullptr
-      && start->IsNotNullChunk())
+   if (start->IsNotNullChunk())
    {
       pc = start;
    }
@@ -471,8 +468,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
          last = prev;
       } while ((prev = prev->GetNext())->IsNotNullChunk());
 
-      if (  last != nullptr
-         && last->IsNotNullChunk())
+      if (last->IsNotNullChunk())
       {
          LOG_FMT(LPFUNC, "%s:%zu] ended on %s, level %zu\n",
                  __func__, last->GetOrigLine(), get_token_name(last->GetType()), last->GetLevel());

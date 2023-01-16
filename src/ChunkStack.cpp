@@ -49,13 +49,13 @@ Chunk *ChunkStack::GetChunk(size_t idx) const
    {
       return(m_cse[idx].m_pc);
    }
-   return(nullptr);
+   return(Chunk::NullChunkPtr);
 }
 
 
 Chunk *ChunkStack::Pop_Front()
 {
-   Chunk *pc = nullptr;
+   Chunk *pc = Chunk::NullChunkPtr;
 
    if (!m_cse.empty())
    {
@@ -68,7 +68,7 @@ Chunk *ChunkStack::Pop_Front()
 
 Chunk *ChunkStack::Pop_Back()
 {
-   Chunk *pc = nullptr;
+   Chunk *pc = Chunk::NullChunkPtr;
 
    if (!m_cse.empty())
    {
@@ -94,7 +94,7 @@ void ChunkStack::Zap(size_t idx)
 {
    if (idx < m_cse.size())
    {
-      m_cse[idx].m_pc = nullptr;
+      m_cse[idx].m_pc = Chunk::NullChunkPtr;
    }
 }
 
@@ -105,7 +105,7 @@ void ChunkStack::Collapse()
 
    for (size_t rd_idx = 0; rd_idx < m_cse.size(); rd_idx++)
    {
-      if (m_cse[rd_idx].m_pc != nullptr)
+      if (m_cse[rd_idx].m_pc->IsNotNullChunk())
       {
          if (rd_idx != wr_idx)
          {

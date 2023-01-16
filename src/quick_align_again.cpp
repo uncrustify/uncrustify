@@ -23,7 +23,7 @@ void quick_align_again()
       LOG_FMT(LALAGAIN, "%s(%d): orig line is %zu, orig col is %zu, column is %zu, Text() '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetColumn(), pc->ElidedText(copy));
 
-      if (  pc->GetAlignData().next != nullptr
+      if (  pc->GetAlignData().next->IsNotNullChunk()
          && pc->TestFlags(PCF_ALIGN_START))
       {
          AlignStack as;
@@ -38,7 +38,7 @@ void quick_align_again()
          as.Add(pc->GetAlignData().start);
          pc->SetFlagBits(PCF_WAS_ALIGNED);
 
-         for (Chunk *tmp = pc->GetAlignData().next; tmp != nullptr; tmp = tmp->GetAlignData().next)
+         for (Chunk *tmp = pc->GetAlignData().next; tmp->IsNotNullChunk(); tmp = tmp->GetAlignData().next)
          {
             tmp->SetFlagBits(PCF_WAS_ALIGNED);
             as.Add(tmp->GetAlignData().start);

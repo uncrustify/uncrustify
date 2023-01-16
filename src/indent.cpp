@@ -228,7 +228,7 @@ void align_to_column(Chunk *pc, size_t column)
 {
    LOG_FUNC_ENTRY();
 
-   if (  pc == nullptr
+   if (  pc->IsNullChunk()
       || column == pc->GetColumn())
    {
       return;
@@ -491,12 +491,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
                                   bool from_keyword)
 {
    LOG_FUNC_ENTRY();
-   Chunk *tmp = Chunk::NullChunkPtr;
-
-   if (pc != nullptr)
-   {
-      tmp = pc->GetPrevNc();
-   }
+   Chunk *tmp = pc->GetPrevNc();
 
    if (from_brace)
    {
@@ -667,8 +662,7 @@ void indent_text()
    Chunk *pc        = Chunk::GetHead();
    bool  classFound = false;                                 // Issue #672
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       LOG_CHUNK(LINDLINE, pc);
       //  forces string literal to column-1 [Fix for 1246]
@@ -3888,8 +3882,7 @@ void indent_text()
          else if (  options::indent_func_const()
                  && pc->Is(CT_QUALIFIER)
                  && strncasecmp(pc->Text(), "const", pc->Len()) == 0
-                 && (  next == nullptr
-                    || next->Is(CT_BRACED)
+                 && (  next->Is(CT_BRACED)
                     || next->IsBraceOpen()
                     || next->Is(CT_NEWLINE)
                     || next->Is(CT_SEMICOLON)

@@ -24,20 +24,20 @@ Chunk *skip_c99_array(Chunk *sq_open)
          return(tmp->GetNextNc());
       }
    }
-   return(nullptr);
+   return(Chunk::NullChunkPtr);
 } // skip_c99_array
 
 
 Chunk *scan_ib_line(Chunk *start)
 {
    LOG_FUNC_ENTRY();
-   Chunk  *prev_match = nullptr;
+   Chunk  *prev_match = Chunk::NullChunkPtr;
    size_t idx         = 0;
 
    // Skip past C99 "[xx] =" stuff
    Chunk *tmp = skip_c99_array(start);
 
-   if (tmp != nullptr)
+   if (tmp->IsNotNullChunk())
    {
       start->SetParentType(CT_TSQUARE);
       start            = tmp;
@@ -45,7 +45,7 @@ Chunk *scan_ib_line(Chunk *start)
    }
    Chunk *pc = start;
 
-   if (pc != nullptr)
+   if (pc->IsNotNullChunk())
    {
       LOG_FMT(LSIB, "%s(%d): start: orig line is %zu, orig col is %zu, column is %zu, type is %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetColumn(), get_token_name(pc->GetType()));
@@ -114,7 +114,7 @@ Chunk *scan_ib_line(Chunk *start)
                        __func__, __LINE__, idx, pc->GetOrigLine(), pc->GetColumn(), token_width, get_token_name(pc->GetType()));
 
                // Shift out based on column
-               if (prev_match == nullptr)
+               if (prev_match->IsNullChunk())
                {
                   if (pc->GetColumn() > cpd.al[idx].col)
                   {
@@ -180,7 +180,7 @@ void ib_shift_out(size_t idx, size_t num)
 
 Chunk *step_back_over_member(Chunk *pc)
 {
-   if (pc == nullptr)
+   if (pc->IsNullChunk())
    {
       pc = Chunk::NullChunkPtr;
    }

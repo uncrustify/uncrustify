@@ -197,7 +197,7 @@ Chunk *newline_add_between(Chunk *start, Chunk *end);
  *                   (will be initialized with 0)
  * @param  scope     specifies region chunks should/should not be considered.
  *
- * @return false  if pc_start or pc_end are nullptr or if pc_end is not reached
+ * @return false  if pc_start or pc_end are null chunks or if pc_end is not reached
  * @return true   if above cases are not met
  */
 bool newlines_between(Chunk *pc_start, Chunk *pc_end, size_t &newlines, E_Scope scope = E_Scope::ALL);

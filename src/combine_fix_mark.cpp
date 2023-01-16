@@ -306,7 +306,7 @@ void fix_fcn_def_params(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   if (start == nullptr)
+   if (start->IsNullChunk())
    {
       return;
    }
@@ -395,7 +395,7 @@ void fix_type_cast(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   if (start == nullptr)
+   if (start->IsNullChunk())
    {
       return;
    }
@@ -437,7 +437,7 @@ void fix_typedef(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   if (start == nullptr)
+   if (start->IsNullChunk())
    {
       return;
    }
@@ -562,8 +562,7 @@ void fix_typedef(Chunk *start)
       && after->IsNot(CT_STRUCT)
       && after->IsNot(CT_UNION))
    {
-      if (  the_type != nullptr
-         && the_type->IsNotNullChunk())
+      if (the_type->IsNotNullChunk())
       {
          // We have just a regular typedef
          LOG_FMT(LTYPEDEF, "%s(%d): regular typedef Text() %s, on orig line %zu\n",
@@ -612,8 +611,7 @@ void fix_typedef(Chunk *start)
       }
    }
 
-   if (  the_type != nullptr
-      && the_type->IsNotNullChunk())
+   if (the_type->IsNotNullChunk())
    {
       LOG_FMT(LTYPEDEF, "%s(%d): %s typedef Text() %s, on orig line %zu\n",
               __func__, __LINE__, get_token_name(after->GetType()), the_type->Text(),
@@ -700,7 +698,7 @@ Chunk *fix_variable_definition(Chunk *start)
    if (end->IsNullChunk())
    {
       LOG_FMT(LFVD, "%s(%d): end is null chunk\n", __func__, __LINE__);
-      return(nullptr);
+      return(Chunk::NullChunkPtr);
    }
    LOG_FMT(LFVD, "%s(%d): end->GetType() is %s\n", __func__, __LINE__, get_token_name(end->GetType()));
 
@@ -1017,8 +1015,7 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
    LOG_FUNC_ENTRY();
    Chunk *pc = start;
 
-   if (  pc != nullptr
-      && pc->IsNotNullChunk())
+   if (pc->IsNotNullChunk())
    {
       // Step backwards from pc and mark the parent of the return type
       LOG_FMT(LFCNR, "%s(%d): (backwards) return type for '%s' @ orig line is %zu, orig col is %zu\n",
@@ -1152,7 +1149,7 @@ void mark_function(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (pc == nullptr)
+   if (pc->IsNullChunk())
    {
       return;
    }
@@ -1166,7 +1163,7 @@ void mark_function(Chunk *pc)
       return;
    }
    Chunk *tmp;
-   Chunk *semi = nullptr;
+   Chunk *semi = Chunk::NullChunkPtr;
    Chunk *paren_open;
    Chunk *paren_close;
 
@@ -1246,7 +1243,7 @@ void mark_function(Chunk *pc)
             }
          }
 
-         if (  tmp != nullptr
+         if (  tmp->IsNotNullChunk()
             && pc->IsNot(CT_FUNC_CALL))
          {
             // Mark the return type
@@ -1286,7 +1283,7 @@ void mark_function(Chunk *pc)
               __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
       next = skip_template_next(next);
 
-      if (next == nullptr)
+      if (next->IsNullChunk())
       {
          return;
       }
@@ -1296,13 +1293,13 @@ void mark_function(Chunk *pc)
    // Skip over any template and attribute madness
    next = skip_template_next(next);
 
-   if (next == nullptr)
+   if (next->IsNullChunk())
    {
       return;
    }
    next = skip_attribute_next(next);
 
-   if (next == nullptr)
+   if (next->IsNullChunk())
    {
       return;
    }
@@ -1444,8 +1441,7 @@ void mark_function(Chunk *pc)
    LOG_FMT(LFCN, "%s(%d): Check for C++ function def, Text() is '%s', orig line is %zu, orig col is %zu, type is %s\n",
            __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
 
-   if (  prev != nullptr
-      && prev->IsNotNullChunk())
+   if (prev->IsNotNullChunk())
    {
       LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', orig line is %zu, orig col is %zu, type is %s\n",
               __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->GetOrigCol(), get_token_name(prev->GetType()));
@@ -1777,7 +1773,6 @@ void mark_function(Chunk *pc)
       }
 
       if (  isa_def
-         && prev != nullptr
          && prev->IsNotNullChunk()
          && (  (  prev->IsParenClose()
                && prev->GetParentType() != CT_D_CAST
@@ -1821,8 +1816,7 @@ void mark_function(Chunk *pc)
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
          pc->SetType(CT_FUNC_DEF);
 
-         if (  prev == nullptr
-            || prev->IsNullChunk())
+         if (prev->IsNullChunk())
          {
             prev = Chunk::GetHead();
          }
@@ -1844,7 +1838,7 @@ void mark_function(Chunk *pc)
 
       tmp = flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
 
-      if (  tmp != nullptr
+      if (  tmp->IsNotNullChunk()
          && tmp->Is(CT_BRACE_OPEN)
          && tmp->GetParentType() != CT_DOUBLE_BRACE)
       {
@@ -2014,8 +2008,7 @@ void mark_function(Chunk *pc)
       }
    }
 
-   if (  semi != nullptr
-      && semi->IsNotNullChunk())
+   if (semi->IsNotNullChunk())
    {
       semi->SetParentType(pc->GetType());
    }
@@ -2115,7 +2108,7 @@ bool mark_function_type(Chunk *pc)
 
    size_t  star_count = 0;
    size_t  word_count = 0;
-   Chunk   *ptrcnk    = nullptr;
+   Chunk   *ptrcnk    = Chunk::NullChunkPtr;
    Chunk   *tmp;
    Chunk   *apo;
    Chunk   *apc;
@@ -2468,9 +2461,9 @@ Chunk *mark_variable_definition(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   if (start == nullptr)
+   if (start->IsNullChunk())
    {
-      return(nullptr);
+      return(Chunk::NullChunkPtr);
    }
    Chunk    *pc   = start;
    PcfFlags flags = PCF_VAR_1ST_DEF;
@@ -2539,14 +2532,14 @@ void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
    // throw out the last word and mark the rest
    Chunk *var_name = cs.Pop_Back();
 
-   if (  var_name != nullptr
+   if (  var_name->IsNotNullChunk()
       && var_name->GetPrev()->IsNotNullChunk()
       && var_name->GetPrev()->GetType() == CT_DC_MEMBER)
    {
       cs.Push_Back(var_name);
    }
 
-   if (var_name != nullptr)
+   if (var_name->IsNotNullChunk())
    {
       LOG_FMT(LFCNP, "%s(%d): parameter on orig line %zu, orig col %zu:\n",
               __func__, __LINE__, var_name->GetOrigLine(), var_name->GetOrigCol());
@@ -2554,7 +2547,7 @@ void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
       size_t word_cnt = 0;
       Chunk  *word_type;
 
-      while ((word_type = cs.Pop_Back()) != nullptr)
+      while ((word_type = cs.Pop_Back())->IsNotNullChunk())
       {
          if (  word_type->Is(CT_WORD)
             || word_type->Is(CT_TYPE))

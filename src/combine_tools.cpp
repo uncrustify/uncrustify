@@ -23,12 +23,12 @@ bool can_be_full_param(Chunk *start, Chunk *end)
 
    int   word_count     = 0;
    int   type_count     = 0;
-   Chunk *pc            = nullptr;
-   Chunk *first_word    = nullptr;
+   Chunk *pc            = Chunk::NullChunkPtr;
+   Chunk *first_word    = Chunk::NullChunkPtr;
    bool  first_word_set = false;
 
    for (pc = start;
-        pc != nullptr && pc->IsNotNullChunk() && pc != end;
+        pc->IsNotNullChunk() && pc != end;
         pc = pc->GetNextNcNnl(E_Scope::PREPROC))
    {
       LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', type is %s\n",
@@ -273,15 +273,14 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          // A Most Vexing Parse variable declaration cannot occur in the body
          // of a struct/class, so we probably have a function prototype
          LOG_FMT(LFPARAM, "%s(%d): <== type is %s, Likely!\n",
-                 __func__, __LINE__, (pc == nullptr ? "nullptr" : get_token_name(pc->GetType())));
+                 __func__, __LINE__, (pc->IsNullChunk() ? "null chunk" : get_token_name(pc->GetType())));
          return(true);
       }
    }
    LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', word_count is %d, type_count is %d\n",
            __func__, __LINE__, pc->Text(), word_count, type_count);
 
-   if (  first_word != nullptr
-      && first_word->IsNotNullChunk())
+   if (first_word->IsNotNullChunk())
    {
       LOG_FMT(LFPARAM, "%s(%d): first_word->Text() is '%s'\n",
               __func__, __LINE__, first_word->Text());
@@ -296,7 +295,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
    LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', ",
            __func__, __LINE__, pc->Text());
    LOG_FMT(LFPARAM, "<== type is %s, ",
-           (pc == nullptr ? "nullptr" : get_token_name(pc->GetType())));
+           (pc->IsNullChunk() ? "null chunk" : get_token_name(pc->GetType())));
 
    if (ret)
    {
@@ -416,8 +415,7 @@ void flag_series(Chunk *start, Chunk *end, PcfFlags set_flags, PcfFlags clr_flag
 {
    LOG_FUNC_ENTRY();
 
-   while (  start != nullptr
-         && start->IsNotNullChunk()
+   while (  start->IsNotNullChunk()
          && start != end)
    {
       start->UpdateFlagBits(clr_flags, set_flags);
@@ -431,8 +429,7 @@ void flag_series(Chunk *start, Chunk *end, PcfFlags set_flags, PcfFlags clr_flag
       }
    }
 
-   if (  end != nullptr
-      && end->IsNotNullChunk())
+   if (end->IsNotNullChunk())
    {
       end->UpdateFlagBits(clr_flags, set_flags);
       log_pcf_flags(LGUY, end->GetFlags());
@@ -444,11 +441,6 @@ size_t get_cpp_template_angle_nest_level(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
    int nestLevel = 0;
-
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
-   }
 
    while (  pc->IsNotNullChunk()
          && pc->TestFlags(PCF_IN_TEMPLATE))
@@ -500,8 +492,7 @@ Chunk *get_d_template_types(ChunkStack &cs, Chunk *open_paren)
 
 bool go_on(Chunk *pc, Chunk *start)
 {
-   if (  pc == nullptr
-      || pc->IsNullChunk()
+   if (  pc->IsNullChunk()
       || pc->GetLevel() != start->GetLevel())
    {
       return(false);
@@ -534,8 +525,7 @@ void make_type(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (  pc != nullptr
-      && pc->IsNotNullChunk())
+   if (pc->IsNotNullChunk())
    {
       if (pc->Is(CT_WORD))
       {
@@ -577,5 +567,5 @@ Chunk *set_paren_parent(Chunk *start, E_Token parent_type)
       return(end->GetNextNcNnl(E_Scope::PREPROC));
    }
    LOG_FMT(LFLPAREN, "%s(%d):\n", __func__, __LINE__);
-   return(nullptr);
+   return(Chunk::NullChunkPtr);
 } // set_paren_parent

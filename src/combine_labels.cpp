@@ -18,11 +18,6 @@ Chunk *chunk_get_next_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
 {
    Chunk *tmp = pc;
 
-   if (tmp == nullptr)
-   {
-      tmp = Chunk::NullChunkPtr;
-   }
-
    do
    {
       tmp = tmp->GetNext(scope);
@@ -37,11 +32,6 @@ Chunk *chunk_get_next_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
 Chunk *chunk_get_prev_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
 {
    Chunk *tmp = pc;
-
-   if (tmp == nullptr)
-   {
-      tmp = Chunk::NullChunkPtr;
-   }
 
    do
    {
@@ -81,8 +71,7 @@ void combine_labels()
 
    // unlikely that the file will start with a label...
    // prev cur next
-   while (  next != nullptr
-         && next->IsNotNullChunk())
+   while (next->IsNotNullChunk())
    {
       if (next->Is(CT_NEWLINE))
       {
@@ -217,7 +206,7 @@ void combine_labels()
                     __func__, __LINE__, next->Text(), next->GetOrigLine(), next->GetOrigCol());
             Chunk *nextprev = chunk_get_prev_local(next);   // Issue #2279
 
-            if (nextprev == nullptr)
+            if (nextprev->IsNullChunk())
             {
                return;
             }

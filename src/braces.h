@@ -25,7 +25,7 @@ void add_long_closebrace_comment();
 
 /**
  * Adds a comment after the ref chunk
- * Returns the added chunk or nullptr
+ * Returns the added chunk or Chunk::NullChunkPtr
  */
 Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type, const UncText &cmt_text);
 

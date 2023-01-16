@@ -40,9 +40,9 @@ public:
 
 void sp_votes::vote(Chunk *first, Chunk *second)
 {
-   if (  first == nullptr
+   if (  first->IsNullChunk()
       || first->IsNewline()
-      || second == nullptr
+      || second->IsNullChunk()
       || second->IsNewline())
    {
       return;

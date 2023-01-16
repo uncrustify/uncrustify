@@ -8,6 +8,7 @@
 #ifndef CHUNKSTACK_H_INCLUDED
 #define CHUNKSTACK_H_INCLUDED
 
+#include "chunk.h"
 #include "uncrustify_types.h"
 
 class ChunkStack
@@ -17,7 +18,7 @@ public:
    {
       Entry()
          : m_seqnum(0)
-         , m_pc(0)
+         , m_pc(Chunk::NullChunkPtr)
       {
       }
 

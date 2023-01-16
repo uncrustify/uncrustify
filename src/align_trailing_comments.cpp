@@ -37,7 +37,7 @@ void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev)
       LOG_FMT(sev, "%s(%d): max_col=%zu\n", __func__, __LINE__, col);
       Chunk *pc;
 
-      while ((pc = cs.Pop_Back()) != nullptr)
+      while ((pc = cs.Pop_Back())->IsNotNullChunk())
       {
          align_to_column(pc, col);
          pc->SetFlagBits(PCF_WAS_ALIGNED);
@@ -154,7 +154,7 @@ comment_align_e get_comment_align_type(Chunk *cmt)
    log_rule_B("align_right_cmt_mix");
 
    if (  !options::align_right_cmt_mix()
-      && cmt != nullptr
+      && cmt->IsNotNullChunk()
       && ((prev = cmt->GetPrev())->IsNotNullChunk()))
    {
       if (  prev->Is(CT_PP_ENDIF)

@@ -124,7 +124,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
          else
          {
             LOG_FMT(LMCB, "\n\n%s(%d):\n", __func__, __LINE__);
-            fprintf(stderr, "FATAL: second is nullptr\n");
+            fprintf(stderr, "FATAL: second is null chunk\n");
             fprintf(stderr, "Please make a report.\n");
             exit(EX_SOFTWARE);
          }
