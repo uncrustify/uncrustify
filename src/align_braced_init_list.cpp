@@ -19,12 +19,11 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
 {
    LOG_FUNC_ENTRY();
 
-   if (  first == nullptr
-      || first->IsNullChunk())
+   if (first->IsNullChunk())
    {
       // coveralls will complain here. There are no example for that.
       // see https://en.wikipedia.org/wiki/Robustness_principle
-      return(nullptr);
+      return(Chunk::NullChunkPtr);
    }
    size_t my_level = first->GetLevel();
 
@@ -45,8 +44,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
    size_t tmp;
    Chunk  *pc = first;
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       LOG_FMT(LALASS, "%s(%d): orig line is %zu, check pc->Text() is '%s', type is %s, parent type is %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
@@ -154,8 +152,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
    }
    vdas.End();
 
-   if (  pc != nullptr
-      && pc->IsNotNullChunk())
+   if (pc->IsNotNullChunk())
    {
       LOG_FMT(LALASS, "%s(%d): done on '%s' on orig line %zu\n",
               __func__, __LINE__, pc->Text(), pc->GetOrigLine());

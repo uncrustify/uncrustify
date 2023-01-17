@@ -21,12 +21,11 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 {
    LOG_FUNC_ENTRY();
 
-   if (  first == nullptr
-      || first->IsNullChunk())
+   if (first->IsNullChunk())
    {
       // coveralls will complain here. There are no example for that.
       // see https://en.wikipedia.org/wiki/Robustness_principle
-      return(nullptr);
+      return(Chunk::NullChunkPtr);
    }
    size_t my_level = first->GetLevel();
 
@@ -63,7 +62,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
    size_t fcn_idx     = 0;
    size_t tmp;
    Chunk  *pc      = first;
-   Chunk  *vdas_pc = nullptr;
+   Chunk  *vdas_pc = Chunk::NullChunkPtr;
 
    while (pc->IsNotNullChunk())
    {
@@ -72,12 +71,12 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
       if (nl_count != 0)
       {
-         if (vdas_pc != nullptr)
+         if (vdas_pc->IsNotNullChunk())
          {
             LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig line %zu, orig col is %zu\n",
                     __func__, __LINE__, vdas_pc->Text(), vdas_pc->GetOrigLine(), vdas_pc->GetOrigCol());
             vdas.Add(vdas_pc);
-            vdas_pc = nullptr;
+            vdas_pc = Chunk::NullChunkPtr;
          }
 
          if (p_nl_count != nullptr)
@@ -172,7 +171,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
          // we hit the second variable def and align was not requested - don't look for assigns, don't align
          LOG_FMT(LALASS, "%s(%d): multiple var defs found and alignment was not requested\n",
                  __func__, __LINE__);
-         vdas_pc = nullptr;
+         vdas_pc = Chunk::NullChunkPtr;
       }
       else if (  equ_count == 0                  // indent only if first '=' in line
               && !pc->TestFlags(PCF_IN_TEMPLATE) // and it is not inside a template #999
@@ -260,12 +259,12 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
       pc = pc->GetNext();
    }
 
-   if (vdas_pc != nullptr)
+   if (vdas_pc->IsNotNullChunk())
    {
       LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig line %zu, orig col is %zu\n",
               __func__, __LINE__, vdas_pc->Text(), vdas_pc->GetOrigLine(), vdas_pc->GetOrigCol());
       vdas.Add(vdas_pc);
-      vdas_pc = nullptr;
+      vdas_pc = Chunk::NullChunkPtr;
    }
    as.End();
    vdas.End();

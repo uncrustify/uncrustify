@@ -73,6 +73,9 @@ void Chunk::Reset()
 
    m_flags = PCF_NONE;
    memset(&m_alignmentData, 0, sizeof(m_alignmentData));
+   m_alignmentData.next  = NullChunkPtr;
+   m_alignmentData.start = NullChunkPtr;
+   m_alignmentData.ref   = NullChunkPtr;
    memset(&m_indentationData, 0, sizeof(m_indentationData));
 
    m_next   = Chunk::NullChunkPtr;
@@ -331,8 +334,7 @@ static void chunk_log_msg(Chunk *chunk, const log_sev_t log, const char *str)
 
 static void chunk_log(Chunk *pc, const char *text)
 {
-   if (  pc != nullptr
-      && pc->IsNotNullChunk()
+   if (  pc->IsNotNullChunk()
       && (cpd.unc_stage != unc_stage_e::TOKENIZE)
       && (cpd.unc_stage != unc_stage_e::CLEANUP))
    {
@@ -639,8 +641,7 @@ Chunk *Chunk::CopyAndAdd(Chunk *pos, const E_Direction dir) const
 
    Chunk *pc = new Chunk(*this);
 
-   if (  pos != nullptr
-      && pos->IsNotNullChunk())
+   if (pos->IsNotNullChunk())
    {
       (dir == E_Direction::FORWARD) ? gChunkList.AddAfter(pc, pos) : gChunkList.AddBefore(pc, pos);
    }

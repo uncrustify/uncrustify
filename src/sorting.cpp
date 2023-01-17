@@ -333,7 +333,7 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
       LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
 
-      // If we hit a newline or nullptr, we are done
+      // If we hit a newline or null chuck, we are done
       if (  pc1->IsNullChunk()
          || pc1->IsNewline()
          || pc2->IsNullChunk()
@@ -594,9 +594,9 @@ void sort_imports()
 
    Chunk     *chunks[max_number_to_sort];
    size_t    num_chunks  = 0;
-   Chunk     *p_last     = nullptr;
-   Chunk     *p_imp      = nullptr;
-   Chunk     *p_imp_last = nullptr;
+   Chunk     *p_last     = Chunk::NullChunkPtr;
+   Chunk     *p_imp      = Chunk::NullChunkPtr;
+   Chunk     *p_imp_last = Chunk::NullChunkPtr;
 
    prepare_categories();
 
@@ -609,7 +609,7 @@ void sort_imports()
       // Simple optimization to limit the sorting. Any MAX_LINES_TO_CHECK_AFTER_INCLUDE lines after last
       // import is seen are ignore from sorting.
       if (  options::mod_sort_incl_import_grouping_enabled()
-         && p_imp_last != nullptr
+         && p_imp_last->IsNotNullChunk()
          && (pc->GetOrigLine() - p_imp_last->GetOrigLine()) > max_lines_to_check_for_sort_after_include)
       {
          break;
@@ -620,9 +620,7 @@ void sort_imports()
       {
          bool did_import = false;
 
-         if (  p_imp != nullptr
-            && p_imp->IsNotNullChunk()
-            && p_last != nullptr
+         if (  p_imp->IsNotNullChunk()
             && (  p_last->Is(CT_SEMICOLON)
                || p_imp->TestFlags(PCF_IN_PREPROC)))
          {
@@ -647,7 +645,7 @@ void sort_imports()
             || (  !options::mod_sort_incl_import_grouping_enabled()
                && pc->GetNlCount() > 1)
             || (  options::mod_sort_incl_import_grouping_enabled()
-               && p_imp_last != nullptr
+               && p_imp_last->IsNotNullChunk()
                && (pc->GetOrigLine() - p_imp_last->GetOrigLine()) > max_gap_threshold_between_include_to_sort)
             || next->IsNullChunk())
          {
@@ -670,8 +668,8 @@ void sort_imports()
             num_chunks = 0;
          }
          p_imp_last = p_imp;
-         p_imp      = nullptr;
-         p_last     = nullptr;
+         p_imp      = Chunk::NullChunkPtr;
+         p_last     = Chunk::NullChunkPtr;
       }
       else if (pc->Is(CT_IMPORT))
       {

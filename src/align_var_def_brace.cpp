@@ -24,7 +24,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
    if (start->IsNullChunk())
    {
-      return(nullptr);
+      return(Chunk::NullChunkPtr);
    }
    Chunk  *next;
    size_t myspan   = span;

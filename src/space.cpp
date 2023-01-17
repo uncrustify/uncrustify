@@ -63,11 +63,6 @@ bool token_is_within_trailing_return(Chunk *pc)
    //   or  CT_FPAREN_OPEN is found
    Chunk *prev = pc;
 
-   if (prev == nullptr)
-   {
-      prev = Chunk::NullChunkPtr;
-   }
-
    while (prev->IsNotNullChunk())
    {
       if (prev->Is(CT_TRAILING_RET))

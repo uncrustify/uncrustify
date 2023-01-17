@@ -68,8 +68,6 @@ Chunk *set_paren_parent(Chunk *start, E_Token parent);
  * First on all non-preprocessor chunks and then on each preprocessor chunk.
  * It does all the detection and classifying.
  * This is only called by fix_symbols.
- * The three parameters never get the value nullptr.
- * it is not necessary to test.
  */
 void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next);
 

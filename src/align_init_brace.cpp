@@ -24,7 +24,7 @@ void align_init_brace(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *num_token = nullptr;
+   Chunk *num_token = Chunk::NullChunkPtr;
 
    cpd.al_cnt       = 0;
    cpd.al_c99_array = false;
@@ -35,7 +35,7 @@ void align_init_brace(Chunk *start)
    Chunk *pc       = start->GetNextNcNnl();
    Chunk *pcSingle = scan_ib_line(pc);
 
-   if (  pcSingle == nullptr
+   if (  pcSingle->IsNullChunk()
       || (  pcSingle->Is(CT_BRACE_CLOSE)
          && pcSingle->GetParentType() == CT_ASSIGN))
    {
@@ -58,8 +58,7 @@ void align_init_brace(Chunk *start)
       {
          pc = pc->GetNext();
       }
-   } while (  pc != nullptr
-           && pc->IsNotNullChunk()
+   } while (  pc->IsNotNullChunk()
            && pc->GetLevel() > start->GetLevel());
 
    // debug dump the current frame
@@ -81,7 +80,7 @@ void align_init_brace(Chunk *start)
       Chunk *tmp;
 
       if (  idx == 0
-         && ((tmp = skip_c99_array(pc)) != nullptr))
+         && ((tmp = skip_c99_array(pc))->IsNotNullChunk()))
       {
          pc = tmp;
 
@@ -114,7 +113,7 @@ void align_init_brace(Chunk *start)
                     __func__, __LINE__,
                     idx, get_token_name(pc->GetType()), get_token_name(cpd.al[idx].type), pc->Text(), cpd.al[idx].col);
 
-            if (num_token != nullptr)
+            if (num_token->IsNotNullChunk())
             {
                int col_diff = pc->GetColumn() - num_token->GetColumn();
 
@@ -124,7 +123,7 @@ void align_init_brace(Chunk *start)
                //        num_token->Text(), cpd.al[idx - 1].col, col_diff);
 
                num_token->SetFlagBits(PCF_WAS_ALIGNED);
-               num_token = nullptr;
+               num_token = Chunk::NullChunkPtr;
             }
 
             // Comma's need to 'fall back' to the previous token

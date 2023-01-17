@@ -190,12 +190,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       ref = ref->GetNext();
    }
    // Find the item that we are going to align.
-   Chunk *ali = Chunk::NullChunkPtr;
-
-   if (start != nullptr)
-   {
-      ali = start;
-   }
+   Chunk *ali = start;
 
    if (m_star_style != SS_IGNORE)
    {
@@ -466,7 +461,7 @@ void AlignStack::Flush()
       if (m_right_align)
       {
          // Adjust the width for signed numbers
-         if (pc->GetAlignData().start != nullptr)
+         if (pc->GetAlignData().start->IsNotNullChunk())
          {
             size_t start_len = pc->GetAlignData().start->Len();
 

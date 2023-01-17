@@ -93,7 +93,7 @@ void align_oc_msg_colon(Chunk *so)
    // find the longest args that isn't the first one
    size_t first_len = 0;
    size_t mlen      = 0;
-   Chunk  *longest  = nullptr;
+   Chunk  *longest  = Chunk::NullChunkPtr;
 
    size_t len = nas.m_aligned.Len();
 
@@ -101,7 +101,7 @@ void align_oc_msg_colon(Chunk *so)
    {
       Chunk *tmp = nas.m_aligned.GetChunk(idx);
 
-      if (tmp != nullptr)
+      if (tmp->IsNotNullChunk())
       {
          size_t tlen = tmp->GetStr().size();
 
@@ -133,7 +133,7 @@ void align_oc_msg_colon(Chunk *so)
    // Align with first colon if possible by removing spaces
    log_rule_B("indent_oc_msg_prioritize_first_colon");
 
-   if (  longest != nullptr
+   if (  longest->IsNotNullChunk()
       && options::indent_oc_msg_prioritize_first_colon()
       && len_diff > 0
       && (  (longest->GetColumn() >= len_diff)
@@ -141,7 +141,7 @@ void align_oc_msg_colon(Chunk *so)
    {
       longest->SetColumn(longest->GetColumn() - len_diff);
    }
-   else if (  longest != nullptr
+   else if (  longest->IsNotNullChunk()
            && len > 0)
    {
       Chunk chunk;

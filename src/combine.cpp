@@ -405,7 +405,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
       // For a D cast - convert the next item
       if (  pc->Is(CT_D_CAST)
-         && tmp != nullptr)
+         && tmp->IsNotNullChunk())
       {
          if (tmp->Is(CT_STAR))
          {
@@ -435,7 +435,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
        */
       if (pc->Is(CT_DELEGATE))
       {
-         if (tmp != nullptr)
+         if (tmp->IsNotNullChunk())
          {
             tmp->SetParentType(CT_DELEGATE);
 
@@ -460,7 +460,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       }
 
       if (  pc->Is(CT_ALIGN)
-         && tmp != nullptr)
+         && tmp->IsNotNullChunk())
       {
          if (tmp->Is(CT_BRACE_OPEN))
          {
@@ -481,11 +481,6 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          next->SetParentType(pc->GetType());
          Chunk *tmp = next->GetNext();
-
-         if (tmp == nullptr)
-         {
-            tmp = Chunk::NullChunkPtr;
-         }
 
          while (tmp->IsNotNullChunk())
          {
@@ -637,7 +632,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
    if (pc->Is(CT_NEW))
    {
-      Chunk *ts  = nullptr;
+      Chunk *ts  = Chunk::NullChunkPtr;
       Chunk *tmp = next;
 
       if (tmp->Is(CT_TSQUARE))
@@ -651,7 +646,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          set_paren_parent(tmp, pc->GetType());
 
-         if (ts != nullptr)
+         if (ts->IsNotNullChunk())
          {
             ts->SetParentType(pc->GetType());
          }
@@ -741,16 +736,14 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          {
             tmp = set_paren_parent(tmp, CT_BRACED_INIT_LIST);
 
-            if (  tmp != nullptr
-               && tmp->IsNotNullChunk())
+            if (tmp->IsNotNullChunk())
             {
                tmp->ResetFlagBits(PCF_EXPR_START | PCF_STMT_START);
             }
          }
          else
          {
-            if (  tmp != nullptr
-               && tmp->Is(CT_WORD))
+            if (tmp->Is(CT_WORD))
             {
                tmp->SetFlagBits(PCF_VAR_1ST_DEF);
             }
@@ -828,8 +821,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          Chunk *tmp = flag_parens(next, PCF_NONE, CT_NONE, CT_EXTERN, true);
 
-         if (  tmp != nullptr
-            && tmp->Is(CT_BRACE_OPEN))
+         if (tmp->Is(CT_BRACE_OPEN))
          {
             set_paren_parent(tmp, CT_EXTERN);
          }
@@ -1069,15 +1061,13 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          tmp = tmp->GetNextNcNnl();
       }
 
-      if (  tmp != nullptr
-         && tmp->IsNotNullChunk())
+      if (tmp->IsNotNullChunk())
       {
          if (tmp->IsParenOpen())
          {
             tmp = flag_parens(tmp, PCF_NONE, CT_FPAREN_OPEN, pc->GetType(), false);
 
-            if (  tmp != nullptr
-               && tmp->IsNotNullChunk())
+            if (tmp->IsNotNullChunk())
             {
                if (tmp->Is(CT_BRACE_OPEN))
                {
@@ -2054,8 +2044,7 @@ void fix_symbols()
    pc = Chunk::GetHead();
    int square_level = -1;
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       char copy[1000];
       LOG_FMT(LFCNR, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s, parent type is %s\n",
@@ -2394,14 +2383,13 @@ static Chunk *process_return_or_throw(Chunk *pc)
 
 static bool is_oc_block(Chunk *pc)
 {
-   return(  pc != nullptr
-         && (  pc->GetParentType() == CT_OC_BLOCK_TYPE
-            || pc->GetParentType() == CT_OC_BLOCK_EXPR
-            || pc->GetParentType() == CT_OC_BLOCK_ARG
-            || pc->GetParentType() == CT_OC_BLOCK
-            || pc->Is(CT_OC_BLOCK_CARET)
-            || pc->GetNext()->Is(CT_OC_BLOCK_CARET)
-            || pc->GetPrev()->Is(CT_OC_BLOCK_CARET)));
+   return(  pc->GetParentType() == CT_OC_BLOCK_TYPE
+         || pc->GetParentType() == CT_OC_BLOCK_EXPR
+         || pc->GetParentType() == CT_OC_BLOCK_ARG
+         || pc->GetParentType() == CT_OC_BLOCK
+         || pc->Is(CT_OC_BLOCK_CARET)
+         || pc->GetNext()->Is(CT_OC_BLOCK_CARET)
+         || pc->GetPrev()->Is(CT_OC_BLOCK_CARET));
 }
 
 
@@ -2516,7 +2504,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
 
    if (prev->IsNullChunk())
    {
-      LOG_FMT(LFCNR, "%s(%d): prev is nullptr\n", __func__, __LINE__);
+      LOG_FMT(LFCNR, "%s(%d): prev is null chunk\n", __func__, __LINE__);
    }
 
    if (  prev->IsNullChunk()
@@ -2726,7 +2714,7 @@ static void handle_d_template(Chunk *pc)
    ChunkStack cs;
    Chunk      *tmp = get_d_template_types(cs, po);
 
-   if (  tmp == nullptr
+   if (  tmp->IsNullChunk()
       || tmp->IsNot(CT_PAREN_CLOSE))
    {
       // TODO: log an error, expected ')'
@@ -2765,11 +2753,6 @@ static void handle_d_template(Chunk *pc)
 
 Chunk *skip_template_next(Chunk *ang_open)
 {
-   if (ang_open == nullptr)
-   {
-      return(Chunk::NullChunkPtr);
-   }
-
    if (ang_open->Is(CT_ANGLE_OPEN))
    {
       Chunk *pc = ang_open->GetNextType(CT_ANGLE_CLOSE, ang_open->GetLevel());
@@ -2816,8 +2799,7 @@ static void handle_oc_class(Chunk *pc)
    }
    tmp = pc;
 
-   while (  (tmp = tmp->GetNextNnl()) != nullptr
-         && tmp->IsNotNullChunk())
+   while ((tmp = tmp->GetNextNnl())->IsNotNullChunk())
    {
       LOG_FMT(LOCCLASS, "%s(%d):       orig line is %zu, [%s]\n",
               __func__, __LINE__, tmp->GetOrigLine(), tmp->Text());
@@ -2958,10 +2940,6 @@ static void handle_oc_block_literal(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (pc == nullptr)
-   {
-      return; // let's be paranoid
-   }
    Chunk *prev = pc->GetPrevNcNnlNi();   // Issue #2279
    Chunk *next = pc->GetNextNcNnl();
 
@@ -3099,7 +3077,7 @@ static void handle_oc_block_type(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (pc == nullptr)
+   if (pc->IsNullChunk())
    {
       return;
    }
@@ -3223,11 +3201,6 @@ static void handle_oc_message_decl(Chunk *pc)
    // Figure out if this is a spec or decl
    Chunk *tmp = pc;
 
-   if (tmp == nullptr)
-   {
-      tmp = Chunk::NullChunkPtr;
-   }
-
    while ((tmp = tmp->GetNext())->IsNotNullChunk())
    {
       if (tmp->GetLevel() < pc->GetLevel())
@@ -3243,7 +3216,7 @@ static void handle_oc_message_decl(Chunk *pc)
       }
    }
 
-   if (tmp == nullptr)
+   if (tmp->IsNullChunk())
    {
       return;
    }
@@ -3348,12 +3321,7 @@ static void handle_oc_message_send(Chunk *os)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *cs = Chunk::NullChunkPtr;
-
-   if (os != nullptr)
-   {
-      cs = os->GetNext();
-   }
+   Chunk *cs = os->GetNext();
 
    while (  cs->IsNotNullChunk()
          && cs->GetLevel() > os->GetLevel())
@@ -3376,12 +3344,7 @@ static void handle_oc_message_send(Chunk *os)
       tmp->SetParentType(CT_OC_MSG);
    }
    // expect a word first thing or [...]
-   tmp = Chunk::NullChunkPtr;
-
-   if (os != nullptr)
-   {
-      tmp = os->GetNextNcNnl();
-   }
+   tmp = os->GetNextNcNnl();
 
    if (  tmp->Is(CT_SQUARE_OPEN)
       || tmp->Is(CT_PAREN_OPEN)
@@ -3569,14 +3532,7 @@ static void handle_oc_message_send(Chunk *os)
 
 static void handle_oc_available(Chunk *os)
 {
-   if (os != nullptr)
-   {
-      os = os->GetNext();
-   }
-   else
-   {
-      os = Chunk::NullChunkPtr;
-   }
+   os = os->GetNext();
 
    while (os->IsNotNullChunk())
    {
@@ -3600,13 +3556,8 @@ static void handle_oc_property_decl(Chunk *os)
    {
       typedef std::vector<Chunk *> ChunkGroup;
 
-      Chunk *next = Chunk::NullChunkPtr;
-
-      if (os != nullptr)
-      {
-         next = os->GetNext();
-      }
-      Chunk                   *open_paren = nullptr;
+      Chunk                   *next       = os->GetNext();
+      Chunk                   *open_paren = Chunk::NullChunkPtr;
 
       std::vector<ChunkGroup> class_chunks;       // class
       std::vector<ChunkGroup> thread_chunks;      // atomic, nonatomic
@@ -3809,8 +3760,7 @@ static void handle_oc_property_decl(Chunk *os)
          }
 
          // Remove the extra comma's that we did not move
-         while (  curr_chunk != nullptr
-               && curr_chunk->IsNotNullChunk()
+         while (  curr_chunk->IsNotNullChunk()
                && curr_chunk->IsNot(CT_PAREN_CLOSE))
          {
             Chunk *rm_chunk = curr_chunk;
@@ -3819,12 +3769,7 @@ static void handle_oc_property_decl(Chunk *os)
          }
       }
    }
-   Chunk *tmp = Chunk::NullChunkPtr;
-
-   if (os != nullptr)
-   {
-      tmp = os->GetNextNcNnl();
-   }
+   Chunk *tmp = os->GetNextNcNnl();
 
    if (tmp->IsParenOpen())
    {
@@ -3838,10 +3783,6 @@ static void handle_cs_square_stmt(Chunk *os)
 {
    LOG_FUNC_ENTRY();
 
-   if (os == nullptr)
-   {
-      os = Chunk::NullChunkPtr;
-   }
    Chunk *cs = os->GetNext();
 
    while (  cs->IsNotNullChunk()
@@ -3923,8 +3864,7 @@ static void handle_cs_property(Chunk *bro)
 
 static void handle_cs_array_type(Chunk *pc)
 {
-   if (  pc == nullptr
-      || pc->IsNullChunk())
+   if (pc->IsNullChunk())
    {
       return;
    }
@@ -3952,12 +3892,7 @@ static void handle_cs_array_type(Chunk *pc)
 static void handle_wrap(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
-   Chunk *opp = Chunk::NullChunkPtr;
-
-   if (pc != nullptr)
-   {
-      opp = pc->GetNext();
-   }
+   Chunk *opp  = pc->GetNext();
    Chunk *name = opp->GetNext();
    Chunk *clp  = name->GetNext();
 
@@ -4011,7 +3946,7 @@ static void handle_proto_wrap(Chunk *pc)
    if (  opp->IsNullChunk()
       || name->IsNullChunk()
       || tmp->IsNullChunk()
-      || clp == nullptr
+      || clp->IsNullChunk()
       || cma->IsNullChunk()
       || (  name->IsNot(CT_WORD)
          && name->IsNot(CT_TYPE))
@@ -4081,11 +4016,6 @@ static void handle_java_assert(Chunk *pc)
    LOG_FUNC_ENTRY();
    bool  did_colon = false;
    Chunk *tmp      = pc;
-
-   if (tmp == nullptr)
-   {
-      tmp = Chunk::NullChunkPtr;
-   }
 
    while ((tmp = tmp->GetNext())->IsNotNullChunk())
    {

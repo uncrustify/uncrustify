@@ -482,7 +482,7 @@ public:
     *        brackets. This handles stacked [] instances to accommodate
     *        multi-dimensional array declarations
     * @param scope  code region to search in
-    * @return nullptr or the next chunk not in or part of square brackets
+    * @return Chunk::NullChunkPtr or the next chunk not in or part of square brackets
     */
    Chunk *GetNextNisq(const E_Scope scope = E_Scope::ALL) const;
 
@@ -561,7 +561,7 @@ public:
 
    /**
     * @brief Finds the first chunk on the line the current chunk is on.
-    * This just backs up until a newline or nullptr is hit.
+    * This just backs up until a newline or null chuck is hit.
     *
     * given: [ a - b - c - n1 - d - e - n2 ]
     * input: [ a | b | c | n1 ] => a

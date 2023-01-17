@@ -32,7 +32,7 @@ using namespace uncrustify;
 
 struct cmt_reflow
 {
-   Chunk   *pc         = nullptr;
+   Chunk   *pc         = Chunk::NullChunkPtr;
    size_t  column      = 0;   //! Column of the comment start
    size_t  brace_col   = 0;   //! Brace column (for indenting with tabs)
    size_t  base_col    = 0;   //! Base column (for indenting with tabs)
@@ -764,16 +764,14 @@ void output_text(FILE *pfile)
                else
                {
                   // Try to keep the same relative spacing
-                  while (  prev != nullptr
-                        && prev->IsNotNullChunk()
+                  while (  prev->IsNotNullChunk()
                         && prev->GetOrigCol() == 0
                         && prev->GetNlCount() == 0)
                   {
                      prev = prev->GetPrev();
                   }
 
-                  if (  prev != nullptr
-                     && prev->IsNotNullChunk()
+                  if (  prev->IsNotNullChunk()
                      && prev->GetNlCount() == 0)
                   {
                      int orig_sp = pc->GetOrigPrevSp();
@@ -1092,7 +1090,7 @@ void output_text(FILE *pfile)
 
          add_text("\"><font color=\"red\">M</font></a>");
          write_in_tracking = true;
-      } // if (pc->GetTrackingData() != nullptr)
+      }
    } // loop over the whole chunk list
 
    if (tracking)
@@ -1557,11 +1555,6 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const UncText &str)
 // TODO: can we use search_next_chunk here?
 static Chunk *get_next_function(Chunk *pc)
 {
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
-   }
-
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
       if (  pc->Is(CT_FUNC_DEF)
@@ -1573,7 +1566,7 @@ static Chunk *get_next_function(Chunk *pc)
          return(pc);
       }
    }
-   return(nullptr);
+   return(Chunk::NullChunkPtr);
 }
 
 
@@ -2879,8 +2872,7 @@ static bool kw_fcn_class(Chunk *cmt, UncText &out_txt)
    {
       Chunk *fcn = get_next_function(cmt);
 
-      if (  fcn != nullptr
-         && fcn->Is(CT_OC_MSG_DECL))
+      if (fcn->Is(CT_OC_MSG_DECL))
       {
          tmp = get_prev_oc_class(cmt);
       }
@@ -2927,7 +2919,7 @@ static bool kw_fcn_message(Chunk *cmt, UncText &out_txt)
 {
    Chunk *fcn = get_next_function(cmt);
 
-   if (fcn == nullptr)
+   if (fcn->IsNullChunk())
    {
       return(false);
    }
@@ -2995,7 +2987,7 @@ static bool kw_fcn_function(Chunk *cmt, UncText &out_txt)
 {
    Chunk *fcn = get_next_function(cmt);
 
-   if (fcn != nullptr)
+   if (fcn->IsNotNullChunk())
    {
       if (fcn->GetParentType() == CT_OPERATOR)
       {
@@ -3017,7 +3009,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, UncText &out_txt)
 {
    Chunk *fcn = get_next_function(cmt);
 
-   if (fcn == nullptr)
+   if (fcn->IsNullChunk())
    {
       return(false);
    }

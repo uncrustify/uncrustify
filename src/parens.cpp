@@ -50,8 +50,7 @@ void do_parens()
    {
       Chunk *pc = Chunk::GetHead();
 
-      while (  (pc = pc->GetNextNcNnl()) != nullptr
-            && pc->IsNotNullChunk())
+      while ((pc = pc->GetNextNcNnl())->IsNotNullChunk())
       {
          if (  pc->IsNot(CT_SPAREN_OPEN)
             || (  pc->GetParentType() != CT_IF
@@ -85,8 +84,7 @@ void do_parens_assign()                         // Issue #3316
    {
       Chunk *pc = Chunk::GetHead();
 
-      while (  (pc = pc->GetNextNcNnl()) != nullptr
-            && pc->IsNotNullChunk())
+      while ((pc = pc->GetNextNcNnl())->IsNotNullChunk())
       {
          if (pc->Is(CT_ASSIGN))
          {
@@ -156,8 +154,7 @@ void do_parens_return()                         // Issue #3316
    {
       Chunk *pc = Chunk::GetHead();
 
-      while (  (pc = pc->GetNextNcNnl()) != nullptr
-            && pc->IsNotNullChunk())
+      while ((pc = pc->GetNextNcNnl())->IsNotNullChunk())
       {
          if (pc->Is(CT_RETURN))
          {
@@ -283,8 +280,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
 
    Chunk *pc = popen;
 
-   while (  (pc = pc->GetNextNcNnl()) != nullptr
-         && pc->IsNotNullChunk()
+   while (  (pc = pc->GetNextNcNnl())->IsNotNullChunk()
          && pc != pclose)
    {
       if (pc->TestFlags(PCF_IN_PREPROC))

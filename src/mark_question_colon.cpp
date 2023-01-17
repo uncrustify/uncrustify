@@ -15,9 +15,9 @@
 
 /*
  * Issue #3558
- * will be called if a chunk ? (CT_QUESTION) is entcountered
- * return the chunk :
- * return nullptr is a chunk ; (CT_SEMI_COLON) is found
+ * will be called if a ? (CT_QUESTION) chunk is encountered
+ * return the chunk colon if found or Chunk::NullChunkPtr
+ * if a ; (CT_SEMI_COLON) chunk is found
  */
 Chunk *search_for_colon(Chunk *pc_local)
 {

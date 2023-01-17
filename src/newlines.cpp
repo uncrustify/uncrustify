@@ -463,9 +463,9 @@ static void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
 {
    LOG_FUNC_ENTRY();
 
-   if (  prev == nullptr
-      || nl == nullptr
-      || next == nullptr)
+   if (  prev->IsNullChunk()
+      || nl->IsNullChunk()
+      || next->IsNullChunk())
    {
       return;
    }
@@ -504,12 +504,7 @@ void double_newline(Chunk *nl)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *prev = Chunk::NullChunkPtr;
-
-   if (nl != nullptr)
-   {
-      prev = nl->GetPrev();
-   }
+   Chunk *prev = nl->GetPrev();
 
    if (prev->IsNullChunk())
    {
@@ -589,7 +584,7 @@ Chunk *newline_add_after(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (pc == nullptr)
+   if (pc->IsNullChunk())
    {
       return(Chunk::NullChunkPtr);
    }
@@ -728,11 +723,11 @@ Chunk *newline_add_between(Chunk *start, Chunk *end)
 {
    LOG_FUNC_ENTRY();
 
-   if (  start == nullptr
-      || end == nullptr
+   if (  start->IsNullChunk()
+      || end->IsNullChunk()
       || end->Is(CT_IGNORED))
    {
-      return(nullptr);
+      return(Chunk::NullChunkPtr);
    }
    LOG_FMT(LNEWLINE, "%s(%d): start->Text() is '%s', type is %s, orig line is %zu, orig col is %zu\n",
            __func__, __LINE__, start->Text(), get_token_name(start->GetType()),
@@ -744,7 +739,7 @@ Chunk *newline_add_between(Chunk *start, Chunk *end)
    // Back-up check for one-liners (should never be true!)
    if (!one_liner_nl_ok(start))
    {
-      return(nullptr);
+      return(Chunk::NullChunkPtr);
    }
 
    /*
@@ -1042,7 +1037,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
    {
       size_t level    = start->GetLevel();
       bool   do_add   = (nl_opt & IARF_ADD) != IARF_IGNORE;  // forcing value to bool
-      Chunk  *last_nl = nullptr;
+      Chunk  *last_nl = Chunk::NullChunkPtr;
 
       if (pc->IsNewline())
       {
@@ -1089,7 +1084,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
       else if (pc->IsComment())
       {
          // vbrace close is ok because it won't go into output, so we should skip it
-         last_nl = nullptr;
+         last_nl = Chunk::NullChunkPtr;
          continue;
       }
       else
@@ -1103,8 +1098,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
          if (do_add) // we found something previously besides a comment or a new line
          {
             // if we have run across a newline
-            if (  last_nl != nullptr
-               && last_nl->IsNotNullChunk())
+            if (last_nl->IsNotNullChunk())
             {
                if (last_nl->GetNlCount() < 2)
                {
@@ -1138,7 +1132,7 @@ static void blank_line_set(Chunk *pc, Option<unsigned> &opt)
 {
    LOG_FUNC_ENTRY();
 
-   if (pc == nullptr)
+   if (pc->IsNullChunk())
    {
       return;
    }
@@ -1159,7 +1153,7 @@ bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, E_Token start_type)
 {
    LOG_FUNC_ENTRY();
 
-   if (last_nl == nullptr)
+   if (last_nl->IsNullChunk())
    {
       return(false);
    }
@@ -1266,7 +1260,7 @@ static void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
    log_rule_B("nl_before_func_body_def");
    log_rule_B("nl_before_func_body_proto");
 
-   if (  start == nullptr
+   if (  start->IsNullChunk()
       || (  (  start_type != CT_FUNC_CLASS_DEF
             || options::nl_before_func_class_def() == 0)
          && (  start_type != CT_FUNC_CLASS_PROTO
@@ -1289,9 +1283,9 @@ static void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
     *   - a destructor
     *   - something else (don't remove)
     */
-   Chunk  *pc           = nullptr;
-   Chunk  *last_nl      = nullptr;
-   Chunk  *last_comment = nullptr;
+   Chunk  *pc           = Chunk::NullChunkPtr;
+   Chunk  *last_nl      = Chunk::NullChunkPtr;
+   Chunk  *last_comment = Chunk::NullChunkPtr;
    size_t first_line    = start->GetOrigLine();
 
    for (pc = start->GetPrev(); pc->IsNotNullChunk(); pc = pc->GetPrev())
@@ -1332,7 +1326,7 @@ static void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
          if (  (  pc->GetOrigLine() < first_line
                && ((first_line - pc->GetOrigLine()
                     - (pc->Is(CT_COMMENT_MULTI) ? pc->GetNlCount() : 0))) < 2)
-            || (  last_comment != nullptr
+            || (  last_comment->IsNotNullChunk()
                && pc->Is(CT_COMMENT_CPP)          // combine only cpp comments
                && last_comment->Is(pc->GetType()) // don't mix comment types
                && last_comment->GetOrigLine() > pc->GetOrigLine()
@@ -1407,11 +1401,11 @@ static Chunk *get_closing_brace(Chunk *start)
       if (  !pc->IsNewline()
          && pc->GetLevel() < level)
       {
-         return(nullptr);
+         return(Chunk::NullChunkPtr);
       }
    }
 
-   return(nullptr);
+   return(Chunk::NullChunkPtr);
 } // get_closing_brace
 
 
@@ -1461,7 +1455,7 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
    Chunk *pc = get_closing_brace(start);
 
    // first find ending brace
-   if (pc == nullptr)
+   if (pc->IsNullChunk())
    {
       return;
    }
@@ -1485,7 +1479,7 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
                || next->Is(CT_ELSEIF)))
          {
             // point to the closing brace of the else
-            if ((pc = get_closing_brace(next)) == nullptr)
+            if ((pc = get_closing_brace(next))->IsNullChunk())
             {
                return;
             }
@@ -2023,8 +2017,7 @@ static Chunk *newline_var_def_blk(Chunk *start)
    if (start->Is(CT_BRACE_OPEN))
    {
       // can't be any variable definitions in a "= {" block
-      if (  (prev != nullptr)
-         && prev->IsNotNullChunk()
+      if (  prev->IsNotNullChunk()
          && prev->Is(CT_ASSIGN))
       {
          Chunk *tmp = start->GetClosingParen();
@@ -2179,9 +2172,9 @@ static Chunk *newline_var_def_blk(Chunk *start)
                LOG_FMT(LVARDFBLK, "%s(%d): pc is '%s', orig line is %zu\n",
                        __func__, __LINE__, pc->Text(), pc->GetOrigLine());
 
-               if (prev == nullptr)
+               if (prev->IsNullChunk())
                {
-                  LOG_FMT(LVARDFBLK, "%s(%d): prev is nullptr\n", __func__, __LINE__);
+                  LOG_FMT(LVARDFBLK, "%s(%d): prev is a null chunk\n", __func__, __LINE__);
                }
                else
                {
@@ -6826,8 +6819,8 @@ void annotations_newlines()
 
 bool newlines_between(Chunk *pc_start, Chunk *pc_end, size_t &newlines, E_Scope scope)
 {
-   if (  pc_start == nullptr
-      || pc_end == nullptr)
+   if (  pc_start->IsNullChunk()
+      || pc_end->IsNullChunk())
    {
       return(false);
    }

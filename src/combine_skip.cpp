@@ -54,11 +54,6 @@ static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(Chunk::*GetNextFn)(E_Sc
 {
    Chunk *prev = pc;
 
-   if (prev == nullptr)
-   {
-      prev = Chunk::NullChunkPtr;
-   }
-
    if (prev->IsNotNullChunk())
    {
       std::size_t level         = prev->GetLevel();
@@ -110,11 +105,6 @@ Chunk *skip_to_expression_start(Chunk *pc)
 
 Chunk *skip_to_next_statement(Chunk *pc)
 {
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
-   }
-
    while (  pc->IsNotNullChunk()
          && !pc->IsSemicolon()
          && pc->IsNot(CT_BRACE_OPEN)
@@ -139,11 +129,6 @@ Chunk *skip_template_prev(Chunk *ang_close)
 
 Chunk *skip_tsquare_next(Chunk *ary_def)
 {
-   if (ary_def == nullptr)
-   {
-      return(Chunk::NullChunkPtr);
-   }
-
    if (  ary_def->Is(CT_SQUARE_OPEN)
       || ary_def->Is(CT_TSQUARE))
    {
@@ -178,11 +163,6 @@ Chunk *skip_attribute_next(Chunk *attr)
       && next->Is(CT_FPAREN_CLOSE))
    {
       attr = next->GetNextNcNnl();
-   }
-
-   if (attr == nullptr)
-   {
-      return(Chunk::NullChunkPtr);
    }
    return(attr);
 }

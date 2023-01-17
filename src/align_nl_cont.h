@@ -20,7 +20,7 @@
  *
  * @param start   Start point
  *
- * @return pointer the last item looked at (nullptr/newline/comment)
+ * @return pointer the last item looked at (null chunk/newline/comment)
  */
 Chunk *align_nl_cont(Chunk *start);
 

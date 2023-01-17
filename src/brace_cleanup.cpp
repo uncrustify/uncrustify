@@ -231,7 +231,7 @@ void brace_cleanup()
       {
          pc = pawn_check_vsemicolon(pc);
 
-         if (pc == nullptr)
+         if (pc->IsNullChunk())
          {
             return;
          }
@@ -698,8 +698,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
                     __func__, __LINE__);
             Chunk *tmp = frm.top().pc;
 
-            if (  tmp != nullptr
-               && tmp->GetParentType() == CT_NAMESPACE)
+            if (tmp->GetParentType() == CT_NAMESPACE)
             {
                LOG_FMT(LBCSPOP, "%s(%d): tmp->GetParentType() is NAMESPACE\n",
                        __func__, __LINE__);
@@ -740,7 +739,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
               __func__, __LINE__, idx);
       Chunk *saved = frm.at(idx - 2).pc;
 
-      if (saved != nullptr)
+      if (saved->IsNotNullChunk())
       {
          // set parent member
          pc->SetParent(saved);
@@ -765,7 +764,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
                  __func__, __LINE__, idx);
          Chunk *saved = frm.at(idx - 2).pc;
 
-         if (saved != nullptr)
+         if (saved->IsNotNullChunk())
          {
             // set parent member
             pc->SetParent(saved);
@@ -782,7 +781,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
               __func__, __LINE__, idx);
       Chunk *saved = frm.at(idx - 2).pc;
 
-      if (saved != nullptr)
+      if (saved->IsNotNullChunk())
       {
          // set parent member
          pc->SetParent(saved);
@@ -1309,7 +1308,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
 
    if (ref->IsNullChunk())
    {
-      return(nullptr);
+      return(Chunk::NullChunkPtr);
    }
 
    if (!ref->TestFlags(PCF_IN_PREPROC))
@@ -1327,7 +1326,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
 
    if (ref->IsNullChunk())
    {
-      return(nullptr);
+      return(Chunk::NullChunkPtr);
    }
 
    // Don't back into a preprocessor
@@ -1360,7 +1359,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
 
    if (ref->IsNullChunk())
    {
-      return(nullptr);
+      return(Chunk::NullChunkPtr);
    }
    chunk.SetOrigLine(ref->GetOrigLine());
    chunk.SetOrigCol(ref->GetOrigCol());
@@ -1376,11 +1375,10 @@ bool close_statement(ParseFrame &frm, Chunk *pc, const BraceState &braceState)
 {
    LOG_FUNC_ENTRY();
 
-   if (  pc == nullptr
-      || pc->IsNullChunk())
+   if (pc->IsNullChunk())
    {
       throw invalid_argument(string(__func__) + ":" + to_string(__LINE__)
-                             + "args cannot be nullptr");
+                             + "args cannot be null chunk");
    }
    LOG_FMT(LTOK, "%s(%d): orig line is %zu, type is %s, '%s' type is %s, stage is %u\n",
            __func__, __LINE__, pc->GetOrigLine(),

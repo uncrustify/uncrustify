@@ -38,7 +38,7 @@ Chunk *align_nl_cont(Chunk *start)
    // NL_CONT is always the last thing on a line
    Chunk *tmp;
 
-   while ((tmp = cs.Pop_Back()) != nullptr)
+   while ((tmp = cs.Pop_Back())->IsNotNullChunk())
    {
       tmp->SetFlagBits(PCF_WAS_ALIGNED);
       tmp->SetColumn(max_col);

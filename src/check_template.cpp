@@ -22,7 +22,7 @@ using namespace uncrustify;
 
 bool invalid_open_angle_template(Chunk *prev)
 {
-   if (prev == nullptr)
+   if (prev->IsNullChunk())
    {
       return(false);
    }
@@ -38,10 +38,6 @@ bool invalid_open_angle_template(Chunk *prev)
 
 Chunk *handle_double_angle_close(Chunk *pc)
 {
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
-   }
    Chunk *next = pc->GetNext();
 
    if (next->IsNotNullChunk())
@@ -403,7 +399,7 @@ void check_template(Chunk *start, bool in_type_cast)
       }
    }
    LOG_FMT(LTEMPL, "%s(%d): - Not a template: end = %s\n",
-           __func__, __LINE__, (end != nullptr) ? get_token_name(end->GetType()) : "<null>");
+           __func__, __LINE__, (end->IsNotNullChunk() ? get_token_name(end->GetType()) : "<null>"));
    start->SetType(CT_COMPARE);
 } // check_template
 
@@ -432,7 +428,6 @@ void check_template_arg(Chunk *start, Chunk *end)
    while (pc != end)
    {
       Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
-      // a test "if (next == nullptr)" is not necessary
       pc->SetFlagBits(PCF_IN_TEMPLATE);
 
       if (  pc->Is(CT_DECLTYPE)
@@ -465,7 +460,6 @@ void check_template_arg(Chunk *start, Chunk *end)
       while (pc != end)
       {
          Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
-         // a test "if (next == nullptr)" is not necessary
          pc->SetFlagBits(PCF_IN_TEMPLATE);
 
          Chunk *prev  = pc->GetPrevNcNnl(E_Scope::PREPROC);

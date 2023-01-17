@@ -74,18 +74,15 @@ void remove_extra_semicolons()
             bool  code_block_found = true;
             Chunk *closing_brace   = pc->GetPrevNcNnl();                   // Issue #3506
 
-            if (  closing_brace != nullptr
-               && closing_brace->IsNotNullChunk())
+            if (closing_brace->IsNotNullChunk())
             {
                Chunk *opening_brace = closing_brace->GetOpeningParen();
 
-               if (  opening_brace != nullptr
-                  && opening_brace->IsNotNullChunk())
+               if (opening_brace->IsNotNullChunk())
                {
                   Chunk *equal_sign = opening_brace->GetPrevNcNnl();
 
-                  if (  equal_sign != nullptr
-                     && equal_sign->IsNotNullChunk()
+                  if (  equal_sign->IsNotNullChunk()
                      && equal_sign->Is(CT_ASSIGN))
                   {
                      // initialisation found

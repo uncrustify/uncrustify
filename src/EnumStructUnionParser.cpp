@@ -37,8 +37,8 @@ static bool adj_tokens_match_qualified_identifier_pattern(Chunk *prev, Chunk *ne
 {
    LOG_FUNC_ENTRY();
 
-   if (  prev != nullptr
-      && next != nullptr)
+   if (  prev->IsNotNullChunk()
+      && next->IsNotNullChunk())
    {
       auto prev_token_type = prev->GetType();
       auto next_token_type = next->GetType();
@@ -98,8 +98,8 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
 {
    LOG_FUNC_ENTRY();
 
-   if (  prev != nullptr
-      && next != nullptr)
+   if (  prev->IsNotNullChunk()
+      && next->IsNotNullChunk())
    {
       auto prev_token_type = prev->GetType();
       auto next_token_type = next->GetType();
@@ -330,15 +330,14 @@ static bool chunk_is_after(Chunk *pc, Chunk *after, bool test_equal = true)
 {
    LOG_FUNC_ENTRY();
 
-   if (  pc != nullptr
-      && pc->IsNotNullChunk())
+   if (pc->IsNotNullChunk())
    {
       if (  test_equal
          && pc == after)
       {
          return(true);
       }
-      else if (after != nullptr)
+      else if (after->IsNotNullChunk())
       {
          auto pc_column    = pc->GetOrigCol();
          auto pc_line      = pc->GetOrigLine();
@@ -365,15 +364,14 @@ static bool chunk_is_before(Chunk *pc, Chunk *before, bool test_equal = true)
 {
    LOG_FUNC_ENTRY();
 
-   if (  pc != nullptr
-      && pc->IsNotNullChunk())
+   if (pc->IsNotNullChunk())
    {
       if (  test_equal
          && pc == before)
       {
          return(true);
       }
-      else if (before != nullptr)
+      else if (before->IsNotNullChunk())
       {
          auto pc_column     = pc->GetOrigCol();
          auto pc_line       = pc->GetOrigLine();
@@ -467,8 +465,8 @@ static std::pair<Chunk *, Chunk *> match_qualified_identifier(Chunk *pc)
    auto *end   = skip_scope_resolution_and_nested_name_specifiers(pc);
    auto *start = skip_scope_resolution_and_nested_name_specifiers_rev(pc);
 
-   if (  end != nullptr
-      && start != nullptr)
+   if (  end->IsNotNullChunk()
+      && start->IsNotNullChunk())
    {
       auto *double_colon = start->GetNextType(CT_DC_MEMBER);
 
@@ -478,7 +476,7 @@ static std::pair<Chunk *, Chunk *> match_qualified_identifier(Chunk *pc)
          return(std::make_pair(start, end));
       }
    }
-   return(std::make_pair(nullptr, nullptr));
+   return(std::make_pair(Chunk::NullChunkPtr, Chunk::NullChunkPtr));
 } // match_qualified_identifier
 
 
@@ -500,7 +498,7 @@ static std::tuple<Chunk *, Chunk *, Chunk *> match_variable(Chunk *pc, std::size
    auto identifier_end_pair   = match_variable_end(pc, level);
    auto start_identifier_pair = match_variable_start(pc, level);
    auto *end                  = identifier_end_pair.second;
-   auto *identifier           = identifier_end_pair.first != nullptr ? identifier_end_pair.first : start_identifier_pair.second;
+   auto *identifier           = identifier_end_pair.first->IsNotNullChunk() ? identifier_end_pair.first : start_identifier_pair.second;
    auto *start                = start_identifier_pair.first;
 
    /**
@@ -511,12 +509,12 @@ static std::tuple<Chunk *, Chunk *, Chunk *> match_variable(Chunk *pc, std::size
 
    if (  identifier->IsNotNullChunk()
       && start->IsNotNullChunk()
-      && (  end != nullptr
+      && (  end->IsNotNullChunk()
          || identifier->GetPrevNcNnlNi()->Is(CT_WORD)))
    {
       return(std::make_tuple(start, identifier, end));
    }
-   return(std::make_tuple(nullptr, nullptr, nullptr));
+   return(std::make_tuple(Chunk::NullChunkPtr, Chunk::NullChunkPtr, Chunk::NullChunkPtr));
 } // match_variable
 
 
@@ -539,15 +537,14 @@ static std::pair<Chunk *, Chunk *> match_variable_end(Chunk *pc, std::size_t lev
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *identifier = nullptr;
+   Chunk *identifier = Chunk::NullChunkPtr;
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       /**
        * skip any right-hand side assignments
        */
-      Chunk *rhs_exp_end = nullptr;
+      Chunk *rhs_exp_end = Chunk::NullChunkPtr;
 
       if (pc->Is(CT_ASSIGN))
       {
@@ -562,8 +559,7 @@ static std::pair<Chunk *, Chunk *> match_variable_end(Chunk *pc, std::size_t lev
       /**
        * skip current and preceding chunks if at a higher brace level
        */
-      while (  pc != nullptr
-            && pc->IsNotNullChunk()
+      while (  pc->IsNotNullChunk()
             && pc->GetLevel() > level)
       {
          pc = pc->GetNextNcNnl();
@@ -620,7 +616,7 @@ static std::pair<Chunk *, Chunk *> match_variable_end(Chunk *pc, std::size_t lev
       }
       pc = next;
    }
-   return(std::make_pair(nullptr, nullptr));
+   return(std::make_pair(Chunk::NullChunkPtr, Chunk::NullChunkPtr));
 } // match_variable_end
 
 
@@ -645,11 +641,6 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
    LOG_FUNC_ENTRY();
 
    Chunk *identifier = Chunk::NullChunkPtr;
-
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
-   }
 
    while (pc->IsNotNullChunk())
    {
@@ -756,8 +747,7 @@ static Chunk *skip_scope_resolution_and_nested_name_specifiers(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (  (  pc != nullptr
-         && pc->TestFlags(PCF_IN_TEMPLATE))
+   if (  pc->TestFlags(PCF_IN_TEMPLATE)
       || pc->Is(CT_DC_MEMBER)
       || pc->Is(CT_TYPE)
       || pc->Is(CT_WORD))
@@ -797,13 +787,7 @@ static Chunk *skip_scope_resolution_and_nested_name_specifiers_rev(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
-   }
-
-   if (  (  pc->IsNotNullChunk()
-         && pc->TestFlags(PCF_IN_TEMPLATE))
+   if (  pc->TestFlags(PCF_IN_TEMPLATE)
       || pc->Is(CT_DC_MEMBER)
       || pc->Is(CT_TYPE)
       || pc->Is(CT_WORD))
@@ -835,10 +819,10 @@ static Chunk *skip_scope_resolution_and_nested_name_specifiers_rev(Chunk *pc)
 
 
 EnumStructUnionParser::EnumStructUnionParser()
-   : m_end(nullptr)
+   : m_end(Chunk::NullChunkPtr)
    , m_parse_error(false)
-   , m_start(nullptr)
-   , m_type(nullptr)
+   , m_start(Chunk::NullChunkPtr)
+   , m_type(Chunk::NullChunkPtr)
 {
 } // EnumStructUnionParser::EnumStructUnionParser
 
@@ -880,7 +864,7 @@ void EnumStructUnionParser::analyze_identifiers()
    auto     *body_start        = get_body_start();
    PcfFlags flags              = PCF_VAR_1ST_DEF;
    auto     *inheritance_start = get_inheritance_start();
-   Chunk    *pc                = body_end ? body_end : m_start;
+   Chunk    *pc                = body_end->IsNotNullChunk() ? body_end : m_start;
 
    /**
     * first, try a simple approach to identify any associated type
@@ -894,19 +878,14 @@ void EnumStructUnionParser::analyze_identifiers()
        * variable identifiers after the closing brace or close angle bracket
        */
 
-      if (body_end != nullptr)
+      if (body_end->IsNotNullChunk())
       {
          pc = body_end;
       }
-      else if (template_end != nullptr)
+      else if (template_end->IsNotNullChunk())
       {
          pc = template_end;
       }
-   }
-
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
    }
 
    if (pc->GetNextNcNnl() == m_end)
@@ -931,7 +910,7 @@ void EnumStructUnionParser::analyze_identifiers()
       pc = pc->GetNextNcNnl();
    }
 
-   if (body_end != nullptr)
+   if (body_end->IsNotNullChunk())
    {
       /**
        * a closing brace was found, so any identifiers trailing the closing
@@ -967,10 +946,10 @@ void EnumStructUnionParser::analyze_identifiers()
       auto *identifier = std::get<1>(match);
       auto *end        = std::get<2>(match);
 
-      if (  start != nullptr
-         && identifier != nullptr)
+      if (  start->IsNotNullChunk()
+         && identifier->IsNotNullChunk())
       {
-         if (end != nullptr)
+         if (end->IsNotNullChunk())
          {
             mark_variable(identifier, flags);
 
@@ -981,7 +960,7 @@ void EnumStructUnionParser::analyze_identifiers()
          }
       }
 
-      if (end != nullptr)
+      if (end->IsNotNullChunk())
       {
          pc = end;
       }
@@ -1058,8 +1037,8 @@ bool EnumStructUnionParser::body_detected() const
    auto *body_end   = get_body_end();
    auto *body_start = get_body_start();
 
-   return(  body_end != nullptr
-         && body_start != nullptr);
+   return(  body_end->IsNotNullChunk()
+         && body_start->IsNotNullChunk());
 } // EnumStructUnionParser::body_detected
 
 
@@ -1089,7 +1068,7 @@ Chunk *EnumStructUnionParser::get_body_end() const
    {
       return(it_token_chunk_map_pair->second.at(0));
    }
-   return(nullptr);
+   return(Chunk::NullChunkPtr);
 } // EnumStructUnionParser::get_body_end
 
 
@@ -1103,7 +1082,7 @@ Chunk *EnumStructUnionParser::get_body_start() const
    {
       return(it_token_chunk_map_pair->second.at(0));
    }
-   return(nullptr);
+   return(Chunk::NullChunkPtr);
 } // EnumStructUnionParser::get_body_start
 
 
@@ -1117,7 +1096,7 @@ Chunk *EnumStructUnionParser::get_enum_base_start() const
    {
       return(it_token_chunk_map_pair->second.at(0));
    }
-   return(nullptr);
+   return(Chunk::NullChunkPtr);
 } // EnumStructUnionParser::get_enum_base_start
 
 
@@ -1131,7 +1110,7 @@ Chunk *EnumStructUnionParser::get_first_top_level_comma() const
    {
       return(it_token_chunk_map_pair->second.at(0));
    }
-   return(nullptr);
+   return(Chunk::NullChunkPtr);
 } // EnumStructUnionParser::get_first_top_level_comma
 
 
@@ -1139,14 +1118,14 @@ Chunk *EnumStructUnionParser::get_inheritance_end() const
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *brace_open        = nullptr;
+   Chunk *brace_open        = Chunk::NullChunkPtr;
    auto  *inheritance_start = get_inheritance_start();
 
-   if (inheritance_start != nullptr)
+   if (inheritance_start->IsNotNullChunk())
    {
       brace_open = get_body_start();
 
-      if (brace_open == nullptr)
+      if (brace_open->IsNullChunk())
       {
          brace_open = inheritance_start->GetNextType(CT_BRACE_OPEN, m_start->GetLevel(), E_Scope::ALL);
       }
@@ -1165,7 +1144,7 @@ Chunk *EnumStructUnionParser::get_inheritance_start() const
    {
       return(it_token_chunk_map_pair->second.at(0));
    }
-   return(nullptr);
+   return(Chunk::NullChunkPtr);
 } // EnumStructUnionParser::get_inheritance_start
 
 
@@ -1193,7 +1172,7 @@ Chunk *EnumStructUnionParser::get_template_end() const
    {
       return(it_token_chunk_map_pair->second.at(0));
    }
-   return(nullptr);
+   return(Chunk::NullChunkPtr);
 } // EnumStructUnionParser::get_template_end
 
 
@@ -1207,7 +1186,7 @@ Chunk *EnumStructUnionParser::get_template_start() const
    {
       return(it_token_chunk_map_pair->second.at(0));
    }
-   return(nullptr);
+   return(Chunk::NullChunkPtr);
 } // EnumStructUnionParser::get_template_start
 
 
@@ -1229,14 +1208,14 @@ Chunk *EnumStructUnionParser::get_where_end() const
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *brace_open  = nullptr;
+   Chunk *brace_open  = Chunk::NullChunkPtr;
    auto  *where_start = get_where_start();
 
-   if (where_start != nullptr)
+   if (where_start->IsNotNullChunk())
    {
       brace_open = get_body_start();
 
-      if (brace_open == nullptr)
+      if (brace_open->IsNullChunk())
       {
          brace_open = where_start->GetNextType(CT_BRACE_OPEN, m_start->GetLevel(), E_Scope::ALL);
       }
@@ -1255,7 +1234,7 @@ Chunk *EnumStructUnionParser::get_where_start() const
    {
       return(it_token_chunk_map_pair->second.at(0));
    }
-   return(nullptr);
+   return(Chunk::NullChunkPtr);
 } // EnumStructUnionParser::get_where_start
 
 
@@ -1275,7 +1254,7 @@ void EnumStructUnionParser::initialize(Chunk *pc)
    m_chunk_map.clear();
 
    m_start = pc;
-   m_type  = nullptr;
+   m_type  = Chunk::NullChunkPtr;
    pc      = try_find_end_chunk(pc);
 
    if (parse_error_detected())
@@ -1411,16 +1390,15 @@ bool EnumStructUnionParser::is_within_inheritance_list(Chunk *pc) const
 {
    LOG_FUNC_ENTRY();
 
-   if (  pc != nullptr
-      && pc->TestFlags(PCF_IN_CLASS_BASE))
+   if (pc->TestFlags(PCF_IN_CLASS_BASE))
    {
       return(true);
    }
    auto *inheritance_end   = get_inheritance_end();
    auto *inheritance_start = get_inheritance_start();
 
-   if (  inheritance_end != nullptr
-      && inheritance_start != nullptr)
+   if (  inheritance_end->IsNotNullChunk()
+      && inheritance_start->IsNotNullChunk())
    {
       return(chunk_is_between(pc, inheritance_start, inheritance_end));
    }
@@ -1432,16 +1410,15 @@ bool EnumStructUnionParser::is_within_where_clause(Chunk *pc) const
 {
    LOG_FUNC_ENTRY();
 
-   if (  pc != nullptr
-      && pc->TestFlags(PCF_IN_WHERE_SPEC))
+   if (pc->TestFlags(PCF_IN_WHERE_SPEC))
    {
       return(true);
    }
    auto *where_end   = get_where_end();
    auto *where_start = get_where_start();
 
-   if (  where_end != nullptr
-      && where_start != nullptr)
+   if (  where_end->IsNotNullChunk()
+      && where_start->IsNotNullChunk())
    {
       return(chunk_is_between(pc, where_start, where_end));
    }
@@ -1455,8 +1432,7 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
 
    PcfFlags flags = PCF_VAR_1ST_DEF;
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       pc->SetFlagBits(PCF_IN_CLASS_BASE);
       /**
@@ -1555,7 +1531,7 @@ void EnumStructUnionParser::mark_braces(Chunk *brace_open)
 
       auto *inheritance_start = get_inheritance_start();
 
-      if (inheritance_start != nullptr)
+      if (inheritance_start->IsNotNullChunk())
       {
          /**
           * the class/struct/union is a derived class; mark the base
@@ -1845,7 +1821,7 @@ void EnumStructUnionParser::mark_template(Chunk *start) const
 {
    LOG_FUNC_ENTRY();
 
-   if (start != nullptr)
+   if (start->IsNotNullChunk())
    {
       LOG_FMT(LTEMPL,
               "%s(%d): Template detected: '%s' at orig line %zu, orig col %zu\n",
@@ -1872,8 +1848,8 @@ void EnumStructUnionParser::mark_template_args(Chunk *start, Chunk *end) const
 {
    LOG_FUNC_ENTRY();
 
-   if (  end != nullptr
-      && start != nullptr)
+   if (  end->IsNotNullChunk()
+      && start->IsNotNullChunk())
    {
       LOG_FMT(LTEMPL,
               "%s(%d): Start of template detected: '%s' at orig line %zu, orig col %zu\n",
@@ -1917,7 +1893,7 @@ void EnumStructUnionParser::mark_type(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (pc != nullptr)
+   if (pc->IsNotNullChunk())
    {
       m_type = pc;
 
@@ -1935,7 +1911,7 @@ void EnumStructUnionParser::mark_variable(Chunk *variable, PcfFlags flags)
 {
    LOG_FUNC_ENTRY();
 
-   if (variable != nullptr)
+   if (variable->IsNotNullChunk())
    {
       LOG_FMT(LVARDEF,
               "%s(%d): Variable definition detected: '%s' at orig line is %zu, orig col is %zu, set %s\n",
@@ -1957,7 +1933,7 @@ void EnumStructUnionParser::mark_where_clause(Chunk *where)
 {
    LOG_FUNC_ENTRY();
 
-   if (where != nullptr)
+   if (where->IsNotNullChunk())
    {
       LOG_FMT(LFTOR,
               "%s(%d): Where clause detected: orig line is %zu, orig col is %zu\n",
@@ -1986,7 +1962,7 @@ void EnumStructUnionParser::mark_where_colon(Chunk *colon)
 {
    LOG_FUNC_ENTRY();
 
-   if (colon != nullptr)
+   if (colon->IsNotNullChunk())
    {
       LOG_FMT(LFTOR,
               "%s(%d): Where colon detected: orig line is %zu, orig col is %zu\n",
@@ -2433,7 +2409,7 @@ void EnumStructUnionParser::record_question_operator(Chunk *question)
 
 void EnumStructUnionParser::record_top_level_comma(Chunk *comma)
 {
-   if (  comma != nullptr
+   if (  comma->IsNotNullChunk()
       && comma->GetLevel() == m_start->GetLevel()
       && !is_within_conditional(comma)
       && !is_within_inheritance_list(comma))
@@ -2487,9 +2463,9 @@ Chunk *EnumStructUnionParser::refine_end_chunk(Chunk *pc)
             auto *identifier = std::get<1>(match);
             auto *end        = std::get<2>(match);
 
-            if (  end == nullptr
-               || identifier == nullptr
-               || start == nullptr)
+            if (  end->IsNullChunk()
+               || identifier->IsNullChunk()
+               || start->IsNullChunk())
             {
                break;
             }
@@ -2608,8 +2584,8 @@ bool EnumStructUnionParser::template_detected() const
    auto *template_end   = get_template_end();
    auto *template_start = get_template_start();
 
-   return(  template_end != nullptr
-         && template_start != nullptr);
+   return(  template_end->IsNotNullChunk()
+         && template_start->IsNotNullChunk());
 } // EnumStructUnionParser::template_detected
 
 
@@ -2732,7 +2708,7 @@ void EnumStructUnionParser::try_post_identify_type()
    Chunk *body_end = get_body_end();
 
    if (  !type_identified()
-      && body_end == nullptr)
+      && body_end->IsNullChunk())
    {
       /**
        * a type wasn't identified and no closing brace is present; we're
@@ -2743,7 +2719,7 @@ void EnumStructUnionParser::try_post_identify_type()
        * a type has yet to be identified, so search for the last word
        * that hasn't been marked as a variable
        */
-      Chunk *type = nullptr;
+      Chunk *type = Chunk::NullChunkPtr;
       Chunk *pc   = m_start;
 
       do
@@ -2766,7 +2742,7 @@ void EnumStructUnionParser::try_post_identify_type()
          pc = pc->GetNextNcNnl();
       } while (chunk_is_between(pc, m_start, m_end));
 
-      if (type != nullptr)
+      if (type->IsNotNullChunk())
       {
          mark_type(type);
       }
@@ -2817,7 +2793,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
       }
    }
 
-   if (pc == nullptr)
+   if (pc->IsNullChunk())
    {
       Chunk *next = m_start->GetNextNcNnl();
 
@@ -2912,8 +2888,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
       }
    }
 
-   if (  pc != nullptr
-      && pc->IsNotNullChunk())
+   if (pc->IsNotNullChunk())
    {
       /**
        * the chunk preceding the previously selected chunk should indicate the type
@@ -2949,7 +2924,7 @@ bool EnumStructUnionParser::type_identified() const
 {
    LOG_FUNC_ENTRY();
 
-   return(m_type != nullptr);
+   return(m_type->IsNotNullChunk());
 } // EnumStructUnionParser::type_identified
 
 
@@ -2963,6 +2938,6 @@ bool EnumStructUnionParser::where_clause_detected() const
    auto *where_end   = get_where_end();
    auto *where_start = get_where_start();
 
-   return(  where_end != nullptr
-         && where_start != nullptr);
+   return(  where_end->IsNotNullChunk()
+         && where_start->IsNotNullChunk());
 } // EnumStructUnionParser::where_clause_detected
