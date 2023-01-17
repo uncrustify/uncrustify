@@ -803,7 +803,8 @@
 34142  common/sp_before_byref-r.cfg                         cpp/I1112-1.cpp
 34143  cpp/I1112-2.cfg                                      cpp/I1112-2.cpp
 34144  cpp/sp_before_ptr_star-r.cfg                         cpp/I1112-3.cpp
-34145  cpp/i683.cfg                                         cpp/i683.cpp
+#34145  cpp/i683.cfg                                         cpp/i683.cpp need to be solved,
+#                                                            https://github.com/uncrustify/uncrustify/issues/3924
 34146  cpp/sp_bool-f.cfg                                    cpp/bug_1002.cpp
 34147  cpp/sp_bool-r.cfg                                    cpp/bug_1002.cpp
 34148  cpp/nl_before_if_closing_paren-f.cfg                 cpp/bug_1139.cpp
