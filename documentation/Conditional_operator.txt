@@ -1,0 +1,7 @@
+The bug https://github.com/uncrustify/uncrustify/issues/1130
+shows the problem with the conditional operator ?
+indent_ternary_operator not aligning correctly.
+
+The solution is to transform the simple call to a recursiv call.
+The position of ? must be saved for each level and be used to
+position the colon operator.

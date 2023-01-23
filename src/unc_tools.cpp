@@ -122,6 +122,12 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
                log_pcf_flags(LGUY, pc->GetFlags());
             }
 
+            if (pc->Is(CT_COND_COLON))
+            {
+               Chunk *pa = pc->GetParent();
+               LOG_FMT(LGUY, "<> pa-type is %s, orig_line is %zu\n", get_token_name(pa->GetType()), pa->GetOrigLine());
+            }
+
             if (pc->GetTrackingData() != nullptr)
             {
                LOG_FMT(LGUY, " Tracking info are: \n");
