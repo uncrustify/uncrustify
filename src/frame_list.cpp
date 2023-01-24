@@ -14,38 +14,38 @@
 namespace
 {
 
-void fl_log_frms(log_sev_t logsev, const char *txt, const ParseFrame &frm, const std::vector<ParseFrame> &frames);
+void fl_log_frms(log_sev_t logsev, const char *txt, const ParsingFrameStack &frm, const std::vector<ParsingFrameStack> &frames);
 
 
 //! Logs the entire parse frame stack
-void fl_log_all(log_sev_t logsev, const std::vector<ParseFrame> &frames);
+void fl_log_all(log_sev_t logsev, const std::vector<ParsingFrameStack> &frames);
 
 
 /**
- * Copy the top element of the frame list into the ParseFrame.
+ * Copy the top element of the frame list into the ParsingFrameStack.
  *
  * If the frame list is empty nothing happens.
  *
  * This is called on #else and #elif.
  */
-void fl_copy_tos(ParseFrame &pf, const std::vector<ParseFrame> &frames);
+void fl_copy_tos(ParsingFrameStack &pf, const std::vector<ParsingFrameStack> &frames);
 
 
 /**
- * Copy the 2nd top element off the list into the ParseFrame.
+ * Copy the 2nd top element off the list into the ParsingFrameStack.
  * This is called on #else and #elif.
  * The stack contains [...] [base] [if] at this point.
  * We want to copy [base].
  */
-void fl_copy_2nd_tos(ParseFrame &pf, const std::vector<ParseFrame> &frames);
+void fl_copy_2nd_tos(ParsingFrameStack &pf, const std::vector<ParsingFrameStack> &frames);
 
 
 //! Deletes the top element from the list.
-void fl_trash_tos(std::vector<ParseFrame> &frames);
+void fl_trash_tos(std::vector<ParsingFrameStack> &frames);
 
 
 //! Logs one parse frame
-void fl_log(log_sev_t logsev, const ParseFrame &frm)
+void fl_log(log_sev_t logsev, const ParsingFrameStack &frm)
 {
    LOG_FMT(logsev, "[%s] BrLevel=%zu Level=%zu PseTos=%zu\n",
            get_token_name(frm.in_ifdef), frm.brace_level, frm.level, frm.size() - 1);
@@ -62,10 +62,10 @@ void fl_log(log_sev_t logsev, const ParseFrame &frm)
 }
 
 
-void fl_log_frms(log_sev_t                     logsev,
-                 const char                    *txt,
-                 const ParseFrame              &frm,
-                 const std::vector<ParseFrame> &frames)
+void fl_log_frms(log_sev_t                            logsev,
+                 const char                           *txt,
+                 const ParsingFrameStack              &frm,
+                 const std::vector<ParsingFrameStack> &frames)
 {
    LOG_FMT(logsev, "%s Parse Frames(%zu):", txt, frames.size());
 
@@ -79,7 +79,7 @@ void fl_log_frms(log_sev_t                     logsev,
 }
 
 
-void fl_log_all(log_sev_t logsev, const std::vector<ParseFrame> &frames)
+void fl_log_all(log_sev_t logsev, const std::vector<ParsingFrameStack> &frames)
 {
    LOG_FMT(logsev, "##=- Parse Frame : %zu entries\n", frames.size());
 
@@ -94,7 +94,7 @@ void fl_log_all(log_sev_t logsev, const std::vector<ParseFrame> &frames)
 }
 
 
-void fl_copy_tos(ParseFrame &pf, const std::vector<ParseFrame> &frames)
+void fl_copy_tos(ParsingFrameStack &pf, const std::vector<ParsingFrameStack> &frames)
 {
    if (!frames.empty())
    {
@@ -104,7 +104,7 @@ void fl_copy_tos(ParseFrame &pf, const std::vector<ParseFrame> &frames)
 }
 
 
-void fl_copy_2nd_tos(ParseFrame &pf, const std::vector<ParseFrame> &frames)
+void fl_copy_2nd_tos(ParsingFrameStack &pf, const std::vector<ParsingFrameStack> &frames)
 {
    if (frames.size() > 1)
    {
@@ -114,7 +114,7 @@ void fl_copy_2nd_tos(ParseFrame &pf, const std::vector<ParseFrame> &frames)
 }
 
 
-void fl_trash_tos(std::vector<ParseFrame> &frames)
+void fl_trash_tos(std::vector<ParsingFrameStack> &frames)
 {
    if (!frames.empty())
    {
@@ -126,7 +126,7 @@ void fl_trash_tos(std::vector<ParseFrame> &frames)
 } // namespace
 
 
-void fl_push(std::vector<ParseFrame> &frames, ParseFrame &frm)
+void fl_push(std::vector<ParsingFrameStack> &frames, ParsingFrameStack &frm)
 {
    static int ref_no = 1;
 
@@ -137,7 +137,7 @@ void fl_push(std::vector<ParseFrame> &frames, ParseFrame &frm)
 }
 
 
-void fl_pop(std::vector<ParseFrame> &frames, ParseFrame &pf)
+void fl_pop(std::vector<ParsingFrameStack> &frames, ParsingFrameStack &pf)
 {
    if (frames.empty())
    {
@@ -148,7 +148,7 @@ void fl_pop(std::vector<ParseFrame> &frames, ParseFrame &pf)
 }
 
 
-int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Chunk *pc)
+int fl_check(std::vector<ParsingFrameStack> &frames, ParsingFrameStack &frm, int &pp_level, Chunk *pc)
 {
    if (pc->IsNot(CT_PREPROC))
    {
