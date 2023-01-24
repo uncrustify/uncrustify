@@ -62,7 +62,6 @@ Chunk *search_for_colon(Chunk *pc_question)
       else if (pc2->Is(CT_COMMA))
       {
          // TODO: is it necessary?
-         int f = 7;
       }
       else if (pc2->Is(CT_QUESTION))
       {
