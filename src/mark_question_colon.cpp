@@ -55,8 +55,8 @@ Chunk *search_for_colon(Chunk *pc_question)
          }
          else
          {
-            pc2->SetParent(pc_question);   // save the question token
-            pc_question->SetParent(pc2);   // back again
+            pc2->SetParent(pc_question);      // save the question token
+            pc_question->SetParent(pc2);      // back again
          }
       }
       else if (pc2->Is(CT_COMMA))
