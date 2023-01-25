@@ -1,7 +1,7 @@
 /**
- * @file ParseFrame.cpp
+ * @file ParsingFrame.cpp
  *
- * Container that holds data needed for indenting and brace parsing
+ * Holds data needed for indenting and brace parsing
  *
  * @author  Daniel Chumak
  * @license GPL v2+
@@ -19,17 +19,14 @@ using std::string;
 using std::to_string;
 using std::invalid_argument;
 
-using ContainerType = paren_stack_entry_t;
-using Container     = std::vector<ContainerType>;
-
 
 //! amount of elements for which memory is going to be pre-initialized
 static constexpr const int CONTAINER_INIT_SIZE = 16;
 
 
-static ContainerType genDummy()
+static ParsingFrameEntry genDummy()
 {
-   ContainerType tmp_dummy{};
+   ParsingFrameEntry tmp_dummy{};
 
    tmp_dummy.indent     = 1;
    tmp_dummy.indent_tmp = 1;
@@ -42,11 +39,11 @@ static ContainerType genDummy()
 }
 
 
-void ParseFrame::clear()
+void ParsingFrame::clear()
 {
    last_poped = genDummy();
 
-   pse = Container{};
+   pse = std::vector<ParsingFrameEntry>();
    pse.reserve(CONTAINER_INIT_SIZE);
    pse.push_back(genDummy());
 
@@ -62,13 +59,13 @@ void ParseFrame::clear()
 }
 
 
-ParseFrame::ParseFrame()
+ParsingFrame::ParsingFrame()
 {
-   ParseFrame::clear();
+   ParsingFrame::clear();
 }
 
 
-bool ParseFrame::empty() const
+bool ParsingFrame::empty() const
 {
    // always at least one (dummy) element inside pse guaranteed
    return(false);
@@ -76,19 +73,19 @@ bool ParseFrame::empty() const
 }
 
 
-ContainerType &ParseFrame::at(size_t idx)
+ParsingFrameEntry &ParsingFrame::at(size_t idx)
 {
    return(pse.at(idx));
 }
 
 
-const ContainerType &ParseFrame::at(size_t idx) const
+const ParsingFrameEntry &ParsingFrame::at(size_t idx) const
 {
    return(pse.at(idx));
 }
 
 
-ContainerType &ParseFrame::prev(size_t idx)
+ParsingFrameEntry &ParsingFrame::prev(size_t idx)
 {
    LOG_FUNC_ENTRY();
 
@@ -109,7 +106,7 @@ ContainerType &ParseFrame::prev(size_t idx)
 }
 
 
-const ContainerType &ParseFrame::prev(size_t idx) const
+const ParsingFrameEntry &ParsingFrame::prev(size_t idx) const
 {
    LOG_FUNC_ENTRY();
 
@@ -123,7 +120,7 @@ const ContainerType &ParseFrame::prev(size_t idx) const
 }
 
 
-ContainerType &ParseFrame::top()
+ParsingFrameEntry &ParsingFrame::top()
 {
    // always at least one (dummy) element inside pse guaranteed
 //   if (pse.empty())
@@ -135,7 +132,7 @@ ContainerType &ParseFrame::top()
 }
 
 
-const ContainerType &ParseFrame::top() const
+const ParsingFrameEntry &ParsingFrame::top() const
 {
    // always at least one (dummy) element inside pse guaranteed
 //   if (pse.empty())
@@ -147,7 +144,7 @@ const ContainerType &ParseFrame::top() const
 }
 
 
-void ParseFrame::push(std::nullptr_t, brace_stage_e stage)
+void ParsingFrame::push(std::nullptr_t, E_BraceStage stage)
 {
    static Chunk dummy;
 
@@ -156,11 +153,11 @@ void ParseFrame::push(std::nullptr_t, brace_stage_e stage)
 }
 
 
-void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage)
+void ParsingFrame::push(Chunk *pc, const char *func, int line, E_BraceStage stage)
 {
    LOG_FUNC_ENTRY();
 
-   ContainerType new_entry = {};
+   ParsingFrameEntry new_entry = {};
 
    new_entry.type      = pc->GetType();
    new_entry.level     = pc->GetLevel();
@@ -182,13 +179,13 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
 // uncomment the line below to get the address of the pse
 // #define DEBUG_PUSH_POP
 #ifdef DEBUG_PUSH_POP
-   LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d) Add is %4zu: orig line is %4zu, orig col is %4zu, type is %12s, "
+   LOG_FMT(LINDPSE, "ParsingFrame::push(%s:%d) Add is %4zu: orig line is %4zu, orig col is %4zu, type is %12s, "
            "brace level is %2zu, level is %2zu, pse_tos: %2zu -> %2zu\n",
            func, line, (size_t)this, pc->GetOrigLine(), pc->GetOrigCol(),
            get_token_name(pc->GetType()), pc->GetBraceLevel(), pc->GetLevel(),
            (pse.size() - 2), (pse.size() - 1));
 #else /* DEBUG_PUSH_POP */
-   LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d): orig line is %4zu, orig col is %4zu, type is %12s, "
+   LOG_FMT(LINDPSE, "ParsingFrame::push(%s:%d): orig line is %4zu, orig col is %4zu, type is %12s, "
            "brace level is %2zu, level is %2zu, pse_tos: %2zu -> %2zu\n",
            func, line, pc->GetOrigLine(), pc->GetOrigCol(),
            get_token_name(pc->GetType()), pc->GetBraceLevel(), pc->GetLevel(),
@@ -197,7 +194,7 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
 }
 
 
-void ParseFrame::pop(const char *func, int line, Chunk *pc)
+void ParsingFrame::pop(const char *func, int line, Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -220,7 +217,7 @@ void ParseFrame::pop(const char *func, int line, Chunk *pc)
       || pc->GetType() == CT_SEMICOLON
       || pc->GetType() == CT_SQUARE_CLOSE)
    {
-      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig line is %4zu, orig col is %4zu, type is %12s, pushed with\n",
+      LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d): orig line is %4zu, orig col is %4zu, type is %12s, pushed with\n",
               func, line, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
    }
    else if (  pc->GetType() == CT_ACCESS
@@ -251,26 +248,26 @@ void ParseFrame::pop(const char *func, int line, Chunk *pc)
            || pc->GetType() == CT_VSEMICOLON
            || pc->GetType() == CT_WORD)
    {
-      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig line is %4zu, orig col is %4zu, type is %12s\n",
+      LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d): orig line is %4zu, orig col is %4zu, type is %12s\n",
               func, line, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
    }
    else
    {
-      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig line is %4zu, orig col is %4zu, type is %12s,\n",
+      LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d): orig line is %4zu, orig col is %4zu, type is %12s,\n",
               func, line, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
-      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): the type is %s, is not coded. Please make a call.\n",
+      LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d): the type is %s, is not coded. Please make a call.\n",
               func, line, get_token_name(pc->GetType()));
       log_flush(true);
       exit(EX_SOFTWARE);
    }
 #ifdef DEBUG_PUSH_POP
-   LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d) Add is %4zu: open_line is %4zu, clos_col is %4zu, type is %12s, "
+   LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d) Add is %4zu: open_line is %4zu, clos_col is %4zu, type is %12s, "
            "cpd.level   is %2d, level is %2zu, pse_tos: %2zu -> %2zu\n",
            func, line, (size_t)this, pse.back().open_line, pse.back().open_colu,
            get_token_name(pse.back().type), cpd.pp_level, pse.back().level,
            (pse.size() - 1), (pse.size() - 2));
 #else /* DEBUG_PUSH_POP */
-   LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): open_line is %4zu, clos_col is %4zu, type is %12s, "
+   LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d): open_line is %4zu, clos_col is %4zu, type is %12s, "
            "cpd.level   is %2d, level is %2zu, pse_tos: %2zu -> %2zu\n",
            func, line, pse.back().open_line, pse.back().open_colu,
            get_token_name(pse.back().type), cpd.pp_level, pse.back().level,
@@ -287,66 +284,66 @@ void ParseFrame::pop(const char *func, int line, Chunk *pc)
    {
       pse.pop_back();
    }
-} // ParseFrame::pop
+} // ParsingFrame::pop
 
 
-size_t ParseFrame::size() const
+size_t ParsingFrame::size() const
 {
    // always at least one (dummy) element inside pse guaranteed
    return(pse.size());
 }
 
 
-const paren_stack_entry_t &ParseFrame::poped() const
+const ParsingFrameEntry &ParsingFrame::poped() const
 {
    return(last_poped);
 }
 
 
 // TODO C++14: see abstract versions: std::rend, std::cend, std::crend ...
-ParseFrame::iterator ParseFrame::begin()
+ParsingFrame::iterator ParsingFrame::begin()
 {
    return(std::begin(pse));
 }
 
 
-ParseFrame::const_iterator ParseFrame::begin() const
+ParsingFrame::const_iterator ParsingFrame::begin() const
 {
    return(std::begin(pse));
 }
 
 
-ParseFrame::reverse_iterator ParseFrame::rbegin()
+ParsingFrame::reverse_iterator ParsingFrame::rbegin()
 {
    return(pse.rbegin());
 }
 
 
-ParseFrame::const_reverse_iterator ParseFrame::rbegin() const
+ParsingFrame::const_reverse_iterator ParsingFrame::rbegin() const
 {
    return(pse.rbegin());
 }
 
 
-ParseFrame::iterator ParseFrame::end()
+ParsingFrame::iterator ParsingFrame::end()
 {
    return(std::end(pse));
 }
 
 
-ParseFrame::const_iterator ParseFrame::end() const
+ParsingFrame::const_iterator ParsingFrame::end() const
 {
    return(std::end(pse));
 }
 
 
-ParseFrame::reverse_iterator ParseFrame::rend()
+ParsingFrame::reverse_iterator ParsingFrame::rend()
 {
    return(pse.rend());
 }
 
 
-ParseFrame::const_reverse_iterator ParseFrame::rend() const
+ParsingFrame::const_reverse_iterator ParsingFrame::rend() const
 {
    return(pse.rend());
 }

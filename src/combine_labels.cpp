@@ -422,15 +422,7 @@ void combine_labels()
                              get_token_name(next->GetParentType()),
                              get_token_name(cur->GetParentType()),
                              next->GetLevel(), next->GetBraceLevel());
-
-                     if (language_is_set(LANG_OC))
-                     {
-                        // TO DO: what is to do? any expert?
-                     }
-                     else
-                     {
-                        exit(EX_SOFTWARE);
-                     }
+                     exit(EX_SOFTWARE);
                   }
                }
             }

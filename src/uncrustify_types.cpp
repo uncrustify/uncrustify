@@ -9,44 +9,44 @@
 #include "uncrustify_types.h"
 
 
-const char *get_brace_stage_name(brace_stage_e brace_stage)
+const char *get_brace_stage_name(E_BraceStage brace_stage)
 {
    switch (brace_stage)
    {
-   case brace_stage_e::NONE:
+   case E_BraceStage::NONE:
       return("NONE");
 
-   case brace_stage_e::PAREN1:
+   case E_BraceStage::PAREN1:
       return("PAREN1");
 
-   case brace_stage_e::OP_PAREN1:
+   case E_BraceStage::OP_PAREN1:
       return("OP_PAREN1");
 
-   case brace_stage_e::WOD_PAREN:
+   case E_BraceStage::WOD_PAREN:
       return("WOD_PAREN");
 
-   case brace_stage_e::WOD_SEMI:
+   case E_BraceStage::WOD_SEMI:
       return("WOD_SEMI");
 
-   case brace_stage_e::BRACE_DO:
+   case E_BraceStage::BRACE_DO:
       return("BRACE_DO");
 
-   case brace_stage_e::BRACE2:
+   case E_BraceStage::BRACE2:
       return("BRACE2");
 
-   case brace_stage_e::ELSE:
+   case E_BraceStage::ELSE:
       return("ELSE");
 
-   case brace_stage_e::ELSEIF:
+   case E_BraceStage::ELSEIF:
       return("ELSEIF");
 
-   case brace_stage_e::WHILE:
+   case E_BraceStage::WHILE:
       return("WHILE");
 
-   case brace_stage_e::CATCH:
+   case E_BraceStage::CATCH:
       return("CATCH");
 
-   case brace_stage_e::CATCH_WHEN:
+   case E_BraceStage::CATCH_WHEN:
       return("CATCH_WHEN");
    }
    return("?????");

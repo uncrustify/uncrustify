@@ -49,7 +49,7 @@ class ParseFrame;
 
 
 //! Brace stage enum used in brace_cleanup
-enum class brace_stage_e : unsigned int
+enum class E_BraceStage : unsigned int
 {
    NONE,
    PAREN1,      //! expected paren after if/catch (C++)/for/switch/synchronized/while
@@ -274,7 +274,7 @@ struct cp_data_t
 
 extern cp_data_t cpd;  // TODO: can we avoid this external variable?
 
-const char *get_brace_stage_name(brace_stage_e brace_stage);
+const char *get_brace_stage_name(E_BraceStage brace_stage);
 
 const char *get_unc_stage_name(unc_stage_e unc_stage);
 

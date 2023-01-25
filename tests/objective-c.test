@@ -21,11 +21,10 @@
 50014  oc/sp_oc_classname_paren-r.cfg           oc/sp_oc_classname_paren-r.m
 50015  oc/oc10.cfg                              oc/receiver.m
 
-#        we need any expert to solve
-#50016  oc/oc11.cfg                              oc/ternary.m
-#50017  oc/ternary_short.cfg                     oc/ternary.m
+50016  oc/oc11.cfg                              oc/ternary.m
+50017  oc/ternary_short.cfg                     oc/ternary.m
 
-#50018  common/indent_inside_ternary_operator.cfg  oc/indent-inside-ternary-operator.m
+50018  common/indent_inside_ternary_operator.cfg  oc/indent-inside-ternary-operator.m
 
 50020  oc/sp_after_oc_at_sel_add.cfg            oc/selector.m
 50021  oc/sp_after_oc_at_sel_force.cfg          oc/selector.m
@@ -97,8 +96,7 @@
 
 50400  oc/oc16.cfg                              oc/for.m
 
-#        we need any expert to solve
-#50410  oc/oc_cond_colon.cfg                     oc/oc_cond_colon.m              OC+
+50410  oc/oc_cond_colon.cfg                     oc/oc_cond_colon.m              OC+
 50411  common/attribute_specifier_seqs.cfg      oc/attribute_specifier_seqs.mm  OC+
 
 50500  oc/oc17.cfg                              oc/code_placeholder.m
@@ -179,9 +177,8 @@
 50905  oc/double_angle_space_2.cfg              oc/double_angle_space.m
 50906  oc/double_angle_space_3.cfg              oc/double_angle_space.m
 
-#        we need any expert to solve
-#50907  oc/align_colon_with_ternary_1.cfg        oc/align_colon_with_ternary_1.m
-#50908  oc/align_colon_with_ternary_2.cfg        oc/align_colon_with_ternary_2.m
+50907  oc/align_colon_with_ternary_1.cfg        oc/align_colon_with_ternary_1.m
+50908  oc/align_colon_with_ternary_2.cfg        oc/align_colon_with_ternary_2.m
 50909  oc/3766.cfg                              oc/3766.m
 50910  oc/3767.cfg                              oc/3767.mm                          OC+
 50911  oc/3811.cfg                              oc/3811.mm                          OC+
@@ -213,6 +210,5 @@
 10102  oc/U24-Cpp.cfg                           oc/pp-ignore.mm
 11030  oc/U08-Cpp.cfg                           oc/argtypes.mm
 11031  oc/U09-Cpp.cfg                           oc/casting.mm
-#        we need any expert to solve
-#11032  oc/U10-Cpp.cfg                           oc/newlines.mm
+11032  oc/U10-Cpp.cfg                           oc/newlines.mm
 60011  oc/UNI-11095.cfg                         oc/UNI-11095.mm
