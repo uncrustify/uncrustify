@@ -38,10 +38,10 @@ using std::stringstream;
 
 struct BraceState
 {
-   std::vector<ParseFrame> frames     = {};
-   E_Token                 in_preproc = CT_NONE;
-   int                     pp_level   = 0;
-   bool                    consumed   = false;
+   ParsingFrameStack frames     = {};
+   E_Token           in_preproc = CT_NONE;
+   int               pp_level   = 0;
+   bool              consumed   = false;
 };
 
 /**
@@ -54,13 +54,13 @@ struct BraceState
  * @retval true   done with this chunk
  * @retval false  keep processing
  */
-static bool close_statement(ParseFrame &frm, Chunk *pc, const BraceState &braceState);
+static bool close_statement(ParsingFrame &frm, Chunk *pc, const BraceState &braceState);
 
 
-static size_t preproc_start(BraceState &braceState, ParseFrame &frm, Chunk *pc);
+static size_t preproc_start(BraceState &braceState, ParsingFrame &frm, Chunk *pc);
 
 
-static void print_stack(log_sev_t logsev, const char *str, const ParseFrame &frm);
+static void print_stack(log_sev_t logsev, const char *str, const ParsingFrame &frm);
 
 
 /**
@@ -74,12 +74,12 @@ static bool maybe_while_of_do(Chunk *pc);
  * @param after  determines: true  - insert_vbrace_close_after(pc, frm)
  *                           false - insert_vbrace_open_before(pc, frm)
  */
-static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm);
+static Chunk *insert_vbrace(Chunk *pc, bool after, const ParsingFrame &frm);
 
 #define insert_vbrace_close_after(pc, frm)    insert_vbrace(pc, true, frm)
 #define insert_vbrace_open_before(pc, frm)    insert_vbrace(pc, false, frm)
 
-static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc);
+static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc);
 
 
 /**
@@ -95,7 +95,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc);
  *
  * @return true - done with this chunk, false - keep processing
  */
-static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceState &braceState);
+static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceState &braceState);
 
 
 /**
@@ -107,14 +107,14 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
  *
  * @return true - done with this chunk, false - keep processing
  */
-static bool handle_complex_close(ParseFrame &frm, Chunk *pc, const BraceState &braceState);
+static bool handle_complex_close(ParsingFrame &frm, Chunk *pc, const BraceState &braceState);
 
 
 //! We're on a 'namespace' skip the word and then set the parent of the braces.
 static void mark_namespace(Chunk *pns);
 
 
-static size_t preproc_start(BraceState &braceState, ParseFrame &frm, Chunk *pc)
+static size_t preproc_start(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
 {
    LOG_FUNC_ENTRY();
    const size_t pp_level = braceState.pp_level;
@@ -151,7 +151,7 @@ static size_t preproc_start(BraceState &braceState, ParseFrame &frm, Chunk *pc)
 
 
 static void print_stack(log_sev_t logsev, const char *str,
-                        const ParseFrame &frm)
+                        const ParsingFrame &frm)
 {
    LOG_FUNC_ENTRY();
 
@@ -163,7 +163,7 @@ static void print_stack(log_sev_t logsev, const char *str,
 
    for (size_t idx = 1; idx < frm.size(); idx++)
    {
-      if (frm.at(idx).stage != brace_stage_e::NONE)
+      if (frm.at(idx).stage != E_BraceStage::NONE)
       {
          LOG_FMT(logsev, " [%s - %u]", get_token_name(frm.at(idx).type),
                  (unsigned int)frm.at(idx).stage);
@@ -183,9 +183,9 @@ void brace_cleanup()
 {
    LOG_FUNC_ENTRY();
 
-   BraceState braceState;
-   ParseFrame frm{};
-   Chunk      *pc = Chunk::GetHead();
+   BraceState   braceState;
+   ParsingFrame frm{};
+   Chunk        *pc = Chunk::GetHead();
 
    while (pc->IsNotNullChunk())
    {
@@ -349,7 +349,7 @@ static bool maybe_while_of_do(Chunk *pc)
  * When a #define is entered, the current frame is pushed and cleared.
  * When a #define is exited, the frame is popped.
  */
-static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
+static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -408,7 +408,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
    }
 
    // Check the progression of complex statements
-   if (  frm.top().stage != brace_stage_e::NONE
+   if (  frm.top().stage != E_BraceStage::NONE
       && !pc->Is(CT_AUTORELEASEPOOL)
       && check_complex_statements(frm, pc, braceState))
    {
@@ -474,7 +474,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          {
             LOG_FMT(LWARN, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
-            paren_stack_entry_t AA = frm.top();                // Issue #3055
+            ParsingFrameEntry AA = frm.top();                // Issue #3055
 
             if (AA.type != CT_EOF)
             {
@@ -520,7 +520,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          frm.pop(__func__, __LINE__, pc);
          print_stack(LBCSPOP, "-Close  ", frm);
 
-         if (  frm.top().stage == brace_stage_e::NONE
+         if (  frm.top().stage == E_BraceStage::NONE
             && (  pc->Is(CT_VBRACE_CLOSE)
                || pc->Is(CT_BRACE_CLOSE)
                || pc->Is(CT_SEMICOLON))
@@ -530,11 +530,11 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
             // this here is a hackish solution to close a vbrace of a block that
             // contains the function
             frm.push(nullptr); // <- dummy frame for the function
-            frm.top().stage = brace_stage_e::BRACE2;
+            frm.top().stage = E_BraceStage::BRACE2;
          }
 
          // See if we are in a complex statement
-         if (frm.top().stage != brace_stage_e::NONE)
+         if (frm.top().stage != E_BraceStage::NONE)
          {
             handle_complex_close(frm, pc, braceState);
          }
@@ -546,7 +546,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
     * sparen, so we need to check braceState.consumed to see if the close sparen
     * was already handled.
     */
-   if (frm.top().stage == brace_stage_e::WOD_SEMI)
+   if (frm.top().stage == E_BraceStage::WOD_SEMI)
    {
       if (braceState.consumed)
       {
@@ -641,7 +641,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          else  // must be CT_BRACE_OPEN
          {
             // Set the parent for open braces
-            if (frm.top().stage != brace_stage_e::NONE)
+            if (frm.top().stage != E_BraceStage::NONE)
             {
                parentType = frm.top().type;
             }
@@ -796,31 +796,31 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
     */
    if (patcls == pattern_class_e::BRACED)
    {
-      frm.push(pc, __func__, __LINE__, (pc->Is(CT_DO) ? brace_stage_e::BRACE_DO
-                    : brace_stage_e::BRACE2));
+      frm.push(pc, __func__, __LINE__, (pc->Is(CT_DO) ? E_BraceStage::BRACE_DO
+                    : E_BraceStage::BRACE2));
       // "+ComplexBraced"
    }
    else if (patcls == pattern_class_e::PBRACED)
    {
-      brace_stage_e bs = brace_stage_e::PAREN1;
+      E_BraceStage bs = E_BraceStage::PAREN1;
 
       if (  pc->Is(CT_WHILE)
          && maybe_while_of_do(pc))
       {
          pc->SetType(CT_WHILE_OF_DO);
-         bs = brace_stage_e::WOD_PAREN;
+         bs = E_BraceStage::WOD_PAREN;
       }
       frm.push(pc, __func__, __LINE__, bs);
       // "+ComplexParenBraced"
    }
    else if (patcls == pattern_class_e::OPBRACED)
    {
-      frm.push(pc, __func__, __LINE__, brace_stage_e::OP_PAREN1);
+      frm.push(pc, __func__, __LINE__, E_BraceStage::OP_PAREN1);
       // "+ComplexOpParenBraced");
    }
    else if (patcls == pattern_class_e::ELSE)
    {
-      frm.push(pc, __func__, __LINE__, brace_stage_e::ELSEIF);
+      frm.push(pc, __func__, __LINE__, E_BraceStage::ELSEIF);
       // "+ComplexElse");
    }
 
@@ -892,33 +892,33 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
 } // parse_cleanup
 
 
-static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceState &braceState)
+static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceState &braceState)
 {
    LOG_FUNC_ENTRY();
 
-   brace_stage_e atest = frm.top().stage;
+   E_BraceStage atest = frm.top().stage;
 
    LOG_FMT(LBCSPOP, "%s(%d): atest is %s\n",
            __func__, __LINE__, get_brace_stage_name(atest));
 
    // Turn an optional parenthesis into either a real parenthesis or a brace
-   if (frm.top().stage == brace_stage_e::OP_PAREN1)
+   if (frm.top().stage == E_BraceStage::OP_PAREN1)
    {
       frm.top().stage = (pc->IsNot(CT_PAREN_OPEN))
-                        ? brace_stage_e::BRACE2
-                        : brace_stage_e::PAREN1;
+                        ? E_BraceStage::BRACE2
+                        : E_BraceStage::PAREN1;
       LOG_FMT(LBCSPOP, "%s(%d): frm.top().stage is now %s\n",
               __func__, __LINE__, get_brace_stage_name(frm.top().stage));
    }
 
    // Check for CT_ELSE after CT_IF
-   while (frm.top().stage == brace_stage_e::ELSE)
+   while (frm.top().stage == E_BraceStage::ELSE)
    {
       if (pc->Is(CT_ELSE))
       {
          // Replace CT_IF with CT_ELSE on the stack & we are done
          frm.top().type  = CT_ELSE;
-         frm.top().stage = brace_stage_e::ELSEIF;
+         frm.top().stage = E_BraceStage::ELSEIF;
          print_stack(LBCSSWAP, "=Swap   ", frm);
 
          return(true);
@@ -936,7 +936,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
    }
 
    // Check for CT_IF after CT_ELSE
-   if (frm.top().stage == brace_stage_e::ELSEIF)
+   if (frm.top().stage == E_BraceStage::ELSEIF)
    {
       log_rule_B("indent_else_if");
 
@@ -947,15 +947,15 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
          // Replace CT_ELSE with CT_IF
          pc->SetType(CT_ELSEIF);
          frm.top().type  = CT_ELSEIF;
-         frm.top().stage = brace_stage_e::PAREN1;
+         frm.top().stage = E_BraceStage::PAREN1;
          return(true);
       }
       // Jump to the 'expecting brace' stage
-      frm.top().stage = brace_stage_e::BRACE2;
+      frm.top().stage = E_BraceStage::BRACE2;
    }
 
    // Check for CT_CATCH or CT_FINALLY after CT_TRY or CT_CATCH
-   while (frm.top().stage == brace_stage_e::CATCH)
+   while (frm.top().stage == E_BraceStage::CATCH)
    {
       if (  pc->Is(CT_CATCH)
          || pc->Is(CT_FINALLY))
@@ -965,14 +965,14 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
 
          if (language_is_set(LANG_CS))
          {
-            frm.top().stage = (pc->Is(CT_CATCH)) ? brace_stage_e::CATCH_WHEN : brace_stage_e::BRACE2;
+            frm.top().stage = (pc->Is(CT_CATCH)) ? E_BraceStage::CATCH_WHEN : E_BraceStage::BRACE2;
          }
          else
          {
             // historically this used OP_PAREN1; however, to my knowledge the expression after a catch clause
             // is only optional for C# which has been handled above; therefore, this should now always expect
             // a parenthetical expression after the catch keyword and brace after the finally keyword
-            frm.top().stage = (pc->Is(CT_CATCH)) ? brace_stage_e::PAREN1 : brace_stage_e::BRACE2;
+            frm.top().stage = (pc->Is(CT_CATCH)) ? E_BraceStage::PAREN1 : E_BraceStage::BRACE2;
          }
          print_stack(LBCSSWAP, "=Swap   ", frm);
 
@@ -991,14 +991,14 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
    }
 
    // Check for optional parenthesis and optional CT_WHEN after CT_CATCH
-   if (frm.top().stage == brace_stage_e::CATCH_WHEN)
+   if (frm.top().stage == E_BraceStage::CATCH_WHEN)
    {
       if (pc->Is(CT_PAREN_OPEN)) // this is for the paren after "catch"
       {
          // Replace CT_PAREN_OPEN with CT_SPAREN_OPEN
          pc->SetType(CT_SPAREN_OPEN);
          frm.top().type  = pc->GetType();
-         frm.top().stage = brace_stage_e::PAREN1;
+         frm.top().stage = E_BraceStage::PAREN1;
 
          return(false);
       }
@@ -1006,27 +1006,27 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
       if (pc->Is(CT_WHEN))
       {
          frm.top().type  = pc->GetType();
-         frm.top().stage = brace_stage_e::OP_PAREN1;
+         frm.top().stage = E_BraceStage::OP_PAREN1;
 
          return(true);
       }
 
       if (pc->Is(CT_BRACE_OPEN))
       {
-         frm.top().stage = brace_stage_e::BRACE2;
+         frm.top().stage = E_BraceStage::BRACE2;
 
          return(false);
       }
    }
 
    // Check for CT_WHILE after the CT_DO
-   if (frm.top().stage == brace_stage_e::WHILE)
+   if (frm.top().stage == E_BraceStage::WHILE)
    {
       if (pc->Is(CT_WHILE))
       {
          pc->SetType(CT_WHILE_OF_DO);
          frm.top().type  = CT_WHILE_OF_DO; //CT_WHILE;
-         frm.top().stage = brace_stage_e::WOD_PAREN;
+         frm.top().stage = E_BraceStage::WOD_PAREN;
 
          return(true);
       }
@@ -1045,8 +1045,8 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
 
    if (  pc->IsNot(CT_BRACE_OPEN)
       && !pc->TestFlags(PCF_IN_PREPROC)
-      && (  (frm.top().stage == brace_stage_e::BRACE2)
-         || (frm.top().stage == brace_stage_e::BRACE_DO)))
+      && (  (frm.top().stage == E_BraceStage::BRACE2)
+         || (frm.top().stage == E_BraceStage::BRACE_DO)))
    {
       log_rule_B("indent_using_block");
 
@@ -1069,7 +1069,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
                  __func__, __LINE__, frm.brace_level);
          log_pcf_flags(LBCSPOP, pc->GetFlags());
 
-         frm.push(vbrace, __func__, __LINE__, brace_stage_e::NONE);
+         frm.push(vbrace, __func__, __LINE__, E_BraceStage::NONE);
          // "+VBrace");
 
          frm.top().parent = parentType;
@@ -1092,7 +1092,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
    }
 
    // Check for "constexpr" after CT_IF or CT_ELSEIF
-   if (  frm.top().stage == brace_stage_e::PAREN1
+   if (  frm.top().stage == E_BraceStage::PAREN1
       && (  frm.top().type == CT_IF
          || frm.top().type == CT_ELSEIF)
       && pc->Is(CT_CONSTEXPR))
@@ -1102,8 +1102,8 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
 
    // Verify open parenthesis in complex statement
    if (  pc->IsNot(CT_PAREN_OPEN)
-      && (  (frm.top().stage == brace_stage_e::PAREN1)
-         || (frm.top().stage == brace_stage_e::WOD_PAREN)))
+      && (  (frm.top().stage == E_BraceStage::PAREN1)
+         || (frm.top().stage == E_BraceStage::WOD_PAREN)))
    {
       LOG_FMT(LWARN, "%s(%d): %s, orig line is %zu, Error: Expected '(', got '%s' for '%s'\n",
               __func__, __LINE__, cpd.filename.c_str(), pc->GetOrigLine(), pc->Text(),
@@ -1120,29 +1120,29 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
 } // check_complex_statements
 
 
-static bool handle_complex_close(ParseFrame &frm, Chunk *pc, const BraceState &braceState)
+static bool handle_complex_close(ParsingFrame &frm, Chunk *pc, const BraceState &braceState)
 {
    LOG_FUNC_ENTRY();
 
-   if (frm.top().stage == brace_stage_e::PAREN1)
+   if (frm.top().stage == E_BraceStage::PAREN1)
    {
       if (pc->GetNext()->GetType() == CT_WHEN)
       {
          frm.top().type  = pc->GetType();
-         frm.top().stage = brace_stage_e::CATCH_WHEN;
+         frm.top().stage = E_BraceStage::CATCH_WHEN;
 
          return(true);
       }
       // PAREN1 always => BRACE2
-      frm.top().stage = brace_stage_e::BRACE2;
+      frm.top().stage = E_BraceStage::BRACE2;
    }
-   else if (frm.top().stage == brace_stage_e::BRACE2)
+   else if (frm.top().stage == E_BraceStage::BRACE2)
    {
       // BRACE2: IF => ELSE, anything else => close
       if (  (frm.top().type == CT_IF)
          || (frm.top().type == CT_ELSEIF))
       {
-         frm.top().stage = brace_stage_e::ELSE;
+         frm.top().stage = E_BraceStage::ELSE;
 
          // If the next chunk isn't CT_ELSE, close the statement
          Chunk *next = pc->GetNextNcNnl();
@@ -1161,7 +1161,7 @@ static bool handle_complex_close(ParseFrame &frm, Chunk *pc, const BraceState &b
       else if (  (frm.top().type == CT_TRY)
               || (frm.top().type == CT_CATCH))
       {
-         frm.top().stage = brace_stage_e::CATCH;
+         frm.top().stage = E_BraceStage::CATCH;
 
          // If the next chunk isn't CT_CATCH or CT_FINALLY, close the statement
          Chunk *next = pc->GetNextNcNnl();
@@ -1179,7 +1179,7 @@ static bool handle_complex_close(ParseFrame &frm, Chunk *pc, const BraceState &b
       }
       else
       {
-         LOG_FMT(LNOTE, "%s(%d): close_statement on %s brace_stage_e::BRACE2\n",
+         LOG_FMT(LNOTE, "%s(%d): close_statement on %s E_BraceStage::BRACE2\n",
                  __func__, __LINE__, get_token_name(frm.top().type));
          LOG_FMT(LBCSPOP, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
@@ -1189,20 +1189,20 @@ static bool handle_complex_close(ParseFrame &frm, Chunk *pc, const BraceState &b
          return(close_statement(frm, pc, braceState));
       }
    }
-   else if (frm.top().stage == brace_stage_e::BRACE_DO)
+   else if (frm.top().stage == E_BraceStage::BRACE_DO)
    {
-      frm.top().stage = brace_stage_e::WHILE;
+      frm.top().stage = E_BraceStage::WHILE;
    }
-   else if (frm.top().stage == brace_stage_e::WOD_PAREN)
+   else if (frm.top().stage == E_BraceStage::WOD_PAREN)
    {
-      LOG_FMT(LNOTE, "%s(%d): close_statement on %s brace_stage_e::WOD_PAREN\n",
+      LOG_FMT(LNOTE, "%s(%d): close_statement on %s E_BraceStage::WOD_PAREN\n",
               __func__, __LINE__, get_token_name(frm.top().type));
-      frm.top().stage = brace_stage_e::WOD_SEMI;
+      frm.top().stage = E_BraceStage::WOD_SEMI;
       print_stack(LBCSPOP, "-HCC WoDP ", frm);
    }
-   else if (frm.top().stage == brace_stage_e::WOD_SEMI)
+   else if (frm.top().stage == E_BraceStage::WOD_SEMI)
    {
-      LOG_FMT(LNOTE, "%s(%d): close_statement on %s brace_stage_e::WOD_SEMI\n",
+      LOG_FMT(LNOTE, "%s(%d): close_statement on %s E_BraceStage::WOD_SEMI\n",
               __func__, __LINE__, get_token_name(frm.top().type));
       LOG_FMT(LBCSPOP, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
@@ -1284,7 +1284,7 @@ static void mark_namespace(Chunk *pns)
 } // mark_namespace
 
 
-static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
+static Chunk *insert_vbrace(Chunk *pc, bool after, const ParsingFrame &frm)
 {
    LOG_FUNC_ENTRY();
 
@@ -1371,7 +1371,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
 } // insert_vbrace
 
 
-bool close_statement(ParseFrame &frm, Chunk *pc, const BraceState &braceState)
+bool close_statement(ParsingFrame &frm, Chunk *pc, const BraceState &braceState)
 {
    LOG_FUNC_ENTRY();
 
@@ -1436,7 +1436,7 @@ bool close_statement(ParseFrame &frm, Chunk *pc, const BraceState &braceState)
    }
 
    // See if we are done with a complex statement
-   if (frm.top().stage != brace_stage_e::NONE)
+   if (frm.top().stage != E_BraceStage::NONE)
    {
       if (handle_complex_close(frm, vbc, braceState))
       {
