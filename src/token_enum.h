@@ -145,9 +145,9 @@ enum E_Token
    CT_CLASS_COLON,         // colon after a class def
    CT_CONSTR_COLON,        // colon after a constructor
    CT_D_ARRAY_COLON,       // D named array initializer colon
-   CT_COND_COLON,          // conditional colon in 'b ? t : f'
+   CT_COND_COLON,          // conditional colon in  'b ? t : f'
    CT_WHERE_COLON,         // C# where-constraint colon (after the type)
-   CT_QUESTION,            // conditional question in 'b ? t : f'
+   CT_QUESTION,
    CT_COMMA,
 
    CT_ASM,

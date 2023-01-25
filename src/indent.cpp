@@ -168,7 +168,7 @@ static void indent_comment(Chunk *pc, size_t col);
 static size_t token_indent(E_Token type);
 
 
-static size_t calc_indent_continue(const ParseFrame &frm, size_t pse_tos);
+static size_t calc_indent_continue(const ParsingFrame &frm, size_t pse_tos);
 
 /**
  * Get candidate chunk first on line to which OC blocks can be indented against.
@@ -193,7 +193,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start, bool forward);
  * returns true if semicolon on the same level ends any assign operations
  * false if next thing hit is not the end of an assign operation
  */
-static bool is_end_of_assignment(Chunk *pc, const ParseFrame &frm);
+static bool is_end_of_assignment(Chunk *pc, const ParsingFrame &frm);
 
 
 void indent_to_column(Chunk *pc, size_t column)
@@ -447,7 +447,7 @@ static size_t get_indent_first_continue(Chunk *pc)
 }
 
 
-static size_t calc_indent_continue(const ParseFrame &frm, size_t pse_tos)
+static size_t calc_indent_continue(const ParsingFrame &frm, size_t pse_tos)
 {
    log_rule_B("indent_continue");
    const int ic = options::indent_continue();
@@ -461,7 +461,7 @@ static size_t calc_indent_continue(const ParseFrame &frm, size_t pse_tos)
 }
 
 
-static size_t calc_indent_continue(const ParseFrame &frm)
+static size_t calc_indent_continue(const ParsingFrame &frm)
 {
    return(calc_indent_continue(frm, frm.size() - 1));
 }
@@ -582,7 +582,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    } while (false)
 
 
-static void _log_indent(const char *func, const uint32_t line, const ParseFrame &frm)
+static void _log_indent(const char *func, const uint32_t line, const ParsingFrame &frm)
 {
    LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos is %zu, ...indent is %zu\n",
            func, line, frm.size() - 1, frm.top().indent);
@@ -594,7 +594,7 @@ static void _log_indent(const char *func, const uint32_t line, const ParseFrame 
    } while (false)
 
 
-static void _log_prev_indent(const char *func, const uint32_t line, const ParseFrame &frm)
+static void _log_prev_indent(const char *func, const uint32_t line, const ParsingFrame &frm)
 {
    LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos is %zu, prev....indent is %zu\n",
            func, line, frm.size() - 1, frm.prev().indent);
@@ -606,7 +606,7 @@ static void _log_prev_indent(const char *func, const uint32_t line, const ParseF
    } while (false)
 
 
-static void _log_indent_tmp(const char *func, const uint32_t line, const ParseFrame &frm)
+static void _log_indent_tmp(const char *func, const uint32_t line, const ParsingFrame &frm)
 {
    LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos is %zu, ...indent_tmp is %zu\n",
            func, line, frm.size() - 1, frm.top().indent_tmp);
@@ -655,8 +655,8 @@ void indent_text()
    bool         in_func_def   = false;
 
 
-   std::vector<ParseFrame> frames;
-   ParseFrame              frm{};
+   ParsingFrameStack frames;
+   ParsingFrame      frm{};
 
 
    Chunk *pc        = Chunk::GetHead();
@@ -787,7 +787,7 @@ void indent_text()
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
             frm.pop(__func__, __LINE__, pc);
          }
-         ParseFrame frmbkup = frm;
+         ParsingFrame frmbkup = frm;
          fl_check(frames, frm, cpd.pp_level, pc);
 
          // Indent the body of a #region here
@@ -4033,14 +4033,13 @@ void indent_text()
                  && pc->Is(CT_COND_COLON))
          {
             log_rule_B("indent_ternary_operator");
-            // get the parent, the QUESTION
-            Chunk *question = pc->GetParent();
+            Chunk *tmp = pc->GetPrevType(CT_QUESTION);
 
-            if (question->IsNotNullChunk())
+            if (tmp->IsNotNullChunk())
             {
                LOG_FMT(LINDENT, "%s: %zu] ternarydefcol => %zu [%s]\n",
-                       __func__, pc->GetOrigLine(), question->GetColumn(), pc->Text());
-               reindent_line(pc, question->GetColumn());
+                       __func__, pc->GetOrigLine(), tmp->GetColumn(), pc->Text());
+               reindent_line(pc, tmp->GetColumn());
             }
          }
          else if (  options::indent_oc_inside_msg_sel()
@@ -4396,7 +4395,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start, bool forward)
 } // single_line_comment_indent_rule_applies
 
 
-static bool is_end_of_assignment(Chunk *pc, const ParseFrame &frm)
+static bool is_end_of_assignment(Chunk *pc, const ParsingFrame &frm)
 {
    return(  (  frm.top().type == CT_ASSIGN_NL
             || frm.top().type == CT_MEMBER
