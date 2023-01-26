@@ -4033,13 +4033,14 @@ void indent_text()
                  && pc->Is(CT_COND_COLON))
          {
             log_rule_B("indent_ternary_operator");
-            Chunk *tmp = pc->GetPrevType(CT_QUESTION);
+            // get the parent, the QUESTION
+            Chunk *question = pc->GetParent();
 
-            if (tmp->IsNotNullChunk())
+            if (question->IsNotNullChunk())
             {
                LOG_FMT(LINDENT, "%s: %zu] ternarydefcol => %zu [%s]\n",
-                       __func__, pc->GetOrigLine(), tmp->GetColumn(), pc->Text());
-               reindent_line(pc, tmp->GetColumn());
+                       __func__, pc->GetOrigLine(), question->GetColumn(), pc->Text());
+               reindent_line(pc, question->GetColumn());
             }
          }
          else if (  options::indent_oc_inside_msg_sel()

@@ -26,7 +26,6 @@
 #include "keywords.h"
 #include "prototypes.h"
 #include "space.h"
-#include "unc_tools.h"
 
 #ifdef WIN32
 #include <algorithm>                   // to get max
@@ -2001,7 +2000,6 @@ static bool is_func_call_or_def(Chunk *pc)
 // Put newline(s) before and/or after a block of variable definitions
 static Chunk *newline_var_def_blk(Chunk *start)
 {
-//prot_the_line(__func__, __LINE__, 15, 4);
    LOG_FUNC_ENTRY();
 
    Chunk *pc           = start;
@@ -2225,7 +2223,6 @@ static Chunk *newline_var_def_blk(Chunk *start)
                {
                   LOG_FMT(LVARDFBLK, "%s(%d): nl_var_def_blk_end_func_top at line %zu\n",
                           __func__, __LINE__, prev->GetOrigLine());
-                  prot_the_line(__func__, __LINE__, 15, 4);
                   newline_min_after(prev, options::nl_var_def_blk_end_func_top() + 1, PCF_VAR_DEF);
                }
             }
@@ -2239,7 +2236,6 @@ static Chunk *newline_var_def_blk(Chunk *start)
                newline_min_after(prev, options::nl_var_def_blk_end() + 1, PCF_VAR_DEF);
             }
             // reset the variables for the next block
-            prot_the_line(__func__, __LINE__, 15, 4);
             first_var_blk = false;
             var_blk       = false;
          }
@@ -2279,7 +2275,6 @@ static Chunk *newline_var_def_blk(Chunk *start)
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetLevel());
    LOG_FMT(LVARDFBLK, "%s(%d): start orig line is %zu, orig col is %zu, Text() is '%s', level is %zu\n",
            __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol(), start->Text(), start->GetLevel());
-   //prot_the_line(__func__, __LINE__, 15, 4);
    return(pc);
 } // newline_var_def_blk
 
@@ -3921,7 +3916,6 @@ void newlines_cleanup_angles()
 
 void newlines_cleanup_braces(bool first)
 {
-//prot_the_line(__func__, __LINE__, 15, 4);
    LOG_FUNC_ENTRY();
 
    // Get the first token that's not an empty line:
@@ -3934,7 +3928,6 @@ void newlines_cleanup_braces(bool first)
 
    for ( ; pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-//prot_the_line(__func__, __LINE__, 15, 4);
       char copy[1000];
       LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy));
@@ -5105,9 +5098,7 @@ void newlines_cleanup_braces(bool first)
       }
    }
 
-//prot_the_line(__func__, __LINE__, 15, 4);
    newline_var_def_blk(Chunk::GetHead());
-//prot_the_line(__func__, __LINE__, 15, 4);
 } // newlines_cleanup_braces
 
 
