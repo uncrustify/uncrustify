@@ -10,7 +10,6 @@
 #include "chunk.h"
 #include "combine_tools.h"
 #include "log_levels.h"
-#include "unc_tools.h"
 
 
 /*
@@ -19,51 +18,120 @@
  * return the chunk colon if found or Chunk::NullChunkPtr
  * if a ; (CT_SEMI_COLON) chunk is found
  */
-Chunk *search_for_colon(Chunk *pc_local)
+Chunk *search_for_colon(Chunk *pc_question)
 {
-   Chunk *pc2;
+   Chunk *pc2        = pc_question->GetNextNcNnl();
+   bool  colon_found = false;
 
-   LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-           __func__, __LINE__, pc_local->GetOrigLine(), pc_local->GetOrigCol(), pc_local->GetLevel(), pc_local->Text());
-   Chunk *colon = pc_local->GetNextType(CT_COLON, pc_local->GetLevel());
+   LOG_FMT(LCOMBINE, "%s(%d): pc_question.orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+           __func__, __LINE__, pc_question->GetOrigLine(), pc_question->GetOrigCol(), pc_question->GetLevel(),
+           pc_question->Text());
 
-   if (colon != nullptr)
+   // examine the next tokens, look for E2, E3, COLON, might be for a next CT_QUESTION
+   while (pc2->IsNotNullChunk())
    {
       LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-              __func__, __LINE__, colon->GetOrigLine(), colon->GetOrigCol(), colon->GetLevel(), colon->Text());
-      colon->SetType(CT_COND_COLON);
-      flag_series(pc_local, colon, PCF_IN_CONDITIONAL);
+              __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
 
-      // examine the next tokens, search for a next CT_QUESTION
-      for (pc2 = colon->GetNext(); pc2->IsNotNullChunk(); pc2 = pc2->GetNextNcNnl())
+      if (  pc2->Is(CT_SEMICOLON)
+         || (  pc2->Is(CT_PAREN_CLOSE)
+            && (pc_question->GetLevel() == pc2->GetLevel() + 1))
+         || pc2->Is(CT_COMMA))
       {
-         LOG_FMT(LCOMBINE, "%s(%d): THE NEXT: orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+         LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                  __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
          pc2->SetFlagBits(PCF_IN_CONDITIONAL);
          log_pcf_flags(LCOMBINE, pc2->GetFlags());
 
-         if (pc2->Is(CT_SEMICOLON))
+         if (colon_found)
          {
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+            pc_question->SetParent(pc2);   // back again
+
             LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                     __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
             return(pc2);
          }
-         else if (pc2->Is(CT_QUESTION))
+         else
          {
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
-            pc2 = search_for_colon(pc2);
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
-            return(pc2);
+            pc2->SetParent(pc_question);   // save the question token
+            pc_question->SetParent(pc2);   // back again
          }
       }
+      else if (pc2->Is(CT_COMMA))
+      {
+         // TODO: is it necessary?
+      }
+      else if (pc2->Is(CT_QUESTION))
+      {
+         LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                 __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+         pc2 = search_for_colon(pc2);
+         LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                 __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+         continue;
+      }
+      else if (pc2->Is(CT_COND_COLON))
+      {
+         LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                 __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+
+         if (colon_found)
+         {
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+            Chunk *pr = pc2->GetPrevNcNnl();
+            return(pr);
+         }
+         else
+         {
+            pc2->SetParent(pc_question);              // save the question token
+            pc_question->SetParent(pc2);              // back again
+            colon_found = true;
+         }
+
+         if (pc2->Is(CT_COLON))
+         {
+            if (colon_found)
+            {
+               return(pc2);
+            }
+            else
+            {
+            }
+         }
+      }
+      else if (pc2->Is(CT_COLON))
+      {
+         LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                 __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+
+         if (colon_found)
+         {
+            pc2->SetType(CT_COND_COLON);
+            return(pc2);
+         }
+         else
+         {
+            // E2 found   orig line is 23, orig col is 3
+            pc2->SetType(CT_COND_COLON);
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+            pc2->SetParent(pc_question);              // save the question token
+            pc_question->SetParent(pc2);              // back again
+
+            // look for E3
+            colon_found = true;
+         }
+      }
+      pc2 = pc2->GetNextNcNnl();
    }
-   else
+
+   if (pc2->IsNotNullChunk())
    {
-      LOG_FMT(LWARN, "%s(%d): %zu: Error: Expected a colon\n",
-              __func__, __LINE__, pc_local->GetOrigLine());
-      exit(EX_SOFTWARE);
+      LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '?'\n",
+              __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel());
    }
    LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '?'\n",
            __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel());
@@ -74,39 +142,51 @@ Chunk *search_for_colon(Chunk *pc_local)
 void mark_question_colon()
 {
    LOG_FUNC_ENTRY();
-   Chunk *pc;
+   Chunk *pc = Chunk::GetHead();
+   Chunk *pc_question;
 
    // Issue #3558
-   for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
+   while (pc->IsNotNullChunk())
    {
       LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->Text());
       log_pcf_flags(LCOMBINE, pc->GetFlags());
 
+      if (  pc->Is(CT_QUESTION)
+         && !language_is_set(LANG_JAVA))
+      {
+         pc_question = pc;
+         // look for E2, COLON, E3...
+         pc = search_for_colon(pc);
+
+         LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->Text());
+
+         if (  pc->Is(CT_SEMICOLON)
+            || (  pc->Is(CT_PAREN_CLOSE)
+               && (pc_question->GetLevel() == pc->GetLevel() + 1))
+            || pc->Is(CT_COMMA))
+         {
+            // set at the end of the question statement ...
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->Text());
+            // ... and go on
+         }
+      }
+      pc = pc->GetNextNcNnl();
+   }
+
+   for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
+   {
+      LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() '%s'\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->Text());
+
       if (pc->Is(CT_QUESTION))
       {
-         Chunk *colon = search_for_colon(pc);
-
-         if (colon != nullptr)
-         {
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, colon->GetOrigLine(), colon->GetOrigCol(), colon->GetLevel(), colon->Text());
-
-            if (colon->Is(CT_SEMICOLON))
-            {
-               // set at the end of the question statement ...
-               pc = colon;
-               LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->Text());
-               // ... and go on
-            }
-         }
-         else
-         {
-            LOG_FMT(LWARN, "%s(%d): %zu: Error: Expected a colon\n",
-                    __func__, __LINE__, pc->GetOrigLine());
-            exit(EX_SOFTWARE);
-         }
+         Chunk *from = pc;
+         Chunk *to   = pc->GetParent();
+         flag_series(from, to, PCF_IN_CONDITIONAL);
+         pc = to;
       }
    }
 } // mark_question_colon
