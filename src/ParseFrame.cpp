@@ -229,6 +229,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
            || pc->GetType() == CT_COMMENT
            || pc->GetType() == CT_COMMENT_CPP
            || pc->GetType() == CT_COMMENT_MULTI
+           || pc->GetType() == CT_COMPARE                  // Issue #3915
            || pc->GetType() == CT_COND_COLON
            || pc->GetType() == CT_FPAREN_OPEN
            || pc->GetType() == CT_PAREN_OPEN
