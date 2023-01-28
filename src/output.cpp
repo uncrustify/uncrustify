@@ -2122,7 +2122,22 @@ static Chunk *output_comment_cpp(Chunk *first)
                if (  !unc_isspace(tmp[0])
                   && (tmp[0] != '/'))
                {
-                  add_comment_text(" ", cmt, false);
+                  // only with sp_cmt_cpp_start set to 'add' or 'force'
+                  bool    sp_cmt_pvs = options::sp_cmt_cpp_pvs(); // Issue #3919
+                  UncText temp       = first->GetStr();
+                  int     PVS        = temp.find("//-V");
+
+                  // @return == -1 if not found
+                  // @return >=  0 the position
+                  if (  PVS == 0
+                     && sp_cmt_pvs)
+                  {
+                     // do not include a space
+                  }
+                  else
+                  {
+                     add_comment_text(" ", cmt, false);
+                  }
                }
             }
             add_comment_text(tmp, cmt, false);

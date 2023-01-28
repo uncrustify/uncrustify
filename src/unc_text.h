@@ -168,7 +168,7 @@ public:
 
 
    /**
-    * look for 'text', beginning with position 'sidx'
+    * look for 'text', beginning with position 'idx'
     *
     * @param text  text to search for
     * @param idx   position to start search

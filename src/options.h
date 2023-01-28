@@ -1189,6 +1189,11 @@ sp_extern_paren;
 extern Option<iarf_e>
 sp_cmt_cpp_start;
 
+// remove space after the '//' and the pvs command '-V1234',
+// only works with sp_cmt_cpp_start set to add or force.
+extern Option<bool>
+sp_cmt_cpp_pvs;
+
 // Add or remove space in a C++ region marker comment, as in '// <here> BEGIN'.
 // A region marker is defined as a comment which is not preceded by other text
 // (i.e. the comment is the first non-whitespace on the line), and which starts
