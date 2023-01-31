@@ -162,6 +162,7 @@
 30140  cpp/Issue_3785.cfg                                   cpp/Issue_3785.cpp
 30141  cpp/Issue_1130.cfg                                   cpp/Issue_1130.cpp
 30142  cpp/Issue_3915.cfg                                   cpp/Issue_3915.cpp
+30143  cpp/Issue_3919.cfg                                   cpp/Issue_3919.cpp
 
 30200  cpp/bug_1862.cfg                                     cpp/bug_1862.cpp
 30201  cpp/cmt_indent-1.cfg                                 cpp/cmt_indent.cpp
