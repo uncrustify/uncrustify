@@ -1,15 +1,15 @@
 /**
- * @file frame_list.h
+ * @file parsing_frame_stack.h
  * mainly used to handle preprocessor stuff
  *
  * @author  Ben Gardner
  * @license GPL v2+
  */
 
-#ifndef PARSE_FRAME_H_INCLUDED
-#define PARSE_FRAME_H_INCLUDED
+#ifndef PARSING_FRAME_STACK_H_INCLUDED
+#define PARSING_FRAME_STACK_H_INCLUDED
 
-#include "ParseFrame.h"
+#include "parsing_frame.h"
 
 //! Class describing a parsing frame stack
 class ParsingFrameStack
@@ -40,4 +40,4 @@ private:
    std::vector<ParsingFrame> m_frames;
 };
 
-#endif /* PARSE_FRAME_H_INCLUDED */
+#endif /* PARSING_FRAME_STACK_H_INCLUDED */

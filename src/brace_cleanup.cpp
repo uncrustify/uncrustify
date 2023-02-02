@@ -11,9 +11,9 @@
 #include "brace_cleanup.h"
 
 #include "flag_parens.h"
-#include "frame_list.h"
 #include "keywords.h"
 #include "lang_pawn.h"
+#include "parsing_frame_stack.h"
 #include "prototypes.h"
 
 #include <stdexcept>            // to get std::invalid_argument

@@ -1,12 +1,12 @@
 /**
- * @file frame_list.cpp
+ * @file parsing_frame_stack.cpp
  * mainly used to handle preprocessor stuff
  *
  * @author  Ben Gardner
  * @license GPL v2+
  */
 
-#include "frame_list.h"
+#include "parsing_frame_stack.h"
 
 #include "prototypes.h"
 

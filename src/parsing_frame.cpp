@@ -1,5 +1,5 @@
 /**
- * @file ParsingFrame.cpp
+ * @file parsing_frame.cpp
  *
  * Holds data needed for indenting and brace parsing
  *
@@ -7,7 +7,7 @@
  * @license GPL v2+
  */
 
-#include "ParseFrame.h"
+#include "parsing_frame.h"
 
 #include "chunk.h"
 #include "uncrustify.h"

@@ -24,9 +24,6 @@
 #endif
 
 
-class ParseFrame;
-
-
 /**
  * abbreviations used:
  *   SS = star style
