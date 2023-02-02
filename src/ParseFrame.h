@@ -16,7 +16,7 @@
 #include <vector>
 
 
-//! Structure describing a parsing frame and its information
+//! Class describing a component of a parsing frame and its information
 class ParsingFrameEntry
 {
 public:
@@ -39,6 +39,8 @@ public:
    Chunk           *pop_pc;
 };
 
+
+//! Class describing a parsing frame and its information
 class ParsingFrame
 {
 private:
@@ -97,7 +99,5 @@ public:
    const_reverse_iterator rbegin() const;
    const_reverse_iterator rend() const;
 };
-
-typedef std::vector<ParsingFrame> ParsingFrameStack;
 
 #endif /* SRC_PARSEFRAME_H_ */

@@ -10,31 +10,34 @@
 #define PARSE_FRAME_H_INCLUDED
 
 #include "ParseFrame.h"
-#include "uncrustify_types.h"
+
+//! Class describing a parsing frame stack
+class ParsingFrameStack
+{
+public:
+   ParsingFrameStack();
+
+   /**
+    * Push a copy of a ParsingFrame onto the frame stack.
+    */
+   void push(ParsingFrame &frm);
 
 
-/**
- * Push a copy of a ParsingFrame onto the frames list.
- * This is called on #if and #ifdef.
- */
-void fl_push(ParsingFrameStack &frames, ParsingFrame &frm);
+   /**
+    * Pop and return the top element of the frame stack.
+    * TODO: return the frame rather than passing it as argument
+    */
+   void pop(ParsingFrame &pf);
 
 
-/**
- * Pop the top element off the frame list and copy it into the ParsingFrame.
- *
- * Does nothing if the frame list is empty.
- *
- * This is called on #endif
- */
-void fl_pop(ParsingFrameStack &frames, ParsingFrame &pf);
+   // TODO: this name is dumb:
+   // - what is it checking?
+   // - why does is much more than simple checks, it allters kinds of stuff
+   //! Returns the pp_indent to use for this line
+   int check(ParsingFrame &frm, int &pp_level, Chunk *pc);
 
-
-// TODO: this name is dumb:
-// - what is it checking?
-// - why does is much more than simple checks, it allters kinds of stuff
-//! Returns the pp_indent to use for this line
-int fl_check(ParsingFrameStack &frames, ParsingFrame &frm, int &pp_level, Chunk *pc);
-
+private:
+   std::vector<ParsingFrame> m_frames;
+};
 
 #endif /* PARSE_FRAME_H_INCLUDED */

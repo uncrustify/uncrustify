@@ -14,11 +14,13 @@
 namespace
 {
 
-void fl_log_frms(log_sev_t logsev, const char *txt, const ParsingFrame &frm, const ParsingFrameStack &frames);
+typedef std::vector<ParsingFrame> ParsingFrameOrigStack;
+
+void fl_log_frms(log_sev_t logsev, const char *txt, const ParsingFrame &frm, const ParsingFrameOrigStack &frames);
 
 
 //! Logs the entire parse frame stack
-void fl_log_all(log_sev_t logsev, const ParsingFrameStack &frames);
+void fl_log_all(log_sev_t logsev, const ParsingFrameOrigStack &frames);
 
 
 /**
@@ -28,7 +30,7 @@ void fl_log_all(log_sev_t logsev, const ParsingFrameStack &frames);
  *
  * This is called on #else and #elif.
  */
-void fl_copy_tos(ParsingFrame &pf, const ParsingFrameStack &frames);
+void fl_copy_tos(ParsingFrame &pf, const ParsingFrameOrigStack &frames);
 
 
 /**
@@ -37,11 +39,11 @@ void fl_copy_tos(ParsingFrame &pf, const ParsingFrameStack &frames);
  * The stack contains [...] [base] [if] at this point.
  * We want to copy [base].
  */
-void fl_copy_2nd_tos(ParsingFrame &pf, const ParsingFrameStack &frames);
+void fl_copy_2nd_tos(ParsingFrame &pf, const ParsingFrameOrigStack &frames);
 
 
 //! Deletes the top element from the list.
-void fl_trash_tos(ParsingFrameStack &frames);
+void fl_trash_tos(ParsingFrameOrigStack &frames);
 
 
 //! Logs one parse frame
@@ -62,10 +64,10 @@ void fl_log(log_sev_t logsev, const ParsingFrame &frm)
 }
 
 
-void fl_log_frms(log_sev_t               logsev,
-                 const char              *txt,
-                 const ParsingFrame      &frm,
-                 const ParsingFrameStack &frames)
+void fl_log_frms(log_sev_t                   logsev,
+                 const char                  *txt,
+                 const ParsingFrame          &frm,
+                 const ParsingFrameOrigStack &frames)
 {
    LOG_FMT(logsev, "%s Parse Frames(%zu):", txt, frames.size());
 
@@ -79,7 +81,7 @@ void fl_log_frms(log_sev_t               logsev,
 }
 
 
-void fl_log_all(log_sev_t logsev, const ParsingFrameStack &frames)
+void fl_log_all(log_sev_t logsev, const ParsingFrameOrigStack &frames)
 {
    LOG_FMT(logsev, "##=- Parse Frame : %zu entries\n", frames.size());
 
@@ -94,7 +96,7 @@ void fl_log_all(log_sev_t logsev, const ParsingFrameStack &frames)
 }
 
 
-void fl_copy_tos(ParsingFrame &pf, const ParsingFrameStack &frames)
+void fl_copy_tos(ParsingFrame &pf, const ParsingFrameOrigStack &frames)
 {
    if (!frames.empty())
    {
@@ -104,7 +106,7 @@ void fl_copy_tos(ParsingFrame &pf, const ParsingFrameStack &frames)
 }
 
 
-void fl_copy_2nd_tos(ParsingFrame &pf, const ParsingFrameStack &frames)
+void fl_copy_2nd_tos(ParsingFrame &pf, const ParsingFrameOrigStack &frames)
 {
    if (frames.size() > 1)
    {
@@ -114,7 +116,7 @@ void fl_copy_2nd_tos(ParsingFrame &pf, const ParsingFrameStack &frames)
 }
 
 
-void fl_trash_tos(ParsingFrameStack &frames)
+void fl_trash_tos(ParsingFrameOrigStack &frames)
 {
    if (!frames.empty())
    {
@@ -126,29 +128,35 @@ void fl_trash_tos(ParsingFrameStack &frames)
 } // namespace
 
 
-void fl_push(ParsingFrameStack &frames, ParsingFrame &frm)
+ParsingFrameStack::ParsingFrameStack()
+   : m_frames()
+{
+}
+
+
+void ParsingFrameStack::push(ParsingFrame &frm)
 {
    static int ref_no = 1;
 
-   frames.push_back(frm);
+   m_frames.push_back(frm);
    frm.ref_no = ref_no++;
 
-   LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, frames.size());
+   LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, m_frames.size());
 }
 
 
-void fl_pop(ParsingFrameStack &frames, ParsingFrame &pf)
+void ParsingFrameStack::pop(ParsingFrame &pf)
 {
-   if (frames.empty())
+   if (m_frames.empty())
    {
       return;
    }
-   fl_copy_tos(pf, frames);
-   fl_trash_tos(frames);
+   fl_copy_tos(pf, m_frames);
+   fl_trash_tos(m_frames);
 }
 
 
-int fl_check(ParsingFrameStack &frames, ParsingFrame &frm, int &pp_level, Chunk *pc)
+int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
 {
    if (pc->IsNot(CT_PREPROC))
    {
@@ -170,12 +178,12 @@ int fl_check(ParsingFrameStack &frames, ParsingFrame &frm, int &pp_level, Chunk 
    }
    LOG_FMT(LPFCHK, "%s(%d): orig line is %zu, %s\n",
            __func__, __LINE__, pc->GetOrigLine(), get_token_name(pc->GetParentType()));
-   fl_log_frms(LPFCHK, "TOP", frm, frames);
+   fl_log_frms(LPFCHK, "TOP", frm, m_frames);
 
 
    int           out_pp_level = pp_level;
    const E_Token in_ifdef     = frm.in_ifdef;
-   const size_t  b4_cnt       = frames.size();
+   const size_t  b4_cnt       = m_frames.size();
 
    const char    *txt = nullptr;
 
@@ -188,7 +196,7 @@ int fl_check(ParsingFrameStack &frames, ParsingFrame &frm, int &pp_level, Chunk 
       {
          // An #if pushes a copy of the current frame on the stack
          pp_level++;
-         fl_push(frames, frm);
+         push(frm);
          frm.in_ifdef = CT_PP_IF;
          txt          = "if-push";
       }
@@ -215,19 +223,19 @@ int fl_check(ParsingFrameStack &frames, ParsingFrame &frm, int &pp_level, Chunk 
          if (frm.in_ifdef == CT_PP_IF)
          {
             // we have [...] [base]-[if], so push an [else]
-            fl_push(frames, frm);
+            push(frm);
             frm.in_ifdef = CT_PP_ELSE;
             if_block     = true;
          }
          size_t brace_level = frm.brace_level;
          // we have [...] [base] [if]-[else], copy [base] over [else]
-         fl_copy_2nd_tos(frm, frames);
+         fl_copy_2nd_tos(frm, m_frames);
          frm.in_ifdef = CT_PP_ELSE;
 
          if (if_block)
          {
             // check if #if block was unbalanced
-            size_t base_brace_level = frames[frames.size() - 2].brace_level;
+            size_t base_brace_level = m_frames[m_frames.size() - 2].brace_level;
 
             if (  options::pp_warn_unbalanced_if()
                && brace_level != base_brace_level)
@@ -239,7 +247,7 @@ int fl_check(ParsingFrameStack &frames, ParsingFrame &frm, int &pp_level, Chunk 
          else
          {
             // check if previous #else block has a different indentation than the corresponding #if block
-            size_t if_brace_level = frames[frames.size() - 1].brace_level;
+            size_t if_brace_level = m_frames[m_frames.size() - 1].brace_level;
 
             if (  options::pp_warn_unbalanced_if()
                && brace_level != if_brace_level)
@@ -282,7 +290,7 @@ int fl_check(ParsingFrameStack &frames, ParsingFrame &frm, int &pp_level, Chunk 
              * We have: [...] [base] [if]-[else]
              * We want: [...]-[if]
              */
-            fl_copy_tos(frm, frames);             // [...] [base] [if]-[if]
+            fl_copy_tos(frm, m_frames);           // [...] [base] [if]-[if]
 
             if (  options::pp_warn_unbalanced_if()
                && brace_level != frm.brace_level)
@@ -291,16 +299,16 @@ int fl_check(ParsingFrameStack &frames, ParsingFrame &frm, int &pp_level, Chunk 
                        __func__, __LINE__, pc->GetOrigLine(), brace_level, frm.brace_level);
             }
 
-            if (frames.size() < 2)
+            if (m_frames.size() < 2)
             {
                fprintf(stderr, "Number of 'frame' is too small.\n");
                fprintf(stderr, "Please make a report.\n");
                log_flush(true);
                exit(EX_SOFTWARE);
             }
-            frm.in_ifdef = frames[frames.size() - 2].in_ifdef;
-            fl_trash_tos(frames);       // [...] [base]-[if]
-            fl_trash_tos(frames);       // [...]-[if]
+            frm.in_ifdef = m_frames[m_frames.size() - 2].in_ifdef;
+            fl_trash_tos(m_frames);       // [...] [base]-[if]
+            fl_trash_tos(m_frames);       // [...]-[if]
 
             txt = "endif-trash/pop";
          }
@@ -312,7 +320,7 @@ int fl_check(ParsingFrameStack &frames, ParsingFrame &frm, int &pp_level, Chunk 
              */
             // check if #if block was unbalanced
             size_t brace_level = frm.brace_level;
-            fl_pop(frames, frm);
+            pop(frm);
 
             if (  options::pp_warn_unbalanced_if()
                && brace_level != frm.brace_level)
@@ -334,12 +342,12 @@ int fl_check(ParsingFrameStack &frames, ParsingFrame &frm, int &pp_level, Chunk 
       LOG_FMT(LPF, "%s(%d): orig line is %zu, type is %s: %s in_ifdef is %s/%s, counts is %zu, frame_count is %zu\n",
               __func__, __LINE__, pc->GetOrigLine(),
               get_token_name(pc->GetParentType()), txt, get_token_name(in_ifdef),
-              get_token_name(frm.in_ifdef), b4_cnt, frames.size());
-      fl_log_all(LPF, frames);
+              get_token_name(frm.in_ifdef), b4_cnt, m_frames.size());
+      fl_log_all(LPF, m_frames);
       LOG_FMT(LPF, " <Out>");
       fl_log(LPF, frm);
    }
-   fl_log_frms(LPFCHK, "END", frm, frames);
+   fl_log_frms(LPFCHK, "END", frm, m_frames);
 
    return(out_pp_level);
-} // fl_check
+} // check

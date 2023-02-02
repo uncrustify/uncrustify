@@ -788,7 +788,7 @@ void indent_text()
             frm.pop(__func__, __LINE__, pc);
          }
          ParsingFrame frmbkup = frm;
-         fl_check(frames, frm, cpd.pp_level, pc);
+         frames.check(frm, cpd.pp_level, pc);
 
          // Indent the body of a #region here
          log_rule_B("pp_region_indent_code");
