@@ -1,5 +1,5 @@
 /**
- * @file ParseFrame.h
+ * @file parsing_frame.h
  *
  * Holds data needed for indenting and brace parsing
  *
@@ -7,8 +7,8 @@
  * @license GPL v2+
  */
 
-#ifndef SRC_PARSEFRAME_H_
-#define SRC_PARSEFRAME_H_
+#ifndef PARSING_FRAME_H_INCLUDED
+#define PARSING_FRAME_H_INCLUDED
 
 #include "uncrustify_types.h"
 
@@ -16,7 +16,7 @@
 #include <vector>
 
 
-//! Structure describing a parsing frame and its information
+//! Class describing a component of a parsing frame and its information
 class ParsingFrameEntry
 {
 public:
@@ -39,6 +39,8 @@ public:
    Chunk           *pop_pc;
 };
 
+
+//! Class describing a parsing frame and its information
 class ParsingFrame
 {
 private:
@@ -98,6 +100,4 @@ public:
    const_reverse_iterator rend() const;
 };
 
-typedef std::vector<ParsingFrame> ParsingFrameStack;
-
-#endif /* SRC_PARSEFRAME_H_ */
+#endif /* PARSING_FRAME_H_INCLUDED */

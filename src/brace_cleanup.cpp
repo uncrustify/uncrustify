@@ -11,9 +11,9 @@
 #include "brace_cleanup.h"
 
 #include "flag_parens.h"
-#include "frame_list.h"
 #include "keywords.h"
 #include "lang_pawn.h"
+#include "parsing_frame_stack.h"
 #include "prototypes.h"
 
 #include <stdexcept>            // to get std::invalid_argument
@@ -38,7 +38,7 @@ using std::stringstream;
 
 struct BraceState
 {
-   ParsingFrameStack frames     = {};
+   ParsingFrameStack frames;
    E_Token           in_preproc = CT_NONE;
    int               pp_level   = 0;
    bool              consumed   = false;
@@ -131,11 +131,11 @@ static size_t preproc_start(BraceState &braceState, ParsingFrame &frm, Chunk *pc
    // If we are not in a define, check for #if, #else, #endif, etc
    if (braceState.in_preproc != CT_PP_DEFINE)
    {
-      int pp_indent = fl_check(braceState.frames, frm, braceState.pp_level, pc);
+      int pp_indent = braceState.frames.check(frm, braceState.pp_level, pc);
       return(pp_indent);
    }
    // else push the frame stack
-   fl_push(braceState.frames, frm);
+   braceState.frames.push(frm);
 
    // a preproc body starts a new, blank frame
    frm             = {};
@@ -206,7 +206,7 @@ void brace_cleanup()
                LOG_FMT(LWARN, "%s(%d): orig line is %zu, unbalanced #define block braces, out-level is %zu\n",
                        __func__, __LINE__, pc->GetOrigLine(), brace_level);
             }
-            fl_pop(braceState.frames, frm);
+            braceState.frames.pop(frm);
          }
          braceState.in_preproc = CT_NONE;
       }

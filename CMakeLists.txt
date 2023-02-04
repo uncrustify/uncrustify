@@ -288,7 +288,6 @@ set(uncrustify_sources
   src/flag_braced_init_list.cpp
   src/flag_decltype.cpp
   src/flag_parens.cpp
-  src/frame_list.cpp
   src/indent.cpp
   src/keywords.cpp
   src/lang_pawn.cpp
@@ -305,7 +304,8 @@ set(uncrustify_sources
   src/parameter_pack_cleanup.cpp
   src/parens.cpp
   src/parent_for_pp.cpp
-  src/ParseFrame.cpp
+  src/parsing_frame.cpp
+  src/parsing_frame_stack.cpp
   src/pragma_cleanup.cpp
   src/pcf_flags.cpp
   src/punctuators.cpp
@@ -382,7 +382,6 @@ set(uncrustify_headers
   src/flag_braced_init_list.h
   src/flag_decltype.h
   src/flag_parens.h
-  src/frame_list.h
   src/indent.h
   src/keywords.h
   src/lang_pawn.h
@@ -402,7 +401,8 @@ set(uncrustify_headers
   src/parameter_pack_cleanup.h
   src/parens.h
   src/parent_for_pp.h
-  src/ParseFrame.h
+  src/parsing_frame.h
+  src/parsing_frame_stack.h
   src/pragma_cleanup.h
   src/pcf_flags.h
   src/prototypes.h
