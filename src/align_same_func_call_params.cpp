@@ -51,14 +51,14 @@ void align_same_func_call_params()
 
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (pc->IsNewline())
+      if (pc->IsNewline())              // for debugging
       {
-         LOG_FMT(LAS, "%s(%d): orig line is %zu, <Newline>\n", __func__, __LINE__, pc->GetOrigLine());
+         LOG_FMT(LAS, "%s(%3d): orig line is %zu, <Newline>\n", __func__, __LINE__, pc->GetOrigLine());
       }
       else
       {
-         LOG_FMT(LAS, "%s(%d): orig line is %zu, orig col is %zu, pc->Text() '%s'\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+         LOG_FMT(LAS, "%s(%3d): orig line is %zu, orig col is %zu, pc->Text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
       }
 
       if (pc->IsNot(CT_FUNC_CALL))
@@ -71,6 +71,16 @@ void align_same_func_call_params()
             }
 
             fcn_as.NewLines(pc->GetNlCount());
+         }
+         else if (pc->Is(CT_FUNC_CTOR_VAR))                             // Issue #3916
+         {
+            Chunk *open_paren  = pc->GetNextType(CT_FPAREN_OPEN, pc->GetLevel());
+            Chunk *close_paren = open_paren->GetClosingParen();
+            LOG_FMT(LAS, "%s(%3d): orig line is %zu, orig col is %zu, pc->Text() '%s', type is %s\n",
+                    __func__, __LINE__, open_paren->GetOrigLine(), open_paren->GetOrigCol(), open_paren->Text(), get_token_name(open_paren->GetType()));
+            LOG_FMT(LAS, "%s(%3d): orig line is %zu, orig col is %zu, pc->Text() '%s', type is %s\n",
+                    __func__, __LINE__, close_paren->GetOrigLine(), close_paren->GetOrigCol(), close_paren->Text(), get_token_name(close_paren->GetType()));
+            pc = close_paren;
          }
          else
          {
@@ -93,6 +103,7 @@ void align_same_func_call_params()
          }
          continue;
       }
+      // only if (pc->Is(CT_FUNC_CALL))
       // Only align function calls that are right after a newline
       Chunk *prev = pc->GetPrev();
 
@@ -124,7 +135,7 @@ void align_same_func_call_params()
          prev            = prev->GetNext();
       }
       align_fcn_name += pc->GetStr();
-      LOG_FMT(LASFCP, "%s(%d): Func Call found at orig line is %zu, orig col is %zu, c_str() '%s'\n",
+      LOG_FMT(LASFCP, "%s(%3d): Func Call found at orig line is %zu, orig col is %zu, c_str() '%s'\n",
               __func__, __LINE__, align_fcn->GetOrigLine(),
               align_fcn->GetOrigCol(),
               align_fcn_name.c_str());
@@ -136,12 +147,13 @@ void align_same_func_call_params()
          // Issue # 1395
          // can only align functions on the same brace level
          // and on the same level
-         LOG_FMT(LASFCP, "%s(%d):align_root is not nullptr\n", __func__, __LINE__);
+         LOG_FMT(LASFCP, "%s(%d): align_root is not NullChunk\n", __func__, __LINE__);
 
          if (  align_root->GetBraceLevel() == pc->GetBraceLevel()
             && align_root->GetLevel() == pc->GetLevel()
             && align_fcn_name.equals(align_root_name))
          {
+            //WITH_STACKID_DEBUG;
             fcn_as.Add(pc);
             align_cur->AlignData().next = pc;
             align_cur = pc;
@@ -167,7 +179,8 @@ void align_same_func_call_params()
 
       if (align_root->IsNullChunk())
       {
-         LOG_FMT(LASFCP, "%s(%d):align_root is null chunk, Add pc '%s'\n", __func__, __LINE__, pc->Text());
+         LOG_FMT(LASFCP, "%s(%d): align_root is null chunk, Add pc '%s'\n",
+                 __func__, __LINE__, pc->Text());
          fcn_as.Add(pc);
          align_root      = align_fcn;
          align_root_name = align_fcn_name;
@@ -175,27 +188,12 @@ void align_same_func_call_params()
          align_len       = 1;
          add_str         = "Start";
       }
-      LOG_FMT(LASFCP, "%s(%d):\n", __func__, __LINE__);
 
       if (add_str != nullptr)
       {
-         LOG_FMT(LASFCP, "%s(%d): %s with function '%s', on orig line %zu, ",
+         LOG_FMT(LASFCP, "%s(%3d): %s with function '%s', on orig line %zu\n",
                  __func__, __LINE__, add_str, align_fcn_name.c_str(), pc->GetOrigLine());
          align_params(pc, chunks);
-         LOG_FMT(LASFCP, "%zu items:", chunks.size());
-
-         for (size_t idx = 0; idx < chunks.size(); idx++)
-         {
-            // show the chunk(s)
-            LOG_FMT(LASFCP, " [%s]", chunks[idx]->Text());
-
-            if (idx < chunks.size() - 1)
-            {
-               LOG_FMT(LASFCP, ",");
-            }
-         }
-
-         LOG_FMT(LASFCP, "\n");
 
          for (size_t idx = 0; idx < chunks.size(); idx++)
          {
@@ -259,6 +257,9 @@ void align_params(Chunk *start, deque<Chunk *> &chunks)
 
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
+      LOG_FMT(LAS, "%s(%3d): orig line is %zu, orig col is %zu, pc->Text() '%s'\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+
       if (  pc->IsNewline()
          || pc->Is(CT_SEMICOLON)
          || (  pc->Is(CT_FPAREN_CLOSE)
@@ -271,6 +272,8 @@ void align_params(Chunk *start, deque<Chunk *> &chunks)
       {
          if (hit_comma)
          {
+            LOG_FMT(LAS, "%s(%3d): hit_comma, orig line is %zu, orig col is %zu, pc->Text() '%s'\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
             chunks.push_back(pc);
             hit_comma = false;
          }

@@ -383,7 +383,7 @@ void reindent_line(Chunk *pc, size_t column)
          {
             LOG_FMT(LINDLINED, "'%s'", pc->Text());
          }
-         LOG_FMT(LINDLINED, " to %zu (orig %zu)\n", pc->GetColumn(), pc->GetOrigCol());
+         LOG_FMT(LINDLINED, " to %zu (orig %zu/%zu)\n", pc->GetColumn(), pc->GetOrigLine(), pc->GetOrigCol());
       }
    } while (  pc->IsNotNullChunk()
            && pc->GetNlCount() == 0);
