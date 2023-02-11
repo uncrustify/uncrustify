@@ -1265,7 +1265,7 @@ void indent_text()
                      frm.pop(__func__, __LINE__, pc);
                   }
 
-                  if (next)
+                  if (next->IsNotNullChunk())
                   {
                      // End any assign operations with a semicolon on the same level
                      if (is_end_of_assignment(next, frm))
@@ -1545,7 +1545,7 @@ void indent_text()
                      frm.pop(__func__, __LINE__, pc);
                   }
 
-                  if (next)
+                  if (next->IsNotNullChunk())
                   {
                      // End any assign operations with a semicolon on the same level
                      if (is_end_of_assignment(next, frm))
@@ -1934,7 +1934,7 @@ void indent_text()
                                                    indent_from_colon,
                                                    indent_from_keyword);
 
-                  if (ref)
+                  if (ref->IsNotNullChunk())
                   {
                      frm.top().indent = indent_size + ref->GetColumn();
                   }

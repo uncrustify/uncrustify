@@ -2349,7 +2349,7 @@ static Chunk *process_return_or_throw(Chunk *pc)
       }
    }
 
-   if (semi)
+   if (semi->IsNotNullChunk())
    {
       // add the parenthesis
       chunk.SetType(CT_PAREN_OPEN);

@@ -29,7 +29,7 @@ bool unc_getenv(const char *name, std::string &str)
    }
    buf = (char *)malloc(len);
 
-   if (buf)
+   if (buf != nullptr)
    {
       len = GetEnvironmentVariableA(name, buf, len);
    }
