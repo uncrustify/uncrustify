@@ -3684,12 +3684,12 @@ void indent_text()
             LOG_FMT(LINDLINE, "%s(%d): indent_column is %zu\n",
                     __func__, __LINE__, indent_column);
 
-            if (frm.poped().type == E_Token(pc->GetType() - 1))
+            if (frm.lastPopped().type == E_Token(pc->GetType() - 1))
             {
                // Issue # 405
                LOG_FMT(LINDLINE, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
-               Chunk *ck1 = frm.poped().pc;
+               Chunk *ck1 = frm.lastPopped().pc;
                LOG_FMT(LINDLINE, "%s(%d): ck1 orig line is %zu, orig col is %zu, Text() is '%s', GetType() is %s\n",
                        __func__, __LINE__, ck1->GetOrigLine(), ck1->GetOrigCol(), ck1->Text(), get_token_name(ck1->GetType()));
                Chunk *ck2 = ck1->GetPrev();
@@ -3727,10 +3727,10 @@ void indent_text()
                      // indent_paren_close is 0 or 1
                      LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] indent_paren_close is 0 or 1\n",
                              __func__, __LINE__, ck2->GetOrigLine(), ck2->GetOrigCol());
-                     indent_column_set(frm.poped().indent_tmp);
+                     indent_column_set(frm.lastPopped().indent_tmp);
                      LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] indent_column set to %zu\n",
                              __func__, __LINE__, ck2->GetOrigLine(), ck2->GetOrigCol(), indent_column);
-                     pc->SetColumnIndent(frm.poped().indent_tab);
+                     pc->SetColumnIndent(frm.lastPopped().indent_tab);
                      log_rule_B("indent_paren_close");
 
                      if (options::indent_paren_close() == 1)

@@ -49,8 +49,8 @@ void fl_trash_tos(ParsingFrameOrigStack &frames);
 //! Logs one parse frame
 void fl_log(log_sev_t logsev, const ParsingFrame &frm)
 {
-   LOG_FMT(logsev, "[%s] BrLevel=%zu Level=%zu PseTos=%zu\n",
-           get_token_name(frm.in_ifdef), frm.brace_level, frm.level, frm.size() - 1);
+   LOG_FMT(logsev, "[%s] Brace level=%zu Paren level=%zu PseTos=%zu\n",
+           get_token_name(frm.in_ifdef), frm.GetBraceLevel(), frm.GetParenLevel(), frm.size() - 1);
 
    LOG_FMT(logsev, " *");
 
@@ -74,10 +74,10 @@ void fl_log_frms(log_sev_t                   logsev,
    for (const auto &frame : frames)
    {
       LOG_FMT(logsev, " [%s-%zu]", get_token_name(frame.in_ifdef),
-              frame.ref_no);
+              frame.GetRefNumber());
    }
 
-   LOG_FMT(logsev, "-[%s-%zu]\n", get_token_name(frm.in_ifdef), frm.ref_no);
+   LOG_FMT(logsev, "-[%s-%zu]\n", get_token_name(frm.in_ifdef), frm.GetRefNumber());
 }
 
 
@@ -136,10 +136,10 @@ ParsingFrameStack::ParsingFrameStack()
 
 void ParsingFrameStack::push(ParsingFrame &frm)
 {
-   static int ref_no = 1;
+   static int seq_ref_no = 1;
 
    m_frames.push_back(frm);
-   frm.ref_no = ref_no++;
+   frm.SetRefNumber(seq_ref_no++);
 
    LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, m_frames.size());
 }
@@ -227,7 +227,7 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
             frm.in_ifdef = CT_PP_ELSE;
             if_block     = true;
          }
-         size_t brace_level = frm.brace_level;
+         size_t brace_level = frm.GetBraceLevel();
          // we have [...] [base] [if]-[else], copy [base] over [else]
          fl_copy_2nd_tos(frm, m_frames);
          frm.in_ifdef = CT_PP_ELSE;
@@ -235,7 +235,7 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
          if (if_block)
          {
             // check if #if block was unbalanced
-            size_t base_brace_level = m_frames[m_frames.size() - 2].brace_level;
+            size_t base_brace_level = m_frames[m_frames.size() - 2].GetBraceLevel();
 
             if (  options::pp_warn_unbalanced_if()
                && brace_level != base_brace_level)
@@ -247,7 +247,7 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
          else
          {
             // check if previous #else block has a different indentation than the corresponding #if block
-            size_t if_brace_level = m_frames[m_frames.size() - 1].brace_level;
+            size_t if_brace_level = m_frames[m_frames.size() - 1].GetBraceLevel();
 
             if (  options::pp_warn_unbalanced_if()
                && brace_level != if_brace_level)
@@ -285,18 +285,18 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
 
          if (frm.in_ifdef == CT_PP_ELSE)
          {
-            size_t brace_level = frm.brace_level; // brace level or current #else block
+            size_t brace_level = frm.GetBraceLevel(); // brace level or current #else block
             /*
              * We have: [...] [base] [if]-[else]
              * We want: [...]-[if]
              */
-            fl_copy_tos(frm, m_frames);           // [...] [base] [if]-[if]
+            fl_copy_tos(frm, m_frames);               // [...] [base] [if]-[if]
 
             if (  options::pp_warn_unbalanced_if()
-               && brace_level != frm.brace_level)
+               && brace_level != frm.GetBraceLevel())
             {
                LOG_FMT(LWARN, "%s(%d): orig line is %zu, unbalanced #if-#else block braces (2), #else out-level is %zu, #if out-level is %zu\n",
-                       __func__, __LINE__, pc->GetOrigLine(), brace_level, frm.brace_level);
+                       __func__, __LINE__, pc->GetOrigLine(), brace_level, frm.GetBraceLevel());
             }
 
             if (m_frames.size() < 2)
@@ -319,14 +319,14 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
              * We want: [...] [base]
              */
             // check if #if block was unbalanced
-            size_t brace_level = frm.brace_level;
+            size_t brace_level = frm.GetBraceLevel();
             pop(frm);
 
             if (  options::pp_warn_unbalanced_if()
-               && brace_level != frm.brace_level)
+               && brace_level != frm.GetBraceLevel())
             {
                LOG_FMT(LWARN, "%s(%d): orig line is %zu, unbalanced #if block braces (2), in-level is %zu, out-level is %zu\n",
-                       __func__, __LINE__, pc->GetOrigLine(), frm.brace_level, brace_level);
+                       __func__, __LINE__, pc->GetOrigLine(), frm.GetBraceLevel(), brace_level);
             }
             txt = "endif-pop";
          }

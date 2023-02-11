@@ -28,14 +28,6 @@ using std::to_string;
 using std::stringstream;
 
 
-/*
- * abbreviations used:
- * - sparen = tbd
- * - PS     = Parenthesis Stack
- * - pse    = Parenthesis Stack
- */
-
-
 struct BraceState
 {
    ParsingFrameStack frames;
@@ -138,9 +130,9 @@ static size_t preproc_start(BraceState &braceState, ParsingFrame &frm, Chunk *pc
    braceState.frames.push(frm);
 
    // a preproc body starts a new, blank frame
-   frm             = {};
-   frm.level       = 1;
-   frm.brace_level = 1;
+   frm = {};
+   frm.SetParenLevel(1);
+   frm.SetBraceLevel(1);
 
    // TODO: not sure about the next 3 lines
    frm.push(nullptr);
@@ -198,7 +190,7 @@ void brace_cleanup()
          if (braceState.in_preproc == CT_PP_DEFINE)
          {
             // out of the #define body, restore the frame
-            size_t brace_level = frm.brace_level;
+            size_t brace_level = frm.GetBraceLevel();
 
             if (  options::pp_warn_unbalanced_if()
                && brace_level != 1)
@@ -243,8 +235,8 @@ void brace_cleanup()
          mark_namespace(pc);
       }
       // Assume the level won't change
-      pc->SetLevel(frm.level);
-      pc->SetBraceLevel(frm.brace_level);
+      pc->SetLevel(frm.GetParenLevel());
+      pc->SetBraceLevel(frm.GetBraceLevel());
       pc->SetPpLevel(pp_level);
 
       /*
@@ -299,7 +291,7 @@ static bool maybe_while_of_do(Chunk *pc)
  * At the heart of this algorithm are two stacks.
  * There is the Paren Stack (PS) and the Frame stack.
  *
- * The PS (pse in the code) keeps track of braces, parens,
+ * The PS (m_parenStack in the code) keeps track of braces, parens,
  * if/else/switch/do/while/etc items -- anything that is nestable.
  * Complex statements go through stages.
  * Take this simple if statement as an example:
@@ -333,7 +325,7 @@ static bool maybe_while_of_do(Chunk *pc)
  * ';'    [ELSE - 0]               <- VBrace close inserted after semicolon
  *                                 <- ELSE removed after statement close
  *
- * The pse stack is kept on a frame stack.
+ * The m_parenStack stack is kept on a frame stack.
  * The frame stack is need for languages that support preprocessors (C, C++, C#)
  * that can arbitrarily change code flow. It also isolates #define macros so
  * that they are indented independently and do not affect the rest of the program.
@@ -474,7 +466,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
          {
             LOG_FMT(LWARN, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
-            ParsingFrameEntry AA = frm.top();                // Issue #3055
+            const ParenStackEntry &AA = frm.top();                // Issue #3055
 
             if (AA.type != CT_EOF)
             {
@@ -500,19 +492,19 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
 
          // Copy the parent, update the parenthesis/brace levels
          pc->SetParentType(frm.top().parent);
-         frm.level--;
+         frm.SetParenLevel(frm.GetParenLevel() - 1);
 
          if (  pc->Is(CT_BRACE_CLOSE)
             || pc->Is(CT_VBRACE_CLOSE)
             || pc->Is(CT_MACRO_CLOSE))
          {
-            frm.brace_level--;
-            LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu",
-                    __func__, __LINE__, frm.brace_level);
+            frm.SetBraceLevel(frm.GetBraceLevel() - 1);
+            LOG_FMT(LBCSPOP, "%s(%d): frame brace level decreased to %zu",
+                    __func__, __LINE__, frm.GetBraceLevel());
             log_pcf_flags(LBCSPOP, pc->GetFlags());
          }
-         pc->SetLevel(frm.level);
-         pc->SetBraceLevel(frm.brace_level);
+         pc->SetLevel(frm.GetParenLevel());
+         pc->SetBraceLevel(frm.GetBraceLevel());
 
          // Pop the entry
          LOG_FMT(LBCSPOP, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
@@ -684,7 +676,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
       || pc->Is(CT_MACRO_OPEN)
       || pc->Is(CT_SQUARE_OPEN))
    {
-      frm.level++;
+      frm.SetParenLevel(frm.GetParenLevel() + 1);
 
       if (  pc->Is(CT_BRACE_OPEN)
          || pc->Is(CT_MACRO_OPEN))
@@ -720,9 +712,9 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
 
          if (!single)
          {
-            frm.brace_level++;
-            LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level increased to %zu\n",
-                    __func__, __LINE__, frm.brace_level);
+            frm.SetBraceLevel(frm.GetBraceLevel() + 1);
+            LOG_FMT(LBCSPOP, "%s(%d): frame brace level increased to %zu\n",
+                    __func__, __LINE__, frm.GetBraceLevel());
          }
       }
       frm.push(pc, __func__, __LINE__);
@@ -1063,10 +1055,10 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
          Chunk         *vbrace = insert_vbrace_open_before(pc, frm);
          vbrace->SetParentType(parentType);
 
-         frm.level++;
-         frm.brace_level++;
-         LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level increased to %zu\n",
-                 __func__, __LINE__, frm.brace_level);
+         frm.SetParenLevel(frm.GetParenLevel() + 1);
+         frm.SetBraceLevel(frm.GetBraceLevel() + 1);
+         LOG_FMT(LBCSPOP, "%s(%d): frame brace level increased to %zu\n",
+                 __func__, __LINE__, frm.GetBraceLevel());
          log_pcf_flags(LBCSPOP, pc->GetFlags());
 
          frm.push(vbrace, __func__, __LINE__, E_BraceStage::NONE);
@@ -1075,8 +1067,8 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
          frm.top().parent = parentType;
 
          // update the level of pc
-         pc->SetLevel(frm.level);
-         pc->SetBraceLevel(frm.brace_level);
+         pc->SetLevel(frm.GetParenLevel());
+         pc->SetBraceLevel(frm.GetBraceLevel());
 
          // Mark as a start of a statement
          frm.stmt_count = 0;
@@ -1292,9 +1284,9 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParsingFrame &frm)
 
    chunk.SetParentType(frm.top().type);
    chunk.SetOrigLine(pc->GetOrigLine());
-   chunk.SetLevel(frm.level);
+   chunk.SetLevel(frm.GetParenLevel());
    chunk.SetPpLevel(frm.pp_level);
-   chunk.SetBraceLevel(frm.brace_level);
+   chunk.SetBraceLevel(frm.GetBraceLevel());
    chunk.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
    chunk.Str() = "";
 
@@ -1411,21 +1403,21 @@ bool close_statement(ParsingFrame &frm, Chunk *pc, const BraceState &braceState)
          // otherwise, add before it and consume the vbrace
          vbc = pc->GetPrevNcNnl();
 
-         frm.level--;
-         frm.brace_level--;
+         frm.SetParenLevel(frm.GetParenLevel() - 1);
+         frm.SetBraceLevel(frm.GetBraceLevel() - 1);
          vbc = insert_vbrace_close_after(vbc, frm);
          vbc->SetParentType(frm.top().parent);
 
-         LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu\n",
-                 __func__, __LINE__, frm.brace_level);
+         LOG_FMT(LBCSPOP, "%s(%d): frame brace level decreased to %zu\n",
+                 __func__, __LINE__, frm.GetBraceLevel());
          log_pcf_flags(LBCSPOP, pc->GetFlags());
          LOG_FMT(LBCSPOP, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
          frm.pop(__func__, __LINE__, pc);
 
          // Update the token level
-         pc->SetLevel(frm.level);
-         pc->SetBraceLevel(frm.brace_level);
+         pc->SetLevel(frm.GetParenLevel());
+         pc->SetBraceLevel(frm.GetBraceLevel());
 
          print_stack(LBCSPOP, "-CS VB  ", frm);
 
