@@ -515,7 +515,7 @@ void AlignStack::Flush()
               __func__, __LINE__, idx, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetAlignData().col_adj);
    }
 
-   const ChunkStack::Entry *ce;
+   const ChunkStack::Entry *ce = nullptr;
 
    for (size_t idx = 0; idx < Len(); idx++)
    {

@@ -8,7 +8,7 @@
 At the heart of this algorithm are two stacks.
 There is the Paren Stack (PS) and the Frame stack.
 
-The PS (pse in the code) keeps track of braces, parens,
+The PS (m_parenStack in the code) keeps track of braces, parens,
 if/else/switch/do/while/etc items -- anything that is nestable.
 
 Complex statements go through some of these BS_ stages:
@@ -167,7 +167,7 @@ Another less-interesting example:
 *                                                                             *
 =-----------------------------------------------------------------------------=
 
-The pse stack is kept on a frame stack.
+The m_parenStack stack is kept on a frame stack.
 The frame stack is need for languages that support preprocessors (C, C++, C#)
 that can arbitrarily change code flow. It also isolates #define macros so
 that they are indented independently and do not affect the rest of the program.
