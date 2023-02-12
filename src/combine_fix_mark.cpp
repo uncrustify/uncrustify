@@ -1392,7 +1392,7 @@ void mark_function(Chunk *pc)
             LOG_FMT(LFCN, "%s(%d): orig line is %zu, orig col is %zu, function type, changing '%s' into a type\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
 
-            if (tmp2)
+            if (tmp2->IsNotNullChunk())
             {
                tmp2->SetType(CT_FUNC_TYPE);
             }
@@ -2236,7 +2236,7 @@ bool mark_function_type(Chunk *pc)
       goto nogo_exit;
    }
 
-   if (ptrcnk)
+   if (ptrcnk->IsNotNullChunk())
    {
       ptrcnk->SetType(CT_PTR_TYPE);
    }

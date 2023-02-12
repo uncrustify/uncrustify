@@ -279,7 +279,7 @@ void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_
 {
    UNUSED(skip_cnt);
 
-   if (prefix)
+   if (prefix != nullptr)
    {
       LOG_FMT(sev, "%s", prefix);
    }
@@ -304,7 +304,7 @@ void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_
    LOG_FMT(sev, "-DEBUG NOT SET-");
 #endif
 
-   if (suffix)
+   if (suffix != nullptr)
    {
       LOG_FMT(sev, "%s", suffix);
    }
