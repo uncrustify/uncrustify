@@ -1276,7 +1276,7 @@ static bool parse_cs_string(TokenContext &ctx, Chunk &pc)
 {
    cs_string_t stringType = parse_cs_string_start(ctx, pc);
 
-   if (stringType == 0)
+   if (stringType == CS_STRING_NONE)
    {
       return(false);
    }
@@ -1315,7 +1315,7 @@ static bool parse_cs_string(TokenContext &ctx, Chunk &pc)
          }
          stringType = parse_cs_string_start(ctx, pc);
 
-         if (stringType)
+         if (stringType != CS_STRING_NONE)
          {
             parseState.push(CsStringParseState(stringType));
             continue;
