@@ -789,6 +789,19 @@ sp_inside_fparens;
 extern Option<iarf_e>
 sp_inside_fparen;
 
+// Add or remove space inside user functor '(' and ')'.
+extern Option<iarf_e>
+sp_func_call_user_inside_rparen;
+
+// Add or remove space inside empty functor '()'.
+// Overrides sp_after_angle unless use_sp_after_angle_always is set to true.
+extern Option<iarf_e>
+sp_inside_rparens;
+
+// Add or remove space inside functor '(' and ')'.
+extern Option<iarf_e>
+sp_inside_rparen;
+
 // Add or remove space inside the first parentheses in a function type, as in
 // 'void (*x)(...)'.
 extern Option<iarf_e>

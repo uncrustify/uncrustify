@@ -26,6 +26,7 @@
 #include "indent.h"
 #include "keywords.h"
 #include "lang_pawn.h"
+#include "mark_functor.h"
 #include "mark_question_colon.h"
 #include "newlines.h"
 #include "output.h"
@@ -2011,6 +2012,8 @@ static void uncrustify_start(const deque<int> &data)
    combine_labels();
 
    enum_cleanup();
+
+   mark_functor();
 } // uncrustify_start
 
 

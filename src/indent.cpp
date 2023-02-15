@@ -1403,6 +1403,7 @@ void indent_text()
                   || pc->Is(CT_LPAREN_CLOSE)                     // Issue #3054
                   || pc->Is(CT_SPAREN_CLOSE)
                   || pc->Is(CT_FPAREN_CLOSE)
+                  || pc->Is(CT_RPAREN_CLOSE)                     // Issue #3914
                   || pc->Is(CT_SQUARE_CLOSE)
                   || pc->Is(CT_ANGLE_CLOSE)))
             {
@@ -1722,7 +1723,9 @@ void indent_text()
                && toplevel
                && frm.top().pc->GetClosingParen()->IsOnSameLine(frm.top().pc);
 
-            if (sameLine && ((isAssignSameLine) || (closureSameLineTopLevel)))
+            if (  sameLine
+               && (  (isAssignSameLine)
+                  || (closureSameLineTopLevel)))
             {
                if (indent_size > frm.top().brace_indent)       // if options::indent_indent_columns() is too big
                {
@@ -2591,6 +2594,7 @@ void indent_text()
               || pc->Is(CT_LPAREN_OPEN)                     // Issue #3054
               || pc->Is(CT_SPAREN_OPEN)
               || pc->Is(CT_FPAREN_OPEN)
+              || pc->Is(CT_RPAREN_OPEN)                     // Issue #3914
               || pc->Is(CT_SQUARE_OPEN)
               || pc->Is(CT_ANGLE_OPEN))
       {
@@ -2670,6 +2674,7 @@ void indent_text()
                         && frm.at(idx).type != CT_VBRACE_OPEN
                         && frm.at(idx).type != CT_PAREN_OPEN
                         && frm.at(idx).type != CT_FPAREN_OPEN
+                        && frm.at(idx).type != CT_RPAREN_OPEN                     // Issue #3914
                         && frm.at(idx).type != CT_SPAREN_OPEN
                         && frm.at(idx).type != CT_SQUARE_OPEN
                         && frm.at(idx).type != CT_ANGLE_OPEN
@@ -2889,10 +2894,11 @@ void indent_text()
             if (  pc->GetLevel() == pc->GetBraceLevel()
                && !options::indent_ignore_first_continue()
                && (  pc->Is(CT_FPAREN_OPEN)
+                  || pc->Is(CT_RPAREN_OPEN)                   // Issue #1170
                   || pc->Is(CT_SPAREN_OPEN)
                   || (  pc->Is(CT_SQUARE_OPEN)
                      && pc->GetParentType() != CT_OC_MSG)
-                  || pc->Is(CT_ANGLE_OPEN)))     // Issue #1170
+                  || pc->Is(CT_ANGLE_OPEN)))                  // Issue #1170
             {
                //log_rule_B("indent_continue");
                //frm.top().indent += abs(options::indent_continue());
