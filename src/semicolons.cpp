@@ -58,17 +58,17 @@ void remove_extra_semicolons()
             // keep it
          }
          else if (  prev->Is(CT_BRACE_CLOSE)
-                 && (  prev->GetParentType() == CT_IF
+                 && (  prev->GetParentType() == CT_ELSE
                     || prev->GetParentType() == CT_ELSEIF
-                    || prev->GetParentType() == CT_ELSE
-                    || prev->GetParentType() == CT_SWITCH
-                    || prev->GetParentType() == CT_WHILE
-                    || prev->GetParentType() == CT_USING_STMT
                     || prev->GetParentType() == CT_FOR
-                    || prev->GetParentType() == CT_FUNC_DEF
-                    || prev->GetParentType() == CT_OC_MSG_DECL
                     || prev->GetParentType() == CT_FUNC_CLASS_DEF
-                    || prev->GetParentType() == CT_NAMESPACE))
+                    || prev->GetParentType() == CT_FUNC_DEF
+                    || prev->GetParentType() == CT_IF
+                    || prev->GetParentType() == CT_NAMESPACE
+                    || prev->GetParentType() == CT_OC_MSG_DECL
+                    || prev->GetParentType() == CT_SWITCH
+                    || prev->GetParentType() == CT_USING_STMT
+                    || prev->GetParentType() == CT_WHILE))
          {
             // looking for code block vs. initialisation
             bool  code_block_found = true;
@@ -109,8 +109,8 @@ void remove_extra_semicolons()
          }
          else if (  language_is_set(LANG_D)
                  && (  prev->GetParentType() == CT_ENUM
-                    || prev->GetParentType() == CT_UNION
-                    || prev->GetParentType() == CT_STRUCT))
+                    || prev->GetParentType() == CT_STRUCT
+                    || prev->GetParentType() == CT_UNION))
          {
             remove_semicolon(pc);
          }
@@ -137,12 +137,13 @@ static void check_unknown_brace_close(Chunk *semi, Chunk *brace_close)
    pc = pc->GetPrevNcNnl();
 
    if (  pc->IsNotNullChunk()
-      && pc->IsNot(CT_RETURN)
-      && pc->IsNot(CT_WORD)
-      && pc->IsNot(CT_TYPE)
-      && pc->IsNot(CT_SQUARE_CLOSE)
       && pc->IsNot(CT_ANGLE_CLOSE)
+      && pc->IsNot(CT_COND_COLON)                      // Issue #3920
+      && pc->IsNot(CT_RETURN)
+      && pc->IsNot(CT_SQUARE_CLOSE)
       && pc->IsNot(CT_TSQUARE)
+      && pc->IsNot(CT_TYPE)
+      && pc->IsNot(CT_WORD)
       && !pc->IsParenClose())
    {
       remove_semicolon(semi);
