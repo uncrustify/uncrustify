@@ -14,14 +14,9 @@
 
 using namespace uncrustify;
 
-#if defined DEBUG
 #define log_rule(rule)                                   \
    log_rule2(__func__, __LINE__, (rule), first, second); \
    log_rule4((rule), first)
-#else
-#define log_rule(rule) \
-   log_rule2(__func__, __LINE__, (rule), first, second)
-#endif
 
 // if you need more debug information, remove the comment at the next line
 #define SUPER_LOG    1
