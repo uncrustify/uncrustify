@@ -21,7 +21,7 @@ void mark_functor()
    // Issue #3914
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      LOG_FMT(LCOMBINE, "%s(%d): R1: orig line is %zu, orig col is %zu, level is %zu, Text() '%s'\n",
+      LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->Text());
       log_pcf_flags(LCOMBINE, pc->GetFlags());
 
@@ -43,11 +43,12 @@ void mark_functor()
       }
 
       if (  found_fparen_close
-         && !in_Lamda)
+         && !in_Lamda
+         && (closing->GetParentType() != CT_FUNC_CTOR_VAR))
       {
          if (pc->Is(CT_FPAREN_OPEN))
          {
-            LOG_FMT(LCOMBINE, "%s(%d): RR: FOUND orig line is %zu, orig col is %zu, level is %zu, Text() '%s'\n",
+            LOG_FMT(LCOMBINE, "%s(%d): FOUND orig line is %zu, orig col is %zu, level is %zu, Text() '%s'\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->Text());
             log_pcf_flags(LCOMBINE, pc->GetFlags());
 
