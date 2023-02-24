@@ -50,7 +50,7 @@ void fl_trash_tos(ParsingFrameOrigStack &frames);
 void fl_log(log_sev_t logsev, const ParsingFrame &frm)
 {
    LOG_FMT(logsev, "[%s] Brace level=%zu Paren level=%zu PseTos=%zu\n",
-           get_token_name(frm.in_ifdef), frm.GetBraceLevel(), frm.GetParenLevel(), frm.size() - 1);
+           get_token_name(frm.GetIfdefType()), frm.GetBraceLevel(), frm.GetParenLevel(), frm.size() - 1);
 
    LOG_FMT(logsev, " *");
 
@@ -73,11 +73,11 @@ void fl_log_frms(log_sev_t                   logsev,
 
    for (const auto &frame : frames)
    {
-      LOG_FMT(logsev, " [%s-%zu]", get_token_name(frame.in_ifdef),
+      LOG_FMT(logsev, " [%s-%zu]", get_token_name(frame.GetIfdefType()),
               frame.GetRefNumber());
    }
 
-   LOG_FMT(logsev, "-[%s-%zu]\n", get_token_name(frm.in_ifdef), frm.GetRefNumber());
+   LOG_FMT(logsev, "-[%s-%zu]\n", get_token_name(frm.GetIfdefType()), frm.GetRefNumber());
 }
 
 
@@ -182,7 +182,7 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
 
 
    int           out_pp_level = pp_level;
-   const E_Token in_ifdef     = frm.in_ifdef;
+   const E_Token in_ifdef     = frm.GetIfdefType();
    const size_t  b4_cnt       = m_frames.size();
 
    const char    *txt = nullptr;
@@ -197,8 +197,8 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
          // An #if pushes a copy of the current frame on the stack
          pp_level++;
          push(frm);
-         frm.in_ifdef = CT_PP_IF;
-         txt          = "if-push";
+         frm.SetIfdefType(CT_PP_IF);
+         txt = "if-push";
       }
       else if (pc->GetParentType() == CT_PP_ELSE)
       {
@@ -220,17 +220,17 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
           */
          bool if_block = false;
 
-         if (frm.in_ifdef == CT_PP_IF)
+         if (frm.GetIfdefType() == CT_PP_IF)
          {
             // we have [...] [base]-[if], so push an [else]
             push(frm);
-            frm.in_ifdef = CT_PP_ELSE;
-            if_block     = true;
+            frm.SetIfdefType(CT_PP_ELSE);
+            if_block = true;
          }
          size_t brace_level = frm.GetBraceLevel();
          // we have [...] [base] [if]-[else], copy [base] over [else]
          fl_copy_2nd_tos(frm, m_frames);
-         frm.in_ifdef = CT_PP_ELSE;
+         frm.SetIfdefType(CT_PP_ELSE);
 
          if (if_block)
          {
@@ -283,7 +283,7 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
          }
          out_pp_level--;
 
-         if (frm.in_ifdef == CT_PP_ELSE)
+         if (frm.GetIfdefType() == CT_PP_ELSE)
          {
             size_t brace_level = frm.GetBraceLevel(); // brace level or current #else block
             /*
@@ -306,13 +306,13 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
                log_flush(true);
                exit(EX_SOFTWARE);
             }
-            frm.in_ifdef = m_frames[m_frames.size() - 2].in_ifdef;
+            frm.SetIfdefType(m_frames[m_frames.size() - 2].GetIfdefType());
             fl_trash_tos(m_frames);       // [...] [base]-[if]
             fl_trash_tos(m_frames);       // [...]-[if]
 
             txt = "endif-trash/pop";
          }
-         else if (frm.in_ifdef == CT_PP_IF)
+         else if (frm.GetIfdefType() == CT_PP_IF)
          {
             /*
              * We have: [...] [base] [if]
@@ -339,10 +339,10 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
 
    if (txt != nullptr)
    {
-      LOG_FMT(LPF, "%s(%d): orig line is %zu, type is %s: %s in_ifdef is %s/%s, counts is %zu, frame_count is %zu\n",
+      LOG_FMT(LPF, "%s(%d): orig line is %zu, type is %s: %s ifdef token is %s/%s, counts is %zu, frame_count is %zu\n",
               __func__, __LINE__, pc->GetOrigLine(),
               get_token_name(pc->GetParentType()), txt, get_token_name(in_ifdef),
-              get_token_name(frm.in_ifdef), b4_cnt, m_frames.size());
+              get_token_name(frm.GetIfdefType()), b4_cnt, m_frames.size());
       fl_log_all(LPF, m_frames);
       LOG_FMT(LPF, " <Out>");
       fl_log(LPF, frm);

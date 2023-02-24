@@ -1251,14 +1251,14 @@ void indent_text()
                   {
                      if (frm.top().type == CT_SQUARE_OPEN)
                      {
-                        if (frm.paren_count == 0)
+                        if (frm.GetParenCount() == 0)
                         {
-                           fprintf(stderr, "%s(%d): frm.paren_count is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                           fprintf(stderr, "%s(%d): frame parenthesis count is ZERO, cannot be decremented, at line %zu, column %zu\n",
                                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
                            log_flush(true);
                            exit(EX_SOFTWARE);
                         }
-                        frm.paren_count--;
+                        frm.SetParenCount(frm.GetParenCount() - 1);
                      }
                      LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
@@ -1410,14 +1410,14 @@ void indent_text()
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
 
-               if (frm.paren_count == 0)
+               if (frm.GetParenCount() == 0)
                {
-                  fprintf(stderr, "%s(%d): frm.paren_count is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                  fprintf(stderr, "%s(%d): frame parenthesis count is ZERO, cannot be decremented, at line %zu, column %zu\n",
                           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
                   log_flush(true);
                   exit(EX_SOFTWARE);
                }
-               frm.paren_count--;
+               frm.SetParenCount(frm.GetParenCount() - 1);
             }
          }
       } while (old_frm_size > frm.size());
@@ -1866,7 +1866,7 @@ void indent_text()
 
             frm.prev().indent_tmp = frm.top().indent_tmp;
          }
-         else if (  frm.paren_count != 0
+         else if (  frm.GetParenCount() != 0
                  && !pc->TestFlags(PCF_IN_LAMBDA)) // Issue #3761
          {
             if (frm.top().pc->GetParentType() == CT_OC_BLOCK_EXPR)
@@ -2943,7 +2943,7 @@ void indent_text()
          frm.top().indent_tmp = frm.top().indent;
          log_indent_tmp();
 
-         frm.paren_count++;
+         frm.SetParenCount(frm.GetParenCount() + 1);
       }
       else if (  options::indent_member_single()
               && pc->Is(CT_MEMBER)
