@@ -44,7 +44,9 @@ void mark_functor()
 
       if (  found_fparen_close
          && !in_Lamda
-         && (closing->GetParentType() != CT_FUNC_CTOR_VAR))
+         && (closing->GetParentType() != CT_FUNC_CTOR_VAR)
+         && (closing->GetParentType() != CT_FUNC_CALL)
+         && (closing->GetParentType() != CT_FUNC_DEF))
       {
          if (pc->Is(CT_FPAREN_OPEN))
          {
