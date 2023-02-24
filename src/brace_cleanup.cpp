@@ -354,29 +354,29 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
    // Mark statement starts
    LOG_FMT(LTOK, "%s(%d): orig line is %zu, type is %s, Text() is '%s'\n",
            __func__, __LINE__, pc->GetOrigLine(), get_token_name(pc->GetType()), pc->Text());
-   LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
-           __func__, __LINE__, frm.stmt_count, frm.expr_count);
+   LOG_FMT(LTOK, "%s(%d): frame statement count is %zu, expression count is %zu\n",
+           __func__, __LINE__, frm.GetStmtCount(), frm.GetExprCount());
 
-   if (  (  frm.stmt_count == 0
-         || frm.expr_count == 0)
+   if (  (  frm.GetStmtCount() == 0
+         || frm.GetExprCount() == 0)
       && !pc->IsSemicolon()
       && pc->IsNot(CT_BRACE_CLOSE)
       && pc->IsNot(CT_VBRACE_CLOSE)
       && !pc->IsString(")")
       && !pc->IsString("]"))
    {
-      pc->SetFlagBits(PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : PCF_NONE));
-      LOG_FMT(LSTMT, "%s(%d): orig line is %zu, 1.marked '%s' as %s, start stmt_count is %zu, expr_count is %zu\n",
+      pc->SetFlagBits(PCF_EXPR_START | ((frm.GetStmtCount() == 0) ? PCF_STMT_START : PCF_NONE));
+      LOG_FMT(LSTMT, "%s(%d): orig line is %zu, 1.marked '%s' as %s, start statement count is %zu, expression count is %zu\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->Text(),
-              pc->TestFlags(PCF_STMT_START) ? "stmt" : "expr", frm.stmt_count,
-              frm.expr_count);
+              pc->TestFlags(PCF_STMT_START) ? "statement" : "expression", frm.GetStmtCount(),
+              frm.GetExprCount());
    }
-   frm.stmt_count++;
-   frm.expr_count++;
-   LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
-           __func__, __LINE__, frm.stmt_count, frm.expr_count);
+   frm.SetStmtCount(frm.GetStmtCount() + 1);
+   frm.SetExprCount(frm.GetExprCount() + 1);
+   LOG_FMT(LTOK, "%s(%d): frame statement count is %zu, expression count is %zu\n",
+           __func__, __LINE__, frm.GetStmtCount(), frm.GetExprCount());
 
-   if (frm.sparen_count > 0)
+   if (frm.GetSParenCount() > 0)
    {
       pc->SetFlagBits(PCF_IN_SPAREN);
 
@@ -450,7 +450,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
 
          if (pc->Is(CT_SPAREN_CLOSE))
          {
-            frm.sparen_count--;
+            frm.SetSParenCount(frm.GetSParenCount() - 1);
             pc->ResetFlagBits(PCF_IN_SPAREN);
          }
       }
@@ -609,7 +609,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
             {
                pc->SetType(CT_SPAREN_OPEN);
                parentType = frm.top().type;
-               frm.sparen_count++;
+               frm.SetSParenCount(frm.GetSParenCount() + 1);
             }
             else if (prev->Is(CT_FUNCTION))
             {
@@ -839,10 +839,10 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
    {
       LOG_FMT(LSTMT, "%s(%d): orig line is %zu, reset1 stmt on '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->Text());
-      frm.stmt_count = 0;
-      frm.expr_count = 0;
-      LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
-              __func__, __LINE__, frm.stmt_count, frm.expr_count);
+      frm.SetStmtCount(0);
+      frm.SetExprCount(0);
+      LOG_FMT(LTOK, "%s(%d): frame statement count is %zu, expression count is %zu\n",
+              __func__, __LINE__, frm.GetStmtCount(), frm.GetExprCount());
    }
    // Mark expression starts
    LOG_FMT(LSTMT, "%s(%d): Mark expression starts: orig line is %zu, orig col is %zu, Text() is '%s'\n",
@@ -877,7 +877,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
       || pc->Is(CT_COLON)
       || pc->Is(CT_QUESTION))
    {
-      frm.expr_count = 0;
+      frm.SetExprCount(0);
       LOG_FMT(LSTMT, "%s(%d): orig line is %zu, orig col is %zu, reset expr on '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
    }
@@ -1071,13 +1071,13 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
          pc->SetBraceLevel(frm.GetBraceLevel());
 
          // Mark as a start of a statement
-         frm.stmt_count = 0;
-         frm.expr_count = 0;
-         LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
-                 __func__, __LINE__, frm.stmt_count, frm.expr_count);
+         frm.SetStmtCount(0);
+         frm.SetExprCount(0);
+         LOG_FMT(LTOK, "%s(%d): frame statement count is %zu, expression count is %zu\n",
+                 __func__, __LINE__, frm.GetStmtCount(), frm.GetExprCount());
          pc->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
-         frm.stmt_count = 1;
-         frm.expr_count = 1;
+         frm.SetStmtCount(1);
+         frm.SetExprCount(1);
          LOG_FMT(LSTMT, "%s(%d): orig line is %zu, 2.marked '%s' as stmt start\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->Text());
       }
@@ -1285,7 +1285,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParsingFrame &frm)
    chunk.SetParentType(frm.top().type);
    chunk.SetOrigLine(pc->GetOrigLine());
    chunk.SetLevel(frm.GetParenLevel());
-   chunk.SetPpLevel(frm.pp_level);
+   chunk.SetPpLevel(frm.GetPpLevel());
    chunk.SetBraceLevel(frm.GetBraceLevel());
    chunk.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
    chunk.Str() = "";
@@ -1380,8 +1380,8 @@ bool close_statement(ParsingFrame &frm, Chunk *pc, const BraceState &braceState)
 
    if (braceState.consumed)
    {
-      frm.stmt_count = 0;
-      frm.expr_count = 0;
+      frm.SetStmtCount(0);
+      frm.SetExprCount(0);
       LOG_FMT(LSTMT, "%s(%d): orig line is %zu> reset2 stmt on '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->Text());
    }

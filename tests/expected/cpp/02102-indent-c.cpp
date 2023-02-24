@@ -394,7 +394,7 @@ void indent_text(void)
              (pc->GetType() == CT_ANGLE_CLOSE)))
           {
           indent_pse_pop(frm, pc);
-          frm.paren_count--;
+          frm.SetParenCount(frm.GetParenCount() - 1);
           }
         }
       }
@@ -467,7 +467,7 @@ void indent_text(void)
       frm.level++;
       indent_pse_push(frm, pc);
 
-      if (frm.paren_count != 0)
+      if (frm.GetParenCount() != 0)
           /* We are inside ({ ... }) -- indent one tab from the paren */
         frm.m_parenStack[frm.m_parenStack_tos].indent = frm.m_parenStack[frm.m_parenStack_tos - 1].indent_tmp + indent_size;
       else
@@ -606,7 +606,7 @@ void indent_text(void)
         }
 
       frm.m_parenStack[frm.m_parenStack_tos].indent_tmp = frm.m_parenStack[frm.m_parenStack_tos].indent;
-      frm.paren_count++;
+      frm.SetParenCount(frm.GetParenCount() + 1);
       }
     else if (pc->GetType() == CT_ASSIGN)
       {

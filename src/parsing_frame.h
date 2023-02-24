@@ -10,6 +10,7 @@
 #ifndef PARSING_FRAME_H_INCLUDED
 #define PARSING_FRAME_H_INCLUDED
 
+#include "token_enum.h"
 #include "uncrustify_types.h"
 
 #include <cstddef>
@@ -96,6 +97,72 @@ public:
     */
    void SetBraceLevel(const size_t braceLevel);
 
+   /**
+    * @brief Returns the frame preprocessor level
+    */
+   size_t GetPpLevel() const;
+
+   /**
+    * @brief Set the frame preprocessor level
+    * @param the new preprocessor level
+    */
+   void SetPpLevel(const size_t ppLevel);
+
+   /**
+    * @brief Returns the count of special parenthesis
+    */
+   size_t GetSParenCount() const;
+
+   /**
+    * @brief Set the count of special parenthesis
+    * @param the new special parenthesis count value
+    */
+   void SetSParenCount(const size_t sParenCount);
+
+   /**
+    * @brief Returns the count of parenthesis
+    */
+   size_t GetParenCount() const;
+
+   /**
+    * @brief Set the count of parenthesis
+    * @param the new parenthesis count value
+    */
+   void SetParenCount(const size_t parenCount);
+
+   /**
+    * @brief Returns the count of statements
+    */
+   size_t GetStmtCount() const;
+
+   /**
+    * @brief Set the count of statements
+    * @param the new statement count value
+    */
+   void SetStmtCount(const size_t stmtCount);
+
+   /**
+    * @brief Returns the count of statements
+    */
+   size_t GetExprCount() const;
+
+   /**
+    * @brief Set the count of statements
+    * @param the new statement count value
+    */
+   void SetExprCount(const size_t exprCount);
+
+   /**
+    * @brief Returns the ifdef type
+    */
+   E_Token GetIfdefType() const;
+
+   /**
+    * @brief Set the ifdef type
+    * @param the new type
+    */
+   void SetIfdefType(const E_Token inIfdef);
+
    ParenStackEntry &at(size_t idx);
    const ParenStackEntry &at(size_t idx) const;
 
@@ -126,15 +193,6 @@ public:
    const_reverse_iterator rend() const;
 
 
-   // Members
-   size_t  pp_level;          //! level of preproc #if stuff
-   size_t  sparen_count;
-   size_t  paren_count;
-   E_Token in_ifdef;
-   size_t  stmt_count;
-   size_t  expr_count;
-
-
 protected:
    void clear();
 
@@ -142,9 +200,15 @@ protected:
    std::vector<ParenStackEntry> m_parenStack;
    ParenStackEntry              m_lastPopped;
 
-   size_t                       m_refNumber;  //! frame reference number
-   size_t                       m_parenLevel; //! level of parens/square/angle/brace
-   size_t                       m_braceLevel; //! level of brace/vbrace
+   size_t                       m_refNumber;   //! frame reference number
+   size_t                       m_parenLevel;  //! level of parens/square/angle/brace
+   size_t                       m_braceLevel;  //! level of brace/vbrace
+   size_t                       m_ppLevel;     //! level of preproc #if stuff
+   size_t                       m_sParenCount; //! count of special parenthesis
+   size_t                       m_parenCount;  //! count of parenthesis
+   size_t                       m_stmtCount;   //! count of statements
+   size_t                       m_exprCount;   //! count of expressions
+   E_Token                      m_ifdefType;   //! the ifdef type
 };
 
 
@@ -199,6 +263,78 @@ inline size_t ParsingFrame::GetBraceLevel() const
 inline void ParsingFrame::SetBraceLevel(const size_t braceLevel)
 {
    m_braceLevel = braceLevel;
+}
+
+
+inline size_t ParsingFrame::GetPpLevel() const
+{
+   return(m_ppLevel);
+}
+
+
+inline void ParsingFrame::SetPpLevel(const size_t ppLevel)
+{
+   m_ppLevel = ppLevel;
+}
+
+
+inline size_t ParsingFrame::GetSParenCount() const
+{
+   return(m_sParenCount);
+}
+
+
+inline void ParsingFrame::SetSParenCount(const size_t sParenCount)
+{
+   m_sParenCount = sParenCount;
+}
+
+
+inline size_t ParsingFrame::GetParenCount() const
+{
+   return(m_parenCount);
+}
+
+
+inline void ParsingFrame::SetParenCount(const size_t parenCount)
+{
+   m_parenCount = parenCount;
+}
+
+
+inline size_t ParsingFrame::GetStmtCount() const
+{
+   return(m_stmtCount);
+}
+
+
+inline void ParsingFrame::SetStmtCount(const size_t stmtCount)
+{
+   m_stmtCount = stmtCount;
+}
+
+
+inline size_t ParsingFrame::GetExprCount() const
+{
+   return(m_exprCount);
+}
+
+
+inline void ParsingFrame::SetExprCount(const size_t exprCount)
+{
+   m_exprCount = exprCount;
+}
+
+
+inline E_Token ParsingFrame::GetIfdefType() const
+{
+   return(m_ifdefType);
+}
+
+
+inline void ParsingFrame::SetIfdefType(const E_Token inIfdef)
+{
+   m_ifdefType = inIfdef;
 }
 
 

@@ -46,15 +46,15 @@ void ParsingFrame::clear()
    m_parenStack.clear();
    m_parenStack.push_back(genDummy());
 
-   m_refNumber  = 0;
-   m_parenLevel = 0;
-   m_braceLevel = 0;
-   pp_level     = 0;
-   sparen_count = 0;
-   paren_count  = 0;
-   in_ifdef     = E_Token::CT_NONE;
-   stmt_count   = 0;
-   expr_count   = 0;
+   m_refNumber   = 0;
+   m_parenLevel  = 0;
+   m_braceLevel  = 0;
+   m_ppLevel     = 0;
+   m_sParenCount = 0;
+   m_parenCount  = 0;
+   m_ifdefType   = E_Token::CT_NONE;
+   m_stmtCount   = 0;
+   m_exprCount   = 0;
 }
 
 
