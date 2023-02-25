@@ -714,31 +714,17 @@ def main(args):
     # Test --tracking_space FILE
     #
     if os_name != 'nt':
-        # &lt; &gt; doesn't work under windows
-        if parsed_args.config == 'Debug':
-            eprint("Debug")
-            if not check_uncrustify_output(
-                    uncr_bin,
-                    parsed_args,
-                    args_arr=['-c', s_path_join(script_dir, 'config/tracking_space.cfg'),
-                              '-f', s_path_join(script_dir, 'input/tracking_space.cpp'),
-                              '--tracking_space', s_path_join(test_dir, 'results/Debug_tracking_space.html')],
-                    gen_expected_path=s_path_join(script_dir, 'output/Debug_tracking_space.html'),
-                    gen_result_path=s_path_join(test_dir, 'results/Debug_tracking_space.html'),
-                    ):
-                return_flag = False
-        else:
-            eprint(parsed_args.config)
-            if not check_uncrustify_output(
-                    uncr_bin,
-                    parsed_args,
-                    args_arr=['-c', s_path_join(script_dir, 'config/tracking_space.cfg'),
-                              '-f', s_path_join(script_dir, 'input/tracking_space.cpp'),
-                              '--tracking_space', s_path_join(test_dir, 'results/tracking_space.html')],
-                    gen_expected_path=s_path_join(script_dir, 'output/tracking_space.html'),
-                    gen_result_path=s_path_join(test_dir, 'results/tracking_space.html'),
-                    ):
-                return_flag = False
+        # doesn't work under windows
+        if not check_uncrustify_output(
+                uncr_bin,
+                parsed_args,
+                args_arr=['-c', s_path_join(script_dir, 'config/tracking_space.cfg'),
+                          '-f', s_path_join(script_dir, 'input/tracking_space.cpp'),
+                          '--tracking_space', s_path_join(test_dir, 'results/Debug_tracking_space.html')],
+                gen_expected_path=s_path_join(script_dir, 'output/Debug_tracking_space.html'),
+                gen_result_path=s_path_join(test_dir, 'results/Debug_tracking_space.html'),
+                ):
+            return_flag = False
 
     #
     # Test --replace
