@@ -9,11 +9,11 @@
 
 #include "chunk.h"
 
+
 /*
  * tokenize the functor such as:
  * desc->add_options() ( a ) (b)(c);
  */
-
 void mark_functor()
 {
    LOG_FUNC_ENTRY();
