@@ -1,6 +1,6 @@
 void foo()
 {
-add_options()
+desc->add_options()
     ("help,h", "produce help message")
     ("version,v", "print the version number")
     ("include-path,I", value< vector<string> >(), "include path")
