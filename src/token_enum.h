@@ -220,6 +220,9 @@ enum E_Token
    CT_TPAREN_OPEN,      // 'type' parenthetis used in function types
    CT_TPAREN_CLOSE,
 
+   CT_RPAREN_OPEN,      // functor                                    Issue #3914
+   CT_RPAREN_CLOSE,
+
    CT_BRACE_OPEN,       // {...}
    CT_BRACE_CLOSE,
 

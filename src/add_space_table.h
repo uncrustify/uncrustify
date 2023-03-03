@@ -363,4 +363,19 @@ const no_space_table_t no_space_table[] =
    { CT_TYPENAME,       CT_TYPE         },
 };
 
+/**
+ * this table lists out all combos where nothing is to do
+ * CT_UNKNOWN is a wildcard.
+ *
+ * TODO: some of these are no longer needed.
+ */
+// not used yet
+//const no_space_table_t IGNORE_space_table[] =
+//{
+//   { CT_RPAREN_OPEN, CT_RPAREN_CLOSE},
+//   { CT_RPAREN_OPEN, CT_UNKNOWN     },
+//   { CT_UNKNOWN,     CT_RPAREN_CLOSE},
+//};
+
+
 // *INDENT-ON*

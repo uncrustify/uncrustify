@@ -71,7 +71,7 @@ auto f = []
 };
 
 // Nested lambda within functions
-Func(
+FuncA(
     [] {
         return;
     },
@@ -80,7 +80,7 @@ Func(
     }
 );
 
-Func([] {
+FuncB([] {
         return;
     },
     [] {
@@ -88,7 +88,7 @@ Func([] {
     }
 );
 
-Func([] {
+FuncC([] {
         return;
     },
     [] {
@@ -96,14 +96,14 @@ Func([] {
     }
 )();
 
-Func([] {
+FuncD([] {
         return;
     },
     [] {
         return;
     })();
 
-Func([] {
+FuncE([] {
         return;
     },
     [] {

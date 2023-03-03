@@ -71,7 +71,7 @@ auto f = []
          };
 
 // Nested lambda within functions
-Func(
+FuncA(
     [] {
         return;
     },
@@ -80,35 +80,35 @@ Func(
     }
 );
 
-Func([] {
-         return;
-     },
-     [] {
-         return;
-     }
+FuncB([] {
+          return;
+      },
+      [] {
+          return;
+      }
 );
 
-Func([] {
-         return;
-     },
-     [] {
-         return;
-     }
+FuncC([] {
+          return;
+      },
+      [] {
+          return;
+      }
 )();
 
-Func([] {
-         return;
-     },
-     [] {
-         return;
-     })();
+FuncD([] {
+          return;
+      },
+      [] {
+          return;
+      })();
 
-Func([] {
-         return;
-     },
-     [] {
-         return;
-     });
+FuncE([] {
+          return;
+      },
+      [] {
+          return;
+      });
 
 A(
     B([] (const std::string &s) -> bool {

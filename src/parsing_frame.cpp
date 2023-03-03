@@ -203,6 +203,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
       || pc->GetType() == CT_VBRACE_CLOSE
       || pc->GetType() == CT_FPAREN_CLOSE
       || pc->GetType() == CT_LPAREN_CLOSE
+      || pc->GetType() == CT_RPAREN_CLOSE                      // Issue #3914
       || pc->GetType() == CT_SPAREN_CLOSE
       || pc->GetType() == CT_TPAREN_CLOSE
       || pc->GetType() == CT_CLASS_COLON

@@ -2090,6 +2090,32 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_inside_fparen());
    }
 
+   // functor "foo(...)" vs. "foo( ... )"
+   if (  first->Is(CT_RPAREN_OPEN)
+      || second->Is(CT_RPAREN_CLOSE))                  // Issue #3914
+   {
+      if (  (first->GetParentType() == CT_FUNC_CALL_USER)
+         || (  (second->GetParentType() == CT_FUNC_CALL_USER)
+            && (  (first->Is(CT_WORD))
+               || (first->Is(CT_SQUARE_CLOSE)))))
+      {
+         // Add or remove space inside user function '(' and ')'.
+         log_rule("sp_func_call_user_inside_rparen");
+         return(options::sp_func_call_user_inside_rparen());
+      }
+
+      if (  first->Is(CT_RPAREN_OPEN)
+         && second->Is(CT_RPAREN_CLOSE))                  // Issue #3914
+      {
+         // Add or remove space inside empty function '()'.
+         log_rule("sp_inside_rparens");
+         return(options::sp_inside_rparens());
+      }
+      // Add or remove space inside function '(' and ')'.
+      log_rule("sp_inside_rparen");
+      return(options::sp_inside_rparen());
+   }
+
    // "foo(...)" vs. "foo( ... )"
    if (  first->Is(CT_TPAREN_OPEN)
       || second->Is(CT_TPAREN_CLOSE))
@@ -3168,6 +3194,22 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       log_rule("IGNORE");
       return(IARF_IGNORE);
    }
+   // =============================================================
+   // category 0
+   // this table lists out all combos where nothing is to do
+   // CT_UNKNOWN is a wildcard.
+   // not used yet
+   //for (auto it : IGNORE_space_table)
+   //{
+   //   if (  (  it.first == CT_UNKNOWN
+   //         || it.first == first->GetType())
+   //      && (  it.second == CT_UNKNOWN
+   //         || it.second == second->GetType()))
+   //   {
+   //      log_rule("IGNORE from IGNORE_space_table");
+   //      return(IARF_IGNORE);
+   //   }
+   //}
 
    // =============================================================
    // category 1
@@ -3214,6 +3256,29 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       log_rule("IGNORE");
       return(IARF_IGNORE);
    }
+   //// TODO: if necessary create a new option
+   //if (  first->Is(CT_RPAREN_OPEN)
+   //   && second->Is(CT_RPAREN_CLOSE))
+   //{
+   //   log_rule("IGNORE");
+   //   return(IARF_IGNORE);
+   //}
+
+   //// TODO: if necessary create a new option
+   //if (  first->Is(CT_RPAREN_OPEN)
+   //   && second->Is(CT_UNKNOWN))
+   //{
+   //   log_rule("IGNORE");
+   //   return(IARF_IGNORE);
+   //}
+
+   //// TODO: if necessary create a new option
+   //if (  first->Is(CT_UNKNOWN)
+   //   && second->Is(CT_RPAREN_CLOSE))
+   //{
+   //   log_rule("IGNORE");
+   //   return(IARF_IGNORE);
+   //}
 
    if (  first->Is(CT_CASE_ELLIPSIS)
       && second->Is(CT_NUMBER))
