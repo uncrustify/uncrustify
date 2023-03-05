@@ -2005,7 +2005,7 @@ static bool parse_ignored(TokenContext &ctx, Chunk &pc)
    {
       return(true);
    }
-   // See if the UO_enable_processing_cmt or #pragma endasm / #endasm text is on this line
+   // See if the options::enable_processing_cmt() or #pragma endasm / #endasm text is on this line
    ctx.save();
    pc.Str().clear();
 
