@@ -91,7 +91,7 @@ sp_votes::~sp_votes()
 }
 
 
-// generates "vote_sp_xxx" variable name from uncrustify option name "UO_xxx"
+// generates "vote_sp_xxx" variable name from uncrustify option name "options::xxx()"
 #define SP_VOTE_VAR(x)    sp_votes vote_ ## x(options::x)
 
 

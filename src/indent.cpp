@@ -2114,7 +2114,7 @@ void indent_text()
                                           + options::indent_case_brace();
                   /*
                    * An open brace with the parent of case does not indent by default
-                   * UO_indent_case_brace can be used to indent the brace.
+                   * options::indent_case_brace() can be used to indent the brace.
                    * So we need to take the CASE indent, subtract off the
                    * indent_size that was added above and then add indent_case_brace.
                    * may take negative value
@@ -2300,7 +2300,7 @@ void indent_text()
       }
       else if (pc->Is(CT_CASE))
       {
-         // Start a case - indent UO_indent_switch_case from the switch level
+         // Start a case - indent options::indent_switch_case() from the switch level
          log_rule_B("indent_switch_case");
          const size_t tmp = frm.top().indent + indent_size
                             - options::indent_switch_body()
