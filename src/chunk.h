@@ -12,6 +12,7 @@
 #include "uncrustify_types.h"
 // necessary to not sort it
 #include "char_table.h"
+#include "language_names.h"
 #include "language_tools.h"
 
 

@@ -26,16 +26,6 @@ const char *get_token_name(E_Token token);
 
 
 /**
- * Gets the tag text for a language
- *
- * @param lang  The LANG_xxx enum
- *
- * @return A string
- */
-const char *language_name_from_flags(size_t lang);
-
-
-/**
  * Grab the token id for the text.
  *
  * @return token, will be CT_NONE on failure to match
@@ -75,20 +65,5 @@ void usage(const char *argv0);
 
 
 void usage_error(const char *msg = nullptr);
-
-
-/**
- * Set idx = 0 before the first call.
- * Done when returns nullptr
- */
-const char *get_file_extension(int &idx);
-
-
-//! Prints custom file extensions to the file
-void print_extensions(FILE *pfile);
-
-
-const char *extension_add(const char *ext_text, const char *lang_text);
-
 
 #endif /* UNCRUSTIFY_H_INCLUDED */

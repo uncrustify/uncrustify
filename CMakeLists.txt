@@ -291,6 +291,7 @@ set(uncrustify_sources
   src/indent.cpp
   src/keywords.cpp
   src/lang_pawn.cpp
+  src/language_names.cpp
   src/language_tools.cpp
   src/logger.cpp
   src/logmask.cpp
@@ -386,6 +387,7 @@ set(uncrustify_headers
   src/indent.h
   src/keywords.h
   src/lang_pawn.h
+  src/language_names.h
   src/language_tools.h
   src/ListManager.h
   src/logger.h
