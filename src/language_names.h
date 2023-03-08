@@ -12,9 +12,11 @@
 #include "base_types.h"
 
 #include <cstddef>      // to get size_t
+#include <cstdio>
 #include <map>
 #include <string.h>
-#include <strings.h>
+#include <string>
+//#include <strings.h>
 
 struct lang_name_t
 {
