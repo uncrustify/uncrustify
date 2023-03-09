@@ -11,6 +11,7 @@
 #include "option.h"
 
 #include "keywords.h"
+#include "language_names.h"
 #include "uncrustify.h"
 #include "uncrustify_version.h"
 

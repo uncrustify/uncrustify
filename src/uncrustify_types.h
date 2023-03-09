@@ -17,7 +17,7 @@
 #include "uncrustify_limits.h"
 
 #include <assert.h>
-#include <cstddef>      // do get the definition of size_t
+#include <cstddef>      // to get size_t
 
 #ifdef HAVE_UTIME_H
 #include <utime.h>
@@ -118,27 +118,27 @@ struct AlignmentData
 typedef std::pair<size_t, char *>   TrackNumber;   // track for "trackNumber" and "rule"
 typedef std::vector<TrackNumber>    TrackList;     // list of tracks
 
-//! list of all programming languages Uncrustify supports
-enum lang_flag_e
-{
-   LANG_C    = 0x0001,
-   LANG_CPP  = 0x0002,
-   LANG_D    = 0x0004,
-   LANG_CS   = 0x0008,     //! C# (C-Sharp)
-   LANG_JAVA = 0x0010,
-   LANG_OC   = 0x0020,     //! Objective-C
-   LANG_VALA = 0x0040,
-   LANG_PAWN = 0x0080,
-   LANG_ECMA = 0x0100,     //! ECMA Script (JavaScript)
-
-   LANG_ALLC = 0x017f,     /** LANG_C    | LANG_CPP | LANG_D    | LANG_CS   |
-                            *  LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA   */
-   LANG_ALL  = 0x0fff,     //! applies to all languages
-
-   FLAG_HDR  = 0x2000,     /*<< Header file for C family languages */
-   FLAG_DIG  = 0x4000,     //! digraph/trigraph
-   FLAG_PP   = 0x8000,     //! only appears in a preprocessor
-};
+////! list of all programming languages Uncrustify supports
+//enum lang_flag_e
+//{
+//   LANG_C    = 0x0001,
+//   LANG_CPP  = 0x0002,
+//   LANG_D    = 0x0004,
+//   LANG_CS   = 0x0008,     //! C# (C-Sharp)
+//   LANG_JAVA = 0x0010,
+//   LANG_OC   = 0x0020,     //! Objective-C
+//   LANG_VALA = 0x0040,
+//   LANG_PAWN = 0x0080,
+//   LANG_ECMA = 0x0100,     //! ECMA Script (JavaScript)
+//
+//   LANG_ALLC = 0x017f,     /** LANG_C    | LANG_CPP | LANG_D    | LANG_CS   |
+//                            *  LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA   */
+//   LANG_ALL  = 0x0fff,     //! applies to all languages
+//
+//   FLAG_HDR  = 0x2000,     /*<< Header file for C family languages */
+//   FLAG_DIG  = 0x4000,     //! digraph/trigraph
+//   FLAG_PP   = 0x8000,     //! only appears in a preprocessor
+//};
 
 //! Pattern classes for special keywords
 enum class pattern_class_e : unsigned int

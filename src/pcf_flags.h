@@ -8,13 +8,14 @@
 #ifndef PCF_FLAGS_STR_INCLUDED
 #define PCF_FLAGS_STR_INCLUDED
 
+#include "base_types.h"
 #include "enum_flags.h"
 #include "logger.h"
 
-// and the ever-so-important array size macro
-#ifndef ARRAY_SIZE
-#define ARRAY_SIZE(x)    (sizeof(x) / sizeof((x)[0]))
-#endif
+//// and the ever-so-important array size macro
+//#ifndef ARRAY_SIZE
+//#define ARRAY_SIZE(x)    (sizeof(x) / sizeof((x)[0]))
+//#endif
 
 using namespace std;
 
