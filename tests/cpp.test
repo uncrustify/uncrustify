@@ -495,6 +495,8 @@
 30962  cpp/nl_assign_leave_one_liners.cfg                   cpp/nl_assign_leave_one_liners.cpp
 30963  cpp/Issue_2907.cfg                                   cpp/Issue_2907.cpp
 30964  cpp/Issue_2823.cfg                                   cpp/Issue_2823.cpp
+30965  cpp/return_remove.cfg                                cpp/return_remove.cpp
+30966  cpp/return_dont_remove.cfg                           cpp/return_remove.cpp
 
 30970  cpp/Issue_2219.cfg                                   cpp/Issue_2219.cpp
 30971  cpp/Issue_2224.cfg                                   cpp/Issue_2224.cpp
