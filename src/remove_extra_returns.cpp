@@ -51,13 +51,16 @@ void remove_extra_returns()
          {
             // it is not a class
             // look for a closing brace
+            // make sure we are at level 1 because 'return' could
+            // be part of nested 'if' blocks
             closing_brace = pc->GetNextType(CT_BRACE_CLOSE, 0);
             LOG_FMT(LRMRETURN, "%s(%d): on orig line %zu, level is %zu\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetLevel());
 
             if (closing_brace->IsNotNullChunk())
             {
-               if (closing_brace->GetParentType() == CT_FUNC_DEF)
+               if (  closing_brace->GetParentType() == CT_FUNC_DEF
+                  && pc->GetLevel() < 2)
                {
                   remove_it = true;
                }
