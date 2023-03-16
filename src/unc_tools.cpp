@@ -3,7 +3,7 @@
  * This file contains lot of tools for debugging
  *
  * @author  Guy Maurel
- *          October 2015- 2021
+ *          October 2015- 2023
  * @license GPL v2+
  */
 
@@ -499,4 +499,24 @@ size_t get_A_Number()
 {
    number = number + 1;
    return(number);
+}
+
+
+void dump_keyword_for_lang(size_t language_count, chunk_tag_t *keyword_for_lang)
+{
+   fprintf(stderr, "%s:                      tag            type        flags\n", __func__);
+
+   for (size_t ii = 0; ii < language_count; ii++)
+   {
+      std::bitset<16> bit_a;
+      bit_a = keyword_for_lang[ii].lang_flags;
+      std::string     g_a;
+      g_a = bit_a.to_string();
+      fprintf(stderr, "%s: %3zu: %18s, %14s, %12ld, %16s, %8s\n",
+              __func__, ii,
+              keyword_for_lang[ii].tag, get_token_name(keyword_for_lang[ii].type),
+              keyword_for_lang[ii].lang_flags,
+              g_a.data(),
+              language_name_from_flags(keyword_for_lang[ii].lang_flags));
+   }
 }

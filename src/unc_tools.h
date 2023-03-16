@@ -2,7 +2,7 @@
  * @file unc_tools.h
  *
  * @author  Guy Maurel
- *          October 2015, 2016, 2017, 2018, 2019, 2020, 2021
+ *          October 2015, 2023
  * @license GPL v2+
  */
 
@@ -42,5 +42,8 @@ void dump_in(unsigned int type);
 
 
 size_t get_A_Number();
+
+
+void dump_keyword_for_lang(size_t language_count, chunk_tag_t *keyword_for_lang);
 
 #endif /* UNC_TOOLS_H_INCLUDED */
