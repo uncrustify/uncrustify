@@ -83,17 +83,34 @@ const char *language_name_from_flags(size_t lang)
       }
    }
 
-   // Check for the first set language bit
+   static char lang_liste[120];
+   lang_liste[0] = '\0';
+
+   // Check for the next set language bit
    for (auto &language_name : language_names)
    {
+      if (strcmp(language_name.name, "OC+") == 0)
+      {
+         break;
+      }
+
       if ((language_name.lang & lang) != 0)
       {
-         return(language_name.name);
+         if (lang_liste[0] == '\0')
+         {
+            strcpy(lang_liste, language_name.name);
+         }
+         else
+         {
+            int ll = strlen(lang_liste);
+            strcpy(&lang_liste[ll], ", ");
+            strcpy(&lang_liste[ll + 2], language_name.name);
+         }
       }
    }
 
-   return("???");
-}
+   return(lang_liste);
+} // language_name_from_flags
 
 
 bool ends_with(const char *filename, const char *tag, bool case_sensitive = true)
@@ -106,7 +123,7 @@ bool ends_with(const char *filename, const char *tag, bool case_sensitive = true
                && (strcmp(&filename[len1 - len2], tag) == 0))
             || (  !case_sensitive
                && (strcasecmp(&filename[len1 - len2], tag) == 0))));
-}
+} // ends_with
 
 
 const char *get_file_extension(int &idx)
@@ -119,7 +136,7 @@ const char *get_file_extension(int &idx)
    }
    idx++;
    return(val);
-}
+} // get_file_extension
 
 
 ////typedef std::map<std::string, std::string> extension_map_t;
