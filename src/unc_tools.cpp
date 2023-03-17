@@ -504,7 +504,7 @@ size_t get_A_Number()
 
 void dump_keyword_for_lang(size_t language_count, chunk_tag_t *keyword_for_lang)
 {
-   fprintf(stderr, "%s:                      tag            type        flags\n", __func__);
+   LOG_FMT(LDYNKW, "%s:                      tag            type        flags\n", __func__);
 
    for (size_t ii = 0; ii < language_count; ii++)
    {
@@ -512,7 +512,7 @@ void dump_keyword_for_lang(size_t language_count, chunk_tag_t *keyword_for_lang)
       bit_a = keyword_for_lang[ii].lang_flags;
       std::string     g_a;
       g_a = bit_a.to_string();
-      fprintf(stderr, "%s: %3zu: %18s, %14s, %12ld, %16s, %8s\n",
+      LOG_FMT(LDYNKW, "%s: %3zu: %18s, %14s, %12ld, %16s, %s\n",
               __func__, ii,
               keyword_for_lang[ii].tag, get_token_name(keyword_for_lang[ii].type),
               keyword_for_lang[ii].lang_flags,

@@ -1517,8 +1517,8 @@ static void do_source_file(const char *filename_in,
       LOG_FMT(LERR, "Failed to load (%s)\n", filename_in);
       exit(EX_IOERR);
    }
-   LOG_FMT(LSYS, "%s(%d): Parsing: %s as language %s\n",
-           __func__, __LINE__, filename_in, language_name_from_flags(cpd.lang_flags));
+   LOG_FMT(LSYS, "%s: Parsing: %s as language %s\n",
+           __func__, filename_in, language_name_from_flags(cpd.lang_flags));
 
    // check keyword sort
    assert(keywords_are_sorted());
