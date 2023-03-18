@@ -17,7 +17,7 @@ methodCall2( ^ {
 
 [array block:^ (id obj, NSUInteger idx, BOOL *stop) {
          NSLog(@"Object at index %lu is %@", idx, obj);
-       }];
+}];
 
 
 [UIView animateWithDuration:3.0f animation:^{
@@ -75,7 +75,7 @@ methodCall8(x,  ^(Component *c) {
 
 [Object callMethod:xArg block:^(NSString *)(Component *c) {
                           return @"methodCall6";
-                        }];
+}];
 
 
 [Object callMethod:xArg

@@ -656,7 +656,7 @@ void indent_text()
 
 
    ParsingFrameStack frames;
-   ParsingFrame      frm{};
+   ParsingFrame      frm;
 
 
    Chunk *pc        = Chunk::GetHead();

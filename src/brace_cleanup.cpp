@@ -130,7 +130,7 @@ static size_t preproc_start(BraceState &braceState, ParsingFrame &frm, Chunk *pc
    braceState.frames.push(frm);
 
    // a preproc body starts a new, blank frame
-   frm = {};
+   frm = ParsingFrame();
    frm.SetParenLevel(1);
    frm.SetBraceLevel(1);
 
@@ -176,7 +176,7 @@ void brace_cleanup()
    LOG_FUNC_ENTRY();
 
    BraceState   braceState;
-   ParsingFrame frm{};
+   ParsingFrame frm;
    Chunk        *pc = Chunk::GetHead();
 
    while (pc->IsNotNullChunk())
