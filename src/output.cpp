@@ -2123,14 +2123,18 @@ static Chunk *output_comment_cpp(Chunk *first)
                   && (tmp[0] != '/'))
                {
                   // only with sp_cmt_cpp_start set to 'add' or 'force'
-                  bool    sp_cmt_pvs = options::sp_cmt_cpp_pvs(); // Issue #3919
-                  UncText temp       = first->GetStr();
-                  int     PVS        = temp.find("//-V");
+                  bool    sp_cmt_pvs  = options::sp_cmt_cpp_pvs();  // Issue #3919
+                  bool    sp_cmt_lint = options::sp_cmt_cpp_lint(); // Issue #3614
+                  UncText temp        = first->GetStr();
+                  int     PVS         = temp.find("//-V");
+                  int     LINT        = temp.find("//lint");
 
                   // @return == -1 if not found
                   // @return >=  0 the position
-                  if (  PVS == 0
-                     && sp_cmt_pvs)
+                  if (  (  PVS == 0
+                        && sp_cmt_pvs)
+                     || (  LINT == 0
+                        && sp_cmt_lint))
                   {
                      // do not include a space
                   }
