@@ -403,8 +403,8 @@ void init_keywords_for_language()
    dump_keyword_for_lang(language_count, keyword_for_lang);
 #endif
 
-   LOG_FMT(LDYNKW, "%s(%d): Number of Keywords for language %d: '%zu'\n",
-           __func__, __LINE__, local_flags, language_count);
+   LOG_FMT(LDYNKW, "%s(%d): Number of Keywords for language %s: '%zu'\n",
+           __func__, __LINE__, language_name_from_flags(local_flags), language_count);
 } // init_keywords_for_language
 
 
