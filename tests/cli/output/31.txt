@@ -435,6 +435,30 @@ indent_text : frm.pse_tos is 0, ...indent is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : pc orig line is 0, orig col is 0, Text() is '', type is NONE
 indent_text : before quick_align_again
+reindent_line : orig line is 2, orig col is 1, on '{' [BRACE_OPEN/STRUCT] => 1
+ [CallStack]
+reindent_line : orig line is 3, orig col is 1, on 'TelegramIndex' [FUNC_CLASS_DEF/NONE] => 9
+ [CallStack]
+reindent_line : orig line is 4, orig col is 1, on 'pTelName' [FUNC_CTOR_VAR/NONE] => 17
+ [CallStack]
+reindent_line : orig line is 5, orig col is 1, on 'nTelIndex' [FUNC_CTOR_VAR/NONE] => 17
+ [CallStack]
+reindent_line : orig line is 6, orig col is 1, on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9
+ [CallStack]
+reindent_line : orig line is 7, orig col is 1, on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9
+ [CallStack]
+reindent_line : orig line is 9, orig col is 1, on '~' [DESTRUCTOR/FUNC_CLASS_DEF] => 9
+ [CallStack]
+reindent_line : orig line is 10, orig col is 1, on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9
+ [CallStack]
+reindent_line : orig line is 11, orig col is 1, on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9
+ [CallStack]
+reindent_line : orig line is 13, orig col is 1, on 'const' [QUALIFIER/NONE] => 9
+ [CallStack]
+reindent_line : orig line is 14, orig col is 1, on 'unsigned' [TYPE/NONE] => 9
+ [CallStack]
+reindent_line : orig line is 15, orig col is 1, on '}' [BRACE_CLOSE/STRUCT] => 1
+ [CallStack]
 indent_text : after quick_align_again
 indent_text : orig line is 1, orig col is 1, Text() 'struct', type is STRUCT, PRE is false
 indent_text : orig line is 1, orig col is 1, column is 1, for 'struct'
@@ -873,4 +897,28 @@ indent_text : frm.pse_tos is 0, ...indent is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : pc orig line is 0, orig col is 0, Text() is '', type is NONE
 indent_text : before quick_align_again
+reindent_line : orig line is 2, orig col is 1, on '{' [BRACE_OPEN/STRUCT] => 1
+ [CallStack]
+reindent_line : orig line is 3, orig col is 1, on 'TelegramIndex' [FUNC_CLASS_DEF/NONE] => 9
+ [CallStack]
+reindent_line : orig line is 4, orig col is 1, on 'pTelName' [FUNC_CTOR_VAR/NONE] => 17
+ [CallStack]
+reindent_line : orig line is 5, orig col is 1, on 'nTelIndex' [FUNC_CTOR_VAR/NONE] => 17
+ [CallStack]
+reindent_line : orig line is 6, orig col is 1, on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9
+ [CallStack]
+reindent_line : orig line is 7, orig col is 1, on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9
+ [CallStack]
+reindent_line : orig line is 9, orig col is 1, on '~' [DESTRUCTOR/FUNC_CLASS_DEF] => 9
+ [CallStack]
+reindent_line : orig line is 10, orig col is 1, on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9
+ [CallStack]
+reindent_line : orig line is 11, orig col is 1, on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9
+ [CallStack]
+reindent_line : orig line is 13, orig col is 1, on 'const' [QUALIFIER/NONE] => 9
+ [CallStack]
+reindent_line : orig line is 14, orig col is 1, on 'unsigned' [TYPE/NONE] => 9
+ [CallStack]
+reindent_line : orig line is 15, orig col is 1, on '}' [BRACE_CLOSE/STRUCT] => 1
+ [CallStack]
 indent_text : after quick_align_again

@@ -20,32 +20,38 @@ using std::to_string;
 using std::invalid_argument;
 
 
-//! amount of elements for which memory is going to be pre-initialized
-static constexpr const int CONTAINER_INIT_SIZE = 16;
-
-
-static ParenStackEntry genDummy()
+ParenStackEntry::ParenStackEntry()
 {
-   ParenStackEntry tmp_dummy{};
-
-   tmp_dummy.indent     = 1;
-   tmp_dummy.indent_tmp = 1;
-   tmp_dummy.indent_tab = 1;
-   tmp_dummy.type       = CT_EOF;
-   tmp_dummy.pc         = Chunk::NullChunkPtr;
-   tmp_dummy.pop_pc     = Chunk::NullChunkPtr;
-
-   return(tmp_dummy);
+   type         = CT_EOF;
+   pc           = Chunk::NullChunkPtr;
+   level        = 0;
+   open_line    = 0;
+   open_colu    = 0;
+   brace_indent = 0;
+   indent       = 1;
+   indent_tmp   = 1;
+   indent_tab   = 1;
+   ns_cnt       = 0;
+   indent_cont  = false;
+   in_preproc   = false;
+   non_vardef   = false;
+   parent       = CT_NONE;
+   stage        = E_BraceStage::NONE;
+   ip           = { Chunk::NullChunkPtr, 0 };
+   pop_pc       = Chunk::NullChunkPtr;
 }
 
 
-void ParsingFrame::clear()
+ParsingFrame::ParsingFrame()
 {
-   m_lastPopped = genDummy();
+   //! amount of elements for which memory is going to be pre-initialized
+   static constexpr int CONTAINER_INIT_SIZE = 16;
 
-   m_parenStack.clear();
-   m_parenStack.push_back(genDummy());
+   m_parenStack = std::vector<ParenStackEntry>();
+   m_parenStack.reserve(CONTAINER_INIT_SIZE);
+   m_parenStack.push_back(ParenStackEntry());
 
+   m_lastPopped  = ParenStackEntry();
    m_refNumber   = 0;
    m_parenLevel  = 0;
    m_braceLevel  = 0;
@@ -55,26 +61,6 @@ void ParsingFrame::clear()
    m_ifdefType   = E_Token::CT_NONE;
    m_stmtCount   = 0;
    m_exprCount   = 0;
-}
-
-
-ParsingFrame::ParsingFrame()
-{
-   m_parenStack = std::vector<ParenStackEntry>();
-   m_parenStack.reserve(CONTAINER_INIT_SIZE);
-   clear();
-}
-
-
-ParenStackEntry &ParsingFrame::at(size_t idx)
-{
-   return(m_parenStack.at(idx));
-}
-
-
-const ParenStackEntry &ParsingFrame::at(size_t idx) const
-{
-   return(m_parenStack.at(idx));
 }
 
 
@@ -116,11 +102,6 @@ const ParenStackEntry &ParsingFrame::prev(size_t idx) const
 ParenStackEntry &ParsingFrame::top()
 {
    // always at least one (dummy) element inside m_parenStack guaranteed
-//   if (m_parenStack.empty())
-//   {
-//      throw logic_error(string(__FILE__) + ":" + to_string(__LINE__)
-//                        + " called top on an empty stack");
-//   }
    return(*std::prev(std::end(m_parenStack)));
 }
 
@@ -128,11 +109,6 @@ ParenStackEntry &ParsingFrame::top()
 const ParenStackEntry &ParsingFrame::top() const
 {
    // always at least one (dummy) element inside m_parenStack guaranteed
-//   if (m_parenStack.empty())
-//   {
-//      throw logic_error(string(__FILE__) + ":" + to_string(__LINE__)
-//                        + " called top on an empty stack");
-//   }
    return(*std::prev(std::end(m_parenStack)));
 }
 
@@ -150,7 +126,7 @@ void ParsingFrame::push(Chunk *pc, const char *func, int line, E_BraceStage stag
 {
    LOG_FUNC_ENTRY();
 
-   ParenStackEntry new_entry = {};
+   ParenStackEntry new_entry;
 
    new_entry.type      = pc->GetType();
    new_entry.level     = pc->GetLevel();
@@ -273,7 +249,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
 
    if (m_parenStack.size() == 1)
    {
-      *std::begin(m_parenStack) = genDummy();
+      *std::begin(m_parenStack) = ParenStackEntry();
    }
    else
    {

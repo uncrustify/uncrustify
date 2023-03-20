@@ -10,11 +10,8 @@
 #ifndef PARSING_FRAME_H_INCLUDED
 #define PARSING_FRAME_H_INCLUDED
 
-#include "token_enum.h"
 #include "uncrustify_types.h"
 
-#include <cstddef>
-#include <memory>
 #include <vector>
 
 
@@ -22,21 +19,23 @@
 class ParenStackEntry
 {
 public:
+   ParenStackEntry();
+
    E_Token         type;         //! the type that opened the entry
+   Chunk           *pc;          //! chunk that opened the level, TODO: make const
    size_t          level;        //! level of opening type
    size_t          open_line;    //! line that open symbol is on, only for logging purposes
    size_t          open_colu;    //! column that open symbol is on, only for logging purposes
-   Chunk           *pc;          //! chunk that opened the level, TODO: make const
    size_t          brace_indent; //! indent for braces - may not relate to indent
    size_t          indent;       //! indent level (depends on use)
    size_t          indent_tmp;   //! temporary indent level (depends on use)
    size_t          indent_tab;   //! the 'tab' indent (always <= real column)
+   size_t          ns_cnt;       //! Number of consecutive namespace levels
    bool            indent_cont;  //! indent_continue was applied
+   bool            in_preproc;   //! whether this was created in a preprocessor
+   bool            non_vardef;   //! Hit a non-vardef line
    E_Token         parent;       //! if, for, function, etc
    E_BraceStage    stage;        //! used to check progression of complex statements.
-   bool            in_preproc;   //! whether this was created in a preprocessor
-   size_t          ns_cnt;       //! Number of consecutive namespace levels
-   bool            non_vardef;   //! Hit a non-vardef line
    IndentationData ip;
    Chunk           *pop_pc;
 };
@@ -194,11 +193,9 @@ public:
 
 
 protected:
-   void clear();
-
    // Members
-   std::vector<ParenStackEntry> m_parenStack;
-   ParenStackEntry              m_lastPopped;
+   std::vector<ParenStackEntry> m_parenStack;  //! The parenthesis stack
+   ParenStackEntry              m_lastPopped;  //! last popped frame or nullptr
 
    size_t                       m_refNumber;   //! frame reference number
    size_t                       m_parenLevel;  //! level of parens/square/angle/brace
@@ -335,6 +332,18 @@ inline E_Token ParsingFrame::GetIfdefType() const
 inline void ParsingFrame::SetIfdefType(const E_Token inIfdef)
 {
    m_ifdefType = inIfdef;
+}
+
+
+inline ParenStackEntry &ParsingFrame::at(size_t idx)
+{
+   return(m_parenStack.at(idx));
+}
+
+
+inline const ParenStackEntry &ParsingFrame::at(size_t idx) const
+{
+   return(m_parenStack.at(idx));
 }
 
 
