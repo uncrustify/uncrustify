@@ -1207,6 +1207,11 @@ sp_cmt_cpp_start;
 extern Option<bool>
 sp_cmt_cpp_pvs;
 
+// remove space after the '//' and the command 'lint',
+// only works with sp_cmt_cpp_start set to add or force.
+extern Option<bool>
+sp_cmt_cpp_lint;
+
 // Add or remove space in a C++ region marker comment, as in '// <here> BEGIN'.
 // A region marker is defined as a comment which is not preceded by other text
 // (i.e. the comment is the first non-whitespace on the line), and which starts
