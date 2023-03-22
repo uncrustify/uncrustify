@@ -1446,10 +1446,6 @@ void mark_function(Chunk *pc)
       LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', orig line is %zu, orig col is %zu, type is %s\n",
               __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->GetOrigCol(), get_token_name(prev->GetType()));
    }
-   else
-   {
-      prev = Chunk::NullChunkPtr;
-   }
 
    // Check for C++ function def
    if (  pc->Is(CT_FUNC_CLASS_DEF)
