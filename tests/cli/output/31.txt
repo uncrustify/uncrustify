@@ -2,7 +2,7 @@ indent_text : orig line is 1, orig col is 1, Text() 'struct', type is STRUCT, PR
 indent_text : orig line is 1, orig col is 1, column is 1, for 'struct'
    []
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
-indent_text : pc orig line is 1, orig col is 1, Text() is 'struct', type is STRUCT
+indent_text :     pc orig line is 1, orig col is 1, Text() is 'struct', type is STRUCT
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 reindent_line : orig line is 1, orig col is 1, on 'struct' [STRUCT/NONE] => 1
  [CallStack]
@@ -11,13 +11,13 @@ indent_text : orig line is 1, orig col is 8, Text() 'TelegramIndex', type is TYP
 indent_text : orig line is 1, orig col is 8, column is 8, for 'TelegramIndex'
    []
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
-indent_text : pc orig line is 1, orig col is 8, Text() is 'TelegramIndex', type is TYPE
+indent_text :     pc orig line is 1, orig col is 8, Text() is 'TelegramIndex', type is TYPE
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : pc orig line is 1, orig col is 21, Text() is '', type is NEWLINE
 indent_text : orig line is 1, orig col is 21, <Newline>, PRE is false
 indent_text : orig line is 1, <Newline>
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
-indent_text : pc orig line is 1, orig col is 21, Text() is '', type is NEWLINE
+indent_text :     pc orig line is 1, orig col is 21, Text() is '', type is NEWLINE
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
@@ -26,7 +26,7 @@ indent_text : orig line is 2, orig col is 1, Text() '{', type is BRACE_OPEN, PRE
 indent_text : orig line is 2, orig col is 1, column is 1, for '{'
    []
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
-indent_text : pc orig line is 2, orig col is 1, Text() is '{', type is BRACE_OPEN
+indent_text :     pc orig line is 2, orig col is 1, Text() is '{', type is BRACE_OPEN
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 1, ... indent is 9
 indent_text : orig line is 2, orig col is 1, Text() is '{', parent type is STRUCT
@@ -110,7 +110,7 @@ indent_text : orig line is 3, orig col is 47, Text() ')', type is FPAREN_CLOSE, 
 indent_text : orig line is 3, orig col is 47, column is 55, for ')'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 23
-indent_text : pc orig line is 3, orig col is 47, Text() is ')', type is FPAREN_CLOSE
+indent_text :     pc orig line is 3, orig col is 47, Text() is ')', type is FPAREN_CLOSE
 indent_text : pc orig line is 3, orig col is 47, Text() is ')', type is FPAREN_CLOSE
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : pc orig line is 3, orig col is 49, Text() is ':', type is CONSTR_COLON
@@ -125,7 +125,7 @@ indent_text : pc orig line is 3, orig col is 50, Text() is '', type is NEWLINE
 indent_text : orig line is 3, orig col is 50, <Newline>, PRE is false
 indent_text : orig line is 3, <Newline>
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 3, orig col is 50, Text() is '', type is NEWLINE
+indent_text :     pc orig line is 3, orig col is 50, Text() is '', type is NEWLINE
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : frm.pse_tos is 2, ...indent is 17
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
@@ -134,7 +134,7 @@ indent_text : orig line is 4, orig col is 1, Text() 'pTelName', type is FUNC_CTO
 indent_text : orig line is 4, orig col is 1, column is 1, for 'pTelName'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 4, orig col is 1, Text() is 'pTelName', type is FUNC_CTOR_VAR
+indent_text :     pc orig line is 4, orig col is 1, Text() is 'pTelName', type is FUNC_CTOR_VAR
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 reindent_line : orig line is 4, orig col is 1, on 'pTelName' [FUNC_CTOR_VAR/NONE] => 17
  [CallStack]
@@ -143,7 +143,7 @@ indent_text : orig line is 4, orig col is 9, Text() '(', type is FPAREN_OPEN, PR
 indent_text : orig line is 4, orig col is 9, column is 25, for '('
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 4, orig col is 9, Text() is '(', type is FPAREN_OPEN
+indent_text :     pc orig line is 4, orig col is 9, Text() is '(', type is FPAREN_OPEN
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : frm.pse_tos is 3, ...indent is 26
 indent_text : frm.pse_tos is 3, ...indent is 26
@@ -159,22 +159,22 @@ indent_text : orig line is 4, orig col is 12, Text() ')', type is FPAREN_CLOSE, 
 indent_text : orig line is 4, orig col is 12, column is 28, for ')'
    []
 indent_text : frm.pse_tos is 3, ...indent_tmp is 26
+indent_text :     pc orig line is 4, orig col is 12, Text() is ')', type is FPAREN_CLOSE
 indent_text : pc orig line is 4, orig col is 12, Text() is ')', type is FPAREN_CLOSE
-indent_text : pc orig line is 4, orig col is 12, Text() is ')', type is FPAREN_CLOSE
-indent_text : pc orig line is 4, orig col is 12, Text() is ')', type is FPAREN_CLOSE
+indent_text :     pc orig line is 4, orig col is 12, Text() is ')', type is FPAREN_CLOSE
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : pc orig line is 4, orig col is 13, Text() is ',', type is COMMA
 indent_text : orig line is 4, orig col is 13, Text() ',', type is COMMA, PRE is false
 indent_text : orig line is 4, orig col is 13, column is 29, for ','
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 4, orig col is 13, Text() is ',', type is COMMA
+indent_text :     pc orig line is 4, orig col is 13, Text() is ',', type is COMMA
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : pc orig line is 4, orig col is 14, Text() is '', type is NEWLINE
 indent_text : orig line is 4, orig col is 14, <Newline>, PRE is false
 indent_text : orig line is 4, <Newline>
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 4, orig col is 14, Text() is '', type is NEWLINE
+indent_text :     pc orig line is 4, orig col is 14, Text() is '', type is NEWLINE
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : frm.pse_tos is 2, ...indent is 17
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
@@ -183,7 +183,7 @@ indent_text : orig line is 5, orig col is 1, Text() 'nTelIndex', type is FUNC_CT
 indent_text : orig line is 5, orig col is 1, column is 1, for 'nTelIndex'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 5, orig col is 1, Text() is 'nTelIndex', type is FUNC_CTOR_VAR
+indent_text :     pc orig line is 5, orig col is 1, Text() is 'nTelIndex', type is FUNC_CTOR_VAR
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 reindent_line : orig line is 5, orig col is 1, on 'nTelIndex' [FUNC_CTOR_VAR/NONE] => 17
  [CallStack]
@@ -192,7 +192,7 @@ indent_text : orig line is 5, orig col is 10, Text() '(', type is FPAREN_OPEN, P
 indent_text : orig line is 5, orig col is 10, column is 26, for '('
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 5, orig col is 10, Text() is '(', type is FPAREN_OPEN
+indent_text :     pc orig line is 5, orig col is 10, Text() is '(', type is FPAREN_OPEN
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : frm.pse_tos is 3, ...indent is 27
 indent_text : frm.pse_tos is 3, ...indent is 27
@@ -208,15 +208,15 @@ indent_text : orig line is 5, orig col is 12, Text() ')', type is FPAREN_CLOSE, 
 indent_text : orig line is 5, orig col is 12, column is 28, for ')'
    []
 indent_text : frm.pse_tos is 3, ...indent_tmp is 27
+indent_text :     pc orig line is 5, orig col is 12, Text() is ')', type is FPAREN_CLOSE
 indent_text : pc orig line is 5, orig col is 12, Text() is ')', type is FPAREN_CLOSE
-indent_text : pc orig line is 5, orig col is 12, Text() is ')', type is FPAREN_CLOSE
-indent_text : pc orig line is 5, orig col is 12, Text() is ')', type is FPAREN_CLOSE
+indent_text :     pc orig line is 5, orig col is 12, Text() is ')', type is FPAREN_CLOSE
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : pc orig line is 5, orig col is 13, Text() is '', type is NEWLINE
 indent_text : orig line is 5, orig col is 13, <Newline>, PRE is false
 indent_text : orig line is 5, <Newline>
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 5, orig col is 13, Text() is '', type is NEWLINE
+indent_text :     pc orig line is 5, orig col is 13, Text() is '', type is NEWLINE
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : frm.pse_tos is 2, ...indent is 17
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
@@ -226,7 +226,7 @@ indent_text : orig line is 6, orig col is 1, column is 1, for '{'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : pc orig line is 6, orig col is 1, Text() is '{', type is BRACE_OPEN
-indent_text : pc orig line is 6, orig col is 1, Text() is '{', type is BRACE_OPEN
+indent_text :     pc orig line is 6, orig col is 1, Text() is '{', type is BRACE_OPEN
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : frm.pse_tos is 2, ... indent is 17
 indent_text : orig line is 6, orig col is 1, Text() is '{', parent type is FUNC_CLASS_DEF
@@ -245,7 +245,7 @@ indent_text : orig line is 7, orig col is 1, Text() '}', type is BRACE_CLOSE, PR
 indent_text : orig line is 7, orig col is 1, column is 1, for '}'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 7, orig col is 1, Text() is '}', type is BRACE_CLOSE
+indent_text :     pc orig line is 7, orig col is 1, Text() is '}', type is BRACE_CLOSE
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : pc orig line is 7, orig col is 1, Text() is '}', type is BRACE_CLOSE
 reindent_line : orig line is 7, orig col is 1, on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9
@@ -285,7 +285,7 @@ indent_text : orig line is 9, orig col is 16, Text() ')', type is FPAREN_CLOSE, 
 indent_text : orig line is 9, orig col is 16, column is 24, for ')'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 24
-indent_text : pc orig line is 9, orig col is 16, Text() is ')', type is FPAREN_CLOSE
+indent_text :     pc orig line is 9, orig col is 16, Text() is ')', type is FPAREN_CLOSE
 indent_text : pc orig line is 9, orig col is 16, Text() is ')', type is FPAREN_CLOSE
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : pc orig line is 9, orig col is 17, Text() is '', type is NEWLINE
@@ -318,7 +318,7 @@ indent_text : orig line is 11, orig col is 1, Text() '}', type is BRACE_CLOSE, P
 indent_text : orig line is 11, orig col is 1, column is 1, for '}'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 11, orig col is 1, Text() is '}', type is BRACE_CLOSE
+indent_text :     pc orig line is 11, orig col is 1, Text() is '}', type is BRACE_CLOSE
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : pc orig line is 11, orig col is 1, Text() is '}', type is BRACE_CLOSE
 reindent_line : orig line is 11, orig col is 1, on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9
@@ -413,7 +413,7 @@ indent_text : orig line is 15, orig col is 1, Text() '}', type is BRACE_CLOSE, P
 indent_text : orig line is 15, orig col is 1, column is 1, for '}'
    []
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
-indent_text : pc orig line is 15, orig col is 1, Text() is '}', type is BRACE_CLOSE
+indent_text :     pc orig line is 15, orig col is 1, Text() is '}', type is BRACE_CLOSE
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : pc orig line is 15, orig col is 1, Text() is '}', type is BRACE_CLOSE
 reindent_line : orig line is 15, orig col is 1, on '}' [BRACE_CLOSE/STRUCT] => 1
@@ -423,13 +423,13 @@ indent_text : orig line is 15, orig col is 2, Text() ';', type is SEMICOLON, PRE
 indent_text : orig line is 15, orig col is 2, column is 2, for ';'
    []
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
-indent_text : pc orig line is 15, orig col is 2, Text() is ';', type is SEMICOLON
+indent_text :     pc orig line is 15, orig col is 2, Text() is ';', type is SEMICOLON
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : pc orig line is 15, orig col is 3, Text() is '', type is NEWLINE
 indent_text : orig line is 15, orig col is 3, <Newline>, PRE is false
 indent_text : orig line is 15, <Newline>
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
-indent_text : pc orig line is 15, orig col is 3, Text() is '', type is NEWLINE
+indent_text :     pc orig line is 15, orig col is 3, Text() is '', type is NEWLINE
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
@@ -464,7 +464,7 @@ indent_text : orig line is 1, orig col is 1, Text() 'struct', type is STRUCT, PR
 indent_text : orig line is 1, orig col is 1, column is 1, for 'struct'
    []
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
-indent_text : pc orig line is 1, orig col is 1, Text() is 'struct', type is STRUCT
+indent_text :     pc orig line is 1, orig col is 1, Text() is 'struct', type is STRUCT
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 reindent_line : orig line is 1, orig col is 1, on 'struct' [STRUCT/NONE] => 1
  [CallStack]
@@ -473,13 +473,13 @@ indent_text : orig line is 1, orig col is 8, Text() 'TelegramIndex', type is TYP
 indent_text : orig line is 1, orig col is 8, column is 8, for 'TelegramIndex'
    []
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
-indent_text : pc orig line is 1, orig col is 8, Text() is 'TelegramIndex', type is TYPE
+indent_text :     pc orig line is 1, orig col is 8, Text() is 'TelegramIndex', type is TYPE
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : pc orig line is 1, orig col is 21, Text() is '', type is NEWLINE
 indent_text : orig line is 1, orig col is 21, <Newline>, PRE is false
 indent_text : orig line is 1, <Newline>
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
-indent_text : pc orig line is 1, orig col is 21, Text() is '', type is NEWLINE
+indent_text :     pc orig line is 1, orig col is 21, Text() is '', type is NEWLINE
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
@@ -488,7 +488,7 @@ indent_text : orig line is 2, orig col is 1, Text() '{', type is BRACE_OPEN, PRE
 indent_text : orig line is 2, orig col is 1, column is 1, for '{'
    []
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
-indent_text : pc orig line is 2, orig col is 1, Text() is '{', type is BRACE_OPEN
+indent_text :     pc orig line is 2, orig col is 1, Text() is '{', type is BRACE_OPEN
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 1, ... indent is 9
 indent_text : orig line is 2, orig col is 1, Text() is '{', parent type is STRUCT
@@ -572,7 +572,7 @@ indent_text : orig line is 3, orig col is 47, Text() ')', type is FPAREN_CLOSE, 
 indent_text : orig line is 3, orig col is 47, column is 55, for ')'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 23
-indent_text : pc orig line is 3, orig col is 47, Text() is ')', type is FPAREN_CLOSE
+indent_text :     pc orig line is 3, orig col is 47, Text() is ')', type is FPAREN_CLOSE
 indent_text : pc orig line is 3, orig col is 47, Text() is ')', type is FPAREN_CLOSE
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : pc orig line is 3, orig col is 49, Text() is ':', type is CONSTR_COLON
@@ -587,7 +587,7 @@ indent_text : pc orig line is 3, orig col is 50, Text() is '', type is NEWLINE
 indent_text : orig line is 3, orig col is 50, <Newline>, PRE is false
 indent_text : orig line is 3, <Newline>
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 3, orig col is 50, Text() is '', type is NEWLINE
+indent_text :     pc orig line is 3, orig col is 50, Text() is '', type is NEWLINE
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : frm.pse_tos is 2, ...indent is 17
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
@@ -596,7 +596,7 @@ indent_text : orig line is 4, orig col is 1, Text() 'pTelName', type is FUNC_CTO
 indent_text : orig line is 4, orig col is 1, column is 17, for 'pTelName'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 4, orig col is 1, Text() is 'pTelName', type is FUNC_CTOR_VAR
+indent_text :     pc orig line is 4, orig col is 1, Text() is 'pTelName', type is FUNC_CTOR_VAR
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 reindent_line : orig line is 4, orig col is 1, on 'pTelName' [FUNC_CTOR_VAR/NONE] => 17
  [CallStack]
@@ -605,7 +605,7 @@ indent_text : orig line is 4, orig col is 9, Text() '(', type is FPAREN_OPEN, PR
 indent_text : orig line is 4, orig col is 9, column is 25, for '('
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 4, orig col is 9, Text() is '(', type is FPAREN_OPEN
+indent_text :     pc orig line is 4, orig col is 9, Text() is '(', type is FPAREN_OPEN
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : frm.pse_tos is 3, ...indent is 26
 indent_text : frm.pse_tos is 3, ...indent is 26
@@ -621,22 +621,22 @@ indent_text : orig line is 4, orig col is 12, Text() ')', type is FPAREN_CLOSE, 
 indent_text : orig line is 4, orig col is 12, column is 28, for ')'
    []
 indent_text : frm.pse_tos is 3, ...indent_tmp is 26
+indent_text :     pc orig line is 4, orig col is 12, Text() is ')', type is FPAREN_CLOSE
 indent_text : pc orig line is 4, orig col is 12, Text() is ')', type is FPAREN_CLOSE
-indent_text : pc orig line is 4, orig col is 12, Text() is ')', type is FPAREN_CLOSE
-indent_text : pc orig line is 4, orig col is 12, Text() is ')', type is FPAREN_CLOSE
+indent_text :     pc orig line is 4, orig col is 12, Text() is ')', type is FPAREN_CLOSE
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : pc orig line is 4, orig col is 13, Text() is ',', type is COMMA
 indent_text : orig line is 4, orig col is 13, Text() ',', type is COMMA, PRE is false
 indent_text : orig line is 4, orig col is 13, column is 29, for ','
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 4, orig col is 13, Text() is ',', type is COMMA
+indent_text :     pc orig line is 4, orig col is 13, Text() is ',', type is COMMA
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : pc orig line is 4, orig col is 14, Text() is '', type is NEWLINE
 indent_text : orig line is 4, orig col is 14, <Newline>, PRE is false
 indent_text : orig line is 4, <Newline>
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 4, orig col is 14, Text() is '', type is NEWLINE
+indent_text :     pc orig line is 4, orig col is 14, Text() is '', type is NEWLINE
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : frm.pse_tos is 2, ...indent is 17
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
@@ -645,7 +645,7 @@ indent_text : orig line is 5, orig col is 1, Text() 'nTelIndex', type is FUNC_CT
 indent_text : orig line is 5, orig col is 1, column is 17, for 'nTelIndex'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 5, orig col is 1, Text() is 'nTelIndex', type is FUNC_CTOR_VAR
+indent_text :     pc orig line is 5, orig col is 1, Text() is 'nTelIndex', type is FUNC_CTOR_VAR
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 reindent_line : orig line is 5, orig col is 1, on 'nTelIndex' [FUNC_CTOR_VAR/NONE] => 17
  [CallStack]
@@ -654,7 +654,7 @@ indent_text : orig line is 5, orig col is 10, Text() '(', type is FPAREN_OPEN, P
 indent_text : orig line is 5, orig col is 10, column is 26, for '('
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 5, orig col is 10, Text() is '(', type is FPAREN_OPEN
+indent_text :     pc orig line is 5, orig col is 10, Text() is '(', type is FPAREN_OPEN
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : frm.pse_tos is 3, ...indent is 27
 indent_text : frm.pse_tos is 3, ...indent is 27
@@ -670,15 +670,15 @@ indent_text : orig line is 5, orig col is 12, Text() ')', type is FPAREN_CLOSE, 
 indent_text : orig line is 5, orig col is 12, column is 28, for ')'
    []
 indent_text : frm.pse_tos is 3, ...indent_tmp is 27
+indent_text :     pc orig line is 5, orig col is 12, Text() is ')', type is FPAREN_CLOSE
 indent_text : pc orig line is 5, orig col is 12, Text() is ')', type is FPAREN_CLOSE
-indent_text : pc orig line is 5, orig col is 12, Text() is ')', type is FPAREN_CLOSE
-indent_text : pc orig line is 5, orig col is 12, Text() is ')', type is FPAREN_CLOSE
+indent_text :     pc orig line is 5, orig col is 12, Text() is ')', type is FPAREN_CLOSE
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : pc orig line is 5, orig col is 13, Text() is '', type is NEWLINE
 indent_text : orig line is 5, orig col is 13, <Newline>, PRE is false
 indent_text : orig line is 5, <Newline>
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 5, orig col is 13, Text() is '', type is NEWLINE
+indent_text :     pc orig line is 5, orig col is 13, Text() is '', type is NEWLINE
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : frm.pse_tos is 2, ...indent is 17
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
@@ -688,7 +688,7 @@ indent_text : orig line is 6, orig col is 1, column is 9, for '{'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : pc orig line is 6, orig col is 1, Text() is '{', type is BRACE_OPEN
-indent_text : pc orig line is 6, orig col is 1, Text() is '{', type is BRACE_OPEN
+indent_text :     pc orig line is 6, orig col is 1, Text() is '{', type is BRACE_OPEN
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : frm.pse_tos is 2, ... indent is 17
 indent_text : orig line is 6, orig col is 1, Text() is '{', parent type is FUNC_CLASS_DEF
@@ -707,7 +707,7 @@ indent_text : orig line is 7, orig col is 1, Text() '}', type is BRACE_CLOSE, PR
 indent_text : orig line is 7, orig col is 1, column is 9, for '}'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 7, orig col is 1, Text() is '}', type is BRACE_CLOSE
+indent_text :     pc orig line is 7, orig col is 1, Text() is '}', type is BRACE_CLOSE
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : pc orig line is 7, orig col is 1, Text() is '}', type is BRACE_CLOSE
 reindent_line : orig line is 7, orig col is 1, on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9
@@ -747,7 +747,7 @@ indent_text : orig line is 9, orig col is 16, Text() ')', type is FPAREN_CLOSE, 
 indent_text : orig line is 9, orig col is 16, column is 24, for ')'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 24
-indent_text : pc orig line is 9, orig col is 16, Text() is ')', type is FPAREN_CLOSE
+indent_text :     pc orig line is 9, orig col is 16, Text() is ')', type is FPAREN_CLOSE
 indent_text : pc orig line is 9, orig col is 16, Text() is ')', type is FPAREN_CLOSE
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : pc orig line is 9, orig col is 17, Text() is '', type is NEWLINE
@@ -780,7 +780,7 @@ indent_text : orig line is 11, orig col is 1, Text() '}', type is BRACE_CLOSE, P
 indent_text : orig line is 11, orig col is 1, column is 9, for '}'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-indent_text : pc orig line is 11, orig col is 1, Text() is '}', type is BRACE_CLOSE
+indent_text :     pc orig line is 11, orig col is 1, Text() is '}', type is BRACE_CLOSE
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : pc orig line is 11, orig col is 1, Text() is '}', type is BRACE_CLOSE
 reindent_line : orig line is 11, orig col is 1, on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9
@@ -875,7 +875,7 @@ indent_text : orig line is 15, orig col is 1, Text() '}', type is BRACE_CLOSE, P
 indent_text : orig line is 15, orig col is 1, column is 1, for '}'
    []
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
-indent_text : pc orig line is 15, orig col is 1, Text() is '}', type is BRACE_CLOSE
+indent_text :     pc orig line is 15, orig col is 1, Text() is '}', type is BRACE_CLOSE
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : pc orig line is 15, orig col is 1, Text() is '}', type is BRACE_CLOSE
 reindent_line : orig line is 15, orig col is 1, on '}' [BRACE_CLOSE/STRUCT] => 1
@@ -885,13 +885,13 @@ indent_text : orig line is 15, orig col is 2, Text() ';', type is SEMICOLON, PRE
 indent_text : orig line is 15, orig col is 2, column is 2, for ';'
    []
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
-indent_text : pc orig line is 15, orig col is 2, Text() is ';', type is SEMICOLON
+indent_text :     pc orig line is 15, orig col is 2, Text() is ';', type is SEMICOLON
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : pc orig line is 15, orig col is 3, Text() is '', type is NEWLINE
 indent_text : orig line is 15, orig col is 3, <Newline>, PRE is false
 indent_text : orig line is 15, <Newline>
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
-indent_text : pc orig line is 15, orig col is 3, Text() is '', type is NEWLINE
+indent_text :     pc orig line is 15, orig col is 3, Text() is '', type is NEWLINE
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1

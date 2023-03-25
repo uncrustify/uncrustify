@@ -191,6 +191,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
               func, line, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
    }
    else if (  pc->GetType() == CT_ACCESS
+           || pc->GetType() == CT_ARITH                    // Issue #3965
            || pc->GetType() == CT_ASSIGN
            || pc->GetType() == CT_BRACE_OPEN
            || pc->GetType() == CT_BOOL
