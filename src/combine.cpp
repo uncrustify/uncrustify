@@ -1586,7 +1586,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             pc->SetType(CT_ARITH);
 
             if (  prev->Is(CT_WORD)
-               && !next->Is(CT_NUMBER)) // Issue #3407
+               && next->IsNot(CT_NUMBER))           // Issue #3407
             {
                Chunk *tmp = prev->GetPrevNcNnlNi(); // Issue #2279
 
