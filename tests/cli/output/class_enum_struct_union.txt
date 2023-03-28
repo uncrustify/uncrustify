@@ -14,14 +14,14 @@
 #  23>            PREPROC|          PP_DEFINE|     PARENT_NOT_SET[  1/  1/  2/  0][1/1/0][        2 001c 0001][0-0] #
 #  23>          PP_DEFINE|               NONE|     PARENT_NOT_SET[  2/  2/  8/  0][1/1/0][             2 0001][0-0]  define
 #  23>         MACRO_FUNC|               NONE|     PARENT_NOT_SET[  9/  9/ 16/  1][1/1/0][             8 0001][0-0]         ALIGNAS
-#  23>        FPAREN_OPEN|         MACRO_FUNC|     PARENT_NOT_SET[ 16/ 16/ 17/  0][1/1/0][        2 0000 0001][0-0]                (
+#  23>        FPAREN_OPEN|         MACRO_FUNC|     PARENT_NOT_SET[ 16/ 16/ 17/  0][1/1/0][        2 0000 0011][0-0]                (
 #  23>               WORD|               NONE|     PARENT_NOT_SET[ 17/ 17/ 31/  0][1/2/0][             8 0011][0-0]                 byte_alignment
 #  23>       FPAREN_CLOSE|         MACRO_FUNC|     PARENT_NOT_SET[ 31/ 31/ 32/  0][1/1/0][        2 0000 0011][0-0]                               )
 #  23>          ATTRIBUTE|               NONE|     PARENT_NOT_SET[ 33/ 33/ 46/  1][1/1/0][                  1][0-0]                                 __attribute__
 #  23>        FPAREN_OPEN|          ATTRIBUTE|     PARENT_NOT_SET[ 46/ 46/ 47/  0][1/1/0][        2 0000 0001][0-0]                                              (
 #  23>         PAREN_OPEN|               NONE|     PARENT_NOT_SET[ 47/ 47/ 48/  0][1/2/0][        2 0008 0001][0-0]                                               (
 #  23>          FUNC_CALL|               NONE|     PARENT_NOT_SET[ 48/ 48/ 55/  0][1/3/0][             8 0001][0-0]                                                aligned
-#  23>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[ 55/ 55/ 56/  0][1/3/0][        2 0000 0001][0-0]                                                       (
+#  23>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[ 55/ 55/ 56/  0][1/3/0][        2 0000 0011][0-0]                                                       (
 #  23>               WORD|               NONE|     PARENT_NOT_SET[ 56/ 56/ 70/  0][1/4/0][             8 0011][0-0]                                                        byte_alignment
 #  23>       FPAREN_CLOSE|          FUNC_CALL|     PARENT_NOT_SET[ 70/ 70/ 71/  0][1/3/0][        2 0000 0011][0-0]                                                                      )
 #  23>        PAREN_CLOSE|               NONE|     PARENT_NOT_SET[ 71/ 71/ 72/  0][1/2/0][        2 0000 0001][0-0]                                                                       )
@@ -53,7 +53,7 @@
 #  26>        FPAREN_OPEN|          ATTRIBUTE|     PARENT_NOT_SET[ 34/ 34/ 35/  1][1/1/1][        2 000c 0001][0-0]                                  (
 #  26>         PAREN_OPEN|               NONE|     PARENT_NOT_SET[ 35/ 35/ 36/  0][1/2/1][        2 0008 0001][0-0]                                   (
 #  26>          FUNC_CALL|               NONE|     PARENT_NOT_SET[ 36/ 36/ 46/  0][1/3/1][             8 0001][0-0]                                    visibility
-#  26>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[ 46/ 46/ 47/  0][1/3/1][        2 0000 0001][0-0]                                              (
+#  26>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[ 46/ 46/ 47/  0][1/3/1][        2 0000 0011][0-0]                                              (
 #  26>             STRING|               NONE|     PARENT_NOT_SET[ 47/ 47/ 56/  0][1/4/1][             8 0011][0-0]                                               "default"
 #  26>       FPAREN_CLOSE|          FUNC_CALL|     PARENT_NOT_SET[ 56/ 56/ 57/  0][1/3/1][        2 0000 0011][0-0]                                                        )
 #  26>        PAREN_CLOSE|               NONE|     PARENT_NOT_SET[ 57/ 57/ 58/  0][1/2/1][        2 0000 0001][0-0]                                                         )
@@ -85,7 +85,7 @@
 #  33>          NAMESPACE|               NONE|     PARENT_NOT_SET[  1/  1/ 10/  0][0/0/0][             e 0000][0-0] namespace
 #  33>               WORD|          NAMESPACE|     PARENT_NOT_SET[ 11/ 11/ 26/  1][0/0/0][                  0][0-0]           outer_namespace
 #  33>            NEWLINE|               NONE|     PARENT_NOT_SET[ 26/ 26/  1/  0][0/0/0][                  0][1-0]
-#  34>         BRACE_OPEN|          NAMESPACE|     PARENT_NOT_SET[  1/  1/  2/  0][0/0/0][        2 0000 0000][0-0] {
+#  34>         BRACE_OPEN|          NAMESPACE|     PARENT_NOT_SET[  1/  1/  2/  0][0/0/0][        2 0000 1000][0-0] {
 #  34>            NEWLINE|               NONE|     PARENT_NOT_SET[  2/  2/  1/  0][1/1/0][               1000][2-0]
 #  36>          NAMESPACE|               NONE|     PARENT_NOT_SET[  1/  1/ 10/  0][1/1/0][             e 1000][0-0] namespace
 #  36>               WORD|          NAMESPACE|     PARENT_NOT_SET[ 11/ 11/ 26/  1][1/1/0][               1000][0-0]           inner_namespace
@@ -192,7 +192,7 @@
 #  63>             STRUCT|           TEMPLATE|     PARENT_NOT_SET[  1/  4/ 10/  0][1/1/0][             a 0400][0-0] struct
 #  63>               TYPE|             STRUCT|     PARENT_NOT_SET[  8/ 11/ 22/  1][1/1/0][                400][0-0]        inner_class
 #  63>            NEWLINE|               NONE|     PARENT_NOT_SET[ 19/ 22/  4/  0][1/1/0][                400][1-0]
-#  64>         BRACE_OPEN|             STRUCT|     PARENT_NOT_SET[  1/  4/  5/  0][1/1/0][        2 0000 0400][0-0] {
+#  64>         BRACE_OPEN|             STRUCT|     PARENT_NOT_SET[  1/  4/  5/  0][1/1/0][        2 0000 0402][0-0] {
 #  64>            NEWLINE|               NONE|     PARENT_NOT_SET[  2/  5/  7/  0][2/2/0][                402][1-0]
 #  65>          QUALIFIER|               NONE|     PARENT_NOT_SET[  9/  7/ 13/  0][2/2/0][            8e 0402][0-0]         static
 #  65>               TYPE|               NONE|     PARENT_NOT_SET[ 16/ 14/ 25/  1][2/2/0][            80 0402][0-0]                inner_class
@@ -302,7 +302,7 @@
 #  80>       ACCESS_COLON|               NONE|     PARENT_NOT_SET[  7/  7/  8/  0][1/1/0][        2 0000 0400][0-0]       :
 #  80>            NEWLINE|               NONE|     PARENT_NOT_SET[  8/  8/  4/  0][1/1/0][                400][1-0]
 #  81>     FUNC_CLASS_DEF|               NONE|     PARENT_NOT_SET[  1/  4/  6/  0][1/1/0][             c 0400][0-0] c3
-#  81>        FPAREN_OPEN|     FUNC_CLASS_DEF|     PARENT_NOT_SET[  3/  6/  7/  0][1/1/0][        2 0000 0500][0-0]   (
+#  81>        FPAREN_OPEN|     FUNC_CLASS_DEF|     PARENT_NOT_SET[  3/  6/  7/  0][1/1/0][        2 0000 0510][0-0]   (
 #  81>               TYPE|               NONE|     PARENT_NOT_SET[  4/  7/ 10/  0][1/2/0][          208a 0510][0-0]    int
 #  81>               WORD|               NONE|     PARENT_NOT_SET[  8/ 11/ 12/  1][1/2/0][          2100 0510][0-0]        x
 #  81> ASSIGN_DEFAULT_ARG|         FUNC_PROTO|     PARENT_NOT_SET[ 10/ 13/ 14/  1][1/2/0][        2 0000 0510][0-0]          =
@@ -320,17 +320,17 @@
 #  81>       FPAREN_CLOSE|     FUNC_CLASS_DEF|     PARENT_NOT_SET[ 35/ 38/ 39/  0][1/1/0][        2 0000 0510][0-0]                                   )
 #  81>       CONSTR_COLON|               NONE|     PARENT_NOT_SET[ 37/ 40/ 41/  1][1/1/0][        2 0000 0500][0-0]                                     :
 #  81>      FUNC_CTOR_VAR|               NONE|     PARENT_NOT_SET[ 39/ 42/ 45/  1][1/1/0][             c 0500][0-0]                                       m_x
-#  81>        FPAREN_OPEN|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 42/ 45/ 46/  0][1/1/0][        2 0000 0500][0-0]                                          (
+#  81>        FPAREN_OPEN|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 42/ 45/ 46/  0][1/1/0][        2 0000 0510][0-0]                                          (
 #  81>               WORD|               NONE|     PARENT_NOT_SET[ 43/ 46/ 47/  0][1/2/0][             8 0510][0-0]                                           x
 #  81>       FPAREN_CLOSE|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 44/ 47/ 48/  0][1/1/0][        2 0000 0510][0-0]                                            )
 #  81>              COMMA|               NONE|     PARENT_NOT_SET[ 45/ 48/ 49/  0][1/1/0][        2 0000 0500][0-0]                                             ,
 #  81>      FUNC_CTOR_VAR|               NONE|     PARENT_NOT_SET[ 47/ 50/ 53/  1][1/1/0][             8 0500][0-0]                                               m_y
-#  81>        FPAREN_OPEN|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 50/ 53/ 54/  0][1/1/0][        2 0000 0500][0-0]                                                  (
+#  81>        FPAREN_OPEN|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 50/ 53/ 54/  0][1/1/0][        2 0000 0510][0-0]                                                  (
 #  81>               WORD|               NONE|     PARENT_NOT_SET[ 51/ 54/ 55/  0][1/2/0][             8 0510][0-0]                                                   y
 #  81>       FPAREN_CLOSE|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 52/ 55/ 56/  0][1/1/0][        2 0000 0510][0-0]                                                    )
 #  81>              COMMA|               NONE|     PARENT_NOT_SET[ 53/ 56/ 57/  0][1/1/0][        2 0000 0500][0-0]                                                     ,
 #  81>      FUNC_CTOR_VAR|               NONE|     PARENT_NOT_SET[ 55/ 58/ 61/  1][1/1/0][             8 0500][0-0]                                                       m_z
-#  81>        FPAREN_OPEN|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 58/ 61/ 62/  0][1/1/0][        2 0000 0500][0-0]                                                          (
+#  81>        FPAREN_OPEN|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 58/ 61/ 62/  0][1/1/0][        2 0000 0510][0-0]                                                          (
 #  81>               WORD|               NONE|     PARENT_NOT_SET[ 59/ 62/ 63/  0][1/2/0][             8 0510][0-0]                                                           z
 #  81>       FPAREN_CLOSE|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 60/ 63/ 64/  0][1/1/0][        2 0000 0510][0-0]                                                            )
 #  81>         BRACE_OPEN|     FUNC_CLASS_DEF|     PARENT_NOT_SET[ 62/ 65/ 66/  1][1/1/0][        2 8000 0400][0-0]                                                              {
@@ -379,12 +379,12 @@
 #  86>           PTR_TYPE|              CLASS|     PARENT_NOT_SET[ 70/ 70/ 71/  1][0/0/0][        2 0008 0000][0-0]                                                                      *
 #  86>          QUALIFIER|               NONE|     PARENT_NOT_SET[ 72/ 72/ 77/  1][0/0/0][             a 0000][0-0]                                                                        const
 #  86>          FUNC_CALL|               NONE|     PARENT_NOT_SET[ 78/ 78/ 81/  1][0/0/0][           500 0000][0-0]                                                                              c35
-#  86>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[ 81/ 81/ 82/  0][0/0/0][        2 0000 0000][0-0]                                                                                 (
+#  86>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[ 81/ 81/ 82/  0][0/0/0][        2 0000 0010][0-0]                                                                                 (
 #  86>               WORD|               NONE|     PARENT_NOT_SET[ 82/ 82/ 89/  0][0/1/0][             8 0010][0-0]                                                                                  nullptr
 #  86>       FPAREN_CLOSE|          FUNC_CALL|     PARENT_NOT_SET[ 89/ 89/ 90/  0][0/0/0][        2 0000 0010][0-0]                                                                                         )
 #  86>              COMMA|               NONE|     PARENT_NOT_SET[ 90/ 90/ 91/  0][0/0/0][        2 0000 0000][0-0]                                                                                          ,
 #  86>          FUNC_CALL|               NONE|     PARENT_NOT_SET[ 92/ 92/ 95/  1][0/0/0][           508 0000][0-0]                                                                                            c16
-#  86>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[ 95/ 95/ 96/  0][0/0/0][        2 0000 0000][0-0]                                                                                               (
+#  86>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[ 95/ 95/ 96/  0][0/0/0][        2 0000 0010][0-0]                                                                                               (
 #  86>             NUMBER|               NONE|     PARENT_NOT_SET[ 96/ 96/ 97/  0][0/1/0][             8 0010][0-0]                                                                                                0
 #  86>              COMMA|               NONE|     PARENT_NOT_SET[ 97/ 97/ 98/  0][0/1/0][        2 0000 0010][0-0]                                                                                                 ,
 #  86>             NUMBER|               NONE|     PARENT_NOT_SET[ 99/ 99/100/  1][0/1/0][             8 0010][0-0]                                                                                                   1
@@ -441,12 +441,12 @@
 #  89>           PTR_TYPE|              CLASS|     PARENT_NOT_SET[143/143/144/  1][0/0/0][        2 0008 0000][0-0]                                                                                                                                               *
 #  89>          QUALIFIER|               NONE|     PARENT_NOT_SET[145/145/150/  1][0/0/0][             a 0000][0-0]                                                                                                                                                 const
 #  89>          FUNC_CALL|               NONE|     PARENT_NOT_SET[151/151/154/  1][0/0/0][           100 0000][0-0]                                                                                                                                                       c45
-#  89>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[154/154/155/  0][0/0/0][        2 0000 0000][0-0]                                                                                                                                                          (
+#  89>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[154/154/155/  0][0/0/0][        2 0000 0010][0-0]                                                                                                                                                          (
 #  89>               WORD|               NONE|     PARENT_NOT_SET[155/155/162/  0][0/1/0][             8 0010][0-0]                                                                                                                                                           nullptr
 #  89>       FPAREN_CLOSE|          FUNC_CALL|     PARENT_NOT_SET[162/162/163/  0][0/0/0][        2 0000 0010][0-0]                                                                                                                                                                  )
 #  89>              COMMA|               NONE|     PARENT_NOT_SET[163/163/164/  0][0/0/0][        2 0000 0000][0-0]                                                                                                                                                                   ,
 #  89>          FUNC_CALL|               NONE|     PARENT_NOT_SET[165/165/168/  1][0/0/0][           108 0000][0-0]                                                                                                                                                                     c46
-#  89>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[168/168/169/  0][0/0/0][        2 0000 0000][0-0]                                                                                                                                                                        (
+#  89>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[168/168/169/  0][0/0/0][        2 0000 0010][0-0]                                                                                                                                                                        (
 #  89>             NUMBER|               NONE|     PARENT_NOT_SET[169/169/170/  0][0/1/0][             8 0010][0-0]                                                                                                                                                                         0
 #  89>              COMMA|               NONE|     PARENT_NOT_SET[170/170/171/  0][0/1/0][        2 0000 0010][0-0]                                                                                                                                                                          ,
 #  89>             NUMBER|               NONE|     PARENT_NOT_SET[172/172/173/  1][0/1/0][             8 0010][0-0]                                                                                                                                                                            1
@@ -459,7 +459,7 @@
 #  91>            NEWLINE|               NONE|     PARENT_NOT_SET[ 68/ 68/  1/  0][0/0/0][                  0][1-0]
 #  92>              CLASS|               NONE|     PARENT_NOT_SET[  1/  1/  6/  0][0/0/0][             e 0000][0-0] class
 #  92>          FUNC_CALL|               NONE|     PARENT_NOT_SET[  7/  7/ 14/  1][0/0/0][                  0][0-0]       ALIGNAS
-#  92>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[ 14/ 14/ 15/  0][0/0/0][        2 0000 0000][0-0]              (
+#  92>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[ 14/ 14/ 15/  0][0/0/0][        2 0000 0010][0-0]              (
 #  92>             NUMBER|               NONE|     PARENT_NOT_SET[ 15/ 15/ 16/  0][0/1/0][             8 0010][0-0]               4
 #  92>       FPAREN_CLOSE|          FUNC_CALL|     PARENT_NOT_SET[ 16/ 16/ 17/  0][0/0/0][        2 0000 0010][0-0]                )
 #  92>               WORD|               NONE|     PARENT_NOT_SET[ 18/ 18/ 28/  1][0/0/0][             2 0000][0-0]                  API_EXPORT
@@ -478,7 +478,7 @@
 #  93>          DC_MEMBER|               NONE|     PARENT_NOT_SET[ 50/ 42/ 44/  0][0/0/0][        2 0000 0800][0-0]                                                  ::
 #  93>               TYPE|               NONE|     PARENT_NOT_SET[ 52/ 44/ 49/  0][0/0/0][                800][0-0]                                                    Base1
 #  93>            NEWLINE|               NONE|     PARENT_NOT_SET[ 57/ 49/  1/  0][0/0/0][                  0][1-0]
-#  94>         BRACE_OPEN|              CLASS|     PARENT_NOT_SET[  1/  1/  2/  0][0/0/0][        2 0000 0000][0-0] {
+#  94>         BRACE_OPEN|              CLASS|     PARENT_NOT_SET[  1/  1/  2/  0][0/0/0][        2 0000 0400][0-0] {
 #  94>            NEWLINE|               NONE|     PARENT_NOT_SET[  2/  2/  1/  0][1/1/0][                400][1-0]
 #  95>             ACCESS|               NONE|     PARENT_NOT_SET[  1/  1/  7/  0][1/1/0][             c 0400][0-0] public
 #  95>       ACCESS_COLON|               NONE|     PARENT_NOT_SET[  7/  7/  8/  0][1/1/0][        2 0000 0400][0-0]       :
@@ -521,7 +521,7 @@
 # 103>          BIT_COLON|               ENUM|     PARENT_NOT_SET[  9/  9/ 10/  1][0/0/0][        2 0000 0000][0-0]         :
 # 103>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 11/ 11/ 15/  1][0/0/0][             e 0000][0-0]           long
 # 103>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 16/ 16/ 20/  1][0/0/0][                  0][0-0]                long
-# 103>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 21/ 21/ 22/  1][0/0/0][        2 4000 0000][0-0]                     {
+# 103>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 21/ 21/ 22/  1][0/0/0][        2 4000 0004][0-0]                     {
 # 103>               WORD|               NONE|     PARENT_NOT_SET[ 23/ 23/ 25/  1][1/1/0][          400c 0004][0-0]                       a1
 # 103>              COMMA|               NONE|     PARENT_NOT_SET[ 25/ 25/ 26/  0][1/1/0][        2 4000 0004][0-0]                         ,
 # 103>               WORD|               NONE|     PARENT_NOT_SET[ 27/ 27/ 29/  1][1/1/0][          4008 0004][0-0]                           b1
@@ -542,7 +542,7 @@
 # 106>          BIT_COLON|               ENUM|     PARENT_NOT_SET[  9/  9/ 10/  1][0/0/0][        2 0000 0000][0-0]         :
 # 106>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 11/ 11/ 19/  1][0/0/0][             e 0000][0-0]           unsigned
 # 106>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 20/ 20/ 23/  1][0/0/0][                  0][0-0]                    int
-# 106>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 24/ 24/ 25/  1][0/0/0][        2 4000 0000][0-0]                        {
+# 106>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 24/ 24/ 25/  1][0/0/0][        2 4000 0004][0-0]                        {
 # 106>               WORD|               NONE|     PARENT_NOT_SET[ 26/ 26/ 28/  1][1/1/0][          400c 0004][0-0]                          a2
 # 106>              COMMA|               NONE|     PARENT_NOT_SET[ 28/ 28/ 29/  0][1/1/0][        2 4000 0004][0-0]                            ,
 # 106>               WORD|               NONE|     PARENT_NOT_SET[ 30/ 30/ 32/  1][1/1/0][          4008 0004][0-0]                              b2
@@ -576,7 +576,7 @@
 # 115>          BIT_COLON|               ENUM|     PARENT_NOT_SET[ 15/ 15/ 16/  1][0/0/0][        2 0000 0000][0-0]               :
 # 115>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 17/ 17/ 21/  1][0/0/0][             e 0000][0-0]                 long
 # 115>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 22/ 22/ 26/  1][0/0/0][                  0][0-0]                      long
-# 115>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 27/ 27/ 28/  1][0/0/0][        2 4000 0000][0-0]                           {
+# 115>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 27/ 27/ 28/  1][0/0/0][        2 4000 0004][0-0]                           {
 # 115>               WORD|               NONE|     PARENT_NOT_SET[ 29/ 29/ 31/  1][1/1/0][          400c 0004][0-0]                             a4
 # 115>              COMMA|               NONE|     PARENT_NOT_SET[ 31/ 31/ 32/  0][1/1/0][        2 4000 0004][0-0]                               ,
 # 115>               WORD|               NONE|     PARENT_NOT_SET[ 33/ 33/ 35/  1][1/1/0][          4008 0004][0-0]                                 b4
@@ -600,7 +600,7 @@
 # 118>          BIT_COLON|               ENUM|     PARENT_NOT_SET[ 15/ 15/ 16/  1][0/0/0][        2 0000 0000][0-0]               :
 # 118>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 17/ 17/ 25/  1][0/0/0][             e 0000][0-0]                 unsigned
 # 118>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 26/ 26/ 29/  1][0/0/0][                  0][0-0]                          int
-# 118>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 30/ 30/ 31/  1][0/0/0][        2 4000 0000][0-0]                              {
+# 118>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 30/ 30/ 31/  1][0/0/0][        2 4000 0004][0-0]                              {
 # 118>               WORD|               NONE|     PARENT_NOT_SET[ 32/ 32/ 34/  1][1/1/0][          400c 0004][0-0]                                a5
 # 118>              COMMA|               NONE|     PARENT_NOT_SET[ 34/ 34/ 35/  0][1/1/0][        2 4000 0004][0-0]                                  ,
 # 118>               WORD|               NONE|     PARENT_NOT_SET[ 36/ 36/ 38/  1][1/1/0][          4008 0004][0-0]                                    b5
@@ -631,7 +631,7 @@
 # 127>          BIT_COLON|               ENUM|     PARENT_NOT_SET[  6/  6/  7/  1][0/0/0][        2 0000 0000][0-0]      :
 # 127>               TYPE|          BIT_COLON|     PARENT_NOT_SET[  8/  8/ 12/  1][0/0/0][             e 0000][0-0]        long
 # 127>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 13/ 13/ 17/  1][0/0/0][                  0][0-0]             long
-# 127>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 18/ 18/ 19/  1][0/0/0][        2 4000 0000][0-0]                  {
+# 127>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 18/ 18/ 19/  1][0/0/0][        2 4000 0004][0-0]                  {
 # 127>               WORD|               NONE|     PARENT_NOT_SET[ 20/ 20/ 22/  1][1/1/0][          400c 0004][0-0]                    a8
 # 127>              COMMA|               NONE|     PARENT_NOT_SET[ 22/ 22/ 23/  0][1/1/0][        2 4000 0004][0-0]                      ,
 # 127>               WORD|               NONE|     PARENT_NOT_SET[ 24/ 24/ 26/  1][1/1/0][          4008 0004][0-0]                        b8
@@ -646,7 +646,7 @@
 # 129>        COMMENT_CPP|      COMMENT_WHOLE|     PARENT_NOT_SET[  1/  1/ 23/  0][0/0/0][                  0][0-0] // enum { ... } x, ...
 # 129>            NEWLINE|               NONE|     PARENT_NOT_SET[ 23/ 23/  1/  0][0/0/0][                  0][1-0]
 # 130>               ENUM|               NONE|     PARENT_NOT_SET[  1/  1/  5/  0][0/0/0][             c 0000][0-0] enum
-# 130>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[  6/  6/  7/  1][0/0/0][        2 4000 0000][0-0]      {
+# 130>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[  6/  6/  7/  1][0/0/0][        2 4000 0004][0-0]      {
 # 130>               WORD|               NONE|     PARENT_NOT_SET[  8/  8/ 10/  1][1/1/0][          400c 0004][0-0]        a9
 # 130>              COMMA|               NONE|     PARENT_NOT_SET[ 10/ 10/ 11/  0][1/1/0][        2 4000 0004][0-0]          ,
 # 130>               WORD|               NONE|     PARENT_NOT_SET[ 12/ 12/ 14/  1][1/1/0][          4008 0004][0-0]            b9

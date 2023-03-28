@@ -37,14 +37,14 @@ debug_decode_the_flags          = true
          The flags are: [0x0:]
 #   4>            NEWLINE|               NONE|     PARENT_NOT_SET[ 21/ 21/  1/  0][0/0/0][                  0][1-0]
          The flags are: [0x0:]
-#   5>         BRACE_OPEN|             STRUCT|     PARENT_NOT_SET[  1/  1/  2/  0][0/0/0][        2 0000 0400][0-0] {
-         The flags are: [0x200000400:IN_CLASS,PUNCTUATOR]
+#   5>         BRACE_OPEN|             STRUCT|     PARENT_NOT_SET[  1/  1/  2/  0][0/0/0][        2 0000 0402][0-0] {
+         The flags are: [0x200000402:IN_STRUCT,IN_CLASS,PUNCTUATOR]
 #   5>            NEWLINE|               NONE|     PARENT_NOT_SET[  2/  2/  1/  0][1/1/0][                  2][1-0]
          The flags are: [0x2:IN_STRUCT]
 #   6>     FUNC_CLASS_DEF|               NONE|     PARENT_NOT_SET[  9/  1/ 14/  0][1/1/0][             c 0402][0-0]         TelegramIndex
          The flags are: [0xc0402:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START]
-#   6>        FPAREN_OPEN|     FUNC_CLASS_DEF|     PARENT_NOT_SET[ 22/ 14/ 15/  0][1/1/0][        2 0000 0502][0-0]                      (
-         The flags are: [0x200000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+#   6>        FPAREN_OPEN|     FUNC_CLASS_DEF|     PARENT_NOT_SET[ 22/ 14/ 15/  0][1/1/0][        2 0000 0512][0-0]                      (
+         The flags are: [0x200000512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 #   6>          QUALIFIER|               NONE|     PARENT_NOT_SET[ 23/ 15/ 20/  0][1/2/0][             a 0512][0-0]                       const
          The flags are: [0xa0512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,EXPR_START]
 #   6>               TYPE|               NONE|     PARENT_NOT_SET[ 29/ 21/ 25/  1][1/2/0][            80 0512][0-0]                             char
@@ -69,8 +69,8 @@ debug_decode_the_flags          = true
          The flags are: [0x2:IN_STRUCT]
 #   7>      FUNC_CTOR_VAR|               NONE|     PARENT_NOT_SET[ 17/  1/  9/  0][1/1/0][             c 0502][0-0]                 pTelName
          The flags are: [0xc0502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,STMT_START,EXPR_START]
-#   7>        FPAREN_OPEN|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 25/  9/ 10/  0][1/1/0][        2 0000 0502][0-0]                         (
-         The flags are: [0x200000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+#   7>        FPAREN_OPEN|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 25/  9/ 10/  0][1/1/0][        2 0000 0512][0-0]                         (
+         The flags are: [0x200000512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 #   7>               WORD|               NONE|     PARENT_NOT_SET[ 26/ 10/ 12/  0][1/2/0][             8 0512][0-0]                          pN
          The flags are: [0x80512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
 #   7>       FPAREN_CLOSE|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 28/ 12/ 13/  0][1/1/0][        2 0000 0512][0-0]                            )
@@ -81,8 +81,8 @@ debug_decode_the_flags          = true
          The flags are: [0x2:IN_STRUCT]
 #   8>      FUNC_CTOR_VAR|               NONE|     PARENT_NOT_SET[ 17/  1/ 10/  0][1/1/0][             8 0502][0-0]                 nTelIndex
          The flags are: [0x80502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,EXPR_START]
-#   8>        FPAREN_OPEN|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 26/ 10/ 11/  0][1/1/0][        2 0000 0502][0-0]                          (
-         The flags are: [0x200000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+#   8>        FPAREN_OPEN|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 26/ 10/ 11/  0][1/1/0][        2 0000 0512][0-0]                          (
+         The flags are: [0x200000512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 #   8>               WORD|               NONE|     PARENT_NOT_SET[ 27/ 11/ 12/  0][1/2/0][             8 0512][0-0]                           n
          The flags are: [0x80512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
 #   8>       FPAREN_CLOSE|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 28/ 12/ 13/  0][1/1/0][        2 0000 0512][0-0]                            )
@@ -101,8 +101,8 @@ debug_decode_the_flags          = true
          The flags are: [0x2000c0402:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START,PUNCTUATOR]
 #  12>     FUNC_CLASS_DEF|         DESTRUCTOR|     PARENT_NOT_SET[ 10/  2/ 15/  0][1/1/0][             8 0402][0-0]          TelegramIndex
          The flags are: [0x80402:IN_STRUCT,IN_CLASS,EXPR_START]
-#  12>        FPAREN_OPEN|     FUNC_CLASS_DEF|     PARENT_NOT_SET[ 23/ 15/ 16/  0][1/1/0][        2 0000 0502][0-0]                       (
-         The flags are: [0x200000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+#  12>        FPAREN_OPEN|     FUNC_CLASS_DEF|     PARENT_NOT_SET[ 23/ 15/ 16/  0][1/1/0][        2 0000 0512][0-0]                       (
+         The flags are: [0x200000512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 #  12>       FPAREN_CLOSE|     FUNC_CLASS_DEF|     PARENT_NOT_SET[ 24/ 16/ 17/  0][1/1/0][        2 0000 0512][0-0]                        )
          The flags are: [0x200000512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 #  12>            NEWLINE|               NONE|     PARENT_NOT_SET[ 25/ 17/  1/  0][1/1/0][                  2][1-0]
