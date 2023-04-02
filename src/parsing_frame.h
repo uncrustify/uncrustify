@@ -172,7 +172,6 @@ public:
    const ParenStackEntry &top() const;
 
    void push(Chunk *pc, const char *func, int line, E_BraceStage stage = E_BraceStage::NONE);
-   void push(std::nullptr_t, E_BraceStage stage = E_BraceStage::NONE);
    void pop(const char *func, int line, Chunk *pc);
 
    using iterator = std::vector<ParenStackEntry>::iterator;
