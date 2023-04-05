@@ -42,7 +42,8 @@ Chunk *flag_parens(Chunk *po, PcfFlags flags, E_Token opentype, E_Token parent_t
       {
          Chunk *pc;
 
-         for (pc = po;
+         //for (pc = po;
+         for (pc = po->GetNext(E_Scope::PREPROC);
               pc->IsNotNullChunk() && pc != after_paren_close;
               pc = pc->GetNext(E_Scope::PREPROC))
          {
