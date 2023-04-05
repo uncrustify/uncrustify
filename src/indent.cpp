@@ -1297,13 +1297,13 @@ void indent_text()
                        __func__, __LINE__, frm.top().pop_pc->GetOrigLine(), frm.top().pop_pc->GetOrigCol(),
                        frm.top().pop_pc->Text(), get_token_name(frm.top().pop_pc->GetType()));
             }
-            LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
+            LOG_FMT(LINDLINE, "%s(%d):     pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
 
             if (  (frm.top().type == CT_MEMBER)
                && frm.top().pop_pc == pc)
             {
-               LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
+               LOG_FMT(LINDLINE, "%s(%d):     pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
