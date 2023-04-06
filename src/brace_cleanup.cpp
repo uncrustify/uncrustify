@@ -135,7 +135,7 @@ static size_t preproc_start(BraceState &braceState, ParsingFrame &frm, Chunk *pc
    frm.SetBraceLevel(1);
 
    // TODO: not sure about the next 3 lines
-   frm.push(nullptr);
+   frm.push(Chunk::NullChunkPtr, __func__, __LINE__);
    frm.top().type = CT_PP_DEFINE;
 
    return(pp_level);
@@ -521,7 +521,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
             // frames for functions are not created as they are for an if
             // this here is a hackish solution to close a vbrace of a block that
             // contains the function
-            frm.push(nullptr); // <- dummy frame for the function
+            frm.push(Chunk::NullChunkPtr, __func__, __LINE__);                                     // <- dummy frame for the function
             frm.top().stage = E_BraceStage::BRACE2;
          }
 

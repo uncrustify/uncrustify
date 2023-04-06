@@ -88,14 +88,8 @@ ParenStackEntry &ParsingFrame::prev(size_t idx)
 const ParenStackEntry &ParsingFrame::prev(size_t idx) const
 {
    LOG_FUNC_ENTRY();
-
-   if (  idx == 0
-      || idx >= m_parenStack.size())
-   {
-      throw invalid_argument(string(__FILE__) + ":" + to_string(__LINE__)
-                             + " idx can't be zero or >= size()");
-   }
-   return(*std::prev(std::end(m_parenStack), idx + 1));
+   // Reuse the code from non-const method
+   return((const_cast<ParsingFrame *>(this))->prev(idx));
 }
 
 
@@ -113,36 +107,29 @@ const ParenStackEntry &ParsingFrame::top() const
 }
 
 
-void ParsingFrame::push(std::nullptr_t, E_BraceStage stage)
-{
-   static Chunk dummy;
-
-   push(&dummy, __func__, __LINE__, stage);
-   top().pc = Chunk::NullChunkPtr;
-}
-
-
 void ParsingFrame::push(Chunk *pc, const char *func, int line, E_BraceStage stage)
 {
    LOG_FUNC_ENTRY();
 
    ParenStackEntry new_entry;
 
-   new_entry.type      = pc->GetType();
-   new_entry.level     = pc->GetLevel();
-   new_entry.open_line = pc->GetOrigLine();
-   new_entry.open_colu = pc->GetOrigCol();
-   new_entry.pc        = pc;
+   if (pc->IsNotNullChunk())
+   {
+      new_entry.type      = pc->GetType();
+      new_entry.level     = pc->GetLevel();
+      new_entry.open_line = pc->GetOrigLine();
+      new_entry.open_colu = pc->GetOrigCol();
+      new_entry.pc        = pc;
 
-   new_entry.indent_tab  = top().indent_tab;
-   new_entry.indent_cont = top().indent_cont;
-   new_entry.stage       = stage;
+      new_entry.indent_tab  = top().indent_tab;
+      new_entry.indent_cont = top().indent_cont;
+      new_entry.stage       = stage;
 
-   new_entry.in_preproc = pc->TestFlags(PCF_IN_PREPROC);
-   new_entry.non_vardef = false;
-   new_entry.ip         = top().ip;
-   new_entry.pop_pc     = Chunk::NullChunkPtr;
-
+      new_entry.in_preproc = pc->TestFlags(PCF_IN_PREPROC);
+      new_entry.non_vardef = false;
+      new_entry.ip         = top().ip;
+      new_entry.pop_pc     = Chunk::NullChunkPtr;
+   }
    m_parenStack.push_back(new_entry);
 
 // uncomment the line below to get the address of the m_parenStack
@@ -167,13 +154,6 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   // always at least one (dummy) element inside m_parenStack guaranteed
-//   if (m_parenStack.empty())
-//   {
-//      throw logic_error(string(__FILE__) + ":" + to_string(__LINE__)
-//                        + "the stack index is already zero");
-//   }
-
    if (  pc->GetType() == CT_PAREN_CLOSE
       || pc->GetType() == CT_BRACE_CLOSE
       || pc->GetType() == CT_VBRACE_CLOSE
@@ -191,6 +171,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
               func, line, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
    }
    else if (  pc->GetType() == CT_ACCESS
+           || pc->GetType() == CT_ARITH                    // Issue #3965
            || pc->GetType() == CT_ASSIGN
            || pc->GetType() == CT_BRACE_OPEN
            || pc->GetType() == CT_BOOL
@@ -213,6 +194,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
            || pc->GetType() == CT_OC_SCOPE
            || pc->GetType() == CT_OC_PROPERTY
            || pc->GetType() == CT_PREPROC
+           || pc->GetType() == CT_SBOOL                    // Issue #3965
            || pc->GetType() == CT_SQUARE_OPEN
            || pc->GetType() == CT_SQL_END
            || pc->GetType() == CT_TYPEDEF

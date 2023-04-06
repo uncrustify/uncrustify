@@ -123,7 +123,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
          }
          else
          {
-            LOG_FMT(LMCB, "\n\n%s(%d):\n", __func__, __LINE__);
+            LOG_FMT(LMCB, "\n\n%s(%d): FATAL: second is null chunk\n", __func__, __LINE__);
             fprintf(stderr, "FATAL: second is null chunk\n");
             fprintf(stderr, "Please make a report.\n");
             exit(EX_SOFTWARE);
@@ -136,7 +136,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
    }
    else
    {
-      LOG_FMT(LMCB, "\n\n%s(%d):\n", __func__, __LINE__);
+      LOG_FMT(LMCB, "\n\n%s(%d): FATAL: erst_found is not 3 or 4\n", __func__, __LINE__);
       fprintf(stderr, "FATAL: erst_found is not 3 or 4\n");
       fprintf(stderr, "Please make a report.\n");
       exit(EX_SOFTWARE);

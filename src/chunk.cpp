@@ -558,7 +558,7 @@ void Chunk::SetResetFlags(PcfFlags resetBits, PcfFlags setBits)
 }
 
 
-void Chunk::SetTypeReal(const E_Token token, const char *func, const int line)
+void Chunk::SetType(const E_Token token)
 {
    LOG_FUNC_ENTRY();
 
@@ -568,7 +568,7 @@ void Chunk::SetTypeReal(const E_Token token, const char *func, const int line)
       return;
    }
    LOG_FMT(LSETTYP, "%s(%d): orig line is %zu, orig col is %zu, Text() is ",
-           func, line, m_origLine, m_origCol);
+           __func__, __LINE__, m_origLine, m_origCol);
 
    if (token == CT_NEWLINE)
    {
@@ -584,7 +584,7 @@ void Chunk::SetTypeReal(const E_Token token, const char *func, const int line)
 }
 
 
-void Chunk::SetParentTypeReal(const E_Token token, const char *func, const int line)
+void Chunk::SetParentType(const E_Token token)
 {
    LOG_FUNC_ENTRY();
 
@@ -594,7 +594,7 @@ void Chunk::SetParentTypeReal(const E_Token token, const char *func, const int l
       return;
    }
    LOG_FMT(LSETPAR, "%s(%d): orig line is %zu, orig col is %zu, Text() is ",
-           func, line, m_origLine, m_origCol);
+           __func__, __LINE__, m_origLine, m_origCol);
 
    if (token == CT_NEWLINE)
    {
