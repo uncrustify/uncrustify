@@ -2776,6 +2776,18 @@ void tokenize(const deque<int> &data, Chunk *ref)
       if (cpd.in_preproc != CT_NONE)
       {
          pc->SetFlagBits(PCF_IN_PREPROC);
+         // Issue #2225
+         LOG_FMT(LBCTRL, "%s(%d): orig line is %zu, orig col is %zu, type is %s, parentType is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(),
+                 get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
+
+         if (  pc->Is(CT_STRING_MULTI)
+            && pc->GetParentType() == CT_PP_INCLUDE)
+         {
+            LOG_FMT(LWARN, "%s:%zu: File name is not possible %s\n",
+                    cpd.filename.c_str(), pc->GetOrigLine(), pc->Text());
+            exit(EX_SOFTWARE);
+         }
 
          // Count words after the preprocessor
          if (!pc->IsCommentOrNewline())
