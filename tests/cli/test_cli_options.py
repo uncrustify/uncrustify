@@ -787,7 +787,8 @@ def main(args):
                                   reg_replace(r'   \[0[xX][0-9a-fA-F]+:[_|,|1|A-Z]*\]', '   []'),
                                   reg_replace(r'^[ \t]*[_A-Za-z][_A-Za-z0-9]*::', ''),
                                   reg_replace(RE_CALLSTACK, '[CallStack]'),
-                                  reg_replace(RE_DO_SPACE, '')]
+                                  reg_replace(RE_DO_SPACE, ''),
+                                  reg_replace(r'Chunk::', '')]
             ):
             return_flag = False
 

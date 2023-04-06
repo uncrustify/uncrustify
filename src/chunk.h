@@ -77,10 +77,8 @@ public:
    /**
     * @brief Sets the chunk type
     * @param token the type to set
-    * @param func the name of the function from where this method is called (for log purposes)
-    * @param line the line number from where this method is called (for log purposes)
     */
-   void SetTypeReal(const E_Token token, const char *func, const int line);
+   void SetType(const E_Token token);
 
    /**
     * @brief Returns the parent type of the chunk
@@ -90,10 +88,8 @@ public:
    /**
     * @brief Sets the type of the parent chunk
     * @param token the type to set
-    * @param func the name of the function from where this method is called (for log purposes)
-    * @param line the line number from where this method is called (for log purposes)
     */
-   void SetParentTypeReal(const E_Token token, const char *func, const int line);
+   void SetParentType(const E_Token token);
 
    /**
     * @brief Returns the parent of the chunk
@@ -1791,12 +1787,6 @@ inline Chunk *Chunk::CopyAndAddBefore(Chunk *ref) const
 {
    return(CopyAndAdd(ref, E_Direction::BACKWARD));
 }
-
-
-#define SetType(tt)          SetTypeReal((tt), __unqualified_func__, __LINE__)
-
-
-#define SetParentType(tt)    SetParentTypeReal((tt), __unqualified_func__, __LINE__)
 
 
 #endif /* CHUNK_LIST_H_INCLUDED */
