@@ -1577,8 +1577,6 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                  && next->Is(CT_WORD)
                  && !pc->TestFlags(PCF_IN_SPAREN))
          {
-            //LOG_FMT(LGUY, " ++++++++++ pc->GetFlags(): ");
-            //log_pcf_flags(LGUY, pc->GetFlags());
             pc->SetType(CT_ADDR);
          }
          else
@@ -1610,6 +1608,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                   }
                   else if (tmp->Is(CT_DC_MEMBER))
                   {
+                     // see also Issue #3967
                      // Issue #2103 & Issue #3865: partial fix
                      // No easy way to tell between an enum and a type with
                      // a namespace qualifier. Compromise: if we're in a

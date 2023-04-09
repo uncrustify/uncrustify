@@ -1269,7 +1269,7 @@ void mark_function(Chunk *pc)
          return;
       }
    }
-   LOG_FMT(LFCN, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s, type is %s, parent type is %s\n",
+   LOG_FMT(LFCN, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s, parent type is %s\n",
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(),
            get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
    LOG_FMT(LFCN, "   level is %zu, brace level is %zu, next->Text() '%s', next->GetType() is %s, next->GetLevel() is %zu\n",
@@ -2016,9 +2016,40 @@ void mark_function(Chunk *pc)
    }
    else
    {
+      // see also Issue #2103
+      Chunk *funtionName = paren_open->GetPrevNcNnl();                    // Issue #3967
+      Chunk *a           = funtionName->GetPrevNcNnl();
+
+      while (a->IsNotNullChunk())
+      {
+         LOG_FMT(LFCN, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s, parent type is %s\n",
+                 __func__, __LINE__, a->GetOrigLine(), a->GetOrigCol(), a->Text(),
+                 get_token_name(a->GetType()), get_token_name(a->GetParentType()));
+         log_pcf_flags(LFCN, a->GetFlags());
+
+         if (  a->Is(CT_ARITH)
+            && (strcmp(a->Text(), "&") == 0))
+         {
+            a->SetType(CT_BYREF);
+         }
+
+         if (a->GetParentType() == CT_NONE)
+         {
+            a->SetParentType(CT_FUNC_DEF);
+         }
+         // if token has PCF_STMT_START set, exit the loop
+         PcfFlags f = a->GetFlags();
+         PcfFlags u = f & PCF_STMT_START;
+         bool     b = u != E_PcfFlag::PCF_NONE;
+
+         if (b)
+         {
+            break;
+         }
+         a = a->GetPrevNcNnl();
+      }
       flag_parens(paren_open, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, pc->GetType(), false);
    }
-   //flag_parens(paren_open, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, pc->GetType(), true);
 
    if (pc->Is(CT_FUNC_CTOR_VAR))
    {
