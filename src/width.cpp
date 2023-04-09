@@ -145,10 +145,37 @@ static void split_before_chunk(Chunk *pc)
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s(%d): Text() '%s'\n", __func__, __LINE__, pc->Text());
 
+   Chunk *prev = pc->GetPrev();
+
    if (  !pc->IsNewline()
-      && !pc->GetPrev()->IsNewline())
+      && !prev->IsNewline())
    {
       newline_add_before(pc);
+      // Mark chunk as continuation line, so indentation can be
+      // correctly set over multiple passes
+      pc->SetFlagBits(PCF_CONT_LINE);
+
+      // Mark open and close parens as continuation line chunks.
+      // This will prevent an additional level and frame to be
+      // added to the current frame stack (issue 3105).
+      if (  prev->Is(CT_PAREN_OPEN)
+         || prev->Is(CT_LPAREN_OPEN)
+         || prev->Is(CT_SPAREN_OPEN)
+         || prev->Is(CT_FPAREN_OPEN)
+         || prev->Is(CT_SQUARE_OPEN)
+         || prev->Is(CT_ANGLE_OPEN))
+      {
+         LOG_FMT(LSPLIT, "%s(%d): set PCF_LINE_CONT for prev text '%s', orig line is %zu, orig col is %zu\n",
+                 __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->GetOrigCol());
+
+         prev->SetFlagBits(PCF_CONT_LINE);
+         Chunk *closing_paren = prev->GetClosingParen();
+
+         if (closing_paren->IsNotNullChunk())
+         {
+            closing_paren->SetFlagBits(PCF_CONT_LINE);
+         }
+      }
       // reindent needs to include the indent_continue value and was off by one
       log_rule_B("indent_columns");
       log_rule_B("indent_continue");
@@ -156,7 +183,7 @@ static void split_before_chunk(Chunk *pc)
                     abs(options::indent_continue()) + 1);
       cpd.changes++;
    }
-}
+} // split_before_chunk
 
 
 void do_code_width()
@@ -869,8 +896,33 @@ static void split_fcn_params(Chunk *start)
       LOG_FMT(LSPLIT, "%s(%d): min_col is %zu\n",
               __func__, __LINE__, min_col);
       pc = prev->GetNext();
+
+      if (  prev->Is(CT_PAREN_OPEN)
+         || prev->Is(CT_LPAREN_OPEN)
+         || prev->Is(CT_SPAREN_OPEN)
+         || prev->Is(CT_FPAREN_OPEN)
+         || prev->Is(CT_SQUARE_OPEN)
+         || prev->Is(CT_ANGLE_OPEN))
+      {
+         // Mark open and close parens as continuation line chunks.
+         // This will prevent an additional level and frame to be
+         // added to the current frame stack (issue 3105).
+         LOG_FMT(LSPLIT, "%s(%d): set PCF_LINE_CONT for prev text '%s', orig line is %zu, orig col is %zu\n",
+                 __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->GetOrigCol());
+
+         prev->SetFlagBits(PCF_CONT_LINE);
+         Chunk *closing_paren = prev->GetClosingParen();
+
+         if (closing_paren->IsNotNullChunk())
+         {
+            closing_paren->SetFlagBits(PCF_CONT_LINE);
+         }
+      }
       newline_add_before(pc);
       reindent_line(pc, min_col);
+      // Mark chunk as continuation line, so indentation can be
+      // correctly set over multiple passes
+      pc->SetFlagBits(PCF_CONT_LINE);
       cpd.changes++;
    }
 } // split_fcn_params
