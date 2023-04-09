@@ -85,6 +85,7 @@ enum E_PcfFlag : decltype ( 0ULL )
                                        //! because the line would be too long
    PCF_IN_CONDITIONAL  = pcf_bit(48),  //! inside a conditional ternary expression
    PCF_OC_IN_BLOCK     = pcf_bit(49),  //! inside OC block function
+   PCF_CONT_LINE       = pcf_bit(50),  //! continuation line split
 };
 
 UNC_DECLARE_FLAGS(PcfFlags, E_PcfFlag);

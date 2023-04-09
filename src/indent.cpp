@@ -665,6 +665,48 @@ void indent_text()
    while (pc->IsNotNullChunk())
    {
       LOG_CHUNK(LINDLINE, pc);
+
+      // Mark continuation lines if absolute indentation is requested
+      if (  options::indent_continue() < 0
+         && (  pc->Is(CT_PAREN_OPEN)
+            || pc->Is(CT_LPAREN_OPEN)
+            || pc->Is(CT_SPAREN_OPEN)
+            || pc->Is(CT_FPAREN_OPEN)
+            || pc->Is(CT_RPAREN_OPEN)
+            || pc->Is(CT_SQUARE_OPEN)
+            || pc->Is(CT_ANGLE_OPEN)))
+      {
+         Chunk *next = pc->GetNext();
+
+         if (next->IsNewline())
+         {
+            while (next->IsNewline())
+            {
+               next = next->GetNext();
+            }
+
+            if (next->IsNotNullChunk())
+            {
+               // Mark chunk as continuation line, so indentation can be
+               // correctly set over multiple passes
+               next->SetFlagBits(PCF_CONT_LINE);
+
+               // Mark open and close parens as continuation line chunks.
+               // This will prevent an additional level and frame to be
+               // added to the current frame stack (issue 3105).
+               LOG_FMT(LSPLIT, "%s(%d): set PCF_LINE_CONT for pc text '%s', orig line is %zu, orig col is %zu\n",
+                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
+
+               pc->SetFlagBits(PCF_CONT_LINE);
+               Chunk *closing_paren = pc->GetClosingParen();
+
+               if (closing_paren->IsNotNullChunk())
+               {
+                  closing_paren->SetFlagBits(PCF_CONT_LINE);
+               }
+            }
+         }
+      }
       //  forces string literal to column-1 [Fix for 1246]
       log_rule_B("indent_col1_multi_string_literal");
 
@@ -1405,7 +1447,9 @@ void indent_text()
                   || pc->Is(CT_FPAREN_CLOSE)
                   || pc->Is(CT_RPAREN_CLOSE)                     // Issue #3914
                   || pc->Is(CT_SQUARE_CLOSE)
-                  || pc->Is(CT_ANGLE_CLOSE)))
+                  || pc->Is(CT_ANGLE_CLOSE))
+               && (  !pc->TestFlags(PCF_CONT_LINE)
+                  || options::indent_continue() >= 0))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
@@ -2590,13 +2634,15 @@ void indent_text()
 
          reindent_line(pc, indent_column);
       }
-      else if (  pc->Is(CT_PAREN_OPEN)
-              || pc->Is(CT_LPAREN_OPEN)                     // Issue #3054
-              || pc->Is(CT_SPAREN_OPEN)
-              || pc->Is(CT_FPAREN_OPEN)
-              || pc->Is(CT_RPAREN_OPEN)                     // Issue #3914
-              || pc->Is(CT_SQUARE_OPEN)
-              || pc->Is(CT_ANGLE_OPEN))
+      else if (  (  pc->Is(CT_PAREN_OPEN)
+                 || pc->Is(CT_LPAREN_OPEN)                     // Issue #3054
+                 || pc->Is(CT_SPAREN_OPEN)
+                 || pc->Is(CT_FPAREN_OPEN)
+                 || pc->Is(CT_RPAREN_OPEN)                     // Issue #3914
+                 || pc->Is(CT_SQUARE_OPEN)
+                 || pc->Is(CT_ANGLE_OPEN))
+              && (  !pc->TestFlags(PCF_CONT_LINE)
+                 || options::indent_continue() >= 0))
       {
          /*
           * Open parenthesis and squares - never update indent_column,
@@ -2782,7 +2828,9 @@ void indent_text()
             if (  next->IsNewline()
                && !options::indent_paren_after_func_def()
                && !options::indent_paren_after_func_decl()
-               && !options::indent_paren_after_func_call())
+               && !options::indent_paren_after_func_call()
+               && (  !pc->TestFlags(PCF_CONT_LINE)
+                  || options::indent_continue() >= 0))
             {
                size_t sub = 2;
 
@@ -3557,6 +3605,13 @@ void indent_text()
          && !pc->IsNewline()
          && (pc->Len() != 0))
       {
+         if (  pc->TestFlags(PCF_CONT_LINE)
+            && options::indent_continue() < 0)
+         {
+            log_rule_B("indent_continue");
+            indent_column = calc_indent_continue(frm);
+            log_indent();
+         }
          pc->SetColumnIndent(frm.top().indent_tab);
 
          if (frm.top().ip.ref)

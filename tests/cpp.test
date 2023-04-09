@@ -297,6 +297,13 @@
 
 30330  cpp/Issue_3080.cfg                                   cpp/Issue_3080.cpp
 
+30340  cpp/issue_3105_1_neg.cfg                             cpp/issue_3105_1.cpp
+30341  cpp/issue_3105_1_pos.cfg                             cpp/issue_3105_1.cpp
+30342  cpp/issue_3105_1_zero.cfg                            cpp/issue_3105_1.cpp
+30343  cpp/issue_3105_2_neg.cfg                             cpp/issue_3105_2.cpp
+30344  cpp/issue_3105_2_pos.cfg                             cpp/issue_3105_2.cpp
+30345  cpp/issue_3105_2_zero.cfg                            cpp/issue_3105_2.cpp
+
 30400  common/attribute_specifier_seqs.cfg                  cpp/attribute_specifier_seqs.cpp
 30401  cpp/Issue_2570.cfg                                   cpp/Issue_2570.cpp
 
