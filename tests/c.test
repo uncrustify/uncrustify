@@ -553,3 +553,5 @@
 10121  c/sp_after_sparen-a.cfg                    c/sp_after_sparen.c
 10122  c/sp_after_sparen-r.cfg                    c/sp_after_sparen.c
 10123  c/sp_after_sparen-f.cfg                    c/sp_after_sparen.c
+
+10124  c/Issue-3985.cfg                           c/Issue-3985.c
