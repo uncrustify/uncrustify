@@ -195,6 +195,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
            || pc->GetType() == CT_OC_PROPERTY
            || pc->GetType() == CT_PREPROC
            || pc->GetType() == CT_SBOOL                    // Issue #3965
+           || pc->GetType() == CT_SHIFT                    // Issue #3983
            || pc->GetType() == CT_SQUARE_OPEN
            || pc->GetType() == CT_SQL_END
            || pc->GetType() == CT_TYPEDEF
@@ -206,9 +207,9 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
    }
    else
    {
-      LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d): orig line is %4zu, orig col is %4zu, type is %12s,\n",
+      fprintf(stderr, "ParsingFrame::pop (%s:%d): orig line is %4zu, orig col is %4zu, type is %12s,\n",
               func, line, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
-      LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d): the type is %s, is not coded. Please make a call.\n",
+      fprintf(stderr, "ParsingFrame::pop (%s:%d): the type is %s, is not coded. Please make a call.\n",
               func, line, get_token_name(pc->GetType()));
       log_flush(true);
       exit(EX_SOFTWARE);
