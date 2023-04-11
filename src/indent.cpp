@@ -685,7 +685,8 @@ void indent_text()
                next = next->GetNext();
             }
 
-            if (next->IsNotNullChunk())
+            if (  next->IsNotNullChunk()
+               && !next->IsPreproc())
             {
                // Mark chunk as continuation line, so indentation can be
                // correctly set over multiple passes
