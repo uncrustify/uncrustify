@@ -2629,43 +2629,45 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          log_rule("sp_before_ptr_star_trailing");                     // ptr_star 7
          return(options::sp_before_ptr_star_trailing());
       }
+      // Find the next non-'*' chunk
+      Chunk *next = second;
 
-      // Add or remove space before a pointer star '*', if followed by a function
-      // prototype or function definition.
-      if (options::sp_before_ptr_star_func() != IARF_IGNORE)
+      do
       {
-         // Find the next non-'*' chunk
-         Chunk *next = second;
+         next = next->GetNext();
+      } while (next->Is(CT_PTR_TYPE));
 
-         do
-         {
-            next = next->GetNext();
-         } while (next->Is(CT_PTR_TYPE));
-
-         if (  next->Is(CT_FUNC_DEF)
-            || next->Is(CT_FUNC_PROTO))
+      if (  next->Is(CT_FUNC_DEF)
+         || next->Is(CT_FUNC_PROTO))
+      {
+         // Add or remove space before a pointer star '*', if followed by a function
+         // prototype or function definition. If set to ignore, sp_before_ptr_star is
+         // used instead.
+         if (options::sp_before_ptr_star_func() != IARF_IGNORE)
          {
             log_rule("sp_before_ptr_star_func");                      // ptr_star 6
             return(options::sp_before_ptr_star_func());
          }
       }
-
-      // Add or remove space before pointer star '*' that isn't followed by a
-      // variable name. If set to 'ignore', sp_before_ptr_star is used instead.
-      if (options::sp_before_unnamed_ptr_star() != IARF_IGNORE)
+      else
       {
-         Chunk *next = second->GetNextNc();
-
-         while (next->Is(CT_PTR_TYPE))
+         // Add or remove space before pointer star '*' that isn't followed by a
+         // variable name. If set to 'ignore', sp_before_ptr_star is used instead.
+         if (options::sp_before_unnamed_ptr_star() != IARF_IGNORE)
          {
-            next = next->GetNextNc();
-         }
+            next = second->GetNextNc();
 
-         if (  next->IsNotNullChunk()
-            && next->IsNot(CT_WORD))
-         {
-            log_rule("sp_before_unnamed_ptr_star");                   // ptr_star 8
-            return(options::sp_before_unnamed_ptr_star());
+            while (next->Is(CT_PTR_TYPE))
+            {
+               next = next->GetNextNc();
+            }
+
+            if (  next->IsNotNullChunk()
+               && next->IsNot(CT_WORD))
+            {
+               log_rule("sp_before_unnamed_ptr_star");                // ptr_star 8
+               return(options::sp_before_unnamed_ptr_star());
+            }
          }
       }
 

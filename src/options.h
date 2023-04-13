@@ -311,7 +311,8 @@ extern Option<iarf_e>
 sp_ptr_star_paren;
 
 // Add or remove space before a pointer star '*', if followed by a function
-// prototype or function definition.
+// prototype or function definition. If set to ignore, sp_before_ptr_star is
+// used instead.
 extern Option<iarf_e>
 sp_before_ptr_star_func;
 

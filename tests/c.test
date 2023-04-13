@@ -548,6 +548,7 @@
 10111  c/mod_int-remove-left.cfg                  c/int-types.c
 10112  c/mod_int-remove-right.cfg                 c/int-types.c
 10113  c/mod_int-remove-all.cfg                   c/int-types.c
+10114  c/Issue_3989.cfg                           c/Issue_3989.c
 
 10120  c/sp_after_sparen-i.cfg                    c/sp_after_sparen.c
 10121  c/sp_after_sparen-a.cfg                    c/sp_after_sparen.c
