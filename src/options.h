@@ -265,6 +265,12 @@ sp_before_ptr_star;
 extern Option<iarf_e>
 sp_before_unnamed_ptr_star;
 
+// Add or remove space between a qualifier and a pointer star '*' that isn't
+// followed by a variable name, as in '(char const *)'. If set to ignore,
+// sp_before_ptr_star is used instead.
+extern Option<iarf_e>
+sp_qualifier_unnamed_ptr_star;
+
 // Add or remove space between pointer stars '*', as in 'int ***a;'.
 extern Option<iarf_e>
 sp_between_ptr_star;
@@ -316,10 +322,22 @@ sp_ptr_star_paren;
 extern Option<iarf_e>
 sp_before_ptr_star_func;
 
+// Add or remove space between a qualifier and a pointer star '*' followed by
+// the name of the function in a function prototype or definition, as in
+// 'char const *foo()`. If set to ignore, sp_before_ptr_star is used instead.
+extern Option<iarf_e>
+sp_qualifier_ptr_star_func;
+
 // Add or remove space before a pointer star '*' in the trailing return of a
 // function prototype or function definition.
 extern Option<iarf_e>
 sp_before_ptr_star_trailing;
+
+// Add or remove space between a qualifier and a pointer star '*' in the
+// trailing return of a function prototype or function definition, as in
+// 'auto foo() -> char const *'.
+extern Option<iarf_e>
+sp_qualifier_ptr_star_trailing;
 
 // Add or remove space before a reference sign '&'.
 extern Option<iarf_e>

@@ -1158,3 +1158,16 @@
 60091  cpp/Issue_3863.cfg                                   cpp/Issue_3863_3.cpp
 60092  cpp/Issue_3865.cfg                                   cpp/Issue_3865.cpp
 60093  cpp/Issue_3865_2.cfg                                 cpp/Issue_3865.cpp
+
+60100  cpp/sp_qualifier_unnamed_ptr_star-i.cfg              cpp/sp_qualifier_ptr_star.cpp
+60101  cpp/sp_qualifier_unnamed_ptr_star-a.cfg              cpp/sp_qualifier_ptr_star.cpp
+60102  cpp/sp_qualifier_unnamed_ptr_star-r.cfg              cpp/sp_qualifier_ptr_star.cpp
+60103  cpp/sp_qualifier_unnamed_ptr_star-f.cfg              cpp/sp_qualifier_ptr_star.cpp
+60104  cpp/sp_qualifier_ptr_star_func-i.cfg                 cpp/sp_qualifier_ptr_star.cpp
+60105  cpp/sp_qualifier_ptr_star_func-a.cfg                 cpp/sp_qualifier_ptr_star.cpp
+60106  cpp/sp_qualifier_ptr_star_func-r.cfg                 cpp/sp_qualifier_ptr_star.cpp
+60107  cpp/sp_qualifier_ptr_star_func-f.cfg                 cpp/sp_qualifier_ptr_star.cpp
+60108  cpp/sp_qualifier_ptr_star_trailing-i.cfg             cpp/sp_qualifier_ptr_star.cpp
+60109  cpp/sp_qualifier_ptr_star_trailing-a.cfg             cpp/sp_qualifier_ptr_star.cpp
+60110  cpp/sp_qualifier_ptr_star_trailing-r.cfg             cpp/sp_qualifier_ptr_star.cpp
+60111  cpp/sp_qualifier_ptr_star_trailing-f.cfg             cpp/sp_qualifier_ptr_star.cpp

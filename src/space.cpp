@@ -2626,8 +2626,16 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       // look back for '->' type is TRAILING_RET
       if (token_is_within_trailing_return(second))
       {
-         log_rule("sp_before_ptr_star_trailing");                     // ptr_star 7
-         return(options::sp_before_ptr_star_trailing());
+         if (first->Is(CT_QUALIFIER))
+         {
+            log_rule("sp_qualifier_ptr_star_trailing");
+            return(options::sp_qualifier_ptr_star_trailing());
+         }
+         else
+         {
+            log_rule("sp_before_ptr_star_trailing");                  // ptr_star 7
+            return(options::sp_before_ptr_star_trailing());
+         }
       }
       // Find the next non-'*' chunk
       Chunk *next = second;
@@ -2643,30 +2651,54 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          // Add or remove space before a pointer star '*', if followed by a function
          // prototype or function definition. If set to ignore, sp_before_ptr_star is
          // used instead.
-         if (options::sp_before_ptr_star_func() != IARF_IGNORE)
+
+         if (first->Is(CT_QUALIFIER))
          {
-            log_rule("sp_before_ptr_star_func");                      // ptr_star 6
-            return(options::sp_before_ptr_star_func());
+            if (options::sp_qualifier_ptr_star_func() != IARF_IGNORE)
+            {
+               log_rule("sp_qualifier_ptr_star_func");
+               return(options::sp_qualifier_ptr_star_func());
+            }
+         }
+         else
+         {
+            if (options::sp_before_ptr_star_func() != IARF_IGNORE)
+            {
+               log_rule("sp_before_ptr_star_func");                   // ptr_star 6
+               return(options::sp_before_ptr_star_func());
+            }
          }
       }
       else
       {
          // Add or remove space before pointer star '*' that isn't followed by a
          // variable name. If set to 'ignore', sp_before_ptr_star is used instead.
-         if (options::sp_before_unnamed_ptr_star() != IARF_IGNORE)
+
+         next = second->GetNextNc();
+
+         while (next->Is(CT_PTR_TYPE))
          {
-            next = second->GetNextNc();
+            next = next->GetNextNc();
+         }
 
-            while (next->Is(CT_PTR_TYPE))
+         if (  next->IsNotNullChunk()
+            && next->IsNot(CT_WORD))
+         {
+            if (first->Is(CT_QUALIFIER))
             {
-               next = next->GetNextNc();
+               if (options::sp_qualifier_unnamed_ptr_star() != IARF_IGNORE)
+               {
+                  log_rule("sp_qualifier_unnamed_ptr_star");
+                  return(options::sp_qualifier_unnamed_ptr_star());
+               }
             }
-
-            if (  next->IsNotNullChunk()
-               && next->IsNot(CT_WORD))
+            else
             {
-               log_rule("sp_before_unnamed_ptr_star");                // ptr_star 8
-               return(options::sp_before_unnamed_ptr_star());
+               if (options::sp_before_unnamed_ptr_star() != IARF_IGNORE)
+               {
+                  log_rule("sp_before_unnamed_ptr_star");             // ptr_star 8
+                  return(options::sp_before_unnamed_ptr_star());
+               }
             }
          }
       }
