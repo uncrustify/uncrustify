@@ -1096,12 +1096,30 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
       pc.Str().append(ctx.get());
    }
 
-   // skip the Microsoft-specific '32' and '64' suffix
-   if (  (  (ctx.peek() == '3')
+   // skip the Microsoft-specific '8' suffix
+   if ((ctx.peek() == '8'))
+   {
+      pc.Str().append(ctx.get());
+   }
+
+   // skip the Microsoft-specific '16', '32' and '64' suffix
+   if (  (  (ctx.peek() == '1')
+         && (ctx.peek(1) == '6'))
+      || (  (ctx.peek() == '3')
          && (ctx.peek(1) == '2'))
       || (  (ctx.peek() == '6')
          && (ctx.peek(1) == '4')))
    {
+      pc.Str().append(ctx.get());
+      pc.Str().append(ctx.get());
+   }
+
+   // skip the Microsoft-specific '128' suffix
+   if ((  (ctx.peek() == '1')
+       && (ctx.peek(1) == '2')
+       && (ctx.peek(2) == '8')))
+   {
+      pc.Str().append(ctx.get());
       pc.Str().append(ctx.get());
       pc.Str().append(ctx.get());
    }
