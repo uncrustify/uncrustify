@@ -187,6 +187,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
            || pc->GetType() == CT_TPAREN_OPEN
            || pc->GetType() == CT_MACRO_CLOSE
            || pc->GetType() == CT_MACRO_OPEN
+           || pc->GetType() == CT_MEMBER                   // Issue 3996
            || pc->GetType() == CT_NEWLINE
            || pc->GetType() == CT_NONE
            || pc->GetType() == CT_OC_END
