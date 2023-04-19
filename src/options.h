@@ -3880,6 +3880,13 @@ mod_remove_extra_semicolon;
 extern Option<bool>
 mod_remove_duplicate_include;
 
+// the following options (mod_XX_closebrace_comment) use different comment,
+// depending of the setting of the next option.
+// false: Use the c comment (default)
+// true : Use the cpp comment
+extern Option<bool>
+mod_add_force_c_closebrace_comment;
+
 // If a function body exceeds the specified number of newlines and doesn't have
 // a comment after the close brace, a comment will be added.
 extern BoundedOption<unsigned, 0, 255>

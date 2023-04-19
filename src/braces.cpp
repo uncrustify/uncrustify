@@ -1202,10 +1202,19 @@ void add_long_closebrace_comment()
             && nl_count >= nl_min
             && tag_pc->IsNotNullChunk())
          {
-            // use the comment style that fits to the selected language
-            const E_Token style = language_is_set(LANG_CPP | LANG_CS)
-                                    ? CT_COMMENT_CPP : CT_COMMENT;
+            E_Token style;
 
+            if (options::mod_add_force_c_closebrace_comment())
+            {
+               // force the C comment style
+               style = CT_COMMENT;
+            }
+            else
+            {
+               // use the comment style that fits to the selected language
+               style = language_is_set(LANG_CPP | LANG_CS)
+                          ? CT_COMMENT_CPP : CT_COMMENT;
+            }
             // Add a comment after the close brace
             LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
                     __func__, __LINE__, xstr.c_str());
