@@ -556,3 +556,4 @@
 10123  c/sp_after_sparen-f.cfg                    c/sp_after_sparen.c
 
 10124  common/tde.cfg                             c/Issue_3985.c
+10125  common/tde.cfg                             c/Issue_3992.c
