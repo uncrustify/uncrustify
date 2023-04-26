@@ -4280,7 +4280,10 @@ void newlines_cleanup_braces(bool first)
                   LOG_FMT(LNL1LINE, "a new line may NOT be added (nl_after_brace_open)\n");
                   // no change - preserve one liner body
                }
-               else if (pc->TestFlags(PCF_IN_PREPROC))
+               else if (  pc->TestFlags(PCF_IN_PREPROC)
+                       || (  pc->TestFlags(PCF_ONE_LINER)
+                          && pc->TestFlags(PCF_IN_ARRAY_ASSIGN)
+                          && options::nl_assign_leave_one_liners()))
                {
                   // no change - don't break up preprocessors
                }
