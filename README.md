@@ -193,7 +193,7 @@ on the subdirectories of that folder.
 
 If a PR is altering the CLI output, files inside those directories might
 need to be manually updated. This often happens when options are
-added, removed or altered. Keep in mind that the version string line
+added, removed, or altered. Keep in mind that the version string line
 (example: `# Uncrustify-0.69.0_f`) of outputs from commands like
 `--show-config` should be replaced with a blank line.
 
@@ -323,7 +323,7 @@ The `-f` flag specifies the input file.
 The `-o` flag specifies the output file.
 If flag `-f` is used without flag `-o` the output will be send to `stdout`.
 
-Alternatively multiple or single files that should be processed can be
+Alternatively, multiple or single files that should be processed can be
 specified at the command end without flags.
 If the flag `--no-backup` is missing, every file is saved with the initial
 name and an additional suffix (can be changed with --suffix).
@@ -335,7 +335,7 @@ $ uncrustify -h
 
 ## Configuring the program
 Uncrustify usually reads configuration files that are passed via the `-c`
-flag. If the flag is not provided Uncrustify will try to find a
+flag. If the flag is not provided, Uncrustify will try to find a
 configuration file via the `UNCRUSTIFY_CONFIG` environment variable or a
 file with the name `.uncrustify.cfg` or `uncrustify.cfg` in your home folder.
 
@@ -356,7 +356,7 @@ To get a list of:
   uncrustify --update-config-with-doc
   ```
 
-  As the names suggest both options can produce output that adds newly
+  As the names suggest, both options can produce output that adds newly
   introduced options to your old configuration file. For this your old
   configuration file has to be passed via the `-c` flag:
   ```bash
