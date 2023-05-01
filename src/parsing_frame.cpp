@@ -22,11 +22,11 @@ using std::invalid_argument;
 
 ParenStackEntry::ParenStackEntry()
 {
-   type         = CT_EOF;
-   pc           = Chunk::NullChunkPtr;
-   level        = 0;
-   open_line    = 0;
-   open_colu    = 0;
+   m_openToken  = CT_EOF;
+   m_openChunk  = Chunk::NullChunkPtr;
+   m_openLevel  = 0;
+   m_openLine   = 0;
+   m_openCol    = 0;
    brace_indent = 0;
    indent       = 1;
    indent_tmp   = 1;
@@ -115,11 +115,11 @@ void ParsingFrame::push(Chunk *pc, const char *func, int line, E_BraceStage stag
 
    if (pc->IsNotNullChunk())
    {
-      new_entry.type      = pc->GetType();
-      new_entry.level     = pc->GetLevel();
-      new_entry.open_line = pc->GetOrigLine();
-      new_entry.open_colu = pc->GetOrigCol();
-      new_entry.pc        = pc;
+      new_entry.SetOpenToken(pc->GetType());
+      new_entry.SetOpenLevel(pc->GetLevel());
+      new_entry.SetOpenLine(pc->GetOrigLine());
+      new_entry.SetOpenCol(pc->GetOrigCol());
+      new_entry.SetOpenChunk(pc);
 
       new_entry.indent_tab  = top().indent_tab;
       new_entry.indent_cont = top().indent_cont;
@@ -224,8 +224,8 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
 #else /* DEBUG_PUSH_POP */
    LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d): open_line is %4zu, clos_col is %4zu, type is %12s, "
            "cpd.level   is %2d, level is %2zu, pse_tos: %2zu -> %2zu\n",
-           func, line, m_parenStack.back().open_line, m_parenStack.back().open_colu,
-           get_token_name(m_parenStack.back().type), cpd.pp_level, m_parenStack.back().level,
+           func, line, m_parenStack.back().GetOpenLine(), m_parenStack.back().GetOpenCol(),
+           get_token_name(m_parenStack.back().GetOpenToken()), cpd.pp_level, m_parenStack.back().GetOpenLevel(),
            (m_parenStack.size() - 1), (m_parenStack.size() - 2));
 #endif /* DEBUG_PUSH_POP */
 

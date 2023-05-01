@@ -21,11 +21,64 @@ class ParenStackEntry
 public:
    ParenStackEntry();
 
-   E_Token         type;         //! the type that opened the entry
-   Chunk           *pc;          //! chunk that opened the level, TODO: make const
-   size_t          level;        //! level of opening type
-   size_t          open_line;    //! line that open symbol is on, only for logging purposes
-   size_t          open_colu;    //! column that open symbol is on, only for logging purposes
+   // --------- Access methods
+
+   /**
+    * @brief returns the token that opened the entry
+    */
+   E_Token GetOpenToken() const;
+
+   /**
+    * @brief Sets the token that opened the entry
+    * @param token the token to set
+    */
+   void SetOpenToken(const E_Token token);
+
+   /**
+    * @brief returns the chunk that opened the entry
+    */
+   Chunk *GetOpenChunk() const;
+
+   /**
+    * @brief Sets the chunk that opened the entry
+    * @param chunk the chunk to set
+    */
+   void SetOpenChunk(Chunk *chunk);
+
+   /**
+    * @brief returns the level that opened the entry
+    */
+   size_t GetOpenLevel() const;
+
+   /**
+    * @brief Sets the level that opened the entry
+    * @param level the level to set
+    */
+   void SetOpenLevel(size_t level);
+
+   /**
+    * @brief returns the line that opened the entry
+    */
+   size_t GetOpenLine() const;
+
+   /**
+    * @brief Sets the line that opened the entry
+    * @param line the line to set
+    */
+   void SetOpenLine(size_t line);
+
+   /**
+    * @brief returns the column that opened the entry
+    */
+   size_t GetOpenCol() const;
+
+   /**
+    * @brief Sets the column that opened the entry
+    * @param column the column to set
+    */
+   void SetOpenCol(size_t column);
+
+
    size_t          brace_indent; //! indent for braces - may not relate to indent
    size_t          indent;       //! indent level (depends on use)
    size_t          indent_tmp;   //! temporary indent level (depends on use)
@@ -38,6 +91,13 @@ public:
    E_BraceStage    stage;        //! used to check progression of complex statements.
    IndentationData ip;
    Chunk           *pop_pc;
+
+protected:
+   E_Token m_openToken;          //! the type that opened the entry
+   Chunk   *m_openChunk;         //! chunk that opened the level
+   size_t  m_openLevel;          //! level of opening type
+   size_t  m_openLine;           //! line that open symbol is on, only for logging purposes
+   size_t  m_openCol;            //! column that open symbol is on, only for logging purposes
 };
 
 
@@ -208,6 +268,72 @@ protected:
 };
 
 
+// ------------------------------
+// ParenStackEntry inline methods
+// ------------------------------
+inline E_Token ParenStackEntry::GetOpenToken() const
+{
+   return(m_openToken);
+}
+
+
+inline void ParenStackEntry::SetOpenToken(const E_Token token)
+{
+   m_openToken = token;
+}
+
+
+inline Chunk *ParenStackEntry::GetOpenChunk() const
+{
+   return(m_openChunk);
+}
+
+
+inline void ParenStackEntry::SetOpenChunk(Chunk *chunk)
+{
+   m_openChunk = chunk;
+}
+
+
+inline size_t ParenStackEntry::GetOpenLevel() const
+{
+   return(m_openLevel);
+}
+
+
+inline void ParenStackEntry::SetOpenLevel(const size_t level)
+{
+   m_openLevel = level;
+}
+
+
+inline size_t ParenStackEntry::GetOpenLine() const
+{
+   return(m_openLine);
+}
+
+
+inline void ParenStackEntry::SetOpenLine(const size_t line)
+{
+   m_openLine = line;
+}
+
+
+inline size_t ParenStackEntry::GetOpenCol() const
+{
+   return(m_openCol);
+}
+
+
+inline void ParenStackEntry::SetOpenCol(const size_t column)
+{
+   m_openCol = column;
+}
+
+
+// ------------------------------
+// ParsingFrame inline methods
+// ------------------------------
 inline bool ParsingFrame::empty() const
 {
    return(m_parenStack.empty());

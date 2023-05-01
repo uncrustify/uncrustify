@@ -136,7 +136,7 @@ static size_t preproc_start(BraceState &braceState, ParsingFrame &frm, Chunk *pc
 
    // TODO: not sure about the next 3 lines
    frm.push(Chunk::NullChunkPtr, __func__, __LINE__);
-   frm.top().type = CT_PP_DEFINE;
+   frm.top().SetOpenToken(CT_PP_DEFINE);
 
    return(pp_level);
 }
@@ -157,12 +157,12 @@ static void print_stack(log_sev_t logsev, const char *str,
    {
       if (frm.at(idx).stage != E_BraceStage::NONE)
       {
-         LOG_FMT(logsev, " [%s - %u]", get_token_name(frm.at(idx).type),
+         LOG_FMT(logsev, " [%s - %u]", get_token_name(frm.at(idx).GetOpenToken()),
                  (unsigned int)frm.at(idx).stage);
       }
       else
       {
-         LOG_FMT(logsev, " [%s]", get_token_name(frm.at(idx).type));
+         LOG_FMT(logsev, " [%s]", get_token_name(frm.at(idx).GetOpenToken()));
       }
    }
 
@@ -218,7 +218,7 @@ void brace_cleanup()
 
       // Do before assigning stuff from the frame
       if (  language_is_set(LANG_PAWN)
-         && frm.top().type == CT_VBRACE_OPEN
+         && frm.top().GetOpenToken() == CT_VBRACE_OPEN
          && pc->Is(CT_NEWLINE))
       {
          pc = pawn_check_vsemicolon(pc);
@@ -347,7 +347,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
 
    LOG_FMT(LTOK, "%s(%d): orig line is %zu, orig col is %zu, type is %s, tos is %zu, TOS.type is %s, TOS.stage is %s, ",
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()),
-           frm.size() - 1, get_token_name(frm.top().type),
+           frm.size() - 1, get_token_name(frm.top().GetOpenToken()),
            get_brace_stage_name(frm.top().stage));
    log_pcf_flags(LTOK, pc->GetFlags());
 
@@ -383,7 +383,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
       // Mark everything in the for statement
       for (int tmp = static_cast<int>(frm.size()) - 2; tmp >= 0; tmp--)
       {
-         if (frm.at(tmp).type == CT_FOR)
+         if (frm.at(tmp).GetOpenToken() == CT_FOR)
          {
             pc->SetFlagBits(PCF_IN_FOR);
             break;
@@ -393,7 +393,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
       // Mark the parent on semicolons in for() statements
       if (  pc->Is(CT_SEMICOLON)
          && frm.size() > 2
-         && frm.prev().type == CT_FOR)
+         && frm.prev().GetOpenToken() == CT_FOR)
       {
          pc->SetParentType(CT_FOR);
       }
@@ -413,7 +413,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
     * The semicolon isn't handled at all.
     * TODO: may need to float VBRACE past comments until newline?
     */
-   if (frm.top().type == CT_VBRACE_OPEN)
+   if (frm.top().GetOpenToken() == CT_VBRACE_OPEN)
    {
       if (pc->IsSemicolon())
       {
@@ -442,11 +442,11 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
    {
       // Change CT_PAREN_CLOSE into CT_SPAREN_CLOSE or CT_FPAREN_CLOSE
       if (  pc->Is(CT_PAREN_CLOSE)
-         && (  (frm.top().type == CT_FPAREN_OPEN)
-            || (frm.top().type == CT_SPAREN_OPEN)))
+         && (  (frm.top().GetOpenToken() == CT_FPAREN_OPEN)
+            || (frm.top().GetOpenToken() == CT_SPAREN_OPEN)))
       {
          // TODO: fix enum hack
-         pc->SetType(static_cast<E_Token>(frm.top().type + 1));
+         pc->SetType(static_cast<E_Token>(frm.top().GetOpenToken() + 1));
 
          if (pc->Is(CT_SPAREN_CLOSE))
          {
@@ -456,7 +456,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
       }
 
       // Make sure the open / close match
-      if (pc->IsNot((E_Token)(frm.top().type + 1)))
+      if (pc->IsNot((E_Token)(frm.top().GetOpenToken() + 1)))
       {
          if (pc->TestFlags(PCF_IN_PREPROC))                // Issue #3113, #3283
          {
@@ -468,19 +468,19 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
             const ParenStackEntry &AA = frm.top();                // Issue #3055
 
-            if (AA.type != CT_EOF)
+            if (AA.GetOpenToken() != CT_EOF)
             {
                LOG_FMT(LWARN, "%s(%d): (frm.top().type + 1) is %s\n",
-                       __func__, __LINE__, get_token_name((E_Token)(frm.top().type + 1)));
+                       __func__, __LINE__, get_token_name((E_Token)(frm.top().GetOpenToken() + 1)));
             }
 
-            if (  frm.top().type != CT_EOF
-               && frm.top().type != CT_PP_DEFINE)
+            if (  frm.top().GetOpenToken() != CT_EOF
+               && frm.top().GetOpenToken() != CT_PP_DEFINE)
             {
                LOG_FMT(LWARN, "%s(%d): File: %s, orig line is %zu, orig col is %zu, Error: Unexpected '%s' for '%s', which was on line %zu\n",
                        __func__, __LINE__, cpd.filename.c_str(), pc->GetOrigLine(), pc->GetOrigCol(),
-                       pc->Text(), get_token_name(frm.top().pc->GetType()),
-                       frm.top().pc->GetOrigLine());
+                       pc->Text(), get_token_name(frm.top().GetOpenChunk()->GetType()),
+                       frm.top().GetOpenChunk()->GetOrigLine());
                print_stack(LBCSPOP, "=Error  ", frm);
                exit(EXIT_FAILURE);
             }
@@ -516,7 +516,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
             && (  pc->Is(CT_VBRACE_CLOSE)
                || pc->Is(CT_BRACE_CLOSE)
                || pc->Is(CT_SEMICOLON))
-            && frm.top().pc->Is(CT_VBRACE_OPEN))
+            && frm.top().GetOpenChunk()->Is(CT_VBRACE_OPEN))
          {
             // frames for functions are not created as they are for an if
             // this here is a hackish solution to close a vbrace of a block that
@@ -608,7 +608,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
                || prev->Is(CT_D_SCOPE_IF))
             {
                pc->SetType(CT_SPAREN_OPEN);
-               parentType = frm.top().type;
+               parentType = frm.top().GetOpenToken();
                frm.SetSParenCount(frm.GetSParenCount() + 1);
             }
             else if (prev->Is(CT_FUNCTION))
@@ -635,7 +635,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
             // Set the parent for open braces
             if (frm.top().stage != E_BraceStage::NONE)
             {
-               parentType = frm.top().type;
+               parentType = frm.top().GetOpenToken();
             }
             else if (  prev->Is(CT_ASSIGN)
                     && (prev->GetStr()[0] == '='))
@@ -688,7 +688,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
          {
             LOG_FMT(LBCSPOP, "%s(%d): parent type is NAMESPACE\n",
                     __func__, __LINE__);
-            Chunk *tmp = frm.top().pc;
+            Chunk *tmp = frm.top().GetOpenChunk();
 
             if (tmp->GetParentType() == CT_NAMESPACE)
             {
@@ -729,7 +729,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
       size_t idx = frm.size();
       LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
               __func__, __LINE__, idx);
-      Chunk *saved = frm.at(idx - 2).pc;
+      Chunk *saved = frm.at(idx - 2).GetOpenChunk();
 
       if (saved->IsNotNullChunk())
       {
@@ -754,7 +754,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
          size_t idx = frm.size();
          LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
                  __func__, __LINE__, idx);
-         Chunk *saved = frm.at(idx - 2).pc;
+         Chunk *saved = frm.at(idx - 2).GetOpenChunk();
 
          if (saved->IsNotNullChunk())
          {
@@ -771,7 +771,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
       size_t idx = frm.size();
       LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
               __func__, __LINE__, idx);
-      Chunk *saved = frm.at(idx - 2).pc;
+      Chunk *saved = frm.at(idx - 2).GetOpenChunk();
 
       if (saved->IsNotNullChunk())
       {
@@ -832,9 +832,9 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
       || pc->Is(CT_COLON)
       || pc->Is(CT_OC_END)
       || (  pc->IsSemicolon()
-         && frm.top().type != CT_PAREN_OPEN
-         && frm.top().type != CT_FPAREN_OPEN
-         && frm.top().type != CT_SPAREN_OPEN)
+         && frm.top().GetOpenToken() != CT_PAREN_OPEN
+         && frm.top().GetOpenToken() != CT_FPAREN_OPEN
+         && frm.top().GetOpenToken() != CT_SPAREN_OPEN)
       || pc->Is(CT_MACRO))                         // Issue #2742
    {
       LOG_FMT(LSTMT, "%s(%d): orig line is %zu, reset1 stmt on '%s'\n",
@@ -909,7 +909,7 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
       if (pc->Is(CT_ELSE))
       {
          // Replace CT_IF with CT_ELSE on the stack & we are done
-         frm.top().type  = CT_ELSE;
+         frm.top().SetOpenToken(CT_ELSE);
          frm.top().stage = E_BraceStage::ELSEIF;
          print_stack(LBCSSWAP, "=Swap   ", frm);
 
@@ -938,7 +938,7 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
       {
          // Replace CT_ELSE with CT_IF
          pc->SetType(CT_ELSEIF);
-         frm.top().type  = CT_ELSEIF;
+         frm.top().SetOpenToken(CT_ELSEIF);
          frm.top().stage = E_BraceStage::PAREN1;
          return(true);
       }
@@ -953,7 +953,7 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
          || pc->Is(CT_FINALLY))
       {
          // Replace CT_TRY with CT_CATCH or CT_FINALLY on the stack & we are done
-         frm.top().type = pc->GetType();
+         frm.top().SetOpenToken(pc->GetType());
 
          if (language_is_set(LANG_CS))
          {
@@ -989,7 +989,7 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
       {
          // Replace CT_PAREN_OPEN with CT_SPAREN_OPEN
          pc->SetType(CT_SPAREN_OPEN);
-         frm.top().type  = pc->GetType();
+         frm.top().SetOpenToken(pc->GetType());
          frm.top().stage = E_BraceStage::PAREN1;
 
          return(false);
@@ -997,7 +997,7 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
 
       if (pc->Is(CT_WHEN))
       {
-         frm.top().type  = pc->GetType();
+         frm.top().SetOpenToken(pc->GetType());
          frm.top().stage = E_BraceStage::OP_PAREN1;
 
          return(true);
@@ -1017,7 +1017,7 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
       if (pc->Is(CT_WHILE))
       {
          pc->SetType(CT_WHILE_OF_DO);
-         frm.top().type  = CT_WHILE_OF_DO; //CT_WHILE;
+         frm.top().SetOpenToken(CT_WHILE_OF_DO);
          frm.top().stage = E_BraceStage::WOD_PAREN;
 
          return(true);
@@ -1050,7 +1050,7 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
       }
       else
       {
-         const E_Token parentType = frm.top().type;
+         const E_Token parentType = frm.top().GetOpenToken();
 
          Chunk         *vbrace = insert_vbrace_open_before(pc, frm);
          vbrace->SetParentType(parentType);
@@ -1085,8 +1085,8 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
 
    // Check for "constexpr" after CT_IF or CT_ELSEIF
    if (  frm.top().stage == E_BraceStage::PAREN1
-      && (  frm.top().type == CT_IF
-         || frm.top().type == CT_ELSEIF)
+      && (  frm.top().GetOpenToken() == CT_IF
+         || frm.top().GetOpenToken() == CT_ELSEIF)
       && pc->Is(CT_CONSTEXPR))
    {
       return(false);
@@ -1099,7 +1099,7 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
    {
       LOG_FMT(LWARN, "%s(%d): %s, orig line is %zu, Error: Expected '(', got '%s' for '%s'\n",
               __func__, __LINE__, cpd.filename.c_str(), pc->GetOrigLine(), pc->Text(),
-              get_token_name(frm.top().type));
+              get_token_name(frm.top().GetOpenToken()));
 
       // Throw out the complex statement
       LOG_FMT(LBCSPOP, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
@@ -1120,7 +1120,7 @@ static bool handle_complex_close(ParsingFrame &frm, Chunk *pc, const BraceState 
    {
       if (pc->GetNext()->GetType() == CT_WHEN)
       {
-         frm.top().type  = pc->GetType();
+         frm.top().SetOpenToken(pc->GetType());
          frm.top().stage = E_BraceStage::CATCH_WHEN;
 
          return(true);
@@ -1131,8 +1131,8 @@ static bool handle_complex_close(ParsingFrame &frm, Chunk *pc, const BraceState 
    else if (frm.top().stage == E_BraceStage::BRACE2)
    {
       // BRACE2: IF => ELSE, anything else => close
-      if (  (frm.top().type == CT_IF)
-         || (frm.top().type == CT_ELSEIF))
+      if (  (frm.top().GetOpenToken() == CT_IF)
+         || (frm.top().GetOpenToken() == CT_ELSEIF))
       {
          frm.top().stage = E_BraceStage::ELSE;
 
@@ -1150,8 +1150,8 @@ static bool handle_complex_close(ParsingFrame &frm, Chunk *pc, const BraceState 
             return(close_statement(frm, pc, braceState));
          }
       }
-      else if (  (frm.top().type == CT_TRY)
-              || (frm.top().type == CT_CATCH))
+      else if (  (frm.top().GetOpenToken() == CT_TRY)
+              || (frm.top().GetOpenToken() == CT_CATCH))
       {
          frm.top().stage = E_BraceStage::CATCH;
 
@@ -1172,7 +1172,7 @@ static bool handle_complex_close(ParsingFrame &frm, Chunk *pc, const BraceState 
       else
       {
          LOG_FMT(LNOTE, "%s(%d): close_statement on %s E_BraceStage::BRACE2\n",
-                 __func__, __LINE__, get_token_name(frm.top().type));
+                 __func__, __LINE__, get_token_name(frm.top().GetOpenToken()));
          LOG_FMT(LBCSPOP, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
          frm.pop(__func__, __LINE__, pc);
@@ -1188,14 +1188,14 @@ static bool handle_complex_close(ParsingFrame &frm, Chunk *pc, const BraceState 
    else if (frm.top().stage == E_BraceStage::WOD_PAREN)
    {
       LOG_FMT(LNOTE, "%s(%d): close_statement on %s E_BraceStage::WOD_PAREN\n",
-              __func__, __LINE__, get_token_name(frm.top().type));
+              __func__, __LINE__, get_token_name(frm.top().GetOpenToken()));
       frm.top().stage = E_BraceStage::WOD_SEMI;
       print_stack(LBCSPOP, "-HCC WoDP ", frm);
    }
    else if (frm.top().stage == E_BraceStage::WOD_SEMI)
    {
       LOG_FMT(LNOTE, "%s(%d): close_statement on %s E_BraceStage::WOD_SEMI\n",
-              __func__, __LINE__, get_token_name(frm.top().type));
+              __func__, __LINE__, get_token_name(frm.top().GetOpenToken()));
       LOG_FMT(LBCSPOP, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
       frm.pop(__func__, __LINE__, pc);
@@ -1208,7 +1208,7 @@ static bool handle_complex_close(ParsingFrame &frm, Chunk *pc, const BraceState 
       // PROBLEM
       LOG_FMT(LWARN, "%s(%d): %s:%zu Error: TOS.type='%s' TOS.stage=%u\n",
               __func__, __LINE__, cpd.filename.c_str(), pc->GetOrigLine(),
-              get_token_name(frm.top().type),
+              get_token_name(frm.top().GetOpenToken()),
               (unsigned int)frm.top().stage);
       exit(EX_SOFTWARE);
    }
@@ -1282,7 +1282,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParsingFrame &frm)
 
    Chunk chunk;
 
-   chunk.SetParentType(frm.top().type);
+   chunk.SetParentType(frm.top().GetOpenToken());
    chunk.SetOrigLine(pc->GetOrigLine());
    chunk.SetLevel(frm.GetParenLevel());
    chunk.SetPpLevel(frm.GetPpLevel());
@@ -1375,7 +1375,7 @@ bool close_statement(ParsingFrame &frm, Chunk *pc, const BraceState &braceState)
    LOG_FMT(LTOK, "%s(%d): orig line is %zu, type is %s, '%s' type is %s, stage is %u\n",
            __func__, __LINE__, pc->GetOrigLine(),
            get_token_name(pc->GetType()), pc->Text(),
-           get_token_name(frm.top().type),
+           get_token_name(frm.top().GetOpenToken()),
            (unsigned int)frm.top().stage);
 
    if (braceState.consumed)
@@ -1391,7 +1391,7 @@ bool close_statement(ParsingFrame &frm, Chunk *pc, const BraceState &braceState)
     */
    Chunk *vbc = pc;
 
-   if (frm.top().type == CT_VBRACE_OPEN)
+   if (frm.top().GetOpenToken() == CT_VBRACE_OPEN)
    {
       // If the current token has already been consumed, then add after it
       if (braceState.consumed)
