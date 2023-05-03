@@ -17,6 +17,10 @@
 #define PROT_THE_LINE    /* do nothing */;
 #endif
 
+extern char dump_file_name[80];
+
+void set_dump_file_name(const char *name);
+
 
 void prot_the_line(const char *func_name, int theLine, unsigned int actual_line, size_t partNumber);
 
@@ -45,5 +49,9 @@ size_t get_A_Number();
 
 
 void dump_keyword_for_lang(size_t language_count, chunk_tag_t *keyword_for_lang);
+
+//! This save the next formatting step to a file
+void dump_step(const char *filename, const char *description);
+
 
 #endif /* UNC_TOOLS_H_INCLUDED */
