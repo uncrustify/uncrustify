@@ -26,10 +26,6 @@ void output_parsed_csv(FILE *pfile);
 void output_text(FILE *pfile);
 
 
-//! This save the next formatting step to a file
-void dump_step(const char *filename, const char *description);
-
-
 /**
  * See also it's preprocessor counterpart
  *   add_long_closebrace_comment

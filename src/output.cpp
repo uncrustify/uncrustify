@@ -1103,52 +1103,6 @@ void output_text(FILE *pfile)
 } // output_text
 
 
-void dump_step(const char *filename, const char *step_description)
-{
-   static int file_num = 0;
-   char       buffer[256];
-   FILE       *dump_file;
-
-   if (  filename == nullptr
-      || strlen(filename) == 0)
-   {
-      return;
-   }
-
-   // On the first call, also save the options in use
-   if (file_num == 0)
-   {
-      snprintf(buffer, 256, "New dump file: %s_%03d.log - Options in use", filename, file_num);
-      log_rule_B(buffer);
-
-      snprintf(buffer, 256, "%s_%03d.log", filename, file_num);
-      ++file_num;
-
-      dump_file = fopen(buffer, "wb");
-
-      if (dump_file != nullptr)
-      {
-         save_option_file(dump_file, false, true);
-         fclose(dump_file);
-      }
-   }
-   snprintf(buffer, 256, "New dump file: %s_%03d.log - %s", filename, file_num, step_description);
-   log_rule_B(buffer);
-
-   snprintf(buffer, 256, "%s_%03d.log", filename, file_num);
-   ++file_num;
-
-   dump_file = fopen(buffer, "wb");
-
-   if (dump_file != nullptr)
-   {
-      fprintf(dump_file, "STEP: %s\n--------------\n", step_description);
-      output_parsed(dump_file, false);
-      fclose(dump_file);
-   }
-} // dump_step
-
-
 static size_t cmt_parse_lead(const UncText &line, bool is_last)
 {
    size_t len = 0;

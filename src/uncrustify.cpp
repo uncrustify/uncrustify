@@ -557,12 +557,15 @@ int main(int argc, char *argv[])
       }
    }
    // Get the dump file name prefix
-   const char *dump_file;
+   const char *dump_file_T;
 
-   if (  ((dump_file = arg.Param("--dump-steps")) != nullptr)
-      || ((dump_file = arg.Param("-ds")) != nullptr))
+   if (  ((dump_file_T = arg.Param("--dump-steps")) != nullptr)
+      || ((dump_file_T = arg.Param("-ds")) != nullptr))
    {
-      LOG_FMT(LNOTE, "Will export formatting steps data to '%s_nnn.log' files\n", dump_file);
+      // and save it
+      // Issue #3976
+      set_dump_file_name(dump_file_T);
+      LOG_FMT(LNOTE, "Will export formatting steps data to '%s_nnn.log' files\n", dump_file_name);
    }
 
    // Enable log severities
@@ -1001,12 +1004,12 @@ int main(int argc, char *argv[])
 
       // Issue #3427
       init_keywords_for_language();
-      uncrustify_file(fm, stdout, parsed_file, dump_file);
+      uncrustify_file(fm, stdout, parsed_file, dump_file_name);
    }
    else if (source_file != nullptr)
    {
       // Doing a single file
-      do_source_file(source_file, output_file, parsed_file, dump_file, no_backup, keep_mtime);
+      do_source_file(source_file, output_file, parsed_file, dump_file_name, no_backup, keep_mtime);
    }
    else
    {
@@ -1017,7 +1020,7 @@ int main(int argc, char *argv[])
          exit(EX_CONFIG);
       }
 
-      if (dump_file != nullptr)
+      if (dump_file_name[0] != char(0))                // Issue #3976
       {
          fprintf(stderr, "FAIL: -ds/--dump-steps option must be used with the -f option\n");
          log_flush(true);
@@ -2273,9 +2276,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
          {
             newlines_squeeze_paren_close();
          }
-//prot_the_line(__func__, __LINE__, 15, 4);
          do_blank_lines();
-//prot_the_line(__func__, __LINE__, 15, 4);
          newlines_eat_start_end();
          newlines_functions_remove_extra_blank_lines();
          newlines_cleanup_dup();
