@@ -78,11 +78,51 @@ public:
     */
    void SetOpenCol(size_t column);
 
+   /**
+    * @brief returns the indent for braces
+    */
+   size_t GetBraceIndent() const;
 
-   size_t          brace_indent; //! indent for braces - may not relate to indent
-   size_t          indent;       //! indent level (depends on use)
-   size_t          indent_tmp;   //! temporary indent level (depends on use)
-   size_t          indent_tab;   //! the 'tab' indent (always <= real column)
+   /**
+    * @brief Sets the indent for braces
+    * @param indent the indent for braces
+    */
+   void SetBraceIndent(size_t indent);
+
+   /**
+    * @brief returns the indent level
+    */
+   size_t GetIndent() const;
+
+   /**
+    * @brief Sets the indent level
+    * @param level the indent level
+    */
+   void SetIndent(size_t level);
+
+   /**
+    * @brief returns the temporary indent level
+    */
+   size_t GetIndentTmp() const;
+
+   /**
+    * @brief Sets the temporary indent level
+    * @param level the temporary indent level
+    */
+   void SetIndentTmp(size_t level);
+
+   /**
+    * @brief returns the tab indent level
+    */
+   size_t GetIndentTab() const;
+
+   /**
+    * @brief Sets the tab indent level
+    * @param level the tab indent level
+    */
+   void SetIndentTab(size_t level);
+
+
    size_t          ns_cnt;       //! Number of consecutive namespace levels
    bool            indent_cont;  //! indent_continue was applied
    bool            in_preproc;   //! whether this was created in a preprocessor
@@ -98,6 +138,10 @@ protected:
    size_t  m_openLevel;          //! level of opening type
    size_t  m_openLine;           //! line that open symbol is on, only for logging purposes
    size_t  m_openCol;            //! column that open symbol is on, only for logging purposes
+   size_t  m_braceIndent;        //! indent for braces - may not relate to indent
+   size_t  m_indent;             //! indent level (depends on use)
+   size_t  m_indentTmp;          //! temporary indent level (depends on use)
+   size_t  m_indentTab;          //! the 'tab' indent (always <= real column)
 };
 
 
@@ -301,7 +345,7 @@ inline size_t ParenStackEntry::GetOpenLevel() const
 }
 
 
-inline void ParenStackEntry::SetOpenLevel(const size_t level)
+inline void ParenStackEntry::SetOpenLevel(size_t level)
 {
    m_openLevel = level;
 }
@@ -313,7 +357,7 @@ inline size_t ParenStackEntry::GetOpenLine() const
 }
 
 
-inline void ParenStackEntry::SetOpenLine(const size_t line)
+inline void ParenStackEntry::SetOpenLine(size_t line)
 {
    m_openLine = line;
 }
@@ -325,9 +369,57 @@ inline size_t ParenStackEntry::GetOpenCol() const
 }
 
 
-inline void ParenStackEntry::SetOpenCol(const size_t column)
+inline void ParenStackEntry::SetOpenCol(size_t column)
 {
    m_openCol = column;
+}
+
+
+inline size_t ParenStackEntry::GetBraceIndent() const
+{
+   return(m_braceIndent);
+}
+
+
+inline void ParenStackEntry::SetBraceIndent(size_t indent)
+{
+   m_braceIndent = indent;
+}
+
+
+inline size_t ParenStackEntry::GetIndent() const
+{
+   return(m_indent);
+}
+
+
+inline void ParenStackEntry::SetIndent(size_t level)
+{
+   m_indent = level;
+}
+
+
+inline size_t ParenStackEntry::GetIndentTmp() const
+{
+   return(m_indentTmp);
+}
+
+
+inline void ParenStackEntry::SetIndentTmp(size_t level)
+{
+   m_indentTmp = level;
+}
+
+
+inline size_t ParenStackEntry::GetIndentTab() const
+{
+   return(m_indentTab);
+}
+
+
+inline void ParenStackEntry::SetIndentTab(size_t level)
+{
+   m_indentTab = level;
 }
 
 

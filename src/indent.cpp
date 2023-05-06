@@ -455,9 +455,9 @@ static size_t calc_indent_continue(const ParsingFrame &frm, size_t pse_tos)
    if (  ic < 0
       && frm.at(pse_tos).indent_cont)
    {
-      return(frm.at(pse_tos).indent);
+      return(frm.at(pse_tos).GetIndent());
    }
-   return(frm.at(pse_tos).indent + abs(ic));
+   return(frm.at(pse_tos).GetIndent() + abs(ic));
 }
 
 
@@ -585,7 +585,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
 static void _log_indent(const char *func, const uint32_t line, const ParsingFrame &frm)
 {
    LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos is %zu, ...indent is %zu\n",
-           func, line, frm.size() - 1, frm.top().indent);
+           func, line, frm.size() - 1, frm.top().GetIndent());
 }
 
 
@@ -597,7 +597,7 @@ static void _log_indent(const char *func, const uint32_t line, const ParsingFram
 static void _log_prev_indent(const char *func, const uint32_t line, const ParsingFrame &frm)
 {
    LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos is %zu, prev....indent is %zu\n",
-           func, line, frm.size() - 1, frm.prev().indent);
+           func, line, frm.size() - 1, frm.prev().GetIndent());
 }
 
 
@@ -609,7 +609,7 @@ static void _log_prev_indent(const char *func, const uint32_t line, const Parsin
 static void _log_indent_tmp(const char *func, const uint32_t line, const ParsingFrame &frm)
 {
    LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos is %zu, ...indent_tmp is %zu\n",
-           func, line, frm.size() - 1, frm.top().indent_tmp);
+           func, line, frm.size() - 1, frm.top().GetIndentTmp());
 }
 
 
@@ -774,9 +774,9 @@ void indent_text()
             {
                in_func_def = true;
                frm.push(pc, __func__, __LINE__);
-               frm.top().indent_tmp = 1;
-               frm.top().indent     = 1;
-               frm.top().indent_tab = 1;
+               frm.top().SetIndentTmp(1);
+               frm.top().SetIndent(1);
+               frm.top().SetIndentTab(1);
             }
          }
          else
@@ -851,11 +851,11 @@ void indent_text()
             next->SetType(CT_PP_REGION);
 
             // Indent one level
-            frm.top().indent = frm.prev().indent + indent_size;
+            frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
             log_indent();
 
-            frm.top().indent_tab = frm.prev().indent_tab + indent_size;
-            frm.top().indent_tmp = frm.top().indent;
+            frm.top().SetIndentTab(frm.prev().GetIndentTab() + indent_size);
+            frm.top().SetIndentTmp(frm.top().GetIndent());
             frm.top().in_preproc = false;
             log_indent_tmp();
          }
@@ -867,11 +867,11 @@ void indent_text()
          {
             frm.push(pc, __func__, __LINE__);
             LOG_FMT(LINDPC, "%s(%d): frm.top().indent is %zu, indent_size is %zu\n",
-                    __func__, __LINE__, frm.top().indent, indent_size);
+                    __func__, __LINE__, frm.top().GetIndent(), indent_size);
 
-            if (frm.top().indent >= indent_size)
+            if (frm.top().GetIndent() >= indent_size)
             {
-               frm.prev().indent = frm.top().indent - indent_size;
+               frm.prev().SetIndent(frm.top().GetIndent() - indent_size);
             }
             log_prev_indent();
          }
@@ -941,7 +941,7 @@ void indent_text()
                if (should_ignore_preproc)
                {
                   // Preserve original indentation
-                  frm.top().indent = pc->GetNextNl()->GetNext()->GetOrigCol();
+                  frm.top().SetIndent(pc->GetNextNl()->GetNext()->GetOrigCol());
                   log_indent();
                }
                else
@@ -951,12 +951,12 @@ void indent_text()
                                  && ifdef_over_whole_file())
                                  ? 0 : indent_size;
 
-                  frm.top().indent = frm.prev().indent + extra;
+                  frm.top().SetIndent(frm.prev().GetIndent() + extra);
                   log_indent();
 
-                  frm.top().indent_tab = frm.prev().indent_tab + extra;
+                  frm.top().SetIndentTab(frm.prev().GetIndentTab() + extra);
                }
-               frm.top().indent_tmp = frm.top().indent;
+               frm.top().SetIndentTmp(frm.top().GetIndent());
                frm.top().in_preproc = false;
                log_indent_tmp();
             }
@@ -1024,22 +1024,22 @@ void indent_text()
             || pc->GetParentType() == CT_PP_UNDEF)
          {
             log_rule_B("pp_define_at_level");
-            frm.top().indent_tmp = options::pp_define_at_level()
-                                   ? frm.prev().indent_tmp : 1;
+            frm.top().SetIndentTmp(options::pp_define_at_level()
+                                   ? frm.prev().GetIndentTmp() : 1);
 
             log_rule_B("pp_multiline_define_body_indent");
 
             if (options::pp_multiline_define_body_indent() < 0)
             {
-               frm.top().indent = -options::pp_multiline_define_body_indent();
+               frm.top().SetIndent(-options::pp_multiline_define_body_indent());
             }
             else
             {
-               frm.top().indent = pc->GetColumn() + options::pp_multiline_define_body_indent();
+               frm.top().SetIndent(pc->GetColumn() + options::pp_multiline_define_body_indent());
             }
             log_indent();
 
-            frm.top().indent_tab = frm.top().indent;
+            frm.top().SetIndentTab(frm.top().GetIndent());
             log_indent_tmp();
          }
          else if (  (  pc->GetParentType() == CT_PP_PRAGMA
@@ -1047,22 +1047,22 @@ void indent_text()
                  && options::pp_define_at_level())
          {
             log_rule_B("pp_define_at_level");
-            frm.top().indent_tmp = frm.prev().indent_tmp;
-            frm.top().indent     = frm.top().indent_tmp + indent_size;
+            frm.top().SetIndentTmp(frm.prev().GetIndentTmp());
+            frm.top().SetIndent(frm.top().GetIndentTmp() + indent_size);
             log_indent();
 
-            frm.top().indent_tab = frm.top().indent;
+            frm.top().SetIndentTab(frm.top().GetIndent());
             log_indent_tmp();
          }
          else if (  pc->GetParentType() == CT_PP_INCLUDE
                  && options::pp_include_at_level())
          {
             log_rule_B("pp_include_at_level");
-            frm.top().indent_tmp = frm.prev().indent_tmp;
-            frm.top().indent     = frm.top().indent_tmp + indent_size;
+            frm.top().SetIndentTmp(frm.prev().GetIndentTmp());
+            frm.top().SetIndent(frm.top().GetIndentTmp() + indent_size);
             log_indent();
 
-            frm.top().indent_tab = frm.top().indent;
+            frm.top().SetIndentTab(frm.top().GetIndent());
             log_indent_tmp();
          }
          else
@@ -1071,12 +1071,12 @@ void indent_text()
                || (  (frm.prev().GetOpenToken() == CT_PP_IF_INDENT)
                   && (frm.top().GetOpenToken() != CT_PP_ENDIF)))
             {
-               frm.top().indent = frm.prev(2).indent;
+               frm.top().SetIndent(frm.prev(2).GetIndent());
                log_indent();
             }
             else
             {
-               frm.top().indent = frm.prev().indent;
+               frm.top().SetIndent(frm.prev().GetIndent());
                log_indent();
             }
             log_indent();
@@ -1102,13 +1102,13 @@ void indent_text()
 
             if (val != 0)
             {
-               size_t &indent = frm.top().indent;
-
+               size_t indent = frm.top().GetIndent();
                indent = (val > 0) ? val                     // reassign if positive val,
                         : ((size_t)(abs(val)) < indent)     // else if no underflow
                         ? (indent + val) : 0;               // reduce, else 0
+               frm.top().SetIndent(indent);
             }
-            frm.top().indent_tmp = frm.top().indent;
+            frm.top().SetIndentTmp(frm.top().GetIndent());
             log_indent_tmp();
          }
       }
@@ -1319,7 +1319,7 @@ void indent_text()
                      }
                   }
                   // Indent the brace to match outer most brace/square
-                  indent_column_set(frm.top().indent_tmp);
+                  indent_column_set(frm.top().GetIndentTmp());
                   continue;
                }
             }
@@ -1469,7 +1469,7 @@ void indent_text()
       } while (old_frm_size > frm.size());
 
       // Grab a copy of the current indent
-      indent_column_set(frm.top().indent_tmp);                        // Issue #3294
+      indent_column_set(frm.top().GetIndentTmp());                        // Issue #3294
       log_indent_tmp();
 
       log_rule_B("indent_single_newlines");
@@ -1496,10 +1496,10 @@ void indent_text()
                     frm.at(ttidx).GetOpenChunk()->Text(),
                     get_token_name(frm.at(ttidx).GetOpenToken()),
                     get_token_name(frm.at(ttidx).GetOpenChunk()->GetParentType()),
-                    frm.at(ttidx).indent_tmp,
-                    frm.at(ttidx).indent,
-                    frm.at(ttidx).brace_indent,
-                    frm.at(ttidx).indent_tab,
+                    frm.at(ttidx).GetIndentTmp(),
+                    frm.at(ttidx).GetIndent(),
+                    frm.at(ttidx).GetBraceIndent(),
+                    frm.at(ttidx).GetIndentTab(),
                     frm.at(ttidx).indent_cont,
                     frm.at(ttidx).GetOpenLevel(),
                     frm.at(ttidx).GetOpenChunk()->GetBraceLevel());
@@ -1604,17 +1604,17 @@ void indent_text()
                   // Indent the brace to match outer most brace/square
                   if (frm.top().indent_cont)
                   {
-                     indent_column_set(frm.top().indent_tmp - indent_size);
+                     indent_column_set(frm.top().GetIndentTmp() - indent_size);
                   }
                   else
                   {
-                     indent_column_set(frm.top().indent_tmp);
+                     indent_column_set(frm.top().GetIndentTmp());
                   }
                }
                else
                {
                   // Indent the brace to match the open brace
-                  indent_column_set(frm.top().brace_indent);
+                  indent_column_set(frm.top().GetBraceIndent());
 
                   if (frm.top().ip.ref)
                   {
@@ -1627,10 +1627,10 @@ void indent_text()
                }
             }
          }
-         else if (frm.top().brace_indent) // Issue #3421
+         else if (frm.top().GetBraceIndent()) // Issue #3421
          {
             // Indent the brace to match the open brace
-            indent_column_set(frm.top().brace_indent);
+            indent_column_set(frm.top().GetBraceIndent());
 
             if (frm.top().ip.ref)
             {
@@ -1653,7 +1653,7 @@ void indent_text()
          {
             iMinIndent = indent_size;
          }
-         size_t iNewIndent = frm.prev().indent + iMinIndent;
+         size_t iNewIndent = frm.prev().GetIndent() + iMinIndent;
 
          log_rule_B("indent_vbrace_open_on_tabstop");
 
@@ -1661,14 +1661,14 @@ void indent_text()
          {
             iNewIndent = next_tab_column(iNewIndent);
          }
-         frm.top().indent = iNewIndent;
+         frm.top().SetIndent(iNewIndent);
          log_indent();
-         frm.top().indent_tmp = frm.top().indent;
-         frm.top().indent_tab = frm.top().indent;
+         frm.top().SetIndentTmp(frm.top().GetIndent());
+         frm.top().SetIndentTab(frm.top().GetIndent());
          log_indent_tmp();
 
          // Always indent on virtual braces
-         indent_column_set(frm.top().indent_tmp);
+         indent_column_set(frm.top().GetIndentTmp());
       }
       else if (  pc->Is(CT_BRACE_OPEN)
               && pc->GetNext()->IsNot(CT_NAMESPACE))
@@ -1689,7 +1689,7 @@ void indent_text()
                  && pc->GetParentType() == CT_CPP_LAMBDA)
          {
             log_rule_B("indent_cpp_lambda_body");
-            frm.top().brace_indent = frm.prev().indent;
+            frm.top().SetBraceIndent(frm.prev().GetIndent());
 
             Chunk *head     = frm.top().GetOpenChunk()->GetPrevNcNnlNpp();
             Chunk *tail     = Chunk::NullChunkPtr;
@@ -1772,24 +1772,24 @@ void indent_text()
                && (  (isAssignSameLine)
                   || (closureSameLineTopLevel)))
             {
-               if (indent_size > frm.top().brace_indent)       // if options::indent_indent_columns() is too big
+               if (indent_size > frm.top().GetBraceIndent())       // if options::indent_indent_columns() is too big
                {
-                  frm.top().brace_indent = 1;
+                  frm.top().SetBraceIndent(1);
                }
                else
                {
-                  frm.top().brace_indent -= indent_size;
+                  frm.top().SetBraceIndent(frm.top().GetBraceIndent() - indent_size);
                }
             }
-            indent_column_set(frm.top().brace_indent);
-            frm.top().indent = indent_column + indent_size;
+            indent_column_set(frm.top().GetBraceIndent());
+            frm.top().SetIndent(indent_column + indent_size);
             log_indent();
 
-            frm.top().indent_tab = frm.top().indent;
-            frm.top().indent_tmp = frm.top().indent;
+            frm.top().SetIndentTab(frm.top().GetIndent());
+            frm.top().SetIndentTmp(frm.top().GetIndent());
             log_indent_tmp();
 
-            frm.prev().indent_tmp = frm.top().indent_tmp;
+            frm.prev().SetIndentTmp(frm.top().GetIndentTmp());
             log_indent_tmp();
          }
          else if (  language_is_set(LANG_CPP)
@@ -1814,15 +1814,15 @@ void indent_text()
                }
             }
             // Issue # 1296
-            frm.top().brace_indent = 1 + ((pc->GetBraceLevel() - namespace_indent_to_ignore) * indent_size);
-            indent_column_set(frm.top().brace_indent);
-            frm.top().indent = indent_column + indent_size;
+            frm.top().SetBraceIndent(1 + (pc->GetBraceLevel() - namespace_indent_to_ignore) * indent_size);
+            indent_column_set(frm.top().GetBraceIndent());
+            frm.top().SetIndent(indent_column + indent_size);
             log_indent();
-            frm.top().indent_tab = frm.top().indent;
-            frm.top().indent_tmp = frm.top().indent;
+            frm.top().SetIndentTab(frm.top().GetIndent());
+            frm.top().SetIndentTmp(frm.top().GetIndent());
             log_indent_tmp();
 
-            frm.prev().indent_tmp = frm.top().indent_tmp;
+            frm.prev().SetIndentTmp(frm.top().GetIndentTmp());
             log_indent_tmp();
          }
          else if (  language_is_set(LANG_CS | LANG_JAVA)
@@ -1831,15 +1831,15 @@ void indent_text()
                     || pc->GetParentType() == CT_DELEGATE))
          {
             log_rule_B("indent_cs_delegate_brace");
-            frm.top().brace_indent = 1 + ((pc->GetBraceLevel() + 1) * indent_size);
-            indent_column_set(frm.top().brace_indent);
-            frm.top().indent = indent_column + indent_size;
+            frm.top().SetBraceIndent(1 + (pc->GetBraceLevel() + 1) * indent_size);
+            indent_column_set(frm.top().GetBraceIndent());
+            frm.top().SetIndent(indent_column + indent_size);
             log_indent();
-            frm.top().indent_tab = frm.top().indent;
-            frm.top().indent_tmp = frm.top().indent;
+            frm.top().SetIndentTab(frm.top().GetIndent());
+            frm.top().SetIndentTmp(frm.top().GetIndent());
             log_indent_tmp();
 
-            frm.prev().indent_tmp = frm.top().indent_tmp;
+            frm.prev().SetIndentTmp(frm.top().GetIndentTmp());
             log_indent_tmp();
          }
          else if (  language_is_set(LANG_CS | LANG_JAVA)
@@ -1850,20 +1850,20 @@ void indent_text()
          {
             log_rule_B("indent_cs_delegate_brace");
             log_rule_B("indent_align_paren");
-            frm.top().brace_indent = frm.prev().indent;
+            frm.top().SetBraceIndent(frm.prev().GetIndent());
 
             // Issue # 1620, UNI-24090.cs
             if (frm.prev().GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()->GetPrevNcNnlNpp()))
             {
-               frm.top().brace_indent -= indent_size;
+               frm.top().SetBraceIndent(frm.top().GetBraceIndent() - indent_size);
             }
-            indent_column_set(frm.top().brace_indent);
-            frm.top().indent = indent_column + indent_size;
+            indent_column_set(frm.top().GetBraceIndent());
+            frm.top().SetIndent(indent_column + indent_size);
             log_indent();
-            frm.top().indent_tab = frm.top().indent;
-            frm.top().indent_tmp = frm.top().indent;
+            frm.top().SetIndentTab(frm.top().GetIndent());
+            frm.top().SetIndentTmp(frm.top().GetIndent());
             log_indent_tmp();
-            frm.prev().indent_tmp = frm.top().indent_tmp;
+            frm.prev().SetIndentTmp(frm.top().GetIndentTmp());
             log_indent_tmp();
          }
          else if (  !options::indent_paren_open_brace()
@@ -1877,12 +1877,12 @@ void indent_text()
             // Issue #1165
             LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, brace level is %zu, for '%s', pc->GetLevel() is %zu, pc(-1)->GetLevel() is %zu\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetBraceLevel(), pc->Text(), pc->GetLevel(), frm.prev().GetOpenChunk()->GetLevel());
-            frm.top().brace_indent = 1 + ((pc->GetBraceLevel() + 1) * indent_size);
-            indent_column_set(frm.top().brace_indent);
-            frm.top().indent = frm.prev().indent_tmp;
+            frm.top().SetBraceIndent(1 + (pc->GetBraceLevel() + 1) * indent_size);
+            indent_column_set(frm.top().GetBraceIndent());
+            frm.top().SetIndent(frm.prev().GetIndentTmp());
             log_indent();
 
-            frm.top().indent_tmp = frm.top().indent;
+            frm.top().SetIndentTmp(frm.top().GetIndent());
             log_indent_tmp();
          }
          // any '{' that is inside of a '(' overrides the '(' indent
@@ -1895,24 +1895,24 @@ void indent_text()
             LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, brace level is %zu, for '%s', pc->GetLevel() is %zu, pc(-1)->GetLevel() is %zu\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetBraceLevel(), pc->Text(), pc->GetLevel(), frm.prev().GetOpenChunk()->GetLevel());
             // FIXME: I don't know how much of this is necessary, but it seems to work
-            frm.top().brace_indent = 1 + (pc->GetBraceLevel() * indent_size);
-            indent_column_set(frm.top().brace_indent);
-            frm.top().indent = indent_column + indent_size;
+            frm.top().SetBraceIndent(1 + pc->GetBraceLevel() * indent_size);
+            indent_column_set(frm.top().GetBraceIndent());
+            frm.top().SetIndent(indent_column + indent_size);
             log_indent();
 
             if (  (pc->GetParentType() == CT_OC_BLOCK_EXPR)
                && pc->TestFlags(PCF_IN_OC_MSG))
             {
-               frm.top().indent = frm.prev().indent_tmp + indent_size;
+               frm.top().SetIndent(frm.prev().GetIndentTmp() + indent_size);
                log_indent();
-               frm.top().brace_indent = frm.prev().indent_tmp;
-               indent_column_set(frm.top().brace_indent);
+               frm.top().SetBraceIndent(frm.prev().GetIndentTmp());
+               indent_column_set(frm.top().GetBraceIndent());
             }
-            frm.top().indent_tab = frm.top().indent;
-            frm.top().indent_tmp = frm.top().indent;
+            frm.top().SetIndentTab(frm.top().GetIndent());
+            frm.top().SetIndentTmp(frm.top().GetIndent());
             log_indent_tmp();
 
-            frm.prev().indent_tmp = frm.top().indent_tmp;
+            frm.prev().SetIndentTmp(frm.top().GetIndentTmp());
          }
          else if (  frm.GetParenCount() != 0
                  && !pc->TestFlags(PCF_IN_LAMBDA)) // Issue #3761
@@ -1984,18 +1984,18 @@ void indent_text()
 
                   if (ref->IsNotNullChunk())
                   {
-                     frm.top().indent = indent_size + ref->GetColumn();
+                     frm.top().SetIndent(indent_size + ref->GetColumn());
                   }
                   else
                   {
-                     frm.top().indent = 1 + ((pc->GetBraceLevel() + 1) * indent_size);
+                     frm.top().SetIndent(1 + ((pc->GetBraceLevel() + 1) * indent_size));
                   }
                   log_indent();
-                  indent_column_set(frm.top().indent - indent_size);
+                  indent_column_set(frm.top().GetIndent() - indent_size);
                }
                else
                {
-                  frm.top().indent = frm.prev().indent_tmp + indent_size;
+                  frm.top().SetIndent(frm.prev().GetIndentTmp() + indent_size);
                   log_indent();
                }
             }
@@ -2005,11 +2005,11 @@ void indent_text()
                // We are inside @{ ... } -- indent one tab from the paren
                if (frm.prev().indent_cont)
                {
-                  frm.top().indent = frm.prev().indent_tmp;
+                  frm.top().SetIndent(frm.prev().GetIndentTmp());
                }
                else
                {
-                  frm.top().indent = frm.prev().indent_tmp + indent_size;
+                  frm.top().SetIndent(frm.prev().GetIndentTmp() + indent_size);
                }
                log_indent();
             }
@@ -2022,9 +2022,9 @@ void indent_text()
                log_rule_B("indent_align_paren");
                // We are inside ({ ... }) -- where { and ( are on the same line, avoiding double indentations.
                // only to help the vim command }
-               frm.top().brace_indent = frm.prev().indent - indent_size;
-               indent_column_set(frm.top().brace_indent);
-               frm.top().indent = frm.prev().indent_tmp;
+               frm.top().SetBraceIndent(frm.prev().GetIndent() - indent_size);
+               indent_column_set(frm.top().GetBraceIndent());
+               frm.top().SetIndent(frm.prev().GetIndentTmp());
                log_indent();
             }
             else if (  frm.prev().GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()->GetPrevNcNnlNpp())
@@ -2035,9 +2035,9 @@ void indent_text()
                log_rule_B("indent_align_paren");
                // We are inside ({ ... }) -- where { and ( are on adjacent lines, avoiding indentation of brace.
                // only to help the vim command }
-               frm.top().brace_indent = frm.prev().indent - indent_size;
-               indent_column_set(frm.top().brace_indent);
-               frm.top().indent = frm.prev().indent_tmp;
+               frm.top().SetBraceIndent(frm.prev().GetIndent() - indent_size);
+               indent_column_set(frm.top().GetBraceIndent());
+               frm.top().SetIndent(frm.prev().GetIndentTmp());
                log_indent();
             }
             else if (  options::indent_oc_inside_msg_sel()
@@ -2046,23 +2046,23 @@ void indent_text()
             {
                log_rule_B("indent_oc_inside_msg_sel");
                // [Class Message:{<here>
-               frm.top().indent = frm.prev().GetOpenChunk()->GetColumn() + indent_size;
+               frm.top().SetIndent(frm.prev().GetOpenChunk()->GetColumn() + indent_size);
                log_indent();
                indent_column_set(frm.prev().GetOpenChunk()->GetColumn());
             }
             // Issue #3813
             else if (pc->TestFlags(PCF_OC_IN_BLOCK) && pc->GetParentType() == CT_SWITCH)
             {
-               frm.top().indent = frm.prev().indent_tmp;
+               frm.top().SetIndent(frm.prev().GetIndentTmp());
             }
             else
             {
                // We are inside ({ ... }) -- indent one tab from the paren
-               frm.top().indent = frm.prev().indent_tmp + indent_size;
+               frm.top().SetIndent(frm.prev().GetIndentTmp() + indent_size);
 
                if (!frm.prev().GetOpenChunk()->IsParenOpen())
                {
-                  frm.top().indent_tab = frm.top().indent;
+                  frm.top().SetIndentTab(frm.top().GetIndent());
                }
                log_indent();
             }
@@ -2073,12 +2073,12 @@ void indent_text()
             // We are inside @{ ... } -- indent one tab from the paren
             if (frm.prev().indent_cont)
             {
-               frm.top().indent = frm.prev().indent_tmp;
+               frm.top().SetIndent(frm.prev().GetIndentTmp());
             }
             else
             {
-               frm.top().indent     = frm.prev().indent_tmp + indent_size;
-               frm.top().indent_tab = frm.top().indent;
+               frm.top().SetIndent(frm.prev().GetIndentTmp() + indent_size);
+               frm.top().SetIndentTab(frm.top().GetIndent());
             }
             log_indent();
          }
@@ -2093,11 +2093,11 @@ void indent_text()
             // C++11 initialization list (CT_BRACED_INIT_LIST), use indent from the return.
             if (frm.prev().indent_cont)
             {
-               frm.top().indent = frm.prev().indent_tmp;
+               frm.top().SetIndent(frm.prev().GetIndentTmp());
             }
             else
             {
-               frm.top().indent = frm.prev().indent_tmp + indent_size;
+               frm.top().SetIndent(frm.prev().GetIndentTmp() + indent_size);
             }
             log_indent();
          }
@@ -2106,14 +2106,14 @@ void indent_text()
             // Use the prev indent level + indent_size.
             if (pc->GetParentType() == CT_SWITCH)
             {
-               frm.top().indent = frm.prev().indent + options::indent_switch_body();
+               frm.top().SetIndent(frm.prev().GetIndent() + options::indent_switch_body());
             }
             else
             {
-               frm.top().indent = frm.prev().indent + indent_size;
+               frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
             }
             LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos is %zu, ... indent is %zu\n",
-                    __func__, __LINE__, frm.size() - 1, frm.top().indent);
+                    __func__, __LINE__, frm.size() - 1, frm.top().GetIndent());
             LOG_FMT(LINDLINE, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', parent type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(),
                     get_token_name(pc->GetParentType()));
@@ -2133,13 +2133,13 @@ void indent_text()
             {
                if (parent_token_indent != 0)
                {
-                  frm.top().indent += parent_token_indent - indent_size;
+                  frm.top().SetIndent(frm.top().GetIndent() + parent_token_indent - indent_size);
                   log_indent();
                }
                else
                {
                   log_rule_B("indent_brace");
-                  frm.top().indent += options::indent_brace();
+                  frm.top().SetIndent(frm.top().GetIndent() + options::indent_brace());
                   log_indent();
                   indent_column_set(indent_column + options::indent_brace());
                }
@@ -2154,7 +2154,7 @@ void indent_text()
                else
                {
                   log_rule_B("indent_case_brace");
-                  const auto tmp_indent = static_cast<int>(frm.prev().indent)
+                  const auto tmp_indent = static_cast<int>(frm.prev().GetIndent())
                                           - static_cast<int>(indent_size)
                                           + options::indent_case_brace();
                   /*
@@ -2167,10 +2167,10 @@ void indent_text()
                   indent_column_set(max(tmp_indent, 0));
                }
                // Stuff inside the brace still needs to be indented
-               frm.top().indent = indent_column + indent_size;
+               frm.top().SetIndent(indent_column + indent_size);
                log_indent();
 
-               frm.top().indent_tmp = frm.top().indent;
+               frm.top().SetIndentTmp(frm.top().GetIndent());
                log_indent_tmp();
             }
             else if (  pc->GetParentType() == CT_CLASS
@@ -2179,7 +2179,7 @@ void indent_text()
                log_rule_B("indent_class");
                LOG_FMT(LINDENT, "%s(%d): orig line is %zu, orig col is %zu, text is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
-               frm.top().indent -= indent_size;
+               frm.top().SetIndent(frm.top().GetIndent() - indent_size);
                log_indent();
             }
             else if (pc->GetParentType() == CT_NAMESPACE)
@@ -2195,10 +2195,10 @@ void indent_text()
                   if (frm.top().ns_cnt >= 2)
                   {
                      // undo indent on all except the first namespace
-                     frm.top().indent -= indent_size;
+                     frm.top().SetIndent(frm.top().GetIndent() - indent_size);
                      log_indent();
                   }
-                  indent_column_set(frm.prev(frm.top().ns_cnt).indent);
+                  indent_column_set(frm.prev(frm.top().ns_cnt).GetIndent());
                }
                else if (  options::indent_namespace()
                        && options::indent_namespace_inner_only())
@@ -2206,7 +2206,7 @@ void indent_text()
                   if (frm.top().ns_cnt == 1)
                   {
                      // undo indent on first namespace only
-                     frm.top().indent -= indent_size;
+                     frm.top().SetIndent(frm.top().GetIndent() - indent_size);
                      log_indent();
                   }
                }
@@ -2215,7 +2215,7 @@ void indent_text()
                {
                   log_rule_B("indent_namespace");
                   // don't indent long blocks
-                  frm.top().indent -= indent_size;
+                  frm.top().SetIndent(frm.top().GetIndent() - indent_size);
                   log_indent();
                }
                else // indenting 'short' namespace
@@ -2224,11 +2224,9 @@ void indent_text()
 
                   if (options::indent_namespace_level() > 0)
                   {
-                     frm.top().indent -= indent_size;
+                     frm.top().SetIndent(frm.top().GetIndent() - indent_size);
                      log_indent();
-
-                     frm.top().indent +=
-                        options::indent_namespace_level();
+                     frm.top().SetIndent(frm.top().GetIndent() + options::indent_namespace_level());
                      log_indent();
                   }
                }
@@ -2237,15 +2235,15 @@ void indent_text()
                     && !options::indent_extern())
             {
                log_rule_B("indent_extern");
-               frm.top().indent -= indent_size;
+               frm.top().SetIndent(frm.top().GetIndent() - indent_size);
                log_indent();
             }
-            frm.top().indent_tab = frm.top().indent;
+            frm.top().SetIndentTab(frm.top().GetIndent());
          }
 
          if (pc->TestFlags(PCF_DONT_INDENT))
          {
-            frm.top().indent = pc->GetColumn();
+            frm.top().SetIndent(pc->GetColumn());
             log_indent();
 
             indent_column_set(pc->GetColumn());
@@ -2271,8 +2269,8 @@ void indent_text()
                && prev->Is(CT_BRACE_OPEN)
                && prev->GetParentType() == CT_BRACED_INIT_LIST)
             {
-               indent_column = frm.prev().brace_indent;
-               frm.top().indent = frm.prev().indent;
+               indent_column = frm.prev().GetBraceIndent();
+               frm.top().SetIndent(frm.prev().GetIndent());
                log_indent();
             }
             else if (  !pc->IsNewlineBetween(next)
@@ -2281,10 +2279,10 @@ void indent_text()
                     && !pc->TestFlags(PCF_ONE_LINER)) // Issue #1108
             {
                log_rule_B("indent_token_after_brace");
-               frm.top().indent = next->GetColumn();
+               frm.top().SetIndent(next->GetColumn());
                log_indent();
             }
-            frm.top().indent_tmp = frm.top().indent;
+            frm.top().SetIndentTmp(frm.top().GetIndent());
             frm.top().SetOpenLine(pc->GetOrigLine());
             log_indent_tmp();
 
@@ -2294,12 +2292,12 @@ void indent_text()
             if (  brace_indent
                || parent_token_indent != 0)
             {
-               indent_column_set(frm.top().indent_tmp);
+               indent_column_set(frm.top().GetIndentTmp());
                log_indent_tmp();
             }
          }
          // Save the brace indent
-         frm.top().brace_indent = indent_column;
+         frm.top().SetBraceIndent(indent_column);
       }
       else if (pc->Is(CT_SQL_END))
       {
@@ -2308,7 +2306,7 @@ void indent_text()
             LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
             frm.pop(__func__, __LINE__, pc);
-            indent_column_set(frm.top().indent_tmp);
+            indent_column_set(frm.top().GetIndentTmp());
             log_indent_tmp();
          }
       }
@@ -2319,49 +2317,49 @@ void indent_text()
       {
          frm.push(pc, __func__, __LINE__);
 
-         frm.top().indent = frm.prev().indent + indent_size;
+         frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
          log_indent();
 
-         frm.top().indent_tmp = frm.top().indent;
-         frm.top().indent_tab = frm.top().indent;
+         frm.top().SetIndentTmp(frm.top().GetIndent());
+         frm.top().SetIndentTab(frm.top().GetIndent());
          log_indent_tmp();
       }
       else if (pc->Is(CT_SQL_EXEC))
       {
          frm.push(pc, __func__, __LINE__);
 
-         frm.top().indent = frm.prev().indent + indent_size;
+         frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
          log_indent();
 
-         frm.top().indent_tmp = frm.top().indent;
+         frm.top().SetIndentTmp(frm.top().GetIndent());
          log_indent_tmp();
       }
       else if (pc->Is(CT_MACRO_ELSE))
       {
          if (frm.top().GetOpenToken() == CT_MACRO_OPEN)
          {
-            indent_column_set(frm.prev().indent);
+            indent_column_set(frm.prev().GetIndent());
          }
       }
       else if (pc->Is(CT_CASE))
       {
          // Start a case - indent options::indent_switch_case() from the switch level
          log_rule_B("indent_switch_case");
-         const size_t tmp = frm.top().indent + indent_size
+         const size_t tmp = frm.top().GetIndent() + indent_size
                             - options::indent_switch_body()
                             + options::indent_switch_case();
          frm.push(pc, __func__, __LINE__);
 
-         frm.top().indent = tmp;
+         frm.top().SetIndent(tmp);
          log_indent();
 
          log_rule_B("indent_case_shift");
-         frm.top().indent_tmp = tmp - indent_size + options::indent_case_shift();
-         frm.top().indent_tab = tmp;
+         frm.top().SetIndentTmp(tmp - indent_size + options::indent_case_shift());
+         frm.top().SetIndentTab(tmp);
          log_indent_tmp();
 
          // Always set on case statements
-         indent_column_set(frm.top().indent_tmp);
+         indent_column_set(frm.top().GetIndentTmp());
 
          if (options::indent_case_comment())
          {
@@ -2375,7 +2373,7 @@ void indent_text()
 
                if (t2->IsNewline())
                {
-                  pct->SetColumn(frm.top().indent_tmp);
+                  pct->SetColumn(frm.top().GetIndentTmp());
                   pct->SetColumnIndent(pct->GetColumn());
                }
             }
@@ -2409,7 +2407,7 @@ void indent_text()
          {
             log_rule_B("indent_label");
             const int val        = options::indent_label();
-            size_t    pse_indent = frm.top().indent;
+            size_t    pse_indent = frm.top().GetIndent();
 
             // Labels get sent to the left or backed up
             if (val > 0)
@@ -2439,21 +2437,21 @@ void indent_text()
 
          if (options::indent_access_spec_body())
          {
-            const size_t tmp = frm.top().indent + indent_size;
+            const size_t tmp = frm.top().GetIndent() + indent_size;
             frm.push(pc, __func__, __LINE__);
 
-            frm.top().indent = tmp;
+            frm.top().SetIndent(tmp);
             log_indent();
 
-            frm.top().indent_tmp = tmp - indent_size;
-            frm.top().indent_tab = tmp;
+            frm.top().SetIndentTmp(tmp - indent_size);
+            frm.top().SetIndentTab(tmp);
             log_indent_tmp();
 
             /*
              * If we are indenting the body, then we must leave the access spec
              * indented at brace level
              */
-            indent_column_set(frm.top().indent_tmp);
+            indent_column_set(frm.top().GetIndentTmp());
             // Issues 1161 + 2704
             // comments before 'access specifier' need to be aligned with the 'access specifier'
             // unless it is a Doxygen comment
@@ -2467,7 +2465,7 @@ void indent_text()
 
                if (t2->IsNewline())
                {
-                  pct->SetColumn(frm.top().indent_tmp);
+                  pct->SetColumn(frm.top().GetIndentTmp());
                   pct->SetColumnIndent(pct->GetColumn());
                }
             }
@@ -2484,7 +2482,7 @@ void indent_text()
             }
             else
             {
-               size_t pse_indent   = frm.top().indent;
+               size_t pse_indent   = frm.top().GetIndent();
                bool   no_underflow = (size_t)(abs(val)) < pse_indent;
 
                indent_column_set(no_underflow ? (pse_indent + val) : 0);
@@ -2497,11 +2495,11 @@ void indent_text()
          // just indent one level
          frm.push(pc, __func__, __LINE__);
 
-         frm.top().indent = frm.prev().indent_tmp + indent_size;
+         frm.top().SetIndent(frm.prev().GetIndentTmp() + indent_size);
          log_indent();
 
-         frm.top().indent_tmp = frm.top().indent;
-         frm.top().indent_tab = frm.top().indent;
+         frm.top().SetIndentTmp(frm.top().GetIndent());
+         frm.top().SetIndentTab(frm.top().GetIndent());
          log_indent_tmp();
 
          if (pc->Is(CT_CLASS_COLON))
@@ -2509,17 +2507,17 @@ void indent_text()
             if (options::indent_ignore_before_class_colon())
             {
                log_rule_B("indent_ignore_before_class_colon");
-               frm.top().indent_tmp = pc->GetOrigCol();
+               frm.top().SetIndentTmp(pc->GetOrigCol());
                log_indent_tmp();
             }
             else if (options::indent_before_class_colon() != 0)
             {
                log_rule_B("indent_before_class_colon");
-               frm.top().indent_tmp = std::max<ptrdiff_t>(frm.top().indent_tmp + options::indent_before_class_colon(), 0);
+               frm.top().SetIndentTmp(std::max<ptrdiff_t>(frm.top().GetIndentTmp() + options::indent_before_class_colon(), 0));
                log_indent_tmp();
             }
          }
-         indent_column_set(frm.top().indent_tmp);
+         indent_column_set(frm.top().GetIndentTmp());
 
          log_rule_B("indent_class_colon");
 
@@ -2530,7 +2528,7 @@ void indent_text()
 
             if (options::indent_class_on_colon())
             {
-               frm.top().indent = pc->GetColumn();
+               frm.top().SetIndent(pc->GetColumn());
                log_indent();
             }
             else
@@ -2540,7 +2538,7 @@ void indent_text()
                if (  next->IsNotNullChunk()
                   && !next->IsNewline())
                {
-                  frm.top().indent = next->GetColumn();
+                  frm.top().SetIndent(next->GetColumn());
                   log_indent();
                }
             }
@@ -2550,8 +2548,8 @@ void indent_text()
             if (options::indent_ignore_before_constr_colon())
             {
                log_rule_B("indent_ignore_before_constr_colon");
-               frm.top().indent_tmp = pc->GetOrigCol();
-               indent_column_set(frm.top().indent_tmp);
+               frm.top().SetIndentTmp(pc->GetOrigCol());
+               indent_column_set(frm.top().GetIndentTmp());
             }
 
             if (options::indent_constr_colon())
@@ -2562,7 +2560,7 @@ void indent_text()
                if (prev->IsNewline())
                {
                   log_rule_B("indent_ctor_init_following");
-                  frm.top().indent += options::indent_ctor_init_following();
+                  frm.top().SetIndent(frm.top().GetIndent() + options::indent_ctor_init_following());
                   log_indent();
                }
                // TODO: Create a dedicated indent_constr_on_colon?
@@ -2577,16 +2575,16 @@ void indent_text()
                    * a "negative" result would be always greater than zero.
                    * Using ptrdiff_t (a standard signed type of the same size as size_t) in order to avoid that.
                    */
-                  frm.top().indent = std::max<ptrdiff_t>(frm.top().indent + options::indent_ctor_init(), 0);
+                  frm.top().SetIndent(std::max<ptrdiff_t>(frm.top().GetIndent() + options::indent_ctor_init(), 0));
                   log_indent();
-                  frm.top().indent_tmp = std::max<ptrdiff_t>(frm.top().indent_tmp + options::indent_ctor_init(), 0);
-                  frm.top().indent_tab = std::max<ptrdiff_t>(frm.top().indent_tab + options::indent_ctor_init(), 0);
+                  frm.top().SetIndentTmp(std::max<ptrdiff_t>(frm.top().GetIndentTmp() + options::indent_ctor_init(), 0));
+                  frm.top().SetIndentTab(std::max<ptrdiff_t>(frm.top().GetIndentTab() + options::indent_ctor_init(), 0));
                   log_indent_tmp();
-                  indent_column_set(frm.top().indent_tmp);
+                  indent_column_set(frm.top().GetIndentTmp());
                }
                else if (options::indent_class_on_colon())
                {
-                  frm.top().indent = pc->GetColumn();
+                  frm.top().SetIndent(pc->GetColumn());
                   log_indent();
                }
                else
@@ -2596,7 +2594,7 @@ void indent_text()
                   if (  next->IsNotNullChunk()
                      && !next->IsNewline())
                   {
-                     frm.top().indent = next->GetColumn();
+                     frm.top().SetIndent(next->GetColumn());
                      log_indent();
                   }
                }
@@ -2659,13 +2657,13 @@ void indent_text()
                     __func__, __LINE__, pc->GetOrigLine(), indent_column, pc->Text());
             reindent_line(pc, indent_column);
          }
-         frm.top().indent = pc->GetColumn() + pc->Len();
+         frm.top().SetIndent(pc->GetColumn() + pc->Len());
          log_indent();
 
          if (  pc->Is(CT_SQUARE_OPEN)
             && language_is_set(LANG_D))
          {
-            frm.top().indent_tab = frm.top().indent;
+            frm.top().SetIndentTab(frm.top().GetIndent());
          }
          bool skipped = false;
          log_rule_B("indent_inside_ternary_operator");
@@ -2679,10 +2677,10 @@ void indent_text()
                || frm.prev().GetOpenToken() == CT_COND_COLON)
             && !options::indent_align_paren())
          {
-            frm.top().indent = frm.prev().indent_tmp + indent_size;
+            frm.top().SetIndent(frm.prev().GetIndentTmp() + indent_size);
             log_indent();
-            frm.top().indent_tab = frm.top().indent;
-            frm.top().indent_tmp = frm.top().indent;
+            frm.top().SetIndentTab(frm.top().GetIndent());
+            frm.top().SetIndentTmp(frm.top().GetIndent());
             log_indent_tmp();
          }
          else if (  (  pc->Is(CT_FPAREN_OPEN)
@@ -2752,12 +2750,12 @@ void indent_text()
 
             if (options::indent_param() != 0)
             {
-               frm.top().indent = frm.at(idx).indent + options::indent_param();
+               frm.top().SetIndent(frm.at(idx).GetIndent() + options::indent_param());
                log_indent();
             }
             else
             {
-               frm.top().indent = frm.at(idx).indent + indent_size;
+               frm.top().SetIndent(frm.at(idx).GetIndent() + indent_size);
                log_indent();
             }
             log_rule_B("indent_func_param_double");
@@ -2765,10 +2763,10 @@ void indent_text()
             if (options::indent_func_param_double())
             {
                // double is: Use both values of the options indent_columns and indent_param
-               frm.top().indent += indent_size;
+               frm.top().SetIndent(frm.top().GetIndent() + indent_size);
                log_indent();
             }
-            frm.top().indent_tab = frm.top().indent;
+            frm.top().SetIndentTab(frm.top().GetIndent());
          }
          else if (  options::indent_oc_inside_msg_sel()
                  && pc->Is(CT_PAREN_OPEN)
@@ -2781,10 +2779,10 @@ void indent_text()
             log_rule_B("indent_align_paren");
             // When parens are inside OC messages, push on the parse frame stack
             // [Class Message:(<here>
-            frm.top().indent = frm.prev().GetOpenChunk()->GetColumn() + indent_size;
+            frm.top().SetIndent(frm.prev().GetOpenChunk()->GetColumn() + indent_size);
             log_indent();
-            frm.top().indent_tab = frm.top().indent;
-            frm.top().indent_tmp = frm.top().indent;
+            frm.top().SetIndentTab(frm.top().GetIndent());
+            frm.top().SetIndentTmp(frm.top().GetIndent());
             log_indent_tmp();
          }
          else if (  pc->Is(CT_PAREN_OPEN)
@@ -2801,10 +2799,10 @@ void indent_text()
                idx--;
                skipped = true;
             }
-            frm.top().indent = frm.at(idx).indent + indent_size;
+            frm.top().SetIndent(frm.at(idx).GetIndent() + indent_size);
             log_indent();
 
-            frm.top().indent_tab = frm.top().indent;
+            frm.top().SetIndentTab(frm.top().GetIndent());
             skipped = true;
          }
          else if (  (  pc->IsString("(")
@@ -2862,10 +2860,10 @@ void indent_text()
                      sub = sub + 1;
                   }
                }
-               frm.top().indent = frm.at(sub).indent + indent_size;
+               frm.top().SetIndent(frm.at(sub).GetIndent() + indent_size);
                log_indent();
 
-               frm.top().indent_tab = frm.top().indent;
+               frm.top().SetIndentTab(frm.top().GetIndent());
                skipped = true;
             }
             else
@@ -2886,11 +2884,11 @@ void indent_text()
                   if (next->GetPrev()->IsComment())
                   {
                      // Issue #2099
-                     frm.top().indent = next->GetPrev()->GetColumn();
+                     frm.top().SetIndent(next->GetPrev()->GetColumn());
                   }
                   else
                   {
-                     frm.top().indent = next->GetColumn();
+                     frm.top().SetIndent(next->GetColumn());
                   }
                   log_indent();
                }
@@ -2918,10 +2916,10 @@ void indent_text()
                   && options::indent_paren_after_func_call())
                || !pc->GetNext()->IsNewline()))
          {
-            frm.top().indent = frm.prev().indent + indent_size;
+            frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
             log_indent();
 
-            indent_column_set(frm.top().indent);
+            indent_column_set(frm.top().GetIndent());
          }
          log_rule_B("indent_continue");
 
@@ -2932,11 +2930,11 @@ void indent_text()
          {
             if (options::indent_ignore_first_continue())
             {
-               frm.top().indent = get_indent_first_continue(pc->GetNext());
+               frm.top().SetIndent(get_indent_first_continue(pc->GetNext()));
             }
             else
             {
-               frm.top().indent = frm.prev().indent;
+               frm.top().SetIndent(frm.prev().GetIndent());
             }
             log_indent();
 
@@ -2975,12 +2973,12 @@ void indent_text()
                    */
 
                   // if vardefcol isn't zero, use it
-                  frm.top().indent = vardefcol;
+                  frm.top().SetIndent(vardefcol);
                   log_indent();
                }
                else
                {
-                  frm.top().indent = calc_indent_continue(frm);
+                  frm.top().SetIndent(calc_indent_continue(frm));
                   log_indent();
                   frm.top().indent_cont = true;
 
@@ -2989,13 +2987,13 @@ void indent_text()
                   if (  pc->Is(CT_SPAREN_OPEN)
                      && options::indent_sparen_extra() != 0)
                   {
-                     frm.top().indent += options::indent_sparen_extra();
+                     frm.top().SetIndent(frm.top().GetIndent() + options::indent_sparen_extra());
                      log_indent();
                   }
                }
             }
          }
-         frm.top().indent_tmp = frm.top().indent;
+         frm.top().SetIndentTmp(frm.top().GetIndent());
          log_indent_tmp();
 
          frm.SetParenCount(frm.GetParenCount() + 1);
@@ -3014,14 +3012,14 @@ void indent_text()
 
             if (frm.prev().GetOpenChunk()->IsOnSameLine(tmp))
             {
-               frm.top().indent = frm.prev().indent;
+               frm.top().SetIndent(frm.prev().GetIndent());
             }
             else
             {
-               frm.top().indent = frm.prev().indent + indent_size;
+               frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
             }
             log_indent();
-            frm.top().indent_tmp = frm.top().indent;
+            frm.top().SetIndentTmp(frm.top().GetIndent());
             log_indent_tmp();
          }
 
@@ -3035,7 +3033,7 @@ void indent_text()
             }
             else
             {
-               indent_column_set(frm.top().indent);
+               indent_column_set(frm.top().GetIndent());
                reindent_line(pc, indent_column);
                did_newline = false;
             }
@@ -3099,18 +3097,18 @@ void indent_text()
          {
             if (frm.top().GetOpenToken() == CT_ASSIGN_NL)
             {
-               frm.top().indent_tmp = frm.top().indent;
+               frm.top().SetIndentTmp(frm.top().GetIndent());
             }
             else
             {
-               frm.top().indent_tmp = frm.top().indent + indent_size;
+               frm.top().SetIndentTmp(frm.top().GetIndent() + indent_size);
             }
             log_indent_tmp();
 
-            indent_column_set(frm.top().indent_tmp);
+            indent_column_set(frm.top().GetIndentTmp());
             LOG_FMT(LINDENT, "%s(%d): %zu] assign => %zu [%s]\n",
                     __func__, __LINE__, pc->GetOrigLine(), indent_column, pc->Text());
-            reindent_line(pc, frm.top().indent_tmp);
+            reindent_line(pc, frm.top().GetIndentTmp());
          }
          Chunk *next = pc->GetNext();
 
@@ -3140,13 +3138,13 @@ void indent_text()
 
             if (options::indent_ignore_first_continue())
             {
-               frm.top().indent = get_indent_first_continue(pc);
+               frm.top().SetIndent(get_indent_first_continue(pc));
                log_indent();
                frm.top().indent_cont = true; // Issue #3567
             }
             else if (options::indent_continue() != 0)
             {
-               frm.top().indent = frm.prev().indent;
+               frm.top().SetIndent(frm.prev().GetIndent());
                log_indent();
 
                if (  pc->GetLevel() == pc->GetBraceLevel()
@@ -3161,15 +3159,15 @@ void indent_text()
                      && vardefcol != 0)
                   {
                      // if vardefcol isn't zero, use it
-                     frm.top().indent = vardefcol;
+                     frm.top().SetIndent(vardefcol);
                      log_indent();
                   }
                   else
                   {
-                     frm.top().indent = calc_indent_continue(frm);
+                     frm.top().SetIndent(calc_indent_continue(frm));
                      log_indent();
 
-                     vardefcol = frm.top().indent;  // use the same variable for the next line
+                     vardefcol = frm.top().GetIndent();  // use the same variable for the next line
                      frm.top().indent_cont = true;
                   }
                }
@@ -3182,11 +3180,11 @@ void indent_text()
 
                if (options::indent_off_after_assign())             // Issue #2591
                {
-                  frm.top().indent = frm.prev().indent_tmp;
+                  frm.top().SetIndent(frm.prev().GetIndentTmp());
                }
                else
                {
-                  frm.top().indent = frm.prev().indent_tmp + indent_size;
+                  frm.top().SetIndent(frm.prev().GetIndentTmp() + indent_size);
                }
                log_indent();
 
@@ -3194,15 +3192,15 @@ void indent_text()
                   && next->IsNewline())
                {
                   frm.top().SetOpenToken(CT_ASSIGN_NL);
-                  frm.top().indent_tab = frm.top().indent;
+                  frm.top().SetIndentTab(frm.top().GetIndent());
                }
             }
             else
             {
-               frm.top().indent = pc->GetColumn() + pc->Len() + 1;
+               frm.top().SetIndent(pc->GetColumn() + pc->Len() + 1);
                log_indent();
             }
-            frm.top().indent_tmp = frm.top().indent;
+            frm.top().SetIndentTmp(frm.top().GetIndent());
             log_indent_tmp();
          }
       }
@@ -3239,15 +3237,15 @@ void indent_text()
                      && options::indent_single_after_return()))
                {
                   // apply normal single indentation
-                  frm.top().indent = frm.prev().indent + indent_size;
+                  frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
                }
                else
                {
                   // indent after the return token
-                  frm.top().indent = frm.prev().indent + pc->Len() + 1;
+                  frm.top().SetIndent(frm.prev().GetIndent() + pc->Len() + 1);
                }
                log_indent();
-               frm.top().indent_tmp = frm.prev().indent;
+               frm.top().SetIndentTmp(frm.prev().GetIndent());
                log_indent_tmp();
             }
             log_indent();
@@ -3258,30 +3256,30 @@ void indent_text()
       {
          frm.push(pc, __func__, __LINE__);
          // Issue #405
-         frm.top().indent = frm.prev().indent;
+         frm.top().SetIndent(frm.prev().GetIndent());
          log_indent();
 
-         frm.top().indent_tmp = frm.top().indent;
+         frm.top().SetIndentTmp(frm.top().GetIndent());
          LOG_FMT(LINDLINE, "%s(%d): .indent is %zu, .indent_tmp is %zu\n",
-                 __func__, __LINE__, frm.top().indent, frm.top().indent_tmp);
+                 __func__, __LINE__, frm.top().GetIndent(), frm.top().GetIndentTmp());
 
          log_rule_B("indent_continue");
 
          if (options::indent_ignore_first_continue())
          {
-            frm.top().indent = get_indent_first_continue(pc);
+            frm.top().SetIndent(get_indent_first_continue(pc));
             log_indent();
          }
          else if (options::indent_continue() != 0)
          {
-            frm.top().indent = calc_indent_continue(frm, frm.size() - 2);
+            frm.top().SetIndent(calc_indent_continue(frm, frm.size() - 2));
             log_indent();
 
             frm.top().indent_cont = true;
          }
          else
          {
-            frm.top().indent = frm.prev().indent + indent_size;
+            frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
             log_indent();
          }
       }
@@ -3298,7 +3296,7 @@ void indent_text()
             || (  pc->GetParentType() == CT_STRUCT
                && frm.top().GetOpenToken() != CT_CLASS_COLON))
          {
-            indent_column_set(frm.top().indent + 4);
+            indent_column_set(frm.top().GetIndent() + 4);
          }
       }
       else if (  options::indent_inside_ternary_operator()
@@ -3323,14 +3321,14 @@ void indent_text()
             LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
             frm.pop(__func__, __LINE__, pc);
-            indent_column_set(frm.top().indent_tmp);
+            indent_column_set(frm.top().GetIndentTmp());
          }
          frm.push(pc, __func__, __LINE__);
 
-         frm.top().indent     = frm.prev().indent + indent_size;
-         frm.top().indent_tab = frm.top().indent;
+         frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
+         frm.top().SetIndentTab(frm.top().GetIndent());
          log_indent();
-         frm.top().indent_tmp = frm.top().indent;
+         frm.top().SetIndentTmp(frm.top().GetIndent());
          log_indent_tmp();
       }
       else if (  pc->Is(CT_LAMBDA)
@@ -3340,24 +3338,24 @@ void indent_text()
       {
          log_rule_B("indent_cs_delegate_body");
          frm.push(pc, __func__, __LINE__);
-         frm.top().indent = frm.prev().indent;
+         frm.top().SetIndent(frm.prev().GetIndent());
          log_indent();
 
          if (  pc->GetPrevNc()->IsNewline()
             && !frm.prev().GetOpenChunk()->IsOnSameLine(pc->GetPrevNcNnl()))
          {
-            frm.top().indent = frm.prev().indent + indent_size;
+            frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
             log_indent();
-            reindent_line(pc, (frm.prev().indent + indent_size));
+            reindent_line(pc, (frm.prev().GetIndent() + indent_size));
             did_newline = false;
          }
          else if (  pc->GetNextNc()->IsNewline()
                  && !frm.prev().GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()))
          {
-            frm.top().indent = frm.prev().indent + indent_size;
+            frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
          }
          log_indent();
-         frm.top().indent_tmp = frm.top().indent;
+         frm.top().SetIndentTmp(frm.top().GetIndent());
          log_indent_tmp();
       }
       else if (  options::indent_oc_inside_msg_sel()
@@ -3370,10 +3368,10 @@ void indent_text()
          // [Class Message:<here>
          frm.push(pc, __func__, __LINE__);
 
-         frm.top().indent     = frm.prev().indent;
-         frm.top().indent_tab = frm.prev().indent_tab;
+         frm.top().SetIndent(frm.prev().GetIndent());
+         frm.top().SetIndentTab(frm.prev().GetIndentTab());
          log_indent();
-         frm.top().indent_tmp = frm.prev().indent_tmp;
+         frm.top().SetIndentTmp(frm.prev().GetIndentTmp());
          log_indent_tmp();
       }
       else if (pc->IsComment())
@@ -3561,7 +3559,7 @@ void indent_text()
                  || pc->GetPrev()->IsNewline())
          {
             log_rule_B("indent_var_def_cont");
-            vardefcol = frm.top().indent + indent_size;
+            vardefcol = frm.top().GetIndent() + indent_size;
          }
          else
          {
@@ -3613,7 +3611,7 @@ void indent_text()
             indent_column = calc_indent_continue(frm);
             log_indent();
          }
-         pc->SetColumnIndent(frm.top().indent_tab);
+         pc->SetColumnIndent(frm.top().GetIndentTab());
 
          if (frm.top().ip.ref)
          {
@@ -3710,8 +3708,8 @@ void indent_text()
             log_rule_B("indent_namespace");
             log_rule_B("indent_namespace_single_indent");
             LOG_FMT(LINDENT, "%s(%d): orig line is %zu, Namespace => %zu\n",
-                    __func__, __LINE__, pc->GetOrigLine(), frm.top().brace_indent);
-            reindent_line(pc, frm.top().brace_indent);
+                    __func__, __LINE__, pc->GetOrigLine(), frm.top().GetBraceIndent());
+            reindent_line(pc, frm.top().GetBraceIndent());
          }
          else if (  pc->Is(CT_STRING)
                  && prev->Is(CT_STRING)
@@ -3727,8 +3725,8 @@ void indent_text()
          else if (pc->IsComment())
          {
             LOG_FMT(LINDENT, "%s(%d): orig line is %zu, comment => %zu\n",
-                    __func__, __LINE__, pc->GetOrigLine(), frm.top().indent_tmp);
-            indent_comment(pc, frm.top().indent_tmp);
+                    __func__, __LINE__, pc->GetOrigLine(), frm.top().GetIndentTmp());
+            indent_comment(pc, frm.top().GetIndentTmp());
          }
          else if (pc->Is(CT_PREPROC))
          {
@@ -3789,10 +3787,10 @@ void indent_text()
                      // indent_paren_close is 0 or 1
                      LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] indent_paren_close is 0 or 1\n",
                              __func__, __LINE__, ck2->GetOrigLine(), ck2->GetOrigCol());
-                     indent_column_set(frm.lastPopped().indent_tmp);
+                     indent_column_set(frm.lastPopped().GetIndentTmp());
                      LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] indent_column set to %zu\n",
                              __func__, __LINE__, ck2->GetOrigLine(), ck2->GetOrigCol(), indent_column);
-                     pc->SetColumnIndent(frm.lastPopped().indent_tab);
+                     pc->SetColumnIndent(frm.lastPopped().GetIndentTab());
                      log_rule_B("indent_paren_close");
 
                      if (options::indent_paren_close() == 1)
@@ -3861,7 +3859,7 @@ void indent_text()
                                       || frm.top().GetOpenToken() == CT_COND_COLON)) // Issue #1130, #1715
                            {
                               log_rule_B("indent_inside_ternary_operator");
-                              indent_column_set(frm.top().indent);
+                              indent_column_set(frm.top().GetIndent());
                            }
                            else
                            {
@@ -3952,7 +3950,7 @@ void indent_text()
          {
             // indent const - void GetFoo(void)\n const\n { return (m_Foo); }
             log_rule_B("indent_func_const");
-            indent_column_set(frm.top().indent + options::indent_func_const());
+            indent_column_set(frm.top().GetIndent() + options::indent_func_const());
             LOG_FMT(LINDENT, "%s(%d): %zu] const => %zu [%s]\n",
                     __func__, __LINE__, pc->GetOrigLine(), indent_column, pc->Text());
             reindent_line(pc, indent_column);
@@ -4110,7 +4108,7 @@ void indent_text()
                     || pc->Is(CT_OC_MSG_NAME))) // Issue #2658
          {
             log_rule_B("indent_oc_inside_msg_sel");
-            reindent_line(pc, frm.top().indent);
+            reindent_line(pc, frm.top().GetIndent());
          }
          else
          {
@@ -4308,7 +4306,7 @@ void indent_text()
          || pc->Is(CT_COMMENT_CPP))
       {
          log_indent();
-         frm.top().indent_tmp = frm.top().indent;
+         frm.top().SetIndentTmp(frm.top().GetIndent());
          log_indent_tmp();
 
          /*
@@ -4316,10 +4314,10 @@ void indent_text()
           * first line (indent_tmp will be 1 or 0)
           */
          if (  pc->Is(CT_NL_CONT)
-            && frm.top().indent_tmp <= indent_size
+            && frm.top().GetIndentTmp() <= indent_size
             && frm.top().GetOpenToken() != CT_PP_DEFINE)
          {
-            frm.top().indent_tmp = indent_size + 1;
+            frm.top().SetIndentTmp(indent_size + 1);
             log_indent_tmp();
          }
          // Get ready to indent the next item
@@ -4357,16 +4355,16 @@ void indent_text()
 
          if (options::indent_ignore_first_continue())
          {
-            frm.top().indent = get_indent_first_continue(pc);
+            frm.top().SetIndent(get_indent_first_continue(pc));
          }
          else
          {
-            frm.top().indent = frm.prev().indent + options::indent_continue_class_head();
+            frm.top().SetIndent(frm.prev().GetIndent() + options::indent_continue_class_head());
          }
          log_indent();
 
-         frm.top().indent_tmp = frm.top().indent;
-         frm.top().indent_tab = frm.top().indent;
+         frm.top().SetIndentTmp(frm.top().GetIndent());
+         frm.top().SetIndentTab(frm.top().GetIndent());
          log_indent_tmp();
          classFound = true;
       }
