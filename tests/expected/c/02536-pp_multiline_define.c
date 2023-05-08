@@ -1,5 +1,8 @@
 #define gettext(Msgid) \
         QWERTY0 Msgid;
+#define farright(Msgid) \
+                        \
+        QWERTY0 Msgid;
 #ifdef TEST
    #define gettext1(Msgid)  \
            if (true)        \
