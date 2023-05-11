@@ -1,3 +1,20 @@
+Change highlights in uncrustify-0.77.0 (May 2023)
+-------------------------------------------------------------------------------
+   ea6c54eefe2f3272a4867d30920408c327167199
+     Added   : sp_cmt_cpp_pvs                       Jan 28 2023
+   74cf6ca40a0ce1b0d2499a92128ccde34bb48428
+     Added   : sp_inside_rparen                     Feb 15 2023
+     Added   : sp_func_call_user_inside_rparen      Feb 15 2023
+     Added   : sp_inside_rparens                    Feb 15 2023
+   70fac8d68b8a697132a21c5c59a09fd91e0a0486
+     Added   : sp_cmt_cpp_lint                      Mar 18 2023
+   73d9ab72ce736e9689f56406302f6d62ddfc3835
+     Added   : sp_qualifier_ptr_star_trailing       Apr 13 2023
+     Added   : sp_qualifier_unnamed_ptr_star        Apr 13 2023
+     Added   : sp_qualifier_ptr_star_func           Apr 13 2023
+   8b639a0b31637204da3d17dc29cc659def6f4cf7
+     Added   : mod_add_force_c_closebrace_comment   Apr 19 2023
+
 Change highlights in uncrustify-0.76.0 (November 2022)
 -------------------------------------------------------------------------------
    1aea3d1fcb55dc2ca40dfe2b1d548685a415ef3a
