@@ -410,6 +410,8 @@
 02539  c/pp_multiline_define_align_pp_ml0.cfg     c/pp_multiline_define.c
 02540  c/pp_multiline_define_align_pp_ml-1.cfg    c/pp_multiline_define.c
 02541  c/pp_multiline_define_align_pp_ml-5.cfg    c/pp_multiline_define.c
+02542  c/align_nl_cont-2.cfg                      c/pp_multiline_define.c
+02543  c/align_nl_cont-3.cfg                      c/pp_multiline_define.c
 
 02550  c/Issue_3852.cfg                           c/func_var_multi_paren.c
 

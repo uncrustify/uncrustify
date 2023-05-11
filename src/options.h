@@ -3511,9 +3511,16 @@ align_single_line_brace_gap;
 extern BoundedOption<unsigned, 0, 5000>
 align_oc_msg_spec_span;
 
-// Whether to align macros wrapped with a backslash and a newline. This will
-// not work right if the macro contains a multi-line comment.
-extern Option<bool>
+// Whether and how to align backslashes that split a macro onto multiple lines.
+// This will not work right if the macro contains a multi-line comment.
+//
+// 0: Do nothing (default)
+// 1: Align the backslashes in the column at the end of the longest line
+// 2: Align with the backslash that is farthest to the left, or, if that
+//    backslash is farther left than the end of the longest line, at the end of
+//    the longest line
+// 3: Align with the backslash that is farthest to the right
+extern BoundedOption<unsigned, 0, 3>
 align_nl_cont;
 
 // Whether to align macro functions and variables together.
