@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <cstdint>
 
 
 using namespace std;
