@@ -12,8 +12,8 @@
 #include "unicode.h" // encode_utf8()
 
 #include <algorithm>
-#include <stdexcept>
 #include <cstdint>
+#include <stdexcept>
 
 
 using namespace std;
