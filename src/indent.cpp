@@ -16,6 +16,7 @@
 #include "prototypes.h"
 #include "quick_align_again.h"
 #include "space.h"
+#include <cstdint>
 
 #ifdef WIN32
 #include <algorithm>                   // to get max
