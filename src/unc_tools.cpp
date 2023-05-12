@@ -516,7 +516,7 @@ void dump_keyword_for_lang(size_t language_count, chunk_tag_t *keyword_for_lang)
       LOG_FMT(LDYNKW, "%s: %3zu: %18s, %14s, %12ld, %16s, %s\n",
               __func__, ii,
               keyword_for_lang[ii].tag, get_token_name(keyword_for_lang[ii].type),
-              keyword_for_lang[ii].lang_flags,
+              (long)keyword_for_lang[ii].lang_flags,
               g_a.data(),
               language_name_from_flags(keyword_for_lang[ii].lang_flags));
    }
