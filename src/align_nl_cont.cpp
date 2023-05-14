@@ -46,6 +46,7 @@ Chunk *align_nl_cont(Chunk *start)
       }
       pc = pc->GetNext();
    }
+   align_col = align_col - 1 + options::align_nl_cont_spaces();
 
    if (options::align_nl_cont() == 2) // align with leftmost backslash
    {

@@ -3523,6 +3523,11 @@ align_oc_msg_spec_span;
 extern BoundedOption<unsigned, 0, 3>
 align_nl_cont;
 
+// The minimum number of spaces between the end of a line and its continuation
+// backslash. Requires align_nl_cont.
+extern BoundedOption<unsigned, 0, 16>
+align_nl_cont_spaces; // = 1
+
 // Whether to align macro functions and variables together.
 extern Option<bool>
 align_pp_define_together;
