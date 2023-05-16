@@ -12,6 +12,7 @@
 #include "unicode.h" // encode_utf8()
 
 #include <algorithm>
+#include <cstdint>
 #include <stdexcept>
 
 
