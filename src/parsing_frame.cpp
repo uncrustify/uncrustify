@@ -22,23 +22,23 @@ using std::invalid_argument;
 
 ParenStackEntry::ParenStackEntry()
 {
-   m_openToken   = CT_EOF;
-   m_openChunk   = Chunk::NullChunkPtr;
-   m_openLevel   = 0;
-   m_openLine    = 0;
-   m_openCol     = 0;
-   m_braceIndent = 0;
-   m_indent      = 1;
-   m_indentTmp   = 1;
-   m_indentTab   = 1;
-   ns_cnt        = 0;
-   indent_cont   = false;
-   in_preproc    = false;
-   non_vardef    = false;
-   parent        = CT_NONE;
-   stage         = E_BraceStage::NONE;
-   ip            = { Chunk::NullChunkPtr, 0 };
-   pop_pc        = Chunk::NullChunkPtr;
+   m_openToken       = CT_EOF;
+   m_openChunk       = Chunk::NullChunkPtr;
+   m_openLevel       = 0;
+   m_openLine        = 0;
+   m_openCol         = 0;
+   m_braceIndent     = 0;
+   m_indent          = 1;
+   m_indentTmp       = 1;
+   m_indentTab       = 1;
+   m_nsCount         = 0;
+   m_indentContinue  = false;
+   m_inPreproc       = false;
+   m_nonVardef       = false;
+   m_parent          = CT_NONE;
+   m_stage           = E_BraceStage::NONE;
+   m_indentationData = { Chunk::NullChunkPtr, 0 };
+   m_popChunk        = Chunk::NullChunkPtr;
 }
 
 
@@ -122,13 +122,13 @@ void ParsingFrame::push(Chunk *pc, const char *func, int line, E_BraceStage stag
       new_entry.SetOpenChunk(pc);
 
       new_entry.SetIndentTab(top().GetIndentTab());
-      new_entry.indent_cont = top().indent_cont;
-      new_entry.stage       = stage;
+      new_entry.SetIndentContinue(top().GetIndentContinue());
+      new_entry.SetStage(stage);
 
-      new_entry.in_preproc = pc->TestFlags(PCF_IN_PREPROC);
-      new_entry.non_vardef = false;
-      new_entry.ip         = top().ip;
-      new_entry.pop_pc     = Chunk::NullChunkPtr;
+      new_entry.SetInPreproc(pc->TestFlags(PCF_IN_PREPROC));
+      new_entry.SetNonVardef(false);
+      new_entry.IndentData() = top().GetIndentData();
+      new_entry.SetPopChunk(Chunk::NullChunkPtr);
    }
    m_parenStack.push_back(new_entry);
 
