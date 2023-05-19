@@ -122,26 +122,112 @@ public:
     */
    void SetIndentTab(size_t level);
 
+   /**
+    * @brief returns the consecutive namespace levels
+    */
+   size_t GetNsCount() const;
 
-   size_t          ns_cnt;       //! Number of consecutive namespace levels
-   bool            indent_cont;  //! indent_continue was applied
-   bool            in_preproc;   //! whether this was created in a preprocessor
-   bool            non_vardef;   //! Hit a non-vardef line
-   E_Token         parent;       //! if, for, function, etc
-   E_BraceStage    stage;        //! used to check progression of complex statements.
-   IndentationData ip;
-   Chunk           *pop_pc;
+   /**
+    * @brief Sets the consecutive namespace levels
+    * @param count the consecutive namespace levels
+    */
+   void SetNsCount(size_t count);
+
+   /**
+    * @brief returns whether indent_continue was applied
+    */
+   bool GetIndentContinue() const;
+
+   /**
+    * @brief Sets whether indent_continue was applied
+    * @param cont new value
+    */
+   void SetIndentContinue(bool cont);
+
+   /**
+    * @brief returns whether this was created in a preprocessor
+    */
+   bool GetInPreproc() const;
+
+   /**
+    * @brief Sets whether this was created in a preprocessor
+    * @param preproc new value
+    */
+   void SetInPreproc(bool preproc);
+
+   /**
+    * @brief returns whether a non-vardef line was hit
+    */
+   bool GetNonVardef() const;
+
+   /**
+    * @brief Sets whether a non-vardef line was hit
+    * @param vardef new value
+    */
+   void SetNonVardef(bool vardef);
+
+   /**
+    * @brief returns the parent token (if, for, function, etc)
+    */
+   E_Token GetParent() const;
+
+   /**
+    * @brief Sets the parent token (if, for, function, etc)
+    * @param parent the token to set
+    */
+   void SetParent(const E_Token parent);
+
+   /**
+    * @brief returns the stage used to check progression of complex statements
+    */
+   E_BraceStage GetStage() const;
+
+   /**
+    * @brief Sets the stage used to check progression of complex statements
+    * @param stage the new value
+    */
+   void SetStage(const E_BraceStage stage);
+
+   /**
+    * @brief Returns the associated indentation data as a const reference
+    */
+   const IndentationData &GetIndentData() const;
+
+   /**
+    * @brief Returns the associated indentation data as a modifiable reference
+    */
+   IndentationData &IndentData();
+
+   /**
+    * @brief returns the pop chunk
+    */
+   Chunk *GetPopChunk() const;
+
+   /**
+    * @brief Sets the pop chunk
+    * @param chunk the new chunk
+    */
+   void SetPopChunk(Chunk *chunk);
+
 
 protected:
-   E_Token m_openToken;          //! the type that opened the entry
-   Chunk   *m_openChunk;         //! chunk that opened the level
-   size_t  m_openLevel;          //! level of opening type
-   size_t  m_openLine;           //! line that open symbol is on, only for logging purposes
-   size_t  m_openCol;            //! column that open symbol is on, only for logging purposes
-   size_t  m_braceIndent;        //! indent for braces - may not relate to indent
-   size_t  m_indent;             //! indent level (depends on use)
-   size_t  m_indentTmp;          //! temporary indent level (depends on use)
-   size_t  m_indentTab;          //! the 'tab' indent (always <= real column)
+   E_Token         m_openToken;       // the type that opened the entry
+   Chunk           *m_openChunk;      // chunk that opened the level
+   size_t          m_openLevel;       // level of opening type
+   size_t          m_openLine;        // line that open symbol is on, only for logging purposes
+   size_t          m_openCol;         // column that open symbol is on, only for logging purposes
+   size_t          m_braceIndent;     // indent for braces - may not relate to indent
+   size_t          m_indent;          // indent level (depends on use)
+   size_t          m_indentTmp;       // temporary indent level (depends on use)
+   size_t          m_indentTab;       // the 'tab' indent (always <= real column)
+   size_t          m_nsCount;         // Number of consecutive namespace levels
+   bool            m_indentContinue;  // indent_continue was applied
+   bool            m_inPreproc;       // whether this was created in a preprocessor
+   bool            m_nonVardef;       // Hit a non-vardef line
+   E_Token         m_parent;          // if, for, function, etc
+   E_BraceStage    m_stage;           // used to check progression of complex statements.
+   IndentationData m_indentationData; // Indentation data
+   Chunk           *m_popChunk;       // Pop chunk
 };
 
 
@@ -420,6 +506,102 @@ inline size_t ParenStackEntry::GetIndentTab() const
 inline void ParenStackEntry::SetIndentTab(size_t level)
 {
    m_indentTab = level;
+}
+
+
+inline size_t ParenStackEntry::GetNsCount() const
+{
+   return(m_nsCount);
+}
+
+
+inline void ParenStackEntry::SetNsCount(size_t count)
+{
+   m_nsCount = count;
+}
+
+
+inline bool ParenStackEntry::GetIndentContinue() const
+{
+   return(m_indentContinue);
+}
+
+
+inline void ParenStackEntry::SetIndentContinue(bool cont)
+{
+   m_indentContinue = cont;
+}
+
+
+inline bool ParenStackEntry::GetInPreproc() const
+{
+   return(m_inPreproc);
+}
+
+
+inline void ParenStackEntry::SetInPreproc(bool preproc)
+{
+   m_inPreproc = preproc;
+}
+
+
+inline bool ParenStackEntry::GetNonVardef() const
+{
+   return(m_nonVardef);
+}
+
+
+inline void ParenStackEntry::SetNonVardef(bool vardef)
+{
+   m_nonVardef = vardef;
+}
+
+
+inline E_Token ParenStackEntry::GetParent() const
+{
+   return(m_parent);
+}
+
+
+inline void ParenStackEntry::SetParent(const E_Token parent)
+{
+   m_parent = parent;
+}
+
+
+inline E_BraceStage ParenStackEntry::GetStage() const
+{
+   return(m_stage);
+}
+
+
+inline void ParenStackEntry::SetStage(const E_BraceStage stage)
+{
+   m_stage = stage;
+}
+
+
+inline const IndentationData &ParenStackEntry::GetIndentData() const
+{
+   return(m_indentationData);
+}
+
+
+inline IndentationData &ParenStackEntry::IndentData()
+{
+   return(m_indentationData);
+}
+
+
+inline Chunk *ParenStackEntry::GetPopChunk() const
+{
+   return(m_popChunk);
+}
+
+
+inline void ParenStackEntry::SetPopChunk(Chunk *chunk)
+{
+   m_popChunk = chunk;
 }
 
 

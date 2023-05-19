@@ -57,7 +57,7 @@ void fl_log(log_sev_t logsev, const ParsingFrame &frm)
    for (size_t idx = 1; idx < frm.size(); idx++)
    {
       LOG_FMT(logsev, " [%s-%s]", get_token_name(frm.at(idx).GetOpenToken()),
-              get_brace_stage_name(frm.at(idx).stage));
+              get_brace_stage_name(frm.at(idx).GetStage()));
    }
 
    LOG_FMT(logsev, "\n");
