@@ -370,6 +370,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
               __func__, __LINE__, pc->GetOrigLine(), pc->Text(),
               pc->TestFlags(PCF_STMT_START) ? "statement" : "expression", frm.GetStmtCount(),
               frm.GetExprCount());
+      pc->TestFlags(PCF_STMT_START) ? log_ruleStart("start statement", pc) : log_ruleStart("start expression", pc);
    }
    frm.SetStmtCount(frm.GetStmtCount() + 1);
    frm.SetExprCount(frm.GetExprCount() + 1);

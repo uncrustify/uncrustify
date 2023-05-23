@@ -79,6 +79,33 @@ void log_rule4(const char *rule, Chunk *first)
 }
 
 
+void log_ruleStart(const char *rule, Chunk *first)
+{
+   if (!(cpd.html_type == tracking_type_e::TT_START))
+   {
+      return;
+   }
+
+   if (first->GetTrackingData() == nullptr)
+   {
+      first->TrackingData() = new TrackList;
+   }
+   // copy the rule
+   size_t length = strlen(rule) + 1;
+   char   *r     = (char *)malloc(length);
+
+   strcpy(r, rule);
+   size_t      a_number = get_A_Number();
+   TrackNumber A        = make_pair(a_number, r);
+
+   first->TrackingData()->push_back(A);
+   size_t sizeOfTrack = first->GetTrackingData()->size();
+
+   LOG_FMT(LSPACE, "log_ruleStart(%d): rule is '%s', '%s', at line %zu, tracking number is %zu, size is %zu\n",
+           __LINE__, rule, first->Text(), first->GetOrigLine(), a_number, sizeOfTrack);
+} // log_ruleStart
+
+
 void log_ruleNL(const char *rule, Chunk *pc)
 {
    if (!(cpd.html_type == tracking_type_e::TT_NEWLINE))

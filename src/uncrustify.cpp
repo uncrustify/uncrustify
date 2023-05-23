@@ -299,8 +299,9 @@ void usage(const char *argv0)
            " -L SEV                : Set the log severity (see log_levels.h; note 'A' = 'all')\n"
            " -s                    : Show the log severity in the logs.\n"
            " --decode              : Decode remaining args (chunk flags) and exit.\n"
-           " --tracking_space FILE : Prepare space tracking information for debugging.\n"
-           " --tracking_nl FILE    : Prepare newline tracking information for debugging.\n"
+           " --tracking space:FILE : Prepare space tracking information for debugging.\n"
+           " --tracking nl:FILE    : Prepare newline tracking information for debugging.\n"
+           " --tracking start:FILE : Prepare start of statement tracking information for debugging.\n"
            "                         Cannot be used with the -o option'\n"
            "\n"
            "Usage Examples\n"
@@ -660,47 +661,66 @@ int main(int argc, char *argv[])
    const char *output_file = arg.Param("-o");
 
    // for debugging tracking
-   const char *html_file = nullptr;
-   html_file = arg.Param("--tracking_space");
+   const char *html_arg = nullptr;
+   html_arg = arg.Param("--tracking");
 
-   if (html_file != nullptr)
+   if (html_arg != nullptr)
    {
-      cpd.html_type = tracking_type_e::TT_SPACE;
-      cpd.html_file = html_file;
-      html_file     = arg.Param("--tracking_nl");
-      bool try_it = html_file != nullptr;
+      const size_t max_args_length = 256;
+      size_t       argLength       = strlen(html_arg);
 
-      if (try_it)
+      if (argLength > max_args_length)
       {
-         usage_error("Cannot specify both --tracking_space and --tracking_nl.");
-         return(EX_NOUSER);
+         fprintf(stderr, "The buffer is to short for the tracking argument '%s'\n", html_arg);
+         log_flush(true);
+         exit(EX_SOFTWARE);
       }
-   }
-   else
-   {
-      html_file = arg.Param("--tracking_nl");
-      bool try_it = html_file != nullptr;
+      char buffer[max_args_length];
+      strcpy(buffer, html_arg);
 
-      if (try_it)
+      // Tokenize and extract key and value
+      const char *tracking_art = strtok(buffer, ":");
+      const char *html_file    = strtok(nullptr, ":");
+
+      if (html_file != nullptr)
       {
-         cpd.html_type = tracking_type_e::TT_NEWLINE;
+         if (strcmp(tracking_art, "space") == 0)
+         {
+            cpd.html_type = tracking_type_e::TT_SPACE;
+         }
+         else if (strcmp(tracking_art, "nl") == 0)
+         {
+            cpd.html_type = tracking_type_e::TT_NEWLINE;
+         }
+         else if (strcmp(tracking_art, "start") == 0)
+         {
+            cpd.html_type = tracking_type_e::TT_START;
+         }
+         else
+         {
+            fprintf(stderr, "tracking_art '%s' not implemented\n",
+                    tracking_art);
+            log_flush(true);
+            return(EXIT_FAILURE);
+         }
          cpd.html_file = html_file;
       }
    }
    LOG_FMT(LDATA, "%s\n", UNCRUSTIFY_VERSION);
-   LOG_FMT(LDATA, "config_file = %s\n", cfg_file.c_str());
-   LOG_FMT(LDATA, "output_file = %s\n", (output_file != nullptr) ? output_file : "null");
-   LOG_FMT(LDATA, "source_file = %s\n", (source_file != nullptr) ? source_file : "null");
-   LOG_FMT(LDATA, "source_list = %s\n", (source_list != nullptr) ? source_list : "null");
-   LOG_FMT(LDATA, "tracking    = %s\n", (cpd.html_file != nullptr) ? cpd.html_file : "null");
-   LOG_FMT(LDATA, "prefix      = %s\n", (prefix != nullptr) ? prefix : "null");
-   LOG_FMT(LDATA, "suffix      = %s\n", (suffix != nullptr) ? suffix : "null");
-   LOG_FMT(LDATA, "assume      = %s\n", (assume != nullptr) ? assume : "null");
-   LOG_FMT(LDATA, "replace     = %s\n", replace ? "true" : "false");
-   LOG_FMT(LDATA, "no_backup   = %s\n", no_backup ? "true" : "false");
-   LOG_FMT(LDATA, "detect      = %s\n", detect ? "true" : "false");
-   LOG_FMT(LDATA, "check       = %s\n", cpd.do_check ? "true" : "false");
-   LOG_FMT(LDATA, "if_changed  = %s\n", cpd.if_changed ? "true" : "false");
+   LOG_FMT(LDATA, "config_file  = %s\n", cfg_file.c_str());
+   LOG_FMT(LDATA, "output_file  = %s\n", (output_file != nullptr) ? output_file : "null");
+   LOG_FMT(LDATA, "source_file  = %s\n", (source_file != nullptr) ? source_file : "null");
+   LOG_FMT(LDATA, "source_list  = %s\n", (source_list != nullptr) ? source_list : "null");
+   LOG_FMT(LDATA, "tracking_art = %s\n", get_tracking_type_e_name(cpd.html_type));
+   LOG_FMT(LDATA, "tracking     = %s\n", (cpd.html_file != nullptr) ? cpd.html_file : "null");
+   LOG_FMT(LDATA, "prefix       = %s\n", (prefix != nullptr) ? prefix : "null");
+   LOG_FMT(LDATA, "suffix       = %s\n", (suffix != nullptr) ? suffix : "null");
+   LOG_FMT(LDATA, "assume       = %s\n", (assume != nullptr) ? assume : "null");
+   LOG_FMT(LDATA, "replace      = %s\n", replace ? "true" : "false");
+   LOG_FMT(LDATA, "no_backup    = %s\n", no_backup ? "true" : "false");
+   LOG_FMT(LDATA, "detect       = %s\n", detect ? "true" : "false");
+   LOG_FMT(LDATA, "check        = %s\n", cpd.do_check ? "true" : "false");
+   LOG_FMT(LDATA, "if_changed   = %s\n", cpd.if_changed ? "true" : "false");
 
    if (  cpd.do_check
       && (  output_file
@@ -780,11 +800,10 @@ int main(int argc, char *argv[])
    // Set config options using command line arguments.
    idx = 0;
 
-   const size_t max_args_length = 256;
-
    while ((p_arg = arg.Params("--set", idx)) != nullptr)
    {
-      size_t argLength = strlen(p_arg);
+      size_t       argLength       = strlen(p_arg);
+      const size_t max_args_length = 256;
 
       if (argLength > max_args_length)
       {

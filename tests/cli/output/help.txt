@@ -61,8 +61,9 @@ Debug Options:
  -L SEV                : Set the log severity (see log_levels.h; note 'A' = 'all')
  -s                    : Show the log severity in the logs.
  --decode              : Decode remaining args (chunk flags) and exit.
- --tracking_space FILE : Prepare space tracking information for debugging.
- --tracking_nl FILE    : Prepare newline tracking information for debugging.
+ --tracking space:FILE : Prepare space tracking information for debugging.
+ --tracking nl:FILE    : Prepare newline tracking information for debugging.
+ --tracking start:FILE : Prepare start of statement tracking information for debugging.
                          Cannot be used with the -o option'
 
 Usage Examples

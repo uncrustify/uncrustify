@@ -76,9 +76,11 @@ enum class tracking_type_e : unsigned int
 {
    TT_NONE,
    TT_SPACE,
-   TT_NEWLINE
+   TT_NEWLINE,
+   TT_START
 };
 
+const char *get_tracking_type_e_name(tracking_type_e type);
 
 class Chunk; //forward declaration
 

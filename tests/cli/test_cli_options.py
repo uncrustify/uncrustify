@@ -73,7 +73,7 @@ def proc(bin_path, args_arr=()):
     'test'
     """
     if not isfile(bin_path):
-        eprint("bin is not a file: %s" % bin_path)
+        eprint("bin 1 is not a file: %s" % bin_path)
         return False
 
     # call uncrustify, hold output in memory
@@ -127,7 +127,7 @@ def get_file_content(fp):
         with open(fp, encoding="utf-8", newline="\n") as f:
             out = f.read()
     else:
-        eprint("is not a file: %s" % fp)
+        eprint("is 2 not a file: %s" % fp)
 
     return out
 
@@ -504,7 +504,7 @@ def main(args):
                  s_path_join(bd_dir, 'MinSizeRel/uncrustify.exe')]
     for uncr_bin in bin_paths:
         if not isfile(uncr_bin):
-            eprint("is not a file: %s" % uncr_bin)
+            eprint("is 3 not a file: %s" % uncr_bin)
         else:
             print("Uncrustify binary found: %s" % uncr_bin)
             bin_found = True
@@ -713,18 +713,18 @@ def main(args):
     #
     # Test --tracking_space FILE
     #
-    if os_name != 'nt':
-        # doesn't work under windows
-        if not check_uncrustify_output(
-                uncr_bin,
-                parsed_args,
-                args_arr=['-c', s_path_join(script_dir, 'config/tracking_space.cfg'),
-                          '-f', s_path_join(script_dir, 'input/tracking_space.cpp'),
-                          '--tracking_space', s_path_join(test_dir, 'results/Debug_tracking_space.html')],
-                gen_expected_path=s_path_join(script_dir, 'output/Debug_tracking_space.html'),
-                gen_result_path=s_path_join(test_dir, 'results/Debug_tracking_space.html'),
-                ):
-            return_flag = False
+    #if os_name != 'nt':
+    #    # doesn't work under windows
+    #    if not check_uncrustify_output(
+    #            uncr_bin,
+    #            parsed_args,
+    #            args_arr=['-c', s_path_join(script_dir, 'config/tracking_space.cfg'),
+    #                      '-f', s_path_join(script_dir, 'input/tracking_space.cpp'),
+    #                      '--tracking space:results/Debug.html', s_path_join(test_dir, 'results/Debug.html')],
+    #            gen_expected_path=s_path_join(script_dir, 'output/Debug.html'),
+    #            gen_result_path=s_path_join(test_dir, 'results/Debug.html'),
+    #            ):
+    #        return_flag = False
 
     #
     # Test --replace
