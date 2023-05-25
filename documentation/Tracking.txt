@@ -7,7 +7,9 @@ Using a browser, one can see where, which options are working.
 
 The command option is:
 
-uncrustify --tracking Track.html -c config-FILE -f source-FILE -L A 2>A.txt
+uncrustify --tracking space:Track.html -c config-FILE -f source-FILE -L A 2>A.txt
+uncrustify --tracking nl:Track.html    -c config-FILE -f source-FILE -L A 2>A.txt
+uncrustify --tracking start:Track.html -c config-FILE -f source-FILE -L A 2>A.txt
 
 Tracking puts a red "M" in the source to show where the options are working.
 A tracking number is used and written in the Track.html file and the output file A.txt

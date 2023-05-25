@@ -49,6 +49,8 @@ void log_rule3(log_sev_t sev, const char *func, const char *rule);
 
 void log_rule4(const char *rule, Chunk *first);
 
+void log_ruleStart(const char *rule, Chunk *first);
+
 void log_ruleNL(const char *rule, Chunk *pc);
 
 #endif /* LOG_RULES_H_INCLUDED */

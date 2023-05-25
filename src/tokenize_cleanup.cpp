@@ -728,6 +728,7 @@ void tokenize_cleanup()
             if ((tmp = next->GetNextNcNnl())->IsNotNullChunk())
             {
                tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
+               log_ruleStart("start statementi/ expression", tmp);
             }
          }
          else
@@ -919,6 +920,7 @@ void tokenize_cleanup()
          if (tmp->IsNotNullChunk())
          {
             tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
+            log_ruleStart("start statementi/ expression", tmp);
          }
          tmp = pc->GetNextType(CT_OC_END, pc->GetLevel());
 
@@ -994,6 +996,7 @@ void tokenize_cleanup()
          if (next->IsNot(CT_PAREN_OPEN))
          {
             next->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
+            log_ruleStart("start statement/ expression", next);
          }
          else
          {
@@ -1149,6 +1152,7 @@ static void cleanup_objc_property(Chunk *start)
       if (tmp->IsNotNullChunk())
       {
          tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
+         log_ruleStart("start statement/ expression", tmp);
 
          tmp = tmp->GetNextType(CT_SEMICOLON, start->GetLevel());
 

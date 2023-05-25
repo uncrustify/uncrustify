@@ -53,6 +53,26 @@ const char *get_brace_stage_name(E_BraceStage brace_stage)
 } // get_brace_stage_name
 
 
+const char *get_tracking_type_e_name(tracking_type_e type)
+{
+   switch (type)
+   {
+   case tracking_type_e::TT_NONE:
+      return("NONE");
+
+   case tracking_type_e::TT_SPACE:
+      return("space");
+
+   case tracking_type_e::TT_NEWLINE:
+      return("newline");
+
+   case tracking_type_e::TT_START:
+      return("start");
+   }
+   return("?????");
+} // get_tracking_type_e_name
+
+
 const char *get_unc_stage_name(unc_stage_e unc_stage)
 {
    switch (unc_stage)
