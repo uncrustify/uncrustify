@@ -195,6 +195,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
            || pc->GetType() == CT_OC_SCOPE
            || pc->GetType() == CT_OC_PROPERTY
            || pc->GetType() == CT_PREPROC
+           || pc->GetType() == CT_QUESTION                 // Issue #4023
            || pc->GetType() == CT_SBOOL                    // Issue #3965
            || pc->GetType() == CT_SHIFT                    // Issue #3983
            || pc->GetType() == CT_SQUARE_OPEN
