@@ -154,55 +154,57 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (  pc->GetType() == CT_PAREN_CLOSE
-      || pc->GetType() == CT_BRACE_CLOSE
-      || pc->GetType() == CT_VBRACE_CLOSE
-      || pc->GetType() == CT_FPAREN_CLOSE
-      || pc->GetType() == CT_LPAREN_CLOSE
-      || pc->GetType() == CT_RPAREN_CLOSE                      // Issue #3914
-      || pc->GetType() == CT_SPAREN_CLOSE
-      || pc->GetType() == CT_TPAREN_CLOSE
-      || pc->GetType() == CT_CLASS_COLON
+   if (  pc->GetType() == CT_ACCESS
       || pc->GetType() == CT_ANGLE_CLOSE
+      || pc->GetType() == CT_ANGLE_OPEN
+      || pc->GetType() == CT_ARITH                    // Issue #3965
+      || pc->GetType() == CT_ASSIGN
+      || pc->GetType() == CT_BRACE_CLOSE
+      || pc->GetType() == CT_BRACE_OPEN
+      || pc->GetType() == CT_BOOL
+      || pc->GetType() == CT_CASE
+      || pc->GetType() == CT_CLASS_COLON
+      || pc->GetType() == CT_COMMA
+      || pc->GetType() == CT_COMMENT
+      || pc->GetType() == CT_COMMENT_CPP
+      || pc->GetType() == CT_COMMENT_MULTI
+      || pc->GetType() == CT_COMPARE                  // Issue #3915
+      || pc->GetType() == CT_COND_COLON
+      || pc->GetType() == CT_FPAREN_CLOSE
+      || pc->GetType() == CT_FPAREN_OPEN
+      || pc->GetType() == CT_INCDEC_AFTER             // Issue #4026
+      || pc->GetType() == CT_LPAREN_CLOSE
+      || pc->GetType() == CT_LPAREN_OPEN
+      || pc->GetType() == CT_MACRO_CLOSE
+      || pc->GetType() == CT_MACRO_OPEN
+      || pc->GetType() == CT_MEMBER                   // Issue #3996
+      || pc->GetType() == CT_NEWLINE
+      || pc->GetType() == CT_NONE
+      || pc->GetType() == CT_OC_END
+      || pc->GetType() == CT_OC_MSG_NAME
+      || pc->GetType() == CT_OC_PROPERTY
+      || pc->GetType() == CT_OC_SCOPE
+      || pc->GetType() == CT_PAREN_CLOSE
+      || pc->GetType() == CT_PAREN_OPEN
+      || pc->GetType() == CT_PREPROC
+      || pc->GetType() == CT_QUESTION                 // Issue #4023
+      || pc->GetType() == CT_RPAREN_CLOSE             // Issue #3914
+      || pc->GetType() == CT_RPAREN_OPEN
+      || pc->GetType() == CT_SBOOL                    // Issue #3965
       || pc->GetType() == CT_SEMICOLON
-      || pc->GetType() == CT_SQUARE_CLOSE)
-   {
-      LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d): orig line is %4zu, orig col is %4zu, type is %12s, pushed with\n",
-              func, line, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
-   }
-   else if (  pc->GetType() == CT_ACCESS
-           || pc->GetType() == CT_ARITH                    // Issue #3965
-           || pc->GetType() == CT_ASSIGN
-           || pc->GetType() == CT_BRACE_OPEN
-           || pc->GetType() == CT_BOOL
-           || pc->GetType() == CT_CASE
-           || pc->GetType() == CT_COMMA
-           || pc->GetType() == CT_COMMENT
-           || pc->GetType() == CT_COMMENT_CPP
-           || pc->GetType() == CT_COMMENT_MULTI
-           || pc->GetType() == CT_COMPARE                  // Issue #3915
-           || pc->GetType() == CT_COND_COLON
-           || pc->GetType() == CT_FPAREN_OPEN
-           || pc->GetType() == CT_PAREN_OPEN
-           || pc->GetType() == CT_TPAREN_OPEN
-           || pc->GetType() == CT_MACRO_CLOSE
-           || pc->GetType() == CT_MACRO_OPEN
-           || pc->GetType() == CT_MEMBER                   // Issue 3996
-           || pc->GetType() == CT_NEWLINE
-           || pc->GetType() == CT_NONE
-           || pc->GetType() == CT_OC_END
-           || pc->GetType() == CT_OC_MSG_NAME
-           || pc->GetType() == CT_OC_SCOPE
-           || pc->GetType() == CT_OC_PROPERTY
-           || pc->GetType() == CT_PREPROC
-           || pc->GetType() == CT_QUESTION                 // Issue #4023
-           || pc->GetType() == CT_SBOOL                    // Issue #3965
-           || pc->GetType() == CT_SHIFT                    // Issue #3983
-           || pc->GetType() == CT_SQUARE_OPEN
-           || pc->GetType() == CT_SQL_END
-           || pc->GetType() == CT_TYPEDEF
-           || pc->GetType() == CT_VSEMICOLON
-           || pc->GetType() == CT_WORD)
+      || pc->GetType() == CT_SHIFT                    // Issue #3983
+      || pc->GetType() == CT_SPAREN_CLOSE
+      || pc->GetType() == CT_SPAREN_OPEN
+      || pc->GetType() == CT_SQL_END
+      || pc->GetType() == CT_SQUARE_CLOSE
+      || pc->GetType() == CT_SQUARE_OPEN
+      || pc->GetType() == CT_TPAREN_CLOSE
+      || pc->GetType() == CT_TPAREN_OPEN
+      || pc->GetType() == CT_TYPEDEF
+      || pc->GetType() == CT_VBRACE_CLOSE
+      || pc->GetType() == CT_VBRACE_OPEN
+      || pc->GetType() == CT_VSEMICOLON
+      || pc->GetType() == CT_WORD)
    {
       LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d): orig line is %4zu, orig col is %4zu, type is %12s\n",
               func, line, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
