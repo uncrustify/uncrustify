@@ -159,6 +159,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
       || pc->GetType() == CT_ANGLE_OPEN
       || pc->GetType() == CT_ARITH                    // Issue #3965
       || pc->GetType() == CT_ASSIGN
+      || pc->GetType() == CT_ASSIGN_FUNC_PROTO        // Issue #4026
       || pc->GetType() == CT_BRACE_CLOSE
       || pc->GetType() == CT_BRACE_OPEN
       || pc->GetType() == CT_BOOL
@@ -170,12 +171,15 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
       || pc->GetType() == CT_COMMENT_MULTI
       || pc->GetType() == CT_COMPARE                  // Issue #3915
       || pc->GetType() == CT_COND_COLON
+      || pc->GetType() == CT_DC_MEMBER                // Issue #4026
       || pc->GetType() == CT_FPAREN_CLOSE
       || pc->GetType() == CT_FPAREN_OPEN
+      || pc->GetType() == CT_FUNC_CTOR_VAR            // Issue #4026
       || pc->GetType() == CT_INCDEC_AFTER             // Issue #4026
       || pc->GetType() == CT_LPAREN_CLOSE
       || pc->GetType() == CT_LPAREN_OPEN
       || pc->GetType() == CT_MACRO_CLOSE
+      || pc->GetType() == CT_MACRO_FUNC_CALL          // Issue #4026
       || pc->GetType() == CT_MACRO_OPEN
       || pc->GetType() == CT_MEMBER                   // Issue #3996
       || pc->GetType() == CT_NEWLINE
@@ -184,6 +188,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
       || pc->GetType() == CT_OC_MSG_NAME
       || pc->GetType() == CT_OC_PROPERTY
       || pc->GetType() == CT_OC_SCOPE
+      || pc->GetType() == CT_OPERATOR                 // Issue #4026
       || pc->GetType() == CT_PAREN_CLOSE
       || pc->GetType() == CT_PAREN_OPEN
       || pc->GetType() == CT_PREPROC
