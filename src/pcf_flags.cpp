@@ -58,7 +58,8 @@ static const char *pcf_names[] =
    "WF_IF",             // 46
    "NOT_POSSIBLE",      // 47
    "IN_CONDITIONAL",    // 48                    Issue #3558
-   "PCF_OC_IN_BLOCK",   // 49
+   "OC_IN_BLOCK",       // 49
+   "CONT_LINE",         // 50
 };
 
 
