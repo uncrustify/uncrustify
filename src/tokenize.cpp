@@ -357,20 +357,20 @@ static bool d_parse_string(TokenContext &ctx, Chunk &pc)
 {
    size_t ch = ctx.peek();
 
-   if (  ch == '"'
-      || ch == '\'')
+   if (  ch == '"'             // 34
+      || ch == '\'')           // 39
    {
       return(parse_string(ctx, pc, 0, true));
    }
 
-   if (ch == '`')
+   if (ch == '`')              // 96
    {
       return(parse_string(ctx, pc, 0, false));
    }
 
-   if (  (  ch == 'r'
-         || ch == 'x')
-      && ctx.peek(1) == '"')
+   if (  (  ch == 'r'          // 114
+         || ch == 'x')         // 120
+      && ctx.peek(1) == '"')   //  34
    {
       return(parse_string(ctx, pc, 1, false));
    }
@@ -384,7 +384,7 @@ static bool d_parse_string(TokenContext &ctx, Chunk &pc)
 
    pc.Str().clear();
 
-   while (ctx.peek() == '\\')
+   while (ctx.peek() == '\\')   // 92
    {
       pc.Str().append(ctx.get());
 
@@ -453,7 +453,7 @@ static bool d_parse_string(TokenContext &ctx, Chunk &pc)
             pc.Str().append(ctx.get());
          }
 
-         if (ctx.peek() == ';')
+         if (ctx.peek() == ';')          // 59
          {
             pc.Str().append(ctx.get());
          }
@@ -520,7 +520,7 @@ static bool parse_comment(TokenContext &ctx, Chunk &pc)
 
    pc.Str().append(ch);    // second char
 
-   if (ch == '/')
+   if (ch == '/')          // 47
    {
       pc.SetType(CT_COMMENT_CPP);
 
@@ -538,8 +538,8 @@ static bool parse_comment(TokenContext &ctx, Chunk &pc)
                break;
             }
 
-            if (  (ch == '\\')
-               && !is_cs) // backslashes aren't special in comments in C#
+            if (  (ch == '\\') // 92
+               && !is_cs)      // backslashes aren't special in comments in C#
             {
                bs_cnt++;
             }
@@ -579,7 +579,7 @@ static bool parse_comment(TokenContext &ctx, Chunk &pc)
       ctx.restore();
       return(false);
    }
-   else if (ch == '+')
+   else if (ch == '+')                         // 43
    {
       pc.SetType(CT_COMMENT);
       d_level++;
@@ -587,8 +587,8 @@ static bool parse_comment(TokenContext &ctx, Chunk &pc)
       while (  d_level > 0
             && ctx.more())
       {
-         if (  (ctx.peek() == '+')
-            && (ctx.peek(1) == '/'))
+         if (  (ctx.peek() == '+')             // 43
+            && (ctx.peek(1) == '/'))           // 47
          {
             pc.Str().append(ctx.get());  // store the '+'
             pc.Str().append(ctx.get());  // store the '/'
@@ -596,8 +596,8 @@ static bool parse_comment(TokenContext &ctx, Chunk &pc)
             continue;
          }
 
-         if (  (ctx.peek() == '/')
-            && (ctx.peek(1) == '+'))
+         if (  (ctx.peek() == '/')           // 47
+            && (ctx.peek(1) == '+'))         // 43
          {
             pc.Str().append(ctx.get());  // store the '/'
             pc.Str().append(ctx.get());  // store the '+'
@@ -638,8 +638,8 @@ static bool parse_comment(TokenContext &ctx, Chunk &pc)
 
       while (ctx.more())
       {
-         if (  (ctx.peek() == '*')
-            && (ctx.peek(1) == '/'))
+         if (  (ctx.peek() == '*')         // 43
+            && (ctx.peek(1) == '/'))       // 47
          {
             pc.Str().append(ctx.get());  // store the '*'
             pc.Str().append(ctx.get());  // store the '/'
@@ -649,8 +649,8 @@ static bool parse_comment(TokenContext &ctx, Chunk &pc)
             size_t    oldsize = pc.GetStr().size();
 
             // If there is another C comment right after this one, combine them
-            while (  (ctx.peek() == ' ')
-                  || (ctx.peek() == '\t'))
+            while (  (ctx.peek() == ' ')         // 32
+                  || (ctx.peek() == '\t'))       // tab
             {
                pc.Str().append(ctx.get());
             }
@@ -758,8 +758,8 @@ static bool parse_code_placeholder(TokenContext &ctx, Chunk &pc)
       last1 = ctx.get();
       pc.Str().append(last1);
 
-      if (  (last2 == '#')
-         && (last1 == '>'))
+      if (  (last2 == '#')            // 35
+         && (last1 == '>'))           // 62
       {
          pc.SetType(CT_WORD);
          return(true);
@@ -782,11 +782,11 @@ static void parse_suffix(TokenContext &ctx, Chunk &pc, bool forstring = false)
       size_t p2 = ctx.peek(1);
 
       if (  forstring
-         && (  (  (p1 == 'L')
-               && (  (p2 == '"')
-                  || (p2 == '\'')))
-            || (  (p1 == 'S')
-               && (p2 == '"'))))
+         && (  (  (p1 == 'L')          // 76
+               && (  (p2 == '"')       // 34
+                  || (p2 == '\'')))    // 39
+            || (  (p1 == 'S')          // 83
+               && (p2 == '"'))))       // 34
       {
          return;
       }
@@ -814,38 +814,38 @@ static void parse_suffix(TokenContext &ctx, Chunk &pc, bool forstring = false)
 
 static bool is_bin(int ch)
 {
-   return(  (ch == '0')
-         || (ch == '1'));
+   return(  (ch == '0')           // 48
+         || (ch == '1'));         // 49
 }
 
 
 static bool is_bin_(int ch)
 {
    return(  is_bin(ch)
-         || ch == '_'
-         || ch == '\'');
+         || ch == '_'            // 95
+         || ch == '\'');         // 39
 }
 
 
 static bool is_oct(int ch)
 {
-   return(  (ch >= '0')
-         && (ch <= '7'));
+   return(  (ch >= '0')         // 48
+         && (ch <= '7'));       // 55
 }
 
 
 static bool is_oct_(int ch)
 {
    return(  is_oct(ch)
-         || ch == '_'
-         || ch == '\'');
+         || ch == '_'            // 95
+         || ch == '\'');         // 39
 }
 
 
 static bool is_dec(int ch)
 {
-   return(  (ch >= '0')
-         && (ch <= '9'));
+   return(  (ch >= '0')          // 48
+         && (ch <= '9'));        // 57
 }
 
 
@@ -853,27 +853,27 @@ static bool is_dec_(int ch)
 {
    // number separators: JAVA: "_", C++14: "'"
    return(  is_dec(ch)
-         || (ch == '_')
-         || (ch == '\''));
+         || (ch == '_')           // 95
+         || (ch == '\''));        // 39
 }
 
 
 static bool is_hex(int ch)
 {
-   return(  (  (ch >= '0')
-            && (ch <= '9'))
-         || (  (ch >= 'a')
-            && (ch <= 'f'))
-         || (  (ch >= 'A')
-            && (ch <= 'F')));
+   return(  (  (ch >= '0')            // 48
+            && (ch <= '9'))           // 57
+         || (  (ch >= 'a')            // 97
+            && (ch <= 'f'))           // 102
+         || (  (ch >= 'A')            // 65
+            && (ch <= 'F')));         // 70
 }
 
 
 static bool is_hex_(int ch)
 {
    return(  is_hex(ch)
-         || ch == '_'
-         || ch == '\'');
+         || ch == '_'              // 95
+         || ch == '\'');           // 39
 }
 
 
@@ -884,15 +884,15 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
     * (signs handled elsewhere)
     */
    if (  !is_dec(ctx.peek())
-      && (  (ctx.peek() != '.')
+      && (  (ctx.peek() != '.')         // 46
          || !is_dec(ctx.peek(1))))
    {
       return(false);
    }
-   bool is_float = (ctx.peek() == '.');
+   bool is_float = (ctx.peek() == '.');         // 46
 
    if (  is_float
-      && (ctx.peek(1) == '.')) // make sure it isn't '..'
+      && (ctx.peek(1) == '.')) // make sure it isn't '..'  46
    {
       return(false);
    }
@@ -904,7 +904,7 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
     */
    bool did_hex = false;
 
-   if (  ctx.peek() == '0'
+   if (  ctx.peek() == '0'                   // 48
       && !language_is_set(LANG_CS))
    {
       size_t ch;
@@ -926,7 +926,7 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
       ctx.restore();
       LOG_FMT(LGUY, "%s(%d): pc_temp:%s\n", __func__, __LINE__, pc_temp.Text());
 
-      if (ch == 'h') // TODO can we combine this in analyze_character
+      if (ch == 'h') // TODO can we combine this in analyze_character  104
       {
          // we have an MS hexadecimal number with "h" at the end
          LOG_FMT(LGUY, "%s(%d): MS hexadecimal number\n", __func__, __LINE__);
@@ -997,8 +997,8 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
    }
 
    // Check if we stopped on a decimal point & make sure it isn't '..'
-   if (  (ctx.peek() == '.')
-      && (ctx.peek(1) != '.'))
+   if (  (ctx.peek() == '.')                 // 46
+      && (ctx.peek(1) != '.'))               // 46
    {
       // Issue #1265, 5.clamp()
       TokenInfo ss;
@@ -1011,7 +1011,7 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
          ctx.get();
       }
 
-      if (ctx.peek(1) == '(')
+      if (ctx.peek(1) == '(')                // 40
       {
          ctx.restore(ss);
          pc.SetType(CT_NUMBER);
@@ -1047,14 +1047,14 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
     */
    size_t tmp = unc_toupper(ctx.peek());
 
-   if (  (tmp == 'E')
-      || (tmp == 'P'))
+   if (  (tmp == 'E')                 // 69
+      || (tmp == 'P'))                // 80
    {
       is_float = true;
       pc.Str().append(ctx.get());
 
-      if (  (ctx.peek() == '+')
-         || (ctx.peek() == '-'))
+      if (  (ctx.peek() == '+')          // 43
+         || (ctx.peek() == '-'))         // 45
       {
          pc.Str().append(ctx.get());
       }
@@ -1081,15 +1081,15 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
    {
       size_t tmp2 = unc_toupper(ctx.peek());
 
-      if (  (tmp2 == 'I')
-         || (tmp2 == 'F')
-         || (tmp2 == 'D')
-         || (tmp2 == 'M'))
+      if (  (tmp2 == 'I')    // 73
+         || (tmp2 == 'F')    // 70
+         || (tmp2 == 'D')    // 68
+         || (tmp2 == 'M'))   // 77
       {
          is_float = true;
       }
-      else if (  (tmp2 != 'L')
-              && (tmp2 != 'U'))
+      else if (  (tmp2 != 'L')   // 76
+              && (tmp2 != 'U'))  // 85
       {
          break;
       }
@@ -1097,27 +1097,27 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
    }
 
    // skip the Microsoft-specific '8' suffix
-   if ((ctx.peek() == '8'))
+   if ((ctx.peek() == '8'))      // 56
    {
       pc.Str().append(ctx.get());
    }
 
    // skip the Microsoft-specific '16', '32' and '64' suffix
-   if (  (  (ctx.peek() == '1')
-         && (ctx.peek(1) == '6'))
-      || (  (ctx.peek() == '3')
-         && (ctx.peek(1) == '2'))
-      || (  (ctx.peek() == '6')
-         && (ctx.peek(1) == '4')))
+   if (  (  (ctx.peek() == '1')     // 49
+         && (ctx.peek(1) == '6'))   // 54
+      || (  (ctx.peek() == '3')     // 51
+         && (ctx.peek(1) == '2'))   // 50
+      || (  (ctx.peek() == '6')     // 54
+         && (ctx.peek(1) == '4')))  // 52
    {
       pc.Str().append(ctx.get());
       pc.Str().append(ctx.get());
    }
 
    // skip the Microsoft-specific '128' suffix
-   if ((  (ctx.peek() == '1')
-       && (ctx.peek(1) == '2')
-       && (ctx.peek(2) == '8')))
+   if ((  (ctx.peek() == '1')      // 49
+       && (ctx.peek(1) == '2')     // 50
+       && (ctx.peek(2) == '8')))   // 56
    {
       pc.Str().append(ctx.get());
       pc.Str().append(ctx.get());
@@ -1242,19 +1242,19 @@ static cs_string_t parse_cs_string_start(TokenContext &ctx, Chunk &pc)
    cs_string_t stringType = CS_STRING_NONE;
    int         offset     = 0;
 
-   if (ctx.peek(offset) == '$')
+   if (ctx.peek(offset) == '$')                     // 36
    {
       stringType |= CS_STRING_INTERPOLATED;
       ++offset;
    }
 
-   if (ctx.peek(offset) == '@')
+   if (ctx.peek(offset) == '@')                     // 64
    {
       stringType |= CS_STRING_VERBATIM;
       ++offset;
    }
 
-   if (ctx.peek(offset) == '"')
+   if (ctx.peek(offset) == '"')                     // 34
    {
       stringType |= CS_STRING_STRING;
 
@@ -1317,11 +1317,11 @@ static bool parse_cs_string(TokenContext &ctx, Chunk &pc)
          // so we can peek and potentially consume chars for new string openings, before the ch=get() happens later,
          // which is needed for newline processing.
 
-         if (ctx.peek() == '}')
+         if (ctx.peek() == '}')              // 125
          {
             pc.Str().append(ctx.get());
 
-            if (ctx.peek() == '}')
+            if (ctx.peek() == '}')              // 125
             {
                pc.Str().append(ctx.get()); // in interpolated string, `}}` is escape'd `}`
             }
@@ -1397,16 +1397,16 @@ static bool parse_cs_string(TokenContext &ctx, Chunk &pc)
               && !(parseState.top().type & CS_STRING_VERBATIM))
       {
          // catch escaped quote in order to avoid ending string (but also must handle \\ to avoid accidental 'escape' seq of `\\"`)
-         if (  ctx.peek() == '"'
-            || ctx.peek() == '\\')
+         if (  ctx.peek() == '"'                  // 34
+            || ctx.peek() == '\\')                // 92
          {
             pc.Str().append(ctx.get());
          }
       }
-      else if (ch == '"')
+      else if (ch == '"')                           // 34
       {
          if (  (parseState.top().type & CS_STRING_VERBATIM)
-            && (ctx.peek() == '"'))
+            && (ctx.peek() == '"'))                           // 34
          {
             // in verbatim string, `""` is escape'd `"`
             pc.Str().append(ctx.get());
@@ -1424,9 +1424,9 @@ static bool parse_cs_string(TokenContext &ctx, Chunk &pc)
       }
       else if (parseState.top().type & CS_STRING_INTERPOLATED)
       {
-         if (ch == '{')
+         if (ch == '{')                     // 123
          {
-            if (ctx.peek() == '{')
+            if (ctx.peek() == '{')          // 123
             {
                pc.Str().append(ctx.get()); // in interpolated string, `{{` is escape'd `{`
             }
@@ -1456,9 +1456,9 @@ static void parse_verbatim_string(TokenContext &ctx, Chunk &pc)
       size_t ch = ctx.get();
       pc.Str().append(ch);
 
-      if (  (ch == '"')
-         && (ctx.peek() == '"')
-         && (ctx.peek(1) == '"'))
+      if (  (ch == '"')                      // 34
+         && (ctx.peek() == '"')              // 34
+         && (ctx.peek(1) == '"'))            // 34
       {
          pc.Str().append(ctx.get());
          pc.Str().append(ctx.get());
@@ -1524,8 +1524,8 @@ static bool parse_cr_string(TokenContext &ctx, Chunk &pc, size_t q_idx)
 
    while (ctx.more())
    {
-      if (  (ctx.peek() == ')')
-         && (ctx.peek(tag_len + 1) == '"')
+      if (  (ctx.peek() == ')')                 // 41
+         && (ctx.peek(tag_len + 1) == '"')      // 34
          && tag_compare(ctx.data, tag_idx, ctx.c.idx + 1, tag_len))
       {
          cnt = tag_len + 2;   // for the )"
@@ -1577,8 +1577,8 @@ static bool parse_word(TokenContext &ctx, Chunk &pc, bool skipcheck)
       {
          pc.Str().append(ctx.get());
       }
-      else if (  (ch == '\\')
-              && (unc_tolower(ctx.peek(1)) == 'u'))
+      else if (  (ch == '\\')                            // 92
+              && (unc_tolower(ctx.peek(1)) == 'u'))      // 117
       {
          pc.Str().append(ctx.get());
          pc.Str().append(ctx.get());
@@ -1606,7 +1606,7 @@ static bool parse_word(TokenContext &ctx, Chunk &pc, bool skipcheck)
    if (  cpd.in_preproc == CT_PP_DEFINE
       && cpd.preproc_ncnl_count == 1)
    {
-      if (ctx.peek() == '(')
+      if (ctx.peek() == '(')               // 40
       {
          pc.SetType(CT_MACRO_FUNC);
       }
@@ -1671,8 +1671,8 @@ static bool parse_word(TokenContext &ctx, Chunk &pc, bool skipcheck)
                      break;
                   }
 
-                  if (  (ch == '\\')
-                     && !is_cs) // backslashes aren't special in comments in C#
+                  if (  (ch == '\\') // 92
+                     && !is_cs)      // backslashes aren't special in comments in C#
                   {
                      bs_cnt++;
                   }
@@ -1725,7 +1725,7 @@ static size_t parse_attribute_specifier_sequence(TokenContext &ctx)
    {
       auto ch2 = ctx.peek(offset++);
 
-      while (  ch2 == ' '
+      while (  ch2 == ' '       // 32
             || ch2 == '\n'
             || ch2 == '\r'
             || ch2 == '\t')
@@ -1734,19 +1734,19 @@ static size_t parse_attribute_specifier_sequence(TokenContext &ctx)
       }
 
       if (  nested == 0
-         && ch2 != '[')
+         && ch2 != '[')        // 91
       {
          break;
       }
 
-      if (ch1 == '(')
+      if (ch1 == '(')          // 40
       {
          ++parens;
          ch1 = ch2;
          continue;
       }
 
-      if (ch1 == ')')
+      if (ch1 == ')')          // 41
       {
          if (parens == 0)
          {
@@ -1774,7 +1774,7 @@ static size_t parse_attribute_specifier_sequence(TokenContext &ctx)
          continue;
       }
 
-      if (ch1 == '[')
+      if (ch1 == '[')                    // 91
       {
          if (  nested != 0
             && parens == 0)
@@ -1903,7 +1903,7 @@ static bool parse_newline(TokenContext &ctx)
    ctx.save();
 
    // Eat whitespace
-   while (  (ctx.peek() == ' ')
+   while (  (ctx.peek() == ' ')               // 32
          || (ctx.peek() == '\t'))
    {
       ctx.get();
@@ -1932,7 +1932,7 @@ static void parse_pawn_pattern(TokenContext &ctx, Chunk &pc, E_Token tt)
    while (!unc_isspace(ctx.peek()))
    {
       // end the pattern on an escaped newline
-      if (ctx.peek() == '\\')
+      if (ctx.peek() == '\\')             // 92
       {
          size_t ch = ctx.peek(1);
 
@@ -1993,7 +1993,7 @@ static bool parse_macro(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
       size_t pk = ctx.peek(), pk1 = ctx.peek(1);
       bool   nl = (  pk == '\n'
                   || pk == '\r');
-      bool   nl_cont = (  pk == '\\'
+      bool   nl_cont = (  pk == '\\'             // 92
                        && (  pk1 == '\n'
                           || pk1 == '\r'));
 
@@ -2173,8 +2173,8 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
 
          // Fix for issue #1752
          // Ignoring extra spaces after ' \ ' for preproc body continuations
-         if (  last == '\\'
-            && ch == ' ')
+         if (  last == '\\'             // 92
+            && ch == ' ')               // 32
          {
             ctx.get();
             continue;
@@ -2184,7 +2184,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
             || (ch == '\r'))
          {
             // Back off if this is an escaped newline
-            if (last == '\\')
+            if (last == '\\')            // 92
             {
                ctx.restore(ss);
                pc.Str().pop_back();
@@ -2193,9 +2193,9 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
          }
 
          // Quit on a C or C++ comment start           Issue #1966
-         if (  (ch == '/')
-            && (  (ctx.peek(1) == '/')
-               || (ctx.peek(1) == '*')))
+         if (  (ch == '/')               // 47
+            && (  (ctx.peek(1) == '/')   // 47
+               || (ctx.peek(1) == '*'))) // 42
          {
             break;
          }
@@ -2212,7 +2212,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    }
 
    // Detect backslash-newline
-   if (  (ctx.peek() == '\\')
+   if (  (ctx.peek() == '\\')                   // 92
       && parse_bs_newline(ctx, pc))
    {
       return(true);
@@ -2242,7 +2242,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    {
       // check for non-keyword identifiers such as @if @switch, etc
       // Vala also allows numeric identifiers if prefixed with '@'
-      if (  ctx.peek() == '@'
+      if (  ctx.peek() == '@'                          // 64
          && (  CharTable::IsKw1(ctx.peek(1))
             || (  language_is_set(LANG_VALA)
                && CharTable::IsKw2(ctx.peek(1)))))
@@ -2254,9 +2254,9 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
 
    // handle VALA """ strings """
    if (  language_is_set(LANG_VALA)
-      && (ctx.peek() == '"')
-      && (ctx.peek(1) == '"')
-      && (ctx.peek(2) == '"'))
+      && (ctx.peek() == '"')                 // 34
+      && (ctx.peek(1) == '"')                // 34
+      && (ctx.peek(2) == '"'))               // 34
    {
       parse_verbatim_string(ctx, pc);
       return(true);
@@ -2268,27 +2268,27 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    auto ch = ctx.peek();
 
    if (  language_is_set(LANG_C | LANG_CPP)
-      && (  ch == 'u'
-         || ch == 'U'
-         || ch == 'R'
-         || ch == 'L'))
+      && (  ch == 'u'                     // 117
+         || ch == 'U'                     // 85
+         || ch == 'R'                     // 82
+         || ch == 'L'))                   // 76
    {
       auto idx     = size_t{};
       auto is_real = false;
 
-      if (  ch == 'u'
-         && ctx.peek(1) == '8')
+      if (  ch == 'u'                    // 117
+         && ctx.peek(1) == '8')          // 56
       {
          idx = 2;
       }
-      else if (  unc_tolower(ch) == 'u'
-              || ch == 'L')
+      else if (  unc_tolower(ch) == 'u'     // 117
+              || ch == 'L')                 // 76
       {
          idx++;
       }
 
       if (  language_is_set(LANG_C | LANG_CPP)
-         && ctx.peek(idx) == 'R')
+         && ctx.peek(idx) == 'R')             // 82
       {
          idx++;
          is_real = true;
@@ -2297,14 +2297,14 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
 
       if (is_real)
       {
-         if (  quote == '"'
+         if (  quote == '"'                  // 34
             && parse_cr_string(ctx, pc, idx))
          {
             return(true);
          }
       }
-      else if (  (  quote == '"'
-                 || quote == '\'')
+      else if (  (  quote == '"'                  // 34
+                 || quote == '\'')                // 39
               && parse_string(ctx, pc, idx, true))
       {
          return(true);
@@ -2323,18 +2323,18 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
       }
 
       // Check for PAWN strings: \"hi" or !"hi" or !\"hi" or \!"hi"
-      if (  (ctx.peek() == '\\')
-         || (ctx.peek() == '!'))
+      if (  (ctx.peek() == '\\')      // 92
+         || (ctx.peek() == '!'))      // 33
       {
-         if (ctx.peek(1) == '"')
+         if (ctx.peek(1) == '"')      // 32
          {
-            parse_string(ctx, pc, 1, (ctx.peek() == '!'));
+            parse_string(ctx, pc, 1, (ctx.peek() == '!'));  // 33
             return(true);
          }
 
-         if (  (  (ctx.peek(1) == '\\')
-               || (ctx.peek(1) == '!'))
-            && (ctx.peek(2) == '"'))
+         if (  (  (ctx.peek(1) == '\\')           // 92
+               || (ctx.peek(1) == '!'))           // 33
+            && (ctx.peek(2) == '"'))              // 32
          {
             parse_string(ctx, pc, 2, false);
             return(true);
@@ -2343,7 +2343,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
 
       // handle PAWN preprocessor args %0 .. %9
       if (  cpd.in_preproc == CT_PP_DEFINE
-         && (ctx.peek() == '%')
+         && (ctx.peek() == '%')               // 37
          && unc_isdigit(ctx.peek(1)))
       {
          pc.Str().clear();
@@ -2378,13 +2378,13 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
       ch = ctx.peek();
       size_t ch1 = ctx.peek(1);
 
-      if (  (  (  (ch == 'L')
-               || (ch == 'S'))
-            && (  (ch1 == '"')
-               || (ch1 == '\'')))
-         || (ch == '"')
-         || (ch == '\'')
-         || (  (ch == '<')
+      if (  (  (  (ch == 'L')            // 76
+               || (ch == 'S'))           // 83
+            && (  (ch1 == '"')           // 34
+               || (ch1 == '\'')))        // 39
+         || (ch == '"')                  // 34
+         || (ch == '\'')                 // 39
+         || (  (ch == '<')               // 60
             && cpd.in_preproc == CT_PP_INCLUDE))
       {
          parse_string(ctx, pc, unc_isalpha(ch) ? 1 : 0, true);
@@ -2396,7 +2396,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
          return(true);
       }
 
-      if (  (ch == '<')
+      if (  (ch == '<')                    // 60
          && cpd.in_preproc == CT_PP_DEFINE)
       {
          if (Chunk::GetTail()->Is(CT_MACRO))
@@ -2409,7 +2409,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
       /* Inside clang's __has_include() could be "path/to/file.h" or system-style <path/to/file.h> */
       Chunk *tail = Chunk::GetTail();
 
-      if (  (ch == '(')
+      if (  (ch == '(')                 // 40
          && (tail->IsNotNullChunk())
          && (  tail->Is(CT_CNG_HASINC)
             || tail->Is(CT_CNG_HASINCN)))
@@ -2421,11 +2421,11 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
 
    // Check for Vala string templates
    if (  language_is_set(LANG_VALA)
-      && (ctx.peek() == '@'))
+      && (ctx.peek() == '@'))            // 64
    {
       size_t nc = ctx.peek(1);
 
-      if (nc == '"')
+      if (nc == '"')                     // 34
       {
          // literal string
          parse_string(ctx, pc, 1, true);
@@ -2435,13 +2435,13 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
 
    // Check for Objective C literals
    if (  language_is_set(LANG_OC)
-      && (ctx.peek() == '@'))
+      && (ctx.peek() == '@'))            // 64
    {
       size_t nc = ctx.peek(1);
 
-      if (nc == 'R') // Issue #2720
+      if (nc == 'R') // Issue #2720  82
       {
-         if (ctx.peek(2) == '"')
+         if (ctx.peek(2) == '"')          // 34
          {
             if (parse_cr_string(ctx, pc, 2)) // Issue #3027
             {
@@ -2453,8 +2453,8 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
          }
       }
 
-      if (  (nc == '"')
-         || (nc == '\''))
+      if (  (nc == '"')          // 34
+         || (nc == '\''))        // 39
       {
          // literal string
          parse_string(ctx, pc, 1, true);
@@ -2473,9 +2473,9 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
 
    // Check for pawn/ObjectiveC/Java and normal identifiers
    if (  CharTable::IsKw1(ctx.peek())
-      || (  (ctx.peek() == '\\')
-         && (unc_tolower(ctx.peek(1)) == 'u'))
-      || (  (ctx.peek() == '@')
+      || (  (ctx.peek() == '\\')                    // 92
+         && (unc_tolower(ctx.peek(1)) == 'u'))      // 117
+      || (  (ctx.peek() == '@')                     // 64
          && CharTable::IsKw1(ctx.peek(1))))
    {
       parse_word(ctx, pc, false);
@@ -2484,7 +2484,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
 
    // Check for C++11/14/17/20 attribute specifier sequences
    if (  language_is_set(LANG_CPP)
-      && ctx.peek() == '[')
+      && ctx.peek() == '[')                   // 91
    {
       if (  !language_is_set(LANG_OC)
          || (  prev_pc->IsNotNullChunk()
@@ -2732,7 +2732,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
          // Issue #1338
          // Strip trailing whitespace (for CPP comments and PP blocks)
          while (  (chunk.GetStr().size() > 0)
-               && (  (chunk.GetStr()[chunk.GetStr().size() - 1] == ' ')
+               && (  (chunk.GetStr()[chunk.GetStr().size() - 1] == ' ')         // 32
                   || (chunk.GetStr()[chunk.GetStr().size() - 1] == '\t')))
          {
             // If comment contains backslash '\' followed by whitespace chars, keep last one;
