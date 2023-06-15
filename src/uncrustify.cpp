@@ -879,7 +879,7 @@ int main(int argc, char *argv[])
 #else
    if (options::debug_timeout() > 0)
    {
-      alarm(options::debug_timeout());
+      alarm((unsigned int)options::debug_timeout());
    }
 #endif // ifdef WIN32
 
