@@ -3249,6 +3249,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    // category 1
    // this table lists out all combos where a space should NOT be present
    // CT_UNKNOWN is a wildcard.
+   size_t number = 0;
+
    for (auto it : no_space_table)
    {
       if (  (  it.first == CT_UNKNOWN
@@ -3256,23 +3258,30 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          && (  it.second == CT_UNKNOWN
             || it.second == second->GetType()))
       {
-         log_rule("REMOVE from no_space_table");
+         char text[80];
+         sprintf(text, "REMOVE from no_space_table @ %zu.", number);
+         log_rule(text);
          return(IARF_REMOVE);
       }
+      number++;
    }
 
    // =============================================================
    // category 2
    // this table lists out all combos where a space MUST be present
+   number = 0;
+
    for (auto it : add_space_table)
    {
       if (  it.first == first->GetType()
          && it.second == second->GetType())
       {
-         // TODO: if necessary create a new option
-         log_rule("ADD from add_space_table");
+         char text[80];
+         sprintf(text, "ADD from add_space_table @ %zu.", number);
+         log_rule(text);
          return(IARF_ADD);
       }
+      number++;
    }
 
    // Issue #2386
