@@ -26,6 +26,7 @@
 #include "keywords.h"
 #include "prototypes.h"
 #include "space.h"
+#include "unc_tools.h"
 
 #ifdef WIN32
 #include <algorithm>                   // to get max
@@ -834,6 +835,8 @@ void newline_del_between(Chunk *start, Chunk *end)
    do
    {
       Chunk *next = pc->GetNext();
+      //LOG_FMT(LNEWLINE, "%s(%d): 123456789 next->Text() is '%s', type is %s, orig line is %zu, orig col is %zu\n",
+      //        __func__, __LINE__, next->Text(), get_token_name(next->GetType()), next->GetOrigLine(), next->GetOrigCol());
 
       if (pc->IsNewline())
       {
@@ -855,7 +858,18 @@ void newline_del_between(Chunk *start, Chunk *end)
 
                if (prev->IsNotNullChunk())
                {
-                  align_to_column(next, prev->GetColumn() + space_col_align(prev, next));
+                  size_t temp = space_col_align(prev, next);
+                  //align_to_column(next, prev->GetColumn() + space_col_align(prev, next));
+                  align_to_column(next, prev->GetColumn() + temp);
+                  //LOG_FMT(LNEWLINE, "%s(%d): AAAA next->Text() is '%s', type is %s, orig line is %zu, orig col is %zu\n",
+                  //        __func__, __LINE__, next->Text(), get_token_name(next->GetType()), next->GetOrigLine(), next->GetOrigCol());
+                  //LOG_FMT(LNEWLINE, "%s(%d): start->Text() is '%s', orig line is %zu, orig col is %zu\n",
+                  //        __func__, __LINE__, start->Text(), start->GetOrigLine(), start->GetOrigCol());
+                  //LOG_FMT(LNEWLINE, "%s(%d): and end->Text() is '%s', orig line is %zu, orig col is %zu: preproc=%c/%c\n",
+                  //        __func__, __LINE__, end->Text(), end->GetOrigLine(), end->GetOrigCol(),
+                  //        start->TestFlags(PCF_IN_PREPROC) ? 'y' : 'n',
+                  //        end->TestFlags(PCF_IN_PREPROC) ? 'y' : 'n');
+                  dump_step(dump_file_name, "del 1");
                }
             }
          }
@@ -1758,6 +1772,9 @@ static void newlines_enum(Chunk *start)
       // look for 'identifier'/ 'type'
       Chunk *pcType = pcClass->GetNextNcNnl();
 
+      //LOG_FMT(LNEWLINE, "%s(%d): BBBB pcType->Text() is '%s', type is %s, orig line is %zu, orig col is %zu\n",
+      //        __func__, __LINE__, pcType->Text(), get_token_name(pcType->GetType()), pcType->GetOrigLine(), pcType->GetOrigCol());
+
       if (pcType->Is(CT_TYPE))
       {
          log_rule_B("nl_enum_class_identifier");
@@ -1765,7 +1782,7 @@ static void newlines_enum(Chunk *start)
          // look for ':'
          Chunk *pcColon = pcType->GetNextNcNnl();
 
-         if (pcColon->Is(CT_BIT_COLON))
+         if (pcColon->Is(CT_ENUM_COLON))                       // Issue #4040
          {
             log_rule_B("nl_enum_identifier_colon");
             newline_iarf_pair(pcType, pcColon, options::nl_enum_identifier_colon());
@@ -3917,6 +3934,7 @@ void newlines_cleanup_angles()
 void newlines_cleanup_braces(bool first)
 {
    LOG_FUNC_ENTRY();
+   dump_step(dump_file_name, "new 2");
 
    // Get the first token that's not an empty line:
    Chunk *pc = Chunk::GetHead();

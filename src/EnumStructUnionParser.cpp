@@ -1653,7 +1653,12 @@ void EnumStructUnionParser::mark_enum_integral_type(Chunk *colon)
 {
    LOG_FUNC_ENTRY();
 
-   colon->SetType(CT_BIT_COLON);
+   // Issue #4040
+   LOG_FMT(LFTOR,
+           "%s(%d): orig line is %zu, orig col is %zu\n",
+           __unqualified_func__, __LINE__,
+           colon->GetOrigLine(), colon->GetOrigCol());
+   colon->SetType(CT_ENUM_COLON);
    colon->SetParentType(m_start->GetType());
 
    auto *body_start = get_body_start();
@@ -2024,15 +2029,24 @@ void EnumStructUnionParser::parse(Chunk *pc)
 
    while (chunk_is_between(next, m_start, m_end))
    {
+      //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+      //        __unqualified_func__, __LINE__,
+      //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
       /**
        * skip attributes
        */
       next = skip_attribute(next);
+      //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+      //        __unqualified_func__, __LINE__,
+      //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
 
       /**
        * skip declspec
        */
       next = skip_declspec(next);
+      //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+      //        __unqualified_func__, __LINE__,
+      //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
 
       /**
        * skip any right-hand side assignments
@@ -2041,65 +2055,151 @@ void EnumStructUnionParser::parse(Chunk *pc)
       {
          next = skip_to_expression_end(next);
       }
+      //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+      //        __unqualified_func__, __LINE__,
+      //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
 
       if (  next->Is(CT_ANGLE_OPEN)
          && !template_detected())
       {
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
          next = parse_angles(next);
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
       }
       else if (  next->Is(CT_BRACE_OPEN)
               && !body_detected())
       {
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
          next = parse_braces(next);
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
       }
       else if (next->IsColon())
       {
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
          parse_colon(next);
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
       }
       else if (next->Is(CT_COMMA))
       {
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
          record_top_level_comma(next);
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
       }
       else if (next->Is(CT_DC_MEMBER))
       {
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
          next = parse_double_colon(next);
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
       }
       else if (  next->IsParenOpen()
               && (  language_is_set(LANG_D)
                  || (  language_is_set(LANG_PAWN)
                     && m_start->IsEnum())))
       {
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
          set_paren_parent(next, m_start->GetType());
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
 
          if (  prev->Is(CT_WORD)
             && language_is_set(LANG_D))
          {
+            //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+            //        __unqualified_func__, __LINE__,
+            //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
             mark_template(next);
+            //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+            //        __unqualified_func__, __LINE__,
+            //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
          }
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
          next = next->GetClosingParen(E_Scope::PREPROC);
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
       }
       else if (  next->Is(CT_QUALIFIER)
               && language_is_set(LANG_JAVA)
               && std::strncmp(next->GetStr().c_str(), "implements", 10) == 0)
       {
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
          mark_base_classes(next);
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
       }
       else if (next->Is(CT_QUESTION))
       {
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
          record_question_operator(next);
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
       }
       else if (  next->Is(CT_WHERE)
               && !where_clause_detected())
       {
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
          mark_where_clause(next);
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
       }
+      //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+      //        __unqualified_func__, __LINE__,
+      //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
       prev = next;
+
+      //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+      //        __unqualified_func__, __LINE__,
+      //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
 
       do
       {
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
          next = next->GetNextNcNnl();
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
       } while (  next->IsNotNullChunk()
               && next->GetLevel() > m_start->GetLevel());
+
+      //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+      //        __unqualified_func__, __LINE__,
+      //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
    }
    /**
     * identify the type and/or variable(s)
@@ -2118,6 +2218,9 @@ void EnumStructUnionParser::parse(Chunk *pc)
    {
       prev->SetParentType(m_start->GetType());
    }
+   //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+   //        __unqualified_func__, __LINE__,
+   //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
 } // EnumStructUnionParser::parse
 
 
@@ -2316,6 +2419,10 @@ void EnumStructUnionParser::parse_colon(Chunk *colon)
 {
    LOG_FUNC_ENTRY();
 
+   //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+   //        __unqualified_func__, __LINE__,
+   //        colon->GetOrigLine(), colon->GetOrigCol(), get_token_name(colon->GetType()));
+
    if (m_start->Is(CT_UNION))
    {
       /**
@@ -2355,8 +2462,17 @@ void EnumStructUnionParser::parse_colon(Chunk *colon)
       }
       else if (m_start->IsEnum())
       {
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        colon->GetOrigLine(), colon->GetOrigCol(), get_token_name(colon->GetType()));
          set_enum_base_start(colon);
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        colon->GetOrigLine(), colon->GetOrigCol(), get_token_name(colon->GetType()));
          mark_enum_integral_type(colon);
+         //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+         //        __unqualified_func__, __LINE__,
+         //        colon->GetOrigLine(), colon->GetOrigCol(), get_token_name(colon->GetType()));
       }
    }
 } // EnumStructUnionParser::parse_colon
@@ -2440,6 +2556,9 @@ Chunk *EnumStructUnionParser::refine_end_chunk(Chunk *pc)
        * enum_comma.h for examples of offenders
        */
       auto *next = pc->GetNextNcNnl();
+      //LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
+      //        __unqualified_func__, __LINE__,
+      //        next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
 
       while (true)
       {

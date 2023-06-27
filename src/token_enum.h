@@ -270,6 +270,7 @@ enum E_Token
    CT_TRAILING_RET,       // '->' in 'auto fname(...) -> type;'
                           // '->' in 'auto fname(...) const -> type;'
    CT_BIT_COLON,          // a ':' in a variable declaration
+   CT_ENUM_COLON,         // a ':' in a enum definition
 
    CT_OC_DYNAMIC,
    CT_OC_END,           // ObjC: @end
