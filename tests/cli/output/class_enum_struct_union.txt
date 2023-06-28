@@ -518,9 +518,9 @@
 # 102>            NEWLINE|               NONE|     PARENT_NOT_SET[ 44/ 44/  1/  0][0/0/0][                  0][1-0]
 # 103>               ENUM|               NONE|     PARENT_NOT_SET[  1/  1/  5/  0][0/0/0][             e 0000][0-0] enum
 # 103>               TYPE|               ENUM|     PARENT_NOT_SET[  6/  6/  8/  1][0/0/0][            80 0000][0-0]      e1
-# 103>          BIT_COLON|               ENUM|     PARENT_NOT_SET[  9/  9/ 10/  1][0/0/0][        2 0000 0000][0-0]         :
-# 103>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 11/ 11/ 15/  1][0/0/0][             e 0000][0-0]           long
-# 103>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 16/ 16/ 20/  1][0/0/0][                  0][0-0]                long
+# 103>         ENUM_COLON|               ENUM|     PARENT_NOT_SET[  9/  9/ 10/  1][0/0/0][        2 0000 0000][0-0]         :
+# 103>               TYPE|         ENUM_COLON|     PARENT_NOT_SET[ 11/ 11/ 15/  1][0/0/0][             e 0000][0-0]           long
+# 103>               TYPE|         ENUM_COLON|     PARENT_NOT_SET[ 16/ 16/ 20/  1][0/0/0][                  0][0-0]                long
 # 103>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 21/ 21/ 22/  1][0/0/0][        2 4000 0000][0-0]                     {
 # 103>               WORD|               NONE|     PARENT_NOT_SET[ 23/ 23/ 25/  1][1/1/0][          400c 0004][0-0]                       a1
 # 103>              COMMA|               NONE|     PARENT_NOT_SET[ 25/ 25/ 26/  0][1/1/0][        2 4000 0004][0-0]                         ,
@@ -539,9 +539,9 @@
 # 105>            NEWLINE|               NONE|     PARENT_NOT_SET[ 37/ 37/  1/  0][0/0/0][                  0][1-0]
 # 106>               ENUM|               NONE|     PARENT_NOT_SET[  1/  1/  5/  0][0/0/0][             e 0000][0-0] enum
 # 106>               TYPE|               ENUM|     PARENT_NOT_SET[  6/  6/  8/  1][0/0/0][                  0][0-0]      e2
-# 106>          BIT_COLON|               ENUM|     PARENT_NOT_SET[  9/  9/ 10/  1][0/0/0][        2 0000 0000][0-0]         :
-# 106>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 11/ 11/ 19/  1][0/0/0][             e 0000][0-0]           unsigned
-# 106>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 20/ 20/ 23/  1][0/0/0][                  0][0-0]                    int
+# 106>         ENUM_COLON|               ENUM|     PARENT_NOT_SET[  9/  9/ 10/  1][0/0/0][        2 0000 0000][0-0]         :
+# 106>               TYPE|         ENUM_COLON|     PARENT_NOT_SET[ 11/ 11/ 19/  1][0/0/0][             e 0000][0-0]           unsigned
+# 106>               TYPE|         ENUM_COLON|     PARENT_NOT_SET[ 20/ 20/ 23/  1][0/0/0][                  0][0-0]                    int
 # 106>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 24/ 24/ 25/  1][0/0/0][        2 4000 0000][0-0]                        {
 # 106>               WORD|               NONE|     PARENT_NOT_SET[ 26/ 26/ 28/  1][1/1/0][          400c 0004][0-0]                          a2
 # 106>              COMMA|               NONE|     PARENT_NOT_SET[ 28/ 28/ 29/  0][1/1/0][        2 4000 0004][0-0]                            ,
@@ -555,8 +555,8 @@
 # 108>            NEWLINE|               NONE|     PARENT_NOT_SET[ 29/ 29/  1/  0][0/0/0][                  0][1-0]
 # 109>               ENUM|               NONE|     PARENT_NOT_SET[  1/  1/  5/  0][0/0/0][     1000 000e 0000][0-0] enum
 # 109>               TYPE|               ENUM|     PARENT_NOT_SET[  6/  6/  8/  1][0/0/0][     1000 0000 0000][0-0]      e3
-# 109>          BIT_COLON|               ENUM|     PARENT_NOT_SET[  9/  9/ 10/  1][0/0/0][        2 0000 0000][0-0]         :
-# 109>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 11/ 11/ 16/  1][0/0/0][             c 0000][0-0]           short
+# 109>         ENUM_COLON|               ENUM|     PARENT_NOT_SET[  9/  9/ 10/  1][0/0/0][        2 0000 0000][0-0]         :
+# 109>               TYPE|         ENUM_COLON|     PARENT_NOT_SET[ 11/ 11/ 16/  1][0/0/0][             c 0000][0-0]           short
 # 109>          SEMICOLON|               ENUM|     PARENT_NOT_SET[ 16/ 16/ 17/  0][0/0/0][        2 0000 0000][0-0]                ;
 # 109>            NEWLINE|               NONE|     PARENT_NOT_SET[ 17/ 17/  1/  0][0/0/0][                  0][2-0]
 # 111>        COMMENT_CPP|      COMMENT_WHOLE|     PARENT_NOT_SET[  1/  1/ 20/  0][0/0/0][                  0][0-0] // enum type x, ...
@@ -573,9 +573,9 @@
 # 115>               ENUM|               NONE|     PARENT_NOT_SET[  1/  1/  5/  0][0/0/0][             e 0000][0-0] enum
 # 115>         ENUM_CLASS|               NONE|     PARENT_NOT_SET[  6/  6/ 11/  1][0/0/0][             2 0000][0-0]      class
 # 115>               TYPE|               ENUM|     PARENT_NOT_SET[ 12/ 12/ 14/  1][0/0/0][            80 0000][0-0]            e4
-# 115>          BIT_COLON|               ENUM|     PARENT_NOT_SET[ 15/ 15/ 16/  1][0/0/0][        2 0000 0000][0-0]               :
-# 115>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 17/ 17/ 21/  1][0/0/0][             e 0000][0-0]                 long
-# 115>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 22/ 22/ 26/  1][0/0/0][                  0][0-0]                      long
+# 115>         ENUM_COLON|               ENUM|     PARENT_NOT_SET[ 15/ 15/ 16/  1][0/0/0][        2 0000 0000][0-0]               :
+# 115>               TYPE|         ENUM_COLON|     PARENT_NOT_SET[ 17/ 17/ 21/  1][0/0/0][             e 0000][0-0]                 long
+# 115>               TYPE|         ENUM_COLON|     PARENT_NOT_SET[ 22/ 22/ 26/  1][0/0/0][                  0][0-0]                      long
 # 115>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 27/ 27/ 28/  1][0/0/0][        2 4000 0000][0-0]                           {
 # 115>               WORD|               NONE|     PARENT_NOT_SET[ 29/ 29/ 31/  1][1/1/0][          400c 0004][0-0]                             a4
 # 115>              COMMA|               NONE|     PARENT_NOT_SET[ 31/ 31/ 32/  0][1/1/0][        2 4000 0004][0-0]                               ,
@@ -597,9 +597,9 @@
 # 118>               ENUM|               NONE|     PARENT_NOT_SET[  1/  1/  5/  0][0/0/0][             e 0000][0-0] enum
 # 118>         ENUM_CLASS|               NONE|     PARENT_NOT_SET[  6/  6/ 11/  1][0/0/0][             2 0000][0-0]      class
 # 118>               TYPE|               ENUM|     PARENT_NOT_SET[ 12/ 12/ 14/  1][0/0/0][                  0][0-0]            e5
-# 118>          BIT_COLON|               ENUM|     PARENT_NOT_SET[ 15/ 15/ 16/  1][0/0/0][        2 0000 0000][0-0]               :
-# 118>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 17/ 17/ 25/  1][0/0/0][             e 0000][0-0]                 unsigned
-# 118>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 26/ 26/ 29/  1][0/0/0][                  0][0-0]                          int
+# 118>         ENUM_COLON|               ENUM|     PARENT_NOT_SET[ 15/ 15/ 16/  1][0/0/0][        2 0000 0000][0-0]               :
+# 118>               TYPE|         ENUM_COLON|     PARENT_NOT_SET[ 17/ 17/ 25/  1][0/0/0][             e 0000][0-0]                 unsigned
+# 118>               TYPE|         ENUM_COLON|     PARENT_NOT_SET[ 26/ 26/ 29/  1][0/0/0][                  0][0-0]                          int
 # 118>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 30/ 30/ 31/  1][0/0/0][        2 4000 0000][0-0]                              {
 # 118>               WORD|               NONE|     PARENT_NOT_SET[ 32/ 32/ 34/  1][1/1/0][          400c 0004][0-0]                                a5
 # 118>              COMMA|               NONE|     PARENT_NOT_SET[ 34/ 34/ 35/  0][1/1/0][        2 4000 0004][0-0]                                  ,
@@ -614,8 +614,8 @@
 # 121>               ENUM|               NONE|     PARENT_NOT_SET[  1/  1/  5/  0][0/0/0][     1000 000e 0000][0-0] enum
 # 121>         ENUM_CLASS|               NONE|     PARENT_NOT_SET[  6/  6/ 11/  1][0/0/0][     1000 0002 0000][0-0]      class
 # 121>               TYPE|               ENUM|     PARENT_NOT_SET[ 12/ 12/ 14/  1][0/0/0][     1000 0000 0000][0-0]            e6
-# 121>          BIT_COLON|               ENUM|     PARENT_NOT_SET[ 15/ 15/ 16/  1][0/0/0][        2 0000 0000][0-0]               :
-# 121>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 17/ 17/ 22/  1][0/0/0][             c 0000][0-0]                 short
+# 121>         ENUM_COLON|               ENUM|     PARENT_NOT_SET[ 15/ 15/ 16/  1][0/0/0][        2 0000 0000][0-0]               :
+# 121>               TYPE|         ENUM_COLON|     PARENT_NOT_SET[ 17/ 17/ 22/  1][0/0/0][             c 0000][0-0]                 short
 # 121>          SEMICOLON|               ENUM|     PARENT_NOT_SET[ 22/ 22/ 23/  0][0/0/0][        2 0000 0000][0-0]                      ;
 # 121>            NEWLINE|               NONE|     PARENT_NOT_SET[ 23/ 23/  1/  0][0/0/0][                  0][2-0]
 # 123>        COMMENT_CPP|      COMMENT_WHOLE|     PARENT_NOT_SET[  1/  1/ 19/  0][0/0/0][                  0][0-0] // enum class type
@@ -628,9 +628,9 @@
 # 126>        COMMENT_CPP|      COMMENT_WHOLE|     PARENT_NOT_SET[  1/  1/ 39/  0][0/0/0][                  0][0-0] // enum : integral_type { ... } x, ...
 # 126>            NEWLINE|               NONE|     PARENT_NOT_SET[ 39/ 39/  1/  0][0/0/0][                  0][1-0]
 # 127>               ENUM|               NONE|     PARENT_NOT_SET[  1/  1/  5/  0][0/0/0][             c 0000][0-0] enum
-# 127>          BIT_COLON|               ENUM|     PARENT_NOT_SET[  6/  6/  7/  1][0/0/0][        2 0000 0000][0-0]      :
-# 127>               TYPE|          BIT_COLON|     PARENT_NOT_SET[  8/  8/ 12/  1][0/0/0][             e 0000][0-0]        long
-# 127>               TYPE|          BIT_COLON|     PARENT_NOT_SET[ 13/ 13/ 17/  1][0/0/0][                  0][0-0]             long
+# 127>         ENUM_COLON|               ENUM|     PARENT_NOT_SET[  6/  6/  7/  1][0/0/0][        2 0000 0000][0-0]      :
+# 127>               TYPE|         ENUM_COLON|     PARENT_NOT_SET[  8/  8/ 12/  1][0/0/0][             e 0000][0-0]        long
+# 127>               TYPE|         ENUM_COLON|     PARENT_NOT_SET[ 13/ 13/ 17/  1][0/0/0][                  0][0-0]             long
 # 127>         BRACE_OPEN|               ENUM|     PARENT_NOT_SET[ 18/ 18/ 19/  1][0/0/0][        2 4000 0000][0-0]                  {
 # 127>               WORD|               NONE|     PARENT_NOT_SET[ 20/ 20/ 22/  1][1/1/0][          400c 0004][0-0]                    a8
 # 127>              COMMA|               NONE|     PARENT_NOT_SET[ 22/ 22/ 23/  0][1/1/0][        2 4000 0004][0-0]                      ,

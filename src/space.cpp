@@ -1131,26 +1131,18 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_assign());
    }
 
-   if (first->Is(CT_BIT_COLON))
+   if (first->Is(CT_ENUM_COLON))                      // Issue #4040
    {
-      if (  first->TestFlags(PCF_IN_ENUM)
-         || first->GetParentType() == CT_ENUM)
-      {
-         // Add or remove space around assignment ':' in enum.
-         log_rule("sp_enum_colon");
-         return(options::sp_enum_colon());
-      }
+      // Add or remove space around assignment ':' in enum.
+      log_rule("sp_enum_colon");
+      return(options::sp_enum_colon());
    }
 
-   if (second->Is(CT_BIT_COLON))
+   if (second->Is(CT_ENUM_COLON))                    // Issue #4040
    {
-      if (  second->TestFlags(PCF_IN_ENUM)
-         || second->GetParentType() == CT_ENUM)
-      {
-         // Add or remove space around assignment ':' in enum.
-         log_rule("sp_enum_colon");
-         return(options::sp_enum_colon());
-      }
+      // Add or remove space around assignment ':' in enum.
+      log_rule("sp_enum_colon");
+      return(options::sp_enum_colon());
    }
 
    if (  first->Is(CT_OC_AVAILABLE_VALUE)

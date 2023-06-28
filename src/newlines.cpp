@@ -26,6 +26,7 @@
 #include "keywords.h"
 #include "prototypes.h"
 #include "space.h"
+#include "unc_tools.h"
 
 #ifdef WIN32
 #include <algorithm>                   // to get max
@@ -855,7 +856,9 @@ void newline_del_between(Chunk *start, Chunk *end)
 
                if (prev->IsNotNullChunk())
                {
-                  align_to_column(next, prev->GetColumn() + space_col_align(prev, next));
+                  size_t temp = space_col_align(prev, next);
+                  align_to_column(next, prev->GetColumn() + temp);
+                  dump_step(dump_file_name, "del 1");
                }
             }
          }
@@ -1765,7 +1768,7 @@ static void newlines_enum(Chunk *start)
          // look for ':'
          Chunk *pcColon = pcType->GetNextNcNnl();
 
-         if (pcColon->Is(CT_BIT_COLON))
+         if (pcColon->Is(CT_ENUM_COLON))                       // Issue #4040
          {
             log_rule_B("nl_enum_identifier_colon");
             newline_iarf_pair(pcType, pcColon, options::nl_enum_identifier_colon());
@@ -3917,6 +3920,7 @@ void newlines_cleanup_angles()
 void newlines_cleanup_braces(bool first)
 {
    LOG_FUNC_ENTRY();
+   dump_step(dump_file_name, "new 2");
 
    // Get the first token that's not an empty line:
    Chunk *pc = Chunk::GetHead();

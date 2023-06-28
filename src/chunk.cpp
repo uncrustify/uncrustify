@@ -840,6 +840,7 @@ bool Chunk::IsColon() const
          || Is(CT_CONSTR_COLON)
          || Is(CT_CS_SQ_COLON)
          || Is(CT_D_ARRAY_COLON)
+         || Is(CT_ENUM_COLON)
          || Is(CT_FOR_COLON)
          || Is(CT_LABEL_COLON)
          || Is(CT_OC_COLON)
