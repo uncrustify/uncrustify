@@ -2135,6 +2135,7 @@ void fix_symbols()
                   )
                )
          && pc->GetParentType() != CT_BIT_COLON
+         && pc->GetParentType() != CT_ENUM_COLON      // Issue #4040
          && pc->GetParentType() != CT_ENUM
          && !pc->TestFlags(PCF_IN_CLASS_BASE)
          && !pc->TestFlags(PCF_IN_ENUM))

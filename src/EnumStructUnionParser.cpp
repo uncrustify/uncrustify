@@ -1653,7 +1653,12 @@ void EnumStructUnionParser::mark_enum_integral_type(Chunk *colon)
 {
    LOG_FUNC_ENTRY();
 
-   colon->SetType(CT_BIT_COLON);
+   // Issue #4040
+   LOG_FMT(LFTOR,
+           "%s(%d): orig line is %zu, orig col is %zu\n",
+           __unqualified_func__, __LINE__,
+           colon->GetOrigLine(), colon->GetOrigCol());
+   colon->SetType(CT_ENUM_COLON);
    colon->SetParentType(m_start->GetType());
 
    auto *body_start = get_body_start();

@@ -1325,6 +1325,14 @@ sp_after_noexcept;
 extern Option<iarf_e>
 sp_vala_after_translation;
 
+// Add or remove space before a bit colon ':'.
+extern Option<iarf_e>
+sp_before_bit_colon;
+
+// Add or remove space after a bit colon ':'.
+extern Option<iarf_e>
+sp_after_bit_colon;
+
 // If true, a <TAB> is inserted after #define.
 extern Option<bool>
 force_tab_after_define;
