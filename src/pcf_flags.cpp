@@ -68,11 +68,7 @@ std::string pcf_flags_str(PcfFlags flags)
    char buffer[64];
 
    // Generate hex representation first
-#ifdef WIN32
-   snprintf(buffer, 63, "[");
-#else // not WIN32
    snprintf(buffer, 63, "[0x%llx:", (long long unsigned int)(flags));
-#endif // ifdef WIN32
 
    // Add human-readable names
    auto out   = std::string{ buffer };
@@ -105,5 +101,5 @@ void log_pcf_flags(log_sev_t sev, PcfFlags flags)
    {
       return;
    }
-   log_fmt(sev, "%s\n", pcf_flags_str(flags).c_str());
+   log_fmt(sev, "   chunk flags: %s\n", pcf_flags_str(flags).c_str());
 }

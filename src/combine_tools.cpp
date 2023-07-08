@@ -312,18 +312,16 @@ bool can_be_full_param(Chunk *start, Chunk *end)
 bool chunk_ends_type(Chunk *start)
 {
    LOG_FUNC_ENTRY();
+
+   if (start->TestFlags(PCF_IN_FCN_CTOR))
+   {
+      return(false);
+   }
    Chunk  *pc       = start;
    bool   ret       = false;
    size_t cnt       = 0;
    bool   last_expr = false;
    bool   last_lval = false;
-
-   bool   a = pc->TestFlags(PCF_IN_FCN_CTOR);
-
-   if (a)
-   {
-      return(false);
-   }
 
    for ( ; pc->IsNotNullChunk(); pc = pc->GetPrevNcNnlNi()) // Issue #2279
    {

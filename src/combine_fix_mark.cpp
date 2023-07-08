@@ -1153,7 +1153,7 @@ void mark_function(Chunk *pc)
    {
       return;
    }
-   LOG_FMT(LFCN, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s'\n",
+   LOG_FMT(LFCN, "%s(%d): orig line is %zu, orig col is %zu, text '%s'\n",
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
    Chunk *prev = pc->GetPrevNcNnlNi();   // Issue #2279
    Chunk *next = pc->GetNextNppOrNcNnl();
@@ -1170,7 +1170,7 @@ void mark_function(Chunk *pc)
    // Find out what is before the operator
    if (pc->GetParentType() == CT_OPERATOR)
    {
-      LOG_FMT(LFCN, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s",
+      LOG_FMT(LFCN, "%s(%d): orig line %zu, orig col %zu, text '%s",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
       log_pcf_flags(LGUY, pc->GetFlags());
       Chunk *pc_op = pc->GetPrevType(CT_OPERATOR, pc->GetLevel());
@@ -1178,7 +1178,7 @@ void mark_function(Chunk *pc)
       if (  pc_op->IsNotNullChunk()
          && pc_op->TestFlags(PCF_EXPR_START))
       {
-         LOG_FMT(LFCN, "%s(%d): (4) SET TO CT_FUNC_CALL: orig line is %zu, orig col is %zu, Text() '%s'\n",
+         LOG_FMT(LFCN, "%s(%d): (4) SET TO CT_FUNC_CALL: orig line %zu, orig col %zu, text '%s'\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
          pc->SetType(CT_FUNC_CALL);
       }
@@ -1269,10 +1269,10 @@ void mark_function(Chunk *pc)
          return;
       }
    }
-   LOG_FMT(LFCN, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s, parent type is %s\n",
+   LOG_FMT(LFCN, "%s(%d): orig line %zu, orig col %zu, text '%s', type %s, parent type %s\n",
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(),
            get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
-   LOG_FMT(LFCN, "   level is %zu, brace level is %zu, next->Text() '%s', next->GetType() is %s, next->GetLevel() is %zu\n",
+   LOG_FMT(LFCN, "   level %zu, brace level %zu, next->text '%s', next->type %s, next->level is %zu\n",
            pc->GetLevel(), pc->GetBraceLevel(),
            next->Text(), get_token_name(next->GetType()), next->GetLevel());
 
@@ -2129,7 +2129,7 @@ void mark_function(Chunk *pc)
 bool mark_function_type(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LFTYPE, "%s(%d): type is %s, Text() '%s' @ orig line is %zu, orig col is %zu\n",
+   LOG_FMT(LFTYPE, "%s(%d): type %s, text '%s' @ orig line %zu, orig col %zu\n",
            __func__, __LINE__, get_token_name(pc->GetType()), pc->Text(),
            pc->GetOrigLine(), pc->GetOrigCol());
 
@@ -2160,7 +2160,7 @@ bool mark_function_type(Chunk *pc)
       }
       else
       {
-         LOG_FMT(LFTYPE, "%s(%d): not a word: Text() '%s', type is %s, @ orig line is %zu:, orig col is %zu\n",
+         LOG_FMT(LFTYPE, "%s(%d): not a word: text '%s', type %s, @ orig line %zu:, orig col %zu\n",
                  __func__, __LINE__, varcnk->Text(), get_token_name(varcnk->GetType()),
                  varcnk->GetOrigLine(), varcnk->GetOrigCol());
          goto nogo_exit;
@@ -2204,14 +2204,21 @@ bool mark_function_type(Chunk *pc)
    while ((tmp = tmp->GetPrevNcNnlNi())->IsNotNullChunk()) // Issue #2279
    {
       tmp = tmp->GetPrevNbsb();
-
       LOG_FMT(LFTYPE, " -- type is %s, %s on orig line %zu, orig col is %zu",
               get_token_name(tmp->GetType()), tmp->Text(),
               tmp->GetOrigLine(), tmp->GetOrigCol());
 
-      if (  tmp->IsStar()
-         || tmp->Is(CT_PTR_TYPE)
-         || tmp->Is(CT_CARET))
+      if (tmp->IsSemicolon())
+      {
+         // Stop if we found previous statement. Make 'tmp' null to make sure
+         // chunk_ends_type() does not start from the previous statement
+         LOG_FMT(LFTYPE, " -- found semicolon (break)\n");
+         tmp = Chunk::NullChunkPtr;
+         break;
+      }
+      else if (  tmp->IsStar()
+              || tmp->Is(CT_PTR_TYPE)
+              || tmp->Is(CT_CARET))
       {
          star_count++;
          ptrcnk = tmp;
@@ -2288,6 +2295,7 @@ bool mark_function_type(Chunk *pc)
    apc->SetType(CT_FPAREN_CLOSE);
    apc->SetParentType(pt);
    fix_fcn_def_params(apo);
+   flag_parens(apo, PCF_IN_FCN_DEF, CT_NONE, pt, false);
 
    if (aft->IsSemicolon())
    {
@@ -2339,7 +2347,7 @@ nogo_exit:
    {
       LOG_FMT(LFTYPE, "%s(%d): setting FUNC_CALL on orig line is %zu, orig col is %zu\n",
               __func__, __LINE__, tmp->GetOrigLine(), tmp->GetOrigCol());
-      flag_parens(tmp, PCF_NONE, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
+      flag_parens(tmp, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
    }
    return(false);
 } // mark_function_type

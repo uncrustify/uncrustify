@@ -678,6 +678,17 @@ def main(args):
                 ):
             return_flag = False
 
+        if not check_uncrustify_output(
+                uncr_bin,
+                parsed_args,
+                args_arr=['-f', s_path_join(script_dir, 'input/in_fcn_def.cpp'),
+                          '-p', s_path_join(test_dir, 'results/in_fcn_def.txt')],
+                gen_expected_path=s_path_join(script_dir, 'output/in_fcn_def.txt'),
+                gen_result_path=s_path_join(test_dir, 'results/in_fcn_def.txt'),
+                gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
+                ):
+            return_flag = False
+
     if os_name == 'nt' or check_uncrustify_output(
             uncr_bin,
             parsed_args,
