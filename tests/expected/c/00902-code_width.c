@@ -31,10 +31,8 @@ typedef
     xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     yyyyyyyyyyyyyyyyyyyyyy;
 
-typedef some_return_value (*some_function_type)(another_type
-                                                parameter1,
-                                                another_type
-                                                parameter2);
+typedef some_return_value (*some_function_type)(
+    another_type parameter1, another_type parameter2);
 
 typedef struct
     xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

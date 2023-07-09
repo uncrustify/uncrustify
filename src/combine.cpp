@@ -1134,7 +1134,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       && !is_oc_block(pc)
       && pc->GetParentType() != CT_OC_MSG_DECL
       && pc->GetParentType() != CT_OC_MSG_SPEC
-      && pc->IsString(")")
+      && (  pc->IsString(")")
+         || pc->Is(CT_FUNC_TYPE))
       && next->IsString("("))
    {
       if (language_is_set(LANG_D))
@@ -1997,7 +1998,7 @@ void fix_symbols()
          pc = pc->GetNextNcNnl();
          continue;
       }
-      LOG_FMT(LFCNR, "%s(%d): pc orig line       is %zu, orig col is %zu, Text() is '%s', type is %s\n",
+      LOG_FMT(LFCNR, "%s(%d): pc orig line %zu, orig col %zu, text '%s', type %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
       Chunk *prev = pc->GetPrevNcNnlNi(E_Scope::PREPROC);   // Issue #2279
 
@@ -2008,27 +2009,27 @@ void fix_symbols()
 
       if (prev->IsNullChunk())
       {
-         LOG_FMT(LFCNR, "%s(%d): WARNING: prev is NOT defined\n", __func__, __LINE__);
+         LOG_FMT(LFCNR, "%s(%d): prev is NOT defined\n", __func__, __LINE__);
       }
       else
       {
          // Issue #2279
-         LOG_FMT(LFCNR, "%s(%d): prev(ni) orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
+         LOG_FMT(LFCNR, "%s(%d): prev(ni) orig line %zu, orig col %zu, text '%s', type %s\n",
                  __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->Text(), get_token_name(prev->GetType()));
       }
       Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
 
       if (next->IsNullChunk())
       {
-         LOG_FMT(LFCNR, "%s(%d): WARNING: next is NOT defined\n", __func__, __LINE__);
+         LOG_FMT(LFCNR, "%s(%d): next is NOT defined\n", __func__, __LINE__);
       }
       else
       {
          // Issue #2279
-         LOG_FMT(LFCNR, "%s(%d): next orig line     is %zu, orig col is %zu, Text() is '%s', type is %s\n",
+         LOG_FMT(LFCNR, "%s(%d): next orig line %zu, orig col %zu, text '%s', type %s\n",
                  __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text(), get_token_name(next->GetType()));
       }
-      LOG_FMT(LFCNR, "%s(%d): do_symbol_check(%s, %s, %s)\n",
+      LOG_FMT(LFCNR, "%s(%d): do_symbol_check for '%s, %s, %s'\n",
               __func__, __LINE__, prev->Text(), pc->Text(), next->Text());
       do_symbol_check(prev, pc, next);
       pc = pc->GetNextNcNnl();
