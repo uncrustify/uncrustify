@@ -37,9 +37,9 @@ enum lang_flag_e
    LANG_PAWN       = 0x0080,
    LANG_ECMA       = 0x0100,     //! ECMA Script (JavaScript)
 
-   LANG_ALLC       = 0x017f,     /** LANG_C    | LANG_CPP | LANG_D    | LANG_CS   |
+   LANG_ALLC_NOT_C = 0x017e,     /**             LANG_CPP | LANG_D    | LANG_CS   |            Issue # 4044
                                   *  LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA   */
-   LANG_ALLC_NOT_C = 0x017e,     /**             LANG_CPP | LANG_D    | LANG_CS   |
+   LANG_ALLC       = 0x017f,     /** LANG_C    | LANG_CPP | LANG_D    | LANG_CS   |
                                   *  LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA   */
    LANG_ALL        = 0x0fff,     //! applies to all languages
 
