@@ -1145,6 +1145,20 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_enum_colon());
    }
 
+   if (first->Is(CT_BIT_COLON))                      // Issue #4040
+   {
+      // Add or remove space after a bit colon ':'.
+      log_rule("sp_after_bit_colon");
+      return(options::sp_after_bit_colon());
+   }
+
+   if (second->Is(CT_BIT_COLON))                    // Issue #4040
+   {
+      // Add or remove space before a bit colon ':'.
+      log_rule("sp_before_bit_colon");
+      return(options::sp_before_bit_colon());
+   }
+
    if (  first->Is(CT_OC_AVAILABLE_VALUE)
       || second->Is(CT_OC_AVAILABLE_VALUE))
    {
