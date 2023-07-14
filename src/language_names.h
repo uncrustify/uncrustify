@@ -27,23 +27,25 @@ struct lang_name_t
 //! list of all programming languages Uncrustify supports
 enum lang_flag_e
 {
-   LANG_C    = 0x0001,
-   LANG_CPP  = 0x0002,
-   LANG_D    = 0x0004,
-   LANG_CS   = 0x0008,     //! C# (C-Sharp)
-   LANG_JAVA = 0x0010,
-   LANG_OC   = 0x0020,     //! Objective-C
-   LANG_VALA = 0x0040,
-   LANG_PAWN = 0x0080,
-   LANG_ECMA = 0x0100,     //! ECMA Script (JavaScript)
+   LANG_C          = 0x0001,
+   LANG_CPP        = 0x0002,
+   LANG_D          = 0x0004,
+   LANG_CS         = 0x0008,     //! C# (C-Sharp)
+   LANG_JAVA       = 0x0010,
+   LANG_OC         = 0x0020,     //! Objective-C
+   LANG_VALA       = 0x0040,
+   LANG_PAWN       = 0x0080,
+   LANG_ECMA       = 0x0100,     //! ECMA Script (JavaScript)
 
-   LANG_ALLC = 0x017f,     /** LANG_C    | LANG_CPP | LANG_D    | LANG_CS   |
-                            *  LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA   */
-   LANG_ALL  = 0x0fff,     //! applies to all languages
+   LANG_ALLC_NOT_C = 0x017e,     /**             LANG_CPP | LANG_D    | LANG_CS   |            Issue # 4044
+                                  *  LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA   */
+   LANG_ALLC       = 0x017f,     /** LANG_C    | LANG_CPP | LANG_D    | LANG_CS   |
+                                  *  LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA   */
+   LANG_ALL        = 0x0fff,     //! applies to all languages
 
-   FLAG_HDR  = 0x2000,     /*<< Header file for C family languages */
-   FLAG_DIG  = 0x4000,     //! digraph/trigraph
-   FLAG_PP   = 0x8000,     //! only appears in a preprocessor
+   FLAG_HDR        = 0x2000,     /*<< Header file for C family languages */
+   FLAG_DIG        = 0x4000,     //! digraph/trigraph
+   FLAG_PP         = 0x8000,     //! only appears in a preprocessor
 };
 
 

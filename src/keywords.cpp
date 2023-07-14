@@ -292,10 +292,10 @@ static chunk_tag_t keywords[] =
    { "package",                         CT_PACKAGE,          LANG_ECMA | LANG_JAVA                                                       },
    { "params",                          CT_TYPE,             LANG_CS | LANG_VALA                                                         },
    { "pragma",                          CT_PP_PRAGMA,        LANG_ALL | FLAG_PP                                                          },
-   { "private",                         CT_ACCESS,           LANG_ALLC                                                                   }, // not C
+   { "private",                         CT_ACCESS,           LANG_ALLC_NOT_C                                                             }, // Issue # 4044
    { "property",                        CT_PP_PROPERTY,      LANG_CS | FLAG_PP                                                           },
-   { "protected",                       CT_ACCESS,           LANG_ALLC                                                                   }, // not C
-   { "public",                          CT_ACCESS,           LANG_ALL                                                                    }, // PAWN // not C
+   { "protected",                       CT_ACCESS,           LANG_ALLC_NOT_C                                                             }, // Issue # 4044
+   { "public",                          CT_ACCESS,           LANG_ALLC_NOT_C                                                             }, // Issue # 4044
    { "readonly",                        CT_QUALIFIER,        LANG_CS                                                                     },
    { "real",                            CT_TYPE,             LANG_D                                                                      },
    { "ref",                             CT_QUALIFIER,        LANG_CS | LANG_VALA                                                         },
