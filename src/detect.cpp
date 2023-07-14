@@ -110,6 +110,7 @@ static void detect_space_options()
    SP_VOTE_VAR(sp_before_ptr_star);
    SP_VOTE_VAR(sp_before_unnamed_ptr_star);
    SP_VOTE_VAR(sp_between_ptr_star);
+   SP_VOTE_VAR(sp_between_ptr_ref);
    SP_VOTE_VAR(sp_after_ptr_star);
    SP_VOTE_VAR(sp_after_byref);
    SP_VOTE_VAR(sp_before_byref);
@@ -260,6 +261,11 @@ static void detect_space_options()
          if (next->IsNot(CT_WORD))
          {
             vote_sp_before_unnamed_byref.vote(prev, pc);
+         }
+
+         if (prev->Is(CT_PTR_TYPE))
+         {
+            vote_sp_between_ptr_ref.vote(prev, pc);
          }
          else
          {
