@@ -14,6 +14,7 @@
 30002  cpp/ben_003.cfg                                      cpp/constructor.cpp
 30003  cpp/ben_004.cfg                                      cpp/strings.cpp
 30004  cpp/Issue_4036.cfg                                   cpp/Issue_4036.cpp
+30005  common/empty.cfg                                     cpp/Issue_4042.cpp
 
 30010  cpp/ben_005.cfg                                      cpp/class.h
 30011  cpp/ben_006.cfg                                      cpp/misc.cpp
