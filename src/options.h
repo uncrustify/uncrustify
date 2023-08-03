@@ -2852,7 +2852,7 @@ nl_class_leave_one_liner_groups;
 extern BoundedOption<unsigned, 0, 16>
 nl_after_func_body;
 
-// The minimal number of newlines after '}' of a multi-line function body.
+// The minimum number of newlines after '}' of a multi-line function body.
 extern BoundedOption<unsigned, 0, 16>
 nl_min_after_func_body;
 
