@@ -2847,8 +2847,14 @@ extern Option<bool>
 nl_class_leave_one_liner_groups;
 
 // The number of newlines after '}' of a multi-line function body.
+//
+// Overrides nl_min_after_func_body.
 extern BoundedOption<unsigned, 0, 16>
 nl_after_func_body;
+
+// The minimal number of newlines after '}' of a multi-line function body.
+extern BoundedOption<unsigned, 0, 16>
+nl_min_after_func_body;
 
 // The number of newlines after '}' of a multi-line function body in a class
 // declaration. Also affects class constructors/destructors.

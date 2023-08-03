@@ -6384,6 +6384,19 @@ void do_blank_lines()
                   }
                }
             }
+            else if (options::nl_min_after_func_body() > 0) // Issue #2787
+            {
+               log_rule_B("nl_min_after_func_body");
+
+               if (!(pc->GetPrev()->TestFlags(PCF_IN_TRY_BLOCK)))
+               {
+                  if (options::nl_min_after_func_body() > pc->GetNlCount())
+                  {
+                     log_rule_B("nl_min_after_func_body");
+                     blank_line_set(pc, options::nl_min_after_func_body);
+                  }
+               }
+            }
          }
       }
 
