@@ -512,11 +512,15 @@ def main(args):
     if not bin_found:
         eprint("No Uncrustify binary found")
         sys_exit(EX_USAGE)
+# guy
+    print("Summary")
+    print("OS is %s" % os_name)
 
     clear_dir(s_path_join(test_dir, 'results'))
 
     return_flag = True
 
+    print("Test help ...")
     #
     # Test help
     #   -h -? --help --usage
@@ -531,7 +535,9 @@ def main(args):
                 reg_replace(r'currently \d+ options', 'currently x options')
             ]):
         return_flag = False
+    print("Test help is OK")
 
+    print("Test false parameter ...")
     #
     # Test false parameter
     #   --xyz
@@ -543,7 +549,9 @@ def main(args):
             err_result_path=s_path_join(test_dir, 'results/xyz-err.txt')
             ):
         return_flag = False
+    print("Test false parameter is OK")
 
+    print("Test Version ...")
     #
     # Test Version
     #   -v
@@ -556,8 +564,10 @@ def main(args):
             out_result_manip=reg_replace(r'Uncrustify.+', 'Uncrustify')
             ):
         return_flag = False
+    print("Test Version is OK")
 
     # temporary removed
+    #print("Test --show-config ...")
     ##
     ## Test --show-config
     ##
@@ -570,7 +580,9 @@ def main(args):
     #        out_result_manip=reg_replace(r'\# Uncrustify.+', '')
     #        ):
     #    return_flag = False
+    #print("Test --show-config is OK")
 
+    print("Test the truncate option ...")
     #
     # Test the truncate option
     #
@@ -587,7 +599,9 @@ def main(args):
                               reg_replace(RE_DO_SPACE, '')]
             ):
         return_flag = False
+    print("Test the truncate option is OK")
 
+    #print("Test --update-config ...")
     # temporary removed
     ##
     ## Test --update-config
@@ -619,7 +633,9 @@ def main(args):
     #        err_result_manip=string_replace('\\', '/')
     #        ):
     #    return_flag = False
+    #print("Test --update-config is OK")
 
+    #print("Test --update-config-with-doc ...")
     ##
     ## Test --update-config-with-doc
     ##
@@ -636,6 +652,7 @@ def main(args):
     #        err_result_manip=string_replace('\\', '/')
     #        ):
     #    return_flag = False
+    #print("Test --update-config-with-doc is OK")
 
     #if not check_uncrustify_output(
     #        uncr_bin,
@@ -651,6 +668,7 @@ def main(args):
     #        ):
     #    return_flag = False
 
+    print("Test -p ...")
     #
     # Test -p
     #
@@ -688,7 +706,9 @@ def main(args):
                 gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
                 ):
             return_flag = False
+    print("Test -p is OK")
 
+    #print("Test -p and -c with '-' input ...")
     if os_name == 'nt' or check_uncrustify_output(
             uncr_bin,
             parsed_args,
@@ -700,12 +720,16 @@ def main(args):
             out_result_path=s_path_join(test_dir, 'results/pc-.txt')
     ):
         pass
+
+    #print("Test -p and -c with '-' input ...")
     #
     # Test -p and -c with '-' input
     #
     else:
         return_flag = False
+    #print("Test -p and -c with '-' input is OK")
 
+    print("Test -p and --debug-csv-format option ...")
     #
     # Test -p and --debug-csv-format option
     #
@@ -720,7 +744,9 @@ def main(args):
             gen_result_path=s_path_join(test_dir, 'results/class_enum_struct_union.csv'),
             ):
         return_flag = False
+    print("Test -p and --debug-csv-format option is OK")
 
+    #print("Test --tracking_space FILE ...")
     #
     # Test --tracking_space FILE
     #
@@ -736,7 +762,9 @@ def main(args):
     #            gen_result_path=s_path_join(test_dir, 'results/Debug.html'),
     #            ):
     #        return_flag = False
+    #print("Test --tracking_space FILE is OK")
 
+    print("Test --replace ...")
     #
     # Test --replace
     #
@@ -753,7 +781,9 @@ def main(args):
             err_result_path=s_path_join(test_dir, 'results/replace.txt'),
             ):
         return_flag = False
+    print("Test --replace is OK")
 
+    print("Test --universalindent ...")
     # The flag CMAKE_BUILD_TYPE must be set to "Release", or all lines with
     # 'Description="<html>(<number>)text abc.</html>" must be changed to
     # 'Description="<html>text abc.</html>"
@@ -776,7 +806,9 @@ def main(args):
                               reg_replace(r'\r', '')]
             ):
         return_flag = False
+    print("Test --universalindent is OK")
 
+    print("Test -L ...")
     # Debug Options:
     #   -L
     # look at src/log_levels.h
@@ -802,6 +834,7 @@ def main(args):
                                   reg_replace(r'Chunk::', '')]
             ):
             return_flag = False
+    print("Test -L is OK")
 
     # Test logger buffer overflow
     if not check_uncrustify_output(
@@ -829,6 +862,7 @@ def main(args):
                 ):
             return_flag = False
 
+    print("Test $(year) keyword ...")
     # Test $(year) keyword (issue #3251)
     if not check_uncrustify_output(
             uncr_bin,
@@ -840,6 +874,7 @@ def main(args):
             out_result_manip=string_replace(str(date.today().year), 'this year'),
             ):
         return_flag = False
+    print("Test $(year) keyword is OK")
 
     if return_flag:
         print("all tests are OK")
