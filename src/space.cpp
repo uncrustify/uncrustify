@@ -2708,6 +2708,27 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
                      return(options::sp_before_keyword_ptr_star());
                   }
                }
+               else if (next->Is(CT_DC_MEMBER))
+               {
+                  if (options::sp_before_global_scope_ptr_star() != IARF_IGNORE)
+                  {
+                     log_rule("sp_before_global_scope_ptr_star");     // ptr_star 13
+                     return(options::sp_before_global_scope_ptr_star());
+                  }
+               }
+               else
+               {
+                  Chunk *next_next = next->GetNextNc();
+
+                  if (next_next->IsNotNullChunk() && next_next->Is(CT_DC_MEMBER))
+                  {
+                     if (options::sp_before_scope_ptr_star() != IARF_IGNORE)
+                     {
+                        log_rule("sp_before_scope_ptr_star");         // ptr_star 12
+                        return(options::sp_before_scope_ptr_star());
+                     }
+                  }
+               }
 
                if (options::sp_before_unnamed_ptr_star() != IARF_IGNORE)
                {

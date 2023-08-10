@@ -271,6 +271,19 @@ sp_before_unnamed_ptr_star;
 extern Option<iarf_e>
 sp_before_keyword_ptr_star;
 
+// Add or remove space before pointer star '*' that is followed by
+// a class scope (as in 'int *MyClass::method()') or namespace scope
+// (as in 'int *my_ns::func()').
+// If set to ignore, sp_before_unnamed_ptr_star is used instead.
+extern Option<iarf_e>
+sp_before_scope_ptr_star;
+
+// Add or remove space before pointer star '*' that is followed by '::',
+// as in 'int *::func()'.
+// If set to ignore, sp_before_unnamed_ptr_star is used instead.
+extern Option<iarf_e>
+sp_before_global_scope_ptr_star;
+
 // Add or remove space between a qualifier and a pointer star '*' that isn't
 // followed by a variable name, as in '(char const *)'. If set to ignore,
 // sp_before_ptr_star is used instead.
