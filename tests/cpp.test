@@ -1178,5 +1178,5 @@
 60110  cpp/sp_qualifier_ptr_star_trailing-r.cfg             cpp/sp_qualifier_ptr_star.cpp
 60111  cpp/sp_qualifier_ptr_star_trailing-f.cfg             cpp/sp_qualifier_ptr_star.cpp
 
-60120  cpp/nl_min_after_func_body.cfg                       cpp/nl_func.cpp
-60121  cpp/nl_min_after_func_body.cfg                       cpp/nl_func-2.cpp
+60160  cpp/nl_min_after_func_body.cfg                       cpp/nl_func.cpp
+60161  cpp/nl_min_after_func_body.cfg                       cpp/nl_func-2.cpp
