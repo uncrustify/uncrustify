@@ -48,16 +48,16 @@ void  *  method5();
 void* Test::method1() {
 	return nullptr;
 }
-void*Test::method2() {
+void *Test::method2() {
 	return NULL;
 }
-void*Test::method3() {
+void  *Test::method3() {
 	return NULL;
 }
 void*  Test::method4() {
 	return nullptr;
 }
-void*  Test::method5() {
+void  *  Test::method5() {
 	return 0;
 }
 
@@ -76,19 +76,19 @@ int *foo();
 
 }
 
-int*testing::func1() {
+int *testing::func1() {
 	return nullptr;
 }
 int* testing::func2() {
 	return NULL;
 }
-int*testing::func3() {
+int   *testing::func3() {
 	return nullptr;
 }
-int* testing::func4() {
+int * testing::func4() {
 	return NULL;
 }
-int*  testing::func5() {
+int  *  testing::func5() {
 	return NULL;
 }
 

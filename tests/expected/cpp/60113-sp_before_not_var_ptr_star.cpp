@@ -24,10 +24,10 @@ auto baz4() -> char*const  *;
 
 
 void *operator new(int size);
-void *operator new(int size);
-void *    operator new(int size);
+void*operator new(int size);
+void*    operator new(int size);
 void     *operator new(int size);
-void * operator new(int size);
+void* operator new(int size);
 
 void *::alloc1(int size);
 void*::alloc2(int size);
@@ -100,7 +100,7 @@ int*testing::test::foo()
 namespace Bar {
 
 class Foo {
-int *operator[] (int x) {
+int*operator[] (int x) {
 }
 
 Foo *get();

@@ -265,11 +265,15 @@ sp_before_ptr_star;
 extern Option<iarf_e>
 sp_before_unnamed_ptr_star;
 
-// Add or remove space before pointer star '*' that is followed by
-// a keyword (a qualifier or 'operator').
+// Add or remove space before pointer star '*' that is followed by a qualifier.
 // If set to ignore, sp_before_unnamed_ptr_star is used instead.
 extern Option<iarf_e>
-sp_before_keyword_ptr_star;
+sp_before_qualifier_ptr_star;
+
+// Add or remove space before pointer star '*' that is followed by 'operator' keyword.
+// If set to ignore, sp_before_unnamed_ptr_star is used instead.
+extern Option<iarf_e>
+sp_before_operator_ptr_star;
 
 // Add or remove space before pointer star '*' that is followed by
 // a class scope (as in 'int *MyClass::method()') or namespace scope

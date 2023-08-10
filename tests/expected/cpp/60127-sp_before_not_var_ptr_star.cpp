@@ -30,11 +30,11 @@ void     *operator new(int size);
 void* operator new(int size);
 
 void *::alloc1(int size);
-void*::alloc2(int size);
-void* ::alloc3(int size);
+void *::alloc2(int size);
+void * ::alloc3(int size);
 void * ::alloc4(int size);
-void     * ::alloc5(int size);
-void     *     ::alloc6(int size);
+void * ::alloc5(int size);
+void *     ::alloc6(int size);
 
 
 class Test {
@@ -45,19 +45,19 @@ void*  method4();
 void  *  method5();
 };
 
-void * Test::method1() {
+void* Test::method1() {
 	return nullptr;
 }
 void *Test::method2() {
 	return NULL;
 }
-void *Test::method3() {
+void  *Test::method3() {
 	return NULL;
 }
-void *  Test::method4() {
+void*  Test::method4() {
 	return nullptr;
 }
-void *  Test::method5() {
+void  *  Test::method5() {
 	return 0;
 }
 
@@ -79,20 +79,20 @@ int *foo();
 int *testing::func1() {
 	return nullptr;
 }
-int * testing::func2() {
+int* testing::func2() {
 	return NULL;
 }
-int *testing::func3() {
+int   *testing::func3() {
 	return nullptr;
 }
 int * testing::func4() {
 	return NULL;
 }
-int *  testing::func5() {
+int  *  testing::func5() {
 	return NULL;
 }
 
-int *testing::test::foo()
+int*testing::test::foo()
 {
 	return NULL;
 }
@@ -108,12 +108,12 @@ Foo *get();
 
 }
 
-Bar::Foo *Bar::Foo::get() {
+Bar::Foo*Bar::Foo::get() {
 }
 
 void* not_malloc(const int);
 
-void*::not_malloc(const int n)
+void *::not_malloc(const int n)
 {
 }
 

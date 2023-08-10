@@ -26,7 +26,7 @@ auto baz4() -> char*const  *;
 void *operator new(int size);
 void*operator new(int size);
 void*    operator new(int size);
-void*operator new(int size);
+void     *operator new(int size);
 void* operator new(int size);
 
 void *::alloc1(int size);
