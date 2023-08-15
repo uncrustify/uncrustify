@@ -4359,6 +4359,10 @@ debug_sort_the_tracks;  // = true
 extern Option<bool>
 debug_decode_the_flags;
 
+// use (or not) the exit(EX_SOFTWARE) function.
+extern Option<bool>
+debug_use_the_exit_function_pop; // = true
+
 // insert the number of the line at the beginning of each line
 extern Option<bool>
 set_numbering_for_html_output;
