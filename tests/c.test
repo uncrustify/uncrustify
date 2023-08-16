@@ -38,6 +38,7 @@
 00056  c/brace-remove-all.cfg                     c/brace-remove3.c
 00057  c/if_chain.cfg                             c/brace-remove3.c
 00058  c/brace-kr-nobr.cfg                        c/if_chain.c
+00059  c/Issue_2205.cfg                           c/Issue_2205.c
 
 00060  c/ben_050.cfg                              c/braces-2.c
 00061  c/ben_051.cfg                              c/braces-3.c
