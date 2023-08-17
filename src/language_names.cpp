@@ -56,6 +56,7 @@ struct lang_ext_t language_exts[] =
    { ".sqc",  "C"        },  // embedded SQL
    { ".sql",  "SQL"      },
    { ".vala", "VALA"     },
+   { ".vapi", "VALA"     },
 };
 
 
