@@ -17,12 +17,6 @@ char*const  *bar2(char* const  *);
 char  *const  *bar3(char* const  *);
 char *const  *bar4(char* const  *);
 
-auto baz1() -> char* const*;
-auto baz2() -> char* const  *;
-auto baz3() -> char * const  *;
-auto baz4() -> char*const  *;
-
-
 void *operator new(int size);
 void*operator new(int size);
 void*    operator new(int size);
@@ -130,3 +124,8 @@ int main()
 	int y = 2+*x;
 	return 0;
 }
+
+auto baz1() -> char* const*;
+auto baz2() -> char* const  *;
+auto baz3() -> char * const  *;
+auto baz4() -> char*const  *;
