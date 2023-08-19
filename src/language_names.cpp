@@ -44,6 +44,7 @@ struct lang_ext_t language_exts[] =
    { ".hp",   "CPP"      },
    { ".hpp",  "CPP"      },
    { ".hxx",  "CPP"      },
+   { ".inc",  "PAWN"     },
    { ".inl",  "CPP"      },
    { ".java", "JAVA"     },
    { ".js",   "ECMA"     },
