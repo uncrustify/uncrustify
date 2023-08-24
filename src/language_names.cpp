@@ -44,7 +44,8 @@ struct lang_ext_t language_exts[] =
    { ".hp",   "CPP"      },
    { ".hpp",  "CPP"      },
    { ".hxx",  "CPP"      },
-   { ".inl",  "PAWN"     },
+   { ".inc",  "PAWN"     },
+   { ".inl",  "CPP"      },
    { ".java", "JAVA"     },
    { ".js",   "ECMA"     },
    { ".m",    "OC"       },
@@ -55,6 +56,7 @@ struct lang_ext_t language_exts[] =
    { ".sqc",  "C"        },  // embedded SQL
    { ".sql",  "SQL"      },
    { ".vala", "VALA"     },
+   { ".vapi", "VALA"     },
 };
 
 

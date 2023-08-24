@@ -10,6 +10,7 @@
 #include "parsing_frame.h"
 
 #include "chunk.h"
+#include "options.h"
 #include "uncrustify.h"
 
 #include <stdexcept>            // to get std::logic_error
@@ -189,6 +190,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
       || pc->GetType() == CT_OC_PROPERTY
       || pc->GetType() == CT_OC_SCOPE
       || pc->GetType() == CT_OPERATOR                 // Issue #4026
+      || pc->GetType() == CT_PARAMETER_PACK           // Issue #4075
       || pc->GetType() == CT_PAREN_CLOSE
       || pc->GetType() == CT_PAREN_OPEN
       || pc->GetType() == CT_PREPROC
@@ -221,7 +223,11 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
       fprintf(stderr, "ParsingFrame::pop (%s:%d): the type is %s, is not coded. Please make a call.\n",
               func, line, get_token_name(pc->GetType()));
       log_flush(true);
-      exit(EX_SOFTWARE);
+
+      if (uncrustify::options::debug_use_the_exit_function_pop())  // Issue #4075
+      {
+         exit(EX_SOFTWARE);
+      }
    }
 #ifdef DEBUG_PUSH_POP
    LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d) Add is %4zu: open_line is %4zu, clos_col is %4zu, type is %12s, "

@@ -265,6 +265,29 @@ sp_before_ptr_star;
 extern Option<iarf_e>
 sp_before_unnamed_ptr_star;
 
+// Add or remove space before pointer star '*' that is followed by a qualifier.
+// If set to ignore, sp_before_unnamed_ptr_star is used instead.
+extern Option<iarf_e>
+sp_before_qualifier_ptr_star;
+
+// Add or remove space before pointer star '*' that is followed by 'operator' keyword.
+// If set to ignore, sp_before_unnamed_ptr_star is used instead.
+extern Option<iarf_e>
+sp_before_operator_ptr_star;
+
+// Add or remove space before pointer star '*' that is followed by
+// a class scope (as in 'int *MyClass::method()') or namespace scope
+// (as in 'int *my_ns::func()').
+// If set to ignore, sp_before_unnamed_ptr_star is used instead.
+extern Option<iarf_e>
+sp_before_scope_ptr_star;
+
+// Add or remove space before pointer star '*' that is followed by '::',
+// as in 'int *::func()'.
+// If set to ignore, sp_before_unnamed_ptr_star is used instead.
+extern Option<iarf_e>
+sp_before_global_scope_ptr_star;
+
 // Add or remove space between a qualifier and a pointer star '*' that isn't
 // followed by a variable name, as in '(char const *)'. If set to ignore,
 // sp_before_ptr_star is used instead.
@@ -4364,6 +4387,10 @@ debug_sort_the_tracks;  // = true
 // only if the -p option is set.
 extern Option<bool>
 debug_decode_the_flags;
+
+// use (or not) the exit(EX_SOFTWARE) function.
+extern Option<bool>
+debug_use_the_exit_function_pop; // = true
 
 // insert the number of the line at the beginning of each line
 extern Option<bool>
