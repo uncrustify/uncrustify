@@ -809,7 +809,7 @@ static void parse_suffix(TokenContext &ctx, Chunk &pc, bool forstring = false)
          pc.Str().resize(oldsize);
       }
    }
-}
+} // parse_suffix
 
 
 static bool is_bin(int ch)
@@ -1081,12 +1081,49 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
    {
       size_t tmp2 = unc_toupper(ctx.peek());
 
+      // https://en.cppreference.com/w/cpp/language/floating_literal
       if (  (tmp2 == 'I')    // 73
          || (tmp2 == 'F')    // 70
          || (tmp2 == 'D')    // 68
          || (tmp2 == 'M'))   // 77
       {
-         is_float = true;
+         // is a decimal point found?                     Issue #4027
+         const char *test_it    = pc.Text();
+         size_t     test_long   = strlen(test_it);
+         bool       point_found = false;
+
+         for (size_t ind = 0; ind < test_long; ind++)
+         {
+            if (test_it[ind] == '.')
+            {
+               point_found = true;
+               break;
+            }
+         }
+
+         if (point_found)
+         {
+            is_float = true;
+         }
+         else
+         {
+            // append the char(s) until is not IsKw2
+            while (ctx.more())
+            {
+               size_t ch = ctx.peek();
+
+               if (CharTable::IsKw2(ch))
+               {
+                  pc.Str().append(ctx.get());
+               }
+               else
+               {
+                  break;
+               }
+            }
+            pc.SetType(CT_WORD);
+            return(true);
+         }
       }
       else if (  (tmp2 != 'L')   // 76
               && (tmp2 != 'U'))  // 85
@@ -2355,8 +2392,6 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    }
    // Parse strings and character constants
 
-//parse_word(ctx, pc_temp, true);
-//ctx.restore(ctx.c);
    if (parse_number(ctx, pc))
    {
       return(true);
