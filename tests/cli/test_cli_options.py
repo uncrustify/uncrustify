@@ -206,7 +206,7 @@ def check_generated_output(gen_expected_path, gen_result_path,
                   % (gen_result_path, gen_expected_path))
             return False
 
-    remove(gen_result_path)
+    #remove(gen_result_path)
 
     return True
 
@@ -512,11 +512,12 @@ def main(args):
     if not bin_found:
         eprint("No Uncrustify binary found")
         sys_exit(EX_USAGE)
-# guy
+
     print("Summary")
     print("OS is %s" % os_name)
+    print("parsed_args.config is %s" % parsed_args.config)
 
-    clear_dir(s_path_join(test_dir, 'results'))
+    clear_dir(s_path_join(script_dir, 'results'))
 
     return_flag = True
 
@@ -746,23 +747,31 @@ def main(args):
         return_flag = False
     print("Test -p and --debug-csv-format option is OK")
 
-    #print("Test --tracking_space FILE ...")
+    print("Test --tracking space:FILE ...")
     #
-    # Test --tracking_space FILE
+    # Test --tracking space:FILE
     #
-    #if os_name != 'nt':
-    #    # doesn't work under windows
-    #    if not check_uncrustify_output(
-    #            uncr_bin,
-    #            parsed_args,
-    #            args_arr=['-c', s_path_join(script_dir, 'config/tracking_space.cfg'),
-    #                      '-f', s_path_join(script_dir, 'input/tracking_space.cpp'),
-    #                      '--tracking space:results/Debug.html', s_path_join(test_dir, 'results/Debug.html')],
-    #            gen_expected_path=s_path_join(script_dir, 'output/Debug.html'),
-    #            gen_result_path=s_path_join(test_dir, 'results/Debug.html'),
-    #            ):
-    #        return_flag = False
-    #print("Test --tracking_space FILE is OK")
+    if parsed_args.config == 'Debug':
+        print("  config is Debug")
+        if os_name != 'nt':
+            # doesn't work under windows
+            if not check_uncrustify_output(
+                    uncr_bin,
+                    parsed_args,
+                    args_arr=['-c', s_path_join(script_dir, 'config/tracking_space.cfg'),
+                              '-f', s_path_join(script_dir, 'input/tracking_space.cpp'),
+                              '--tracking',
+                              'space:results/Debug_tracking_space.html'],
+                    gen_expected_path=s_path_join(script_dir, 'output/Debug_tracking_space.html'),
+                    gen_result_path=s_path_join(script_dir, 'results/Debug_tracking_space.html'),
+                    ):
+                return_flag = False
+            else:
+               # abc
+               dummy = 1
+    else:
+        print("  config must be Debug")
+    print("Test --tracking space:FILE is OK")
 
     print("Test --replace ...")
     #
