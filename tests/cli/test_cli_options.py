@@ -167,10 +167,12 @@ def check_generated_output(gen_expected_path, gen_result_path,
     True
     """
 
+    eprint("is 2233 %s" % abspath(gen_expected_path))
     gen_exp_txt = get_file_content(gen_expected_path)
     if gen_exp_txt is None:
         return False
 
+    eprint("is 2233 %s" % abspath(gen_result_path))
     gen_res_txt = get_file_content(gen_result_path)
     if gen_res_txt is None:
         return False
@@ -242,6 +244,7 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None,
     True or False depending on whether both files have the same content
 
     """
+    eprint("is 2233 %s" % abspath(expected_path))
     exp_txt = get_file_content(expected_path)
     if exp_txt is None:
         return False

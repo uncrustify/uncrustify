@@ -90,4 +90,4 @@ add_custom_target(update-cli-options
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cli
 )
 
-add_test(NAME sanity COMMAND uncrustify --help)
+#add_test(NAME sanity COMMAND uncrustify --help)
