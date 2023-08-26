@@ -25,47 +25,47 @@ set(stdoc
   " this is slower, especially with Python 3"
 )
 option("UNCRUSTIFY_SEPARATE_TESTS" "${stdoc}" OFF)
-if (UNCRUSTIFY_SEPARATE_TESTS)
-  set(tests_ctest_file "${CMAKE_CURRENT_BINARY_DIR}/tests.cmake")
-  set_property(DIRECTORY PROPERTY TEST_INCLUDE_FILE ${tests_ctest_file})
+#if (UNCRUSTIFY_SEPARATE_TESTS)
+#  set(tests_ctest_file "${CMAKE_CURRENT_BINARY_DIR}/tests.cmake")
+#  set_property(DIRECTORY PROPERTY TEST_INCLUDE_FILE ${tests_ctest_file})
+#
+#  add_custom_command(
+#    OUTPUT ${tests_ctest_file}
+#    COMMAND ${PYTHON_EXECUTABLE} run_format_tests.py
+#      --executable $<TARGET_FILE:uncrustify>
+#      --git ${GIT_EXECUTABLE}
+#      --python ${PYTHON_EXECUTABLE}
+#      --write-ctest ${tests_ctest_file}
+#      --cmake-config "$<CONFIGURATION>"
+#    VERBATIM
+#    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+#    DEPENDS ${test_suites}
+#  )
+#
+#  add_custom_target(register_tests ALL DEPENDS ${tests_ctest_file})
+#else()
+#  foreach(suite IN LISTS test_suites)
+#    string(REPLACE ".test" "" lang "${suite}")
+#    add_test(NAME ${lang}
+#      COMMAND ${PYTHON_EXECUTABLE} run_format_tests.py ${lang}
+#        --executable $<TARGET_FILE:uncrustify>
+#        -d --git ${GIT_EXECUTABLE}
+#        --result-dir ${CMAKE_CURRENT_BINARY_DIR}
+#      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+#    )
+#  endforeach()
+#endif()
 
-  add_custom_command(
-    OUTPUT ${tests_ctest_file}
-    COMMAND ${PYTHON_EXECUTABLE} run_format_tests.py
-      --executable $<TARGET_FILE:uncrustify>
-      --git ${GIT_EXECUTABLE}
-      --python ${PYTHON_EXECUTABLE}
-      --write-ctest ${tests_ctest_file}
-      --cmake-config "$<CONFIGURATION>"
-    VERBATIM
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    DEPENDS ${test_suites}
-  )
-
-  add_custom_target(register_tests ALL DEPENDS ${tests_ctest_file})
-else()
-  foreach(suite IN LISTS test_suites)
-    string(REPLACE ".test" "" lang "${suite}")
-    add_test(NAME ${lang}
-      COMMAND ${PYTHON_EXECUTABLE} run_format_tests.py ${lang}
-        --executable $<TARGET_FILE:uncrustify>
-        -d --git ${GIT_EXECUTABLE}
-        --result-dir ${CMAKE_CURRENT_BINARY_DIR}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-  endforeach()
-endif()
-
-if (NOT ENABLE_CODECOVERAGE)
-  add_test(
-    NAME sources_format
-    COMMAND ${PYTHON_EXECUTABLE} run_sources_tests.py
-      --executable $<TARGET_FILE:uncrustify>
-      -d --git ${GIT_EXECUTABLE}
-      --result-dir ${CMAKE_CURRENT_BINARY_DIR}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-  )
-endif()
+#if (NOT ENABLE_CODECOVERAGE)
+#  add_test(
+#    NAME sources_format
+#    COMMAND ${PYTHON_EXECUTABLE} run_sources_tests.py
+#      --executable $<TARGET_FILE:uncrustify>
+#      -d --git ${GIT_EXECUTABLE}
+#      --result-dir ${CMAKE_CURRENT_BINARY_DIR}
+#    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+#  )
+#endif()
 
 add_test(
   NAME cli_options

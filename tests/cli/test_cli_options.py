@@ -127,7 +127,7 @@ def get_file_content(fp):
         with open(fp, encoding="utf-8", newline="\n") as f:
             out = f.read()
     else:
-        print(abspath(fp))
+        eprint("is 22 %s" % abspath(fp))
         eprint("is 2 not a file: %s" % fp)
 
     return out
