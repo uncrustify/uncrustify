@@ -950,7 +950,8 @@ int main(int argc, char *argv[])
 
    // Check args - for multifile options
    if (  source_list != nullptr
-      || p_arg != nullptr)
+      || (  p_arg != nullptr
+         && cpd.html_type == tracking_type_e::TT_NONE))           // Issue #4066
    {
       if (source_file != nullptr)
       {
