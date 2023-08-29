@@ -126,7 +126,7 @@ def get_file_content(fp):
     out = None
 
     #eprint(abspath(fp))
-    #traceback.print_stack()
+    traceback.print_stack()
     if isfile(fp):
         with open(fp, encoding="utf-8", newline="\n") as f:
             out = f.read()
