@@ -22,9 +22,8 @@ import re
 import difflib
 import argparse
 import pprint
-import traceback
-import sys
-#import traceit
+#import traceback
+#import sys
 
 if os_name == 'nt':
     EX_OK = 0
@@ -127,11 +126,7 @@ def get_file_content(fp):
     out = None
 
     #eprint(abspath(fp))
-    #exc = sys.exception()
-    #traceback.print_exc(file=sys.stdout)
-    #traceback.print_tb(traceback, limit=3, file=sys.stdout)
-    #sys.setprofile(traceit.tracefunc)
-    traceback.print_stack()
+    #traceback.print_stack()
     if isfile(fp):
         with open(fp, encoding="utf-8", newline="\n") as f:
             out = f.read()
@@ -786,7 +781,7 @@ def main(args):
                     ):
                 return_flag = False
         print("Test --tracking space:FILE is OK")
-        sys_exit()
+        #sys_exit()
 
     print("Test --replace ...")
     #
