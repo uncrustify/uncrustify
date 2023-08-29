@@ -123,7 +123,7 @@ def get_file_content(fp):
     """
     out = None
 
-    #eprint(abspath(fp))
+    eprint(abspath(fp))
     if isfile(fp):
         with open(fp, encoding="utf-8", newline="\n") as f:
             out = f.read()
