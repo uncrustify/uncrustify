@@ -781,7 +781,8 @@ def main(args):
                     ):
                 return_flag = False
         print("Test --tracking space:FILE is OK")
-        #sys_exit()
+
+    #sys_exit()
 
     print("Test --replace ...")
     #
