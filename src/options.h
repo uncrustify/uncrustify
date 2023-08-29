@@ -2876,11 +2876,14 @@ extern BoundedOption<unsigned, 0, 16>
 nl_after_func_body;
 
 // The minimum number of newlines after '}' of a multi-line function body.
+//
+// Only works when nl_after_func_body is 0.
 extern BoundedOption<unsigned, 0, 16>
 nl_min_after_func_body;
 
 // The maximum number of newlines after '}' of a multi-line function body.
 //
+// Only works when nl_after_func_body is 0.
 // Takes precedence over nl_min_after_func_body.
 extern BoundedOption<unsigned, 0, 16>
 nl_max_after_func_body;
