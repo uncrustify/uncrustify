@@ -22,7 +22,7 @@ import re
 import difflib
 import argparse
 import pprint
-#import traceback
+import traceback
 #import sys
 
 if os_name == 'nt':
