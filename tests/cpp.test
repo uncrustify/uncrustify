@@ -1194,3 +1194,8 @@
 60125  cpp/sp_before_global_scope_ptr_star-a.cfg            cpp/sp_before_not_var_ptr_star.cpp
 60126  cpp/sp_before_global_scope_ptr_star-r.cfg            cpp/sp_before_not_var_ptr_star.cpp
 60127  cpp/sp_before_global_scope_ptr_star-f.cfg            cpp/sp_before_not_var_ptr_star.cpp
+
+60160  cpp/nl_min_after_func_body.cfg                       cpp/nl_func.cpp
+60161  cpp/nl_min_after_func_body.cfg                       cpp/nl_func-2.cpp
+60162  cpp/nl_max_after_func_body.cfg                       cpp/nl_func.cpp
+60163  cpp/nl_max_after_func_body.cfg                       cpp/nl_func-2.cpp
