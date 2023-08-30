@@ -770,11 +770,11 @@ def main(args):
                               '--tracking',
                               abc,
                               s_path_join(script_dir, 'results/Debug_tracking_space.html')
-                              , '-L'
-                              , 'A'
-                              , '2'
-                              , '>'
-                              , '/home/guy/A-T.txt'
+                              #, '-L'
+                              #, 'A'
+                              #, '2'
+                              #, '>'
+                              #, '/home/guy/A-T.txt'
                               ],
                     gen_expected_path=s_path_join(script_dir, 'output/Debug_tracking_space.html'),
                     gen_result_path=s_path_join(script_dir, 'results/Debug_tracking_space.html')

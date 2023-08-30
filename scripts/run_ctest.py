@@ -26,7 +26,7 @@ def main():
         print('(Note: This script must be run from your build directory.)')
         sys.exit(-1)
 
-    cmd = ['ctest', '-j{}'.format(args.parallel)]
+    cmd = ['ctest', '--verbose', '-j{}'.format(args.parallel)]
     if not args.quiet:
         cmd.append('--output-on-failure')
     cmd += args.args
