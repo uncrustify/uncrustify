@@ -22,6 +22,7 @@ import re
 import difflib
 import argparse
 import pprint
+import traceback
 
 if os_name == 'nt':
     EX_OK = 0
@@ -124,6 +125,8 @@ def get_file_content(fp):
     out = None
 
     eprint(abspath(fp))
+    for line in traceback.format_stack():
+        print(line.strip())
     if isfile(fp):
         with open(fp, encoding="utf-8", newline="\n") as f:
             out = f.read()
