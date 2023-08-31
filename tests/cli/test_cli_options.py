@@ -481,9 +481,11 @@ def main(args):
     # set working dir to script dir
     script_dir = dirname(relpath(__file__))
     print("B +++ "+sys.version)
-    sys_exit()
+    #sys_exit()
 
     parser = argparse.ArgumentParser(description='Test CLI Options')
+    print("C +++ "+sys.version)
+    sys_exit()
     parser.add_argument('--diff', action='store_true',
                         help='show diffs when there is a test mismatch')
     parser.add_argument('--apply', action='store_true',
