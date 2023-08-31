@@ -485,20 +485,30 @@ def main(args):
 
     parser = argparse.ArgumentParser(description='Test CLI Options')
     print("C +++ "+sys.version)
-    sys_exit()
+    #sys_exit()
     parser.add_argument('--diff', action='store_true',
                         help='show diffs when there is a test mismatch')
+    print("D +++ "+sys.version)
+    sys_exit()
     parser.add_argument('--apply', action='store_true',
                         help='auto apply the changes from the results folder to the output folder')
+    print("E +++ "+sys.version)
+    sys_exit()
     parser.add_argument('--build',
                         default=s_path_join(script_dir, '../../build'),
                         help='specify location of the build directory')
+    print("F +++ "+sys.version)
+    sys_exit()
     parser.add_argument('--config',
                         default='Release',
                         help='the build_type value (Release or Debug)')
+    print("G +++ "+sys.version)
+    sys_exit()
     parser.add_argument('--test',
                         default=s_path_join(script_dir, '../../build/tests/cli'),
                         help='specify the location of the test cli build folder')
+    print("H +++ "+sys.version)
+    sys_exit()
 
     parsed_args = parser.parse_args()
 
