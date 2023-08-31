@@ -489,7 +489,7 @@ def main(args):
     parser.add_argument('--diff', action='store_true',
                         help='show diffs when there is a test mismatch')
     print("D +++ "+sys.version)
-    sys_exit()
+    #sys_exit()
     parser.add_argument('--apply', action='store_true',
                         help='auto apply the changes from the results folder to the output folder')
     print("E +++ "+sys.version)
