@@ -497,7 +497,7 @@ def main(args):
     parser.add_argument('--build',
                         default=s_path_join(script_dir, '../../build'),
                         help='specify location of the build directory')
-    print("F +++ "+sys.version)
+    #print("F +++ "+sys.version)
     sys_exit()
     parser.add_argument('--config',
                         default='Release',
