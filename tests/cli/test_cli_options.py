@@ -477,9 +477,11 @@ def s_path_join(path, *paths):
 def main(args):
     print("die Version ist :"+sys.version)
     print("A +++ "+sys.version)
-    sys_exit()
+    #sys_exit()
     # set working dir to script dir
     script_dir = dirname(relpath(__file__))
+    print("B +++ "+sys.version)
+    sys_exit()
 
     parser = argparse.ArgumentParser(description='Test CLI Options')
     parser.add_argument('--diff', action='store_true',
