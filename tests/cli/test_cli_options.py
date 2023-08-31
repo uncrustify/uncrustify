@@ -503,7 +503,7 @@ def main(args):
                         default='Release',
                         help='the build_type value (Release or Debug)')
     print("G +++ "+sys.version)
-    sys_exit()
+    #sys_exit()
     parser.add_argument('--test',
                         default=s_path_join(script_dir, '../../build/tests/cli'),
                         help='specify the location of the test cli build folder')
