@@ -493,7 +493,7 @@ def main(args):
     parser.add_argument('--apply', action='store_true',
                         help='auto apply the changes from the results folder to the output folder')
     print("E +++ "+sys.version)
-    sys_exit()
+    #sys_exit()
     parser.add_argument('--build',
                         default=s_path_join(script_dir, '../../build'),
                         help='specify location of the build directory')
