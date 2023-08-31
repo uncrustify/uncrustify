@@ -476,6 +476,7 @@ def s_path_join(path, *paths):
 
 def main(args):
     print("die Version ist :"+sys.version)
+    sys_exit()
     print("A +++ "+sys.version)
     # set working dir to script dir
     script_dir = dirname(relpath(__file__))
