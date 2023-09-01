@@ -508,10 +508,12 @@ def main(args):
                         default=s_path_join(script_dir, '../../build/tests/cli'),
                         help='specify the location of the test cli build folder')
     print("H +++ "+sys.version)
-    sys_exit()
+    #sys_exit()
 
     parsed_args = parser.parse_args()
 
+    print("2a +++ ")
+    print(parsed_args)
     print("2 +++ "+sys.version)
     # find the uncrustify binary
     bin_found = False
