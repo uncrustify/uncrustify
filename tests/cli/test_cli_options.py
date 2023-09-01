@@ -108,36 +108,36 @@ def write_to_output_path(output_path, result_str):
         f.write(result_str)
 
 
-def get_file_content(fp):
-    """
-    returns file content as an utf8 string or None if fp is not a file
-
-
-    Parameters
-    ----------------------------------------------------------------------------
-    :param fp: string
-        path of the file that will be read
-
-
-    :return: string or None
-    ----------------------------------------------------------------------------
-    the file content
-
-    """
-    out = None
-
-    print("1 +++ "+sys.version)
-    #eprint(abspath(fp))
-    #for line in traceback.format_stack():
-    #    print(line.strip())
-    if isfile(fp):
-        with open(fp, encoding="utf-8", newline="\n") as f:
-            out = f.read()
-    else:
-        #eprint(abspath(fp))
-        eprint("is 2 not a file: %s" % fp)
-
-    return out
+#def get_file_content(fp):
+#    """
+#    returns file content as an utf8 string or None if fp is not a file
+#
+#
+#    Parameters
+#    ----------------------------------------------------------------------------
+#    :param fp: string
+#        path of the file that will be read
+#
+#
+#    :return: string or None
+#    ----------------------------------------------------------------------------
+#    the file content
+#
+#    """
+#    out = None
+#
+#    print("1 +++ "+sys.version)
+#    #eprint(abspath(fp))
+#    #for line in traceback.format_stack():
+#    #    print(line.strip())
+#    if isfile(fp):
+#        with open(fp, encoding="utf-8", newline="\n") as f:
+#            out = f.read()
+#    else:
+#        #eprint(abspath(fp))
+#        eprint("is 2 not a file: %s" % fp)
+#
+#    return out
 
 
 def check_generated_output(gen_expected_path, gen_result_path,
@@ -472,6 +472,38 @@ def s_path_join(path, *paths):
     for r in map(path_split, paths):
         p_splits.extend(r)
     return path_join(*p_splits)
+
+
+def get_file_content(fp):
+    """
+    returns file content as an utf8 string or None if fp is not a file
+
+
+    Parameters
+    ----------------------------------------------------------------------------
+    :param fp: string
+        path of the file that will be read
+
+
+    :return: string or None
+    ----------------------------------------------------------------------------
+    the file content
+
+    """
+    out = None
+
+    print("1 +++ "+sys.version)
+    #eprint(abspath(fp))
+    #for line in traceback.format_stack():
+    #    print(line.strip())
+    if isfile(fp):
+        with open(fp, encoding="utf-8", newline="\n") as f:
+            out = f.read()
+    else:
+        #eprint(abspath(fp))
+        eprint("is 2 not a file: %s" % fp)
+
+    return out
 
 
 def main(args):
