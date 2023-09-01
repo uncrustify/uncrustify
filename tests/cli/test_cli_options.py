@@ -108,36 +108,40 @@ def write_to_output_path(output_path, result_str):
         f.write(result_str)
 
 
-#def get_file_content(fp):
-#    """
-#    returns file content as an utf8 string or None if fp is not a file
-#
-#
-#    Parameters
-#    ----------------------------------------------------------------------------
-#    :param fp: string
-#        path of the file that will be read
-#
-#
-#    :return: string or None
-#    ----------------------------------------------------------------------------
-#    the file content
-#
-#    """
-#    out = None
-#
-#    print("1 +++ "+sys.version)
-#    #eprint(abspath(fp))
-#    #for line in traceback.format_stack():
-#    #    print(line.strip())
-#    if isfile(fp):
-#        with open(fp, encoding="utf-8", newline="\n") as f:
-#            out = f.read()
-#    else:
-#        #eprint(abspath(fp))
-#        eprint("is 2 not a file: %s" % fp)
-#
-#    return out
+def get_file_content(fp):
+    """
+    returns file content as an utf8 string or None if fp is not a file
+
+
+    Parameters
+    ----------------------------------------------------------------------------
+    :param fp: string
+        path of the file that will be read
+
+
+    :return: string or None
+    ----------------------------------------------------------------------------
+    the file content
+
+    """
+    out = None
+
+    #print("1 +++ "+sys.version)
+    #eprint(abspath(fp))
+    #for line in traceback.format_stack():
+    #    print(line.strip())
+    if isfile(fp):
+        #print("A: "+abspath(fp))
+        #print("is 2a a file: %s" % fp)
+        with open(fp, encoding="utf-8", newline="\n") as f:
+            out = f.read()
+    else:
+        #print("B: "+abspath(fp))
+        print("is 2b Not a file: %s" % fp)
+        #for line in traceback.format_stack():
+        #    print(line.strip())
+
+    return out
 
 
 def check_generated_output(gen_expected_path, gen_result_path,
@@ -474,83 +478,63 @@ def s_path_join(path, *paths):
     return path_join(*p_splits)
 
 
-def get_file_content(fp):
-    """
-    returns file content as an utf8 string or None if fp is not a file
-
-
-    Parameters
-    ----------------------------------------------------------------------------
-    :param fp: string
-        path of the file that will be read
-
-
-    :return: string or None
-    ----------------------------------------------------------------------------
-    the file content
-
-    """
-    out = None
-
-    print("1 +++ "+sys.version)
-    #eprint(abspath(fp))
-    #for line in traceback.format_stack():
-    #    print(line.strip())
-    if isfile(fp):
-        print("A: "+abspath(fp))
-        print("is 2a a file: %s" % fp)
-        with open(fp, encoding="utf-8", newline="\n") as f:
-            out = f.read()
-    else:
-        print("B: "+abspath(fp))
-        print("is 2b Not a file: %s" % fp)
-        for line in traceback.format_stack():
-            print(line.strip())
-
-    return out
+#def get_file_content(fp):
+#    """
+#    returns file content as an utf8 string or None if fp is not a file
+#
+#
+#    Parameters
+#    ----------------------------------------------------------------------------
+#    :param fp: string
+#        path of the file that will be read
+#
+#
+#    :return: string or None
+#    ----------------------------------------------------------------------------
+#    the file content
+#
+#    """
+#    out = None
+#
+#    print("1 +++ "+sys.version)
+#    #eprint(abspath(fp))
+#    #for line in traceback.format_stack():
+#    #    print(line.strip())
+#    if isfile(fp):
+#        print("A: "+abspath(fp))
+#        print("is 2a a file: %s" % fp)
+#        with open(fp, encoding="utf-8", newline="\n") as f:
+#            out = f.read()
+#    else:
+#        print("B: "+abspath(fp))
+#        print("is 2b Not a file: %s" % fp)
+#        for line in traceback.format_stack():
+#            print(line.strip())
+#
+#    return out
 
 
 def main(args):
-    print("die Version ist :"+sys.version)
-    print("A +++ "+sys.version)
-    #sys_exit()
     # set working dir to script dir
     script_dir = dirname(relpath(__file__))
-    print("B +++ "+sys.version)
-    #sys_exit()
 
     parser = argparse.ArgumentParser(description='Test CLI Options')
-    print("C +++ "+sys.version)
-    #sys_exit()
     parser.add_argument('--diff', action='store_true',
                         help='show diffs when there is a test mismatch')
-    print("D +++ "+sys.version)
-    #sys_exit()
     parser.add_argument('--apply', action='store_true',
                         help='auto apply the changes from the results folder to the output folder')
-    print("E +++ "+sys.version)
-    #sys_exit()
     parser.add_argument('--build',
                         default=s_path_join(script_dir, '../../build'),
                         help='specify location of the build directory')
-    print("F +++ "+sys.version)
-    #sys_exit()
     parser.add_argument('--config',
                         default='Release',
                         help='the build_type value (Release or Debug)')
-    print("G +++ "+sys.version)
-    #sys_exit()
     parser.add_argument('--test',
                         default=s_path_join(script_dir, '../../build/tests/cli'),
                         help='specify the location of the test cli build folder')
-    print("H +++ "+sys.version)
-    #sys_exit()
 
     parsed_args = parser.parse_args()
 
-    print("2a +++ ")
-    print(parsed_args)
-    print("2 +++ "+sys.version)
     # find the uncrustify binary
     bin_found = False
     uncr_bin = ''
@@ -577,10 +561,9 @@ def main(args):
     if not bin_found:
         eprint("No Uncrustify binary found")
         sys_exit(EX_USAGE)
-    # guy
-    print("3 +++ "+sys.version)
-    print("Summary")
-    print("OS is %s" % os_name)
+    print("Summary:")
+    print("Python version is: "+sys.version)
+    print("OS is: %s" % os_name)
 
     clear_dir(s_path_join(test_dir, 'results'))
 
