@@ -138,8 +138,9 @@ def get_file_content(fp):
     else:
         #print("B: "+abspath(fp))
         print("is 2b Not a file: %s" % fp)
-        #for line in traceback.format_stack():
-        #    print(line.strip())
+        for line in traceback.format_stack():
+            print(line.strip())
+        print("is 2b+ Not a file: %s" % fp)
 
     return out
 
