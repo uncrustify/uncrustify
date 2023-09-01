@@ -497,12 +497,12 @@ def get_file_content(fp):
     #for line in traceback.format_stack():
     #    print(line.strip())
     if isfile(fp):
-        print(abspath(fp))
+        print("A: "+abspath(fp))
         print("is 2a a file: %s" % fp)
         with open(fp, encoding="utf-8", newline="\n") as f:
             out = f.read()
     else:
-        print(abspath(fp))
+        print("B: "+abspath(fp))
         print("is 2b Not a file: %s" % fp)
         for line in traceback.format_stack():
             print(line.strip())
