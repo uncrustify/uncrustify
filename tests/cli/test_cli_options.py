@@ -500,8 +500,10 @@ def get_file_content(fp):
         with open(fp, encoding="utf-8", newline="\n") as f:
             out = f.read()
     else:
-        #eprint(abspath(fp))
+        eprint(abspath(fp))
         eprint("is 2 not a file: %s" % fp)
+        for line in traceback.format_stack():
+            print(line.strip())
 
     return out
 
