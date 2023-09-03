@@ -125,19 +125,20 @@ def get_file_content(fp):
 
     """
     print("3-1: fp is "+fp)
+    #print("3-1b: gen_result_path is "+gen_result_path)
     out = None
 
     if isfile(fp):
         #print("A: "+abspath(fp))
-        print("is 2a a file: %s" % fp)
+        print("2a is a file: %s" % fp)
         with open(fp, encoding="utf-8", newline="\n") as f:
             out = f.read()
     else:
         #print("B: "+abspath(fp))
-        print("is 2bx Not a file: %s" % fp)
+        print("2bx is Not a file: %s" % fp)
         for line in traceback.format_stack():
             print(line.strip())
-        print("is 2bx+ Not a file: %s" % fp)
+        print("2bx+ is Not a file: %s" % fp)
 
     return out
 
@@ -802,7 +803,8 @@ def main(args):
                               #, '/home/guy/A-T.txt'
                               ],
                     gen_expected_path=s_path_join(script_dir, 'output/Debug_tracking_space.html'),
-                    gen_result_path=s_path_join(script_dir, 'results/Debug_tracking_space.html')
+                    #gen_result_path=s_path_join(script_dir, 'results/Debug_tracking_space.html')
+                    gen_result_path=temp_result_path
                     ):
                 return_flag = False
         print("Test --tracking space:FILE is OK")
