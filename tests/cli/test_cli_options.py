@@ -124,23 +124,20 @@ def get_file_content(fp):
     the file content
 
     """
+    print("3-1: fp is "+fp)
     out = None
 
-    #print("1 +++ "+sys.version)
-    #eprint(abspath(fp))
-    #for line in traceback.format_stack():
-    #    print(line.strip())
     if isfile(fp):
         #print("A: "+abspath(fp))
-        #print("is 2a a file: %s" % fp)
+        print("is 2a a file: %s" % fp)
         with open(fp, encoding="utf-8", newline="\n") as f:
             out = f.read()
     else:
         #print("B: "+abspath(fp))
-        print("is 2b Not a file: %s" % fp)
+        print("is 2bx Not a file: %s" % fp)
         for line in traceback.format_stack():
             print(line.strip())
-        print("is 2b+ Not a file: %s" % fp)
+        print("is 2bx+ Not a file: %s" % fp)
 
     return out
 
@@ -179,23 +176,23 @@ def check_generated_output(gen_expected_path, gen_result_path,
     True
     """
 
-    print("2: gen_expected_path is "+gen_expected_path)
-    print("2: gen_result_path is "+gen_result_path)
+    print("2-1: gen_expected_path is "+gen_expected_path)
+    print("2-2: gen_result_path is "+gen_result_path)
     gen_exp_txt = get_file_content(gen_expected_path)
-    print("2: gen_exp_txt is "+gen_exp_txt)
+    print("2-3: gen_exp_txt is "+gen_exp_txt)
     if gen_exp_txt is None:
         return False
 
     gen_res_txt = get_file_content(gen_result_path)
-    print("2: gen_res_txt is "+gen_res_txt)
+    print("2-4: gen_res_txt is "+gen_res_txt)
     if gen_res_txt is None:
         return False
 
     #print("2: result_manip is "+result_manip)
     if result_manip is not None:
-        print("1: result_manip is "+result_manip)
+        print("2-5: result_manip is "+result_manip)
     else:
-        print("1: result_manip is None")
+        print("2-6: result_manip is None")
     if result_manip is not None:
         if type(result_manip) is list or type(result_manip) is tuple:
             for m in result_manip:
@@ -203,7 +200,8 @@ def check_generated_output(gen_expected_path, gen_result_path,
         else:
             gen_res_txt = result_manip(gen_res_txt)
 
-    print("2: gen_res_txt is "+gen_res_txt)
+    print("2: gen_res_txt is ")
+    print(gen_res_txt)
     print("2: gen_exp_txt is "+gen_exp_txt)
     if gen_res_txt != gen_exp_txt:
         with open(gen_result_path, 'w', encoding="utf-8", newline="") as f:
@@ -495,42 +493,6 @@ def s_path_join(path, *paths):
     for r in map(path_split, paths):
         p_splits.extend(r)
     return path_join(*p_splits)
-
-
-#def get_file_content(fp):
-#    """
-#    returns file content as an utf8 string or None if fp is not a file
-#
-#
-#    Parameters
-#    ----------------------------------------------------------------------------
-#    :param fp: string
-#        path of the file that will be read
-#
-#
-#    :return: string or None
-#    ----------------------------------------------------------------------------
-#    the file content
-#
-#    """
-#    out = None
-#
-#    print("1 +++ "+sys.version)
-#    #eprint(abspath(fp))
-#    #for line in traceback.format_stack():
-#    #    print(line.strip())
-#    if isfile(fp):
-#        print("A: "+abspath(fp))
-#        print("is 2a a file: %s" % fp)
-#        with open(fp, encoding="utf-8", newline="\n") as f:
-#            out = f.read()
-#    else:
-#        print("B: "+abspath(fp))
-#        print("is 2b Not a file: %s" % fp)
-#        for line in traceback.format_stack():
-#            print(line.strip())
-#
-#    return out
 
 
 def main(args):
