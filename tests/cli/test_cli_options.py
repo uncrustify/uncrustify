@@ -179,6 +179,8 @@ def check_generated_output(gen_expected_path, gen_result_path,
     True
     """
 
+    print("2: gen_expected_path is "+gen_expected_path)
+    print("2: gen_result_path is "+gen_result_path)
     gen_exp_txt = get_file_content(gen_expected_path)
     if gen_exp_txt is None:
         return False
@@ -391,6 +393,13 @@ def check_uncrustify_output(
             program_args=program_args):
         ret_flag = False
 
+    print("1: gen_expected_path is "+gen_expected_path)
+    print("1: gen_result_path is "+gen_result_path)
+    if gen_result_manip is not None:
+        print("1: gen_result_manip is "+gen_result_manip)
+    else:
+        print("1: gen_result_manip is None")
+    #print("program_args is "+program_args)
     if gen_expected_path and not check_generated_output(
             gen_expected_path, gen_result_path,
             result_manip=gen_result_manip,
