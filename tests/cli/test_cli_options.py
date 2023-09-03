@@ -795,7 +795,8 @@ def main(args):
                               '-f', s_path_join(script_dir, 'input/tracking_space.cpp'),
                               '--tracking',
                               abc,
-                              s_path_join(script_dir, 'results/Debug_tracking_space.html')
+                              #s_path_join(script_dir, 'results/Debug_tracking_space.html')
+                              gen_result_path=temp_result_path
                               #, '-L'
                               #, 'A'
                               #, '2'
