@@ -182,13 +182,20 @@ def check_generated_output(gen_expected_path, gen_result_path,
     print("2: gen_expected_path is "+gen_expected_path)
     print("2: gen_result_path is "+gen_result_path)
     gen_exp_txt = get_file_content(gen_expected_path)
+    print("2: gen_exp_txt is "+gen_exp_txt)
     if gen_exp_txt is None:
         return False
 
     gen_res_txt = get_file_content(gen_result_path)
+    print("2: gen_res_txt is "+gen_res_txt)
     if gen_res_txt is None:
         return False
 
+    #print("2: result_manip is "+result_manip)
+    if result_manip is not None:
+        print("1: result_manip is "+result_manip)
+    else:
+        print("1: result_manip is None")
     if result_manip is not None:
         if type(result_manip) is list or type(result_manip) is tuple:
             for m in result_manip:
@@ -196,6 +203,8 @@ def check_generated_output(gen_expected_path, gen_result_path,
         else:
             gen_res_txt = result_manip(gen_res_txt)
 
+    print("2: gen_res_txt is "+gen_res_txt)
+    print("2: gen_exp_txt is "+gen_exp_txt)
     if gen_res_txt != gen_exp_txt:
         with open(gen_result_path, 'w', encoding="utf-8", newline="") as f:
             f.write(gen_res_txt)
