@@ -200,9 +200,10 @@ def check_generated_output(gen_expected_path, gen_result_path,
         else:
             gen_res_txt = result_manip(gen_res_txt)
 
-    print("2: gen_res_txt is ")
+    print("2-7: gen_res_txt is ")
     print(gen_res_txt)
-    print("2: gen_exp_txt is "+gen_exp_txt)
+    print("2-8: gen_exp_txt is ")
+    print(gen_exp_txt)
     if gen_res_txt != gen_exp_txt:
         with open(gen_result_path, 'w', encoding="utf-8", newline="") as f:
             f.write(gen_res_txt)
