@@ -796,7 +796,7 @@ def main(args):
                               '--tracking',
                               abc,
                               #s_path_join(script_dir, 'results/Debug_tracking_space.html')
-                              gen_result_path=temp_result_path
+                              temp_result_path
                               #, '-L'
                               #, 'A'
                               #, '2'
