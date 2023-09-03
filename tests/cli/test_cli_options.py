@@ -180,7 +180,8 @@ def check_generated_output(gen_expected_path, gen_result_path,
     print("2-1: gen_expected_path is "+gen_expected_path)
     print("2-2: gen_result_path is "+gen_result_path)
     gen_exp_txt = get_file_content(gen_expected_path)
-    print("2-3: gen_exp_txt is "+gen_exp_txt)
+    print("2-3: gen_exp_txt is ")
+    #+gen_exp_txt)
     if gen_exp_txt is None:
         return False
 
