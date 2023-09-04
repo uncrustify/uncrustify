@@ -124,18 +124,18 @@ def get_file_content(fp):
     the file content
 
     """
-    print("3-1: fp is "+fp)
+    #print("3-1: fp is "+fp)
     #print("3-1b: gen_result_path is "+gen_result_path)
     out = None
 
     if isfile(fp):
         #print("A: "+abspath(fp))
-        print("2a is a file: %s" % fp)
+        #print("2a is a file: %s" % fp)
         with open(fp, encoding="utf-8", newline="\n") as f:
             out = f.read()
-    else:
+    #else:
         #print("B: "+abspath(fp))
-        print("2bx is Not a file: %s" % fp)
+        #print("2bx is Not a file: %s" % fp)
         #for line in traceback.format_stack():
         #    print(line.strip())
         #print("2bx+ is Not a file: %s" % fp)
@@ -403,12 +403,12 @@ def check_uncrustify_output(
             program_args=program_args):
         ret_flag = False
 
-    print("1: gen_expected_path is "+gen_expected_path)
-    print("1: gen_result_path is "+gen_result_path)
-    if gen_result_manip is not None:
-        print("1: gen_result_manip is "+gen_result_manip)
-    else:
-        print("1: gen_result_manip is None")
+    #print("1: gen_expected_path is "+gen_expected_path)
+    #print("1: gen_result_path is "+gen_result_path)
+    #if gen_result_manip is not None:
+    #    print("1: gen_result_manip is "+gen_result_manip)
+    #else:
+    #    print("1: gen_result_manip is None")
     #print("program_args is "+program_args)
     if gen_expected_path and not check_generated_output(
             gen_expected_path, gen_result_path,
