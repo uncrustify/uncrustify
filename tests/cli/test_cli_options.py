@@ -787,7 +787,7 @@ def main(args):
         #
         if os_name != 'nt':
             # doesn't work under windows
-            temp_result_path = s_path_join(script_dir, 'results/Debug_tracking_space.html')
+            temp_result_path = s_path_join(script_dir, 'results_Debug_tracking_space.html')
             abc = "space:" + temp_result_path                   # Issue #4066
             if not check_uncrustify_output(
                     uncr_bin,
@@ -798,19 +798,19 @@ def main(args):
                               abc,
                               #s_path_join(script_dir, 'results/Debug_tracking_space.html')
                               #temp_result_path
-                                '-L'
-                              , 'A'
-                              , '2'
-                              , '>'
-                              , '/home/guy/A-T.txt'
+                              #  '-L'
+                              #, 'A'
+                              #, '2'
+                              #, '>'
+                              #, '/home/guy/A-T.txt'
                               ],
                     gen_expected_path=s_path_join(script_dir, 'output/Debug_tracking_space.html'),
                     #gen_result_path=s_path_join(script_dir, 'results/Debug_tracking_space.html')
                     gen_result_path=temp_result_path
                     ):
-                print("/home/guy/A-T.txt")
-            else:
-                print("/home/guy/A-T.txt")
+                #print("/home/guy/A-T.txt")
+            #else:
+                #print("/home/guy/A-T.txt")
                 return_flag = False
         print("Test --tracking space:FILE is OK")
 
