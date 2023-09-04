@@ -6370,17 +6370,43 @@ void do_blank_lines()
                   blank_line_set(pc, options::nl_after_func_body_class);
                }
             }
-            else if (options::nl_after_func_body() > 0)
+            else
             {
-               log_rule_B("nl_after_func_body");
-
-               // Issue #1734
-               if (!(pc->GetPrev()->TestFlags(PCF_IN_TRY_BLOCK)))
+               if (!(pc->GetPrev()->TestFlags(PCF_IN_TRY_BLOCK))) // Issue #1734
                {
-                  if (options::nl_after_func_body() != pc->GetNlCount())
+                  if (options::nl_after_func_body() > 0)
                   {
                      log_rule_B("nl_after_func_body");
-                     blank_line_set(pc, options::nl_after_func_body);
+
+                     if (options::nl_after_func_body() != pc->GetNlCount())
+                     {
+                        log_rule_B("nl_after_func_body");
+                        blank_line_set(pc, options::nl_after_func_body);
+                     }
+                  }
+                  else
+                  {
+                     if (options::nl_min_after_func_body() > 0) // Issue #2787
+                     {
+                        log_rule_B("nl_min_after_func_body");
+
+                        if (options::nl_min_after_func_body() > pc->GetNlCount())
+                        {
+                           log_rule_B("nl_min_after_func_body");
+                           blank_line_set(pc, options::nl_min_after_func_body);
+                        }
+                     }
+
+                     if (options::nl_max_after_func_body() > 0)
+                     {
+                        log_rule_B("nl_max_after_func_body");
+
+                        if (options::nl_max_after_func_body() < pc->GetNlCount())
+                        {
+                           log_rule_B("nl_max_after_func_body");
+                           blank_line_set(pc, options::nl_max_after_func_body);
+                        }
+                     }
                   }
                }
             }
