@@ -24,7 +24,7 @@ import re
 import difflib
 import argparse
 import pprint
-import traceback
+#import traceback
 
 if os_name == 'nt':
     EX_OK = 0
@@ -553,231 +553,231 @@ def main(args):
 
     return_flag = True
 
-    #print("Test help ...")
-    ##
-    ## Test help
-    ##   -h -? --help --usage
-    #if not check_uncrustify_output(
-    #        uncr_bin,
-    #        parsed_args,
-    #        out_expected_path=s_path_join(script_dir, 'output/help.txt'),
-    #        out_result_path=s_path_join(test_dir, 'results/help.txt'),
-    #        out_result_manip=[
-    #            string_replace(' --mtime      : Preserve mtime on replaced files.\n', ''),
-    #            string_replace('.exe', ''),
-    #            reg_replace(r'currently \d+ options', 'currently x options')
-    #        ]):
-    #    return_flag = False
-    #print("Test help is OK")
+    print("Test help ...")
+    #
+    # Test help
+    #   -h -? --help --usage
+    if not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            out_expected_path=s_path_join(script_dir, 'output/help.txt'),
+            out_result_path=s_path_join(test_dir, 'results/help.txt'),
+            out_result_manip=[
+                string_replace(' --mtime      : Preserve mtime on replaced files.\n', ''),
+                string_replace('.exe', ''),
+                reg_replace(r'currently \d+ options', 'currently x options')
+            ]):
+        return_flag = False
+    print("Test help is OK")
 
-    #print("Test false parameter ...")
-    ##
-    ## Test false parameter
-    ##   --xyz
-    #if not check_uncrustify_output(
-    #        uncr_bin,
-    #        parsed_args,
-    #        args_arr=['--xyz'],
-    #        err_expected_path=s_path_join(script_dir, 'output/xyz-err.txt'),
-    #        err_result_path=s_path_join(test_dir, 'results/xyz-err.txt')
-    #        ):
-    #    return_flag = False
-    #print("Test false parameter is OK")
+    print("Test false parameter ...")
+    #
+    # Test false parameter
+    #   --xyz
+    if not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['--xyz'],
+            err_expected_path=s_path_join(script_dir, 'output/xyz-err.txt'),
+            err_result_path=s_path_join(test_dir, 'results/xyz-err.txt')
+            ):
+        return_flag = False
+    print("Test false parameter is OK")
 
-    #print("Test Version ...")
-    ##
-    ## Test Version
-    ##   -v
-    #if not check_uncrustify_output(
-    #        uncr_bin,
-    #        parsed_args,
-    #        args_arr=['-v'],
-    #        out_expected_path=s_path_join(script_dir, 'output/v-out.txt'),
-    #        out_result_path=s_path_join(test_dir, 'results/v-out.txt'),
-    #        out_result_manip=reg_replace(r'Uncrustify.+', 'Uncrustify')
-    #        ):
-    #    return_flag = False
-    #print("Test Version is OK")
+    print("Test Version ...")
+    #
+    # Test Version
+    #   -v
+    if not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['-v'],
+            out_expected_path=s_path_join(script_dir, 'output/v-out.txt'),
+            out_result_path=s_path_join(test_dir, 'results/v-out.txt'),
+            out_result_manip=reg_replace(r'Uncrustify.+', 'Uncrustify')
+            ):
+        return_flag = False
+    print("Test Version is OK")
 
-    ## temporary removed
-    ##print("Test --show-config ...")
-    ###
-    ### Test --show-config
-    ###
-    ##if not check_uncrustify_output(
-    ##        uncr_bin,
-    ##        parsed_args,
-    ##        args_arr=['--show-config'],
-    ##        out_expected_path=s_path_join(script_dir, 'output/show_config.txt'),
-    ##        out_result_path=s_path_join(test_dir, 'results/show_config.txt'),
-    ##        out_result_manip=reg_replace(r'\# Uncrustify.+', '')
-    ##        ):
-    ##    return_flag = False
-    ##print("Test --show-config is OK")
-
-    #print("Test the truncate option ...")
+    # temporary removed
+    #print("Test --show-config ...")
     ##
-    ## Test the truncate option
+    ## Test --show-config
     ##
     #if not check_uncrustify_output(
     #        uncr_bin,
     #        parsed_args,
-    #        args_arr=['-c', s_path_join(script_dir, 'config/truncate.cfg'),
-    #                  '-f', s_path_join(script_dir, 'input/truncate.cpp'),
-    #                  '-o', NULL_DEVICE,
-    #                  '-L', '83'],
-    #        err_expected_path=s_path_join(script_dir, 'output/truncate.txt'),
-    #        err_result_path=s_path_join(test_dir, 'results/truncate.txt'),
-    #        err_result_manip=[reg_replace(r'\([0-9]+\)', ' '),
-    #                          reg_replace(RE_DO_SPACE, '')]
+    #        args_arr=['--show-config'],
+    #        out_expected_path=s_path_join(script_dir, 'output/show_config.txt'),
+    #        out_result_path=s_path_join(test_dir, 'results/show_config.txt'),
+    #        out_result_manip=reg_replace(r'\# Uncrustify.+', '')
     #        ):
     #    return_flag = False
-    #print("Test the truncate option is OK")
+    #print("Test --show-config is OK")
 
-    ##print("Test --update-config ...")
-    ## temporary removed
-    ###
-    ### Test --update-config
-    ###
-    ##if not check_uncrustify_output(
-    ##        uncr_bin,
-    ##        parsed_args,
-    ##        args_arr=['-c', s_path_join(script_dir, 'config/mini_d.cfg'),
-    ##                  '--update-config'],
-    ##        out_expected_path=s_path_join(script_dir, 'output/mini_d_uc.txt'),
-    ##        out_result_path=s_path_join(test_dir, 'results/mini_d_uc.txt'),
-    ##        out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
-    ##        err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
-    ##        err_result_path=s_path_join(test_dir, 'results/mini_d_error0.txt'),
-    ##        err_result_manip=string_replace('\\', '/')
-    ##        ):
-    ##    return_flag = False
+    print("Test the truncate option ...")
+    #
+    # Test the truncate option
+    #
+    if not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['-c', s_path_join(script_dir, 'config/truncate.cfg'),
+                      '-f', s_path_join(script_dir, 'input/truncate.cpp'),
+                      '-o', NULL_DEVICE,
+                      '-L', '83'],
+            err_expected_path=s_path_join(script_dir, 'output/truncate.txt'),
+            err_result_path=s_path_join(test_dir, 'results/truncate.txt'),
+            err_result_manip=[reg_replace(r'\([0-9]+\)', ' '),
+                              reg_replace(RE_DO_SPACE, '')]
+            ):
+        return_flag = False
+    print("Test the truncate option is OK")
 
-    ##if not check_uncrustify_output(
-    ##        uncr_bin,
-    ##        parsed_args,
-    ##        args_arr=['-c', s_path_join(script_dir, 'config/mini_nd.cfg'),
-    ##                  '--update-config'],
-    ##        out_expected_path=s_path_join(script_dir, 'output/mini_nd_uc.txt'),
-    ##        out_result_path=s_path_join(test_dir, 'results/mini_nd_uc.txt'),
-    ##        out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
-    ##        err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
-    ##        err_result_path=s_path_join(test_dir, 'results/mini_d_error1.txt'),
-    ##        err_result_manip=string_replace('\\', '/')
-    ##        ):
-    ##    return_flag = False
-    ##print("Test --update-config is OK")
-
-    ##print("Test --update-config-with-doc ...")
-    ###
-    ### Test --update-config-with-doc
-    ###
-    ##if not check_uncrustify_output(
-    ##        uncr_bin,
-    ##        parsed_args,
-    ##        args_arr=['-c', s_path_join(script_dir, 'config/mini_d.cfg'),
-    ##                  '--update-config-with-doc'],
-    ##        out_expected_path=s_path_join(script_dir, 'output/mini_d_ucwd.txt'),
-    ##        out_result_path=s_path_join(test_dir, 'results/mini_d_ucwd.txt'),
-    ##        out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
-    ##        err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
-    ##        err_result_path=s_path_join(test_dir, 'results/mini_d_error2.txt'),
-    ##        err_result_manip=string_replace('\\', '/')
-    ##        ):
-    ##    return_flag = False
-    ##print("Test --update-config-with-doc is OK")
-
-    ##if not check_uncrustify_output(
-    ##        uncr_bin,
-    ##        parsed_args,
-    ##        args_arr=['-c', s_path_join(script_dir, 'config/mini_nd.cfg'),
-    ##                  '--update-config-with-doc'],
-    ##        out_expected_path=s_path_join(script_dir, 'output/mini_nd_ucwd.txt'),
-    ##        out_result_path=s_path_join(test_dir, 'results/mini_nd_ucwd.txt'),
-    ##        out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
-    ##        err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
-    ##        err_result_path=s_path_join(test_dir, 'results/mini_d_error3.txt'),
-    ##        err_result_manip=string_replace('\\', '/')
-    ##        ):
-    ##    return_flag = False
-
-    #print("Test -p ...")
+    #print("Test --update-config ...")
+    # temporary removed
     ##
-    ## Test -p
+    ## Test --update-config
     ##
-    #if os_name != 'nt':
-    #    if not check_uncrustify_output(
-    #            uncr_bin,
-    #            parsed_args,
-    #            args_arr=['-c', s_path_join(script_dir, 'config/mini_nd.cfg'),
-    #                      '-f', s_path_join(script_dir, 'input/testSrcP.cpp'),
-    #                      '-p', s_path_join(test_dir, 'results/p.txt')],
-    #            gen_expected_path=s_path_join(script_dir, 'output/p.txt'),
-    #            gen_result_path=s_path_join(test_dir, 'results/p.txt'),
-    #            gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
-    #            ):
-    #        return_flag = False
-
-    #    if not check_uncrustify_output(
-    #            uncr_bin,
-    #            parsed_args,
-    #            args_arr=['-f', s_path_join(script_dir, 'input/class_enum_struct_union.cpp'),
-    #                      '-p', s_path_join(test_dir, 'results/class_enum_struct_union.txt')],
-    #            gen_expected_path=s_path_join(script_dir, 'output/class_enum_struct_union.txt'),
-    #            gen_result_path=s_path_join(test_dir, 'results/class_enum_struct_union.txt'),
-    #            gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
-    #            ):
-    #        return_flag = False
-
-    #    if not check_uncrustify_output(
-    #            uncr_bin,
-    #            parsed_args,
-    #            args_arr=['-f', s_path_join(script_dir, 'input/in_fcn_def.cpp'),
-    #                      '-p', s_path_join(test_dir, 'results/in_fcn_def.txt')],
-    #            gen_expected_path=s_path_join(script_dir, 'output/in_fcn_def.txt'),
-    #            gen_result_path=s_path_join(test_dir, 'results/in_fcn_def.txt'),
-    #            gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
-    #            ):
-    #        return_flag = False
-    #print("Test -p is OK")
-
-    ##print("Test -p and -c with '-' input ...")
-    #if os_name == 'nt' or check_uncrustify_output(
+    #if not check_uncrustify_output(
     #        uncr_bin,
     #        parsed_args,
-    #        args_arr=['-c', '-',
-    #                  '-f', NULL_DEVICE,
-    #                  '-p', '-'],
-    #        out_expected_path=s_path_join(script_dir, 'output/pc-.txt'),
-    #        out_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', ''),
-    #        out_result_path=s_path_join(test_dir, 'results/pc-.txt')
-    #):
-    #    pass
-
-    ##print("Test -p and -c with '-' input ...")
-    ##
-    ## Test -p and -c with '-' input
-    ##
-    #else:
-    #    return_flag = False
-    ##print("Test -p and -c with '-' input is OK")
-
-    #print("Test -p and --debug-csv-format option ...")
-    ##
-    ## Test -p and --debug-csv-format option
-    ##
-    #if os_name != 'nt' and not check_uncrustify_output(
-    #        uncr_bin,
-    #        parsed_args,
-    #        args_arr=['-c', '-',
-    #                  '-f', s_path_join(script_dir, 'input/class_enum_struct_union.cpp'),
-    #                  '-p', s_path_join(test_dir, 'results/class_enum_struct_union.csv'),
-    #                  '--debug-csv-format'],
-    #        gen_expected_path=s_path_join(script_dir, 'output/class_enum_struct_union.csv'),
-    #        gen_result_path=s_path_join(test_dir, 'results/class_enum_struct_union.csv'),
+    #        args_arr=['-c', s_path_join(script_dir, 'config/mini_d.cfg'),
+    #                  '--update-config'],
+    #        out_expected_path=s_path_join(script_dir, 'output/mini_d_uc.txt'),
+    #        out_result_path=s_path_join(test_dir, 'results/mini_d_uc.txt'),
+    #        out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
+    #        err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
+    #        err_result_path=s_path_join(test_dir, 'results/mini_d_error0.txt'),
+    #        err_result_manip=string_replace('\\', '/')
     #        ):
     #    return_flag = False
-    #print("Test -p and --debug-csv-format option is OK")
+
+    #if not check_uncrustify_output(
+    #        uncr_bin,
+    #        parsed_args,
+    #        args_arr=['-c', s_path_join(script_dir, 'config/mini_nd.cfg'),
+    #                  '--update-config'],
+    #        out_expected_path=s_path_join(script_dir, 'output/mini_nd_uc.txt'),
+    #        out_result_path=s_path_join(test_dir, 'results/mini_nd_uc.txt'),
+    #        out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
+    #        err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
+    #        err_result_path=s_path_join(test_dir, 'results/mini_d_error1.txt'),
+    #        err_result_manip=string_replace('\\', '/')
+    #        ):
+    #    return_flag = False
+    #print("Test --update-config is OK")
+
+    #print("Test --update-config-with-doc ...")
+    ##
+    ## Test --update-config-with-doc
+    ##
+    #if not check_uncrustify_output(
+    #        uncr_bin,
+    #        parsed_args,
+    #        args_arr=['-c', s_path_join(script_dir, 'config/mini_d.cfg'),
+    #                  '--update-config-with-doc'],
+    #        out_expected_path=s_path_join(script_dir, 'output/mini_d_ucwd.txt'),
+    #        out_result_path=s_path_join(test_dir, 'results/mini_d_ucwd.txt'),
+    #        out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
+    #        err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
+    #        err_result_path=s_path_join(test_dir, 'results/mini_d_error2.txt'),
+    #        err_result_manip=string_replace('\\', '/')
+    #        ):
+    #    return_flag = False
+    #print("Test --update-config-with-doc is OK")
+
+    #if not check_uncrustify_output(
+    #        uncr_bin,
+    #        parsed_args,
+    #        args_arr=['-c', s_path_join(script_dir, 'config/mini_nd.cfg'),
+    #                  '--update-config-with-doc'],
+    #        out_expected_path=s_path_join(script_dir, 'output/mini_nd_ucwd.txt'),
+    #        out_result_path=s_path_join(test_dir, 'results/mini_nd_ucwd.txt'),
+    #        out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
+    #        err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
+    #        err_result_path=s_path_join(test_dir, 'results/mini_d_error3.txt'),
+    #        err_result_manip=string_replace('\\', '/')
+    #        ):
+    #    return_flag = False
+
+    print("Test -p ...")
+    #
+    # Test -p
+    #
+    if os_name != 'nt':
+        if not check_uncrustify_output(
+                uncr_bin,
+                parsed_args,
+                args_arr=['-c', s_path_join(script_dir, 'config/mini_nd.cfg'),
+                          '-f', s_path_join(script_dir, 'input/testSrcP.cpp'),
+                          '-p', s_path_join(test_dir, 'results/p.txt')],
+                gen_expected_path=s_path_join(script_dir, 'output/p.txt'),
+                gen_result_path=s_path_join(test_dir, 'results/p.txt'),
+                gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
+                ):
+            return_flag = False
+
+        if not check_uncrustify_output(
+                uncr_bin,
+                parsed_args,
+                args_arr=['-f', s_path_join(script_dir, 'input/class_enum_struct_union.cpp'),
+                          '-p', s_path_join(test_dir, 'results/class_enum_struct_union.txt')],
+                gen_expected_path=s_path_join(script_dir, 'output/class_enum_struct_union.txt'),
+                gen_result_path=s_path_join(test_dir, 'results/class_enum_struct_union.txt'),
+                gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
+                ):
+            return_flag = False
+
+        if not check_uncrustify_output(
+                uncr_bin,
+                parsed_args,
+                args_arr=['-f', s_path_join(script_dir, 'input/in_fcn_def.cpp'),
+                          '-p', s_path_join(test_dir, 'results/in_fcn_def.txt')],
+                gen_expected_path=s_path_join(script_dir, 'output/in_fcn_def.txt'),
+                gen_result_path=s_path_join(test_dir, 'results/in_fcn_def.txt'),
+                gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
+                ):
+            return_flag = False
+    print("Test -p is OK")
+
+    #print("Test -p and -c with '-' input ...")
+    if os_name == 'nt' or check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['-c', '-',
+                      '-f', NULL_DEVICE,
+                      '-p', '-'],
+            out_expected_path=s_path_join(script_dir, 'output/pc-.txt'),
+            out_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', ''),
+            out_result_path=s_path_join(test_dir, 'results/pc-.txt')
+    ):
+        pass
+
+    #print("Test -p and -c with '-' input ...")
+    #
+    # Test -p and -c with '-' input
+    #
+    else:
+        return_flag = False
+    #print("Test -p and -c with '-' input is OK")
+
+    print("Test -p and --debug-csv-format option ...")
+    #
+    # Test -p and --debug-csv-format option
+    #
+    if os_name != 'nt' and not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['-c', '-',
+                      '-f', s_path_join(script_dir, 'input/class_enum_struct_union.cpp'),
+                      '-p', s_path_join(test_dir, 'results/class_enum_struct_union.csv'),
+                      '--debug-csv-format'],
+            gen_expected_path=s_path_join(script_dir, 'output/class_enum_struct_union.csv'),
+            gen_result_path=s_path_join(test_dir, 'results/class_enum_struct_union.csv'),
+            ):
+        return_flag = False
+    print("Test -p and --debug-csv-format option is OK")
 
     if parsed_args.config == 'Debug':
         print("Test --tracking space:FILE ...")
@@ -814,7 +814,7 @@ def main(args):
                 return_flag = False
         print("Test --tracking space:FILE is OK")
 
-    sys_exit()
+    #sys_exit()
 
     print("Test --replace ...")
     #
