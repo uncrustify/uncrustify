@@ -2433,6 +2433,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
       }
       else
       {
+         make_folders(cpd.html_file);                    // Issue #4066
          // create the tracking file
          FILE *t_file;
          t_file = fopen(cpd.html_file, "wb");
