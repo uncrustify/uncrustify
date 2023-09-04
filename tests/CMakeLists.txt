@@ -56,16 +56,16 @@ else()
   endforeach()
 endif()
 
-#if (NOT ENABLE_CODECOVERAGE)
-#  add_test(
-#    NAME sources_format
-#    COMMAND ${PYTHON_EXECUTABLE} run_sources_tests.py
-#      --executable $<TARGET_FILE:uncrustify>
-#      -d --git ${GIT_EXECUTABLE}
-#      --result-dir ${CMAKE_CURRENT_BINARY_DIR}
-#    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-#  )
-#endif()
+if (NOT ENABLE_CODECOVERAGE)
+  add_test(
+    NAME sources_format
+    COMMAND ${PYTHON_EXECUTABLE} run_sources_tests.py
+      --executable $<TARGET_FILE:uncrustify>
+      -d --git ${GIT_EXECUTABLE}
+      --result-dir ${CMAKE_CURRENT_BINARY_DIR}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  )
+endif()
 
 add_test(
   NAME cli_options
