@@ -177,24 +177,24 @@ def check_generated_output(gen_expected_path, gen_result_path,
     True
     """
 
-    print("2-1: gen_expected_path is "+gen_expected_path)
-    print("2-2: gen_result_path is "+gen_result_path)
+    #print("2-1: gen_expected_path is "+gen_expected_path)
+    #print("2-2: gen_result_path is "+gen_result_path)
     gen_exp_txt = get_file_content(gen_expected_path)
-    print("2-3: gen_exp_txt is ")
+    #print("2-3: gen_exp_txt is ")
     #+gen_exp_txt)
     if gen_exp_txt is None:
         return False
 
     gen_res_txt = get_file_content(gen_result_path)
-    print("2-4: gen_res_txt is "+gen_res_txt)
+    #print("2-4: gen_res_txt is "+gen_res_txt)
     if gen_res_txt is None:
         return False
 
     #print("2: result_manip is "+result_manip)
-    if result_manip is not None:
-        print("2-5: result_manip is "+result_manip)
-    else:
-        print("2-6: result_manip is None")
+    #if result_manip is not None:
+    #    print("2-5: result_manip is "+result_manip)
+    #else:
+    #    print("2-6: result_manip is None")
     if result_manip is not None:
         if type(result_manip) is list or type(result_manip) is tuple:
             for m in result_manip:
@@ -202,10 +202,10 @@ def check_generated_output(gen_expected_path, gen_result_path,
         else:
             gen_res_txt = result_manip(gen_res_txt)
 
-    print("2-7: gen_res_txt is ")
-    print(gen_res_txt)
-    print("2-8: gen_exp_txt is ")
-    print(gen_exp_txt)
+    #print("2-7: gen_res_txt is ")
+    #print(gen_res_txt)
+    #print("2-8: gen_exp_txt is ")
+    #print(gen_exp_txt)
     if gen_res_txt != gen_exp_txt:
         with open(gen_result_path, 'w', encoding="utf-8", newline="") as f:
             f.write(gen_res_txt)
@@ -787,7 +787,7 @@ def main(args):
         #
         if os_name != 'nt':
             # doesn't work under windows
-            temp_result_path = s_path_join(script_dir, 'results_Debug_tracking_space.html')
+            temp_result_path = s_path_join(script_dir, 'results/Debug_tracking_space.html')
             abc = "space:" + temp_result_path                   # Issue #4066
             if not check_uncrustify_output(
                     uncr_bin,
