@@ -2444,6 +2444,9 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
                     __func__, cpd.html_file, strerror(errno), errno);
             exit(EX_IOERR);
          }
+         output_text(t_file);
+         fclose(t_file);
+         exit(EX_OK);
       }
    }
 
