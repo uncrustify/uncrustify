@@ -70,7 +70,8 @@ bool token_is_within_trailing_return(Chunk *pc)
          return(true);
       }
       else if (  prev->Is(CT_FPAREN_CLOSE)
-              || prev->Is(CT_FPAREN_OPEN))
+              || prev->Is(CT_FPAREN_OPEN)
+              || prev->Is(CT_SEMICOLON))                     // Issue #4080
       {
          return(false);
       }
