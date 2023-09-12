@@ -381,6 +381,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          return(options::sp_before_semi());
       }
 
+      // Issue #4094-03
       if (second->GetParentType() == CT_FOR)
       {
          if (first->Is(CT_SPAREN_OPEN))
@@ -463,6 +464,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
    }
 
+   // Issue #4094-05
    // "for (;;)" vs. "for (;; )" and "for (a;b;c)" vs. "for (a; b; c)"
    if (first->Is(CT_SEMICOLON))                        // see the tests cpp:34517-34519
    {
@@ -951,6 +953,15 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (first->Is(CT_LPAREN_OPEN))
    {
+      if (second->Is(CT_LPAREN_CLOSE))
+      {
+         // Add or remove space after the opening parenthesis and before the closing
+         // parenthesis of a argument list of a C++11 lambda, as in
+         // '[]( <here> ){ ... }'
+         // with an empty list.
+         log_rule("sp_cpp_lambda_argument_list_empty");
+         return(options::sp_cpp_lambda_argument_list_empty());
+      }
       // Add or remove space after the opening parenthesis of a argument list
       // of a C++11 lambda, as in '[]( <here> int x ){ ... }'.
       log_rule("sp_cpp_lambda_argument_list");
@@ -1264,6 +1275,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_angle_shift());
    }
 
+   // Issue #4094-01
    // spacing around template < > stuff
    if (  first->Is(CT_ANGLE_OPEN)
       || second->Is(CT_ANGLE_CLOSE))
@@ -1272,6 +1284,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          && second->Is(CT_ANGLE_CLOSE))
       {
          // Add or remove space inside '<>'.
+         // if empty.
          log_rule("sp_inside_angle_empty");
          return(options::sp_inside_angle_empty());
       }
@@ -1320,6 +1333,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          return(options::sp_angle_word());
       }
 
+      // Issue #4094-02
       if (  second->Is(CT_FPAREN_OPEN)
          || second->Is(CT_PAREN_OPEN))
       {
@@ -1474,6 +1488,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
    }
 
+   // Issue #4094-07
    if (  second->Is(CT_FPAREN_OPEN)
       && first->GetParentType() == CT_OPERATOR
       && (options::sp_after_operator_sym() != IARF_IGNORE))
@@ -1527,6 +1542,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(IARF_IGNORE);
    }
 
+   // Issue #4094-11
    // spaces between function and open paren
    if (  first->Is(CT_FUNC_CALL)
       || first->Is(CT_FUNCTION)                        // Issue #2665
@@ -1575,6 +1591,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_attribute_paren());
    }
 
+   // Issue #4094-10
    if (first->Is(CT_FUNC_DEF))
    {
       if (  (options::sp_func_def_paren_empty() != IARF_IGNORE)
@@ -1585,7 +1602,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          if (next->Is(CT_FPAREN_CLOSE))
          {
             // Add or remove space between function name and '()' on function definition
-            // without parameters.
+            // if empty.
             log_rule("sp_func_def_paren_empty");
             return(options::sp_func_def_paren_empty());
          }
@@ -1650,6 +1667,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_cparen_oparen());
    }
 
+   // Issue #4094-09
    if (  first->Is(CT_FUNC_PROTO)
       || (  second->Is(CT_FPAREN_OPEN)
          && second->GetParentType() == CT_FUNC_PROTO))
@@ -1662,7 +1680,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          if (next->Is(CT_FPAREN_CLOSE))
          {
             // Add or remove space between function name and '()' on function declaration
-            // without parameters.
+            // if empty.
             log_rule("sp_func_proto_paren_empty");
             return(options::sp_func_proto_paren_empty());
          }
@@ -1681,6 +1699,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_func_type_paren());
    }
 
+   // Issue #4094-12
    if (  first->Is(CT_FUNC_CLASS_DEF)
       || first->Is(CT_FUNC_CLASS_PROTO))
    {
@@ -1710,10 +1729,12 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(IARF_FORCE);
    }
 
+   // Issue #4094-08
    if (  first->Is(CT_BRACE_OPEN)
       && second->Is(CT_BRACE_CLOSE))
    {
       // Add or remove space inside '{}'.
+      // if empty.
       log_rule("sp_inside_braces_empty");
       return(options::sp_inside_braces_empty());
    }
@@ -2268,10 +2289,12 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_inside_paren());
    }
 
+   // Issue #4094-06
    if (  first->Is(CT_SQUARE_OPEN)
       && second->Is(CT_SQUARE_CLOSE))
    {
       // Add or remove space inside '[]'.
+      // if empty.
       log_rule("sp_inside_square_empty");
       return(options::sp_inside_square_empty());
    }
