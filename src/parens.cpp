@@ -52,6 +52,9 @@ void do_parens()
 
       while ((pc = pc->GetNextNcNnl())->IsNotNullChunk())
       {
+         //LOG_FMT(LPARADD, "%s(%d): pc++++1 orig line is %zu, orig col is %zu\n",
+         //        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
+
          if (  pc->IsNot(CT_SPAREN_OPEN)
             || (  pc->GetParentType() != CT_IF
                && pc->GetParentType() != CT_ELSEIF
@@ -283,9 +286,12 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
    while (  (pc = pc->GetNextNcNnl())->IsNotNullChunk()
          && pc != pclose)
    {
+      //LOG_FMT(LPARADD, "%s(%d): pc++++2 Text is '%s', orig line is %zu, orig col is %zu\n",
+      //        __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
       if (pc->TestFlags(PCF_IN_PREPROC))
       {
-         LOG_FMT(LPARADD2, " -- bail on PP %s [%s] at line %zu col %zu, level %zu\n",
+         LOG_FMT(LPARADD, "%s(%d): -- bail on PP %s [%s] at line %zu col %zu, level %zu\n",
+                 __func__, __LINE__,
                  get_token_name(pc->GetType()),
                  pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
          return;
@@ -296,7 +302,8 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
          || pc->Is(CT_COND_COLON)
          || pc->Is(CT_COMMA))
       {
-         LOG_FMT(LPARADD2, " -- %s [%s] at line %zu col %zu, level %zu\n",
+         LOG_FMT(LPARADD, "%s(%d): -- %s [%s] at line %zu col %zu, level %zu\n",
+                 __func__, __LINE__,
                  get_token_name(pc->GetType()),
                  pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
 
@@ -313,19 +320,26 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       }
       else if (pc->Is(CT_COMPARE))
       {
-         LOG_FMT(LPARADD2, " -- compare '%s' at line %zu, orig col is %zu, level is %zu\n",
+         LOG_FMT(LPARADD, "%s(%d): -- compare '%s' at line %zu, orig col is %zu, level is %zu\n",
+                 __func__, __LINE__,
                  pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
          hit_compare = true;
       }
       else if (pc->IsParenOpen())
       {
          Chunk *next = pc->GetClosingParen();
+         //LOG_FMT(LPARADD, "%s(%d): next++++2 Text is '%s', orig line is %zu, orig col is %zu\n",
+         //        __func__, __LINE__, next->Text(), next->GetOrigLine(), next->GetOrigCol());
 
          if (next->IsNotNullChunk())
          {
             check_bool_parens(pc, next, nest + 1);
             pc = next;
          }
+      }
+      else if (pc->Is(CT_SEMICOLON))                      // Issue #3236
+      {
+         ref = pc;
       }
       else if (  pc->Is(CT_BRACE_OPEN)
               || pc->Is(CT_SQUARE_OPEN)
