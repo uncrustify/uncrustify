@@ -150,6 +150,13 @@ sp_cpp_lambda_square_brace;
 
 // Add or remove space after the opening parenthesis and before the closing
 // parenthesis of a argument list of a C++11 lambda, as in
+// '[]( <here> ){ ... }'
+// with an empty list.
+extern Option<iarf_e>
+sp_cpp_lambda_argument_list_empty;
+
+// Add or remove space after the opening parenthesis and before the closing
+// parenthesis of a argument list of a C++11 lambda, as in
 // '[]( <here> int x <here> ){ ... }'.
 extern Option<iarf_e>
 sp_cpp_lambda_argument_list;
@@ -430,6 +437,7 @@ extern Option<iarf_e>
 sp_inside_angle;
 
 // Add or remove space inside '<>'.
+// if empty.
 extern Option<iarf_e>
 sp_inside_angle_empty;
 
@@ -593,6 +601,7 @@ extern Option<iarf_e>
 sp_inside_square;
 
 // Add or remove space inside '[]'.
+// if empty.
 extern Option<iarf_e>
 sp_inside_square_empty;
 
@@ -783,6 +792,7 @@ extern Option<iarf_e>
 sp_inside_braces;
 
 // Add or remove space inside '{}'.
+// if empty.
 extern Option<iarf_e>
 sp_inside_braces_empty;
 
@@ -805,7 +815,7 @@ extern Option<iarf_e>
 sp_func_proto_paren;
 
 // Add or remove space between function name and '()' on function declaration
-// without parameters.
+// if empty.
 extern Option<iarf_e>
 sp_func_proto_paren_empty;
 
@@ -818,7 +828,7 @@ extern Option<iarf_e>
 sp_func_def_paren;
 
 // Add or remove space between function name and '()' on function definition
-// without parameters.
+// if empty.
 extern Option<iarf_e>
 sp_func_def_paren_empty;
 
