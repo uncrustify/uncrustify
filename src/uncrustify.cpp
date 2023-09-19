@@ -950,7 +950,8 @@ int main(int argc, char *argv[])
 
    // Check args - for multifile options
    if (  source_list != nullptr
-      || p_arg != nullptr)
+      || (  p_arg != nullptr
+         && cpd.html_type == tracking_type_e::TT_NONE))           // Issue #4066
    {
       if (source_file != nullptr)
       {
@@ -2432,17 +2433,20 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
       }
       else
       {
+         make_folders(cpd.html_file);                    // Issue #4066
          // create the tracking file
          FILE *t_file;
          t_file = fopen(cpd.html_file, "wb");
 
-         if (t_file)
+         if (t_file == nullptr)
          {
-            output_text(t_file);
-            fclose(t_file);
-            exit(EX_OK);
+            LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
+                    __func__, cpd.html_file, strerror(errno), errno);
+            exit(EX_IOERR);
          }
-         exit(EX_USAGE);
+         output_text(t_file);
+         fclose(t_file);
+         exit(EX_OK);
       }
    }
 

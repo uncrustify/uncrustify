@@ -1,6 +1,6 @@
 /**
  * @file uncrustify.h
- * prototypes for uncrustify.c
+ * prototypes for uncrustify.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

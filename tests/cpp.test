@@ -16,6 +16,8 @@
 30004  cpp/Issue_4036.cfg                                   cpp/Issue_4036.cpp
 30005  common/empty.cfg                                     cpp/Issue_4042.cpp
 30006  common/empty.cfg                                     cpp/Issue_4027.cpp
+30007  cpp/Issue_4080.cfg                                   cpp/Issue_4080.cpp
+30008  cpp/Issue_4094.cfg                                   cpp/Issue_4094.cpp
 
 30010  cpp/ben_005.cfg                                      cpp/class.h
 30011  cpp/ben_006.cfg                                      cpp/misc.cpp
