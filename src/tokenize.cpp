@@ -924,12 +924,12 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
       }
       ch = pc_temp.GetStr()[pc_temp.Len() - 1];
       ctx.restore();
-      LOG_FMT(LGUY, "%s(%d): pc_temp:%s\n", __func__, __LINE__, pc_temp.Text());
+      LOG_FMT(LBCTRL, "%s(%d): pc_temp:%s\n", __func__, __LINE__, pc_temp.Text());
 
       if (ch == 'h') // TODO can we combine this in analyze_character  104
       {
          // we have an MS hexadecimal number with "h" at the end
-         LOG_FMT(LGUY, "%s(%d): MS hexadecimal number\n", __func__, __LINE__);
+         LOG_FMT(LBCTRL, "%s(%d): MS hexadecimal number\n", __func__, __LINE__);
          did_hex = true;
 
          do
@@ -938,7 +938,7 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
          } while (is_hex_(ctx.peek()));
 
          pc.Str().append(ctx.get());    // store the h
-         LOG_FMT(LGUY, "%s(%d): pc:%s\n", __func__, __LINE__, pc.Text());
+         LOG_FMT(LBCTRL, "%s(%d): pc:%s\n", __func__, __LINE__, pc.Text());
       }
       else
       {
@@ -2901,18 +2901,18 @@ void tokenize(const deque<int> &data, Chunk *ref)
 
       if (pc->Is(CT_NEWLINE))
       {
-         LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig col is %zu, <Newline>, nl is %zu\n",
+         LOG_FMT(LBCTRL, "%s(%d): orig line is %zu, orig col is %zu, <Newline>, nl is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetNlCount());
       }
       else if (pc->Is(CT_VBRACE_OPEN))
       {
-         LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig col is %zu, type is %s, orig col end is %zu\n",
+         LOG_FMT(LBCTRL, "%s(%d): orig line is %zu, orig col is %zu, type is %s, orig col end is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->GetOrigColEnd());
       }
       else
       {
          char copy[1000];
-         LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s, orig col end is %zu\n",
+         LOG_FMT(LBCTRL, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s, orig col end is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy), get_token_name(pc->GetType()), pc->GetOrigColEnd());
       }
    }
