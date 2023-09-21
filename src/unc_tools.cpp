@@ -153,6 +153,35 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
 } // prot_the_line_pc
 
 
+void prot_the_columns(int theLine, unsigned int actual_line)
+{
+   if (actual_line == 0)
+   {
+      // use the option debug_line_number_to_protocol.
+      actual_line = options::debug_line_number_to_protocol();
+
+      if (actual_line == 0)
+      {
+         // don't make any protocol.
+         return;
+      }
+   }
+   counter++;
+   LOG_FMT(LGUY, "%4d:", theLine);
+
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+   {
+      if (pc->GetOrigLine() == actual_line)
+      {
+         LOG_FMT(LGUY, "%4zu,",
+                 pc->GetColumn());
+      }
+   }
+
+   LOG_FMT(LGUY, "                 (%2zu)\n", counter);
+} // prot_the_columns
+
+
 void prot_all_lines(const char *func_name, int theLine)
 {
    counter++;
