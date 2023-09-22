@@ -37,6 +37,9 @@ void prot_the_source(int theLine);
 void prot_the_columns(int theLine, unsigned int actual_line);
 
 
+void prot_the_OrigCols(int theLine, unsigned int actual_line);
+
+
 void examine_Data(const char *func_name, int theLine, int what);
 
 
