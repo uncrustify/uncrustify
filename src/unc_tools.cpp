@@ -211,6 +211,61 @@ void prot_the_OrigCols(int theLine, unsigned int actual_line)
 } // prot_the_OrigCols
 
 
+void rebuild_the_line(int theLine, unsigned int actual_line)
+{
+#define MANY    100
+
+   if (actual_line == 0)
+   {
+      // use the option debug_line_number_to_protocol.
+      actual_line = options::debug_line_number_to_protocol();
+
+      if (actual_line == 0)
+      {
+         // don't make any protocol.
+         return;
+      }
+   }
+   char rebuildLine[MANY];
+
+   // fill the array
+   for (size_t where = 0; where < MANY; where++)
+   {
+      rebuildLine[where] = ' ';
+   }
+
+   rebuildLine[MANY - 1] = '\0';
+   LOG_FMT(LGUY, "%4d:", theLine);
+
+   size_t len0 = 0;
+
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+   {
+      if (pc->GetOrigLine() == actual_line)
+      {
+         size_t     col  = pc->GetColumn();
+         size_t     len1 = pc->Len();
+         const char *A   = pc->Text();
+
+         for (size_t x = 0; x < len1; x++)
+         {
+            char B = A[x];
+            rebuildLine[col + x - 1] = B;
+         }
+
+         if (pc->Is(CT_NEWLINE))
+         {
+            len0              = col + len1 - 1;
+            rebuildLine[len0] = '\0';
+            break;
+         }
+      }
+   }
+
+   LOG_FMT(LGUY, "%s\n", rebuildLine);
+} // prot_the_OrigCols
+
+
 void prot_all_lines(const char *func_name, int theLine)
 {
    counter++;
