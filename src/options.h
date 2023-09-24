@@ -305,6 +305,10 @@ sp_qualifier_unnamed_ptr_star;
 extern Option<iarf_e>
 sp_between_ptr_star;
 
+// Add or remove space between pointer star '*' and reference '&', as in 'int *& a;'.
+extern Option<iarf_e>
+sp_between_ptr_ref;
+
 // Add or remove space after pointer star '*', if followed by a word.
 //
 // Overrides sp_type_func.

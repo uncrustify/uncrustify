@@ -599,6 +599,10 @@
 31635  common/empty.cfg                                     cpp/sp_decltype.cpp
 31636  cpp/Issue_1923.cfg                                   cpp/Issue_1923.cpp
 31637  cpp/Issue_3446.cfg                                   cpp/Issue_3446.cpp
+31638  cpp/sp_between_ptr_ref-a.cfg                         cpp/misc2.cpp
+31639  cpp/sp_between_ptr_ref-r.cfg                         cpp/misc2.cpp
+31640  cpp/sp_between_ptr_ref-f.cfg                         cpp/misc2.cpp
+31641  cpp/sp_between_ptr_ref-i.cfg                         cpp/misc2.cpp
 
 31660  cpp/var_def_blks-1.cfg                               cpp/issue_1919.cpp
 31661  cpp/Issue_3097.cfg                                   cpp/Issue_3097.cpp
