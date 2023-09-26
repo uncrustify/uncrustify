@@ -13,7 +13,7 @@
  *   Rmk: spaces = space + nl
  *
  * @author  Ben Gardner
- * @author  Guy Maurel, 2015-2022
+ * @author  Guy Maurel, 2015-2023
  * @license GPL v2+
  */
 
@@ -23,6 +23,7 @@
 #include "log_rules.h"
 #include "options_for_QT.h"
 #include "punctuators.h"
+#include "unc_tools.h"
 
 #ifdef WIN32
 #include <algorithm>                   // to get max
@@ -90,6 +91,7 @@ bool token_is_within_trailing_return(Chunk *pc)
  */
 static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 {
+   //rebuild_the_line(__LINE__, 2);
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, first Text() '%s', type is %s\n",
@@ -2536,6 +2538,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (  first->Is(CT_BOOL)
       || second->Is(CT_BOOL))
    {
+      //rebuild_the_line(__LINE__, 2);
       // Add or remove space around boolean operators '&&' and '||'.
       iarf_e arg = options::sp_bool();
 
@@ -3723,7 +3726,14 @@ void space_text()
             if (  next->GetOrigCol() >= pc->GetOrigColEnd()
                && pc->GetOrigColEnd() != 0)
             {
+               //LOG_FMT(LGUY, "%s(%d):AAA davor column is %zu\n",
+               //        __func__, __LINE__, column);
+               //LOG_FMT(LGUY, "%s(%d): pc is '%s', pc orig col end is %zu\n",
+               //        __func__, __LINE__, pc->Text(),
+               //        pc->GetOrigColEnd());
                column += next->GetOrigCol() - pc->GetOrigColEnd();
+               //LOG_FMT(LGUY, "%s(%d):AAA danach column is %zu\n",
+               //        __func__, __LINE__, column);
             }
             else
             {
@@ -3760,10 +3770,14 @@ void space_text()
                {
                   // Try to keep relative spacing between tokens
                   LOG_FMT(LSPACE, "%s(%d): <relative adj>", __func__, __LINE__);
-                  LOG_FMT(LSPACE, "%s(%d): pc is '%s', orig col is %zu, next orig col is %zu, pc orig col end is %zu\n",
-                          __func__, __LINE__, pc->Text(),
-                          pc->GetOrigCol(), next->GetOrigCol(), pc->GetOrigColEnd());
+                  //LOG_FMT(LSPACE, "%s(%d): pc is '%s', orig col is %zu, next orig col is %zu, pc orig col end is %zu\n",
+                  //        __func__, __LINE__, pc->Text(),
+                  //        pc->GetOrigCol(), next->GetOrigCol(), pc->GetOrigColEnd());
+                  //LOG_FMT(LGUY, "%s(%d):AAA davor column is %zu\n",
+                  //        __func__, __LINE__, column);
                   column = pc->GetColumn() + (next->GetOrigCol() - pc->GetOrigColEnd());
+                  //LOG_FMT(LGUY, "%s(%d):AAA danach column is %zu\n",
+                  //        __func__, __LINE__, column);
                }
                else
                {
@@ -3772,7 +3786,11 @@ void space_text()
                    * try to keep the comment in the same column.
                    */
                   size_t col_min = pc->GetColumn() + pc->Len() + ((next->GetOrigPrevSp() > 0) ? 1 : 0);
+                  //LOG_FMT(LGUY, "%s(%d):AAA davor column is %zu\n",
+                  //        __func__, __LINE__, column);
                   column = next->GetOrigCol();
+                  //LOG_FMT(LGUY, "%s(%d):AAA danach column is %zu\n",
+                  //        __func__, __LINE__, column);
 
                   if (column < col_min)
                   {
@@ -3782,7 +3800,23 @@ void space_text()
                }
             }
          }
+         //rebuild_the_line(__LINE__, 2);
+         //LOG_FMT(LGUY, "%s(%d):AAA davor column is %zu\n",
+         //        __func__, __LINE__, column);
+
+         //if (column == 11)
+         //{
+         //   int a = 13;
+         //}
+         //LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig col is %zu, next-Text() '%s', type is %s, column is %zu\n",
+         //        __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text(), get_token_name(next->GetType()), next->GetColumn());
+         //LOG_FMT(LGUY, "%s(%d): next setzen auf %zu\n", __func__, __LINE__, column);
          next->SetColumn(column);
+         //LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig col is %zu, next-Text() '%s', type is %s, column is %zu\n",
+         //        __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text(), get_token_name(next->GetType()), next->GetColumn());
+         //LOG_FMT(LGUY, "%s(%d):AAA danach column is %zu\n",
+         //        __func__, __LINE__, column);
+         //rebuild_the_line(__LINE__, 2);
 
          LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, pc-Text() '%s', type is %s\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));

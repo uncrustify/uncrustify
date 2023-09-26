@@ -9,6 +9,7 @@
 #include "parens.h"
 
 #include "log_rules.h"
+#include "unc_tools.h"
 
 using namespace uncrustify;
 
@@ -16,6 +17,7 @@ using namespace uncrustify;
 //! Add an open parenthesis after first and add a close parenthesis before the last
 static void add_parens_between(Chunk *first, Chunk *last);
 
+size_t Anzahl = 0;
 
 /**
  * Scans between two parens and adds additional parens if needed.
@@ -228,40 +230,125 @@ static void add_parens_between(Chunk *first, Chunk *last)
    {
       return;
    }
+   Anzahl++;
+   LOG_FMT(LGUY, "\nAnfang: %zu", Anzahl);
+   //prot_the_line(__func__, __LINE__, 2, 0);
+   //prot_the_columns(__LINE__, 2);
+   //prot_the_OrigCols(__LINE__, 2);
+   //LOG_FMT(LGUY, "        if   (    va1  <    0    ||   va2  >    0    )\n");
+   //rebuild_the_line(__LINE__, 2);
    Chunk pc;
 
    pc.SetType(CT_PAREN_OPEN);
    pc.SetOrigLine(first_n->GetOrigLine());
-   pc.SetOrigCol(first_n->GetOrigCol());
+   pc.SetColumn(first_n->GetColumn());                         // Issue #3236
+   pc.SetOrigCol(first_n->GetOrigCol());                       // Issue #3236
+   pc.SetOrigColEnd(first_n->GetOrigColEnd());                 // Issue #3236
    pc.Str() = "(";
    pc.SetFlags(first_n->GetFlags() & PCF_COPY_FLAGS);
    pc.SetLevel(first_n->GetLevel());
    pc.SetPpLevel(first_n->GetPpLevel());
    pc.SetBraceLevel(first_n->GetBraceLevel());
-
+   //LOG_FMT(LGUY, "insert (");
    pc.CopyAndAddBefore(first_n);
 
-   Chunk *last_p = last->GetPrevNcNnl(E_Scope::PREPROC);
+   //prot_the_line(__func__, __LINE__, 2, 0);
+   //prot_the_columns(__LINE__, 2);
+   //prot_the_OrigCols(__LINE__, 2);
+   //LOG_FMT(LGUY, "        if   (    (    va1  <    0    ||   va2  >    0    )\n");
+   //rebuild_the_line(__LINE__, 2);
+   //LOG_FMT(LGUY, "shift all the tokens in this line to the right  Issue #3236\n");
+   // shift all the tokens in this line to the right  Issue #3236
+   for (Chunk *temp = first_n; ; temp = temp->GetNext())
+   {
+      //LOG_FMT(LGUY, "%s(%d): orig line %zu, orig col %zu, Column is %zu, Text is '%s'\n",
+      //        __func__, __LINE__,
+      //        temp->GetOrigLine(), temp->GetOrigCol(), temp->GetColumn(), temp->Text());
+      temp->SetColumn(temp->GetColumn() + 1);                         // Issue #3236
+      //LOG_FMT(LGUY, "%s(%d): orig line %zu, orig col %zu, OrigCol is %zu, Text is '%s'\n",
+      //        __func__, __LINE__,
+      //        temp->GetOrigLine(), temp->GetOrigCol(), temp->GetOrigCol(), temp->Text());
+      temp->SetOrigCol(temp->GetOrigCol() + 1);                         // Issue #3236
+      temp->SetOrigColEnd(temp->GetOrigColEnd() + 1);                   // Issue #3236
+
+      if (temp->Is(CT_NEWLINE))
+      {
+         break;
+      }
+   }
+
+   //prot_the_columns(__LINE__, 2);
+   //prot_the_OrigCols(__LINE__, 2);
+   //LOG_FMT(LGUY, "        if   (    (    va1 <    0    ||   va2  >    0    )\n");
+   //rebuild_the_line(__LINE__, 2);
+
+   Chunk *last_prev = last->GetPrevNcNnl(E_Scope::PREPROC);
+
+   //LOG_FMT(LGUY, "%s(%d): last_prev is '%s', orig line %zu, orig Col %zu, Column is %zu\n",
+   //LOG_FMT(LGUY, "%s(%d): last_prev is '%s', orig line %zu, orig Col %zu, Column is %zu\n",
+   //LOG_FMT(LGUY, "%s(%d): last_prev is '%s', Column is %zu\n",
+   //        __func__, __LINE__,
+   //        last_prev->Text(),
+   //        last_prev->GetColumn());
+   //LOG_FMT(LGUY, "%s(%d): last_prev is '%s', OrigCol is %zu\n",
+   //        __func__, __LINE__,
+   //        last_prev->Text(),
+   //        last_prev->GetOrigCol());
 
    pc.SetType(CT_PAREN_CLOSE);
-   pc.SetOrigLine(last_p->GetOrigLine());
-   pc.SetOrigCol(last_p->GetOrigCol());
+   pc.SetOrigLine(last_prev->GetOrigLine());
+   pc.SetOrigCol(last_prev->GetOrigCol());
+   pc.SetColumn(last_prev->GetColumn() + 1);                         // Issue #3236
+   pc.SetOrigCol(last_prev->GetOrigCol() + 1);                       // Issue #3236
+   pc.SetOrigColEnd(last_prev->GetOrigColEnd() + 1);                 // Issue #3236
    pc.Str() = ")";
-   pc.SetFlags(last_p->GetFlags() & PCF_COPY_FLAGS);
-   pc.SetLevel(last_p->GetLevel());
-   pc.SetPpLevel(last_p->GetPpLevel());
-   pc.SetBraceLevel(last_p->GetBraceLevel());
+   pc.SetFlags(last_prev->GetFlags() & PCF_COPY_FLAGS);
+   pc.SetLevel(last_prev->GetLevel());
+   pc.SetPpLevel(last_prev->GetPpLevel());
+   pc.SetBraceLevel(last_prev->GetBraceLevel());
+   //LOG_FMT(LGUY, "insert )\n");
+   pc.CopyAndAddAfter(last_prev);
 
-   pc.CopyAndAddAfter(last_p);
+   //prot_the_line(__func__, __LINE__, 2, 0);
+   //prot_the_columns(__LINE__, 2);
+   //prot_the_OrigCols(__LINE__, 2);
+   //LOG_FMT(LGUY, "        if   (    (    va1 <    0    )    ||   va2  >    0    )\n");
+   //rebuild_the_line(__LINE__, 2);
+   //LOG_FMT(LGUY, "shift all the tokens in this line to the right  Issue #3236\n");
+   // shift all the tokens in this line to the right  Issue #3236
+   //for (Chunk *temp = last_prev->GetNext();; temp = temp->GetNext())
+   for (Chunk *temp = last; ; temp = temp->GetNext())
+   {
+      //LOG_FMT(LGUY, "%s(%d): line %zu, Column is %zu, Text is '%s'\n",
+      //        __func__, __LINE__,
+      //        temp->GetOrigLine(), temp->GetColumn(), temp->Text());
+      temp->SetColumn(temp->GetColumn() + 1);                         // Issue #3236
+      //LOG_FMT(LGUY, "%s(%d): line %zu, OrigCol is %zu, Text is '%s'\n",
+      //        __func__, __LINE__,
+      //        temp->GetOrigLine(), temp->GetOrigCol(), temp->Text());
+      temp->SetOrigCol(temp->GetOrigCol() + 1);                        // Issue #3236
+      temp->SetOrigColEnd(temp->GetOrigColEnd() + 1);                  // Issue #3236
+
+      if (temp->Is(CT_NEWLINE))
+      {
+         break;
+      }
+   }
+
+   //prot_the_line(__func__, __LINE__, 2, 0);
+   //prot_the_columns(__LINE__, 2);
+   //prot_the_OrigCols(__LINE__, 2);
+   //LOG_FMT(LGUY, "        if   (    (    va1 <    0    )    ||   va2  >    0    )\n");
+   //rebuild_the_line(__LINE__, 2);
 
    for (Chunk *tmp = first_n;
-        tmp != last_p;
+        tmp != last_prev;
         tmp = tmp->GetNextNcNnl())
    {
       tmp->SetLevel(tmp->GetLevel() + 1);
    }
 
-   last_p->SetLevel(last_p->GetLevel() + 1);
+   last_prev->SetLevel(last_prev->GetLevel() + 1);
 } // add_parens_between
 
 
@@ -326,6 +413,10 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
             check_bool_parens(pc, next, nest + 1);
             pc = next;
          }
+      }
+      else if (pc->Is(CT_SEMICOLON))                      // Issue #3236
+      {
+         ref = pc;
       }
       else if (  pc->Is(CT_BRACE_OPEN)
               || pc->Is(CT_SQUARE_OPEN)
