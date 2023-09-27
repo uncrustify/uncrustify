@@ -13,7 +13,7 @@
  *   Rmk: spaces = space + nl
  *
  * @author  Ben Gardner
- * @author  Guy Maurel, 2015-2022
+ * @author  Guy Maurel, 2015-2023
  * @license GPL v2+
  */
 
@@ -3783,7 +3783,6 @@ void space_text()
             }
          }
          next->SetColumn(column);
-
          LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, pc-Text() '%s', type is %s\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
          LOG_FMT(LSPACE, "%s(%d): ",

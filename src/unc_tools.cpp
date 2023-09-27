@@ -250,6 +250,12 @@ void rebuild_the_line(int theLine, unsigned int actual_line)
          for (size_t x = 0; x < len1; x++)
          {
             char B = A[x];
+
+            if (col + x >= MANY)
+            {
+               LOG_FMT(LGUY, " ***** MANY is too little for this line %d\n", theLine);
+               exit(EX_SOFTWARE);
+            }
             rebuildLine[col + x - 1] = B;
          }
 
@@ -263,7 +269,7 @@ void rebuild_the_line(int theLine, unsigned int actual_line)
    }
 
    LOG_FMT(LGUY, "%s\n", rebuildLine);
-} // prot_the_OrigCols
+} // rebuild_the_line
 
 
 void prot_all_lines(const char *func_name, int theLine)

@@ -232,36 +232,64 @@ static void add_parens_between(Chunk *first, Chunk *last)
 
    pc.SetType(CT_PAREN_OPEN);
    pc.SetOrigLine(first_n->GetOrigLine());
-   pc.SetOrigCol(first_n->GetOrigCol());
+   pc.SetColumn(first_n->GetColumn());                         // Issue #3236
+   pc.SetOrigCol(first_n->GetOrigCol());                       // Issue #3236
+   pc.SetOrigColEnd(first_n->GetOrigColEnd());                 // Issue #3236
    pc.Str() = "(";
    pc.SetFlags(first_n->GetFlags() & PCF_COPY_FLAGS);
    pc.SetLevel(first_n->GetLevel());
    pc.SetPpLevel(first_n->GetPpLevel());
    pc.SetBraceLevel(first_n->GetBraceLevel());
-
    pc.CopyAndAddBefore(first_n);
 
-   Chunk *last_p = last->GetPrevNcNnl(E_Scope::PREPROC);
+   // shift all the tokens in this line to the right  Issue #3236
+   for (Chunk *temp = first_n; ; temp = temp->GetNext())
+   {
+      temp->SetColumn(temp->GetColumn() + 1);                         // Issue #3236
+      temp->SetOrigCol(temp->GetOrigCol() + 1);                       // Issue #3236
+      temp->SetOrigColEnd(temp->GetOrigColEnd() + 1);                 // Issue #3236
+
+      if (temp->Is(CT_NEWLINE))
+      {
+         break;
+      }
+   }
+
+   Chunk *last_prev = last->GetPrevNcNnl(E_Scope::PREPROC);
 
    pc.SetType(CT_PAREN_CLOSE);
-   pc.SetOrigLine(last_p->GetOrigLine());
-   pc.SetOrigCol(last_p->GetOrigCol());
+   pc.SetOrigLine(last_prev->GetOrigLine());
+   pc.SetOrigCol(last_prev->GetOrigCol());
+   pc.SetColumn(last_prev->GetColumn() + 1);                         // Issue #3236
+   pc.SetOrigCol(last_prev->GetOrigCol() + 1);                       // Issue #3236
+   pc.SetOrigColEnd(last_prev->GetOrigColEnd() + 1);                 // Issue #3236
    pc.Str() = ")";
-   pc.SetFlags(last_p->GetFlags() & PCF_COPY_FLAGS);
-   pc.SetLevel(last_p->GetLevel());
-   pc.SetPpLevel(last_p->GetPpLevel());
-   pc.SetBraceLevel(last_p->GetBraceLevel());
+   pc.SetFlags(last_prev->GetFlags() & PCF_COPY_FLAGS);
+   pc.SetLevel(last_prev->GetLevel());
+   pc.SetPpLevel(last_prev->GetPpLevel());
+   pc.SetBraceLevel(last_prev->GetBraceLevel());
+   pc.CopyAndAddAfter(last_prev);
 
-   pc.CopyAndAddAfter(last_p);
+   for (Chunk *temp = last; ; temp = temp->GetNext())
+   {
+      temp->SetColumn(temp->GetColumn() + 1);                         // Issue #3236
+      temp->SetOrigCol(temp->GetOrigCol() + 1);                       // Issue #3236
+      temp->SetOrigColEnd(temp->GetOrigColEnd() + 1);                 // Issue #3236
+
+      if (temp->Is(CT_NEWLINE))
+      {
+         break;
+      }
+   }
 
    for (Chunk *tmp = first_n;
-        tmp != last_p;
+        tmp != last_prev;
         tmp = tmp->GetNextNcNnl())
    {
       tmp->SetLevel(tmp->GetLevel() + 1);
    }
 
-   last_p->SetLevel(last_p->GetLevel() + 1);
+   last_prev->SetLevel(last_prev->GetLevel() + 1);
 } // add_parens_between
 
 
@@ -326,6 +354,10 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
             check_bool_parens(pc, next, nest + 1);
             pc = next;
          }
+      }
+      else if (pc->Is(CT_SEMICOLON))                      // Issue #3236
+      {
+         ref = pc;
       }
       else if (  pc->Is(CT_BRACE_OPEN)
               || pc->Is(CT_SQUARE_OPEN)
