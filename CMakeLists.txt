@@ -555,8 +555,3 @@ add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${PROJECT_SOURCE_DIR}/cmake/u
 # add to build the compile_commands.json file, to be used by clang-tidy
 #
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON" CACHE BOOL "to create the compile_commands.json file" FORCE)
-
-add_custom_target(format
-  COMMAND $<TARGET_FILE:uncrustify> -c ${PROJECT_SOURCE_DIR}/forUncrustifySources.cfg -l cpp --replace --no-backup ${uncrustify_sources} ${uncrustify_headers}
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-  USES_TERMINAL)
