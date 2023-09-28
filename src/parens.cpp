@@ -242,18 +242,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
    pc.SetBraceLevel(first_n->GetBraceLevel());
    pc.CopyAndAddBefore(first_n);
 
-   // shift all the tokens in this line to the right  Issue #3236
-   for (Chunk *temp = first_n; ; temp = temp->GetNext())
-   {
-      temp->SetColumn(temp->GetColumn() + 1);                         // Issue #3236
-      temp->SetOrigCol(temp->GetOrigCol() + 1);                       // Issue #3236
-      temp->SetOrigColEnd(temp->GetOrigColEnd() + 1);                 // Issue #3236
-
-      if (temp->Is(CT_NEWLINE))
-      {
-         break;
-      }
-   }
+   shift_the_rest_of_the_line(first_n);                         // Issue #3236
 
    Chunk *last_prev = last->GetPrevNcNnl(E_Scope::PREPROC);
 
@@ -270,17 +259,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
    pc.SetBraceLevel(last_prev->GetBraceLevel());
    pc.CopyAndAddAfter(last_prev);
 
-   for (Chunk *temp = last; ; temp = temp->GetNext())
-   {
-      temp->SetColumn(temp->GetColumn() + 1);                         // Issue #3236
-      temp->SetOrigCol(temp->GetOrigCol() + 1);                       // Issue #3236
-      temp->SetOrigColEnd(temp->GetOrigColEnd() + 1);                 // Issue #3236
-
-      if (temp->Is(CT_NEWLINE))
-      {
-         break;
-      }
-   }
+   shift_the_rest_of_the_line(last);                         // Issue #3236
 
    for (Chunk *tmp = first_n;
         tmp != last_prev;
