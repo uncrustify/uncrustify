@@ -3,6 +3,7 @@
  * Manages and navigates the list of chunks.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel
  * @license GPL v2+
  */
 
@@ -1787,6 +1788,10 @@ inline Chunk *Chunk::CopyAndAddBefore(Chunk *ref) const
 {
    return(CopyAndAdd(ref, E_Direction::BACKWARD));
 }
+
+
+// shift all the tokens in this line to the right  Issue #3236
+void shift_the_rest_of_the_line(Chunk *first);
 
 
 #endif /* CHUNK_LIST_H_INCLUDED */

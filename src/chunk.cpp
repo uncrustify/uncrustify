@@ -896,3 +896,20 @@ bool Chunk::IsNewlineBetween(const Chunk *other) const
    }
    return(false);
 }
+
+
+void shift_the_rest_of_the_line(Chunk *first)
+{
+   // shift all the tokens in this line to the right  Issue #3236
+   for (Chunk *temp = first; ; temp = temp->GetNext())
+   {
+      temp->SetColumn(temp->GetColumn() + 1);                         // Issue #3236
+      temp->SetOrigCol(temp->GetOrigCol() + 1);                       // Issue #3236
+      temp->SetOrigColEnd(temp->GetOrigColEnd() + 1);                 // Issue #3236
+
+      if (temp->Is(CT_NEWLINE))
+      {
+         break;
+      }
+   }
+} //shift_the_rest_of_the_line
