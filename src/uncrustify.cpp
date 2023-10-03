@@ -117,8 +117,9 @@ static void uncrustify_start(const deque<int> &data);
  * @param dump_file    nullptr or the filename prefix for dumping formatting steps debug info
  * @param no_backup    don't create a backup, if filename_out == filename_in
  * @param keep_mtime   don't change the mtime (dangerous)
+ * @param is_quiet     whether output should be quiet
  */
-static void do_source_file(const char *filename_in, const char *filename_out, const char *parsed_file, const char *dump_file, bool no_backup, bool keep_mtime);
+static void do_source_file(const char *filename_in, const char *filename_out, const char *parsed_file, const char *dump_file, bool no_backup, bool keep_mtime, bool is_quiet);
 
 
 static void add_file_header();
@@ -133,7 +134,7 @@ static void add_func_header(E_Token type, file_mem &fm);
 static void add_msg_header(E_Token type, file_mem &fm);
 
 
-static void process_source_list(const char *source_list, const char *prefix, const char *suffix, bool no_backup, bool keep_mtime);
+static void process_source_list(const char *source_list, const char *prefix, const char *suffix, bool no_backup, bool keep_mtime, bool is_quiet);
 
 
 static const char *make_output_filename(char *buf, size_t buf_size, const char *filename, const char *prefix, const char *suffix);
@@ -146,7 +147,7 @@ static bool file_content_matches(const string &filename1, const string &filename
 static string fix_filename(const char *filename);
 
 
-static bool bout_content_matches(const file_mem &fm, bool report_status);
+static bool bout_content_matches(const file_mem &fm, bool report_status, bool is_quiet);
 
 
 /**
@@ -633,6 +634,7 @@ int main(int argc, char *argv[])
    bool        update_config_wd = arg.Present("--update-config-with-doc");
    bool        detect           = arg.Present("--detect");
    bool        pfile_csv        = arg.Present("--debug-csv-format");
+   bool        is_quiet         = arg.Present("-q");
 
    std::string parsed_file_csv;
 
@@ -1024,12 +1026,12 @@ int main(int argc, char *argv[])
 
       // Issue #3427
       init_keywords_for_language();
-      uncrustify_file(fm, stdout, parsed_file, dump_file_name);
+      uncrustify_file(fm, stdout, parsed_file, dump_file_name, is_quiet);
    }
    else if (source_file != nullptr)
    {
       // Doing a single file
-      do_source_file(source_file, output_file, parsed_file, dump_file_name, no_backup, keep_mtime);
+      do_source_file(source_file, output_file, parsed_file, dump_file_name, no_backup, keep_mtime, is_quiet);
    }
    else
    {
@@ -1065,12 +1067,12 @@ int main(int argc, char *argv[])
          char outbuf[1024];
          do_source_file(p_arg,
                         make_output_filename(outbuf, sizeof(outbuf), p_arg, prefix, suffix),
-                        nullptr, nullptr, no_backup, keep_mtime);
+                        nullptr, nullptr, no_backup, keep_mtime, is_quiet);
       }
 
       if (source_list != nullptr)
       {
-         process_source_list(source_list, prefix, suffix, no_backup, keep_mtime);
+         process_source_list(source_list, prefix, suffix, no_backup, keep_mtime, is_quiet);
       }
    }
    clear_keyword_file();
@@ -1086,7 +1088,7 @@ int main(int argc, char *argv[])
 
 static void process_source_list(const char *source_list,
                                 const char *prefix, const char *suffix,
-                                bool no_backup, bool keep_mtime)
+                                bool no_backup, bool keep_mtime, bool is_quiet)
 {
    bool from_stdin = strcmp(source_list, "-") == 0;
    FILE *p_file    = from_stdin ? stdin : fopen(source_list, "r");
@@ -1134,7 +1136,7 @@ static void process_source_list(const char *source_list,
          char outbuf[1024];
          do_source_file(fname,
                         make_output_filename(outbuf, sizeof(outbuf), fname, prefix, suffix),
-                        nullptr, nullptr, no_backup, keep_mtime);
+                        nullptr, nullptr, no_backup, keep_mtime, is_quiet);
       }
    }
 
@@ -1470,7 +1472,7 @@ static string fix_filename(const char *filename)
 }
 
 
-static bool bout_content_matches(const file_mem &fm, bool report_status)
+static bool bout_content_matches(const file_mem &fm, bool report_status, bool is_quiet)
 {
    bool is_same = true;
 
@@ -1507,8 +1509,11 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
    if (  is_same
       && report_status)
    {
-      fprintf(stdout, "PASS: %s (%u bytes)\n",
-              cpd.filename.c_str(), static_cast<int>(fm.raw.size()));
+      if (!is_quiet)
+      {
+         fprintf(stdout, "PASS: %s (%u bytes)\n",
+                 cpd.filename.c_str(), static_cast<int>(fm.raw.size()));
+      }
    }
    return(is_same);
 } // bout_content_matches
@@ -1519,7 +1524,8 @@ static void do_source_file(const char *filename_in,
                            const char *parsed_file,
                            const char *dump_file,
                            bool       no_backup,
-                           bool       keep_mtime)
+                           bool       keep_mtime,
+                           bool       is_quiet)
 {
    FILE     *pfout      = nullptr;
    bool     did_open    = false;
@@ -1565,9 +1571,9 @@ static void do_source_file(const char *filename_in,
        * Cleanup is deferred because we need 'bout' preserved long enough
        * to write it to a file (if it changed).
        */
-      uncrustify_file(fm, nullptr, parsed_file, dump_file, true);
+      uncrustify_file(fm, nullptr, parsed_file, dump_file, is_quiet, true);
 
-      if (bout_content_matches(fm, false))
+      if (bout_content_matches(fm, false, is_quiet))
       {
          uncrustify_end();
          return;
@@ -1627,7 +1633,7 @@ static void do_source_file(const char *filename_in,
    }
    else
    {
-      uncrustify_file(fm, pfout, parsed_file, dump_file);
+      uncrustify_file(fm, pfout, parsed_file, dump_file, is_quiet);
    }
 
    if (did_open)
@@ -2036,7 +2042,7 @@ static void uncrustify_start(const deque<int> &data)
 
 
 void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
-                     const char *dump_file, bool defer_uncrustify_end)
+                     const char *dump_file, bool is_quiet, bool defer_uncrustify_end)
 {
    const deque<int> &data = fm.data;
 
@@ -2490,7 +2496,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
    }
 
    if (  cpd.do_check
-      && !bout_content_matches(fm, true))
+      && !bout_content_matches(fm, true, is_quiet))
    {
       cpd.check_fail_cnt++;
    }
