@@ -2538,27 +2538,21 @@ static void handle_cpp_lambda(Chunk *sq_o)
          return;
       }
    }
+   Chunk *angle_open  = sq_c->GetNextNcNnl();
+   Chunk *angle_close = Chunk::NullChunkPtr;
 
-   Chunk *angle_open = sq_c->GetNextNcNnl();
-   Chunk *angle_close  = Chunk::NullChunkPtr;
-
-   if( angle_open->Text() == string("<") )
+   if (angle_open->Is(CT_ANGLE_OPEN))
    {
-      angle_open->SetType(CT_ANGLE_OPEN);
-      angle_open->SetParentType(CT_TEMPLATE);
+      // make sure there is a '>'
+      angle_close = angle_open->GetClosingParen();
 
-      angle_close = angle_open->GetNextNcNnl();
-
-      while( angle_close->Text() != string(">") )
+      if (angle_close->IsNullChunk())
       {
-         angle_close = angle_close->GetNextNcNnl();
+         LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
+         return;
       }
-      angle_close->SetType(CT_ANGLE_CLOSE);
-      angle_close->SetParentType(CT_TEMPLATE);
    }
-
-
-   Chunk *pa_o = ( angle_close == Chunk::NullChunkPtr ) ? sq_c->GetNextNcNnl() : angle_close->GetNextNcNnl();
+   Chunk *pa_o = (angle_close == Chunk::NullChunkPtr) ? sq_c->GetNextNcNnl() : angle_close->GetNextNcNnl();
 
    // check to see if there is a lambda-specifier in the pa_o chunk;
    // assuming chunk is CT_EXECUTION_CONTEXT, ignore lambda-specifier
@@ -2590,13 +2584,13 @@ static void handle_cpp_lambda(Chunk *sq_o)
    // Check for 'mutable' keyword: '[]() mutable {}' or []() mutable -> ret {}
    Chunk *br_o = pa_c->IsNotNullChunk() ? pa_c->GetNextNcNnl() : pa_o;
 
-   while ( br_o->IsString("mutable") || 
-           br_o->IsString("constexpr") ||
-           br_o->IsString("consteval") ||
-           br_o->IsString("static") ||
-           br_o->IsString("noexcept") ||
-           br_o->IsString("noexcept(true)") ||
-           br_o->IsString("noexcept(false)") )
+   while (  br_o->IsString("mutable")
+         || br_o->IsString("constexpr")
+         || br_o->IsString("consteval")
+         || br_o->IsString("static")
+         || br_o->IsString("noexcept")
+         || br_o->IsString("noexcept(true)")
+         || br_o->IsString("noexcept(false)"))
    {
       br_o = br_o->GetNextNcNnl();
    }

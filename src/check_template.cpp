@@ -32,6 +32,7 @@ bool invalid_open_angle_template(Chunk *prev)
          && prev->IsNot(CT_COMMA)
          && prev->IsNot(CT_QUALIFIER)
          && prev->IsNot(CT_OPERATOR_VAL)
+         && prev->IsNot(CT_SQUARE_CLOSE)
          && prev->GetParentType() != CT_OPERATOR);
 }
 
