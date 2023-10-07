@@ -144,9 +144,6 @@ static const char *make_output_filename(char *buf, size_t buf_size, const char *
 static bool file_content_matches(const string &filename1, const string &filename2);
 
 
-static string fix_filename(const char *filename);
-
-
 static bool bout_content_matches(const file_mem &fm, bool report_status, bool is_quiet);
 
 
@@ -1454,24 +1451,6 @@ static bool file_content_matches(const string &filename1, const string &filename
 } // file_content_matches
 
 
-static string fix_filename(const char *filename)
-{
-   char   *tmp_file;
-   string rv;
-
-   // Create 'outfile.uncrustify'
-   tmp_file = new char[strlen(filename) + 16 + 1]; // + 1 for '//  + 1 for '/* + 1 for '\0' */' '
-
-   if (tmp_file != nullptr)
-   {
-      sprintf(tmp_file, "%s.uncrustify", filename);
-   }
-   rv = tmp_file;
-   delete[] tmp_file;
-   return(rv);
-}
-
-
 static bool bout_content_matches(const file_mem &fm, bool report_status, bool is_quiet)
 {
    bool is_same = true;
@@ -1594,7 +1573,7 @@ static void do_source_file(const char *filename_in,
          if (strcmp(filename_in, filename_out) == 0)
          {
             // Create 'outfile.uncrustify'
-            filename_tmp = fix_filename(filename_out);
+            filename_tmp += ".uncrustify";
 
             if (!no_backup)
             {
