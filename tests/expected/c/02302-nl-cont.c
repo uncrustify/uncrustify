@@ -1,6 +1,6 @@
 
-#define FOO(bar) create_a_really_long_identifier name(some_function( \
-                                                          bar1 + bar2), bar3, \
+#define FOO(bar) create_a_really_long_identifier name(some_function(bar1 + \
+                                                                    bar2), bar3, \
                                                       bar4);
 
 #define VNV_RECORD_CYCLES(m) do { \
