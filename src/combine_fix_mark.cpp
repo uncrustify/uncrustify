@@ -1172,7 +1172,7 @@ void mark_function(Chunk *pc)
    {
       LOG_FMT(LFCN, "%s(%d): orig line %zu, orig col %zu, text '%s",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
-      log_pcf_flags(LGUY, pc->GetFlags());
+      log_pcf_flags(LFCN, pc->GetFlags());
       Chunk *pc_op = pc->GetPrevType(CT_OPERATOR, pc->GetLevel());
 
       if (  pc_op->IsNotNullChunk()

@@ -169,7 +169,7 @@ void combine_labels()
             && !cur->Is(CT_OC_MSG_NAME)
             && next->TestFlags(PCF_IN_CONDITIONAL))             // Issue #3558
          {
-            //log_pcf_flags(LGUY, next->GetFlags());
+            //log_pcf_flags(LFCN, next->GetFlags());
             next->SetType(CT_COND_COLON);
             cs.Pop_Back();
          }
@@ -275,7 +275,7 @@ void combine_labels()
                LOG_FMT(LFCN, "%s(%d): orig line is %zu, orig col is %zu, tmp '%s': ",
                        __func__, __LINE__, tmp->GetOrigLine(), tmp->GetOrigCol(),
                        (tmp->Is(CT_NEWLINE)) ? "<Newline>" : tmp->Text());
-               log_pcf_flags(LGUY, tmp->GetFlags());
+               log_pcf_flags(LFCN, tmp->GetFlags());
 
                if (next->TestFlags(PCF_IN_FCN_CALL))
                {
