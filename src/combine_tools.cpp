@@ -417,7 +417,7 @@ void flag_series(Chunk *start, Chunk *end, PcfFlags set_flags, PcfFlags clr_flag
          && start != end)
    {
       start->UpdateFlagBits(clr_flags, set_flags);
-      log_pcf_flags(LGUY, start->GetFlags());
+      log_pcf_flags(LFTYPE, start->GetFlags());
 
       start = start->GetNext(nav);
 
@@ -430,7 +430,7 @@ void flag_series(Chunk *start, Chunk *end, PcfFlags set_flags, PcfFlags clr_flag
    if (end->IsNotNullChunk())
    {
       end->UpdateFlagBits(clr_flags, set_flags);
-      log_pcf_flags(LGUY, end->GetFlags());
+      log_pcf_flags(LFTYPE, end->GetFlags());
    }
 } // flag_series
 
