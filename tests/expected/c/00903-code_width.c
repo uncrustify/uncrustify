@@ -16,13 +16,13 @@ static int short_function_name(struct device *dev, struct device_driver *drv)
     call_some_really_long_function.of_some_sort(some_long_parameter1,
                                                 some_long_parameter2);
 
-    abc = call_some_other_really_long_function.of_some_sort(
-        some_long_parameter1,
-        some_long_parameter2);
+    abc =
+        call_some_other_really_long_function.of_some_sort(some_long_parameter1,
+                                                          some_long_parameter2);
 
-    abc.def.ghi = call_some_other_really_long_function.of_some_sort(
-        some_long_parameter1,
-        some_long_parameter2);
+    abc.def.ghi =
+        call_some_other_really_long_function.of_some_sort(some_long_parameter1,
+                                                          some_long_parameter2);
 
     abcdefghijklmnopqrstuvwxyz = abc + def + ghi + jkl + mno + prq + stu + vwx +
                                  yz;

@@ -916,6 +916,7 @@
 34255  cpp/eat_blanks_after_codewidth.cfg                   cpp/eat_blanks_after_codewidth.cpp
 34256  cpp/Issue_2836.cfg                                   cpp/Issue_2836.cpp
 34257  cpp/code_width-70.cfg                                cpp/brace_init_stdint_macros.cpp
+34258  common/tde.cfg                                       cpp/long_lines.cpp
 
 34280  cpp/UNI-29935.cfg                                    cpp/UNI-29935.cpp
 
