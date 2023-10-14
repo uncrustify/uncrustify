@@ -1854,10 +1854,22 @@ static Chunk *output_comment_c(Chunk *first)
       cmt.cont_text = options::cmt_star_cont() ? " * " : "   ";
       LOG_CONTTEXT();
 
-      log_rule_B("cmt_trailing_single_line_c_to_cpp");
+      bool replace_comment = (options::cmt_trailing_single_line_c_to_cpp() && first->IsLastChunkOnLine());
 
-      if (options::cmt_trailing_single_line_c_to_cpp() && first->IsLastChunkOnLine())
+      if (  replace_comment
+         && first->TestFlags(PCF_IN_PREPROC))
       {
+         // Do not replace a single line comment if we are inside a #define line
+         if (first->GetPpStart()->GetParentType() == CT_PP_DEFINE)
+         {
+            replace_comment = false;
+         }
+      }
+
+      if (replace_comment)
+      {
+         log_rule_B("cmt_trailing_single_line_c_to_cpp");
+
          add_text("//");
 
          UncText tmp;
