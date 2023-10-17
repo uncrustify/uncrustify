@@ -239,6 +239,12 @@ const int &UncText::at(size_t idx) const
 }
 
 
+int &UncText::at(size_t idx)
+{
+   return(m_chars.at(idx));
+}
+
+
 const int &UncText::back() const
 {
    return(m_chars.back());
