@@ -430,7 +430,14 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       && (  first->Is(CT_PP_ELSE)
          || first->Is(CT_PP_ENDIF)))
    {
-      second->SetType(CT_COMMENT_ENDIF);
+      if (second->Is(CT_COMMENT_CPP))
+      {
+         second->SetType(CT_COMMENT_CPP_ENDIF);
+      }
+      else
+      {
+         second->SetType(CT_COMMENT_ENDIF);
+      }
       // Add or remove space between #else or #endif and a trailing comment.
       log_rule("sp_endif_cmt");
       return(options::sp_endif_cmt());

@@ -836,7 +836,8 @@ void output_text(FILE *pfile)
             output_comment_multi_simple(pc);
          }
       }
-      else if (pc->Is(CT_COMMENT_CPP))
+      else if (  pc->Is(CT_COMMENT_CPP)
+              || pc->Is(CT_COMMENT_CPP_ENDIF))
       {
          log_rule_B("cmt_comment_cpp");
          log_rule_B("cmt_convert_tab_to_spaces - comment_cpp");
@@ -852,7 +853,8 @@ void output_text(FILE *pfile)
          pc                    = output_comment_cpp(pc);
          cpd.output_trailspace = tmp;
       }
-      else if (pc->Is(CT_COMMENT))
+      else if (  pc->Is(CT_COMMENT)
+              || pc->Is(CT_COMMENT_ENDIF))
       {
          log_rule_B("cmt_comment");
          log_rule_B("cmt_convert_tab_to_spaces - comment");
