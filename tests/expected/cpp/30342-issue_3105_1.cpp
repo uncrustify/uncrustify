@@ -5,12 +5,13 @@ int short_function_name()
 
 	void *test_func =
 		library->symbol( TQString(TQString("test_%1").arg(
-																module2.
-																factoryName())).utf8() );
+																module2.factoryName())).utf8() );
 
 	CHECK_COMPLETE_SIZE (iceConn, ICE_AuthNextPhase, length,
 	                     message->authDataLength +
-	                     SIZEOF (
-												 iceAuthNextPhaseMsg), authData,
-	                     iceConn->connect_to_you ? IceFatalToConnection : IceFatalToProtocol);
+	                     SIZEOF (iceAuthNextPhaseMsg),
+	                     authData,
+	                     iceConn->connect_to_you ?
+	                     IceFatalToConnection :
+	                     IceFatalToProtocol);
 }

@@ -211,9 +211,9 @@ void prot_the_OrigCols(int theLine, unsigned int actual_line)
 } // prot_the_OrigCols
 
 
-void rebuild_the_line(int theLine, unsigned int actual_line)
+void rebuild_the_line(int theLine, unsigned int actual_line, bool increment)
 {
-#define MANY    100
+#define MANY    1000
 
    if (actual_line == 0)
    {
@@ -227,48 +227,74 @@ void rebuild_the_line(int theLine, unsigned int actual_line)
       }
    }
    char rebuildLine[MANY];
+   char virtualLine[MANY];
 
    // fill the array
    for (size_t where = 0; where < MANY; where++)
    {
       rebuildLine[where] = ' ';
+      virtualLine[where] = '_';
    }
 
    rebuildLine[MANY - 1] = '\0';
+   virtualLine[MANY - 1] = '\0';
    LOG_FMT(LGUY, "%4d:", theLine);
 
    size_t len0 = 0;
+   bool   has_a_virtual_brace;
+   has_a_virtual_brace = false;
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (pc->GetOrigLine() == actual_line)
       {
-         size_t     col  = pc->GetColumn();
-         size_t     len1 = pc->Len();
-         const char *A   = pc->Text();
-
-         for (size_t x = 0; x < len1; x++)
-         {
-            char B = A[x];
-
-            if (col + x >= MANY)
-            {
-               LOG_FMT(LGUY, " ***** MANY is too little for this line %d\n", theLine);
-               exit(EX_SOFTWARE);
-            }
-            rebuildLine[col + x - 1] = B;
-         }
-
          if (pc->Is(CT_NEWLINE))
          {
+            size_t col  = pc->GetColumn();
+            size_t len1 = pc->Len();
             len0              = col + len1 - 1;
             rebuildLine[len0] = '\0';
+            virtualLine[len0] = '\0';
             break;
+         }
+         else if (  pc->Is(CT_VBRACE_OPEN)
+                 || pc->Is(CT_VBRACE_CLOSE))
+         {
+            has_a_virtual_brace = true;
+            size_t col = pc->GetOrigCol();
+            virtualLine[col - 1] = 'V';
+         }
+         else
+         {
+            size_t     col  = pc->GetColumn();
+            size_t     len1 = pc->Len();
+            const char *A   = pc->Text();
+
+            for (size_t x = 0; x < len1; x++)
+            {
+               char B = A[x];
+
+               if (col + x >= MANY)
+               {
+                  LOG_FMT(LGUY, " ***** MANY is too little for this line %d\n", theLine);
+                  exit(EX_SOFTWARE);
+               }
+               rebuildLine[col + x - 1] = B;
+            }
          }
       }
    }
 
-   LOG_FMT(LGUY, "%s\n", rebuildLine);
+   if (increment)
+   {
+      counter++;
+   }
+   LOG_FMT(LGUY, "%s            , counter is %zu\n", rebuildLine, counter);
+
+   if (has_a_virtual_brace)
+   {
+      LOG_FMT(LGUY, "VIRT:%s\n", virtualLine);
+   }
 } // rebuild_the_line
 
 

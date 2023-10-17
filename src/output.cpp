@@ -411,8 +411,6 @@ static void add_text(const UncText &text, bool is_ignored = false, bool is_liter
 
 static bool next_word_exceeds_limit(const UncText &text, size_t idx)
 {
-   LOG_FMT(LCONTTEXT, "%s(%d): idx is %zu\n",
-           __func__, __LINE__, idx);
    size_t length = 0;
 
    // Count any whitespace
@@ -430,7 +428,10 @@ static bool next_word_exceeds_limit(const UncText &text, size_t idx)
       idx++;
       length++;
    }
-   return((cpd.column + length - 1) > options::cmt_width());
+   bool exceed_limit = (cpd.column + length - 1) > options::cmt_width();
+   LOG_FMT(LCONTTEXT, "%s(%d): idx is %zu%s\n",
+           __func__, __LINE__, idx, (exceed_limit ? " exceeds limit" : ""));
+   return(exceed_limit);
 }
 
 
@@ -836,7 +837,8 @@ void output_text(FILE *pfile)
             output_comment_multi_simple(pc);
          }
       }
-      else if (pc->Is(CT_COMMENT_CPP))
+      else if (  pc->Is(CT_COMMENT_CPP)
+              || pc->Is(CT_COMMENT_CPP_ENDIF))
       {
          log_rule_B("cmt_comment_cpp");
          log_rule_B("cmt_convert_tab_to_spaces - comment_cpp");
@@ -852,7 +854,8 @@ void output_text(FILE *pfile)
          pc                    = output_comment_cpp(pc);
          cpd.output_trailspace = tmp;
       }
-      else if (pc->Is(CT_COMMENT))
+      else if (  pc->Is(CT_COMMENT)
+              || pc->Is(CT_COMMENT_ENDIF))
       {
          log_rule_B("cmt_comment");
          log_rule_B("cmt_convert_tab_to_spaces - comment");
@@ -1736,7 +1739,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
    // Issue #2752
    log_rule_B("cmt_insert_file_header");
    log_rule_B("cmt_insert_file_footer");
-   log_rule_B("cmt_insert_func_header)");
+   log_rule_B("cmt_insert_func_header");
    log_rule_B("cmt_insert_class_header");
    log_rule_B("cmt_insert_oc_msg_header");
 
@@ -1854,16 +1857,29 @@ static Chunk *output_comment_c(Chunk *first)
       cmt.cont_text = options::cmt_star_cont() ? " * " : "   ";
       LOG_CONTTEXT();
 
-      log_rule_B("cmt_trailing_single_line_c_to_cpp");
+      bool replace_comment = (options::cmt_trailing_single_line_c_to_cpp() && first->IsLastChunkOnLine());
 
-      if (options::cmt_trailing_single_line_c_to_cpp() && first->IsLastChunkOnLine())
+      if (  replace_comment
+         && first->TestFlags(PCF_IN_PREPROC))
       {
-         add_text("//");
+         // Do not replace a single line comment if we are inside a #define line
+         if (first->GetPpStart()->GetParentType() == CT_PP_DEFINE)
+         {
+            replace_comment = false;
+         }
+      }
 
-         UncText tmp;
-         tmp.set(first->GetStr(), 2, first->Len() - 4);
+      if (replace_comment)
+      {
+         // Transform the comment to CPP and reuse the same logic (issue #4121)
+         log_rule_B("cmt_trailing_single_line_c_to_cpp");
+
+         UncText tmp(first->GetStr(), 0, first->Len() - 2);
+         tmp.at(1) = 47; // Change '/*' to '//' (47 is '/')
          cmt_trim_whitespace(tmp, false);
-         add_comment_text(tmp, cmt, false);
+         first->Str() = tmp;
+
+         output_comment_cpp(first);
       }
       else
       {

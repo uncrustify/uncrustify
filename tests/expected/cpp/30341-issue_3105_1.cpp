@@ -8,7 +8,8 @@ int short_function_name()
 							module2.factoryName())).utf8() );
 
 	CHECK_COMPLETE_SIZE (iceConn, ICE_AuthNextPhase, length,
-	     message->authDataLength + SIZEOF (
-				 iceAuthNextPhaseMsg), authData,
-	     iceConn->connect_to_you ? IceFatalToConnection : IceFatalToProtocol);
+	     message->authDataLength +
+	     SIZEOF (iceAuthNextPhaseMsg), authData,
+	     iceConn->connect_to_you ? IceFatalToConnection :
+	     IceFatalToProtocol);
 }
