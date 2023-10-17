@@ -146,8 +146,9 @@
 00305  c/ben_081.cfg                              c/one-liner-define.c
 
 00310  common/empty.cfg                           c/sp_embed_comment.c
-00311  c/comment_conversion.cfg                   c/comment_conversion.c
+00311  c/comment_conversion.cfg                   c/comment_conversion_define.c
 00312  c/comment_conversion.cfg                   c/comment_conversion_endif.c
+00313  c/comment_conversion.cfg                   c/comment_conversion_long_lines.c
 
 00320  c/rdan.cfg                                 c/indent_first_bool_expr.c
 

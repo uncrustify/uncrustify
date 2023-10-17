@@ -147,6 +147,7 @@ public:
 
    // throws an exception if out of bounds
    const int &at(size_t idx) const;
+   int &at(size_t idx);
 
 
    //! returns the last element of the character list

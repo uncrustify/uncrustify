@@ -411,8 +411,6 @@ static void add_text(const UncText &text, bool is_ignored = false, bool is_liter
 
 static bool next_word_exceeds_limit(const UncText &text, size_t idx)
 {
-   LOG_FMT(LCONTTEXT, "%s(%d): idx is %zu\n",
-           __func__, __LINE__, idx);
    size_t length = 0;
 
    // Count any whitespace
@@ -430,7 +428,10 @@ static bool next_word_exceeds_limit(const UncText &text, size_t idx)
       idx++;
       length++;
    }
-   return((cpd.column + length - 1) > options::cmt_width());
+   bool exceed_limit = (cpd.column + length - 1) > options::cmt_width();
+   LOG_FMT(LCONTTEXT, "%s(%d): idx is %zu%s\n",
+           __func__, __LINE__, idx, (exceed_limit ? " exceeds limit" : ""));
+   return(exceed_limit);
 }
 
 
@@ -1738,7 +1739,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
    // Issue #2752
    log_rule_B("cmt_insert_file_header");
    log_rule_B("cmt_insert_file_footer");
-   log_rule_B("cmt_insert_func_header)");
+   log_rule_B("cmt_insert_func_header");
    log_rule_B("cmt_insert_class_header");
    log_rule_B("cmt_insert_oc_msg_header");
 
@@ -1870,14 +1871,15 @@ static Chunk *output_comment_c(Chunk *first)
 
       if (replace_comment)
       {
+         // Transform the comment to CPP and reuse the same logic (issue #4121)
          log_rule_B("cmt_trailing_single_line_c_to_cpp");
 
-         add_text("//");
-
-         UncText tmp;
-         tmp.set(first->GetStr(), 2, first->Len() - 4);
+         UncText tmp(first->GetStr(), 0, first->Len() - 2);
+         tmp.at(1) = 47; // Change '/*' to '//' (47 is '/')
          cmt_trim_whitespace(tmp, false);
-         add_comment_text(tmp, cmt, false);
+         first->Str() = tmp;
+
+         output_comment_cpp(first);
       }
       else
       {
