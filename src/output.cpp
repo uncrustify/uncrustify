@@ -1857,7 +1857,9 @@ static Chunk *output_comment_c(Chunk *first)
       cmt.cont_text = options::cmt_star_cont() ? " * " : "   ";
       LOG_CONTTEXT();
 
-      bool replace_comment = (options::cmt_trailing_single_line_c_to_cpp() && first->IsLastChunkOnLine());
+      bool replace_comment = (  options::cmt_trailing_single_line_c_to_cpp()
+                             && first->IsLastChunkOnLine()
+                             && first->Str().at(2) != '*');
 
       if (  replace_comment
          && first->TestFlags(PCF_IN_PREPROC))
@@ -1875,7 +1877,7 @@ static Chunk *output_comment_c(Chunk *first)
          log_rule_B("cmt_trailing_single_line_c_to_cpp");
 
          UncText tmp(first->GetStr(), 0, first->Len() - 2);
-         tmp.at(1) = 47; // Change '/*' to '//' (47 is '/')
+         tmp.at(1) = '/'; // Change '/*' to '//'
          cmt_trim_whitespace(tmp, false);
          first->Str() = tmp;
 
