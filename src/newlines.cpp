@@ -6718,27 +6718,22 @@ static void newlines_enum_entries(Chunk *open_brace, iarf_e av)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *pc = Chunk::NullChunkPtr;
-
-   if (open_brace != nullptr)
-   {
-      pc = open_brace;
-   }
-
-   while (  (pc = pc->GetNextNc())->IsNotNullChunk()
-         && pc->GetLevel() > open_brace->GetLevel())
+   for (Chunk *pc = open_brace->GetNextNc();
+        pc->IsNotNullChunk() && pc->GetLevel() > open_brace->GetLevel();
+        pc = pc->GetNextNc())
    {
       if (  (pc->GetLevel() != (open_brace->GetLevel() + 1))
          || pc->IsNot(CT_COMMA)
          || (  pc->Is(CT_COMMA)
-            && pc->GetNext()->IsNotNullChunk()
             && (  pc->GetNext()->GetType() == CT_COMMENT_CPP
-               || pc->GetNext()->GetType() == CT_COMMENT)))
+               || pc->GetNext()->GetType() == CT_COMMENT
+               || pc->GetNext()->GetType() == CT_COMMENT_MULTI)))
       {
          continue;
       }
       newline_iarf(pc, av);
    }
+
    newline_iarf(open_brace, av);
 } // newlines_enum_entries
 

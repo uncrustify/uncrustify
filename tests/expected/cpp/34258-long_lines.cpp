@@ -2,7 +2,7 @@ void main()
 {
 	if (true)
 	{
-		/* Output the coordinates of the icon */
+		// Output the coordinates of the icon
 		snprintf(&ret[strlen(ret)], ret_max - strlen(ret), "\nx=\"0px\"\ny=\"0px\"\n");
 		snprintf(&ret[strlen(ret)], ret_max - strlen(ret), "width=\"%d\"\n", icon->icon_width);
 		snprintf(&ret[strlen(ret)], ret_max - strlen(ret), "height=\"%d\"\n", icon->icon_height);
