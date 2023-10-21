@@ -33,17 +33,6 @@ using namespace uncrustify;
 
 
 /**
- * Decides how to change inter-chunk spacing.
- * Note that the order of the if statements is VERY important.
- *
- * @param first   The first chunk
- * @param second  The second chunk
- *
- * @return IARF_IGNORE, IARF_ADD, IARF_REMOVE or IARF_FORCE
- */
-static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp);
-
-/**
  * Ensure to force the space between the \a first and the \a second chunks
  * if the PCF_FORCE_SPACE flag is set in the \a first.
  *
@@ -84,15 +73,23 @@ bool token_is_within_trailing_return(Chunk *pc)
 } // token_is_within_trailing_return
 
 
-/*
- * this function is called for every chunk in the input file.
- * Thus it is important to keep this function efficient
+/**
+ * Decides how to change inter-chunk spacing.
+ * Note that the order of the if statements is VERY important.
+ *
+ * @param first   The first chunk
+ * @param second  The second chunk
+ *
+ * @return IARF_IGNORE, IARF_ADD, IARF_REMOVE or IARF_FORCE
+ *
+ * This function is called for every chunk in the input file,
+ * thus it is important to keep this function efficient
  */
 static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, first Text() '%s', type is %s\n",
+   LOG_FMT(LSPACE, "%s(%d): orig line %zu, orig col %zu, first text '%s', type %s\n",
            __func__, __LINE__, first->GetOrigLine(), first->GetOrigCol(), first->Text(), get_token_name(first->GetType()));
 
    min_sp = 1;
@@ -3472,7 +3469,7 @@ static iarf_e ensure_force_space(Chunk *first, Chunk *second, iarf_e av)
 {
    if (first->TestFlags(PCF_FORCE_SPACE))
    {
-      LOG_FMT(LSPACE, "%s(%d): <force between '%s' and '%s'>\n",
+      LOG_FMT(LSPACE, "%s(%d): force between '%s' and '%s'\n",
               __func__, __LINE__, first->Text(), second->Text());
       return(av | IARF_ADD);
    }
@@ -3482,9 +3479,7 @@ static iarf_e ensure_force_space(Chunk *first, Chunk *second, iarf_e av)
 
 static iarf_e do_space_ensured(Chunk *first, Chunk *second, int &min_sp)
 {
-   iarf_e aa = ensure_force_space(first, second, do_space(first, second, min_sp));
-
-   return(aa);
+   return(ensure_force_space(first, second, do_space(first, second, min_sp)));
 }
 
 
@@ -3892,11 +3887,11 @@ size_t space_col_align(Chunk *first, Chunk *second)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s(%d): first orig line is %zu, orig col is %zu, [%s/%s], Text() '%s' <==>\n",
+   LOG_FMT(LSPACE, "%s(%d): 1st orig line %zu, orig col %zu, [%s/%s], text '%s' <==>\n",
            __func__, __LINE__, first->GetOrigLine(), first->GetOrigCol(),
            get_token_name(first->GetType()), get_token_name(first->GetParentType()),
            first->Text());
-   LOG_FMT(LSPACE, "%s(%d): second orig line is %zu, orig col is %zu [%s/%s], Text() '%s',",
+   LOG_FMT(LSPACE, "%s(%d): 2nd orig line %zu, orig col %zu, [%s/%s], text '%s'\n",
            __func__, __LINE__, second->GetOrigLine(), second->GetOrigCol(),
            get_token_name(second->GetType()), get_token_name(second->GetParentType()),
            second->Text());
@@ -3908,14 +3903,15 @@ size_t space_col_align(Chunk *first, Chunk *second)
    LOG_FMT(LSPACE, "%s(%d): av is %s\n", __func__, __LINE__, to_string(av));
    size_t coldiff;
 
-   if (first->GetNlCount())
+   if (first->GetNlCount() > 0)
    {
-      LOG_FMT(LSPACE, "%s(%d):    new line count is %zu, orig col end is %zu\n", __func__, __LINE__, first->GetNlCount(), first->GetOrigColEnd());
+      LOG_FMT(LSPACE, "%s(%d):    new line count %zu, orig col end %zu\n",
+              __func__, __LINE__, first->GetNlCount(), first->GetOrigColEnd());
       coldiff = first->GetOrigColEnd() - 1;
    }
    else
    {
-      LOG_FMT(LSPACE, "%s(%d):    Len is %zu\n", __func__, __LINE__, first->Len());
+      LOG_FMT(LSPACE, "%s(%d):    '1st' len is %zu\n", __func__, __LINE__, first->Len());
       coldiff = first->Len();
    }
    LOG_FMT(LSPACE, "%s(%d):    => coldiff is %zu\n", __func__, __LINE__, coldiff);
@@ -3938,11 +3934,11 @@ size_t space_col_align(Chunk *first, Chunk *second)
    case IARF_IGNORE:                // Issue #2064
       LOG_FMT(LSPACE, "%s(%d):    => first orig line  is %zu\n", __func__, __LINE__, first->GetOrigLine());
       LOG_FMT(LSPACE, "%s(%d):    => second orig line is %zu\n", __func__, __LINE__, second->GetOrigLine());
-      LOG_FMT(LSPACE, "%s(%d):    => first Text()     is '%s'\n", __func__, __LINE__, first->Text());
-      LOG_FMT(LSPACE, "%s(%d):    => second Text()    is '%s'\n", __func__, __LINE__, second->Text());
+      LOG_FMT(LSPACE, "%s(%d):    => first text       is '%s'\n", __func__, __LINE__, first->Text());
+      LOG_FMT(LSPACE, "%s(%d):    => second text      is '%s'\n", __func__, __LINE__, second->Text());
       LOG_FMT(LSPACE, "%s(%d):    => first orig col   is %zu\n", __func__, __LINE__, first->GetOrigCol());
       LOG_FMT(LSPACE, "%s(%d):    => second orig col  is %zu\n", __func__, __LINE__, second->GetOrigCol());
-      LOG_FMT(LSPACE, "%s(%d):    => first Len()      is %zu\n", __func__, __LINE__, first->Len());
+      LOG_FMT(LSPACE, "%s(%d):    => first len        is %zu\n", __func__, __LINE__, first->Len());
 
       if (  first->GetOrigLine() == second->GetOrigLine()
          && second->GetOrigCol() > (first->GetOrigCol() + first->Len()))

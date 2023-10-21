@@ -71,7 +71,7 @@ void align_func_proto(size_t span)
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       char copy[1000];
-      LOG_FMT(LAS, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s, level is %zu, brace level is %zu\n",
+      LOG_FMT(LAS, "%s(%d): orig line %zu, orig col %zu, text '%s', type %s, level %zu, brace level %zu\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy),
               get_token_name(pc->GetType()), pc->GetLevel(), pc->GetBraceLevel());
 
@@ -93,6 +93,8 @@ void align_func_proto(size_t span)
       }
 
       if (  pc->IsNewline()
+         && (  !options::align_func_proto_span_ignore_cont_lines()
+            || !pc->GetNextNnl()->TestFlags(PCF_CONT_LINE))  // Issue #4131
          && !pc->TestFlags(PCF_IN_FCN_CALL))                 // Issue #2831
       {
          look_bro = false;
@@ -157,7 +159,7 @@ void align_func_proto(size_t span)
             toadd = pc;
          }
          Chunk *tmp = step_back_over_member(toadd);
-         LOG_FMT(LAS, "%s(%d): tmp->Text() is '%s', orig line is %zu, orig col is %zu, level is %zu, brace level is %zu\n",
+         LOG_FMT(LAS, "%s(%d): 'tmp' text is '%s', orig line is %zu, orig col is %zu, level is %zu, brace level is %zu\n",
                  __func__, __LINE__, tmp->Text(), tmp->GetOrigLine(), tmp->GetOrigCol(),
                  tmp->GetLevel(), tmp->GetBraceLevel());
          // test the Stack
@@ -176,6 +178,7 @@ void align_func_proto(size_t span)
             many_as.at(pc->GetLevel()).at(pc->GetBraceLevel()) = stack_at_l_bl;
          }
          stack_at_l_bl->Add(tmp);
+         stack_at_l_bl->Debug();
          log_rule_B("align_single_line_brace");
          look_bro = (pc->Is(CT_FUNC_DEF))
                     && options::align_single_line_brace();
@@ -193,8 +196,8 @@ void align_func_proto(size_t span)
             stack_at_l_bl_brace->m_gap                               = mybr_gap;
             many_as_brace.at(pc->GetLevel()).at(pc->GetBraceLevel()) = stack_at_l_bl_brace;
          }
-         stack_at_l_bl_brace->Debug();
          stack_at_l_bl_brace->Add(pc);
+         stack_at_l_bl_brace->Debug();
          look_bro = false;
       }
    }
