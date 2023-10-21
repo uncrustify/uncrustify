@@ -180,15 +180,10 @@ void ib_shift_out(size_t idx, size_t num)
 
 Chunk *step_back_over_member(Chunk *pc)
 {
-   if (pc->IsNullChunk())
-   {
-      pc = Chunk::NullChunkPtr;
-   }
    Chunk *tmp = pc->GetPrevNcNnl();
 
    // Skip over any class stuff: bool CFoo::bar()
-   while (  tmp->IsNotNullChunk()
-         && tmp->Is(CT_DC_MEMBER))
+   while (tmp->Is(CT_DC_MEMBER))
    {
       pc  = tmp->GetPrevNcNnl();
       tmp = pc->GetPrevNcNnl();

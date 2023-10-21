@@ -54,6 +54,7 @@
 00072  common/star_pos-0.cfg                      c/align-proto.c
 00073  common/empty.cfg                           c/nl_proto_endif.c
 00074  c/clang-has_include.cfg                    c/clang-has_include.h
+00075  common/tde.cfg                             c/function_prototypes_alignment.c
 00076  c/1225.cfg                                 c/1225.c
 
 00081  c/else-if-1.cfg                            c/else-if.c

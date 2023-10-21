@@ -3512,6 +3512,14 @@ align_right_cmt_at_col;
 extern BoundedOption<unsigned, 0, 5000>
 align_func_proto_span;
 
+// Whether to ignore continuation lines when evaluating the number of
+// new lines for the function prototype alignment's span.
+//
+// false: continuation lines are part of the newlines count
+// true:  continuation lines are not counted
+extern Option<bool>
+align_func_proto_span_ignore_cont_lines; // = false
+
 // How to consider (or treat) the '*' in the alignment of function prototypes.
 //
 // 0: Part of the type     'void *   foo();' (default)
