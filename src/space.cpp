@@ -3315,22 +3315,22 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       log_rule("IGNORE");
       return(IARF_IGNORE);
    }
+
    // =============================================================
    // category 0
    // this table lists out all combos where nothing is to do
    // CT_UNKNOWN is a wildcard.
-   // not used yet
-   //for (auto it : IGNORE_space_table)
-   //{
-   //   if (  (  it.first == CT_UNKNOWN
-   //         || it.first == first->GetType())
-   //      && (  it.second == CT_UNKNOWN
-   //         || it.second == second->GetType()))
-   //   {
-   //      log_rule("IGNORE from IGNORE_space_table");
-   //      return(IARF_IGNORE);
-   //   }
-   //}
+   for (auto it : IGNORE_space_table)
+   {
+      if (  (  it.first == CT_UNKNOWN
+            || it.first == first->GetType())
+         && (  it.second == CT_UNKNOWN
+            || it.second == second->GetType()))
+      {
+         log_rule("IGNORE from IGNORE_space_table");
+         return(IARF_IGNORE);
+      }
+   }
 
    // =============================================================
    // category 1
