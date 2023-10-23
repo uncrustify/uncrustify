@@ -3318,6 +3318,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       log_rule("IGNORE");
       return(IARF_IGNORE);
    }
+
    // =============================================================
    // category 0
    // this table lists out all combos where nothing is to do
