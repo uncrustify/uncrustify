@@ -2029,13 +2029,12 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
    cpd.bom = fm.bom;
    cpd.enc = fm.enc;
 
-   log_rule_B("utf8_force");
-   log_rule_B("utf8_byte");
-
    if (  options::utf8_force()
       || (  (cpd.enc == char_encoding_e::e_BYTE)
          && options::utf8_byte()))
    {
+      log_rule_B("utf8_force");
+      log_rule_B("utf8_byte");
       cpd.enc = char_encoding_e::e_UTF8;
    }
    iarf_e av;
@@ -2097,55 +2096,68 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
     * Done with detection. Do the rest only if the file will go somewhere.
     * The detection code needs as few changes as possible.
     */
+
+   // Add comments before function defs and classes
+   if (!cpd.func_hdr.data.empty())
    {
-      // Add comments before function defs and classes
-      if (!cpd.func_hdr.data.empty())
+      log_rule_B("cmt_insert_function_header");
+
+      add_func_header(CT_FUNC_DEF, cpd.func_hdr);
+
+      if (options::cmt_insert_before_ctor_dtor())
       {
-         add_func_header(CT_FUNC_DEF, cpd.func_hdr);
-
-         log_rule_B("cmt_insert_before_ctor_dtor");
-
-         if (options::cmt_insert_before_ctor_dtor())
-         {
-            add_func_header(CT_FUNC_CLASS_DEF, cpd.func_hdr);
-         }
+         add_func_header(CT_FUNC_CLASS_DEF, cpd.func_hdr);
       }
+   }
 
-      if (!cpd.class_hdr.data.empty())
-      {
-         add_func_header(CT_CLASS, cpd.class_hdr);
-      }
+   if (!cpd.class_hdr.data.empty())
+   {
+      log_rule_B("cmt_insert_class_header");
+      add_func_header(CT_CLASS, cpd.class_hdr);
+   }
 
-      if (!cpd.oc_msg_hdr.data.empty())
-      {
-         add_msg_header(CT_OC_MSG_DECL, cpd.oc_msg_hdr);
-      }
-      do_parent_for_pp();
+   if (!cpd.oc_msg_hdr.data.empty())
+   {
+      log_rule_B("cmt_insert_oc_message_header");
+      add_msg_header(CT_OC_MSG_DECL, cpd.oc_msg_hdr);
+   }
+   do_parent_for_pp();
 
-      // Rewrite infinite loops
+   // Rewrite infinite loops
+   if (options::mod_infinite_loop())
+   {
       log_rule_B("mod_infinite_loop");
+      rewrite_infinite_loops();
+   }
+   // Change virtual braces into real braces
+   do_braces();
 
-      if (options::mod_infinite_loop())
-      {
-         rewrite_infinite_loops();
-      }
-      do_braces();  // Change virtual braces into real braces...
-
-      // Scrub extra semicolons
+   // Scrub extra semicolons
+   if (options::mod_remove_extra_semicolon())
+   {
       log_rule_B("mod_remove_extra_semicolon");
+      remove_extra_semicolons();
+   }
 
-      if (options::mod_remove_extra_semicolon())
-      {
-         remove_extra_semicolons();
-      }
-      // Remove unnecessary returns
+   // Remove unnecessary returns
+   if (options::mod_remove_empty_return())
+   {
       log_rule_B("mod_remove_empty_return");
+      remove_extra_returns();
+   }
 
-      if (options::mod_remove_empty_return())
-      {
-         remove_extra_returns();
-      }
-      // Add or remove redundant 'int' keyword of integer types
+   // Add or remove redundant 'int' keyword of integer types
+   if (  (  language_is_set(LANG_C)
+         || language_is_set(LANG_CPP))
+      && (  options::mod_int_short() != IARF_IGNORE
+         || options::mod_short_int() != IARF_IGNORE
+         || options::mod_int_long() != IARF_IGNORE
+         || options::mod_long_int() != IARF_IGNORE
+         || options::mod_int_signed() != IARF_IGNORE
+         || options::mod_signed_int() != IARF_IGNORE
+         || options::mod_int_unsigned() != IARF_IGNORE
+         || options::mod_unsigned_int() != IARF_IGNORE))
+   {
       log_rule_B("mod_int_short");
       log_rule_B("mod_short_int");
       log_rule_B("mod_int_long");
@@ -2154,285 +2166,264 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
       log_rule_B("mod_signed_int");
       log_rule_B("mod_int_unsigned");
       log_rule_B("mod_unsigned_int");
+      change_int_types();
+   }
 
-      if (  (  language_is_set(LANG_C)
-            || language_is_set(LANG_CPP))
-         && (  options::mod_int_short() != IARF_IGNORE
-            || options::mod_short_int() != IARF_IGNORE
-            || options::mod_int_long() != IARF_IGNORE
-            || options::mod_long_int() != IARF_IGNORE
-            || options::mod_int_signed() != IARF_IGNORE
-            || options::mod_signed_int() != IARF_IGNORE
-            || options::mod_int_unsigned() != IARF_IGNORE
-            || options::mod_unsigned_int() != IARF_IGNORE))
-      {
-         change_int_types();
-      }
-      // Remove duplicate include
+   // Remove duplicate include
+   if (options::mod_remove_duplicate_include())
+   {
       log_rule_B("mod_remove_duplicate_include");
+      remove_duplicate_include();
+   }
+   // Add parens
+   do_parens();
+   do_parens_assign();
+   do_parens_return();
 
-      if (options::mod_remove_duplicate_include())
-      {
-         remove_duplicate_include();
-      }
-      // Add parens
-      do_parens();
-      do_parens_assign();
-      do_parens_return();
+   // Modify line breaks as needed
+   bool first = true;
+   int  old_changes;
 
-      // Modify line breaks as needed
-      bool first = true;
-      int  old_changes;
-
+   if (options::nl_remove_extra_newlines() == 2)
+   {
       log_rule_B("nl_remove_extra_newlines");
+      newlines_remove_newlines();
+   }
+   cpd.pass_count = 3;
 
-      if (options::nl_remove_extra_newlines() == 2)
+   dump_step(dump_file, "Before first while loop");
+
+   do
+   {
+      old_changes = cpd.changes;
+
+      LOG_FMT(LNEWLINE, "Newline loop start: %d\n", cpd.changes);
+
+      annotations_newlines();
+      newlines_cleanup_dup();
+      newlines_sparens();
+      newlines_cleanup_braces(first);
+      newlines_cleanup_angles();                           // Issue #1167
+
+      if (options::nl_after_multiline_comment())
       {
-         newlines_remove_newlines();
-      }
-      cpd.pass_count = 3;
-
-      dump_step(dump_file, "Before first while loop");
-
-      do
-      {
-         old_changes = cpd.changes;
-
-         LOG_FMT(LNEWLINE, "Newline loop start: %d\n", cpd.changes);
-
-         annotations_newlines();
-         newlines_cleanup_dup();
-         newlines_sparens();
-         newlines_cleanup_braces(first);
-         newlines_cleanup_angles();                           // Issue #1167
-
          log_rule_B("nl_after_multiline_comment");
+         newline_after_multiline_comment();
+      }
 
-         if (options::nl_after_multiline_comment())
-         {
-            newline_after_multiline_comment();
-         }
+      if (options::nl_after_label_colon())
+      {
          log_rule_B("nl_after_label_colon");
+         newline_after_label_colon();
+      }
+      newlines_insert_blank_lines();
 
-         if (options::nl_after_label_colon())
-         {
-            newline_after_label_colon();
-         }
-         newlines_insert_blank_lines();
-
+      if (options::pos_bool() != TP_IGNORE)
+      {
          log_rule_B("pos_bool");
+         newlines_chunk_pos(CT_BOOL, options::pos_bool());
+      }
 
-         if (options::pos_bool() != TP_IGNORE)
-         {
-            newlines_chunk_pos(CT_BOOL, options::pos_bool());
-         }
+      if (options::pos_compare() != TP_IGNORE)
+      {
          log_rule_B("pos_compare");
+         newlines_chunk_pos(CT_COMPARE, options::pos_compare());
+      }
 
-         if (options::pos_compare() != TP_IGNORE)
-         {
-            newlines_chunk_pos(CT_COMPARE, options::pos_compare());
-         }
+      if (options::pos_conditional() != TP_IGNORE)
+      {
          log_rule_B("pos_conditional");
+         newlines_chunk_pos(CT_COND_COLON, options::pos_conditional());
+         newlines_chunk_pos(CT_QUESTION, options::pos_conditional());
+      }
 
-         if (options::pos_conditional() != TP_IGNORE)
-         {
-            newlines_chunk_pos(CT_COND_COLON, options::pos_conditional());
-            newlines_chunk_pos(CT_QUESTION, options::pos_conditional());
-         }
+      if (  options::pos_comma() != TP_IGNORE
+         || options::pos_enum_comma() != TP_IGNORE)
+      {
          log_rule_B("pos_comma");
          log_rule_B("pos_enum_comma");
+         newlines_chunk_pos(CT_COMMA, options::pos_comma());
+      }
 
-         if (  options::pos_comma() != TP_IGNORE
-            || options::pos_enum_comma() != TP_IGNORE)
-         {
-            newlines_chunk_pos(CT_COMMA, options::pos_comma());
-         }
+      if (options::pos_assign() != TP_IGNORE)
+      {
          log_rule_B("pos_assign");
+         newlines_chunk_pos(CT_ASSIGN, options::pos_assign());
+      }
 
-         if (options::pos_assign() != TP_IGNORE)
-         {
-            newlines_chunk_pos(CT_ASSIGN, options::pos_assign());
-         }
+      if (options::pos_arith() != TP_IGNORE)
+      {
          log_rule_B("pos_arith");
+         newlines_chunk_pos(CT_ARITH, options::pos_arith());
+         newlines_chunk_pos(CT_CARET, options::pos_arith());
+      }
 
-         if (options::pos_arith() != TP_IGNORE)
-         {
-            newlines_chunk_pos(CT_ARITH, options::pos_arith());
-            newlines_chunk_pos(CT_CARET, options::pos_arith());
-         }
+      if (options::pos_shift() != TP_IGNORE)
+      {
          log_rule_B("pos_shift");
+         newlines_chunk_pos(CT_SHIFT, options::pos_shift());
+      }
+      newlines_class_colon_pos(CT_CLASS_COLON);
+      newlines_class_colon_pos(CT_CONSTR_COLON);
 
-         if (options::pos_shift() != TP_IGNORE)
-         {
-            newlines_chunk_pos(CT_SHIFT, options::pos_shift());
-         }
-         newlines_class_colon_pos(CT_CLASS_COLON);
-         newlines_class_colon_pos(CT_CONSTR_COLON);
-
+      if (options::nl_squeeze_ifdef())
+      {
          log_rule_B("nl_squeeze_ifdef");
+         newlines_squeeze_ifdef();
+      }
 
-         if (options::nl_squeeze_ifdef())
-         {
-            newlines_squeeze_ifdef();
-         }
+      if (options::nl_squeeze_paren_close())
+      {
          log_rule_B("nl_squeeze_paren_close");
+         newlines_squeeze_paren_close();
+      }
+      do_blank_lines();
+      newlines_eat_start_end();
+      newlines_functions_remove_extra_blank_lines();
+      newlines_cleanup_dup();
+      first = false;
+      dump_step(dump_file, "Inside first while loop");
+   } while (  old_changes != cpd.changes
+           && cpd.pass_count-- > 0);
 
-         if (options::nl_squeeze_paren_close())
-         {
-            newlines_squeeze_paren_close();
-         }
-         do_blank_lines();
-         newlines_eat_start_end();
-         newlines_functions_remove_extra_blank_lines();
-         newlines_cleanup_dup();
-         first = false;
-         dump_step(dump_file, "Inside first while loop");
-      } while (  old_changes != cpd.changes
-              && cpd.pass_count-- > 0);
+   mark_comments();
 
-      mark_comments();
-
-      // Add balanced spaces around nested params
+   // Add balanced spaces around nested params
+   if (options::sp_balance_nested_parens())
+   {
       log_rule_B("sp_balance_nested_parens");
+      space_text_balance_nested_parens();
+   }
 
-      if (options::sp_balance_nested_parens())
-      {
-         space_text_balance_nested_parens();
-      }
-      // Scrub certain added semicolons
+   // Scrub certain added semicolons
+   if (  language_is_set(LANG_PAWN)
+      && options::mod_pawn_semicolon())
+   {
       log_rule_B("mod_pawn_semicolon");
+      pawn_scrub_vsemi();
+   }
 
-      if (  language_is_set(LANG_PAWN)
-         && options::mod_pawn_semicolon())
-      {
-         pawn_scrub_vsemi();
-      }
-      // Sort imports/using/include
+   // Sort imports/using/include
+   if (  options::mod_sort_import()
+      || options::mod_sort_include()
+      || options::mod_sort_using())
+   {
       log_rule_B("mod_sort_import");
       log_rule_B("mod_sort_include");
       log_rule_B("mod_sort_using");
+      sort_imports();
+   }
+   // Fix same-line inter-chunk spacing
+   space_text();
 
-      if (  options::mod_sort_import()
-         || options::mod_sort_include()
-         || options::mod_sort_using())
-      {
-         sort_imports();
-      }
-      // Fix same-line inter-chunk spacing
-      space_text();
-
+   if (options::align_pp_define_span() > 0)
+   {
       // Do any aligning of preprocessors
       log_rule_B("align_pp_define_span");
+      align_preprocessor();
+   }
+   // Indent the text
+   indent_preproc();
+   indent_text();
 
-      if (options::align_pp_define_span() > 0)
-      {
-         align_preprocessor();
-      }
-      // Indent the text
-      indent_preproc();
-      indent_text();
-
-      // Insert trailing comments after certain close braces
+   // Insert trailing comments after certain close braces
+   if (  (options::mod_add_long_switch_closebrace_comment() > 0)
+      || (options::mod_add_long_function_closebrace_comment() > 0)
+      || (options::mod_add_long_class_closebrace_comment() > 0)
+      || (options::mod_add_long_namespace_closebrace_comment() > 0))
+   {
       log_rule_B("mod_add_long_switch_closebrace_comment");
       log_rule_B("mod_add_long_function_closebrace_comment");
       log_rule_B("mod_add_long_class_closebrace_comment");
       log_rule_B("mod_add_long_namespace_closebrace_comment");
+      add_long_closebrace_comment();
+   }
 
-      if (  (options::mod_add_long_switch_closebrace_comment() > 0)
-         || (options::mod_add_long_function_closebrace_comment() > 0)
-         || (options::mod_add_long_class_closebrace_comment() > 0)
-         || (options::mod_add_long_namespace_closebrace_comment() > 0))
-      {
-         add_long_closebrace_comment();
-      }
-      // Insert trailing comments after certain preprocessor conditional blocks
+   // Insert trailing comments after certain preprocessor conditional blocks
+   if (  (options::mod_add_long_ifdef_else_comment() > 0)
+      || (options::mod_add_long_ifdef_endif_comment() > 0))
+   {
       log_rule_B("mod_add_long_ifdef_else_comment");
       log_rule_B("mod_add_long_ifdef_endif_comment");
+      add_long_preprocessor_conditional_block_comment();
+   }
+   // Align everything else, reindent and break at code_width
+   first = true;
 
-      if (  (options::mod_add_long_ifdef_else_comment() > 0)
-         || (options::mod_add_long_ifdef_endif_comment() > 0))
+   dump_step(dump_file, "Before second while loop");
+
+   do
+   {
+      align_all();
+      indent_text();
+      old_changes = cpd.changes;
+
+      if (options::code_width() > 0)
       {
-         add_long_preprocessor_conditional_block_comment();
-      }
-      // Align everything else, reindent and break at code_width
-      first = true;
-
-      dump_step(dump_file, "Before second while loop");
-
-      do
-      {
-         align_all();
-         indent_text();
-         old_changes = cpd.changes;
-
          log_rule_B("code_width");
+         LOG_FMT(LNEWLINE, "%s(%d): Code_width loop start: %d\n",
+                 __func__, __LINE__, cpd.changes);
 
-         if (options::code_width() > 0)
+         if (options::debug_max_number_of_loops() > 0)
          {
-            LOG_FMT(LNEWLINE, "%s(%d): Code_width loop start: %d\n",
-                    __func__, __LINE__, cpd.changes);
             log_rule_B("debug_max_number_of_loops");
 
-            if (options::debug_max_number_of_loops() > 0)
+            if (cpd.changes > options::debug_max_number_of_loops())                 // Issue #2432
             {
-               if (cpd.changes > options::debug_max_number_of_loops())                 // Issue #2432
-               {
-                  LOG_FMT(LNEWLINE, "%s(%d): too many loops. Make a report, please.\n",
-                          __func__, __LINE__);
-                  log_flush(true);
-                  exit(EX_SOFTWARE);
-               }
-            }
-            do_code_width();
-
-            if (  old_changes != cpd.changes
-               && first)
-            {
-               // retry line breaks caused by splitting 1-liners
-               newlines_cleanup_braces(false);
-               newlines_insert_blank_lines();
-               newlines_functions_remove_extra_blank_lines();
-               newlines_remove_disallowed();
-               first = false;
+               LOG_FMT(LNEWLINE, "%s(%d): too many loops. Make a report, please.\n",
+                       __func__, __LINE__);
+               log_flush(true);
+               exit(EX_SOFTWARE);
             }
          }
-         dump_step(dump_file, "Inside second while loop");
-      } while (old_changes != cpd.changes);
+         do_code_width();
 
-      // And finally, align the backslash newline stuff
-      align_right_comments();
-
-      log_rule_B("align_nl_cont");
-
-      if (options::align_nl_cont())
-      {
-         align_backslash_newline();
-      }
-      dump_step(dump_file, "Final version");
-
-      // which output is to be done?
-      if (cpd.html_file == nullptr)
-      {
-         // Now render it all to the output file
-         output_text(pfout);
-      }
-      else
-      {
-         make_folders(cpd.html_file);                    // Issue #4066
-         // create the tracking file
-         FILE *t_file;
-         t_file = fopen(cpd.html_file, "wb");
-
-         if (t_file == nullptr)
+         if (  old_changes != cpd.changes
+            && first)
          {
-            LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
-                    __func__, cpd.html_file, strerror(errno), errno);
-            exit(EX_IOERR);
+            // retry line breaks caused by splitting 1-liners
+            newlines_cleanup_braces(false);
+            newlines_insert_blank_lines();
+            newlines_functions_remove_extra_blank_lines();
+            newlines_remove_disallowed();
+            first = false;
          }
-         output_text(t_file);
-         fclose(t_file);
-         exit(EX_OK);
       }
+      dump_step(dump_file, "Inside second while loop");
+   } while (old_changes != cpd.changes);
+
+   // And finally, align the backslash newline stuff
+   align_right_comments();
+
+   if (options::align_nl_cont())
+   {
+      log_rule_B("align_nl_cont");
+      align_backslash_newline();
+   }
+   dump_step(dump_file, "Final version");
+
+   // which output is to be done?
+   if (cpd.html_file == nullptr)
+   {
+      // Now render it all to the output file
+      output_text(pfout);
+   }
+   else
+   {
+      make_folders(cpd.html_file);                    // Issue #4066
+      // create the tracking file
+      FILE *t_file;
+      t_file = fopen(cpd.html_file, "wb");
+
+      if (t_file == nullptr)
+      {
+         LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
+                 __func__, cpd.html_file, strerror(errno), errno);
+         exit(EX_IOERR);
+      }
+      output_text(t_file);
+      fclose(t_file);
+      exit(EX_OK);
    }
 
    // Special hook for dumping parsed data for debugging
