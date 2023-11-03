@@ -549,7 +549,10 @@ endif()
 #
 # Uninstall
 #
-add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${PROJECT_SOURCE_DIR}/cmake/uninstall.cmake")
+get_directory_property(hasParent PARENT_DIRECTORY)
+if(NOT hasParent)
+  add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${PROJECT_SOURCE_DIR}/cmake/uninstall.cmake")
+endif()
 
 #
 # add to build the compile_commands.json file, to be used by clang-tidy
