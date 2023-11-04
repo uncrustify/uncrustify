@@ -1,6 +1,6 @@
 /**
  * @file output.h
- * prototypes for output.c
+ * prototypes for output.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

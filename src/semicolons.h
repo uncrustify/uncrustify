@@ -1,6 +1,6 @@
 /**
  * @file semicolons.h
- * prototypes for semicolons.c
+ * prototypes for semicolons.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

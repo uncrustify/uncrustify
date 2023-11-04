@@ -1,6 +1,6 @@
 /**
  * @file compat.h
- * prototypes for compat_xxx.c
+ * prototypes for compat_xxx.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

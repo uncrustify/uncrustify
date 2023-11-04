@@ -1,6 +1,6 @@
 /**
  * @file keywords.h
- * prototypes for keywords.c
+ * prototypes for keywords.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

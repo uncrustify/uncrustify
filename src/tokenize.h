@@ -1,6 +1,6 @@
 /**
  * @file tokenize.h
- * prototypes for tokenize.c
+ * prototypes for tokenize.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

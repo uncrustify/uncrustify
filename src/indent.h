@@ -1,6 +1,6 @@
 /**
  * @file indent.h
- * prototypes for indent.c
+ * prototypes for indent.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

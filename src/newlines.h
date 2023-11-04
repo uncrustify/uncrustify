@@ -1,6 +1,6 @@
 /**
  * @file newlines.h
- * prototypes for newlines.c
+ * prototypes for newlines.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

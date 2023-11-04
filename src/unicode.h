@@ -1,6 +1,6 @@
 /**
  * @file unicode.h
- * prototypes for unicode.c
+ * prototypes for unicode.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

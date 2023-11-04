@@ -1,6 +1,6 @@
 /**
  * @file width.h
- * prototypes for width.c
+ * prototypes for width.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

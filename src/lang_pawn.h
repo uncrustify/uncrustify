@@ -1,6 +1,6 @@
 /**
  * @file long_pawn.h
- * prototypes for long_pawn.c
+ * prototypes for long_pawn.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+
