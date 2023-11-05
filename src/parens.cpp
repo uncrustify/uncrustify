@@ -88,8 +88,12 @@ void do_parens_assign()                         // Issue #3316
       {
          if (pc->Is(CT_ASSIGN))
          {
-            LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->Text(), pc->GetLevel());
+            if (pc->TestFlags(PCF_IN_SPAREN))            // Issue #4239
+            {
+               continue;
+            }
+            LOG_FMT(LPARADD, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', level is %zu\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetLevel());
             // look before for a open sparen
             size_t check_level = pc->GetLevel();
             Chunk  *p          = pc->GetPrevNc(E_Scope::PREPROC);
@@ -216,9 +220,11 @@ static void add_parens_between(Chunk *first, Chunk *last)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LPARADD, "%s(%d): line %zu, between '%s' [lvl is %zu] and '%s' [lvl is %zu]\n",
-           __func__, __LINE__, first->GetOrigLine(),
-           first->Text(), first->GetLevel(),
+   LOG_FMT(LPARADD, "%s(%d): first: line %zu, col %zu, between '%s' [lvl is %zu] and\n",
+           __func__, __LINE__, first->GetOrigLine(), first->GetOrigCol(),
+           first->Text(), first->GetLevel());
+   LOG_FMT(LPARADD, "%s(%d): last: line %zu, col %zu, '%s' [lvl is %zu]\n",
+           __func__, __LINE__, last->GetOrigLine(), last->GetOrigCol(),
            last->Text(), last->GetLevel());
 
    // Don't do anything if we have a bad sequence, ie "&& )"
