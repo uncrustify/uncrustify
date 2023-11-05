@@ -1,6 +1,6 @@
 /**
  * @file detect.h
- * prototypes for detect.c
+ * prototypes for detect.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

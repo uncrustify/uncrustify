@@ -1,6 +1,6 @@
 /**
  * @file universalindentgui.h
- * prototypes for universalindentgui.c
+ * prototypes for universalindentgui.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

@@ -1,6 +1,6 @@
 /**
  * @file align.h
- * prototypes for align.c
+ * prototypes for align.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

@@ -1,6 +1,6 @@
 /**
  * @file parens.h
- * prototypes for parens.c
+ * prototypes for parens.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

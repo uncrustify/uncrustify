@@ -1,6 +1,6 @@
 /**
  * @file tokenize_cleanup.h
- * prototypes for tokenize_cleanup.c
+ * prototypes for tokenize_cleanup.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+
