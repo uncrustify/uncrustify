@@ -46,7 +46,7 @@ void print_option_choices(FILE *pfile, uncrustify::GenericOption *option,
 
    for (auto c = option->possibleValues(); *c; ++c)
    {
-      fprintf(pfile, "%s=%s%c", option->name(), *c, c[1] ? '|' : '\n');
+      fprintf(pfile, "%s\\s*=\\s*%s%c", option->name(), *c, c[1] ? '|' : '\n');
    }
 }
 
@@ -152,7 +152,8 @@ void print_universal_indent_cfg(FILE *pfile)
            "parameterOrder=ipo\n"
            "showHelpParameter=-h\n"
            "stringparaminquotes=false\n"
-           "useCfgFileParameter=\"-c \"\n");
+           "useCfgFileParameter=\"-c \"\n"
+           "useRegex=true\n");
 
    fprintf(pfile, "version=%s\n", UNCRUSTIFY_VERSION);
 
@@ -249,7 +250,7 @@ void print_universal_indent_cfg(FILE *pfile)
             // only a number. Also it is by default enabled.
             fprintf(pfile, "Enabled=true\n");
             fprintf(pfile, "EditorType=multiple\n");
-            fprintf(pfile, "Choices=\"%s=0|%s=1|%s=2\"\n",
+            fprintf(pfile, "Choices=\"%s\\s*=\\s*0|%s\\s*=\\s*1|%s\\s*=\\s*2\"\n",
                     option->name(), option->name(), option->name());
 #if defined (DEBUG) && !defined (WIN32)
             fprintf(pfile, "ChoicesReadable=\"(%zu)Spaces only|(%zu)Indent with tabs, align with spaces|(%zu)Indent and align with tabs\"\n",
@@ -292,7 +293,7 @@ void print_universal_indent_cfg(FILE *pfile)
 
             case uncrustify::OT_NUM:
                fprintf(pfile, "EditorType=numeric\n");
-               fprintf(pfile, "CallName=\"%s=\"\n", option->name());
+               fprintf(pfile, "CallName=\"%s\\s*=\\s*\"\n", option->name());
                fprintf(pfile, "MinVal=%s\n", option->minStr().c_str());
                fprintf(pfile, "MaxVal=%s\n", option->maxStr().c_str());
                fprintf(pfile, "ValueDefault=%s\n", option->str().c_str());
@@ -300,7 +301,7 @@ void print_universal_indent_cfg(FILE *pfile)
 
             case uncrustify::OT_UNUM:
                fprintf(pfile, "EditorType=numeric\n");
-               fprintf(pfile, "CallName=\"%s=\"\n", option->name());
+               fprintf(pfile, "CallName=\"%s\\s*=\\s*\"\n", option->name());
                fprintf(pfile, "MinVal=%s\n", option->minStr().c_str());
                fprintf(pfile, "MaxVal=%s\n", option->maxStr().c_str());
                fprintf(pfile, "ValueDefault=%s\n", option->str().c_str());
@@ -353,7 +354,7 @@ void print_universal_indent_cfg(FILE *pfile)
 
             case uncrustify::OT_STRING:
             {
-               fprintf(pfile, "CallName=%s=\n", option->name());
+               fprintf(pfile, "CallName=%s\\s*=\\s*\n", option->name());
                fprintf(pfile, "EditorType=string\n");
                fprintf(pfile, "ValueDefault=%s\n", option->str().c_str());
                break;
