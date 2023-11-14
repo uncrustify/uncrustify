@@ -4,7 +4,7 @@
 
 .. Update the date in the next line when editing this document!
 
-*This document was last updated on 2023-05-11, for Uncrustify 0.7r76.0.*
+*This document was last updated on 2023-11-13, for Uncrustify 0.78.0.*
 
 This document uses "0.1.2" throughout as an example version number.
 Whenever you see this, you should substitute the version number
@@ -66,6 +66,22 @@ You might need a new PAT for your account, for your admin-account.
 See:
 https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/
 https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+   loggin with a admin account at https://github.com/uncrustify/uncrustify
+   on the right, click on the photo
+   scroll down to "Settings"
+   on the left, scroll down to "Developer settings", and click
+   on the left, click on "Personal access tokens"
+   choose "Tokens (classic), click
+   if necessary "Delete" expired token(s)
+   click on "Generate new token"
+   choose "Generate new token (classic)", click
+   choose a "what's this token for"
+   click on "repo"
+   scroll down to bottom and click on "Generate token"
+Make sure to copy your personal access token now. You won’t be able to see it again!
+   copy the token "ghp_otx****"
+   and substitute in the file .git/config fuer [remote "origin"]
+   "url = https://gmaurel:ghp_otxZ****"
 
 Then, run::
 
