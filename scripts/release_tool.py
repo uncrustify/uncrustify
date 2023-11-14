@@ -273,7 +273,7 @@ def main():
 
     parser_update = subparsers.add_parser(
         'update', help='update version information')
-    parser_update.set_defaults(func=cmd_update)
+    parser_update.set_defaults(func=cmd_update, keepversion=False)
     parser_update.add_argument('executable',
                                help='path to uncrustify executable')
 
