@@ -80,7 +80,7 @@ https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/c
    scroll down to bottom and click on "Generate token"
 Make sure to copy your personal access token now. You won’t be able to see it again!
    copy the token "ghp_otx****"
-   and substitute in the file .git/config fuer [remote "origin"]
+   and substitute in the file .git/config for [remote "origin"]
    "url = https://gmaurel:ghp_otxZ****"
 
 Then, run::
