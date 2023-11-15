@@ -96,11 +96,11 @@ def main():
             changes.append(c)
 
     for c in changes:
-        print(c.sha)
+        print('  ', c.sha)
         for o in c.added_options:
-            print('  Added   : {:36} {}'.format(o, c.date))
+            print('     Added   : {:36} {}'.format(o, c.date))
         for o in c.removed_options:
-            print('  Removed : {:36} {}'.format(o, c.date))
+            print('     Removed : {:36} {}'.format(o, c.date))
 
     return 0
 

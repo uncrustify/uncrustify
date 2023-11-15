@@ -1,3 +1,32 @@
+Change highlights in uncrustify-0.78.0 (November 2023)
+-------------------------------------------------------------------------------
+   50b364e02d4e6ebe5fa99d2d1de642f1a3fb6570
+     Added   : align_nl_cont_spaces                 May 11 2023
+   7c53d3cc66d939dc5b0de25868e947508e2353d5
+     Added   : sp_after_bit_colon                   Jun 28 2023
+     Added   : sp_before_bit_colon                  Jun 28 2023
+   b4af21a59630315f79ec28bc5449c31f48194111
+     Added   : sp_between_ptr_ref                   Jul 14 2023
+   84780fef16da0552e7f44785d63d23a2b0e6a8b4
+     Added   : nl_min_after_func_body               Aug  3 2023
+   d8931537292a5cb897cfd561adf581d27087bfe4
+     Added   : sp_before_keyword_ptr_star           Aug 10 2023
+   8ffe999d3382c6f516372627bd529917bc6611ae
+     Added   : sp_before_global_scope_ptr_star      Aug 10 2023
+     Added   : sp_before_scope_ptr_star             Aug 10 2023
+   f493e4d9e003648753e6574ba2cd61f5c0bd1352
+     Added   : sp_before_operator_ptr_star          Aug 10 2023
+     Added   : sp_before_qualifier_ptr_star         Aug 10 2023
+     Removed : sp_before_keyword_ptr_star           Aug 10 2023
+   adbb82b0f6e551ef976e64a1351ca0eb05acf932
+     Added   : debug_use_the_exit_function_pop      Aug 15 2023
+   2e0e019dc28cac0844b5cff81d05859ee1a02394
+     Added   : nl_max_after_func_body               Aug 28 2023
+   cb44fe733a2c1e0391cfa5afdac77f7e66d688e1
+     Added   : sp_cpp_lambda_argument_list_empty    Sep 12 2023
+   e058aafd4ee5e407e250a6b921886d2c00d6a622
+     Added   : align_func_proto_span_ignore_cont_lines Oct 21 2023
+
 Change highlights in uncrustify-0.77.0 (May 2023)
 -------------------------------------------------------------------------------
    ea6c54eefe2f3272a4867d30920408c327167199
