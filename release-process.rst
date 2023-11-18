@@ -66,7 +66,7 @@ You might need a new PAT for your account, for your admin-account.
 See:
 https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/
 https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
-   loggin with a admin account at https://github.com/uncrustify/uncrustify
+   login with an admin account at https://github.com/uncrustify/uncrustify
    on the right, click on the photo
    scroll down to "Settings"
    on the left, scroll down to "Developer settings", and click
@@ -276,6 +276,21 @@ This is also a good time to test the tagged build on Linux:
    $ ninja
    $ ctest
    $ ./uncrustify --version
+
+Create a release on github
+==========================
+
+- Login with an admin account at https://github.com/uncrustify/uncrustify
+- Navigate to https://github.com/uncrustify/uncrustify/releases and click on
+  the "Draft a new release" button at the top of the page
+- Select the corresponding release tag under the "Choose a tag" combobox
+- Add the release version under "Release title" as "Uncrustify 0.xx.y"
+- Add release text in describing section. It is recommended to copy the text
+  from previous releases and update the related files
+- Upload the Windows binaries and the source code zip/tarball files in the section
+  "Attach binaries by dropping them here or selecting them": these will show up as
+  "Assets" under the release text.
+- Publish the release by clicking on the "Publish release" button.
 
 Upload to SourceForge
 =====================
