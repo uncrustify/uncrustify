@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 
 project(uncrustify)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
   message(FATAL_ERROR "
     In-source builds are not supported, please remove the `CMakeFiles'
@@ -553,8 +555,3 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 if(NOT hasParent)
   add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${PROJECT_SOURCE_DIR}/cmake/uninstall.cmake")
 endif()
-
-#
-# add to build the compile_commands.json file, to be used by clang-tidy
-#
-set(CMAKE_EXPORT_COMPILE_COMMANDS "ON" CACHE BOOL "to create the compile_commands.json file" FORCE)
