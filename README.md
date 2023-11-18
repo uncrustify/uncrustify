@@ -59,7 +59,7 @@ That should give you a pretty good idea of what Uncrustify can do.
 ---------------------------------------------------------------------------
 
 ## Binaries
-Pre compiled binaries for Windows can be downloaded [here](https://sourceforge.net/projects/uncrustify/files/).
+Pre compiled binaries for Windows can be downloaded from the [Releases](https://github.com/uncrustify/uncrustify/releases) page or from the [Sourceforge](https://sourceforge.net/projects/uncrustify/files/) website.
 
 ## Build
 [Python](https://www.python.org/) is an "interpreted high-level programming language for general-purpose programming", for this project it is needed to extend the capabilities of CMake.
