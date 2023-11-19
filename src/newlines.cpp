@@ -858,7 +858,6 @@ void newline_del_between(Chunk *start, Chunk *end)
                {
                   size_t temp = space_col_align(prev, next);
                   align_to_column(next, prev->GetColumn() + temp);
-                  dump_step(dump_file_name, "del 1");
                }
             }
          }
@@ -3920,7 +3919,6 @@ void newlines_cleanup_angles()
 void newlines_cleanup_braces(bool first)
 {
    LOG_FUNC_ENTRY();
-   dump_step(dump_file_name, "new 2");
 
    // Get the first token that's not an empty line:
    Chunk *pc = Chunk::GetHead();
