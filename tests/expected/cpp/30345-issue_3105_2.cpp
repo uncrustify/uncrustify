@@ -45,8 +45,7 @@ static const int POPUP_FLAGS = TQt::WStyle_Customize | TQt::WDestructiveClose | 
 KPassivePopup::KPassivePopup(TQWidget *parent, const char *name, WFlags f) :
 		TQFrame(0, name, (WFlags)(f ? (int)f : POPUP_FLAGS)), window(parent ? parent->winId() : 0L),
 		msgView(0), topLayout(0), hideDelay(DEFAULT_POPUP_TIME),
-		hideTimer(new TQTimer(this, "hide_timer")),
-		m_autoDelete(false)
+		hideTimer(new TQTimer(this, "hide_timer")), m_autoDelete(false)
 {
 	init(DEFAULT_POPUP_TYPE);
 
@@ -91,8 +90,7 @@ TDEPopupMenu* KPixmapRegionSelectorWidget::createPopupMenu()
 
 	action = new TDEAction(i18n("Rotate &Counterclockwise"), "object-rotate-left", 0,
 	                       TQT_TQOBJECT(this), TQT_SLOT(rotateCounterclockwise()),
-	                       TQT_TQOBJECT(popup),
-	                       "rotatecounterclockwise");
+	                       TQT_TQOBJECT(popup), "rotatecounterclockwise");
 	action->plug(popup);
 	return popup;
 }

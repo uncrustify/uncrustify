@@ -4,7 +4,8 @@ DCOPClient::DCOPClient()
         &d->postMessageTimer,
         TQT_SIGNAL(timeout()),
         this,
-        TQT_SLOT(
+        TQT_SLOT
+        (
             processPostedMessagesInternal()));
     TQObject::connect(
         &d->eventLoopTimer,
