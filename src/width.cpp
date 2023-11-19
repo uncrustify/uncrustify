@@ -113,11 +113,13 @@ static void split_for_stmt(Chunk *start);
 static inline bool is_past_width(Chunk *pc)
 {
    // allow char to sit at last column by subtracting 1
-   size_t currCol = pc->GetColumn() + pc->Len() - 1;
+   size_t currCol    = pc->GetColumn() + pc->Len() - 1;
+   bool   past_width = currCol > options::code_width();
 
-   LOG_FMT(LSPLIT, "%s(%d): orig line %zu, orig col %zu, curr col %zu, text %s\n",
-           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), currCol, pc->Text());
-   return(currCol > options::code_width());
+   LOG_FMT(LSPLIT, "%s(%d): orig line %zu, orig col %zu, curr col %zu, text '%s', past width %s\n",
+           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), currCol, pc->Text(),
+           past_width ? "YES" : "NO");
+   return(past_width);
 }
 
 
@@ -225,12 +227,18 @@ void do_code_width()
 
          if (split_OK)
          {
-            LOG_FMT(LSPLIT, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s'\n",
+            // After a line split it is necessary to reindent the text before considering
+            // further splits. This avoid splits out of position which would produce an
+            // awkward result in some cases when a line needs more that one split.
+            // After the split, skip over the remainder of the line.
+            Chunk *nextNl = pc->GetNextNl();
+            LOG_FMT(LSPLIT, "%s(%d): orig line %zu, orig col %zu, text '%s' splitted\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+            pc = nextNl;
          }
          else
          {
-            LOG_FMT(LSPLIT, "%s(%d): Bailed! orig line is %zu, orig col is %zu, Text() '%s'\n",
+            LOG_FMT(LSPLIT, "%s(%d): orig line %zu, orig col %zu, text '%s' not splitted\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
             break;
          }
@@ -342,11 +350,11 @@ static void try_split_here(SplitEntry &ent, Chunk *pc)
 static bool split_line(Chunk *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s(%d): start->Text() '%s', orig line %zu, orig col %zu, type %s\n",
+   LOG_FMT(LSPLIT, "%s(%d): start text '%s', orig line %zu, orig col %zu, type %s\n",
            __func__, __LINE__, start->Text(), start->GetOrigLine(), start->GetOrigCol(), get_token_name(start->GetType()));
-   LOG_FMT(LSPLIT, "   start->GetFlags() ");
+   LOG_FMT(LSPLIT, "   flags ");
    log_pcf_flags(LSPLIT, start->GetFlags());
-   LOG_FMT(LSPLIT, "   start->GetParentType() %s, (PCF_IN_FCN_DEF %s), (PCF_IN_FCN_CALL %s)\n",
+   LOG_FMT(LSPLIT, "   parent type %s, (PCF_IN_FCN_DEF %s), (PCF_IN_FCN_CALL %s)\n",
            get_token_name(start->GetParentType()),
            start->TestFlags((PCF_IN_FCN_DEF)) ? "TRUE" : "FALSE",
            start->TestFlags((PCF_IN_FCN_CALL)) ? "TRUE" : "FALSE");
@@ -362,15 +370,14 @@ static bool split_line(Chunk *start)
       cpd.changes++;
       return(false);
    }
-   LOG_FMT(LSPLIT, "%s(%d): before ls_code_width\n", __func__, __LINE__);
 
    if (options::ls_code_width())
    {
       log_rule_B("ls_code_width");
    }
-   // Check to see if we are in a for statement
    else if (start->TestFlags(PCF_IN_FOR))
    {
+      // Check to see if we are in a for statement
       LOG_FMT(LSPLIT, " ** FOR SPLIT **\n");
       split_for_stmt(start);
 
@@ -380,14 +387,14 @@ static bool split_line(Chunk *start)
       }
       LOG_FMT(LSPLIT, "%s(%d): for split didn't work\n", __func__, __LINE__);
    }
-   /*
-    * If this is in a function call or prototype, split on commas or right
-    * after the open parenthesis
-    */
    else if (  start->TestFlags(PCF_IN_FCN_DEF)
            || start->TestFlags(PCF_IN_FCN_CALL)
            || start->GetParentType() == CT_FUNC_PROTO)            // Issue #1169
    {
+      /*
+       * If this is in a function call or prototype, split on commas or right
+       * after the open parenthesis
+       */
       LOG_FMT(LSPLIT, " ** FUNC SPLIT **\n");
 
       if (options::ls_func_split_full())
@@ -402,18 +409,17 @@ static bool split_line(Chunk *start)
          }
       }
    }
-
-   /*
-    * If this is in a template, split on commas, Issue #1170
-    */
    else if (start->TestFlags(PCF_IN_TEMPLATE))
    {
+      /*
+       * If this is in a template, split on commas, Issue #1170
+       */
       LOG_FMT(LSPLIT, " ** TEMPLATE SPLIT **\n");
       split_template(start);
       return(true);
    }
-   LOG_FMT(LSPLIT, "%s(%d):\n", __func__, __LINE__);
    // Try to find the best spot to split the line
+   LOG_FMT(LSPLIT, "%s(%d): try to find a split point\n", __func__, __LINE__);
    SplitEntry ent;
    ent.pc  = Chunk::NullChunkPtr;
    ent.pri = CT_UNKNOWN;
@@ -494,31 +500,67 @@ static bool split_line(Chunk *start)
       LOG_FMT(LSPLIT, "%s(%d): at '%s', orig col is %zu\n",
               __func__, __LINE__, pc->Text(), pc->GetOrigCol());
    }
+   bool move_forward = false;
 
    if (pc->IsNullChunk())
    {
       pc = start;
+      Chunk *next = pc->GetNext();
 
-      // Don't break before a close, comma, or colon
-      if (  start->Is(CT_PAREN_CLOSE)
-         || start->Is(CT_PAREN_OPEN)
-         || start->Is(CT_FPAREN_CLOSE)
-         || start->Is(CT_FPAREN_OPEN)
-         || start->Is(CT_SPAREN_CLOSE)
-         || start->Is(CT_SPAREN_OPEN)
-         || start->Is(CT_ANGLE_CLOSE)
-         || start->Is(CT_BRACE_CLOSE)
-         || start->Is(CT_COMMA)
-         || start->IsSemicolon()
-         || start->Len() == 0)
+      // On comma, close parenthesis/bracket/braces or semicolon, empty
+      // parenthesis/brackets/braces pairs, skip after them since they
+      // are small chunks and the split looks much better.
+      if (  pc->Is(CT_COMMA)
+         || pc->IsSemicolon()
+         || pc->IsParenClose()
+         || pc->IsBraceClose()
+         || pc->Is(CT_ANGLE_CLOSE)
+         || pc->Is(CT_SQUARE_CLOSE)
+         || (  pc->IsParenOpen()
+            && next->IsParenClose())
+         || (  pc->IsBraceOpen()
+            && next->IsBraceClose())
+         || (  pc->Is(CT_SQUARE_OPEN)
+            && next->Is(CT_SQUARE_CLOSE))
+         || pc->Len() == 0)
       {
-         LOG_FMT(LSPLIT, " ** NO GO **\n");
-
-         // TODO: Add in logic to handle 'hard' limits by backing up a token
-         return(true);
+         LOG_FMT(LSPLIT, "Move forward past the chuck");
+         move_forward = true;
       }
    }
-   // add a newline before pc
+   // Add a newline before 'pc', if possible.
+   // If 'pc' is the first chunk in the line, split after it since it is
+   // already past the allowed code width. If the next chunk is a comma, close
+   // parenthesis/bracket/braces or semicolon, skip after them since they
+   // are small chunks and the split looks much better. Also skip over
+   // empty parenthesis/brackets/braces pairs.
+   prev = pc->GetPrev();
+
+   if (  prev->IsNullChunk()
+      || pc->IsNewline()
+      || prev->IsNewline()
+      || move_forward)
+   {
+      pc = pc->GetNext();
+      Chunk *next = pc->GetNext();
+
+      while (  pc->Is(CT_COMMA)
+            || pc->IsSemicolon()
+            || pc->IsParenClose()
+            || pc->IsBraceClose()
+            || pc->Is(CT_ANGLE_CLOSE)
+            || pc->Is(CT_SQUARE_CLOSE)
+            || (  pc->IsParenOpen()
+               && next->IsParenClose())
+            || (  pc->IsBraceOpen()
+               && next->IsBraceClose())
+            || (  pc->Is(CT_SQUARE_OPEN)
+               && next->Is(CT_SQUARE_CLOSE)))
+      {
+         pc   = next;
+         next = pc->GetNext();
+      }
+   }
    prev = pc->GetPrev();
 
    if (  prev->IsNotNullChunk()
