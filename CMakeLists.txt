@@ -140,7 +140,7 @@ endif()
 # Generate uncrustify_version.h
 #
 
-set(UNCRUSTIFY_VERSION "0.78.0_f")
+set(UNCRUSTIFY_VERSION "0.78.1_f")
 
 option(NoGitVersionString "Do not use make_version.py and git to build a version string" OFF)
 if(NoGitVersionString)

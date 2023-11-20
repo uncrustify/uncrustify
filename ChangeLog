@@ -1,3 +1,8 @@
+Change highlights in uncrustify-0.78.1 (November 2023)
+-------------------------------------------------------------------------------
+   24ca784086c31ce6aa0817ac9c99539a5ac52d00
+     Improve line splitting logic to avoid awkward splits  Nov 19 2023
+
 Change highlights in uncrustify-0.78.0 (November 2023)
 -------------------------------------------------------------------------------
    50b364e02d4e6ebe5fa99d2d1de642f1a3fb6570
