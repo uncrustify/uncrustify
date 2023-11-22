@@ -720,3 +720,103 @@ void set_dump_file_name(const char *name)
 {
    sprintf(dump_file_name, "%s", name);
 }
+
+
+//! give the oportunity to examine most(all) the data members of a single token
+//! may be inserted everythere to follow a value
+void examine_token(const char *func_name, int theLine, size_t orig_line_to_examine, size_t orig_column_to_examine)
+{
+   bool  line_found   = false;
+   bool  column_found = false;
+   Chunk *pc_saved    = nullptr;
+
+   // look for the searched line
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+   {
+      //LOG_FMT(LGUY, "orig line is %zu, ", pc->GetOrigLine());
+      //LOG_FMT(LGUY, "orig column is %zu, ", pc->GetOrigCol());
+      //LOG_FMT(LGUY, "Text is '%s'\n", pc->Text());
+
+      if (!line_found)
+      {
+         if (pc->GetOrigLine() == orig_line_to_examine)
+         {
+            line_found = true;
+            pc_saved   = pc;
+            break;
+         }
+      }
+   }
+
+   if (line_found)
+   {
+      // look for the searched column
+      for (Chunk *pc = pc_saved; pc->IsNotNullChunk(); pc = pc->GetNext())
+      {
+         //LOG_FMT(LGUY, "orig line is %zu, ", pc->GetOrigLine());
+         //LOG_FMT(LGUY, "orig column is %zu, ", pc->GetOrigCol());
+         //LOG_FMT(LGUY, "Text is '%s'\n", pc->Text());
+         if (!column_found)
+         {
+            if (pc->GetOrigCol() == orig_column_to_examine)
+            {
+               column_found = true;
+               LOG_FMT(LGUY, "Examine:(%s:%d), ", func_name, theLine);
+               LOG_FMT(LGUY, "for the token at orig line is %zu, ", pc->GetOrigLine());
+               LOG_FMT(LGUY, "at orig column %zu, type is %s :\n", pc->GetColumn(), get_token_name(pc->GetType()));
+
+               // the data members can be seen at chunk.h lines 1047 ...
+               // --------- Data members
+               // E_Token         m_type;
+               // E_Token         m_parentType;
+               // size_t          m_origLine;
+               // size_t          m_origCol;
+               // size_t          m_origColEnd;
+               // size_t          m_origPrevSp;
+               // size_t          m_column;
+               // size_t          m_columnIndent;
+               // size_t          m_nlCount;
+               if (pc->Is(CT_NEWLINE))
+               {
+                  LOG_FMT(LGUY, "   nl_count is %zu\n", pc->GetNlCount());
+               }
+               // size_t          m_nlColumn;
+               // size_t          m_level;
+               // size_t          m_braceLevel;
+               // size_t          m_ppLevel;
+               // bool            m_afterTab;
+               // PcfFlags        m_flags;
+               // AlignmentData   m_alignmentData;
+               // IndentationData m_indentationData;
+               // Chunk           *m_next;
+               // Chunk           *m_prev;
+               // Chunk           *m_parent;
+               // UncText         m_str;
+               // TrackList       *m_trackingList;
+            }
+            else
+            {
+               if (pc->GetOrigCol() > orig_column_to_examine)
+               {
+                  break;
+               }
+               continue;
+            }
+         }
+         else
+         {
+            break;
+         }
+      }
+   }
+
+   if (!column_found)
+   {
+      LOG_FMT(LGUY, "column (%zu) not found\n", orig_column_to_examine);
+   }
+
+   if (!line_found)
+   {
+      LOG_FMT(LGUY, "line (%zu) not found\n", orig_line_to_examine);
+   }
+} // examine_token
