@@ -724,7 +724,7 @@ void set_dump_file_name(const char *name)
 
 //! give the oportunity to examine most(all) the data members of a single token
 //! may be inserted everythere to follow a value
-void examine_token(size_t orig_line_to_examine, size_t orig_column_to_examine)
+void examine_token(const char *func_name, int theLine, size_t orig_line_to_examine, size_t orig_column_to_examine)
 {
    bool  line_found   = false;
    bool  column_found = false;
@@ -761,8 +761,9 @@ void examine_token(size_t orig_line_to_examine, size_t orig_column_to_examine)
             if (pc->GetOrigCol() == orig_column_to_examine)
             {
                column_found = true;
+               LOG_FMT(LGUY, "Examine:(%s:%d), ", func_name, theLine);
                LOG_FMT(LGUY, "for the token at orig line is %zu, ", pc->GetOrigLine());
-               LOG_FMT(LGUY, "at column %zu:\n", pc->GetColumn());
+               LOG_FMT(LGUY, "at orig column %zu, type is %s :\n", pc->GetColumn(), get_token_name(pc->GetType()));
 
                // the data members can be seen at chunk.h lines 1047 ...
                // --------- Data members
