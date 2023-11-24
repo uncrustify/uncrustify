@@ -730,12 +730,20 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
       size_t idx = frm.size();
       LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
               __func__, __LINE__, idx);
-      Chunk *saved = frm.at(idx - 2).GetOpenChunk();
 
-      if (saved->IsNotNullChunk())
+      if (idx >= 2)
       {
-         // set parent member
-         pc->SetParent(saved);
+         Chunk *saved = frm.at(idx - 2).GetOpenChunk();
+
+         if (saved->IsNotNullChunk())
+         {
+            // set parent member
+            pc->SetParent(saved);
+         }
+      }
+      else
+      {
+         LOG_FMT(LBCSPOP, "%s(%d): not enough braces (1)\n", __func__, __LINE__);
       }
    }
 
@@ -749,12 +757,36 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
             && prev->IsNot(CT_ASSIGN)))
       {
          // it is a CT_DEFAULT from a switch
-         LOG_FMT(LBCSPOP, "%s(%d): pc orig line is %zu, orig col is %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
-         pc->SetParentType(CT_SWITCH);
          size_t idx = frm.size();
-         LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
-                 __func__, __LINE__, idx);
+         LOG_FMT(LBCSPOP, "%s(%d): pc orig line %zu, orig col %zu, frame idx %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), idx);
+         pc->SetParentType(CT_SWITCH);
+
+         if (idx >= 2)
+         {
+            Chunk *saved = frm.at(idx - 2).GetOpenChunk();
+
+            if (saved->IsNotNullChunk())
+            {
+               // set parent member
+               pc->SetParent(saved);
+            }
+         }
+         else
+         {
+            LOG_FMT(LBCSPOP, "%s(%d): not enough braces (2)\n", __func__, __LINE__);
+         }
+      }
+   }
+
+   if (pc->Is(CT_BREAK))
+   {
+      size_t idx = frm.size();
+      LOG_FMT(LBCSPOP, "%s(%d): pc orig line %zu, orig col %zu, frame idx %zu\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), idx);
+
+      if (idx >= 2)
+      {
          Chunk *saved = frm.at(idx - 2).GetOpenChunk();
 
          if (saved->IsNotNullChunk())
@@ -763,21 +795,9 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
             pc->SetParent(saved);
          }
       }
-   }
-
-   if (pc->Is(CT_BREAK))
-   {
-      LOG_FMT(LBCSPOP, "%s(%d): pc orig line is %zu, orig col is %zu\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
-      size_t idx = frm.size();
-      LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
-              __func__, __LINE__, idx);
-      Chunk *saved = frm.at(idx - 2).GetOpenChunk();
-
-      if (saved->IsNotNullChunk())
+      else
       {
-         // set parent member
-         pc->SetParent(saved);
+         LOG_FMT(LBCSPOP, "%s(%d): not enough braces (3)\n", __func__, __LINE__);
       }
    }
    const pattern_class_e patcls = get_token_pattern_class(pc->GetType());
