@@ -322,6 +322,7 @@
 
 30400  common/attribute_specifier_seqs.cfg                  cpp/attribute_specifier_seqs.cpp
 30401  cpp/Issue_2570.cfg                                   cpp/Issue_2570.cpp
+30402  common/tde.cfg                                       cpp/Issue_4157.cpp
 
 # function def newlines
 30701  common/func-def-1.cfg                                cpp/function-def.cpp
