@@ -23,6 +23,7 @@
 #include "combine_skip.h"
 #include "flag_parens.h"
 #include "indent.h"
+#include "is_var_def.h"
 #include "keywords.h"
 #include "prototypes.h"
 #include "space.h"
@@ -243,10 +244,6 @@ static void newlines_cuddle_uncuddle(Chunk *start, iarf_e nl_opt);
  * "else {" or "else \n {"
  */
 static void newlines_do_else(Chunk *start, iarf_e nl_opt);
-
-
-//! Check if token starts a variable declaration
-static bool is_var_def(Chunk *pc, Chunk *next);
 
 
 //! Put newline(s) before and/or after a block of variable definitions
@@ -1946,40 +1943,6 @@ static void newlines_do_else(Chunk *start, iarf_e nl_opt)
       }
    }
 } // newlines_do_else
-
-
-static bool is_var_def(Chunk *pc, Chunk *next)
-{
-   if (  pc->Is(CT_DECLTYPE)
-      && next->Is(CT_PAREN_OPEN))
-   {
-      // If current token starts a decltype expression, skip it
-      next = next->GetClosingParen();
-      next = next->GetNextNcNnl();
-   }
-   else if (!pc->IsTypeDefinition())
-   {
-      // Otherwise, if the current token is not a type --> not a declaration
-      return(false);
-   }
-   else if (next->Is(CT_DC_MEMBER))
-   {
-      // If next token is CT_DC_MEMBER, skip it
-      next = next->SkipDcMember();
-   }
-   else if (next->Is(CT_ANGLE_OPEN))
-   {
-      // If we have a template type, skip it
-      next = next->GetClosingParen();
-      next = next->GetNextNcNnl();
-   }
-   bool is = (  (  next->IsTypeDefinition()
-                && next->GetParentType() != CT_FUNC_DEF)           // Issue #2639
-             || next->Is(CT_WORD)
-             || next->Is(CT_FUNC_CTOR_VAR));
-
-   return(is);
-} // is_var_def
 
 
 static bool is_func_call_or_def(Chunk *pc)
