@@ -291,6 +291,7 @@ set(uncrustify_sources
   src/flag_decltype.cpp
   src/flag_parens.cpp
   src/indent.cpp
+  src/is_var_def.cpp
   src/keywords.cpp
   src/lang_pawn.cpp
   src/language_names.cpp
@@ -387,6 +388,7 @@ set(uncrustify_headers
   src/flag_decltype.h
   src/flag_parens.h
   src/indent.h
+  src/is_var_def.h
   src/keywords.h
   src/lang_pawn.h
   src/language_names.h
