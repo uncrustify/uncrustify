@@ -2060,14 +2060,15 @@ static Chunk *newline_var_def_blk(Chunk *start)
 
       // Determine if this is a variable definition or code
       if (  !did_this_line
-         && pc->IsNot(CT_FUNC_CLASS_DEF)
          && pc->IsNot(CT_FUNC_CLASS_PROTO)
          && (  (pc->GetLevel() == (start->GetLevel() + 1))
             || pc->GetLevel() == 0))
       {
+         // Find the "next" chunk for is_var_def()
          Chunk *next = pc->GetNextNcNnl();
-         LOG_FMT(LVARDFBLK, "%s(%d): next orig line is %zu, orig col is %zu, Text() is '%s'\n",
-                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text());
+
+         LOG_FMT(LVARDFBLK, "%s(%d): next orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
+                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()), next->Text());
 
          // skip over all other type-like things
          while (  next->Is(CT_PTR_TYPE)  // Issue #2692
@@ -2084,10 +2085,17 @@ static Chunk *newline_var_def_blk(Chunk *start)
          {
             break;
          }
-         LOG_FMT(LVARDFBLK, "%s(%d): next orig line is %zu, orig col is %zu, Text() is '%s'\n",
-                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text());
+         LOG_FMT(LVARDFBLK, "%s(%d): next orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
+                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()), next->Text());
+
+         // Find the end of the previous block
+         LOG_FMT(LVARDFBLK, "%s(%d): pc orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->Text());
 
          prev = pc->GetPrevNcNnl();
+
+         LOG_FMT(LVARDFBLK, "%s(%d): prev orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
+                 __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), get_token_name(prev->GetType()), prev->Text());
 
          while (  prev->Is(CT_DC_MEMBER)
                || prev->Is(CT_QUALIFIER)
@@ -2113,12 +2121,24 @@ static Chunk *newline_var_def_blk(Chunk *start)
          {
             prev = prev->GetPrev()->GetPrevNcNnlNi();   // Issue #2279
          }
-         LOG_FMT(LVARDFBLK, "%s(%d): pc orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->Text());
-         LOG_FMT(LVARDFBLK, "%s(%d): next orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
-                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()), next->Text());
+         LOG_FMT(LVARDFBLK, "%s(%d): prev orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
+                 __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), get_token_name(prev->GetType()), prev->Text());
 
-         if (is_var_def(pc, next))
+         if (pc->Is(CT_FUNC_CLASS_DEF))
+         {
+            log_rule_B("nl_var_def_blk_end");
+
+            if (  var_blk
+               && options::nl_var_def_blk_end() > 0)
+            {
+               prev = prev->GetPrev();
+               newline_min_after(prev, options::nl_var_def_blk_end() + 1, PCF_VAR_DEF);
+               pc            = pc->GetNext();
+               first_var_blk = false;
+               var_blk       = false;
+            }
+         }
+         else if (is_var_def(pc, next))
          {
             LOG_FMT(LVARDFBLK, "%s(%d): 'typ==var' found: '%s %s' at line %zu\n",
                     __func__, __LINE__, pc->Text(), next->Text(), pc->GetOrigLine());
@@ -2208,24 +2228,6 @@ static Chunk *newline_var_def_blk(Chunk *start)
          {
             first_var_blk = false;
             var_blk       = false;
-         }
-      }
-      else
-      {
-         if (pc->Is(CT_FUNC_CLASS_DEF))
-         {
-            log_rule_B("nl_var_def_blk_end");
-
-            if (  var_blk
-               && options::nl_var_def_blk_end() > 0)
-            {
-               prev = pc->GetPrev();
-               prev = prev->GetPrev();
-               newline_min_after(prev, options::nl_var_def_blk_end() + 1, PCF_VAR_DEF);
-               pc            = pc->GetNext();
-               first_var_blk = false;
-               var_blk       = false;
-            }
          }
       }
       did_this_line = true;

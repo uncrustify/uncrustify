@@ -1,3 +1,24 @@
+class SomeClass {
+enum Things {
+	This,
+	That,
+	TheOther,
+};
+explicit SomeClass(const char * instr) :
+	_inchar(instr[0]) {
+}
+};
+
+
+bool SomeClass::dothething = true;
+SomeClass::SomeClass( char input ) :
+	_inchar(input) {
+	if (dothething) {
+		// do it!
+	}
+}
+
+
 unsigned a;
 char b;
 int bar(void);
