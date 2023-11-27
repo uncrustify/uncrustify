@@ -513,7 +513,8 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
          frm.pop(__func__, __LINE__, pc);
          print_stack(LBCSPOP, "-Close  ", frm);
 
-         if (  frm.top().GetStage() == E_BraceStage::NONE
+         if (  language_is_set(LANG_D)
+            && frm.top().GetStage() == E_BraceStage::NONE
             && (  pc->Is(CT_VBRACE_CLOSE)
                || pc->Is(CT_BRACE_CLOSE)
                || pc->Is(CT_SEMICOLON))
