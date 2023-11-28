@@ -14,6 +14,7 @@
 #include "align_tools.h"
 #include "indent.h"
 #include "log_rules.h"
+#include "reindent_line.h"
 
 constexpr static auto LCURRENT = LALBR;
 

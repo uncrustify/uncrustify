@@ -11,6 +11,7 @@
 #include "indent.h"
 #include "newlines.h"
 #include "prototypes.h"
+#include "reindent_line.h"
 
 
 constexpr static auto LCURRENT = LSPLIT;

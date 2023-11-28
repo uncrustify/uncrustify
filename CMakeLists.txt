@@ -315,6 +315,7 @@ set(uncrustify_sources
   src/pcf_flags.cpp
   src/punctuators.cpp
   src/quick_align_again.cpp
+  src/reindent_line.cpp
   src/remove_duplicate_include.cpp
   src/remove_extra_returns.cpp
   src/rewrite_infinite_loops.cpp
@@ -416,6 +417,7 @@ set(uncrustify_headers
   src/prototypes.h
   src/punctuators.h
   src/quick_align_again.h
+  src/reindent_line.h
   src/remove_duplicate_include.h
   src/remove_extra_returns.h
   src/rewrite_infinite_loops.h
