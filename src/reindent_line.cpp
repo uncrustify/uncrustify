@@ -15,6 +15,14 @@
 #include "space.h"
 #include "uncrustify.h"
 
+#ifdef WIN32
+#include <algorithm>                   // to get max
+#endif // ifdef WIN32
+
+#ifdef IGNORE // WinBase.h
+#undef IGNORE
+#endif
+
 
 constexpr static auto LCURRENT = LINDENT;
 
