@@ -47,13 +47,4 @@ void align_to_column(Chunk *pc, size_t column);
 bool ifdef_over_whole_file();
 
 
-///**
-// * Changes the initial indent for a line to the given column
-// *
-// * @param pc      The chunk at the start of the line
-// * @param column  The desired column
-// */
-//void reindent_line(Chunk *pc, size_t column);
-
-
 #endif /* INDENT_H_INCLUDED */
