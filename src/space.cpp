@@ -23,6 +23,7 @@
 #include "log_rules.h"
 #include "options_for_QT.h"
 #include "punctuators.h"
+#include "token_is_within_trailing_return.h"
 
 #ifdef WIN32
 #include <algorithm>                   // to get max
@@ -43,34 +44,6 @@ using namespace uncrustify;
  * @return IARF_IGNORE, IARF_ADD, IARF_REMOVE or IARF_FORCE
  */
 static iarf_e ensure_force_space(Chunk *first, Chunk *second, iarf_e av);
-
-
-bool token_is_within_trailing_return(Chunk *pc)
-{
-   // look back for '->' type is TRAILING_RET
-   // until CT_FPAREN_CLOSE
-   //   or  CT_FPAREN_OPEN is found
-   Chunk *prev = pc;
-
-   while (prev->IsNotNullChunk())
-   {
-      if (prev->Is(CT_TRAILING_RET))
-      {
-         return(true);
-      }
-      else if (  prev->Is(CT_FPAREN_CLOSE)
-              || prev->Is(CT_FPAREN_OPEN)
-              || prev->Is(CT_SEMICOLON))                     // Issue #4080
-      {
-         return(false);
-      }
-      else
-      {
-         prev = prev->GetPrev();
-      }
-   }
-   return(false);
-} // token_is_within_trailing_return
 
 
 /**
