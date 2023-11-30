@@ -300,6 +300,7 @@ set(uncrustify_sources
   src/logger.cpp
   src/logmask.cpp
   src/log_rules.cpp
+  src/mark_change.cpp
   src/mark_functor.cpp
   src/mark_question_colon.cpp
   src/md5.cpp
@@ -401,6 +402,7 @@ set(uncrustify_headers
   src/log_levels.h
   src/logmask.h
   src/log_rules.h
+  src/mark_change.h
   src/mark_functor.h
   src/mark_question_colon.h
   src/md5.h
