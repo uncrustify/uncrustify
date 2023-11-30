@@ -324,6 +324,7 @@ set(uncrustify_sources
   src/semicolons.cpp
   src/sorting.cpp
   src/space.cpp
+  src/token_is_within_trailing_return.cpp
   src/tokenize_cleanup.cpp
   src/tokenize.cpp
   src/uncrustify.cpp
@@ -430,6 +431,7 @@ set(uncrustify_headers
   src/space.h
   src/symbols_table.h
   src/token_enum.h
+  src/token_is_within_trailing_return.h
   src/tokenize_cleanup.h
   src/tokenize.h
   src/unc_ctype.h
