@@ -25,6 +25,7 @@
 #include "indent.h"
 #include "is_var_def.h"
 #include "keywords.h"
+#include "mark_change.h"
 #include "prototypes.h"
 #include "space.h"
 #include "unc_tools.h"
@@ -40,7 +41,7 @@ using namespace std;
 using namespace uncrustify;
 
 
-static void mark_change(const char *func, size_t line);
+#define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
 
 /**
@@ -302,23 +303,6 @@ static void blank_line_max(Chunk *pc, Option<unsigned> &opt);
 
 
 static iarf_e newline_template_option(Chunk *pc, iarf_e special, iarf_e base, iarf_e fallback);
-
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
-
-
-static void mark_change(const char *func, size_t line)
-{
-   LOG_FUNC_ENTRY();
-
-   cpd.changes++;
-
-   if (cpd.pass_count == 0)
-   {
-      LOG_FMT(LCHANGE, "%s(%d): change %d on %s:%zu\n",
-              __func__, __LINE__, cpd.changes, func, line);
-   }
-} // mark_change
 
 
 static bool can_increase_nl(Chunk *nl)
