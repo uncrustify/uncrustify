@@ -291,6 +291,7 @@ set(uncrustify_sources
   src/flag_braced_init_list.cpp
   src/flag_decltype.cpp
   src/flag_parens.cpp
+  src/ifdef_over_whole_file.cpp
   src/indent.cpp
   src/is_var_def.cpp
   src/keywords.cpp
@@ -392,6 +393,7 @@ set(uncrustify_headers
   src/flag_braced_init_list.h
   src/flag_decltype.h
   src/flag_parens.h
+  src/ifdef_over_whole_file.h
   src/indent.h
   src/is_var_def.h
   src/keywords.h
