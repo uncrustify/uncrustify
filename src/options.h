@@ -3193,6 +3193,11 @@ pos_shift;
 extern BoundedOption<unsigned, 0, 10000>
 code_width;
 
+// When a line is split due to code_width, limit width of split lines to N columns.
+// Values within [0, code_width]
+extern BoundedOption<unsigned, 0, 10000>
+code_split_width;
+
 // Whether to fully split long 'for' statements at semi-colons.
 extern Option<bool>
 ls_for_split_full;

@@ -44,6 +44,7 @@ struct TokenPriority
 
 static inline bool is_past_width(Chunk *pc);
 
+static inline bool is_past_split_width(Chunk *pc);
 
 //! Split right after the chunk
 static void split_before_chunk(Chunk *pc);
@@ -121,6 +122,17 @@ static inline bool is_past_width(Chunk *pc)
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), currCol, pc->Text(),
            past_width ? "YES" : "NO");
    return(past_width);
+}
+
+static inline bool is_past_split_width(Chunk *pc)
+{
+   size_t currCol        = pc->GetColumn() + pc->Len() - 1;
+   bool past_split_width = currCol > options::code_split_width();
+
+   LOG_FMT(LSPLIT, "%s(%d): orig line %zu, orig col %zu, curr col %zu, text '%s', past split width %s\n",
+           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), currCol, pc->Text(),
+           past_split_width ? "YES" : "NO");
+   return(past_split_width);
 }
 
 
@@ -224,6 +236,21 @@ void do_code_width()
          {
             continue;
          }
+
+         // We must split the line, check if we have a split width
+         if (options::code_split_width() > 0)
+         {
+            // Move pc back to first chunk within the split width
+            Chunk* prev = pc->GetPrev();
+            while (  prev->IsNotNullChunk()
+                  && !prev->IsNewline()
+                  && is_past_split_width(prev))
+            {
+               pc = prev;
+               prev = prev->GetPrev();
+            }
+         }
+
          bool split_OK = split_line(pc);
 
          if (split_OK)
