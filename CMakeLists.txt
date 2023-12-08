@@ -328,6 +328,7 @@ set(uncrustify_sources
   src/token_is_within_trailing_return.cpp
   src/tokenize_cleanup.cpp
   src/tokenize.cpp
+  src/too_big_for_nl_max.cpp
   src/uncrustify.cpp
   src/uncrustify_emscripten.cpp
   src/uncrustify_types.cpp
@@ -436,6 +437,7 @@ set(uncrustify_headers
   src/token_is_within_trailing_return.h
   src/tokenize_cleanup.h
   src/tokenize.h
+  src/too_big_for_nl_max.h
   src/unc_ctype.h
   src/uncrustify.h
   src/uncrustify_limits.h

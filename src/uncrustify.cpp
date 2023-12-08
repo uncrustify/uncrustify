@@ -43,6 +43,7 @@
 #include "token_names.h"
 #include "tokenize.h"
 #include "tokenize_cleanup.h"
+#include "too_big_for_nl_max.h"
 #include "unc_ctype.h"
 #include "unc_tools.h"
 #include "uncrustify_version.h"
@@ -786,14 +787,7 @@ int main(int argc, char *argv[])
       if (options::nl_max() > 0)
       {
          // test if one/some option(s) is/are not too big for that
-         log_rule_B("nl_var_def_blk_end_func_top");
-
-         if (options::nl_var_def_blk_end_func_top() >= options::nl_max())
-         {
-            fprintf(stderr, "The option 'nl_var_def_blk_end_func_top' is too big against the option 'nl_max'\n");
-            log_flush(true);
-            exit(EX_CONFIG);
-         }
+         too_big_for_nl_max();
       }
    }
    // Set config options using command line arguments.
