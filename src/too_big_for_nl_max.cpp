@@ -270,6 +270,7 @@ void too_big_for_nl_max()
       stop_it = true;
       fprintf(stdout, "The option 'nl_after_whole_file_endif'");
    }
+
    if (stop_it)
    {
       stop_it = true;
