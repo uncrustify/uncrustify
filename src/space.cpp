@@ -1191,9 +1191,22 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    // c++17 structured bindings e.g., "auto [x, y, z]" vs. a[x, y, z]" or "auto const [x, y, z]" vs. "auto const[x, y, z]"
+   // after byref.
    if (  language_is_set(LANG_CPP)
-      && (  first->Is(CT_BYREF)
-         || first->Is(CT_QUALIFIER)
+      && first->Is(CT_BYREF)
+      && second->Is(CT_SQUARE_OPEN)
+      && second->GetParentType() != CT_OC_MSG
+      && second->GetParentType() != CT_CS_SQ_STMT)
+   {
+      // Add or remove space before C++17 structured bindings.
+      // after byref.
+      log_rule("sp_cpp_before_struct_binding_after_byref");
+      return(options::sp_cpp_before_struct_binding_after_byref());
+   }
+
+   // c++17 structured bindings e.g., "auto [x, y, z]" vs. a[x, y, z]" or "auto const [x, y, z]" vs. "auto const[x, y, z]"
+   if (  language_is_set(LANG_CPP)
+      && (  first->Is(CT_QUALIFIER)
          || first->Is(CT_TYPE))
       && second->Is(CT_SQUARE_OPEN)
       && second->GetParentType() != CT_OC_MSG
