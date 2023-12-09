@@ -1,0 +1,1 @@
+The option 'nl_end_of_file_min' is too big against the option 'nl_max'

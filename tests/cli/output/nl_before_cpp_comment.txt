@@ -1,0 +1,1 @@
+The option 'nl_before_cpp_comment' is too big against the option 'nl_max'

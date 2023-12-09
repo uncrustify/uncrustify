@@ -553,6 +553,65 @@ def main(args):
 
     return_flag = True
 
+    print("Test too big ...")
+    # test option(s) too big against the option 'nl_max'
+    Ls_B = ['nl_var_def_blk_end_func_top',
+            'nl_var_def_blk_end',
+            'nl_var_def_blk_start',
+            'nl_var_def_blk_in',
+            'nl_after_access_spec',
+            'nl_start_of_file_min',
+            'nl_end_of_file_min',
+            'nl_inside_empty_func',
+            'nl_before_func_body_proto',
+            'nl_before_func_body_def',
+            'nl_before_func_class_proto',
+            'nl_before_func_class_def',
+            'nl_after_func_proto',
+            'nl_after_func_proto_group',
+            'nl_after_func_class_proto',
+            'nl_after_func_class_proto_group',
+            'nl_after_func_body',
+            'nl_min_after_func_body',
+            'nl_after_func_body_class',
+            'nl_after_func_body_one_liner',
+            'nl_typedef_blk_start',
+            'nl_typedef_blk_end',
+            'nl_before_block_comment',
+            'nl_before_c_comment',
+            'nl_before_cpp_comment',
+            'nl_before_struct',
+            'nl_after_struct',
+            'nl_before_class',
+            'nl_after_class',
+            'nl_before_namespace',
+            'nl_inside_namespace',
+            'nl_after_namespace',
+            'nl_before_access_spec',
+            'nl_after_access_spec',
+            'nl_comment_func_def',
+            'nl_after_try_catch_finally',
+            'nl_around_cs_property',
+            'nl_between_get_set',
+            'nl_before_whole_file_ifdef',
+            'nl_after_whole_file_ifdef',
+            'nl_before_whole_file_endif',
+            'nl_after_whole_file_endif'
+            ]
+    for L in Ls_B:
+        print("Test too big %s" % L)
+        if not check_uncrustify_output(
+                uncr_bin,
+                parsed_args,
+                args_arr=['-c', s_path_join(script_dir, 'config/%s.cfg' % L),
+                          '-f', s_path_join(script_dir, 'input/too_big.cpp')],
+                out_expected_path=s_path_join(script_dir, 'output/%s.txt' % L),
+                out_result_path=s_path_join(test_dir, 'results/%s.txt' %  L),
+            ):
+            return_flag = False
+
+    print("Test too big is OK")
+
     print("Test help ...")
     #
     # Test help
