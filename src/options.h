@@ -596,6 +596,11 @@ sp_before_square_asm_block;
 extern Option<iarf_e>
 sp_before_squares;
 
+// Add or remove space before C++17 structured bindings
+// after byref.
+extern Option<iarf_e>
+sp_cpp_before_struct_binding_after_byref;
+
 // Add or remove space before C++17 structured bindings.
 extern Option<iarf_e>
 sp_cpp_before_struct_binding;

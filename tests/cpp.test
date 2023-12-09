@@ -181,6 +181,8 @@
 30152  cpp/Issue_3983.cfg                                   cpp/Issue_4023.cpp
 30153  cpp/Issue_3983.cfg                                   cpp/Issue_4026.cpp
 30154  common/empty.cfg                                     cpp/Issue_4132.cpp
+30155  cpp/Issue_4100_force.cfg                             cpp/Issue_4100.cpp
+30156  cpp/Issue_4100_remove.cfg                            cpp/Issue_4100.cpp
 
 30160  common/empty.cfg                                     cpp/Issue_3980.cpp
 30161  cpp/Discussion_3987.cfg                              cpp/Discussion_3987.cpp
