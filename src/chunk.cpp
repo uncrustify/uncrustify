@@ -567,21 +567,25 @@ void Chunk::SetType(const E_Token token)
    {
       return;
    }
-   LOG_FMT(LSETTYP, "%s(%d): orig line is %zu, orig col is %zu, Text() is ",
+   LOG_FMT(LSETTYP, "%s(%d): m_origLine is %zu, m_origCol is %zu, Text() is ",
            __func__, __LINE__, m_origLine, m_origCol);
 
    if (token == CT_NEWLINE)
    {
       LOG_FMT(LSETTYP, "<Newline>\n");
    }
+   else if (token == CT_WHITESPACE)
+   {
+      LOG_FMT(LSETTYP, "<white_space>\n");
+   }
    else
    {
       LOG_FMT(LSETTYP, "'%s'\n", Text());
    }
-   LOG_FMT(LSETTYP, "   type is %s, parent type is %s => new type is %s\n",
+   LOG_FMT(LSETTYP, "   m_type is %s, m_parentType is %s => token is %s\n",
            get_token_name(m_type), get_token_name(m_parentType), get_token_name(token));
    m_type = token;
-}
+} // Chunk::SetType
 
 
 void Chunk::SetParentType(const E_Token token)
