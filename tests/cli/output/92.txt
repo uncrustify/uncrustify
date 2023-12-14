@@ -1,196 +1,196 @@
-SetType : orig line is 1, orig col is 1, Text() is 'struct'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 1, orig col is 1, Text() is 'struct'
-   type is WORD, parent type is NONE => new type is STRUCT
-SetType : orig line is 1, orig col is 7, Text() is ''
-   type is NONE, parent type is NONE => new type is WHITESPACE
-SetType : orig line is 1, orig col is 8, Text() is 'TelegramIndex'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 1, orig col is 21, Text() is <Newline>
-   type is NONE, parent type is NONE => new type is NEWLINE
-SetType : orig line is 2, orig col is 1, Text() is '{'
-   type is NONE, parent type is NONE => new type is BRACE_OPEN
-SetType : orig line is 2, orig col is 2, Text() is <Newline>
-   type is NONE, parent type is NONE => new type is NEWLINE
-SetType : orig line is 3, orig col is 1, Text() is 'TelegramIndex'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 3, orig col is 14, Text() is '('
-   type is NONE, parent type is NONE => new type is PAREN_OPEN
-SetType : orig line is 3, orig col is 15, Text() is 'const'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 3, orig col is 15, Text() is 'const'
-   type is WORD, parent type is NONE => new type is QUALIFIER
-SetType : orig line is 3, orig col is 20, Text() is ''
-   type is NONE, parent type is NONE => new type is WHITESPACE
-SetType : orig line is 3, orig col is 21, Text() is 'char'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 3, orig col is 21, Text() is 'char'
-   type is WORD, parent type is NONE => new type is TYPE
-SetType : orig line is 3, orig col is 25, Text() is '*'
-   type is NONE, parent type is NONE => new type is STAR
-SetType : orig line is 3, orig col is 26, Text() is ''
-   type is NONE, parent type is NONE => new type is WHITESPACE
-SetType : orig line is 3, orig col is 27, Text() is 'pN'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 3, orig col is 29, Text() is ','
-   type is NONE, parent type is NONE => new type is COMMA
-SetType : orig line is 3, orig col is 30, Text() is ''
-   type is NONE, parent type is NONE => new type is WHITESPACE
-SetType : orig line is 3, orig col is 31, Text() is 'unsigned'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 3, orig col is 31, Text() is 'unsigned'
-   type is WORD, parent type is NONE => new type is TYPE
-SetType : orig line is 3, orig col is 39, Text() is ''
-   type is NONE, parent type is NONE => new type is WHITESPACE
-SetType : orig line is 3, orig col is 40, Text() is 'long'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 3, orig col is 40, Text() is 'long'
-   type is WORD, parent type is NONE => new type is TYPE
-SetType : orig line is 3, orig col is 44, Text() is ''
-   type is NONE, parent type is NONE => new type is WHITESPACE
-SetType : orig line is 3, orig col is 45, Text() is 'nI'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 3, orig col is 47, Text() is ')'
-   type is NONE, parent type is NONE => new type is PAREN_CLOSE
-SetType : orig line is 3, orig col is 48, Text() is ''
-   type is NONE, parent type is NONE => new type is WHITESPACE
-SetType : orig line is 3, orig col is 49, Text() is ':'
-   type is NONE, parent type is NONE => new type is COLON
-SetType : orig line is 3, orig col is 50, Text() is <Newline>
-   type is NONE, parent type is NONE => new type is NEWLINE
-SetType : orig line is 4, orig col is 1, Text() is 'pTelName'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 4, orig col is 9, Text() is '('
-   type is NONE, parent type is NONE => new type is PAREN_OPEN
-SetType : orig line is 4, orig col is 10, Text() is 'pN'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 4, orig col is 12, Text() is ')'
-   type is NONE, parent type is NONE => new type is PAREN_CLOSE
-SetType : orig line is 4, orig col is 13, Text() is ','
-   type is NONE, parent type is NONE => new type is COMMA
-SetType : orig line is 4, orig col is 14, Text() is <Newline>
-   type is NONE, parent type is NONE => new type is NEWLINE
-SetType : orig line is 5, orig col is 1, Text() is 'nTelIndex'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 5, orig col is 10, Text() is '('
-   type is NONE, parent type is NONE => new type is PAREN_OPEN
-SetType : orig line is 5, orig col is 11, Text() is 'n'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 5, orig col is 12, Text() is ')'
-   type is NONE, parent type is NONE => new type is PAREN_CLOSE
-SetType : orig line is 5, orig col is 13, Text() is <Newline>
-   type is NONE, parent type is NONE => new type is NEWLINE
-SetType : orig line is 6, orig col is 1, Text() is '{'
-   type is NONE, parent type is NONE => new type is BRACE_OPEN
-SetType : orig line is 6, orig col is 2, Text() is <Newline>
-   type is NONE, parent type is NONE => new type is NEWLINE
-SetType : orig line is 7, orig col is 1, Text() is '}'
-   type is NONE, parent type is NONE => new type is BRACE_CLOSE
-SetType : orig line is 7, orig col is 2, Text() is <Newline>
-   type is NONE, parent type is NONE => new type is NEWLINE
-SetType : orig line is 9, orig col is 1, Text() is '~'
-   type is NONE, parent type is NONE => new type is INV
-SetType : orig line is 9, orig col is 2, Text() is 'TelegramIndex'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 9, orig col is 15, Text() is '('
-   type is NONE, parent type is NONE => new type is PAREN_OPEN
-SetType : orig line is 9, orig col is 16, Text() is ')'
-   type is NONE, parent type is NONE => new type is PAREN_CLOSE
-SetType : orig line is 9, orig col is 17, Text() is <Newline>
-   type is NONE, parent type is NONE => new type is NEWLINE
-SetType : orig line is 10, orig col is 1, Text() is '{'
-   type is NONE, parent type is NONE => new type is BRACE_OPEN
-SetType : orig line is 10, orig col is 2, Text() is <Newline>
-   type is NONE, parent type is NONE => new type is NEWLINE
-SetType : orig line is 11, orig col is 1, Text() is '}'
-   type is NONE, parent type is NONE => new type is BRACE_CLOSE
-SetType : orig line is 11, orig col is 2, Text() is <Newline>
-   type is NONE, parent type is NONE => new type is NEWLINE
-SetType : orig line is 13, orig col is 1, Text() is 'const'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 13, orig col is 1, Text() is 'const'
-   type is WORD, parent type is NONE => new type is QUALIFIER
-SetType : orig line is 13, orig col is 6, Text() is ''
-   type is NONE, parent type is NONE => new type is WHITESPACE
-SetType : orig line is 13, orig col is 7, Text() is 'char'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 13, orig col is 7, Text() is 'char'
-   type is WORD, parent type is NONE => new type is TYPE
-SetType : orig line is 13, orig col is 11, Text() is '*'
-   type is NONE, parent type is NONE => new type is STAR
-SetType : orig line is 13, orig col is 12, Text() is ''
-   type is NONE, parent type is NONE => new type is WHITESPACE
-SetType : orig line is 13, orig col is 13, Text() is 'const'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 13, orig col is 13, Text() is 'const'
-   type is WORD, parent type is NONE => new type is QUALIFIER
-SetType : orig line is 13, orig col is 18, Text() is ''
-   type is NONE, parent type is NONE => new type is WHITESPACE
-SetType : orig line is 13, orig col is 19, Text() is 'pTelName'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 13, orig col is 27, Text() is ';'
-   type is NONE, parent type is NONE => new type is SEMICOLON
-SetType : orig line is 13, orig col is 28, Text() is <Newline>
-   type is NONE, parent type is NONE => new type is NEWLINE
-SetType : orig line is 14, orig col is 1, Text() is 'unsigned'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 14, orig col is 1, Text() is 'unsigned'
-   type is WORD, parent type is NONE => new type is TYPE
-SetType : orig line is 14, orig col is 9, Text() is ''
-   type is NONE, parent type is NONE => new type is WHITESPACE
-SetType : orig line is 14, orig col is 10, Text() is 'long'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 14, orig col is 10, Text() is 'long'
-   type is WORD, parent type is NONE => new type is TYPE
-SetType : orig line is 14, orig col is 14, Text() is ''
-   type is NONE, parent type is NONE => new type is WHITESPACE
-SetType : orig line is 14, orig col is 15, Text() is 'nTelIndex'
-   type is NONE, parent type is NONE => new type is WORD
-SetType : orig line is 14, orig col is 24, Text() is ';'
-   type is NONE, parent type is NONE => new type is SEMICOLON
-SetType : orig line is 14, orig col is 25, Text() is <Newline>
-   type is NONE, parent type is NONE => new type is NEWLINE
-SetType : orig line is 15, orig col is 1, Text() is '}'
-   type is NONE, parent type is NONE => new type is BRACE_CLOSE
-SetType : orig line is 15, orig col is 2, Text() is ';'
-   type is NONE, parent type is NONE => new type is SEMICOLON
-SetType : orig line is 15, orig col is 3, Text() is <Newline>
-   type is NONE, parent type is NONE => new type is NEWLINE
-SetType : orig line is 1, orig col is 8, Text() is 'TelegramIndex'
-   type is WORD, parent type is NONE => new type is TYPE
-SetType : orig line is 3, orig col is 25, Text() is '*'
-   type is STAR, parent type is NONE => new type is PTR_TYPE
-SetType : orig line is 13, orig col is 11, Text() is '*'
-   type is STAR, parent type is NONE => new type is PTR_TYPE
-SetType : orig line is 1, orig col is 8, Text() is 'TelegramIndex'
-   type is TYPE, parent type is NONE => new type is WORD
-SetType : orig line is 1, orig col is 8, Text() is 'TelegramIndex'
-   type is WORD, parent type is NONE => new type is TYPE
-SetType : orig line is 3, orig col is 1, Text() is 'TelegramIndex'
-   type is WORD, parent type is NONE => new type is FUNC_CLASS_DEF
-SetType : orig line is 3, orig col is 14, Text() is '('
-   type is PAREN_OPEN, parent type is NONE => new type is FPAREN_OPEN
-SetType : orig line is 3, orig col is 47, Text() is ')'
-   type is PAREN_CLOSE, parent type is NONE => new type is FPAREN_CLOSE
-SetType : orig line is 3, orig col is 49, Text() is ':'
-   type is COLON, parent type is NONE => new type is CONSTR_COLON
-SetType : orig line is 4, orig col is 1, Text() is 'pTelName'
-   type is WORD, parent type is NONE => new type is FUNC_CTOR_VAR
-SetType : orig line is 4, orig col is 9, Text() is '('
-   type is PAREN_OPEN, parent type is NONE => new type is FPAREN_OPEN
-SetType : orig line is 4, orig col is 12, Text() is ')'
-   type is PAREN_CLOSE, parent type is NONE => new type is FPAREN_CLOSE
-SetType : orig line is 5, orig col is 1, Text() is 'nTelIndex'
-   type is WORD, parent type is NONE => new type is FUNC_CTOR_VAR
-SetType : orig line is 5, orig col is 10, Text() is '('
-   type is PAREN_OPEN, parent type is NONE => new type is FPAREN_OPEN
-SetType : orig line is 5, orig col is 12, Text() is ')'
-   type is PAREN_CLOSE, parent type is NONE => new type is FPAREN_CLOSE
-SetType : orig line is 9, orig col is 2, Text() is 'TelegramIndex'
-   type is WORD, parent type is NONE => new type is FUNC_CLASS_DEF
-SetType : orig line is 9, orig col is 1, Text() is '~'
-   type is INV, parent type is NONE => new type is DESTRUCTOR
-SetType : orig line is 9, orig col is 15, Text() is '('
-   type is PAREN_OPEN, parent type is NONE => new type is FPAREN_OPEN
-SetType : orig line is 9, orig col is 16, Text() is ')'
-   type is PAREN_CLOSE, parent type is NONE => new type is FPAREN_CLOSE
+SetType : m_origLine is 1, m_origCol is 1, Text() is 'struct'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 1, m_origCol is 1, Text() is 'struct'
+   m_type is WORD, m_parentType is NONE => token is STRUCT
+SetType : m_origLine is 1, m_origCol is 7, Text() is <white_space>
+   m_type is NONE, m_parentType is NONE => token is WHITESPACE
+SetType : m_origLine is 1, m_origCol is 8, Text() is 'TelegramIndex'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 1, m_origCol is 21, Text() is <Newline>
+   m_type is NONE, m_parentType is NONE => token is NEWLINE
+SetType : m_origLine is 2, m_origCol is 1, Text() is '{'
+   m_type is NONE, m_parentType is NONE => token is BRACE_OPEN
+SetType : m_origLine is 2, m_origCol is 2, Text() is <Newline>
+   m_type is NONE, m_parentType is NONE => token is NEWLINE
+SetType : m_origLine is 3, m_origCol is 1, Text() is 'TelegramIndex'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 3, m_origCol is 14, Text() is '('
+   m_type is NONE, m_parentType is NONE => token is PAREN_OPEN
+SetType : m_origLine is 3, m_origCol is 15, Text() is 'const'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 3, m_origCol is 15, Text() is 'const'
+   m_type is WORD, m_parentType is NONE => token is QUALIFIER
+SetType : m_origLine is 3, m_origCol is 20, Text() is <white_space>
+   m_type is NONE, m_parentType is NONE => token is WHITESPACE
+SetType : m_origLine is 3, m_origCol is 21, Text() is 'char'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 3, m_origCol is 21, Text() is 'char'
+   m_type is WORD, m_parentType is NONE => token is TYPE
+SetType : m_origLine is 3, m_origCol is 25, Text() is '*'
+   m_type is NONE, m_parentType is NONE => token is STAR
+SetType : m_origLine is 3, m_origCol is 26, Text() is <white_space>
+   m_type is NONE, m_parentType is NONE => token is WHITESPACE
+SetType : m_origLine is 3, m_origCol is 27, Text() is 'pN'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 3, m_origCol is 29, Text() is ','
+   m_type is NONE, m_parentType is NONE => token is COMMA
+SetType : m_origLine is 3, m_origCol is 30, Text() is <white_space>
+   m_type is NONE, m_parentType is NONE => token is WHITESPACE
+SetType : m_origLine is 3, m_origCol is 31, Text() is 'unsigned'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 3, m_origCol is 31, Text() is 'unsigned'
+   m_type is WORD, m_parentType is NONE => token is TYPE
+SetType : m_origLine is 3, m_origCol is 39, Text() is <white_space>
+   m_type is NONE, m_parentType is NONE => token is WHITESPACE
+SetType : m_origLine is 3, m_origCol is 40, Text() is 'long'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 3, m_origCol is 40, Text() is 'long'
+   m_type is WORD, m_parentType is NONE => token is TYPE
+SetType : m_origLine is 3, m_origCol is 44, Text() is <white_space>
+   m_type is NONE, m_parentType is NONE => token is WHITESPACE
+SetType : m_origLine is 3, m_origCol is 45, Text() is 'nI'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 3, m_origCol is 47, Text() is ')'
+   m_type is NONE, m_parentType is NONE => token is PAREN_CLOSE
+SetType : m_origLine is 3, m_origCol is 48, Text() is <white_space>
+   m_type is NONE, m_parentType is NONE => token is WHITESPACE
+SetType : m_origLine is 3, m_origCol is 49, Text() is ':'
+   m_type is NONE, m_parentType is NONE => token is COLON
+SetType : m_origLine is 3, m_origCol is 50, Text() is <Newline>
+   m_type is NONE, m_parentType is NONE => token is NEWLINE
+SetType : m_origLine is 4, m_origCol is 1, Text() is 'pTelName'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 4, m_origCol is 9, Text() is '('
+   m_type is NONE, m_parentType is NONE => token is PAREN_OPEN
+SetType : m_origLine is 4, m_origCol is 10, Text() is 'pN'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 4, m_origCol is 12, Text() is ')'
+   m_type is NONE, m_parentType is NONE => token is PAREN_CLOSE
+SetType : m_origLine is 4, m_origCol is 13, Text() is ','
+   m_type is NONE, m_parentType is NONE => token is COMMA
+SetType : m_origLine is 4, m_origCol is 14, Text() is <Newline>
+   m_type is NONE, m_parentType is NONE => token is NEWLINE
+SetType : m_origLine is 5, m_origCol is 1, Text() is 'nTelIndex'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 5, m_origCol is 10, Text() is '('
+   m_type is NONE, m_parentType is NONE => token is PAREN_OPEN
+SetType : m_origLine is 5, m_origCol is 11, Text() is 'n'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 5, m_origCol is 12, Text() is ')'
+   m_type is NONE, m_parentType is NONE => token is PAREN_CLOSE
+SetType : m_origLine is 5, m_origCol is 13, Text() is <Newline>
+   m_type is NONE, m_parentType is NONE => token is NEWLINE
+SetType : m_origLine is 6, m_origCol is 1, Text() is '{'
+   m_type is NONE, m_parentType is NONE => token is BRACE_OPEN
+SetType : m_origLine is 6, m_origCol is 2, Text() is <Newline>
+   m_type is NONE, m_parentType is NONE => token is NEWLINE
+SetType : m_origLine is 7, m_origCol is 1, Text() is '}'
+   m_type is NONE, m_parentType is NONE => token is BRACE_CLOSE
+SetType : m_origLine is 7, m_origCol is 2, Text() is <Newline>
+   m_type is NONE, m_parentType is NONE => token is NEWLINE
+SetType : m_origLine is 9, m_origCol is 1, Text() is '~'
+   m_type is NONE, m_parentType is NONE => token is INV
+SetType : m_origLine is 9, m_origCol is 2, Text() is 'TelegramIndex'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 9, m_origCol is 15, Text() is '('
+   m_type is NONE, m_parentType is NONE => token is PAREN_OPEN
+SetType : m_origLine is 9, m_origCol is 16, Text() is ')'
+   m_type is NONE, m_parentType is NONE => token is PAREN_CLOSE
+SetType : m_origLine is 9, m_origCol is 17, Text() is <Newline>
+   m_type is NONE, m_parentType is NONE => token is NEWLINE
+SetType : m_origLine is 10, m_origCol is 1, Text() is '{'
+   m_type is NONE, m_parentType is NONE => token is BRACE_OPEN
+SetType : m_origLine is 10, m_origCol is 2, Text() is <Newline>
+   m_type is NONE, m_parentType is NONE => token is NEWLINE
+SetType : m_origLine is 11, m_origCol is 1, Text() is '}'
+   m_type is NONE, m_parentType is NONE => token is BRACE_CLOSE
+SetType : m_origLine is 11, m_origCol is 2, Text() is <Newline>
+   m_type is NONE, m_parentType is NONE => token is NEWLINE
+SetType : m_origLine is 13, m_origCol is 1, Text() is 'const'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 13, m_origCol is 1, Text() is 'const'
+   m_type is WORD, m_parentType is NONE => token is QUALIFIER
+SetType : m_origLine is 13, m_origCol is 6, Text() is <white_space>
+   m_type is NONE, m_parentType is NONE => token is WHITESPACE
+SetType : m_origLine is 13, m_origCol is 7, Text() is 'char'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 13, m_origCol is 7, Text() is 'char'
+   m_type is WORD, m_parentType is NONE => token is TYPE
+SetType : m_origLine is 13, m_origCol is 11, Text() is '*'
+   m_type is NONE, m_parentType is NONE => token is STAR
+SetType : m_origLine is 13, m_origCol is 12, Text() is <white_space>
+   m_type is NONE, m_parentType is NONE => token is WHITESPACE
+SetType : m_origLine is 13, m_origCol is 13, Text() is 'const'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 13, m_origCol is 13, Text() is 'const'
+   m_type is WORD, m_parentType is NONE => token is QUALIFIER
+SetType : m_origLine is 13, m_origCol is 18, Text() is <white_space>
+   m_type is NONE, m_parentType is NONE => token is WHITESPACE
+SetType : m_origLine is 13, m_origCol is 19, Text() is 'pTelName'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 13, m_origCol is 27, Text() is ';'
+   m_type is NONE, m_parentType is NONE => token is SEMICOLON
+SetType : m_origLine is 13, m_origCol is 28, Text() is <Newline>
+   m_type is NONE, m_parentType is NONE => token is NEWLINE
+SetType : m_origLine is 14, m_origCol is 1, Text() is 'unsigned'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 14, m_origCol is 1, Text() is 'unsigned'
+   m_type is WORD, m_parentType is NONE => token is TYPE
+SetType : m_origLine is 14, m_origCol is 9, Text() is <white_space>
+   m_type is NONE, m_parentType is NONE => token is WHITESPACE
+SetType : m_origLine is 14, m_origCol is 10, Text() is 'long'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 14, m_origCol is 10, Text() is 'long'
+   m_type is WORD, m_parentType is NONE => token is TYPE
+SetType : m_origLine is 14, m_origCol is 14, Text() is <white_space>
+   m_type is NONE, m_parentType is NONE => token is WHITESPACE
+SetType : m_origLine is 14, m_origCol is 15, Text() is 'nTelIndex'
+   m_type is NONE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 14, m_origCol is 24, Text() is ';'
+   m_type is NONE, m_parentType is NONE => token is SEMICOLON
+SetType : m_origLine is 14, m_origCol is 25, Text() is <Newline>
+   m_type is NONE, m_parentType is NONE => token is NEWLINE
+SetType : m_origLine is 15, m_origCol is 1, Text() is '}'
+   m_type is NONE, m_parentType is NONE => token is BRACE_CLOSE
+SetType : m_origLine is 15, m_origCol is 2, Text() is ';'
+   m_type is NONE, m_parentType is NONE => token is SEMICOLON
+SetType : m_origLine is 15, m_origCol is 3, Text() is <Newline>
+   m_type is NONE, m_parentType is NONE => token is NEWLINE
+SetType : m_origLine is 1, m_origCol is 8, Text() is 'TelegramIndex'
+   m_type is WORD, m_parentType is NONE => token is TYPE
+SetType : m_origLine is 3, m_origCol is 25, Text() is '*'
+   m_type is STAR, m_parentType is NONE => token is PTR_TYPE
+SetType : m_origLine is 13, m_origCol is 11, Text() is '*'
+   m_type is STAR, m_parentType is NONE => token is PTR_TYPE
+SetType : m_origLine is 1, m_origCol is 8, Text() is 'TelegramIndex'
+   m_type is TYPE, m_parentType is NONE => token is WORD
+SetType : m_origLine is 1, m_origCol is 8, Text() is 'TelegramIndex'
+   m_type is WORD, m_parentType is NONE => token is TYPE
+SetType : m_origLine is 3, m_origCol is 1, Text() is 'TelegramIndex'
+   m_type is WORD, m_parentType is NONE => token is FUNC_CLASS_DEF
+SetType : m_origLine is 3, m_origCol is 14, Text() is '('
+   m_type is PAREN_OPEN, m_parentType is NONE => token is FPAREN_OPEN
+SetType : m_origLine is 3, m_origCol is 47, Text() is ')'
+   m_type is PAREN_CLOSE, m_parentType is NONE => token is FPAREN_CLOSE
+SetType : m_origLine is 3, m_origCol is 49, Text() is ':'
+   m_type is COLON, m_parentType is NONE => token is CONSTR_COLON
+SetType : m_origLine is 4, m_origCol is 1, Text() is 'pTelName'
+   m_type is WORD, m_parentType is NONE => token is FUNC_CTOR_VAR
+SetType : m_origLine is 4, m_origCol is 9, Text() is '('
+   m_type is PAREN_OPEN, m_parentType is NONE => token is FPAREN_OPEN
+SetType : m_origLine is 4, m_origCol is 12, Text() is ')'
+   m_type is PAREN_CLOSE, m_parentType is NONE => token is FPAREN_CLOSE
+SetType : m_origLine is 5, m_origCol is 1, Text() is 'nTelIndex'
+   m_type is WORD, m_parentType is NONE => token is FUNC_CTOR_VAR
+SetType : m_origLine is 5, m_origCol is 10, Text() is '('
+   m_type is PAREN_OPEN, m_parentType is NONE => token is FPAREN_OPEN
+SetType : m_origLine is 5, m_origCol is 12, Text() is ')'
+   m_type is PAREN_CLOSE, m_parentType is NONE => token is FPAREN_CLOSE
+SetType : m_origLine is 9, m_origCol is 2, Text() is 'TelegramIndex'
+   m_type is WORD, m_parentType is NONE => token is FUNC_CLASS_DEF
+SetType : m_origLine is 9, m_origCol is 1, Text() is '~'
+   m_type is INV, m_parentType is NONE => token is DESTRUCTOR
+SetType : m_origLine is 9, m_origCol is 15, Text() is '('
+   m_type is PAREN_OPEN, m_parentType is NONE => token is FPAREN_OPEN
+SetType : m_origLine is 9, m_origCol is 16, Text() is ')'
+   m_type is PAREN_CLOSE, m_parentType is NONE => token is FPAREN_CLOSE
