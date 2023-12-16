@@ -357,7 +357,7 @@ void prot_the_source(int theLine)
 
 
 // examples:
-//   examine_Data(__func__, __LINE__, n);
+//   examine_Data(__func__, 5, n);
 void examine_Data(const char *func_name, int theLine, int what)
 {
    LOG_FMT(LGUY, "\n%s:", func_name);
@@ -761,7 +761,8 @@ void examine_token(const char *func_name, int theLine, size_t orig_line_to_exami
             if (pc->GetOrigCol() == orig_column_to_examine)
             {
                column_found = true;
-               LOG_FMT(LGUY, "Examine:(%s:%d), ", func_name, theLine);
+               counter++;
+               LOG_FMT(LGUY, "Examine:(%s:%d)(%zu), ", func_name, theLine, counter);
                LOG_FMT(LGUY, "for the token at orig line is %zu, ", pc->GetOrigLine());
                LOG_FMT(LGUY, "at orig column %zu, type is %s :\n", pc->GetColumn(), get_token_name(pc->GetType()));
 
@@ -774,6 +775,8 @@ void examine_token(const char *func_name, int theLine, size_t orig_line_to_exami
                // size_t          m_origColEnd;
                // size_t          m_origPrevSp;
                // size_t          m_column;
+               LOG_FMT(LGUY, "   m_column is %zu\n", pc->GetColumn());
+
                // size_t          m_columnIndent;
                // size_t          m_nlCount;
                if (pc->Is(CT_NEWLINE))
