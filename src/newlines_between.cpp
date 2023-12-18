@@ -9,6 +9,7 @@
 
 #include "newlines_between.h"
 
+
 bool newlines_between(Chunk *pc_start, Chunk *pc_end, size_t &newlines, E_Scope scope)
 {
    if (  pc_start->IsNullChunk()
