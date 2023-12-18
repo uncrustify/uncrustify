@@ -11,6 +11,7 @@
 #include "calculate_closing_brace_position.h"
 #include "combine_tools.h"
 #include "newlines.h"
+#include "newlines_between.h"
 #include "prototypes.h"
 
 constexpr static auto LCURRENT = LBR;
