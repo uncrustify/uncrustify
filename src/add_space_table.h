@@ -246,7 +246,6 @@ const no_space_table_t add_space_table[] =
    { CT_STRING,                CT_CONCAT                },
    { CT_STRING,                CT_OC_MSG_NAME           },
    { CT_STRING,                CT_PAREN_OPEN            },
-   { CT_STRING,                CT_STRING                },
    { CT_STRING,                CT_STRUCT                },
    { CT_STRING,                CT_TYPE                  },
    { CT_STRING,                CT_WORD                  },

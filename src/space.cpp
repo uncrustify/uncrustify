@@ -3235,6 +3235,13 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(IARF_FORCE);  /* TODO: make this configurable? */
    }
 
+   if (  first->Is(CT_STRING)                        // Issue #4176
+      && second->Is(CT_STRING))
+   {
+      log_rule("sp_string_string");
+      return(options::sp_string_string());
+   }
+
    if (first->Is(CT_NOEXCEPT))
    {
       // Add or remove space after 'noexcept'.

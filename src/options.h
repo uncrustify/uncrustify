@@ -1379,6 +1379,10 @@ sp_after_bit_colon;
 extern Option<bool>
 force_tab_after_define;
 
+// Add or remove space between two strings.
+extern Option<iarf_e>
+sp_string_string;
+
 //END
 
 ///////////////////////////////////////////////////////////////////////////////
