@@ -306,6 +306,7 @@ set(uncrustify_sources
   src/mark_question_colon.cpp
   src/md5.cpp
   src/newlines.cpp
+  src/newlines_between.cpp
   src/option.cpp
   src/options_for_QT.cpp
   src/output.cpp
@@ -411,6 +412,7 @@ set(uncrustify_headers
   src/mark_question_colon.h
   src/md5.h
   src/newlines.h
+  src/newlines_between.h
   src/option.h
   src/options_for_QT.h
   src/options.h
