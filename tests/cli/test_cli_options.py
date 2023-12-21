@@ -838,7 +838,7 @@ def main(args):
         return_flag = False
     print("Test -p and --debug-csv-format option is OK")
 
-    if parsed_args.config == 'Debug':
+    if parsed_args.config.lower() == 'debug':
         print("Test --tracking space:FILE ...")
         print("  config is Debug")
         #
