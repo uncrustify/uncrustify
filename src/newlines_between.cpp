@@ -3,11 +3,13 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.h
+ * extract from newlines.cpp
  * @license GPL v2+
  */
 
 #include "newlines_between.h"
+
+#include "uncrustify.h"
 
 
 bool newlines_between(Chunk *pc_start, Chunk *pc_end, size_t &newlines, E_Scope scope)

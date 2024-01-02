@@ -1,6 +1,6 @@
 /**
  * @file newlines_between.h
- * prototypes for newlines_between.cpp
+ * prototype for newlines_between.cpp
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
