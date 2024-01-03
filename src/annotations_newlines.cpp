@@ -15,6 +15,7 @@
 
 constexpr static auto LCURRENT = LNEWLINE;
 
+
 void annotations_newlines()
 {
    LOG_FUNC_ENTRY();

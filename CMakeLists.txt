@@ -324,23 +324,22 @@ set(uncrustify_sources
   src/newline_after_return.cpp
   src/newline_before_return.cpp
   src/newline_case_colon.cpp
-  src/newlines_cleanup_angles.cpp
   src/newline_case.cpp
   src/newline_del_between.cpp
   src/newline_end_newline.cpp
-  src/newline_force_before.cpp
   src/newline_force_after.cpp
+  src/newline_force_before.cpp
   src/newline_func_def_or_call.cpp
   src/newline_func_multi_line.cpp
   src/newline_iarf.cpp
   src/newline_iarf_pair.cpp
   src/newline_min_after.cpp
-  src/newline_template.cpp
   src/newline_oc_msg.cpp
   src/newlines_between.cpp
   src/newlines_brace_pair.cpp
   src/newlines_chunk_pos.cpp
   src/newlines_class_colon_pos.cpp
+  src/newlines_cleanup_angles.cpp
   src/newlines_cleanup_braces.cpp
   src/newlines_cleanup_dup.cpp
   src/newlines_cuddle_uncuddle.cpp
@@ -349,8 +348,8 @@ set(uncrustify_sources
   src/newlines_eat_start_end.cpp
   src/newlines_enum.cpp
   src/newlines_enum_entries.cpp
-  src/newlines_functions_remove_extra_blank_lines.cpp
   src/newlines_func_pre_blank_lines.cpp
+  src/newlines_functions_remove_extra_blank_lines.cpp
   src/newlines_if_for_while_switch.cpp
   src/newlines_if_for_while_switch_post_blank_lines.cpp
   src/newlines_if_for_while_switch_pre_blank_lines.cpp
@@ -362,6 +361,7 @@ set(uncrustify_sources
   src/newlines_squeeze_ifdef.cpp
   src/newlines_squeeze_paren_close.cpp
   src/newlines_struct_union.cpp
+  src/newline_template.cpp
   src/newline_template_option.cpp
   src/newline_var_def_blk.cpp
   src/nl_create_list_liner.cpp
@@ -382,8 +382,8 @@ set(uncrustify_sources
   src/quick_align_again.cpp
   src/reindent_line.cpp
   src/remove_duplicate_include.cpp
-  src/remove_next_newlines.cpp
   src/remove_extra_returns.cpp
+  src/remove_next_newlines.cpp
   src/rewrite_infinite_loops.cpp
   src/semicolons.cpp
   src/setup_newline_add.cpp
@@ -413,10 +413,10 @@ set(uncrustify_headers
   src/align_asm_colon.h
   src/align_assign.h
   src/align_braced_init_list.h
+  src/align.h
   src/align_eigen_comma_init.h
   src/align_func_params.h
   src/align_func_proto.h
-  src/align.h
   src/align_init_brace.h
   src/align_left_shift.h
   src/align_log_al.h
@@ -496,7 +496,6 @@ set(uncrustify_headers
   src/newline_after_return.h
   src/newline_before_return.h
   src/newline_case_colon.h
-  src/newlines_cleanup_angles.h
   src/newline_case.h
   src/newline_del_between.h
   src/newline_end_newline.h
@@ -507,22 +506,22 @@ set(uncrustify_headers
   src/newline_iarf.h
   src/newline_iarf_pair.h
   src/newline_min_after.h
-  src/newline_template.h
   src/newline_oc_msg.h
   src/newlines_between.h
   src/newlines_brace_pair.h
   src/newlines_chunk_pos.h
   src/newlines_class_colon_pos.h
+  src/newlines_cleanup_angles.h
   src/newlines_cleanup_braces.h
   src/newlines_cleanup_dup.h
   src/newlines_cuddle_uncuddle.h
   src/newlines_do_else.h
   src/newlines_double_space_struct_enum_union.h
-  src/newlines_enum_entries.h
   src/newlines_eat_start_end.h
+  src/newlines_enum_entries.h
   src/newlines_enum.h
-  src/newlines_functions_remove_extra_blank_lines.h
   src/newlines_func_pre_blank_lines.h
+  src/newlines_functions_remove_extra_blank_lines.h
   src/newlines_if_for_while_switch.h
   src/newlines_if_for_while_switch_post_blank_lines.h
   src/newlines_if_for_while_switch_pre_blank_lines.h
@@ -534,6 +533,7 @@ set(uncrustify_headers
   src/newlines_squeeze_ifdef.h
   src/newlines_squeeze_paren_close.h
   src/newlines_struct_union.h
+  src/newline_template.h
   src/newline_template_option.h
   src/newline_var_def_blk.h
   src/nl_create_list_liner.h
@@ -555,9 +555,9 @@ set(uncrustify_headers
   src/punctuators.h
   src/quick_align_again.h
   src/reindent_line.h
-  src/remove_next_newlines.h
   src/remove_duplicate_include.h
   src/remove_extra_returns.h
+  src/remove_next_newlines.h
   src/rewrite_infinite_loops.h
   src/semicolons.h
   src/setup_newline_add.h
