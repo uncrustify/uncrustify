@@ -9,9 +9,12 @@
 #include "width.h"
 
 #include "indent.h"
-#include "newlines.h"
+#include "newline_add_after.h"
+#include "newline_add_before.h"
+#include "newlines_cleanup_braces.h"
 #include "prototypes.h"
 #include "reindent_line.h"
+#include "undo_one_liner.h"
 
 
 constexpr static auto LCURRENT = LSPLIT;

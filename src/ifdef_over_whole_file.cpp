@@ -1,6 +1,7 @@
 /**
  * @file ifdef_over_whole_file.cpp
  *
+ * @author  Ben Gardner
  * @author  Guy Maurel October 2015- 2023
  * extract from indent.cpp
  * @license GPL v2+
@@ -8,29 +9,10 @@
 
 #include "ifdef_over_whole_file.h"
 
-#include "align.h"
-#include "options.h"
-#include "options_for_QT.h"
-#include "parsing_frame_stack.h"
-#include "prototypes.h"
-#include "quick_align_again.h"
-#include "reindent_line.h"
-#include "space.h"
+#include "chunk.h"
+#include "log_levels.h"
+#include "logger.h"
 
-#include <cstdint>
-
-#ifdef WIN32
-#include <algorithm>                   // to get max
-#endif // ifdef WIN32
-
-#ifdef IGNORE // WinBase.h
-#undef IGNORE
-#endif
-
-
-constexpr static auto LCURRENT = LINDENT;
-
-using namespace std;
 using namespace uncrustify;
 
 

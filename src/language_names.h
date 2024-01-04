@@ -5,7 +5,6 @@
  * extract from uncrustify.cpp
  * @license GPL v2+
  */
-
 #ifndef LANGUAGE_NAMES_H_INCLUDED
 #define LANGUAGE_NAMES_H_INCLUDED
 
@@ -16,7 +15,6 @@
 #include <map>
 #include <string>
 #include <string.h>
-//#include <strings.h>
 
 struct lang_name_t
 {

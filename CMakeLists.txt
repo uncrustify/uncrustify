@@ -266,33 +266,44 @@ set(uncrustify_sources
   src/align_trailing_comments.cpp
   src/align_typedefs.cpp
   src/align_var_def_brace.cpp
+  src/annotations_newlines.cpp
   src/args.cpp
   src/backup.cpp
+  src/blank_line_max.cpp
+  src/blank_line_set.cpp
   src/brace_cleanup.cpp
   src/braces.cpp
   src/calculate_closing_brace_position.cpp
+  src/can_increase_nl.cpp
   src/change_int_types.cpp
   src/check_double_brace_init.cpp
   src/check_template.cpp
   src/chunk.cpp
   src/ChunkStack.cpp
+  src/collapse_empty_body.cpp
   src/combine.cpp
   src/combine_fix_mark.cpp
   src/combine_labels.cpp
-  src/combine_tools.cpp
   src/combine_skip.cpp
+  src/combine_tools.cpp
   src/compat_posix.cpp
   src/compat_win32.cpp
   src/cs_top_is_question.cpp
   src/detect.cpp
+  src/do_blank_lines.cpp
+  src/do_it_newlines_func_pre_blank_lines.cpp
+  src/double_newline.cpp
   src/enum_cleanup.cpp
   src/EnumStructUnionParser.cpp
-  src/EnumStructUnionParser.h
   src/flag_braced_init_list.cpp
   src/flag_decltype.cpp
   src/flag_parens.cpp
+  src/get_closing_brace.cpp
   src/ifdef_over_whole_file.cpp
   src/indent.cpp
+  src/is_class_one_liner.cpp
+  src/is_func_call_or_def.cpp
+  src/is_func_proto_group.cpp
   src/is_var_def.cpp
   src/keywords.cpp
   src/lang_pawn.cpp
@@ -305,8 +316,58 @@ set(uncrustify_sources
   src/mark_functor.cpp
   src/mark_question_colon.cpp
   src/md5.cpp
-  src/newlines.cpp
+  src/newline_add_after.cpp
+  src/newline_add_before.cpp
+  src/newline_add_between.cpp
+  src/newline_after_label_colon.cpp
+  src/newline_after_multiline_comment.cpp
+  src/newline_after_return.cpp
+  src/newline_before_return.cpp
+  src/newline_case_colon.cpp
+  src/newline_case.cpp
+  src/newline_del_between.cpp
+  src/newline_end_newline.cpp
+  src/newline_force_after.cpp
+  src/newline_force_before.cpp
+  src/newline_func_def_or_call.cpp
+  src/newline_func_multi_line.cpp
+  src/newline_iarf.cpp
+  src/newline_iarf_pair.cpp
+  src/newline_min_after.cpp
+  src/newline_oc_msg.cpp
   src/newlines_between.cpp
+  src/newlines_brace_pair.cpp
+  src/newlines_chunk_pos.cpp
+  src/newlines_class_colon_pos.cpp
+  src/newlines_cleanup_angles.cpp
+  src/newlines_cleanup_braces.cpp
+  src/newlines_cleanup_dup.cpp
+  src/newlines_cuddle_uncuddle.cpp
+  src/newlines_do_else.cpp
+  src/newlines_double_space_struct_enum_union.cpp
+  src/newlines_eat_start_end.cpp
+  src/newlines_enum.cpp
+  src/newlines_enum_entries.cpp
+  src/newlines_func_pre_blank_lines.cpp
+  src/newlines_functions_remove_extra_blank_lines.cpp
+  src/newlines_if_for_while_switch.cpp
+  src/newlines_if_for_while_switch_post_blank_lines.cpp
+  src/newlines_if_for_while_switch_pre_blank_lines.cpp
+  src/newlines_insert_blank_lines.cpp
+  src/newlines_namespace.cpp
+  src/newlines_remove_disallowed.cpp
+  src/newlines_remove_newlines.cpp
+  src/newlines_sparens.cpp
+  src/newlines_squeeze_ifdef.cpp
+  src/newlines_squeeze_paren_close.cpp
+  src/newlines_struct_union.cpp
+  src/newline_template.cpp
+  src/newline_template_option.cpp
+  src/newline_var_def_blk.cpp
+  src/nl_create_list_liner.cpp
+  src/nl_create_one_liner.cpp
+  src/nl_handle_define.cpp
+  src/one_liner_nl_ok.cpp
   src/option.cpp
   src/options_for_QT.cpp
   src/output.cpp
@@ -315,27 +376,30 @@ set(uncrustify_sources
   src/parent_for_pp.cpp
   src/parsing_frame.cpp
   src/parsing_frame_stack.cpp
-  src/pragma_cleanup.cpp
   src/pcf_flags.cpp
+  src/pragma_cleanup.cpp
   src/punctuators.cpp
   src/quick_align_again.cpp
   src/reindent_line.cpp
   src/remove_duplicate_include.cpp
   src/remove_extra_returns.cpp
+  src/remove_next_newlines.cpp
   src/rewrite_infinite_loops.cpp
   src/semicolons.cpp
+  src/setup_newline_add.cpp
   src/sorting.cpp
   src/space.cpp
   src/token_is_within_trailing_return.cpp
   src/tokenize_cleanup.cpp
   src/tokenize.cpp
   src/too_big_for_nl_max.cpp
+  src/unc_ctype.cpp
   src/uncrustify.cpp
   src/uncrustify_emscripten.cpp
   src/uncrustify_types.cpp
-  src/unc_ctype.cpp
   src/unc_text.cpp
   src/unc_tools.cpp
+  src/undo_one_liner.cpp
   src/unicode.cpp
   src/universalindentgui.cpp
   src/width.cpp
@@ -349,10 +413,10 @@ set(uncrustify_headers
   src/align_asm_colon.h
   src/align_assign.h
   src/align_braced_init_list.h
-  src/align_func_params.h
-  src/align_func_proto.h
   src/align.h
   src/align_eigen_comma_init.h
+  src/align_func_params.h
+  src/align_func_proto.h
   src/align_init_brace.h
   src/align_left_shift.h
   src/align_log_al.h
@@ -369,34 +433,47 @@ set(uncrustify_headers
   src/align_trailing_comments.h
   src/align_typedefs.h
   src/align_var_def_brace.h
+  src/annotations_newlines.h
   src/args.h
   src/backup.h
   src/base_types.h
+  src/blank_line_max.h
+  src/blank_line_set.h
   src/brace_cleanup.h
   src/braces.h
   src/calculate_closing_brace_position.h
+  src/can_increase_nl.h
   src/change_int_types.h
   src/char_table.h
   src/check_double_brace_init.h
   src/check_template.h
   src/chunk.h
   src/ChunkStack.h
-  src/combine.h
+  src/collapse_empty_body.h
   src/combine_fix_mark.h
+  src/combine.h
   src/combine_labels.h
   src/combine_skip.h
   src/combine_tools.h
   src/compat.h
   src/cs_top_is_question.h
   src/detect.h
+  src/do_blank_lines.h
+  src/do_it_newlines_func_pre_blank_lines.h
+  src/double_newline.h
   src/enum_cleanup.h
   src/enum_flags.h
+  src/EnumStructUnionParser.h
   src/error_types.h
   src/flag_braced_init_list.h
   src/flag_decltype.h
   src/flag_parens.h
+  src/get_closing_brace.h
   src/ifdef_over_whole_file.h
   src/indent.h
+  src/is_class_one_liner.h
+  src/is_func_call_or_def.h
+  src/is_func_proto_group.h
   src/is_var_def.h
   src/keywords.h
   src/lang_pawn.h
@@ -411,8 +488,58 @@ set(uncrustify_headers
   src/mark_functor.h
   src/mark_question_colon.h
   src/md5.h
-  src/newlines.h
+  src/newline_add_after.h
+  src/newline_add_before.h
+  src/newline_add_between.h
+  src/newline_after_label_colon.h
+  src/newline_after_multiline_comment.h
+  src/newline_after_return.h
+  src/newline_before_return.h
+  src/newline_case_colon.h
+  src/newline_case.h
+  src/newline_del_between.h
+  src/newline_end_newline.h
+  src/newline_force_after.h
+  src/newline_force_before.h
+  src/newline_func_def_or_call.h
+  src/newline_func_multi_line.h
+  src/newline_iarf.h
+  src/newline_iarf_pair.h
+  src/newline_min_after.h
+  src/newline_oc_msg.h
   src/newlines_between.h
+  src/newlines_brace_pair.h
+  src/newlines_chunk_pos.h
+  src/newlines_class_colon_pos.h
+  src/newlines_cleanup_angles.h
+  src/newlines_cleanup_braces.h
+  src/newlines_cleanup_dup.h
+  src/newlines_cuddle_uncuddle.h
+  src/newlines_do_else.h
+  src/newlines_double_space_struct_enum_union.h
+  src/newlines_eat_start_end.h
+  src/newlines_enum_entries.h
+  src/newlines_enum.h
+  src/newlines_func_pre_blank_lines.h
+  src/newlines_functions_remove_extra_blank_lines.h
+  src/newlines_if_for_while_switch.h
+  src/newlines_if_for_while_switch_post_blank_lines.h
+  src/newlines_if_for_while_switch_pre_blank_lines.h
+  src/newlines_insert_blank_lines.h
+  src/newlines_namespace.h
+  src/newlines_remove_disallowed.h
+  src/newlines_remove_newlines.h
+  src/newlines_sparens.h
+  src/newlines_squeeze_ifdef.h
+  src/newlines_squeeze_paren_close.h
+  src/newlines_struct_union.h
+  src/newline_template.h
+  src/newline_template_option.h
+  src/newline_var_def_blk.h
+  src/nl_create_list_liner.h
+  src/nl_create_one_liner.h
+  src/nl_handle_define.h
+  src/one_liner_nl_ok.h
   src/option.h
   src/options_for_QT.h
   src/options.h
@@ -422,16 +549,18 @@ set(uncrustify_headers
   src/parent_for_pp.h
   src/parsing_frame.h
   src/parsing_frame_stack.h
-  src/pragma_cleanup.h
   src/pcf_flags.h
+  src/pragma_cleanup.h
   src/prototypes.h
   src/punctuators.h
   src/quick_align_again.h
   src/reindent_line.h
   src/remove_duplicate_include.h
   src/remove_extra_returns.h
+  src/remove_next_newlines.h
   src/rewrite_infinite_loops.h
   src/semicolons.h
+  src/setup_newline_add.h
   src/sorting.h
   src/space.h
   src/symbols_table.h
@@ -446,6 +575,7 @@ set(uncrustify_headers
   src/uncrustify_types.h
   src/unc_text.h
   src/unc_tools.h
+  src/undo_one_liner.h
   src/unicode.h
   src/universalindentgui.h
   src/width.h

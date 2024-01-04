@@ -8,7 +8,8 @@
 
 #include "sorting.h"
 
-#include "newlines.h"
+#include "double_newline.h"
+#include "newline_add_before.h"
 #include "prototypes.h"
 
 #include <regex>
