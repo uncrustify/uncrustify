@@ -9,7 +9,7 @@
 
 #include "newlines_enum.h"
 
-#include "blank_line_set.h"
+#include "blank_line.h"
 #include "double_newline.h"
 #include "log_rules.h"
 #include "mark_change.h"

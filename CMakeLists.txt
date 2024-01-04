@@ -269,8 +269,7 @@ set(uncrustify_sources
   src/annotations_newlines.cpp
   src/args.cpp
   src/backup.cpp
-  src/blank_line_max.cpp
-  src/blank_line_set.cpp
+  src/blank_line.cpp
   src/brace_cleanup.cpp
   src/braces.cpp
   src/calculate_closing_brace_position.cpp
@@ -290,7 +289,6 @@ set(uncrustify_sources
   src/compat_win32.cpp
   src/cs_top_is_question.cpp
   src/detect.cpp
-  src/do_blank_lines.cpp
   src/do_it_newlines_func_pre_blank_lines.cpp
   src/double_newline.cpp
   src/enum_cleanup.cpp
@@ -353,7 +351,6 @@ set(uncrustify_sources
   src/newlines_if_for_while_switch.cpp
   src/newlines_if_for_while_switch_post_blank_lines.cpp
   src/newlines_if_for_while_switch_pre_blank_lines.cpp
-  src/newlines_insert_blank_lines.cpp
   src/newlines_namespace.cpp
   src/newlines_remove_disallowed.cpp
   src/newlines_remove_newlines.cpp
@@ -437,8 +434,7 @@ set(uncrustify_headers
   src/args.h
   src/backup.h
   src/base_types.h
-  src/blank_line_max.h
-  src/blank_line_set.h
+  src/blank_line.h
   src/brace_cleanup.h
   src/braces.h
   src/calculate_closing_brace_position.h
@@ -458,7 +454,6 @@ set(uncrustify_headers
   src/compat.h
   src/cs_top_is_question.h
   src/detect.h
-  src/do_blank_lines.h
   src/do_it_newlines_func_pre_blank_lines.h
   src/double_newline.h
   src/enum_cleanup.h
@@ -525,7 +520,6 @@ set(uncrustify_headers
   src/newlines_if_for_while_switch.h
   src/newlines_if_for_while_switch_post_blank_lines.h
   src/newlines_if_for_while_switch_pre_blank_lines.h
-  src/newlines_insert_blank_lines.h
   src/newlines_namespace.h
   src/newlines_remove_disallowed.h
   src/newlines_remove_newlines.h

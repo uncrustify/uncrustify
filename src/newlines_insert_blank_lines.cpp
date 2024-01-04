@@ -12,7 +12,6 @@
 #include "is_class_one_liner.h"
 #include "log_rules.h"
 #include "newlines_func_pre_blank_lines.h"
-#include "newlines_func_pre_blank_lines.h"
 #include "newlines_if_for_while_switch_post_blank_lines.h"
 #include "newlines_if_for_while_switch_pre_blank_lines.h"
 #include "prototypes.h"
