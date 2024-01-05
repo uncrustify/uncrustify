@@ -9,7 +9,7 @@
 
 #include "newlines_cleanup_braces.h"
 
-#include "blank_line_set.h"
+#include "blank_line.h"
 #include "double_newline.h"
 #include "flag_parens.h"
 #include "log_rules.h"

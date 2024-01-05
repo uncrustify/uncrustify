@@ -9,7 +9,7 @@
 
 #include "newlines_brace_pair.h"
 
-#include "blank_line_set.h"
+#include "blank_line.h"
 #include "collapse_empty_body.h"
 #include "is_func_call_or_def.h"
 #include "log_rules.h"
