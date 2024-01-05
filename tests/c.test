@@ -77,6 +77,7 @@
 
 00110  c/ben_069.cfg                              c/misc.c
 00111  c/brace-kr-br.cfg                          c/misc.c
+00112  common/empty.cfg                           c/Issue_4182.c
 
 00120  c/sp_cmt_cpp_start-r.cfg                   c/sp_cmt_cpp_start.c
 00121  common/sp_cmt_cpp_start-a.cfg              c/sp_cmt_cpp_start.c

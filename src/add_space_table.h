@@ -364,10 +364,8 @@ const no_space_table_t no_space_table[] =
  */
 const no_space_table_t IGNORE_space_table[] =
 {
-   //{ CT_RPAREN_OPEN, CT_RPAREN_CLOSE},
-   //{ CT_RPAREN_OPEN, CT_UNKNOWN     },
-   //{ CT_UNKNOWN,     CT_RPAREN_CLOSE},
    { CT_PAREN_CLOSE,    CT_SIZEOF},
+   { CT_SQUARE_CLOSE,   CT_INCDEC_BEFORE},
 };
 
 
