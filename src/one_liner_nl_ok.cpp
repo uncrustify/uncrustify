@@ -7,16 +7,10 @@
  * @license GPL v2+
  */
 
-#include "newlines.h"
-
 #include "log_rules.h"
 #include "mark_change.h"
 
 constexpr static auto LCURRENT = LNEWLINE;
-
-//using namespace std;
-//using namespace uncrustify;
-
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
