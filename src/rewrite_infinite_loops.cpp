@@ -9,9 +9,7 @@
 
 #include "chunk.h"
 #include "newline_add_before.h"
-#include "newlines.h"
 #include "uncrustify.h"
-
 
 using namespace uncrustify;
 
