@@ -14,7 +14,7 @@
 30002  cpp/ben_003.cfg                                      cpp/constructor.cpp
 30003  cpp/ben_004.cfg                                      cpp/strings.cpp
 30004  cpp/Issue_4036.cfg                                   cpp/Issue_4036.cpp
-30005  common/empty.cfg                                     cpp/Issue_4042.cpp
+#30005  common/empty.cfg                                     cpp/Issue_4042.cpp
 30006  common/empty.cfg                                     cpp/Issue_4027.cpp
 30007  cpp/Issue_4080.cfg                                   cpp/Issue_4080.cpp
 30008  cpp/Issue_4094.cfg                                   cpp/Issue_4094.cpp
@@ -183,6 +183,7 @@
 30154  common/empty.cfg                                     cpp/Issue_4132.cpp
 30155  cpp/Issue_4100_force.cfg                             cpp/Issue_4100.cpp
 30156  cpp/Issue_4100_remove.cfg                            cpp/Issue_4100.cpp
+30157  cpp/Issue_4081.cfg                                   cpp/Issue_4081.cpp
 
 30160  common/empty.cfg                                     cpp/Issue_3980.cpp
 30161  cpp/Discussion_3987.cfg                              cpp/Discussion_3987.cpp
