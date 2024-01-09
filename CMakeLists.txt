@@ -315,9 +315,7 @@ set(uncrustify_sources
   src/mark_question_colon.cpp
   src/md5.cpp
   src/newline_add.cpp
-  src/newline_after_label_colon.cpp
-  src/newline_after_multiline_comment.cpp
-  src/newline_after_return.cpp
+  src/newline_after.cpp
   src/newline_before_return.cpp
   src/newline_case_colon.cpp
   src/newline_case.cpp
@@ -482,9 +480,7 @@ set(uncrustify_headers
   src/mark_question_colon.h
   src/md5.h
   src/newline_add.h
-  src/newline_after_label_colon.h
-  src/newline_after_multiline_comment.h
-  src/newline_after_return.h
+  src/newline_after.h
   src/newline_before_return.h
   src/newline_case_colon.h
   src/newline_case.h
