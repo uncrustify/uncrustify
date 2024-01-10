@@ -9,7 +9,7 @@
 #include "sorting.h"
 
 #include "double_newline.h"
-#include "newline_add_before.h"
+#include "newline_add.h"
 #include "prototypes.h"
 
 #include <regex>

@@ -10,8 +10,7 @@
 #include "newlines_if_for_while_switch.h"
 
 #include "log_rules.h"
-#include "newline_add_after.h"
-#include "newline_add_between.h"
+#include "newline_add.h"
 #include "newline_iarf_pair.h"
 #include "one_liner_nl_ok.h"
 

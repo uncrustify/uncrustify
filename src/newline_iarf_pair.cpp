@@ -8,7 +8,7 @@
 
 #include "newline_iarf_pair.h"
 
-#include "newline_add_between.h"
+#include "newline_add.h"
 #include "newline_del_between.h"
 #include "newlines_between.h"
 #include "prototypes.h"

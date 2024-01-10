@@ -10,7 +10,7 @@
 #include "newlines_squeeze_paren_close.h"
 
 #include "chunk.h"
-#include "newline_add_between.h"
+#include "newline_add.h"
 #include "newline_del_between.h"
 
 

@@ -9,7 +9,7 @@
 
 #include "newline_case_colon.h"
 
-#include "newline_add_before.h"
+#include "newline_add.h"
 
 
 void newline_case_colon(Chunk *start)

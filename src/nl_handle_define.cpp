@@ -9,7 +9,7 @@
 
 #include "nl_handle_define.h"
 
-#include "newline_add_after.h"
+#include "newline_add.h"
 
 
 //! Find the next newline or nl_cont

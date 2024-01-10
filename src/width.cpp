@@ -9,8 +9,7 @@
 #include "width.h"
 
 #include "indent.h"
-#include "newline_add_after.h"
-#include "newline_add_before.h"
+#include "newline_add.h"
 #include "newlines_cleanup_braces.h"
 #include "prototypes.h"
 #include "reindent_line.h"

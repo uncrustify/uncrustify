@@ -13,7 +13,7 @@
 #include "get_closing_brace.h"
 #include "log_rules.h"
 #include "mark_change.h"
-#include "newline_add_after.h"
+#include "newline_add.h"
 #include "remove_next_newlines.h"
 #include "uncrustify.h"
 

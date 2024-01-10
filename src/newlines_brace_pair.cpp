@@ -14,7 +14,7 @@
 #include "is_func_call_or_def.h"
 #include "log_rules.h"
 #include "mark_change.h"
-#include "newline_add_between.h"
+#include "newline_add.h"
 #include "newline_del_between.h"
 #include "newline_iarf_pair.h"
 #include "one_liner_nl_ok.h"

@@ -10,8 +10,7 @@
 
 #include "calculate_closing_brace_position.h"
 #include "combine_tools.h"
-#include "newline_add_after.h"
-#include "newline_add_between.h"
+#include "newline_add.h"
 #include "newline_del_between.h"
 #include "newlines_between.h"
 #include "prototypes.h"
