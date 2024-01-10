@@ -93,15 +93,17 @@ void combine_labels()
          LOG_FMT(LFCN, "%s(%d): next orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
                  __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text(), get_token_name(next->GetType()));
       }
-      E_Token pt = next->GetParentType();                         // Issue #4042
+      // this is a regression, have to be repaired latter
+      // see also Issue #4081
+      //E_Token pt = next->GetParentType();                         // Issue #4042
 
-      if (  pt == CT_UNION
-         && next->Is(CT_BRACE_OPEN))
-      {
-         Chunk *close_brace = next->GetClosingParen();
-         next = close_brace->GetNextNc();
-         continue;
-      }
+      //if (  pt == CT_UNION
+      //   && next->Is(CT_BRACE_OPEN))
+      //{
+      //   Chunk *close_brace = next->GetClosingParen();
+      //   next = close_brace->GetNextNc();
+      //   continue;
+      //}
 
       if (  !next->TestFlags(PCF_IN_OC_MSG) // filter OC case of [self class] msg send
          && (  next->Is(CT_CLASS)
