@@ -13,11 +13,8 @@
 #include "chunk.h"
 #include "log_rules.h"
 #include "mark_change.h"
-#include "newline_add_after.h"
-#include "newline_add_after.h"
-#include "newline_add_before.h"
-#include "newline_force_after.h"
-#include "newline_force_before.h"
+#include "newline_add.h"
+#include "newline_force.h"
 
 constexpr static auto LCURRENT = LNEWLINE;
 

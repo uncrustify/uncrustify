@@ -321,8 +321,7 @@ set(uncrustify_sources
   src/newline_case.cpp
   src/newline_del_between.cpp
   src/newline_end_newline.cpp
-  src/newline_force_after.cpp
-  src/newline_force_before.cpp
+  src/newline_force.cpp
   src/newline_func_def_or_call.cpp
   src/newline_func_multi_line.cpp
   src/newline_iarf.cpp
@@ -486,8 +485,7 @@ set(uncrustify_headers
   src/newline_case.h
   src/newline_del_between.h
   src/newline_end_newline.h
-  src/newline_force_after.h
-  src/newline_force_before.h
+  src/newline_force.h
   src/newline_func_def_or_call.h
   src/newline_func_multi_line.h
   src/newline_iarf.h

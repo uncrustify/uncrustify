@@ -10,7 +10,7 @@
 #include "newline_case.h"
 
 #include "double_newline.h"
-#include "newline_add_between.h"
+#include "newline_add.h"
 
 
 /**

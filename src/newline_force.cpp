@@ -1,5 +1,5 @@
 /**
- * @file newline_force_after.cpp
+ * @file newline_force.cpp
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
@@ -7,11 +7,10 @@
  * @license GPL v2+
  */
 
-#include "newline_force_after.h"
+#include "newline_force.h"
 
-#include "chunk.h"
 #include "mark_change.h"
-#include "newline_add_after.h"
+#include "newline_add.h"
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
@@ -30,3 +29,19 @@ Chunk *newline_force_after(Chunk *pc)
    }
    return(nl);
 } // newline_force_after
+
+
+Chunk *newline_force_before(Chunk *pc)
+{
+   LOG_FUNC_ENTRY();
+
+   Chunk *nl = newline_add_before(pc);
+
+   if (  nl->IsNotNullChunk()
+      && nl->GetNlCount() > 1)
+   {
+      nl->SetNlCount(1);
+      MARK_CHANGE();
+   }
+   return(nl);
+} // newline_force_before
