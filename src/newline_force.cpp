@@ -31,7 +31,6 @@ Chunk *newline_force_after(Chunk *pc)
 } // newline_force_after
 
 
-
 Chunk *newline_force_before(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
