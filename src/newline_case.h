@@ -20,5 +20,7 @@
  */
 void newline_case(Chunk *start);
 
+void newline_case_colon(Chunk *start);
+
 
 #endif /* NEWLINE_CASE_H_INCLUDED */

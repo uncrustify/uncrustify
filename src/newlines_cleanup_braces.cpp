@@ -18,7 +18,7 @@
 #include "newline_after.h"
 #include "newline_before_return.h"
 #include "newline_case.h"
-#include "newline_case_colon.h"
+#include "newline_case.h"
 #include "newline_end_newline.h"
 #include "newline_func_def_or_call.h"
 #include "newline_iarf.h"
