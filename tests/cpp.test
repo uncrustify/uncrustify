@@ -184,6 +184,7 @@
 30155  cpp/Issue_4100_force.cfg                             cpp/Issue_4100.cpp
 30156  cpp/Issue_4100_remove.cfg                            cpp/Issue_4100.cpp
 30157  cpp/Issue_4081.cfg                                   cpp/Issue_4081.cpp
+30158  cpp/Issue_4191.cfg                                   cpp/Issue_4191.cpp
 
 30160  common/empty.cfg                                     cpp/Issue_3980.cpp
 30161  cpp/Discussion_3987.cfg                              cpp/Discussion_3987.cpp

@@ -78,6 +78,8 @@ void do_parens_assign()                         // Issue #3316
 
    LOG_FUNC_ENTRY();
 
+   // Whether to fully parenthesize Boolean expressions after '='
+   // statement, as in 'x = a && b > c;' => 'x = (a && (b > c));'.
    log_rule_B("mod_full_paren_assign_bool");
 
    if (options::mod_full_paren_assign_bool())
@@ -94,7 +96,7 @@ void do_parens_assign()                         // Issue #3316
             }
             LOG_FMT(LPARADD, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', level is %zu\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetLevel());
-            // look before for a open sparen
+            // look before for an open sparen
             size_t check_level = pc->GetLevel();
             Chunk  *p          = pc->GetPrevNc(E_Scope::PREPROC);
 
@@ -132,13 +134,35 @@ void do_parens_assign()                         // Issue #3316
             {
                continue;
             }
-            // Grab the semicolon
-            Chunk *semicolon = pc->GetNextType(CT_SEMICOLON, pc->GetLevel(), E_Scope::PREPROC);
 
-            if (semicolon->IsNotNullChunk())
+            if (pc->TestFlags(PCF_IN_ENUM))            // Issue #4191
             {
-               check_bool_parens(pc, semicolon, 0);
-               pc = semicolon;
+               // look for COMMA or BRACE_CLOSE, what occurs first
+               Chunk *found_comma = pc->GetNextType(CT_COMMA, pc->GetLevel());
+
+               if (found_comma->IsNotNullChunk())
+               {
+                  check_bool_parens(pc, found_comma, 0);
+                  pc = found_comma;
+               }
+               else
+               {
+                  // look for BRACE_CLOSE
+                  Chunk *found_brace = pc->GetNextType(CT_BRACE_CLOSE, pc->GetLevel() - 1);
+                  check_bool_parens(pc, found_brace, 0);
+                  pc = found_brace;
+               }
+            }
+            else
+            {
+               // Grab the semicolon, must be the same block
+               Chunk *semicolon = pc->GetNextType(CT_SEMICOLON, pc->GetLevel(), E_Scope::PREPROC);
+
+               if (semicolon->IsNotNullChunk())
+               {
+                  check_bool_parens(pc, semicolon, 0);
+                  pc = semicolon;
+               }
             }
          }
       }
@@ -342,6 +366,12 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       }
       else if (pc->Is(CT_SEMICOLON))                      // Issue #3236
       {
+         LOG_FMT(LPARADD, "%s(%d): ++++ popen on line %zu, orig col is %zu, level is %zu\n",
+                 __func__, __LINE__,
+                 popen->GetOrigLine(), popen->GetOrigCol(), popen->GetLevel());
+         LOG_FMT(LPARADD, "%s(%d): ++++ pc    on line %zu, orig col is %zu, level is %zu\n",
+                 __func__, __LINE__,
+                 pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
          ref = pc;
       }
       else if (  pc->Is(CT_BRACE_OPEN)
