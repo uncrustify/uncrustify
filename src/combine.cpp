@@ -1364,11 +1364,10 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          next->SetType(CT_PTR_TYPE);
          next->SetParentType(pc->GetParentType());
       }
-      else if (  pc->Is(CT_STAR)
-              && (  prev->Is(CT_DECLTYPE)
-                 || prev->Is(CT_SIZEOF)
-                 || prev->Is(CT_DELETE)
-                 || pc->GetParentType() == CT_SIZEOF))
+      else if (  prev->Is(CT_DECLTYPE)
+              || prev->Is(CT_SIZEOF)
+              || prev->Is(CT_DELETE)
+              || pc->GetParentType() == CT_SIZEOF)
       {
          pc->SetType(CT_DEREF);
       }
