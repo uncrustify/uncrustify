@@ -66,3 +66,23 @@ void newline_case(Chunk *start)
       }
    }
 } // newline_case
+
+
+void newline_case_colon(Chunk *start)
+{
+   LOG_FUNC_ENTRY();
+
+   // Scan forwards until a non-comment is found
+   Chunk *pc = start;
+
+   do
+   {
+      pc = pc->GetNext();
+   } while (pc->IsComment());
+
+   if (  pc->IsNotNullChunk()
+      && !pc->IsNewline())
+   {
+      newline_add_before(pc);
+   }
+} // newline_case_colon

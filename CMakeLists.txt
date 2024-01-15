@@ -317,7 +317,6 @@ set(uncrustify_sources
   src/newline_add.cpp
   src/newline_after.cpp
   src/newline_before_return.cpp
-  src/newline_case_colon.cpp
   src/newline_case.cpp
   src/newline_del_between.cpp
   src/newline_end_newline.cpp
@@ -481,7 +480,6 @@ set(uncrustify_headers
   src/newline_add.h
   src/newline_after.h
   src/newline_before_return.h
-  src/newline_case_colon.h
   src/newline_case.h
   src/newline_del_between.h
   src/newline_end_newline.h
