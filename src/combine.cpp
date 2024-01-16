@@ -1378,10 +1378,37 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
               || prev->Is(CT_DC_MEMBER)
               || prev->Is(CT_PTR_TYPE))
       {
-         LOG_FMT(LFCNR, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n   ",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
-         log_pcf_flags(LFCNR, pc->GetFlags());
-         pc->SetType(CT_PTR_TYPE);
+         if (next->Is(CT_WORD))
+         {
+            Chunk *nn = next->GetNext();                // Issue #4184
+            LOG_FMT(LFCNR, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n   ",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
+            log_pcf_flags(LFCNR, pc->GetFlags());
+            LOG_FMT(LFCNR, "%s(%d): nn orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n   ",
+                    __func__, __LINE__, nn->GetOrigLine(), nn->GetOrigCol(), nn->Text(), get_token_name(nn->GetType()));
+            log_pcf_flags(LFCNR, nn->GetFlags());
+
+            if (nn->Is(CT_STAR))
+            {
+               // MATH_SQRT_2 * MATH_PI * MATH_PI
+               pc->SetType(CT_ARITH);
+               nn->SetType(CT_ARITH);
+            }
+            else
+            {
+               LOG_FMT(LFCNR, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n   ",
+                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
+               log_pcf_flags(LFCNR, pc->GetFlags());
+               pc->SetType(CT_PTR_TYPE);
+            }
+         }
+         else
+         {
+            LOG_FMT(LFCNR, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n   ",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
+            log_pcf_flags(LFCNR, pc->GetFlags());
+            pc->SetType(CT_PTR_TYPE);
+         }
       }
       else if (  next->Is(CT_SQUARE_OPEN)
               && !language_is_set(LANG_OC))  // Issue #408
