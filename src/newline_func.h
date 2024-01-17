@@ -20,5 +20,10 @@
  */
 void newline_func_def_or_call(Chunk *start);
 
+/**
+ * Adds newlines to multi-line function call/decl/def
+ * Start points to the open paren
+ */
+void newline_func_multi_line(Chunk *start);
 
 #endif /* NEWLINE_FUNC_DEF_OR_CALL_H_INCLUDED */

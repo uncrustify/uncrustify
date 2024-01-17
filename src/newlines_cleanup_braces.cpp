@@ -20,7 +20,7 @@
 #include "newline_case.h"
 #include "newline_case.h"
 #include "newline_end_newline.h"
-#include "newline_func_def_or_call.h"
+#include "newline_func.h"
 #include "newline_iarf.h"
 #include "newline_iarf_pair.h"
 #include "newline_oc_msg.h"
