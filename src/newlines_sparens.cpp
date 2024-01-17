@@ -12,7 +12,7 @@
 #include "chunk.h"
 #include "log_rules.h"
 #include "newline_iarf.h"
-#include "newline_iarf_pair.h"
+
 
 constexpr static auto LCURRENT = LNEWLINE;
 

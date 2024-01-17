@@ -11,7 +11,9 @@
 
 #include "log_rules.h"
 
+
 constexpr static auto LCURRENT = LNEWLINE;
+
 
 using namespace uncrustify;
 

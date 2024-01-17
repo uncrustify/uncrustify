@@ -14,7 +14,9 @@
 
 #include <cstdio>
 
+
 constexpr static auto LCURRENT = LINDENT;
+
 
 using namespace std;
 using namespace uncrustify;

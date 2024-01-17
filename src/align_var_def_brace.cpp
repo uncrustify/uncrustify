@@ -13,7 +13,9 @@
 #include "align_tools.h"
 #include "log_rules.h"
 
+
 constexpr static auto LCURRENT = LAVDB;
+
 
 using namespace uncrustify;
 

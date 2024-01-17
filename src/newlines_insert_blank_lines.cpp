@@ -16,6 +16,7 @@
 #include "newlines_if_for_while_switch_pre_blank_lines.h"
 #include "prototypes.h"
 
+
 constexpr static auto LCURRENT = LNEWLINE;
 
 

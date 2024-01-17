@@ -10,7 +10,9 @@
 #include "newlines_cuddle_uncuddle.h"
 
 #include "log_rules.h"
-#include "newline_iarf_pair.h"
+#include "newline_iarf.h"
+
+
 constexpr static auto LCURRENT = LNEWLINE;
 
 

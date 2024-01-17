@@ -10,6 +10,10 @@
 
 #include "log_rules.h"
 
+
+constexpr static auto LCURRENT = LPARADD;
+
+
 using namespace uncrustify;
 
 
@@ -40,8 +44,6 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest);
 
 void do_parens()
 {
-   constexpr static auto LCURRENT = LPARADD;
-
    LOG_FUNC_ENTRY();
 
    log_rule_B("mod_full_paren_if_bool");
@@ -74,8 +76,6 @@ void do_parens()
 
 void do_parens_assign()                         // Issue #3316
 {
-   constexpr static auto LCURRENT = LPARADD;
-
    LOG_FUNC_ENTRY();
 
    // Whether to fully parenthesize Boolean expressions after '='
@@ -172,8 +172,6 @@ void do_parens_assign()                         // Issue #3316
 
 void do_parens_return()                         // Issue #3316
 {
-   constexpr static auto LCURRENT = LPARADD;
-
    LOG_FUNC_ENTRY();
 
    log_rule_B("mod_full_paren_return_bool");

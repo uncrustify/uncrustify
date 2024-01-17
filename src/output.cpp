@@ -26,7 +26,9 @@
 // if you need more logs, commented out the next define line
 #define EXTRA_LOG
 
+
 constexpr static auto LCURRENT = LOUTPUT;
+
 
 using namespace uncrustify;
 

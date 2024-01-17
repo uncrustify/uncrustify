@@ -31,7 +31,9 @@
 #include "log_rules.h"
 #include "quick_align_again.h"
 
+
 constexpr static auto LCURRENT = LALIGN;
+
 
 using namespace uncrustify;
 

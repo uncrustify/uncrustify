@@ -15,7 +15,9 @@
 #include "mark_change.h"
 #include "newline_min_after.h"
 
+
 constexpr static auto LCURRENT = LNEWLINE;
+
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
 

@@ -17,6 +17,9 @@
 #include "prototypes.h"
 
 
+constexpr static auto LCURRENT = LTEMPL;
+
+
 using namespace uncrustify;
 
 
@@ -253,8 +256,6 @@ void check_template(Chunk *start, bool in_type_cast)
            pc->IsNotNullChunk();
            pc = pc->GetNextNcNnl(E_Scope::PREPROC))
       {
-         constexpr static auto LCURRENT = LTEMPL;
-
          LOG_FMT(LTEMPL, "%s(%d): pc orig line is %zu, orig col is %zu, type is %s, num_tokens is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), num_tokens);
 

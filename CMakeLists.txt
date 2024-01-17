@@ -323,7 +323,6 @@ set(uncrustify_sources
   src/newline_force.cpp
   src/newline_func.cpp
   src/newline_iarf.cpp
-  src/newline_iarf_pair.cpp
   src/newline_min_after.cpp
   src/newline_oc_msg.cpp
   src/newlines_between.cpp
@@ -485,7 +484,6 @@ set(uncrustify_headers
   src/newline_force.h
   src/newline_func.h
   src/newline_iarf.h
-  src/newline_iarf_pair.h
   src/newline_min_after.h
   src/newline_oc_msg.h
   src/newlines_between.h

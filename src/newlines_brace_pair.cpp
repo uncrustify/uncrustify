@@ -16,12 +16,15 @@
 #include "mark_change.h"
 #include "newline_add.h"
 #include "newline_del_between.h"
-#include "newline_iarf_pair.h"
+#include "newline_iarf.h"
 #include "one_liner_nl_ok.h"
+
 
 constexpr static auto LCURRENT = LNEWLINE;
 
+
 using namespace uncrustify;
+
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
 

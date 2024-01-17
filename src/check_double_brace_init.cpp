@@ -8,7 +8,9 @@
 
 #include "check_double_brace_init.h"
 
+
 constexpr static auto LCURRENT = LCOMBINE;
+
 
 using namespace std;
 using namespace uncrustify;

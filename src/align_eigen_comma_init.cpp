@@ -14,7 +14,9 @@
 #include "indent.h"
 #include "log_rules.h"
 
+
 constexpr static auto LCURRENT = LALIGN;
+
 
 using namespace uncrustify;
 
