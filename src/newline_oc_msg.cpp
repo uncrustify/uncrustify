@@ -12,6 +12,7 @@
 #include "log_rules.h"
 #include "newline_add.h"
 
+
 constexpr static auto LCURRENT = LNEWLINE;
 
 

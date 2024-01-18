@@ -13,6 +13,7 @@
 #include "do_it_newlines_func_pre_blank_lines.h"
 #include "log_rules.h"
 
+
 constexpr static auto LCURRENT = LNEWLINE;
 
 

@@ -10,7 +10,9 @@
 #include "align_stack.h"
 #include "log_rules.h"
 
+
 constexpr static auto LCURRENT = LALASS;
+
 
 using namespace uncrustify;
 

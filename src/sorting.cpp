@@ -15,16 +15,21 @@
 #include <regex>
 #include <unordered_map>
 
+
 constexpr static auto LCURRENT = LSORT;
+
 
 using namespace uncrustify;
 
-Option<std::string>  *include_category_options[] =
+
+Option<std::string> *include_category_options[] =
 {
    &options::include_category_0,
    &options::include_category_1,
    &options::include_category_2,
 };
+
+
 constexpr static int kIncludeCategoriesCount = 3;
 
 

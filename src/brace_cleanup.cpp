@@ -18,14 +18,15 @@
 
 #include <stdexcept>            // to get std::invalid_argument
 
+
 constexpr static auto LCURRENT = LBC;
 
-using namespace uncrustify;
 
 using std::invalid_argument;
 using std::string;
 using std::to_string;
 using std::stringstream;
+using namespace uncrustify;
 
 
 struct BraceState

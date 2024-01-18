@@ -12,7 +12,9 @@
 #include "ifdef_over_whole_file.h"
 #include "log_rules.h"
 
+
 constexpr static auto LCURRENT = LNEWLINE;
+
 
 using namespace uncrustify;
 

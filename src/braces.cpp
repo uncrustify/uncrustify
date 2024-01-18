@@ -15,11 +15,12 @@
 #include "newlines_between.h"
 #include "prototypes.h"
 
+
 constexpr static auto LCURRENT = LBR;
 
-using namespace uncrustify;
 
 using std::vector;
+using namespace uncrustify;
 
 
 //! Converts a single brace into a virtual brace

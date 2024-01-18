@@ -12,7 +12,9 @@
 #include "args.h"
 #include "output.h"
 
+
 constexpr static auto LCURRENT = LGUY;
+
 
 /*
  * the test suite Coveralls: https://coveralls.io

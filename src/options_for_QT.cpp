@@ -13,9 +13,12 @@
 
 #include "log_rules.h"
 
+
 constexpr static auto LCURRENT = LQT;
 
+
 using namespace uncrustify;
+
 
 // for the modification of options within the SIGNAL/SLOT call.
 bool   QT_SIGNAL_SLOT_found = false;

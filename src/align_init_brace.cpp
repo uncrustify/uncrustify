@@ -16,7 +16,9 @@
 #include "log_rules.h"
 #include "reindent_line.h"
 
+
 constexpr static auto LCURRENT = LALBR;
+
 
 using namespace uncrustify;
 

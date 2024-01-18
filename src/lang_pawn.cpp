@@ -10,6 +10,10 @@
 
 #include "prototypes.h"
 
+
+constexpr static auto LCURRENT = LPVSEMI;
+
+
 using namespace uncrustify;
 
 
@@ -86,8 +90,6 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
 
 void pawn_scrub_vsemi()
 {
-   constexpr static auto LCURRENT = LPVSEMI;
-
    LOG_FUNC_ENTRY();
 
    log_rule_B("mod_pawn_semicolon");

@@ -23,7 +23,9 @@
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
+
 constexpr static auto LCURRENT = LNEWLINE;
+
 
 using namespace uncrustify;
 
@@ -68,25 +70,6 @@ void blank_line_set(Chunk *pc, Option<unsigned> &opt)
       MARK_CHANGE();
    }
 } // blank_line_set
-
-
-//#include "do_blank_lines.h"
-
-//#include "blank_line_max.h"
-//#include "blank_line_set.h"
-#include "can_increase_nl.h"
-#include "chunk.h"
-#include "ifdef_over_whole_file.h"
-#include "is_func_proto_group.h"
-#include "log_rules.h"
-#include "mark_change.h"
-#include "uncrustify.h"
-
-//constexpr static auto LCURRENT = LNEWLINE;
-//
-//using namespace uncrustify;
-//
-//#define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
 
 void do_blank_lines()

@@ -22,7 +22,6 @@
 #include "newline_end_newline.h"
 #include "newline_func.h"
 #include "newline_iarf.h"
-#include "newline_iarf_pair.h"
 #include "newline_oc_msg.h"
 #include "newline_template_option.h"
 #include "newline_var_def_blk.h"
@@ -40,7 +39,9 @@
 #include "nl_handle_define.h"
 #include "one_liner_nl_ok.h"
 
+
 constexpr static auto LCURRENT = LNEWLINE;
+
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
 

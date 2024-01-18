@@ -15,9 +15,10 @@
 #include "mark_change.h"
 #include "newline_add.h"
 #include "newline_iarf.h"
-#include "newline_iarf_pair.h"
+
 
 constexpr static auto LCURRENT = LNEWLINE;
+
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
 

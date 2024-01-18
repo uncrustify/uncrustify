@@ -16,9 +16,12 @@
 #include "remove_next_newlines.h"
 #include "uncrustify.h"
 
+
 constexpr static auto LCURRENT = LNEWLINE;
 
+
 using namespace uncrustify;
+
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
 

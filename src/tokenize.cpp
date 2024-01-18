@@ -21,7 +21,9 @@
 
 #define LE_COUNT(x)    cpd.le_counts[static_cast<size_t>(LE_ ## x)]
 
+
 constexpr static auto LCURRENT = LTOK;
+
 
 using namespace std;
 using namespace uncrustify;

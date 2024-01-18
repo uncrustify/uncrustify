@@ -13,6 +13,7 @@
 #include "flag_parens.h"
 #include "log_rules.h"
 
+
 constexpr static auto LCURRENT = LCOMBINE;
 
 

@@ -23,4 +23,13 @@ using namespace uncrustify;
  */
 void newline_iarf(Chunk *pc, iarf_e av);
 
+/**
+ * Does the Ignore, Add, Remove, or Force thing between two chunks
+ *
+ * @param before  The first chunk
+ * @param after   The second chunk
+ * @param av      The IARF value
+ */
+void newline_iarf_pair(Chunk *before, Chunk *after, iarf_e av, bool check_nl_assign_leave_one_liners = false);
+
 #endif /* NEWLINE_IARF_H_INCLUDED */

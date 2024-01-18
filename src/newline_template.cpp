@@ -13,6 +13,7 @@
 #include "newline_iarf.h"
 #include "uncrustify.h"
 
+
 constexpr static auto LCURRENT = LNEWLINE;
 
 
