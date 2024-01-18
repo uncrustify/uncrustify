@@ -1,5 +1,5 @@
 /**
- * @file newlines_cleanup_braces.cpp
+ * @file newlines_cleanup.cpp
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
@@ -7,9 +7,10 @@
  * @license GPL v2+
  */
 
-#include "newlines_cleanup_braces.h"
+#include "newlines_cleanup.h"
 
 #include "blank_line.h"
+#include "chunk.h"
 #include "double_newline.h"
 #include "flag_parens.h"
 #include "log_rules.h"
@@ -18,11 +19,11 @@
 #include "newline_after.h"
 #include "newline_before_return.h"
 #include "newline_case.h"
-#include "newline_case.h"
 #include "newline_end_newline.h"
 #include "newline_func.h"
 #include "newline_iarf.h"
 #include "newline_oc_msg.h"
+#include "newline_template.h"
 #include "newline_template_option.h"
 #include "newline_var_def_blk.h"
 #include "newlines_brace_pair.h"
@@ -44,6 +45,25 @@ constexpr static auto LCURRENT = LNEWLINE;
 
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
+
+
+void newlines_cleanup_angles()
+{
+   // Issue #1167
+   LOG_FUNC_ENTRY();
+
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
+   {
+      char copy[1000];
+      LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s'\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy));
+
+      if (pc->Is(CT_ANGLE_OPEN))
+      {
+         newline_template(pc);
+      }
+   }
+} // newlines_cleanup_angles
 
 
 void newlines_cleanup_braces(bool first)
@@ -1234,3 +1254,32 @@ void newlines_cleanup_braces(bool first)
 
    newline_var_def_blk(Chunk::GetHead());
 } // newlines_cleanup_braces
+
+
+//#include "chunk.h"
+//#include "mark_change.h"
+
+//#define MARK_CHANGE()    mark_change(__func__, __LINE__)
+
+
+void newlines_cleanup_dup()
+{
+   LOG_FUNC_ENTRY();
+
+   Chunk *pc   = Chunk::GetHead();
+   Chunk *next = pc;
+
+   while (pc->IsNotNullChunk())
+   {
+      next = next->GetNext();
+
+      if (  pc->Is(CT_NEWLINE)
+         && next->Is(CT_NEWLINE))
+      {
+         next->SetNlCount(max(pc->GetNlCount(), next->GetNlCount()));
+         Chunk::Delete(pc);
+         MARK_CHANGE();
+      }
+      pc = next;
+   }
+} // newlines_cleanup_dup
