@@ -329,9 +329,7 @@ set(uncrustify_sources
   src/newlines_brace_pair.cpp
   src/newlines_chunk_pos.cpp
   src/newlines_class_colon_pos.cpp
-  src/newlines_cleanup_angles.cpp
-  src/newlines_cleanup_braces.cpp
-  src/newlines_cleanup_dup.cpp
+  src/newlines_cleanup.cpp
   src/newlines_cuddle_uncuddle.cpp
   src/newlines_do_else.cpp
   src/newlines_double_space_struct_enum_union.cpp
@@ -490,9 +488,7 @@ set(uncrustify_headers
   src/newlines_brace_pair.h
   src/newlines_chunk_pos.h
   src/newlines_class_colon_pos.h
-  src/newlines_cleanup_angles.h
-  src/newlines_cleanup_braces.h
-  src/newlines_cleanup_dup.h
+  src/newlines_cleanup.h
   src/newlines_cuddle_uncuddle.h
   src/newlines_do_else.h
   src/newlines_double_space_struct_enum_union.h
