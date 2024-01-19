@@ -40,6 +40,9 @@
 #include "nl_handle_define.h"
 #include "one_liner_nl_ok.h"
 
+#ifdef WIN32
+#include <algorithm>                   // to get max
+#endif // ifdef WIN32
 
 constexpr static auto LCURRENT = LNEWLINE;
 
