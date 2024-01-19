@@ -24,4 +24,7 @@ using namespace uncrustify;
 // enumerator-list  - comma-separated list of enumerator definitions
 void newlines_enum(Chunk *start);
 
+//! If requested, make sure each entry in an enum is on its own line
+void newlines_enum_entries(Chunk *open_brace, iarf_e av);
+
 #endif /* NEWLINES_ENUM_H_INCLUDED */

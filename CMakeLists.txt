@@ -335,7 +335,6 @@ set(uncrustify_sources
   src/newlines_double_space_struct_enum_union.cpp
   src/newlines_eat_start_end.cpp
   src/newlines_enum.cpp
-  src/newlines_enum_entries.cpp
   src/newlines_func_pre_blank_lines.cpp
   src/newlines_functions_remove_extra_blank_lines.cpp
   src/newlines_if_for_while_switch.cpp
@@ -493,9 +492,7 @@ set(uncrustify_headers
   src/newlines_do_else.h
   src/newlines_double_space_struct_enum_union.h
   src/newlines_eat_start_end.h
-  src/newlines_enum_entries.h
   src/newlines_enum.h
-  src/newlines_func_pre_blank_lines.h
   src/newlines_functions_remove_extra_blank_lines.h
   src/newlines_if_for_while_switch.h
   src/newlines_if_for_while_switch_post_blank_lines.h
