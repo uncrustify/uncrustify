@@ -31,7 +31,6 @@
 #include "newlines_do_else.h"
 #include "newlines_double_space_struct_enum_union.h"
 #include "newlines_enum.h"
-#include "newlines_enum_entries.h"
 #include "newlines_if_for_while_switch.h"
 #include "newlines_namespace.h"
 #include "newlines_struct_union.h"
