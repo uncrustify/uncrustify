@@ -25,4 +25,21 @@ using namespace uncrustify;
  */
 bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt);
 
+/**
+ * Add or remove extra newline after end of the block started in chunk.
+ * Doesn't do anything if close brace after it
+ * Interesting issue is that at this point, nls can be before or after vbraces
+ * VBraces will stay VBraces, conversion to real ones should have already happened
+ * "if (...)\ncode\ncode" or "if (...)\ncode\n\ncode"
+ */
+void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iarf_e nl_opt);
+
+/**
+ * Add or remove extra newline before the chunk.
+ * Adds before comments
+ * Doesn't do anything if open brace before it
+ * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
+ */
+void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl_opt);
+
 #endif /* NEWLINES_IF_FOR_WHILE_SWITCH_H_INCLUDED */

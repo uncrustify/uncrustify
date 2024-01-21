@@ -17,8 +17,7 @@
 #include "log_rules.h"
 #include "mark_change.h"
 #include "newlines_func_pre_blank_lines.h"
-#include "newlines_if_for_while_switch_post_blank_lines.h"
-#include "newlines_if_for_while_switch_pre_blank_lines.h"
+#include "newlines_if_for_while_switch.h"
 #include "uncrustify.h"
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
