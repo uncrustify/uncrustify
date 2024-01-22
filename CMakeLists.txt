@@ -341,8 +341,7 @@ set(uncrustify_sources
   src/newlines_namespace.cpp
   src/newlines_remove.cpp
   src/newlines_sparens.cpp
-  src/newlines_squeeze_ifdef.cpp
-  src/newlines_squeeze_paren_close.cpp
+  src/newlines_squeeze.cpp
   src/newlines_struct_union.cpp
   src/newline_template.cpp
   src/newline_template_option.cpp
@@ -494,8 +493,7 @@ set(uncrustify_headers
   src/newlines_if_for_while_switch.h
   src/newlines_namespace.h
   src/newlines_remove.h
-  src/newlines_squeeze_ifdef.h
-  src/newlines_squeeze_paren_close.h
+  src/newlines_squeeze.h
   src/newlines_struct_union.h
   src/newline_template.h
   src/newline_template_option.h
