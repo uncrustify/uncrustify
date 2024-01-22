@@ -24,7 +24,6 @@
 #include "newline_iarf.h"
 #include "newline_oc_msg.h"
 #include "newline_template.h"
-#include "newline_template_option.h"
 #include "newline_var_def_blk.h"
 #include "newlines_brace_pair.h"
 #include "newlines_cuddle_uncuddle.h"

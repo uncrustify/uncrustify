@@ -344,7 +344,6 @@ set(uncrustify_sources
   src/newlines_squeeze.cpp
   src/newlines_struct_union.cpp
   src/newline_template.cpp
-  src/newline_template_option.cpp
   src/newline_var_def_blk.cpp
   src/nl_create_list_liner.cpp
   src/nl_create_one_liner.cpp
@@ -496,7 +495,6 @@ set(uncrustify_headers
   src/newlines_squeeze.h
   src/newlines_struct_union.h
   src/newline_template.h
-  src/newline_template_option.h
   src/newline_var_def_blk.h
   src/nl_create_list_liner.h
   src/nl_create_one_liner.h
