@@ -7,7 +7,6 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-
 #ifndef UNC_TEXT_H_INCLUDED
 #define UNC_TEXT_H_INCLUDED
 
@@ -192,6 +191,5 @@ protected:
    value_type m_chars;           //! this contains the non-encoded 31-bit chars
    log_type   m_logtext;         //! logging text, utf8 encoded - updated in c_str()
 };
-
 
 #endif /* UNC_TEXT_H_INCLUDED */

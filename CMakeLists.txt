@@ -299,7 +299,6 @@ set(uncrustify_sources
   src/get_closing_brace.cpp
   src/ifdef_over_whole_file.cpp
   src/indent.cpp
-  src/is_class_one_liner.cpp
   src/is_func_call_or_def.cpp
   src/is_func_proto_group.cpp
   src/is_var_def.cpp
@@ -345,10 +344,7 @@ set(uncrustify_sources
   src/newlines_struct_union.cpp
   src/newline_template.cpp
   src/newline_var_def_blk.cpp
-  src/nl_create_list_liner.cpp
-  src/nl_create_one_liner.cpp
-  src/nl_handle_define.cpp
-  src/one_liner_nl_ok.cpp
+  src/one_liner.cpp
   src/option.cpp
   src/options_for_QT.cpp
   src/output.cpp
@@ -380,7 +376,6 @@ set(uncrustify_sources
   src/uncrustify_types.cpp
   src/unc_text.cpp
   src/unc_tools.cpp
-  src/undo_one_liner.cpp
   src/unicode.cpp
   src/universalindentgui.cpp
   src/width.cpp
@@ -450,7 +445,6 @@ set(uncrustify_headers
   src/get_closing_brace.h
   src/ifdef_over_whole_file.h
   src/indent.h
-  src/is_class_one_liner.h
   src/is_func_call_or_def.h
   src/is_func_proto_group.h
   src/is_var_def.h
@@ -496,10 +490,7 @@ set(uncrustify_headers
   src/newlines_struct_union.h
   src/newline_template.h
   src/newline_var_def_blk.h
-  src/nl_create_list_liner.h
-  src/nl_create_one_liner.h
-  src/nl_handle_define.h
-  src/one_liner_nl_ok.h
+  src/one_liner.h
   src/option.h
   src/options_for_QT.h
   src/options.h
@@ -535,7 +526,6 @@ set(uncrustify_headers
   src/uncrustify_types.h
   src/unc_text.h
   src/unc_tools.h
-  src/undo_one_liner.h
   src/unicode.h
   src/universalindentgui.h
   src/width.h

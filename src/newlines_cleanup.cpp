@@ -6,7 +6,6 @@
  * extract from newlines.cpp
  * @license GPL v2+
  */
-
 #include "newlines_cleanup.h"
 
 #include "blank_line.h"
@@ -33,10 +32,7 @@
 #include "newlines_if_for_while_switch.h"
 #include "newlines_namespace.h"
 #include "newlines_struct_union.h"
-#include "nl_create_list_liner.h"
-#include "nl_create_one_liner.h"
-#include "nl_handle_define.h"
-#include "one_liner_nl_ok.h"
+#include "one_liner.h"
 
 #ifdef WIN32
 #include <algorithm>                   // to get max

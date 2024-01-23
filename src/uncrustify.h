@@ -5,13 +5,13 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-
 #ifndef UNCRUSTIFY_H_INCLUDED
 #define UNCRUSTIFY_H_INCLUDED
 
 #include "uncrustify_types.h"
 
 #include <stdio.h>
+
 
 int load_header_files();
 
