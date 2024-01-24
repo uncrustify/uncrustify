@@ -5,13 +5,12 @@
  * @author  Guy Maurel
  * @license GPL v2+
  */
-
 #include "newlines_do_else.h"
 
 #include "log_rules.h"
 #include "newline_add.h"
 #include "newline_iarf.h"
-#include "one_liner_nl_ok.h"
+#include "one_liner.h"
 
 
 constexpr static auto LCURRENT = LNEWLINE;

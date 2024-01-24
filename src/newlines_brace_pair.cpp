@@ -6,7 +6,6 @@
  * extract from newlines.cpp
  * @license GPL v2+
  */
-
 #include "newlines_brace_pair.h"
 
 #include "blank_line.h"
@@ -17,7 +16,7 @@
 #include "newline_add.h"
 #include "newline_del_between.h"
 #include "newline_iarf.h"
-#include "one_liner_nl_ok.h"
+#include "one_liner.h"
 
 
 constexpr static auto LCURRENT = LNEWLINE;

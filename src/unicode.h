@@ -5,7 +5,6 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-
 #ifndef UNICODE_H_INCLUDED
 #define UNICODE_H_INCLUDED
 
@@ -29,6 +28,5 @@ bool decode_unicode(const std::vector<UINT8> &in_data, std::deque<int> &out_data
 
 
 void encode_utf8(int ch, std::vector<UINT8> &res);
-
 
 #endif /* UNICODE_H_INCLUDED */

@@ -6,7 +6,6 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-
 #ifndef UNCRUSTIFY_TYPES_H_INCLUDED
 #define UNCRUSTIFY_TYPES_H_INCLUDED
 

@@ -6,10 +6,9 @@
  * extract from newlines.cpp
  * @license GPL v2+
  */
-
 #include "setup_newline_add.h"
 
-#include "undo_one_liner.h"
+#include "one_liner.h"
 
 
 /**

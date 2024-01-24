@@ -10,7 +10,7 @@
 #include "newline_add.h"
 
 #include "mark_change.h"
-#include "one_liner_nl_ok.h"
+#include "one_liner.h"
 #include "setup_newline_add.h"
 #include "uncrustify.h"
 

@@ -6,18 +6,17 @@
  * extract from newlines.cpp
  * @license GPL v2+
  */
-
 #include "blank_line.h"
 
 #include "can_increase_nl.h"
 #include "chunk.h"
 #include "ifdef_over_whole_file.h"
-#include "is_class_one_liner.h"
 #include "is_func_proto_group.h"
 #include "log_rules.h"
 #include "mark_change.h"
 #include "newlines_func_pre_blank_lines.h"
 #include "newlines_if_for_while_switch.h"
+#include "one_liner.h"
 #include "uncrustify.h"
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)

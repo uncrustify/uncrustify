@@ -5,7 +5,6 @@
  *          October 2015, 2023
  * @license GPL v2+
  */
-
 #ifndef UNC_TOOLS_H_INCLUDED
 #define UNC_TOOLS_H_INCLUDED
 
@@ -18,6 +17,7 @@
 #endif
 
 extern char dump_file_name[80];
+
 
 void set_dump_file_name(const char *name);
 

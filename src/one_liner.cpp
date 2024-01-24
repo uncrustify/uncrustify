@@ -1,20 +1,135 @@
 /**
- * @file one_liner_nl_ok.h
+ * @file one_liner.cpp
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
  * extract from newlines.cpp
  * @license GPL v2+
  */
+#include "one_liner.h"
 
+#include "keywords.h"
 #include "log_rules.h"
 #include "mark_change.h"
+#include "newline_add.h"
+#include "newline_del_between.h"
 
 
 constexpr static auto LCURRENT = LNEWLINE;
 
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
+
+
+bool is_class_one_liner(Chunk *pc)
+{
+   if (  (  pc->Is(CT_FUNC_CLASS_DEF)
+         || pc->Is(CT_FUNC_DEF))
+      && pc->TestFlags(PCF_IN_CLASS))
+   {
+      // Find opening brace
+      pc = pc->GetNextType(CT_BRACE_OPEN, pc->GetLevel());
+      return(  pc->IsNotNullChunk()
+            && pc->TestFlags(PCF_ONE_LINER));
+   }
+   return(false);
+} // is_class_one_liner
+
+
+void nl_create_list_liner(Chunk *brace_open)
+{
+   LOG_FUNC_ENTRY();
+
+   // See if we get a newline between the next text and the vbrace_close
+   if (brace_open == nullptr)
+   {
+      return;
+   }
+   Chunk *closing = brace_open->GetNextType(CT_BRACE_CLOSE, brace_open->GetLevel());
+   Chunk *tmp     = brace_open;
+
+   do
+   {
+      if (tmp->Is(CT_COMMA))
+      {
+         return;
+      }
+      tmp = tmp->GetNext();
+   } while (tmp != closing);
+
+   newline_del_between(brace_open, closing);
+} // nl_create_list_liner
+
+
+void nl_create_one_liner(Chunk *vbrace_open)
+{
+   LOG_FUNC_ENTRY();
+
+   // See if we get a newline between the next text and the vbrace_close
+   Chunk *tmp   = vbrace_open->GetNextNcNnl();
+   Chunk *first = tmp;
+
+   if (  first->IsNullChunk()
+      || get_token_pattern_class(first->GetType()) != pattern_class_e::NONE)
+   {
+      return;
+   }
+   size_t nl_total = 0;
+
+   while (tmp->IsNot(CT_VBRACE_CLOSE))
+   {
+      if (tmp->IsNewline())
+      {
+         nl_total += tmp->GetNlCount();
+
+         if (nl_total > 1)
+         {
+            return;
+         }
+      }
+      tmp = tmp->GetNext();
+   }
+
+   if (  tmp->IsNotNullChunk()
+      && first->IsNotNullChunk())
+   {
+      newline_del_between(vbrace_open, first);
+   }
+} // nl_create_one_liner
+
+
+//! Find the next newline or nl_cont
+void nl_handle_define(Chunk *pc)
+{
+   LOG_FUNC_ENTRY();
+
+   Chunk *nl  = pc;
+   Chunk *ref = Chunk::NullChunkPtr;
+
+   while ((nl = nl->GetNext())->IsNotNullChunk())
+   {
+      if (nl->Is(CT_NEWLINE))
+      {
+         return;
+      }
+
+      if (  nl->Is(CT_MACRO)
+         || (  nl->Is(CT_FPAREN_CLOSE)
+            && nl->GetParentType() == CT_MACRO_FUNC))
+      {
+         ref = nl;
+      }
+
+      if (nl->Is(CT_NL_CONT))
+      {
+         if (ref->IsNotNullChunk())
+         {
+            newline_add_after(ref);
+         }
+         return;
+      }
+   }
+} // nl_handle_define
 
 
 /**
@@ -182,3 +297,52 @@ bool one_liner_nl_ok(Chunk *pc)
    LOG_FMT(LNL1LINE, "%s(%d): true, a new line may be added\n", __func__, __LINE__);
    return(true);
 } // one_liner_nl_ok
+
+
+void undo_one_liner(Chunk *pc)
+{
+   LOG_FUNC_ENTRY();
+
+   if (  pc != nullptr
+      && pc->TestFlags(PCF_ONE_LINER))
+   {
+      LOG_FMT(LNL1LINE, "%s(%d): pc->Text() '%s', orig line is %zu, orig col is %zu",
+              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
+      pc->ResetFlagBits(PCF_ONE_LINER);
+
+      // scan backward
+      LOG_FMT(LNL1LINE, "%s(%d): scan backward\n", __func__, __LINE__);
+      Chunk *tmp = pc;
+
+      while ((tmp = tmp->GetPrev())->IsNotNullChunk())
+      {
+         if (!tmp->TestFlags(PCF_ONE_LINER))
+         {
+            LOG_FMT(LNL1LINE, "%s(%d): tmp->Text() '%s', orig line is %zu, orig col is %zu, --> break\n",
+                    __func__, __LINE__, tmp->Text(), tmp->GetOrigLine(), tmp->GetOrigCol());
+            break;
+         }
+         LOG_FMT(LNL1LINE, "%s(%d): clear for tmp->Text() '%s', orig line is %zu, orig col is %zu",
+                 __func__, __LINE__, tmp->Text(), tmp->GetOrigLine(), tmp->GetOrigCol());
+         tmp->ResetFlagBits(PCF_ONE_LINER);
+      }
+      // scan forward
+      LOG_FMT(LNL1LINE, "%s(%d): scan forward\n", __func__, __LINE__);
+      tmp = pc;
+      LOG_FMT(LNL1LINE, "%s(%d): - \n", __func__, __LINE__);
+
+      while ((tmp = tmp->GetNext())->IsNotNullChunk())
+      {
+         if (!tmp->TestFlags(PCF_ONE_LINER))
+         {
+            LOG_FMT(LNL1LINE, "%s(%d): tmp->Text() '%s', orig line is %zu, orig col is %zu, --> break\n",
+                    __func__, __LINE__, tmp->Text(), tmp->GetOrigLine(), tmp->GetOrigCol());
+            break;
+         }
+         LOG_FMT(LNL1LINE, "%s(%d): clear for tmp->Text() '%s', orig line is %zu, orig col is %zu",
+                 __func__, __LINE__, tmp->Text(), tmp->GetOrigLine(), tmp->GetOrigCol());
+         tmp->ResetFlagBits(PCF_ONE_LINER);
+      }
+      LOG_FMT(LNL1LINE, "\n");
+   }
+} // undo_one_liner
