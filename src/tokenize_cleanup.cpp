@@ -428,6 +428,17 @@ void tokenize_cleanup()
          {
             next->SetType(CT_PTR_TYPE);
          }
+         else if (  language_is_set(LANG_CS | LANG_VALA)
+                 && next->Is(CT_QUESTION))
+         {
+            Chunk *tmp = next->GetNextNcNnl();
+
+            if (tmp->Is(CT_TSQUARE))
+            {
+               // word?[]   Array of nullables.
+               next->SetType(CT_PTR_TYPE);
+            }
+         }
       }
 
       if (  pc->Is(CT_TYPE_CAST)
