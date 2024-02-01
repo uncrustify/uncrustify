@@ -14,7 +14,9 @@
 
 #include "chunk.h"
 
+
 using namespace uncrustify;
+
 
 void newlines_struct_union(Chunk *start, iarf_e nl_opt, bool leave_trailing);
 

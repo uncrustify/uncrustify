@@ -11,7 +11,10 @@
 #define NEWLINES_CLASS_COLON_POS_H_INCLUDED
 
 #include "chunk.h"
+
+
 using namespace uncrustify;
+
 
 void newlines_class_colon_pos(E_Token tok);
 

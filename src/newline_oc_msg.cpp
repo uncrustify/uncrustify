@@ -6,11 +6,13 @@
  * extract from newlines.cpp
  * @license GPL v2+
  */
-
 #include "newline_oc_msg.h"
 
 #include "log_rules.h"
 #include "newline_add.h"
+
+
+using namespace uncrustify;
 
 
 constexpr static auto LCURRENT = LNEWLINE;

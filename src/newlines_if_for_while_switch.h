@@ -12,7 +12,9 @@
 
 #include "chunk.h"
 
+
 using namespace uncrustify;
+
 
 /**
  * Add or remove a newline between the closing paren and opening brace.

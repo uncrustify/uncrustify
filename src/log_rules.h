@@ -5,14 +5,13 @@
  * @author  Guy Maurel
  * @license GPL v2+
  */
-
 #ifndef LOG_RULES_H_INCLUDED
 #define LOG_RULES_H_INCLUDED
 
 #include "chunk.h"
 #include "uncrustify.h"
 
-using namespace uncrustify;
+//using namespace uncrustify;
 
 #define log_rule(rule)                                   \
    log_rule2(__func__, __LINE__, (rule), first, second); \
