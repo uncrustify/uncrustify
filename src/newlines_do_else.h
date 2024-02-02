@@ -12,7 +12,9 @@
 
 #include "chunk.h"
 
+
 using namespace uncrustify;
+
 
 /**
  * Adds/removes a newline between else and '{'.

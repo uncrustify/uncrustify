@@ -6,7 +6,6 @@
  * extract from newlines.cpp
  * @license GPL v2+
  */
-
 #include "newline_var_def_blk.h"
 
 #include "is_func_call_or_def.h"
@@ -14,6 +13,9 @@
 #include "log_rules.h"
 #include "mark_change.h"
 #include "newline_min_after.h"
+
+
+using namespace uncrustify;
 
 
 constexpr static auto LCURRENT = LNEWLINE;

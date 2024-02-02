@@ -3,14 +3,16 @@
  * This file contains lot of tools for debugging
  *
  * @author  Guy Maurel
- *          October 2015- 2023
+ *          October 2015- 2024
  * @license GPL v2+
  */
-
 #include "unc_tools.h"
 
 #include "args.h"
 #include "output.h"
+
+
+using namespace uncrustify;
 
 
 constexpr static auto LCURRENT = LGUY;

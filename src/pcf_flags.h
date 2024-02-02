@@ -4,7 +4,6 @@
  * @author  Guy Maurel
  * @license GPL v2+
  */
-
 #ifndef PCF_FLAGS_STR_INCLUDED
 #define PCF_FLAGS_STR_INCLUDED
 

@@ -6,12 +6,14 @@
  * extract from newlines.cpp
  * @license GPL v2+
  */
-
 #include "newlines_func_pre_blank_lines.h"
 
 #include "chunk.h"
 #include "do_it_newlines_func_pre_blank_lines.h"
 #include "log_rules.h"
+
+
+using namespace uncrustify;
 
 
 constexpr static auto LCURRENT = LNEWLINE;

@@ -5,7 +5,6 @@
  * @license GPL v2+
  * extract fom combine.cpp
  */
-
 #include "combine_fix_mark.h"
 
 #include "combine_skip.h"
@@ -15,6 +14,9 @@
 
 
 constexpr static auto LCURRENT = LCOMBINE;
+
+
+using namespace uncrustify;
 
 
 void fix_casts(Chunk *start)

@@ -12,7 +12,6 @@
 
 #include "chunk.h"
 
-using namespace uncrustify;
 
 /**
  * Test if an opening brace is part of a function call or definition.

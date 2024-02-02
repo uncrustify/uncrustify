@@ -5,10 +5,12 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-
 #include "parsing_frame_stack.h"
 
 #include "prototypes.h"
+
+
+using namespace uncrustify;
 
 
 namespace

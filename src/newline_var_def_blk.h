@@ -12,7 +12,6 @@
 
 #include "chunk.h"
 
-using namespace uncrustify;
 
 //! Put newline(s) before and/or after a block of variable definitions
 Chunk *newline_var_def_blk(Chunk *start);

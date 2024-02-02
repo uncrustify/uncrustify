@@ -7,13 +7,14 @@
  * extract from newlines.h
  * @license GPL v2+
  */
-
 #ifndef NEWLINE_IARF_H_INCLUDED
 #define NEWLINE_IARF_H_INCLUDED
 
 #include "chunk.h"
 
+
 using namespace uncrustify;
+
 
 /**
  * Does a simple Ignore, Add, Remove, or Force after the given chunk

@@ -15,6 +15,9 @@
 #include "newline_del_between.h"
 
 
+using namespace uncrustify;
+
+
 constexpr static auto LCURRENT = LNEWLINE;
 
 
