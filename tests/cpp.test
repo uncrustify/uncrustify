@@ -189,6 +189,7 @@
 30160  common/empty.cfg                                     cpp/Issue_3980.cpp
 30161  cpp/Discussion_3987.cfg                              cpp/Discussion_3987.cpp
 30162  cpp/Issue_4239.cfg                                   cpp/Issue_4239.cpp
+30163  cpp/Issue_4220.cfg                                   cpp/Issue_4220.cpp
 
 30200  cpp/bug_1862.cfg                                     cpp/bug_1862.cpp
 30201  cpp/cmt_indent-1.cfg                                 cpp/cmt_indent.cpp
