@@ -696,7 +696,7 @@ int main(int argc, char *argv[])
       const char *tracking_art = strtok(buffer, ":");
       const char *html_file    = strtok(nullptr, ":");
 
-      if (html_file != nullptr)
+      if (html_file != nullptr && cpd.html_file == nullptr)
       {
          if (strcmp(tracking_art, "space") == 0)
          {
@@ -717,7 +717,7 @@ int main(int argc, char *argv[])
             log_flush(true);
             return(EXIT_FAILURE);
          }
-         cpd.html_file = html_file;
+         cpd.html_file = strdup(html_file);
       }
    }
    LOG_FMT(LDATA, "%s\n", UNCRUSTIFY_VERSION);
