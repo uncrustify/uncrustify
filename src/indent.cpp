@@ -10,6 +10,7 @@
 #include "indent.h"
 
 #include "align.h"
+#include "ifdef_over_whole_file.h"
 #include "options.h"
 #include "options_for_QT.h"
 #include "parsing_frame_stack.h"
