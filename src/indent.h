@@ -43,8 +43,4 @@ void indent_to_column(Chunk *pc, size_t column);
 void align_to_column(Chunk *pc, size_t column);
 
 
-//! Scan to see if the whole file is covered by one #ifdef
-bool ifdef_over_whole_file();
-
-
 #endif /* INDENT_H_INCLUDED */
