@@ -1058,15 +1058,15 @@ void output_text(FILE *pfile)
             }
 #endif
          }
-         char *old_one = nullptr;
+         char *old_one   = nullptr;
+         bool first_text = true;
 
          for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
          {
-            const TrackList   *A         = pc->GetTrackingData();
-            const TrackNumber B          = A->at(track);
-            size_t            Bfirst     = B.first;
-            char              *Bsecond   = B.second;
-            bool              first_text = true;
+            const TrackList   *A       = pc->GetTrackingData();
+            const TrackNumber B        = A->at(track);
+            size_t            Bfirst   = B.first;
+            char              *Bsecond = B.second;
 
             if (  old_one == nullptr
                || strcmp(old_one, Bsecond) != 0)
