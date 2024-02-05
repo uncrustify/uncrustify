@@ -696,7 +696,7 @@ int main(int argc, char *argv[])
       const char *tracking_art = strtok(buffer, ":");
       const char *html_file    = strtok(nullptr, ":");
 
-      if (html_file != nullptr 
+      if (  html_file != nullptr 
          && cpd.html_file == nullptr)
       {
          if (strcmp(tracking_art, "space") == 0)
