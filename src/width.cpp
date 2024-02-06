@@ -8,8 +8,8 @@
 #include "width.h"
 
 #include "indent.h"
-#include "newline_add.h"
-#include "newlines_cleanup.h"
+#include "newlines/add.h"
+#include "newlines/cleanup.h"
 #include "one_liner.h"
 #include "prototypes.h"
 #include "reindent_line.h"

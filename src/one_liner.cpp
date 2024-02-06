@@ -11,8 +11,8 @@
 #include "keywords.h"
 #include "log_rules.h"
 #include "mark_change.h"
-#include "newline_add.h"
-#include "newline_del_between.h"
+#include "newlines/add.h"
+#include "newlines/del_between.h"
 
 
 using namespace uncrustify;

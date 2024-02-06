@@ -18,7 +18,7 @@
 #include "flag_parens.h"
 #include "lang_pawn.h"
 #include "mark_question_colon.h"
-#include "newline_iarf.h"
+#include "newlines/iarf.h"
 #include "prototypes.h"
 #include "tokenize_cleanup.h"
 #include "unc_tools.h"
