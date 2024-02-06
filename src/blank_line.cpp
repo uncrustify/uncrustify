@@ -14,8 +14,8 @@
 #include "is_func_proto_group.h"
 #include "log_rules.h"
 #include "mark_change.h"
-#include "newlines_func_pre_blank_lines.h"
-#include "newlines_if_for_while_switch.h"
+#include "newlines/func_pre_blank_lines.h"
+#include "newlines/if_for_while_switch.h"
 #include "one_liner.h"
 #include "uncrustify.h"
 

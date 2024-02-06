@@ -8,7 +8,7 @@
 #include "rewrite_infinite_loops.h"
 
 #include "chunk.h"
-#include "newline_add.h"
+#include "newlines/add.h"
 #include "uncrustify.h"
 
 using namespace uncrustify;

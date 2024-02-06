@@ -9,13 +9,13 @@
 
 #include "indent.h"
 
-#include "align.h"
+#include "align/align.h"
+#include "align/quick_align_again.h"
 #include "ifdef_over_whole_file.h"
 #include "options.h"
 #include "options_for_QT.h"
 #include "parsing_frame_stack.h"
 #include "prototypes.h"
-#include "quick_align_again.h"
 #include "reindent_line.h"
 #include "space.h"
 
