@@ -9,7 +9,7 @@
 
 #include "newlines_class_colon_pos.h"
 
-#include "align_stack.h"
+#include "align/stack.h"
 #include "chunk.h"
 #include "log_rules.h"
 #include "mark_change.h"

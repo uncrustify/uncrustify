@@ -7,7 +7,7 @@
  * @license GPL v2+
  */
 
-#include "quick_align_again.h"
+#include "align/quick_align_again.h"
 
 #include "align/stack.h"
 #include "chunk.h"

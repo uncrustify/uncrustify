@@ -242,30 +242,31 @@ py_gen(../etc/uncrustify.xml
 # Uncrustify
 #
 set(uncrustify_sources
-  src/align_add.cpp
-  src/align_asm_colon.cpp
-  src/align_assign.cpp
-  src/align_braced_init_list.cpp
-  src/align.cpp
-  src/align_eigen_comma_init.cpp
-  src/align_func_params.cpp
-  src/align_func_proto.cpp
-  src/align_init_brace.cpp
-  src/align_left_shift.cpp
-  src/align_log_al.cpp
-  src/align_nl_cont.cpp
-  src/align_oc_decl_colon.cpp
-  src/align_oc_msg_colons.cpp
-  src/align_oc_msg_spec.cpp
-  src/align_preprocessor.cpp
-  src/align_same_func_call_params.cpp
-  src/align_stack.cpp
-  src/align_struct_initializers.cpp
-  src/align_tab_column.cpp
-  src/align_tools.cpp
-  src/align_trailing_comments.cpp
-  src/align_typedefs.cpp
-  src/align_var_def_brace.cpp
+  src/align/add.cpp
+  src/align/align.cpp
+  src/align/asm_colon.cpp
+  src/align/assign.cpp
+  src/align/braced_init_list.cpp
+  src/align/eigen_comma_init.cpp
+  src/align/func_params.cpp
+  src/align/func_proto.cpp
+  src/align/init_brace.cpp
+  src/align/left_shift.cpp
+  src/align/log_al.cpp
+  src/align/nl_cont.cpp
+  src/align/oc_decl_colon.cpp
+  src/align/oc_msg_colons.cpp
+  src/align/oc_msg_spec.cpp
+  src/align/preprocessor.cpp
+  src/align/quick_align_again.cpp
+  src/align/same_func_call_params.cpp
+  src/align/stack.cpp
+  src/align/struct_initializers.cpp
+  src/align/tab_column.cpp
+  src/align/tools.cpp
+  src/align/trailing_comments.cpp
+  src/align/typedefs.cpp
+  src/align/var_def_brace.cpp
   src/annotations_newlines.cpp
   src/args.cpp
   src/backup.cpp
@@ -356,7 +357,6 @@ set(uncrustify_sources
   src/pcf_flags.cpp
   src/pragma_cleanup.cpp
   src/punctuators.cpp
-  src/quick_align_again.cpp
   src/reindent_line.cpp
   src/remove_duplicate_include.cpp
   src/remove_extra_returns.cpp
@@ -385,30 +385,31 @@ set(uncrustify_sources
 
 set(uncrustify_headers
   src/add_space_table.h
-  src/align_add.h
-  src/align_asm_colon.h
-  src/align_assign.h
-  src/align_braced_init_list.h
-  src/align.h
-  src/align_eigen_comma_init.h
-  src/align_func_params.h
-  src/align_func_proto.h
-  src/align_init_brace.h
-  src/align_left_shift.h
-  src/align_log_al.h
-  src/align_nl_cont.h
-  src/align_oc_decl_colon.h
-  src/align_oc_msg_colons.h
-  src/align_oc_msg_spec.h
-  src/align_preprocessor.h
-  src/align_same_func_call_params.h
-  src/align_stack.h
-  src/align_struct_initializers.h
-  src/align_tab_column.h
-  src/align_tools.h
-  src/align_trailing_comments.h
-  src/align_typedefs.h
-  src/align_var_def_brace.h
+  src/align/add.h
+  src/align/align.h
+  src/align/asm_colon.h
+  src/align/assign.h
+  src/align/braced_init_list.h
+  src/align/eigen_comma_init.h
+  src/align/func_params.h
+  src/align/func_proto.h
+  src/align/init_brace.h
+  src/align/left_shift.h
+  src/align/log_al.h
+  src/align/nl_cont.h
+  src/align/oc_decl_colon.h
+  src/align/oc_msg_colons.h
+  src/align/oc_msg_spec.h
+  src/align/preprocessor.h
+  src/align/quick_align_again.h
+  src/align/same_func_call_params.h
+  src/align/stack.h
+  src/align/struct_initializers.h
+  src/align/tab_column.h
+  src/align/tools.h
+  src/align/trailing_comments.h
+  src/align/typedefs.h
+  src/align/var_def_brace.h
   src/annotations_newlines.h
   src/args.h
   src/backup.h
@@ -504,7 +505,6 @@ set(uncrustify_headers
   src/pragma_cleanup.h
   src/prototypes.h
   src/punctuators.h
-  src/quick_align_again.h
   src/reindent_line.h
   src/remove_duplicate_include.h
   src/remove_extra_returns.h

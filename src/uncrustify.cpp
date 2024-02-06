@@ -10,10 +10,10 @@
 
 #include "uncrustify.h"
 
-#include "align.h"
-#include "align_nl_cont.h"
-#include "align_preprocessor.h"
-#include "align_trailing_comments.h"
+#include "align/align.h"
+#include "align/nl_cont.h"
+#include "align/preprocessor.h"
+#include "align/trailing_comments.h"
 #include "annotations_newlines.h"
 #include "args.h"
 #include "backup.h"

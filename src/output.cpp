@@ -9,7 +9,7 @@
 
 #include "output.h"
 
-#include "align_tab_column.h"
+#include "align/tab_column.h"
 #include "braces.h"
 #include "indent.h"
 #include "prototypes.h"
