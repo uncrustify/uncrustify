@@ -584,15 +584,15 @@ endif(ENABLE_CODECOVERAGE)
 #
 add_custom_target(format-sources)
 foreach(source IN LISTS uncrustify_sources uncrustify_headers)
-  get_filename_component(source_name  ${source} NAME)
-  add_custom_target(format-${source_name}
+  string(REGEX REPLACE "[/:]" "_" source_target ${source})
+  add_custom_target(format-${source_target}
     COMMAND uncrustify
       -c forUncrustifySources.cfg
       -lCPP --no-backup ${source}
     COMMENT "Formatting ${source}"
     WORKING_DIRECTORY ${uncrustify_SOURCE_DIR}
   )
-  add_dependencies(format-sources format-${source_name})
+  add_dependencies(format-sources format-${source_target})
 endforeach()
 
 #
