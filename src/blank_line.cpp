@@ -16,7 +16,7 @@
 #include "mark_change.h"
 #include "newlines/func_pre_blank_lines.h"
 #include "newlines/if_for_while_switch.h"
-#include "one_liner.h"
+#include "newlines/one_liner.h"
 #include "uncrustify.h"
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)

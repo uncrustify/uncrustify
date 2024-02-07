@@ -10,7 +10,7 @@
 #include "log_rules.h"
 #include "newlines/add.h"
 #include "newlines/iarf.h"
-#include "one_liner.h"
+#include "newlines/one_liner.h"
 
 
 constexpr static auto LCURRENT = LNEWLINE;

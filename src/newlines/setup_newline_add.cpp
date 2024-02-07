@@ -8,7 +8,7 @@
  */
 #include "newlines/setup_newline_add.h"
 
-#include "one_liner.h"
+#include "newlines/one_liner.h"
 
 
 /**

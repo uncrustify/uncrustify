@@ -29,10 +29,10 @@
 #include "newlines/if_for_while_switch.h"
 #include "newlines/namespace.h"
 #include "newlines/oc_msg.h"
+#include "newlines/one_liner.h"
 #include "newlines/struct_union.h"
 #include "newlines/template.h"
 #include "newlines/var_def_blk.h"
-#include "one_liner.h"
 
 #ifdef WIN32
 #include <algorithm>                   // to get max

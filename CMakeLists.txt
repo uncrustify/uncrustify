@@ -279,7 +279,6 @@ set(uncrustify_sources
   src/check_template.cpp
   src/chunk.cpp
   src/ChunkStack.cpp
-  src/collapse_empty_body.cpp
   src/combine.cpp
   src/combine_fix_mark.cpp
   src/combine_labels.cpp
@@ -294,10 +293,8 @@ set(uncrustify_sources
   src/flag_braced_init_list.cpp
   src/flag_decltype.cpp
   src/flag_parens.cpp
-  src/get_closing_brace.cpp
   src/ifdef_over_whole_file.cpp
   src/indent.cpp
-  src/is_func_call_or_def.cpp
   src/is_func_proto_group.cpp
   src/is_var_def.cpp
   src/keywords.cpp
@@ -321,6 +318,7 @@ set(uncrustify_sources
   src/newlines/chunk_pos.cpp
   src/newlines/class_colon_pos.cpp
   src/newlines/cleanup.cpp
+  src/newlines/collapse_empty_body.cpp
   src/newlines/cuddle_uncuddle.cpp
   src/newlines/del_between.cpp
   src/newlines/do_else.cpp
@@ -334,11 +332,14 @@ set(uncrustify_sources
   src/newlines/func.cpp
   src/newlines/func_pre_blank_lines.cpp
   src/newlines/functions_remove_extra_blank_lines.cpp
+  src/newlines/get_closing_brace.cpp
   src/newlines/iarf.cpp
   src/newlines/if_for_while_switch.cpp
+  src/newlines/is_func_call_or_def.cpp
   src/newlines/min_after.cpp
   src/newlines/namespace.cpp
   src/newlines/oc_msg.cpp
+  src/newlines/one_liner.cpp
   src/newlines/remove.cpp
   src/newlines/remove_next_newlines.cpp
   src/newlines/setup_newline_add.cpp
@@ -347,7 +348,6 @@ set(uncrustify_sources
   src/newlines/struct_union.cpp
   src/newlines/template.cpp
   src/newlines/var_def_blk.cpp
-  src/one_liner.cpp
   src/option.cpp
   src/options_for_QT.cpp
   src/output.cpp
@@ -424,7 +424,6 @@ set(uncrustify_headers
   src/check_template.h
   src/chunk.h
   src/ChunkStack.h
-  src/collapse_empty_body.h
   src/combine_fix_mark.h
   src/combine.h
   src/combine_labels.h
@@ -440,10 +439,8 @@ set(uncrustify_headers
   src/flag_braced_init_list.h
   src/flag_decltype.h
   src/flag_parens.h
-  src/get_closing_brace.h
   src/ifdef_over_whole_file.h
   src/indent.h
-  src/is_func_call_or_def.h
   src/is_func_proto_group.h
   src/is_var_def.h
   src/keywords.h
@@ -469,6 +466,7 @@ set(uncrustify_headers
   src/newlines/chunk_pos.h
   src/newlines/class_colon_pos.h
   src/newlines/cleanup.h
+  src/newlines/collapse_empty_body.h
   src/newlines/cuddle_uncuddle.h
   src/newlines/del_between.h
   src/newlines/do_else.h
@@ -481,11 +479,14 @@ set(uncrustify_headers
   src/newlines/force.h
   src/newlines/func.h
   src/newlines/functions_remove_extra_blank_lines.h
+  src/newlines/get_closing_brace.h
   src/newlines/iarf.h
   src/newlines/if_for_while_switch.h
+  src/newlines/is_func_call_or_def.h
   src/newlines/min_after.h
   src/newlines/namespace.h
   src/newlines/oc_msg.h
+  src/newlines/one_liner.h
   src/newlines/remove.h
   src/newlines/remove_next_newlines.h
   src/newlines/setup_newline_add.h
@@ -493,7 +494,6 @@ set(uncrustify_headers
   src/newlines/struct_union.h
   src/newlines/template.h
   src/newlines/var_def_blk.h
-  src/one_liner.h
   src/option.h
   src/options_for_QT.h
   src/options.h

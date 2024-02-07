@@ -8,10 +8,10 @@
  */
 #include "newlines/var_def_blk.h"
 
-#include "is_func_call_or_def.h"
 #include "is_var_def.h"
 #include "log_rules.h"
 #include "mark_change.h"
+#include "newlines/is_func_call_or_def.h"
 #include "newlines/min_after.h"
 
 
