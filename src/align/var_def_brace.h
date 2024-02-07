@@ -2,7 +2,6 @@
  * @file var_def_brace.h
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */
@@ -10,7 +9,9 @@
 #ifndef ALIGN_VAR_DEF_BRACE_H_INCLUDED
 #define ALIGN_VAR_DEF_BRACE_H_INCLUDED
 
-#include "chunk.h"
+#include <cstddef>
+
+class Chunk;
 
 /**
  * Scan everything at the current level until the close brace and find the

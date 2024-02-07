@@ -2,7 +2,6 @@
  * @file quick_align_again.cpp
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */

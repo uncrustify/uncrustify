@@ -2,7 +2,6 @@
  * @file eigen_comma_init.cpp
  *
  * @author  Matthew Woehlke
- * copied/adapted from align_left_shift.cpp
  * @author  Guy Maurel
  * @author  Ben Gardner
  * @license GPL v2+

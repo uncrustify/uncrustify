@@ -2,7 +2,6 @@
  * @file assign.h
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */
@@ -10,7 +9,9 @@
 #ifndef ALIGN_ASSIGN_H_INCLUDED
 #define ALIGN_ASSIGN_H_INCLUDED
 
-#include "chunk.h"
+#include <cstddef>
+
+class Chunk;
 
 /**
  * Aligns all assignment operators on the same level as first, starting with

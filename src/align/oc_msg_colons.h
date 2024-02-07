@@ -2,7 +2,6 @@
  * @file oc_msg_colons.h
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */

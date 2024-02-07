@@ -2,13 +2,13 @@
  * @file tools.cpp
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */
 
 #include "align/tools.h"
 
+#include "chunk.h"
 #include "space.h"
 #include "uncrustify.h"
 

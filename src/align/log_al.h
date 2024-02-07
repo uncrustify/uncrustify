@@ -10,7 +10,9 @@
 #ifndef ALIGN_LOG_AL_H_INCLUDED
 #define ALIGN_LOG_AL_H_INCLUDED
 
-#include "uncrustify_types.h"
+#include <cstddef>
+
+#include "log_levels.h"
 
 void align_log_al(log_sev_t sev, size_t line);
 

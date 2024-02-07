@@ -2,7 +2,6 @@
  * @file oc_msg_spec.cpp
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */

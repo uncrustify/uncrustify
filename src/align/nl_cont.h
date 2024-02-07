@@ -2,7 +2,6 @@
  * @file nl_cont.h
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */
@@ -10,9 +9,7 @@
 #ifndef ALIGN_NL_COUNT_H_INCLUDED
 #define ALIGN_NL_COUNT_H_INCLUDED
 
-#include "uncrustify_types.h"
-
-#include "chunk.h"
+class Chunk;
 
 /**
  * For a series of lines ending in backslash-newline, align them.

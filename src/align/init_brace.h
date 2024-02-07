@@ -2,7 +2,6 @@
  * @file init_brace.h
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */
@@ -10,7 +9,7 @@
 #ifndef ALIGN_INIT_BRACE_H_INCLUDED
 #define ALIGN_INIT_BRACE_H_INCLUDED
 
-#include "uncrustify_types.h"
+class Chunk;
 
 /**
  * Generically aligns on '=', '{', '(' and item after ','

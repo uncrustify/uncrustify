@@ -2,7 +2,6 @@
  * @file trailing_comments.cpp
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */
@@ -11,6 +10,8 @@
 
 #include "align/add.h"
 #include "align/tab_column.h"
+#include "chunk.h"
+#include "ChunkStack.h"
 #include "indent.h"
 #include "log_rules.h"
 
