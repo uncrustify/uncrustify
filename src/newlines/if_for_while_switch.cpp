@@ -8,14 +8,14 @@
  */
 #include "newlines/if_for_while_switch.h"
 
-#include "get_closing_brace.h"
 #include "log_rules.h"
 #include "mark_change.h"
 #include "newlines/add.h"
 #include "newlines/double_newline.h"
+#include "newlines/get_closing_brace.h"
 #include "newlines/iarf.h"
+#include "newlines/one_liner.h"
 #include "newlines/remove_next_newlines.h"
-#include "one_liner.h"
 
 
 constexpr static auto LCURRENT = LNEWLINE;

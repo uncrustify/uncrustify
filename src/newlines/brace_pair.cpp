@@ -9,14 +9,14 @@
 #include "newlines/brace_pair.h"
 
 #include "blank_line.h"
-#include "collapse_empty_body.h"
-#include "is_func_call_or_def.h"
 #include "log_rules.h"
 #include "mark_change.h"
 #include "newlines/add.h"
+#include "newlines/collapse_empty_body.h"
 #include "newlines/del_between.h"
 #include "newlines/iarf.h"
-#include "one_liner.h"
+#include "newlines/is_func_call_or_def.h"
+#include "newlines/one_liner.h"
 
 
 constexpr static auto LCURRENT = LNEWLINE;

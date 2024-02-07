@@ -9,11 +9,11 @@
 #include "braces.h"
 
 #include "calculate_closing_brace_position.h"
-#include "combine_tools.h"
 #include "newlines/add.h"
 #include "newlines/between.h"
 #include "newlines/del_between.h"
 #include "prototypes.h"
+#include "tokenizer/combine_tools.h"
 
 
 constexpr static auto LCURRENT = LBR;

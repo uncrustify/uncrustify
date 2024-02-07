@@ -270,34 +270,17 @@ set(uncrustify_sources
   src/args.cpp
   src/backup.cpp
   src/blank_line.cpp
-  src/brace_cleanup.cpp
   src/braces.cpp
   src/calculate_closing_brace_position.cpp
   src/can_increase_nl.cpp
   src/change_int_types.cpp
-  src/check_double_brace_init.cpp
-  src/check_template.cpp
   src/chunk.cpp
   src/ChunkStack.cpp
-  src/collapse_empty_body.cpp
-  src/combine.cpp
-  src/combine_fix_mark.cpp
-  src/combine_labels.cpp
-  src/combine_skip.cpp
-  src/combine_tools.cpp
   src/compat_posix.cpp
   src/compat_win32.cpp
-  src/cs_top_is_question.cpp
   src/detect.cpp
-  src/enum_cleanup.cpp
-  src/EnumStructUnionParser.cpp
-  src/flag_braced_init_list.cpp
-  src/flag_decltype.cpp
-  src/flag_parens.cpp
-  src/get_closing_brace.cpp
   src/ifdef_over_whole_file.cpp
   src/indent.cpp
-  src/is_func_call_or_def.cpp
   src/is_func_proto_group.cpp
   src/is_var_def.cpp
   src/keywords.cpp
@@ -308,8 +291,6 @@ set(uncrustify_sources
   src/logmask.cpp
   src/log_rules.cpp
   src/mark_change.cpp
-  src/mark_functor.cpp
-  src/mark_question_colon.cpp
   src/md5.cpp
   src/newlines/add.cpp
   src/newlines/after.cpp
@@ -321,6 +302,7 @@ set(uncrustify_sources
   src/newlines/chunk_pos.cpp
   src/newlines/class_colon_pos.cpp
   src/newlines/cleanup.cpp
+  src/newlines/collapse_empty_body.cpp
   src/newlines/cuddle_uncuddle.cpp
   src/newlines/del_between.cpp
   src/newlines/do_else.cpp
@@ -334,11 +316,14 @@ set(uncrustify_sources
   src/newlines/func.cpp
   src/newlines/func_pre_blank_lines.cpp
   src/newlines/functions_remove_extra_blank_lines.cpp
+  src/newlines/get_closing_brace.cpp
   src/newlines/iarf.cpp
   src/newlines/if_for_while_switch.cpp
+  src/newlines/is_func_call_or_def.cpp
   src/newlines/min_after.cpp
   src/newlines/namespace.cpp
   src/newlines/oc_msg.cpp
+  src/newlines/one_liner.cpp
   src/newlines/remove.cpp
   src/newlines/remove_next_newlines.cpp
   src/newlines/setup_newline_add.cpp
@@ -347,11 +332,9 @@ set(uncrustify_sources
   src/newlines/struct_union.cpp
   src/newlines/template.cpp
   src/newlines/var_def_blk.cpp
-  src/one_liner.cpp
   src/option.cpp
   src/options_for_QT.cpp
   src/output.cpp
-  src/parameter_pack_cleanup.cpp
   src/parens.cpp
   src/parent_for_pp.cpp
   src/parsing_frame.cpp
@@ -367,8 +350,25 @@ set(uncrustify_sources
   src/sorting.cpp
   src/space.cpp
   src/token_is_within_trailing_return.cpp
-  src/tokenize_cleanup.cpp
-  src/tokenize.cpp
+  src/tokenizer/brace_cleanup.cpp
+  src/tokenizer/check_double_brace_init.cpp
+  src/tokenizer/check_template.cpp
+  src/tokenizer/combine.cpp
+  src/tokenizer/combine_fix_mark.cpp
+  src/tokenizer/combine_labels.cpp
+  src/tokenizer/combine_skip.cpp
+  src/tokenizer/combine_tools.cpp
+  src/tokenizer/cs_top_is_question.cpp
+  src/tokenizer/enum_cleanup.cpp
+  src/tokenizer/EnumStructUnionParser.cpp
+  src/tokenizer/flag_braced_init_list.cpp
+  src/tokenizer/flag_decltype.cpp
+  src/tokenizer/flag_parens.cpp
+  src/tokenizer/mark_functor.cpp
+  src/tokenizer/mark_question_colon.cpp
+  src/tokenizer/parameter_pack_cleanup.cpp
+  src/tokenizer/tokenize_cleanup.cpp
+  src/tokenizer/tokenize.cpp
   src/too_big_for_nl_max.cpp
   src/unc_ctype.cpp
   src/uncrustify.cpp
@@ -414,36 +414,19 @@ set(uncrustify_headers
   src/backup.h
   src/base_types.h
   src/blank_line.h
-  src/brace_cleanup.h
   src/braces.h
   src/calculate_closing_brace_position.h
   src/can_increase_nl.h
   src/change_int_types.h
   src/char_table.h
-  src/check_double_brace_init.h
-  src/check_template.h
   src/chunk.h
   src/ChunkStack.h
-  src/collapse_empty_body.h
-  src/combine_fix_mark.h
-  src/combine.h
-  src/combine_labels.h
-  src/combine_skip.h
-  src/combine_tools.h
   src/compat.h
-  src/cs_top_is_question.h
   src/detect.h
-  src/enum_cleanup.h
   src/enum_flags.h
-  src/EnumStructUnionParser.h
   src/error_types.h
-  src/flag_braced_init_list.h
-  src/flag_decltype.h
-  src/flag_parens.h
-  src/get_closing_brace.h
   src/ifdef_over_whole_file.h
   src/indent.h
-  src/is_func_call_or_def.h
   src/is_func_proto_group.h
   src/is_var_def.h
   src/keywords.h
@@ -456,8 +439,6 @@ set(uncrustify_headers
   src/logmask.h
   src/log_rules.h
   src/mark_change.h
-  src/mark_functor.h
-  src/mark_question_colon.h
   src/md5.h
   src/newlines/add.h
   src/newlines/after.h
@@ -469,6 +450,7 @@ set(uncrustify_headers
   src/newlines/chunk_pos.h
   src/newlines/class_colon_pos.h
   src/newlines/cleanup.h
+  src/newlines/collapse_empty_body.h
   src/newlines/cuddle_uncuddle.h
   src/newlines/del_between.h
   src/newlines/do_else.h
@@ -481,11 +463,14 @@ set(uncrustify_headers
   src/newlines/force.h
   src/newlines/func.h
   src/newlines/functions_remove_extra_blank_lines.h
+  src/newlines/get_closing_brace.h
   src/newlines/iarf.h
   src/newlines/if_for_while_switch.h
+  src/newlines/is_func_call_or_def.h
   src/newlines/min_after.h
   src/newlines/namespace.h
   src/newlines/oc_msg.h
+  src/newlines/one_liner.h
   src/newlines/remove.h
   src/newlines/remove_next_newlines.h
   src/newlines/setup_newline_add.h
@@ -493,12 +478,10 @@ set(uncrustify_headers
   src/newlines/struct_union.h
   src/newlines/template.h
   src/newlines/var_def_blk.h
-  src/one_liner.h
   src/option.h
   src/options_for_QT.h
   src/options.h
   src/output.h
-  src/parameter_pack_cleanup.h
   src/parens.h
   src/parent_for_pp.h
   src/parsing_frame.h
@@ -517,8 +500,25 @@ set(uncrustify_headers
   src/symbols_table.h
   src/token_enum.h
   src/token_is_within_trailing_return.h
-  src/tokenize_cleanup.h
-  src/tokenize.h
+  src/tokenizer/brace_cleanup.h
+  src/tokenizer/check_double_brace_init.h
+  src/tokenizer/check_template.h
+  src/tokenizer/combine_fix_mark.h
+  src/tokenizer/combine.h
+  src/tokenizer/combine_labels.h
+  src/tokenizer/combine_skip.h
+  src/tokenizer/combine_tools.h
+  src/tokenizer/cs_top_is_question.h
+  src/tokenizer/enum_cleanup.h
+  src/tokenizer/EnumStructUnionParser.h
+  src/tokenizer/flag_braced_init_list.h
+  src/tokenizer/flag_decltype.h
+  src/tokenizer/flag_parens.h
+  src/tokenizer/mark_functor.h
+  src/tokenizer/mark_question_colon.h
+  src/tokenizer/parameter_pack_cleanup.h
+  src/tokenizer/tokenize_cleanup.h
+  src/tokenizer/tokenize.h
   src/too_big_for_nl_max.h
   src/unc_ctype.h
   src/uncrustify.h

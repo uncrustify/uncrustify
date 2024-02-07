@@ -10,8 +10,8 @@
 #include "newlines/add.h"
 
 #include "mark_change.h"
+#include "newlines/one_liner.h"
 #include "newlines/setup_newline_add.h"
-#include "one_liner.h"
 #include "uncrustify.h"
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)

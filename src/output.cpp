@@ -14,7 +14,7 @@
 #include "indent.h"
 #include "prototypes.h"
 #include "reindent_line.h"
-#include "tokenize.h"
+#include "tokenizer/tokenize.h"
 #include "unc_ctype.h"
 #include "unicode.h"
 

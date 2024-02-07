@@ -10,7 +10,7 @@
 #include "indent.h"
 #include "newlines/add.h"
 #include "newlines/cleanup.h"
-#include "one_liner.h"
+#include "newlines/one_liner.h"
 #include "prototypes.h"
 #include "reindent_line.h"
 

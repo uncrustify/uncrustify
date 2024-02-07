@@ -9,9 +9,9 @@
 
 #include "newlines/func.h"
 
-#include "combine_skip.h"
 #include "log_rules.h"
 #include "newlines/iarf.h"
+#include "tokenizer/combine_skip.h"
 #include "uncrustify.h"
 
 
