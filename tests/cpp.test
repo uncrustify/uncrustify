@@ -262,6 +262,7 @@
 30266  cpp/Issue_2921.cfg                                   cpp/Issue_2921.cpp
 30267  cpp/Issue_2930.cfg                                   cpp/Issue_2930.cpp
 30268  cpp/Issue_2692.cfg                                   cpp/Issue_3018.cpp
+30269  cpp/Issue_4223.cfg                                   cpp/Issue_4223.cpp
 
 30270  cpp/const_throw.cfg                                  cpp/const_throw.cpp
 30271  cpp/sp_throw_paren-r.cfg                             cpp/sp_throw_paren.cpp
