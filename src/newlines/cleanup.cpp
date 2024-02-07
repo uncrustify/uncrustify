@@ -10,7 +10,6 @@
 
 #include "blank_line.h"
 #include "chunk.h"
-#include "flag_parens.h"
 #include "log_rules.h"
 #include "mark_change.h"
 #include "newlines/add.h"
@@ -33,6 +32,7 @@
 #include "newlines/struct_union.h"
 #include "newlines/template.h"
 #include "newlines/var_def_blk.h"
+#include "tokenizer/flag_parens.h"
 
 #ifdef WIN32
 #include <algorithm>                   // to get max
