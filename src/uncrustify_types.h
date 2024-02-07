@@ -79,8 +79,6 @@ enum class tracking_type_e : unsigned int
    TT_START
 };
 
-const char *get_tracking_type_e_name(tracking_type_e type);
-
 class Chunk; //forward declaration
 
 
@@ -274,6 +272,12 @@ extern cp_data_t cpd;  // TODO: can we avoid this external variable?
 
 const char *get_brace_stage_name(E_BraceStage brace_stage);
 
+const char *get_tracking_type_e_name(tracking_type_e type);
+
 const char *get_unc_stage_name(unc_stage_e unc_stage);
+
+const char *get_char_encoding(char_encoding_e encoding);
+
+const char *get_pattern_class(pattern_class_e p_class);
 
 #endif /* UNCRUSTIFY_TYPES_H_INCLUDED */
