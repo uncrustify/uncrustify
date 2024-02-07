@@ -340,7 +340,6 @@ set(uncrustify_sources
   src/parsing_frame.cpp
   src/parsing_frame_stack.cpp
   src/pcf_flags.cpp
-  src/pragma_cleanup.cpp
   src/punctuators.cpp
   src/reindent_line.cpp
   src/remove_duplicate_include.cpp
@@ -487,7 +486,6 @@ set(uncrustify_headers
   src/parsing_frame.h
   src/parsing_frame_stack.h
   src/pcf_flags.h
-  src/pragma_cleanup.h
   src/prototypes.h
   src/punctuators.h
   src/reindent_line.h
