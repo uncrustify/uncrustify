@@ -2,7 +2,6 @@
  * @file nl_cont.cpp
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */
@@ -10,6 +9,8 @@
 #include "align/nl_cont.h"
 
 #include "align/add.h"
+#include "chunk.h"
+#include "ChunkStack.h"
 #include "uncrustify.h"
 
 #include <algorithm>                   // to get max

@@ -2,7 +2,6 @@
  * @file tab_column.h
  *
  * @author  Guy Maurel
- * split from prototypes.h
  * @author  Ben Gardner
  * @license GPL v2+
  */
@@ -10,7 +9,7 @@
 #ifndef ALIGN_TAB_COLUMN_H_INCLUDED
 #define ALIGN_TAB_COLUMN_H_INCLUDED
 
-#include "uncrustify_types.h"
+#include <cstddef>
 
 /**
  * Advances to the next tab stop if not currently on one.

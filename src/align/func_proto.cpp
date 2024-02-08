@@ -2,7 +2,6 @@
  * @file func_proto.cpp
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */
@@ -12,9 +11,6 @@
 #include "align/stack.h"
 #include "align/tools.h"
 #include "log_rules.h"
-
-#include <algorithm>                           // to get max
-
 
 constexpr static auto LCURRENT = LALPROTO;
 

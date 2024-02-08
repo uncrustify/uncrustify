@@ -2,14 +2,12 @@
  * @file oc_decl_colon.h
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */
 
 #ifndef ALIGN_OC_DECL_COLON_H_INCLUDED
 #define ALIGN_OC_DECL_COLON_H_INCLUDED
-
 
 /**
  * Aligns OC declarations on the colon

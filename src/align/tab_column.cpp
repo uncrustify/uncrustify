@@ -2,7 +2,6 @@
  * @file tab_column.cpp
  *
  * @author  Guy Maurel
- * split from prototypes.h
  * @author  Ben Gardner
  * @license GPL v2+
  */

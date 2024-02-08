@@ -2,7 +2,6 @@
  * @file init_brace.cpp
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */
@@ -12,7 +11,6 @@
 #include "align/log_al.h"
 #include "align/tab_column.h"
 #include "align/tools.h"
-#include "indent.h"
 #include "log_rules.h"
 #include "reindent_line.h"
 

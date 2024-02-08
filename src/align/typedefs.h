@@ -2,7 +2,6 @@
  * @file typedefs.h
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */
@@ -10,7 +9,7 @@
 #ifndef ALIGN_TYPEDEFS_H_INCLUDED
 #define ALIGN_TYPEDEFS_H_INCLUDED
 
-#include "uncrustify_types.h"
+#include <cstddef>
 
 /**
  * Aligns simple typedefs that are contained on a single line each.

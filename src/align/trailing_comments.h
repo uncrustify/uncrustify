@@ -2,7 +2,6 @@
  * @file trailing_comments.h
  *
  * @author  Guy Maurel
- * split from align.cpp
  * @author  Ben Gardner
  * @license GPL v2+
  */
@@ -10,8 +9,12 @@
 #ifndef ALIGN_TRAILING_COMMENTS_H_INCLUDED
 #define ALIGN_TRAILING_COMMENTS_H_INCLUDED
 
-#include "chunk.h"
-#include "ChunkStack.h"
+#include <cstddef>
+
+#include "log_levels.h"
+
+class Chunk;
+class ChunkStack;
 
 enum class comment_align_e : unsigned int
 {
