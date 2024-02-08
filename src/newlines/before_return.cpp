@@ -3,12 +3,13 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
 #include "newlines/before_return.h"
 
+#include "chunk.h"
+#include "mark_change.h"
 
 void newline_before_return(Chunk *start)
 {

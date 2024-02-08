@@ -3,16 +3,14 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #ifndef NEWLINES_AFTER_H_INCLUDED
 #define NEWLINES_AFTER_H_INCLUDED
 
-#include "chunk.h"
+class Chunk;
 
 void newline_after_label_colon();
-
 void newline_after_multiline_comment();
 
 /**

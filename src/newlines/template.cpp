@@ -3,14 +3,16 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #include "newlines/template.h"
 
 #include "log_rules.h"
 #include "newlines/iarf.h"
-#include "uncrustify.h"
+#include "options.h"
+
+
+using namespace uncrustify;
 
 
 constexpr static auto LCURRENT = LNEWLINE;

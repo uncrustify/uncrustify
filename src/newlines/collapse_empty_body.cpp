@@ -3,16 +3,13 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
 #include "newlines/collapse_empty_body.h"
 
+#include "chunk.h"
 #include "mark_change.h"
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
-
 
 void collapse_empty_body(Chunk *br_open)
 {

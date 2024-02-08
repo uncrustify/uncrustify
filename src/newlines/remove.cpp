@@ -3,7 +3,6 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #include "newlines/remove.h"
@@ -13,7 +12,8 @@
 #include "mark_change.h"
 #include "newlines/iarf.h"
 
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
+
+using namespace uncrustify;
 
 
 void newlines_remove_disallowed()

@@ -3,14 +3,12 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #ifndef NEWLINES_GET_CLOSING_BRACE_H_INCLUDED
 #define NEWLINES_GET_CLOSING_BRACE_H_INCLUDED
 
-
-#include "chunk.h"
+class Chunk;
 
 Chunk *get_closing_brace(Chunk *start);
 

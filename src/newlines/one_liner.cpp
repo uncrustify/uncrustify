@@ -3,14 +3,12 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #include "newlines/one_liner.h"
 
 #include "keywords.h"
 #include "log_rules.h"
-#include "mark_change.h"
 #include "newlines/add.h"
 #include "newlines/del_between.h"
 
@@ -19,9 +17,6 @@ using namespace uncrustify;
 
 
 constexpr static auto LCURRENT = LNEWLINE;
-
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
 
 bool is_class_one_liner(Chunk *pc)

@@ -3,17 +3,14 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #ifndef NEWLINES_ENUM_H_INCLUDED
 #define NEWLINES_ENUM_H_INCLUDED
 
-#include "chunk.h"
+#include "option.h"
 
-
-using namespace uncrustify;
-
+class Chunk;
 
 // enum {
 // enum class angle_state_e : unsigned int {
@@ -26,6 +23,6 @@ using namespace uncrustify;
 void newlines_enum(Chunk *start);
 
 //! If requested, make sure each entry in an enum is on its own line
-void newlines_enum_entries(Chunk *open_brace, iarf_e av);
+void newlines_enum_entries(Chunk *open_brace, uncrustify::iarf_e av);
 
 #endif /* NEWLINES_ENUM_H_INCLUDED */

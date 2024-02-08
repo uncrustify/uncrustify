@@ -3,12 +3,12 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
 #include "newlines/is_func_call_or_def.h"
 
+#include "chunk.h"
 
 /**
  * Test if an opening brace is part of a function call or definition.

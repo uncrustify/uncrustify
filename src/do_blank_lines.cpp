@@ -17,16 +17,15 @@
 #include "is_func_proto_group.h"
 #include "log_rules.h"
 #include "mark_change.h"
+#include "options.h"
+#include "pcf_flags.h"
 #include "uncrustify.h"
-
-
-constexpr static auto LCURRENT = LNEWLINE;
 
 
 using namespace uncrustify;
 
 
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
+constexpr static auto LCURRENT = LNEWLINE;
 
 
 void do_blank_lines()

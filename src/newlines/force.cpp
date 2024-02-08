@@ -3,17 +3,15 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
 #include "newlines/force.h"
 
+#include "chunk.h"
+#include "logger.h"
 #include "mark_change.h"
 #include "newlines/add.h"
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
-
 
 Chunk *newline_force_after(Chunk *pc)
 {

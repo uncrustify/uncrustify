@@ -3,17 +3,14 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.h
  * @license GPL v2+
  */
 #ifndef NEWLINES_IARF_H_INCLUDED
 #define NEWLINES_IARF_H_INCLUDED
 
-#include "chunk.h"
+#include "option.h"
 
-
-using namespace uncrustify;
-
+class Chunk;
 
 /**
  * Does a simple Ignore, Add, Remove, or Force after the given chunk
@@ -21,7 +18,7 @@ using namespace uncrustify;
  * @param pc  The chunk
  * @param av  The IARF value
  */
-void newline_iarf(Chunk *pc, iarf_e av);
+void newline_iarf(Chunk *pc, uncrustify::iarf_e av);
 
 /**
  * Does the Ignore, Add, Remove, or Force thing between two chunks
@@ -30,6 +27,6 @@ void newline_iarf(Chunk *pc, iarf_e av);
  * @param after   The second chunk
  * @param av      The IARF value
  */
-void newline_iarf_pair(Chunk *before, Chunk *after, iarf_e av, bool check_nl_assign_leave_one_liners = false);
+void newline_iarf_pair(Chunk *before, Chunk *after, uncrustify::iarf_e av, bool check_nl_assign_leave_one_liners = false);
 
 #endif /* NEWLINES_IARF_H_INCLUDED */

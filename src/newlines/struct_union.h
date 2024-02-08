@@ -3,20 +3,15 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #ifndef NEWLINES_STRUCT_UNION_H_INCLUDED
 #define NEWLINES_STRUCT_UNION_H_INCLUDED
 
-#include "newlines/struct_union.h"
+#include "option.h"
 
-#include "chunk.h"
+class Chunk;
 
-
-using namespace uncrustify;
-
-
-void newlines_struct_union(Chunk *start, iarf_e nl_opt, bool leave_trailing);
+void newlines_struct_union(Chunk *start, uncrustify::iarf_e nl_opt, bool leave_trailing);
 
 #endif /* NEWLINES_STRUCT_UNION_H_INCLUDED */

@@ -3,11 +3,11 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #include "newlines/if_for_while_switch.h"
 
+#include "chunk.h"
 #include "log_rules.h"
 #include "mark_change.h"
 #include "newlines/add.h"
@@ -16,12 +16,13 @@
 #include "newlines/iarf.h"
 #include "newlines/one_liner.h"
 #include "newlines/remove_next_newlines.h"
+#include "option.h"
+
+
+using namespace uncrustify;
 
 
 constexpr static auto LCURRENT = LNEWLINE;
-
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
 
 bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt)

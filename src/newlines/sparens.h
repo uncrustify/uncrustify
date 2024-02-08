@@ -3,13 +3,10 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #ifndef NEWLINES_SPARENS_H_INCLUDED
 #define NEWLINES_SPARENS_H_INCLUDED
-
-#include "chunk.h"
 
 void newlines_sparens();
 

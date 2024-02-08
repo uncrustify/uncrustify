@@ -3,14 +3,13 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.h
  * @license GPL v2+
  */
 
 #ifndef DOUBLE_NEWLINES_H_INCLUDED
 #define DOUBLE_NEWLINES_H_INCLUDED
 
-#include "chunk.h"
+class Chunk;
 
 /**
  * Double the newline, if allowed.

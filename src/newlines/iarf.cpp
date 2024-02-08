@@ -3,16 +3,15 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
 #include "newlines/iarf.h"
 
+#include "chunk.h"
+#include "log_rules.h"
 #include "newlines/add.h"
-#include "newlines/between.h"
 #include "newlines/del_between.h"
-#include "prototypes.h"
 
 
 constexpr static auto LCURRENT = LNEWLINE;

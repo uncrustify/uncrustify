@@ -8,9 +8,11 @@
 
 #include "sorting.h"
 
+#include "chunk.h"
+#include "log_rules.h"
+#include "mark_change.h"
 #include "newlines/add.h"
 #include "newlines/double_newline.h"
-#include "prototypes.h"
 
 #include <regex>
 #include <unordered_map>
@@ -65,22 +67,6 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare);
  * Sort all of the chunks in O(n log n) time with a maximum of O(n) swaps
  */
 static void do_the_sort(Chunk **chunks, size_t num_chunks);
-
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
-
-
-static void mark_change(const char *func, size_t line)
-{
-   LOG_FUNC_ENTRY();
-   cpd.changes++;
-
-   if (cpd.pass_count == 0)
-   {
-      LOG_FMT(LCHANGE, "%s(%d): change %d on %s:%zu\n",
-              __func__, __LINE__, cpd.changes, func, line);
-   }
-}
 
 
 static void prepare_categories()

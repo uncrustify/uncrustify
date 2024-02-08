@@ -3,7 +3,6 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
@@ -20,9 +19,6 @@ constexpr static auto LCURRENT = LNEWLINE;
 
 
 using namespace uncrustify;
-
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
 
 void newlines_squeeze_ifdef()

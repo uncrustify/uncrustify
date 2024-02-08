@@ -11,6 +11,10 @@
 #include "newlines/add.h"
 #include "newlines/iarf.h"
 #include "newlines/one_liner.h"
+#include "options.h"
+
+
+using namespace uncrustify;
 
 
 constexpr static auto LCURRENT = LNEWLINE;

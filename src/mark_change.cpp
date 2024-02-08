@@ -7,11 +7,10 @@
 
 #include "mark_change.h"
 
+#include "logger.h"
+#include "uncrustify_types.h"
 
-constexpr static auto LCURRENT = LNEWLINE;
-
-using namespace std;
-using namespace uncrustify;
+#include <cstddef>
 
 
 void mark_change(const char *func, size_t line)
