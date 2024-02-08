@@ -3,14 +3,13 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cp
  * @license GPL v2+
  */
 
 #ifndef NEWLINES_DEL_BETWEEN_H_INCLUDED
 #define NEWLINES_DEL_BETWEEN_H_INCLUDED
 
-#include "chunk.h"
+class Chunk;
 
 /**
  * Removes any CT_NEWLINE or CT_NL_CONT between start and end.

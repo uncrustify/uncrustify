@@ -3,13 +3,14 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #ifndef NEWLINES_FUNC_PRE_BLANK_LINES_H_INCLUDED
 #define NEWLINES_FUNC_PRE_BLANK_LINES_H_INCLUDED
 
-#include "chunk.h"
+#include "token_enum.h"
+
+class Chunk;
 
 /**
  * Add one/two newline(s) before the chunk.

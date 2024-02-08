@@ -3,7 +3,6 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.h
  * @license GPL v2+
  */
 

@@ -3,19 +3,16 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
 #include "newlines/add.h"
 
+#include "chunk.h"
 #include "mark_change.h"
 #include "newlines/one_liner.h"
 #include "newlines/setup_newline_add.h"
 #include "uncrustify.h"
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
-
 
 Chunk *newline_add_after(Chunk *pc)
 {

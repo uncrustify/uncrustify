@@ -15,8 +15,6 @@
 
 using namespace uncrustify;
 
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
-
 void blank_line_max(Chunk *pc, Option<unsigned> &opt);
 
 void blank_line_set(Chunk *pc, Option<unsigned> &opt);

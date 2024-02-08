@@ -3,16 +3,14 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #ifndef DO_IT_NEWLINES_FUNC_PRE_BLANK_LINES_H_INCLUDED
 #define DO_IT_NEWLINES_FUNC_PRE_BLANK_LINES_H_INCLUDED
 
+#include "token_enum.h"
 
-#include "chunk.h"
-
-#include "uncrustify.h"
+class Chunk;
 
 bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, E_Token start_type);
 

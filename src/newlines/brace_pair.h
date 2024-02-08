@@ -3,13 +3,12 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #ifndef NEWLINES_BRACE_PAIR_H_INCLUDED
 #define NEWLINES_BRACE_PAIR_H_INCLUDED
 
-#include "chunk.h"
+class Chunk;
 
 /**
  * Handles the brace_on_func_line setting and decides if the closing brace

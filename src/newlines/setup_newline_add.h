@@ -3,13 +3,12 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #ifndef SETUP_NEWLINES_ADD_H_INCLUDED
 #define SETUP_NEWLINES_ADD_H_INCLUDED
 
-#include "chunk.h"
+class Chunk;
 
 /**
  * Basic approach:
@@ -22,6 +21,5 @@
  * d. else "} else {"
  */
 void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next);
-
 
 #endif /* SETUP_NEWLINES_ADD_H_INCLUDED */

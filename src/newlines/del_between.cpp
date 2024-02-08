@@ -3,19 +3,15 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
 #include "newlines/del_between.h"
 
+#include "chunk.h"
 #include "indent.h"
 #include "mark_change.h"
 #include "space.h"
-#include "uncrustify.h"
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
-
 
 void newline_del_between(Chunk *start, Chunk *end)
 {

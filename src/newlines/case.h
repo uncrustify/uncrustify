@@ -8,9 +8,7 @@
 #ifndef NEWLINES_CASE_H_INCLUDED
 #define NEWLINES_CASE_H_INCLUDED
 
-
-#include "chunk.h"
-
+class Chunk;
 
 /**
  * Put a empty line between the 'case' statement and the previous case colon
@@ -18,8 +16,6 @@
  * Does not work with PAWN (?)
  */
 void newline_case(Chunk *start);
-
 void newline_case_colon(Chunk *start);
-
 
 #endif /* NEWLINES_CASE_H_INCLUDED */

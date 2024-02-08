@@ -3,17 +3,14 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #ifndef NEWLINES_IF_FOR_WHILE_SWITCH_H_INCLUDED
 #define NEWLINES_IF_FOR_WHILE_SWITCH_H_INCLUDED
 
-#include "chunk.h"
+#include "option.h"
 
-
-using namespace uncrustify;
-
+class Chunk;
 
 /**
  * Add or remove a newline between the closing paren and opening brace.
@@ -24,7 +21,7 @@ using namespace uncrustify;
  * For virtual braces, we can only add a newline after the vbrace open.
  * If we do so, also add a newline after the vbrace close.
  */
-bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt);
+bool newlines_if_for_while_switch(Chunk *start, uncrustify::iarf_e nl_opt);
 
 /**
  * Add or remove extra newline after end of the block started in chunk.
@@ -41,6 +38,6 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
  * Doesn't do anything if open brace before it
  * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
  */
-void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl_opt);
+void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, uncrustify::iarf_e nl_opt);
 
 #endif /* NEWLINES_IF_FOR_WHILE_SWITCH_H_INCLUDED */

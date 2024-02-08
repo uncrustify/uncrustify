@@ -3,7 +3,6 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
@@ -15,12 +14,13 @@
 #include "mark_change.h"
 #include "newlines/add.h"
 #include "newlines/force.h"
+#include "options.h"
+
+
+using namespace uncrustify;
 
 
 constexpr static auto LCURRENT = LNEWLINE;
-
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
 
 void newlines_class_colon_pos(E_Token tok)

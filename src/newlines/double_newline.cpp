@@ -3,7 +3,6 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
@@ -11,9 +10,6 @@
 
 #include "can_increase_nl.h"
 #include "mark_change.h"
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
-
 
 void double_newline(Chunk *nl)
 {

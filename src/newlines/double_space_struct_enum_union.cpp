@@ -3,12 +3,13 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
 #include "newlines/double_space_struct_enum_union.h"
 
+#include "chunk.h"
+#include "logger.h"
 #include "newlines/double_newline.h"
 
 

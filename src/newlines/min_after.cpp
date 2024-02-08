@@ -3,7 +3,6 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
@@ -12,9 +11,6 @@
 #include "can_increase_nl.h"
 #include "mark_change.h"
 #include "uncrustify.h"
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
-
 
 void newline_min_after(Chunk *ref, size_t count, E_PcfFlag flag)
 {

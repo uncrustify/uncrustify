@@ -3,7 +3,6 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #include "newlines/var_def_blk.h"
@@ -19,9 +18,6 @@ using namespace uncrustify;
 
 
 constexpr static auto LCURRENT = LNEWLINE;
-
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
 
 // Put newline(s) before and/or after a block of variable definitions

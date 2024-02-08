@@ -3,7 +3,6 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #include "newlines/cleanup.h"
@@ -39,9 +38,6 @@
 #endif // ifdef WIN32
 
 constexpr static auto LCURRENT = LNEWLINE;
-
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
 
 void newlines_cleanup_angles()
@@ -1251,12 +1247,6 @@ void newlines_cleanup_braces(bool first)
 
    newline_var_def_blk(Chunk::GetHead());
 } // newlines_cleanup_braces
-
-
-//#include "chunk.h"
-//#include "mark_change.h"
-
-//#define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
 
 void newlines_cleanup_dup()

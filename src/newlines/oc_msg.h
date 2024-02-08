@@ -3,14 +3,12 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #ifndef NEWLINES_OC_MSG_H_INCLUDED
 #define NEWLINES_OC_MSG_H_INCLUDED
 
-
-#include "chunk.h"
+class Chunk;
 
 /**
  * Formats a message, adding newlines before the item before the colons.

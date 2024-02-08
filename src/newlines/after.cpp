@@ -3,12 +3,13 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
 #include "newlines/after.h"
 
+#include "chunk.h"
+#include "logger.h"
 #include "newlines/add.h"
 #include "newlines/double_newline.h"
 

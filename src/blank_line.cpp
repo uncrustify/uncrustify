@@ -19,8 +19,6 @@
 #include "newlines/one_liner.h"
 #include "uncrustify.h"
 
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
-
 
 constexpr static auto LCURRENT = LNEWLINE;
 

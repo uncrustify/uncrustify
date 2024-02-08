@@ -3,7 +3,6 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
@@ -11,7 +10,6 @@
 
 #include "chunk.h"
 #include "log_rules.h"
-#include "mark_change.h"
 #include "newlines/add.h"
 #include "newlines/remove_next_newlines.h"
 #include "uncrustify.h"
@@ -21,9 +19,6 @@ constexpr static auto LCURRENT = LNEWLINE;
 
 
 using namespace uncrustify;
-
-
-#define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
 
 void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
