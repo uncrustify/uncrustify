@@ -8,8 +8,11 @@
 #ifndef TOKENIZER_TOKENIZE_H_INCLUDED
 #define TOKENIZER_TOKENIZE_H_INCLUDED
 
-#include "uncrustify_types.h"
+#include <cstddef>
+#include <deque>
 
+class Chunk;
+class UncText;
 
 /**
  * Test the input string to see if it satisfies the criteria

@@ -9,9 +9,10 @@
 
 #include "tokenizer/combine.h"
 
+#include "ChunkStack.h"
 #include "lang_pawn.h"
+#include "log_rules.h"
 #include "newlines/iarf.h"
-#include "prototypes.h"
 #include "tokenizer/check_double_brace_init.h"
 #include "tokenizer/combine_fix_mark.h"
 #include "tokenizer/combine_skip.h"
@@ -19,12 +20,10 @@
 #include "tokenizer/EnumStructUnionParser.h"
 #include "tokenizer/flag_braced_init_list.h"
 #include "tokenizer/flag_parens.h"
-#include "tokenizer/mark_question_colon.h"
 #include "tokenizer/tokenize_cleanup.h"
-#include "unc_tools.h"
+#include "uncrustify.h"
 
 #include <limits>
-
 
 constexpr static auto LCURRENT = LCOMBINE;
 

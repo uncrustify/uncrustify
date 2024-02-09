@@ -1,15 +1,13 @@
 /**
  * @file check_template.h
  *
- * splitted from tokenize_cleanup.cpp
- *
  * @author  Guy Maurel 2022
  * @license GPL v2+
  */
 #ifndef TOKENIZER_CHECK_TEMPLATE_H_INCLUDED
 #define TOKENIZER_CHECK_TEMPLATE_H_INCLUDED
 
-#include "uncrustify_types.h"
+class Chunk;
 
 
 /**

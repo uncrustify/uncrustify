@@ -3,14 +3,18 @@
  *
  * @author  Guy Maurel
  * @license GPL v2+
- * extract from combine.cpp
  */
 
 #ifndef TOKENIZER_COMBINE_TOOLS_H_INCLUDED
 #define TOKENIZER_COMBINE_TOOLS_H_INCLUDED
 
+#include <cstddef>
+
 #include "chunk.h"
-#include "ChunkStack.h"
+#include "pcf_flags.h"
+#include "token_enum.h"
+
+class ChunkStack;
 
 /**
  * Checks to see if a series of chunks could be a C++ parameter

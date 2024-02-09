@@ -8,6 +8,7 @@
 #include "tokenizer/parameter_pack_cleanup.h"
 
 #include "chunk.h"
+#include "logger.h"
 #include "uncrustify.h"
 
 

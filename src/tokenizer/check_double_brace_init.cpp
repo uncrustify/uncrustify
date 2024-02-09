@@ -2,15 +2,12 @@
  * @file check_double_brace_init.cpp
  *
  * @author  Guy Maurel
- * extract from combine.cpp
  * @license GPL v2+
  */
 
 #include "tokenizer/check_double_brace_init.h"
 
-
-constexpr static auto LCURRENT = LCOMBINE;
-
+#include "chunk.h"
 
 using namespace std;
 using namespace uncrustify;

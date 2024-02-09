@@ -12,8 +12,9 @@
 
 #include "tokenizer/tokenize_cleanup.h"
 
+#include "chunk.h"
 #include "keywords.h"
-#include "prototypes.h"
+#include "log_rules.h"
 #include "punctuators.h"
 #include "space.h"
 #include "tokenizer/check_template.h"
@@ -22,6 +23,7 @@
 #include "tokenizer/flag_braced_init_list.h"
 #include "tokenizer/flag_decltype.h"
 #include "unc_ctype.h"
+#include "uncrustify.h"
 
 
 using namespace uncrustify;

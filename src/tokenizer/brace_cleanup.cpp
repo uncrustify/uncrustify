@@ -10,11 +10,13 @@
 
 #include "tokenizer/brace_cleanup.h"
 
+#include "chunk.h"
 #include "keywords.h"
 #include "lang_pawn.h"
+#include "log_rules.h"
 #include "parsing_frame_stack.h"
-#include "prototypes.h"
 #include "tokenizer/flag_parens.h"
+#include "uncrustify.h"
 
 #include <stdexcept>            // to get std::invalid_argument
 

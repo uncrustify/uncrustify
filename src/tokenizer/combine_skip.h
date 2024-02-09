@@ -3,13 +3,12 @@
  *
  * @author  Guy Maurel
  * @license GPL v2+
- * extract from combine.cpp
  */
 
 #ifndef TOKENIZER_COMBINE_SKIP_H_INCLUDED
 #define TOKENIZER_COMBINE_SKIP_H_INCLUDED
 
-#include "chunk.h"
+class Chunk;
 
 
 /**

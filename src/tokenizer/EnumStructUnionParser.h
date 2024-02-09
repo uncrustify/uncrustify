@@ -3,7 +3,6 @@
  *
  * @author  Joshua Parker
  * @license GPL v2+
- * extract from combine_fix_mark.h
  */
 
 #ifndef TOKENIZER_ENUM_STRUCT_UNION_PARSER_H_INCLUDED
@@ -11,8 +10,10 @@
 
 #include "pcf_flags.h"
 #include "token_enum.h"
-#include "uncrustify_types.h"
+
 #include <map>
+
+class Chunk;
 
 
 /**
