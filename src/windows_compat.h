@@ -65,8 +65,8 @@ typedef unsigned long long   UINT64;
 #endif // __GNUC__
 #endif // _MSC_VER
 
-#include "stdio.h"
-#include "string.h"
+#include <stdio.h>
+#include <string.h>
 
 #undef snprintf
 #define snprintf       _snprintf

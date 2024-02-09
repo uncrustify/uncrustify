@@ -47,7 +47,7 @@
 #else // not WIN32 or not __QNXNTO__
 // TODO: do all non windows systems know sysexits.h?
 //       Linux knows: /usr/include/sysexits.h
-#include "sysexits.h"      // comes from BSD
+#include <sysexits.h>      // comes from BSD
 #endif
 
 #endif /* ERROR_TYPES_H_INCLUDED */
