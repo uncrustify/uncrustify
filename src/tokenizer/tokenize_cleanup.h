@@ -7,8 +7,7 @@
 #ifndef TOKENIZER_TOKENIZE_CLEANUP_H_INCLUDED
 #define TOKENIZER_TOKENIZE_CLEANUP_H_INCLUDED
 
-#include "uncrustify_types.h"
-
+class Chunk;
 
 /**
  * @brief clean up tokens
@@ -20,11 +19,8 @@
  */
 void tokenize_cleanup();
 
-
 void tokenize_trailing_return_types();
 
-
 void split_off_angle_close(Chunk *pc);
-
 
 #endif /* TOKENIZER_TOKENIZE_CLEANUP_H_INCLUDED */

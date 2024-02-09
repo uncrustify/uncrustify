@@ -3,14 +3,16 @@
  *
  * @author  Guy Maurel
  * @license GPL v2+
- * extract from combine.cpp
  */
 
 #ifndef TOKENIZER_COMBINE_FIX_MARK_H_INCLUDED
 #define TOKENIZER_COMBINE_FIX_MARK_H_INCLUDED
 
-#include "ChunkStack.h"
+#include "pcf_flags.h"
+#include "token_enum.h"
 
+class Chunk;
+class ChunkStack;
 
 /**
  * Checks to see if the current paren is part of a cast.

@@ -8,8 +8,6 @@
 #ifndef TOKENIZER_PARAMETER_PACK_CLEANUP_H_INCLUDED
 #define TOKENIZER_PARAMETER_PACK_CLEANUP_H_INCLUDED
 
-#include "uncrustify_types.h"
-
 void parameter_pack_cleanup();
 
 #endif /* TOKENIZER_PARAMETER_PACK_CLEANUP_H_INCLUDED */

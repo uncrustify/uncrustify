@@ -8,8 +8,9 @@
 #ifndef TOKENIZER_COMBINE_H_INCLUDED
 #define TOKENIZER_COMBINE_H_INCLUDED
 
-#include "chunk.h"
-#include "uncrustify_types.h"
+#include "token_enum.h"
+
+class Chunk;
 
 
 /**

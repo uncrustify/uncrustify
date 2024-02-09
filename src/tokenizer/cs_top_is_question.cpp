@@ -3,12 +3,12 @@
  *
  * @author  Guy Maurel
  * @license GPL v2+
- * extract from combine.cpp
  */
 
 #include "tokenizer/cs_top_is_question.h"
 
 #include "chunk.h"
+#include "ChunkStack.h"
 
 
 bool cs_top_is_question(ChunkStack &cs, size_t level)

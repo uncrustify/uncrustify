@@ -3,14 +3,13 @@
  *
  * @author  Guy Maurel
  * @license GPL v2+
- * extract from combine.h
  */
 
 #include "tokenizer/combine_labels.h"
 
 #include "chunk.h"
+#include "ChunkStack.h"
 #include "tokenizer/cs_top_is_question.h"
-#include "unc_tools.h"
 #include "uncrustify.h"
 
 

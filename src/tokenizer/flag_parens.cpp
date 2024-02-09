@@ -7,6 +7,7 @@
 
 #include "tokenizer/flag_parens.h"
 
+#include "chunk.h"
 #include "uncrustify.h"
 
 

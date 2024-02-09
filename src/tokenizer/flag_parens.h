@@ -8,8 +8,10 @@
 #ifndef TOKENIZER_FLAG_PARENS_H_INCLUDED
 #define TOKENIZER_FLAG_PARENS_H_INCLUDED
 
-#include "chunk.h"
+#include "pcf_flags.h"
+#include "token_enum.h"
 
+class Chunk;
 
 /**
  * Flags everything from the open paren to the close paren.
@@ -23,6 +25,5 @@
  * @return The token after the close paren
  */
 Chunk *flag_parens(Chunk *po, PcfFlags flags, E_Token opentype, E_Token parenttype, bool parent_all);
-
 
 #endif /* TOKENIZER_FLAG_PARENS_H_INCLUDED */

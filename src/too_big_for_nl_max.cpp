@@ -7,15 +7,10 @@
 
 #include "too_big_for_nl_max.h"
 
-#include "log_levels.h"
-#include "log_rules.h"
 #include "logger.h"
 #include "options.h"
 
 #include <cstdio>
-
-
-constexpr static auto LCURRENT = LINDENT;
 
 
 using namespace std;

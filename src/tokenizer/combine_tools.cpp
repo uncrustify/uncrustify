@@ -3,11 +3,11 @@
  *
  * @author  Guy Maurel
  * @license GPL v2+
- * extract from combine.cpp
  */
 
 #include "tokenizer/combine_tools.h"
 
+#include "ChunkStack.h"
 #include "unc_ctype.h"
 #include "uncrustify.h"
 

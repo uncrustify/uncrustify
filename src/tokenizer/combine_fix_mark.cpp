@@ -3,10 +3,10 @@
  *
  * @author  Guy Maurel
  * @license GPL v2+
- * extract fom combine.cpp
  */
 #include "tokenizer/combine_fix_mark.h"
 
+#include "ChunkStack.h"
 #include "log_rules.h"
 #include "tokenizer/combine_skip.h"
 #include "tokenizer/combine_tools.h"

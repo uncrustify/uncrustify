@@ -10,11 +10,12 @@
 #include "tokenizer/tokenize_cleanup.h"
 
 #include "chunk.h"
-#include "prototypes.h"
+#include "log_rules.h"
 #include "tokenizer/check_template.h"
 #include "tokenizer/combine.h"
 #include "tokenizer/flag_braced_init_list.h"
 #include "tokenizer/flag_decltype.h"
+#include "uncrustify.h"
 
 
 constexpr static auto LCURRENT = LTEMPL;

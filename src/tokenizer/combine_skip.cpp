@@ -3,7 +3,6 @@
  *
  * @author  Guy Maurel
  * @license GPL v2+
- * extract from combine.cpp
  */
 
 #include "tokenizer/combine_skip.h"
