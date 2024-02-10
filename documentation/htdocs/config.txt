@@ -1,4 +1,4 @@
-# Uncrustify-0.78.1
+# Uncrustify-0.79.0-dev
 
 #
 # General options
@@ -470,6 +470,10 @@ sp_before_square_asm_block      = ignore   # ignore/add/remove/force/not_defined
 
 # Add or remove space before '[]'.
 sp_before_squares               = ignore   # ignore/add/remove/force/not_defined
+
+# Add or remove space before C++17 structured bindings
+# after byref.
+sp_cpp_before_struct_binding_after_byref = ignore   # ignore/add/remove/force/not_defined
 
 # Add or remove space before C++17 structured bindings.
 sp_cpp_before_struct_binding    = ignore   # ignore/add/remove/force/not_defined
@@ -1122,6 +1126,9 @@ sp_after_bit_colon              = ignore   # ignore/add/remove/force/not_defined
 
 # If true, a <TAB> is inserted after #define.
 force_tab_after_define          = false    # true/false
+
+# Add or remove space between two strings.
+sp_string_string                = ignore   # ignore/add/remove/force/not_defined
 
 #
 # Indenting options
@@ -3515,8 +3522,12 @@ pp_indent_extern                = true     # true/false
 # Default: 1
 pp_indent_brace                 = 1        # number
 
-# Whether to print warning messages for unbalanced #if and #else blocks.
-# This will print a message in the following cases:
+# Action to perform when unbalanced #if and #else blocks are found.
+# 0: do nothing
+# 1: print a warning message
+# 2: terminate the program with an error (EX_SOFTWARE)
+#
+# The action will be triggered in the following cases:
 # - if an #ifdef block ends on a different indent level than
 #   where it started from. Example:
 #
@@ -3535,7 +3546,7 @@ pp_indent_brace                 = 1        # number
 #        }
 #      int j;
 #    #endif
-pp_warn_unbalanced_if           = false    # true/false
+pp_unbalanced_if_action         = 0        # unsigned number
 
 #
 # Sort includes options

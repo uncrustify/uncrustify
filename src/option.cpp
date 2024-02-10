@@ -431,6 +431,20 @@ bool process_option_line_compat_0_76(const std::string &cmd, const std::vector<s
    return(false);
 } // process_option_line_compat_0_76
 
+
+bool process_option_line_compat_0_78(const std::string &cmd, const char *filename)
+{
+   if (cmd == "pp_warn_unbalanced_if")
+   {
+      OptionWarning w{ filename, OptionWarning::MINOR };
+      w("option '%s' is deprecated; it has been replaced by '%s'.",
+        cmd.c_str(), options::pp_unbalanced_if_action.name());
+
+      return(true);
+   }
+   return(false);
+} // process_option_line_compat_0_78
+
 } // namespace
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1135,6 +1149,14 @@ void process_option_line(const std::string &config_line, const char *filename,
       if (compat_level < option_level(0, 77))
       {
          if (process_option_line_compat_0_76(cmd, args, filename))
+         {
+            return;
+         }
+      }
+
+      if (compat_level < option_level(0, 79))
+      {
+         if (process_option_line_compat_0_78(cmd, filename))
          {
             return;
          }
