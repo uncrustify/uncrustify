@@ -4283,8 +4283,12 @@ pp_indent_extern; // = true
 extern BoundedOption<signed, -1, 1>
 pp_indent_brace; // = 1
 
-// Whether to print warning messages for unbalanced #if and #else blocks.
-// This will print a message in the following cases:
+// Action to perform when unbalanced #if and #else blocks are found.
+// 0: do nothing
+// 1: print a warning message
+// 2: terminate the program with an error (EX_SOFTWARE)
+//
+// The action will be triggered in the following cases:
 // - if an #ifdef block ends on a different indent level than
 //   where it started from. Example:
 //
@@ -4303,10 +4307,8 @@ pp_indent_brace; // = 1
 //        }
 //      int j;
 //    #endif
-extern Option<bool>
-pp_warn_unbalanced_if; // = false
-
-// TODO ...until here.
+extern BoundedOption<unsigned, 0, 2>
+pp_unbalanced_if_action; // = 0
 
 //END
 

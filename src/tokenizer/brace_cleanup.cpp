@@ -195,11 +195,18 @@ void brace_cleanup()
             // out of the #define body, restore the frame
             size_t brace_level = frm.GetBraceLevel();
 
-            if (  options::pp_warn_unbalanced_if()
-               && brace_level != 1)
+            if (brace_level != 1)
             {
-               LOG_FMT(LWARN, "%s(%d): orig line is %zu, unbalanced #define block braces, out-level is %zu\n",
-                       __func__, __LINE__, pc->GetOrigLine(), brace_level);
+               if (options::pp_unbalanced_if_action() > 0)
+               {
+                  LOG_FMT(LWARN, "%s(%d): orig line is %zu, unbalanced #define block braces, out-level is %zu\n",
+                          __func__, __LINE__, pc->GetOrigLine(), brace_level);
+               }
+
+               if (options::pp_unbalanced_if_action() == 2)
+               {
+                  exit(EX_SOFTWARE);
+               }
             }
             braceState.frames.pop(frm);
          }
