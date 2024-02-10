@@ -13,6 +13,7 @@
 #include "mark_change.h"
 #include "space.h"
 
+
 void newline_del_between(Chunk *start, Chunk *end)
 {
    LOG_FUNC_ENTRY();

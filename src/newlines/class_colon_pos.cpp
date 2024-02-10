@@ -54,7 +54,6 @@ void newlines_class_colon_pos(E_Token tok)
       pcc = options::pos_constr_comma();
       log_rule_B("pos_constr_comma");
    }
-   Chunk  *ccolon  = nullptr;
    size_t acv_span = options::align_constr_value_span();
 
    log_rule_B("align_constr_value_span");
@@ -72,10 +71,11 @@ void newlines_class_colon_pos(E_Token tok)
       constructorValue.m_right_align = !options::align_on_tabstop();
       log_rule_B("align_on_tabstop");
    }
+   Chunk *ccolon = Chunk::NullChunkPtr;
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      if (  ccolon == nullptr
+      if (  ccolon->IsNullChunk()
          && pc->IsNot(tok))
       {
          continue;
@@ -162,7 +162,7 @@ void newlines_class_colon_pos(E_Token tok)
          if (  pc->Is(CT_BRACE_OPEN)
             || pc->Is(CT_SEMICOLON))
          {
-            ccolon = nullptr;
+            ccolon = Chunk::NullChunkPtr;
 
             if (with_acv)
             {

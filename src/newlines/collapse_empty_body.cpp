@@ -11,6 +11,7 @@
 #include "chunk.h"
 #include "mark_change.h"
 
+
 void collapse_empty_body(Chunk *br_open)
 {
    for (Chunk *pc = br_open->GetNext(); pc->IsNot(CT_BRACE_CLOSE); pc = pc->GetNext())

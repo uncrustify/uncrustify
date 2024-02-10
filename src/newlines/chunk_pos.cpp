@@ -190,7 +190,7 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
 
             if (next->GetNlCount() == 1)
             {
-               if (  prev != nullptr
+               if (  prev->IsNotNullChunk()
                   && !prev->TestFlags(PCF_IN_PREPROC))
                {
                   // move the CT_BOOL to after the newline

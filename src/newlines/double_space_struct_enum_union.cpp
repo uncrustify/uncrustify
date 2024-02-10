@@ -18,12 +18,7 @@ void newlines_double_space_struct_enum_union(Chunk *open_brace)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *pc = Chunk::NullChunkPtr;
-
-   if (open_brace != nullptr)
-   {
-      pc = open_brace;
-   }
+   Chunk *pc = open_brace;
 
    while (  (pc = pc->GetNextNc())->IsNotNullChunk()
          && pc->GetLevel() > open_brace->GetLevel())

@@ -289,12 +289,7 @@ Chunk *newline_var_def_blk(Chunk *start)
          }
       }
       did_this_line = true;
-
-      if (pc == nullptr)
-      {
-         pc = Chunk::NullChunkPtr;
-      }
-      pc = pc->GetNext();
+      pc            = pc->GetNext();
    }
    LOG_FMT(LVARDFBLK, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', level is %zu\n",
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetLevel());

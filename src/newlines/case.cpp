@@ -50,7 +50,7 @@ void newline_case(Chunk *start)
    }
    Chunk *pc = newline_add_between(prev, start);
 
-   if (pc == nullptr)
+   if (pc->IsNullChunk())
    {
       return;
    }

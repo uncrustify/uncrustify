@@ -14,6 +14,7 @@
 #include "newlines/setup_newline_add.h"
 #include "uncrustify.h"
 
+
 Chunk *newline_add_after(Chunk *pc)
 {
    LOG_FUNC_ENTRY();

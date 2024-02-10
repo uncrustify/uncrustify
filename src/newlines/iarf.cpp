@@ -26,14 +26,9 @@ void newline_iarf(Chunk *pc, iarf_e av)
 
    LOG_FMT(LNFD, "%s(%d): ", __func__, __LINE__);
    log_func_stack(LNFD, "CallStack:");
-   Chunk *after = Chunk::NullChunkPtr;
+   Chunk *after = pc->GetNextNnl();
 
-   if (pc != nullptr)
-   {
-      after = pc->GetNextNnl();
-   }
-
-   if (  (pc != nullptr && pc->Is(CT_FPAREN_OPEN))                         // Issue #2914
+   if (  (pc->IsNotNullChunk() && pc->Is(CT_FPAREN_OPEN))                         // Issue #2914
       && pc->GetParentType() == CT_FUNC_CALL
       && after->Is(CT_COMMENT_CPP)
       && options::donot_add_nl_before_cpp_comment())
@@ -51,9 +46,7 @@ void newline_iarf_pair(Chunk *before, Chunk *after, iarf_e av, bool check_nl_ass
    LOG_FMT(LNEWLINE, "%s(%d): ", __func__, __LINE__);
    log_func_stack(LNEWLINE, "CallStack:");
 
-   if (  before == nullptr
-      || before == Chunk::NullChunkPtr
-      || after == nullptr
+   if (  before == Chunk::NullChunkPtr
       || after == Chunk::NullChunkPtr
       || after->Is(CT_IGNORED))
    {
@@ -73,7 +66,7 @@ void newline_iarf_pair(Chunk *before, Chunk *after, iarf_e av, bool check_nl_ass
       LOG_FMT(LNEWLINE, "%s(%d): newline_add_between '%s' and '%s'\n",
               __func__, __LINE__, before->Text(), after->Text());
 
-      if (  nl != nullptr
+      if (  nl->IsNotNullChunk()
          && av == IARF_FORCE
          && nl->GetNlCount() > 1)
       {

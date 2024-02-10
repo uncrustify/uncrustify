@@ -1812,12 +1812,7 @@ static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt)
    {
       return(false);
    }
-
    // next is a newline for sure, make sure it is a single newline
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
-   }
    Chunk *next = pc->GetNext();
 
    if (  next->IsNotNullChunk()
@@ -2291,7 +2286,7 @@ static std::map<std::size_t, std::pair<std::wregex, std::wregex> > get_reflow_fo
 
 static void output_comment_multi(Chunk *pc)
 {
-   if (pc == nullptr)
+   if (pc->IsNullChunk())
    {
       return;
    }
@@ -3278,8 +3273,7 @@ static void do_kw_subst(Chunk *pc)
 
 static void output_comment_multi_simple(Chunk *pc)
 {
-   if (  pc == nullptr
-      && pc->IsNotNullChunk())
+   if (pc->IsNullChunk())
    {
       return;
    }
@@ -3438,7 +3432,7 @@ static void generate_if_conditional_as_text(UncText &dst, Chunk *ifdef)
 
    dst.clear();
 
-   for (Chunk *pc = ifdef; pc != nullptr && pc->IsNotNullChunk(); pc = pc->GetNext())
+   for (Chunk *pc = ifdef; pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (column == -1)
       {
@@ -3477,8 +3471,8 @@ static void generate_if_conditional_as_text(UncText &dst, Chunk *ifdef)
 
 void add_long_preprocessor_conditional_block_comment()
 {
-   Chunk *pp_start = nullptr;
-   Chunk *pp_end   = nullptr;
+   Chunk *pp_start = Chunk::NullChunkPtr;
+   Chunk *pp_end   = Chunk::NullChunkPtr;
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {

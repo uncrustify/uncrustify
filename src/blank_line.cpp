@@ -30,7 +30,7 @@ void blank_line_max(Chunk *pc, Option<unsigned> &opt)
 {
    LOG_FUNC_ENTRY();
 
-   if (pc == nullptr)
+   if (pc->IsNullChunk())
    {
       return;
    }

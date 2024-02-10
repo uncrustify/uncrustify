@@ -39,7 +39,7 @@ void nl_create_list_liner(Chunk *brace_open)
    LOG_FUNC_ENTRY();
 
    // See if we get a newline between the next text and the vbrace_close
-   if (brace_open == nullptr)
+   if (brace_open->IsNullChunk())
    {
       return;
    }
@@ -301,7 +301,7 @@ void undo_one_liner(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (  pc != nullptr
+   if (  pc->IsNotNullChunk()
       && pc->TestFlags(PCF_ONE_LINER))
    {
       LOG_FMT(LNL1LINE, "%s(%d): pc->Text() '%s', orig line is %zu, orig col is %zu",

@@ -11,6 +11,7 @@
 #include "chunk.h"
 #include "mark_change.h"
 
+
 //! Ensure that the next non-comment token after close brace is a newline
 void newline_end_newline(Chunk *br_close)
 {

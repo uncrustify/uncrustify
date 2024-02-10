@@ -12,6 +12,7 @@
 #include "logger.h"
 #include "mark_change.h"
 
+
 void remove_next_newlines(Chunk *start)
 {
    LOG_FUNC_ENTRY();

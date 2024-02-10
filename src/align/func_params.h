@@ -11,7 +11,7 @@
 
 class Chunk;
 
-void   align_func_params();
+void align_func_params();
 Chunk *align_func_param(Chunk *start);
 
 #endif /* ALIGN_FUNC_PARAMS_H_INCLUDED */
