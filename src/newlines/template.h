@@ -13,7 +13,6 @@
 class Chunk;
 
 void newline_template(Chunk *start);
-uncrustify::iarf_e newline_template_option(Chunk *pc, uncrustify::iarf_e special,
-                                           uncrustify::iarf_e base, uncrustify::iarf_e fallback);
+uncrustify::iarf_e newline_template_option(Chunk *pc, uncrustify::iarf_e special, uncrustify::iarf_e base, uncrustify::iarf_e fallback);
 
 #endif /* NEWLINES_TEMPLATE_H_INCLUDED */

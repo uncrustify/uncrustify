@@ -11,16 +11,12 @@
 #include "chunk.h"
 #include "mark_change.h"
 
+
 void newline_before_return(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *pc = Chunk::NullChunkPtr;
-
-   if (start != nullptr)
-   {
-      pc = start->GetPrev();
-   }
+   Chunk *pc = start->GetPrev();
    Chunk *nl = pc;
 
    // Skip over single preceding newline

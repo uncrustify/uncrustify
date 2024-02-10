@@ -12,6 +12,7 @@
 #include "mark_change.h"
 #include "uncrustify.h"
 
+
 void newline_min_after(Chunk *ref, size_t count, E_PcfFlag flag)
 {
    LOG_FUNC_ENTRY();

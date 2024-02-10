@@ -732,7 +732,7 @@ void examine_token(const char *func_name, int theLine, size_t orig_line_to_exami
 {
    bool  line_found   = false;
    bool  column_found = false;
-   Chunk *pc_saved    = nullptr;
+   Chunk *pc_saved    = Chunk::NullChunkPtr;
 
    // look for the searched line
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())

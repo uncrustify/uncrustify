@@ -10,6 +10,7 @@
 
 #include "chunk.h"
 
+
 Chunk *get_closing_brace(Chunk *start)
 {
    LOG_FUNC_ENTRY();

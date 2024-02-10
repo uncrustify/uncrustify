@@ -11,6 +11,7 @@
 #include "can_increase_nl.h"
 #include "mark_change.h"
 
+
 void double_newline(Chunk *nl)
 {
    LOG_FUNC_ENTRY();

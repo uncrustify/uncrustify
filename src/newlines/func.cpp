@@ -162,7 +162,7 @@ void newline_func_def_or_call(Chunk *start)
                log_rule_B("nl_func_leave_one_liners");
 
                if (  options::nl_func_leave_one_liners()
-                  && (  brace == nullptr
+                  && (  brace->IsNullChunk()
                      || brace->TestFlags(PCF_ONE_LINER)))   // Issue #1511 and #3274
                {
                   a = IARF_IGNORE;

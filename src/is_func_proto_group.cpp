@@ -28,7 +28,7 @@ using namespace uncrustify;
  */
 bool is_func_proto_group(Chunk *pc, E_Token one_liner_type)
 {
-   if (  pc != nullptr
+   if (  pc->IsNotNullChunk()
       && options::nl_class_leave_one_liner_groups()
       && (  pc->Is(one_liner_type)
          || pc->GetParentType() == one_liner_type)

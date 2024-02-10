@@ -8,8 +8,8 @@
 #ifndef NEWLINES_MIN_AFTER_H_INCLUDED
 #define NEWLINES_MIN_AFTER_H_INCLUDED
 
-#include <cstddef>
 #include "pcf_flags.h"
+#include <cstddef>
 
 class Chunk;
 

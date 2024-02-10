@@ -13,6 +13,7 @@
 #include "mark_change.h"
 #include "newlines/add.h"
 
+
 Chunk *newline_force_after(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
