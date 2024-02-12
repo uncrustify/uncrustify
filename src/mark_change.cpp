@@ -10,8 +10,6 @@
 #include "logger.h"
 #include "uncrustify_types.h"
 
-#include <cstddef>
-
 
 void mark_change(const char *func, size_t line)
 {

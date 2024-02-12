@@ -3,14 +3,12 @@
  * Adds or removes newlines.
  *
  * @author  Guy Maurel
- * extract from newlines.cpp 26 November 2023
  * @license GPL v2+
  */
 
-#include "is_var_def.h"
+#include "newlines/is_var_def.h"
 
-
-constexpr static auto LCURRENT = LNEWLINE;
+#include "chunk.h"
 
 using namespace std;
 using namespace uncrustify;

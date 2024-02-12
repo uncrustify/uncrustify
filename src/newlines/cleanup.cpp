@@ -40,6 +40,9 @@
 constexpr static auto LCURRENT = LNEWLINE;
 
 
+using namespace uncrustify;
+
+
 void newlines_cleanup_angles()
 {
    // Issue #1167

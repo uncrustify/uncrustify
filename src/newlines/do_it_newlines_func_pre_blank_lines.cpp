@@ -9,10 +9,15 @@
 #include "newlines/do_it_newlines_func_pre_blank_lines.h"
 
 #include "blank_line.h"
+#include "chunk.h"
 #include "log_rules.h"
+#include "uncrustify.h"
 
 
 constexpr static auto LCURRENT = LNEWLINE;
+
+
+using namespace uncrustify;
 
 
 bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, E_Token start_type)

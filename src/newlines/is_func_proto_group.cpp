@@ -3,12 +3,12 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
 #include "is_func_proto_group.h"
 
+#include "chunk.h"
 #include "log_rules.h"
 
 

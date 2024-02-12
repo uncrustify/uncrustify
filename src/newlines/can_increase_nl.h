@@ -3,13 +3,12 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #ifndef CAN_INCREASE_NL_H_INCLUDED
 #define CAN_INCREASE_NL_H_INCLUDED
 
-#include "chunk.h"
+class Chunk;
 
 /**
  * Check to see if we are allowed to increase the newline count.

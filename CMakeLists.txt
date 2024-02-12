@@ -269,10 +269,8 @@ set(uncrustify_sources
   src/align/var_def_brace.cpp
   src/args.cpp
   src/backup.cpp
-  src/blank_line.cpp
   src/braces.cpp
   src/calculate_closing_brace_position.cpp
-  src/can_increase_nl.cpp
   src/change_int_types.cpp
   src/chunk.cpp
   src/ChunkStack.cpp
@@ -281,8 +279,6 @@ set(uncrustify_sources
   src/detect.cpp
   src/ifdef_over_whole_file.cpp
   src/indent.cpp
-  src/is_func_proto_group.cpp
-  src/is_var_def.cpp
   src/keywords.cpp
   src/lang_pawn.cpp
   src/language_names.cpp
@@ -297,7 +293,9 @@ set(uncrustify_sources
   src/newlines/annotations.cpp
   src/newlines/before_return.cpp
   src/newlines/between.cpp
+  src/newlines/blank_line.cpp
   src/newlines/brace_pair.cpp
+  src/newlines/can_increase_nl.cpp
   src/newlines/case.cpp
   src/newlines/chunk_pos.cpp
   src/newlines/class_colon_pos.cpp
@@ -320,6 +318,8 @@ set(uncrustify_sources
   src/newlines/iarf.cpp
   src/newlines/if_for_while_switch.cpp
   src/newlines/is_func_call_or_def.cpp
+  src/newlines/is_func_proto_group.cpp
+  src/newlines/is_var_def.cpp
   src/newlines/min_after.cpp
   src/newlines/namespace.cpp
   src/newlines/oc_msg.cpp
@@ -412,10 +412,8 @@ set(uncrustify_headers
   src/args.h
   src/backup.h
   src/base_types.h
-  src/blank_line.h
   src/braces.h
   src/calculate_closing_brace_position.h
-  src/can_increase_nl.h
   src/change_int_types.h
   src/char_table.h
   src/chunk.h
@@ -426,8 +424,6 @@ set(uncrustify_headers
   src/error_types.h
   src/ifdef_over_whole_file.h
   src/indent.h
-  src/is_func_proto_group.h
-  src/is_var_def.h
   src/keywords.h
   src/lang_pawn.h
   src/language_names.h
@@ -444,7 +440,9 @@ set(uncrustify_headers
   src/newlines/annotations.h
   src/newlines/before_return.h
   src/newlines/between.h
+  src/newlines/blank_line.h
   src/newlines/brace_pair.h
+  src/newlines/can_increase_nl.h
   src/newlines/case.h
   src/newlines/chunk_pos.h
   src/newlines/class_colon_pos.h
@@ -466,6 +464,8 @@ set(uncrustify_headers
   src/newlines/iarf.h
   src/newlines/if_for_while_switch.h
   src/newlines/is_func_call_or_def.h
+  src/newlines/is_func_proto_group.h
+  src/newlines/is_var_def.h
   src/newlines/min_after.h
   src/newlines/namespace.h
   src/newlines/oc_msg.h

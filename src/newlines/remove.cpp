@@ -7,9 +7,9 @@
  */
 #include "newlines/remove.h"
 
-#include "can_increase_nl.h"
 #include "chunk.h"
 #include "mark_change.h"
+#include "newlines/can_increase_nl.h"
 #include "newlines/iarf.h"
 
 

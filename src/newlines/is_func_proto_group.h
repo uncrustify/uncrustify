@@ -1,16 +1,16 @@
 /**
  * @file is_func_proto_group.h
- * prototype for is_func_proto_group.cpp
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 #ifndef IS_FUNC_PROTO_GROUP_H_INCLUDED
 #define IS_FUNC_PROTO_GROUP_H_INCLUDED
 
-#include "chunk.h"
+#include "token_enum.h"
+
+class Chunk;
 
 /**
  * Test if a chunk may be combined with a function prototype group.
