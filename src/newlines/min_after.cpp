@@ -8,8 +8,9 @@
 
 #include "newlines/min_after.h"
 
-#include "can_increase_nl.h"
+#include "chunk.h"
 #include "mark_change.h"
+#include "newlines/can_increase_nl.h"
 #include "uncrustify.h"
 
 

@@ -3,12 +3,12 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
-#include "can_increase_nl.h"
+#include "newlines/can_increase_nl.h"
 
+#include "chunk.h"
 #include "ifdef_over_whole_file.h"
 #include "log_rules.h"
 

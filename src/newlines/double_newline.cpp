@@ -8,8 +8,9 @@
 
 #include "newlines/double_newline.h"
 
-#include "can_increase_nl.h"
+#include "chunk.h"
 #include "mark_change.h"
+#include "newlines/can_increase_nl.h"
 
 
 void double_newline(Chunk *nl)

@@ -1,31 +1,70 @@
 /**
- * @file do_blank_lines.cpp
+ * @file blank_line.cpp
  *
  * @author  Ben Gardner
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
+#include "blank_line.h"
 
-#include "do_blank_lines.h"
-
-#include "blank_line_max.h"
-#include "blank_line_set.h"
-#include "can_increase_nl.h"
 #include "chunk.h"
 #include "ifdef_over_whole_file.h"
 #include "is_func_proto_group.h"
 #include "log_rules.h"
 #include "mark_change.h"
-#include "options.h"
-#include "pcf_flags.h"
+#include "newlines/can_increase_nl.h"
+#include "newlines/func_pre_blank_lines.h"
+#include "newlines/if_for_while_switch.h"
+#include "newlines/one_liner.h"
 #include "uncrustify.h"
+
+
+constexpr static auto LCURRENT = LNEWLINE;
 
 
 using namespace uncrustify;
 
 
-constexpr static auto LCURRENT = LNEWLINE;
+void blank_line_max(Chunk *pc, Option<unsigned> &opt)
+{
+   LOG_FUNC_ENTRY();
+
+   if (pc->IsNullChunk())
+   {
+      return;
+   }
+   const auto optval = opt();
+
+   if (  (optval > 0)
+      && (pc->GetNlCount() > optval))
+   {
+      LOG_FMT(LBLANKD, "%s(%d): blank lines: %s max line %zu\n",
+              __func__, __LINE__, opt.name(), pc->GetOrigLine());
+      pc->SetNlCount(optval);
+      MARK_CHANGE();
+   }
+} // blank_line_max
+
+
+void blank_line_set(Chunk *pc, Option<unsigned> &opt)
+{
+   LOG_FUNC_ENTRY();
+
+   if (pc->IsNullChunk())
+   {
+      return;
+   }
+   const unsigned optval = opt();
+
+   if (  (optval > 0)
+      && (pc->GetNlCount() != optval))
+   {
+      LOG_FMT(LBLANKD, "%s(%d): blank lines: %s set line %zu to %u\n",
+              __func__, __LINE__, opt.name(), pc->GetOrigLine(), optval);
+      pc->SetNlCount(optval);
+      MARK_CHANGE();
+   }
+} // blank_line_set
 
 
 void do_blank_lines()
@@ -616,3 +655,93 @@ void do_blank_lines()
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetNlCount());
    }
 } // do_blank_lines
+
+
+void newlines_insert_blank_lines()
+{
+   LOG_FUNC_ENTRY();
+
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
+   {
+      //LOG_FMT(LNEWLINE, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
+      //        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
+      if (pc->Is(CT_IF))
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_if());
+         log_rule_B("nl_before_if");
+         newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_if());
+         log_rule_B("nl_after_if");
+      }
+      else if (pc->Is(CT_FOR))
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_for());
+         log_rule_B("nl_before_for");
+         newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_for());
+         log_rule_B("nl_after_for");
+      }
+      else if (pc->Is(CT_WHILE))
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_while());
+         log_rule_B("nl_before_while");
+         newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_while());
+         log_rule_B("nl_after_while");
+      }
+      else if (pc->Is(CT_SWITCH))
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_switch());
+         log_rule_B("nl_before_switch");
+         newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_switch());
+         log_rule_B("nl_after_switch");
+      }
+      else if (pc->Is(CT_SYNCHRONIZED))
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_synchronized());
+         log_rule_B("nl_before_synchronized");
+         newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_synchronized());
+         log_rule_B("nl_after_synchronized");
+      }
+      else if (pc->Is(CT_DO))
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_do());
+         log_rule_B("nl_before_do");
+         newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_do());
+         log_rule_B("nl_after_do");
+      }
+      else if (pc->Is(CT_OC_INTF))
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_interface());
+         log_rule_B("nl_oc_before_interface");
+      }
+      else if (pc->Is(CT_OC_END))
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_end());
+         log_rule_B("nl_oc_before_end");
+      }
+      else if (pc->Is(CT_OC_IMPL))
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_implementation());
+         log_rule_B("nl_oc_before_implementation");
+      }
+      else if (  pc->Is(CT_FUNC_CLASS_DEF)
+              || pc->Is(CT_FUNC_DEF)
+              || pc->Is(CT_FUNC_CLASS_PROTO)
+              || pc->Is(CT_FUNC_PROTO))
+      {
+         if (  options::nl_class_leave_one_liner_groups()
+            && is_class_one_liner(pc))
+         {
+            log_rule_B("nl_class_leave_one_liner_groups");
+            newlines_func_pre_blank_lines(pc, CT_FUNC_PROTO);
+         }
+         else
+         {
+            newlines_func_pre_blank_lines(pc, pc->GetType());
+         }
+      }
+      else
+      {
+         // ignore it
+         //LOG_FMT(LNEWLINE, "%s(%d): ignore it\n", __func__, __LINE__);
+      }
+   }
+} // newlines_insert_blank_lines

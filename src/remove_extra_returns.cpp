@@ -1,10 +1,8 @@
 /**
  * @file remove_extra_returns.cpp
  *
- * @author  Guy Maurel
- *          October 2015, 2016
+ * @author  Guy Maurel October 2015, 2016
  * @license GPL v2+
- * extract from combine.cpp
  */
 
 #include "remove_extra_returns.h"

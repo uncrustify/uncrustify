@@ -1,9 +1,7 @@
 /**
  * @file mark_change.h
- * prototypes for mark_change.cpp
  *
  * @author  Guy Maurel
- * extract from newlines.cpp
  * @license GPL v2+
  */
 
