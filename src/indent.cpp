@@ -624,7 +624,7 @@ void indent_text()
       log_rule_B("indent_col1_multi_string_literal");
 
       if (  (pc->GetType() == CT_STRING_MULTI)
-         && !(cpd.lang_flags & LANG_OC)                      // Issue #1795
+         && !language_is_set(LANG_OC)                      // Issue #1795
          && options::indent_col1_multi_string_literal())
       {
          string str = pc->Text();
