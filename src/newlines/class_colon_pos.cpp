@@ -5,12 +5,12 @@
  * @author  Guy Maurel
  * @license GPL v2+
  */
-
 #include "newlines/class_colon_pos.h"
 
 #include "align/stack.h"
 #include "chunk.h"
 #include "log_rules.h"
+#include "keywords.h"
 #include "mark_change.h"
 #include "newlines/add.h"
 #include "newlines/force.h"
@@ -57,7 +57,7 @@ void newlines_class_colon_pos(E_Token tok)
    size_t acv_span = options::align_constr_value_span();
 
    log_rule_B("align_constr_value_span");
-   bool       with_acv = (acv_span > 0) && language_is_set(LANG_CPP);
+   bool       with_acv = (acv_span > 0) && language_is_set(lang_flag_e::LANG_CPP);
    AlignStack constructorValue;    // ABC_Member(abc_value)
 
    if (with_acv)

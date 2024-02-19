@@ -103,7 +103,7 @@ void newlines_cleanup_braces(bool first)
       {
          log_rule_B("nl_oc_brace_catch");
 
-         if (  language_is_set(LANG_OC)
+         if (  language_is_set(lang_flag_e::LANG_OC)
             && (pc->GetStr()[0] == '@')
             && (options::nl_oc_brace_catch() != IARF_IGNORE))
          {
@@ -120,7 +120,7 @@ void newlines_cleanup_braces(bool first)
          {
             log_rule_B("nl_oc_catch_brace");
 
-            if (  language_is_set(LANG_OC)
+            if (  language_is_set(lang_flag_e::LANG_OC)
                && (options::nl_oc_catch_brace() != IARF_IGNORE))
             {
                log_rule_B("nl_oc_catch_brace");
@@ -136,7 +136,7 @@ void newlines_cleanup_braces(bool first)
          {
             log_rule_B("nl_oc_catch_brace");
 
-            if (  language_is_set(LANG_OC)
+            if (  language_is_set(lang_flag_e::LANG_OC)
                && (options::nl_oc_catch_brace() != IARF_IGNORE))
             {
                newlines_if_for_while_switch(pc, options::nl_oc_catch_brace());
@@ -1230,8 +1230,8 @@ void newlines_cleanup_braces(bool first)
          newline_iarf(pc, IARF_REMOVE);
       }
       else if (  pc->Is(CT_MEMBER)
-              && (  language_is_set(LANG_JAVA)
-                 || language_is_set(LANG_CPP)))                 // Issue #2574
+              && (  language_is_set(lang_flag_e::LANG_JAVA)
+                 || language_is_set(lang_flag_e::LANG_CPP)))                 // Issue #2574
       {
          // Issue #1124
          if (pc->GetParentType() != CT_FUNC_DEF)

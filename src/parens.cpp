@@ -5,7 +5,6 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-
 #include "parens.h"
 
 #include "log_rules.h"
@@ -339,7 +338,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
          {
             hit_compare = false;
 
-            if (!language_is_set(LANG_CS))
+            if (!language_is_set(lang_flag_e::LANG_CS))
             {
                add_parens_between(ref, pc);
             }
@@ -383,7 +382,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
 
    if (  hit_compare
       && ref != popen
-      && !language_is_set(LANG_CS))
+      && !language_is_set(lang_flag_e::LANG_CS))
    {
       add_parens_between(ref, pclose);
    }

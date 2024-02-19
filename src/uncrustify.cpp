@@ -5,7 +5,6 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-
 #define DEFINE_CHAR_TABLE
 
 #include "uncrustify.h"
@@ -1005,7 +1004,7 @@ int main(int argc, char *argv[])
          }
          else
          {
-            cpd.lang_flags = LANG_C;
+            cpd.lang_flags = e_LANG_C;
          }
       }
 
@@ -2002,7 +2001,7 @@ static void uncrustify_start(const deque<int> &data)
 
    // At this point, the level information is available and accurate.
 
-   if (language_is_set(LANG_PAWN))
+   if (language_is_set(lang_flag_e::LANG_PAWN))
    {
       pawn_prescan();
    }
@@ -2151,8 +2150,8 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
    }
 
    // Add or remove redundant 'int' keyword of integer types
-   if (  (  language_is_set(LANG_C)
-         || language_is_set(LANG_CPP))
+   if (  (  language_is_set(lang_flag_e::LANG_C)
+         || language_is_set(lang_flag_e::LANG_CPP))
       && (  options::mod_int_short() != IARF_IGNORE
          || options::mod_short_int() != IARF_IGNORE
          || options::mod_int_long() != IARF_IGNORE
@@ -2300,7 +2299,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
    }
 
    // Scrub certain added semicolons
-   if (  language_is_set(LANG_PAWN)
+   if (  language_is_set(lang_flag_e::LANG_PAWN)
       && options::mod_pawn_semicolon())
    {
       log_rule_B("mod_pawn_semicolon");

@@ -490,14 +490,14 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    cpd.filename = "stdin";
    cpd.frag     = frag;
 
-   if (langIDX == 0)   // 0 == undefined
+   if (langIDX == (lang_flag_e)0)   // 0 == undefined
    {
       LOG_FMT(LWARN, "language of input file not defined, C++ will be assumed\n");
-      cpd.lang_flags = LANG_CPP;
+      cpd.lang_flags = e_LANG_CPP;
    }
    else
    {
-      cpd.lang_flags = langIDX;
+      cpd.lang_flags = (size_t)langIDX;
    }
    // embind complains about char* so we use an intptr_t to get the pointer and
    // cast it, memory management is done in /emscripten/postfix_module.js

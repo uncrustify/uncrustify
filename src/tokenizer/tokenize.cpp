@@ -7,7 +7,6 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-
 #include "tokenizer/tokenize.h"
 
 #include "keywords.h"
@@ -501,8 +500,8 @@ static const char *str_search(const char *needle, const char *haystack, int hays
 
 static bool parse_comment(TokenContext &ctx, Chunk &pc)
 {
-   bool   is_d    = language_is_set(LANG_D);
-   bool   is_cs   = language_is_set(LANG_CS);
+   bool   is_d    = language_is_set(lang_flag_e::LANG_D);
+   bool   is_cs   = language_is_set(lang_flag_e::LANG_CS);
    size_t d_level = 0;
 
    // does this start with '/ /' or '/ *' or '/ +' (d)
@@ -907,7 +906,7 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
    bool did_hex = false;
 
    if (  ctx.peek() == '0'                   // 48
-      && !language_is_set(LANG_CS))
+      && !language_is_set(lang_flag_e::LANG_CS))
    {
       size_t ch;
       Chunk  pc_temp;
@@ -1185,7 +1184,7 @@ static bool parse_string(TokenContext &ctx, Chunk &pc, size_t quote_idx, bool al
    log_rule_B("string_replace_tab_chars");
    const bool should_escape_tabs = (  allow_escape
                                    && options::string_replace_tab_chars()
-                                   && language_is_set(LANG_ALLC));
+                                   && language_is_set(lang_flag_e::LANG_ALLC));
 
    pc.Str().clear();
 
@@ -1668,7 +1667,7 @@ static bool parse_word(TokenContext &ctx, Chunk &pc, bool skipcheck)
    else
    {
       // '@interface' is reserved, not an interface itself
-      if (  language_is_set(LANG_JAVA)
+      if (  language_is_set(lang_flag_e::LANG_JAVA)
          && pc.GetStr().startswith("@")
          && !pc.GetStr().equals(intr_txt))
       {
@@ -1693,7 +1692,7 @@ static bool parse_word(TokenContext &ctx, Chunk &pc, bool skipcheck)
          else if (pc.GetType() == CT_COMMENT_CPP)   // Issue #1460
          {
             size_t ch;
-            bool   is_cs = language_is_set(LANG_CS);
+            bool   is_cs = language_is_set(lang_flag_e::LANG_CS);
 
             // read until EOL
             while (true)
@@ -2269,7 +2268,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
       return(true);
    }
 
-   if (language_is_set(LANG_CS))
+   if (language_is_set(lang_flag_e::LANG_CS))
    {
       if (parse_cs_string(ctx, pc))
       {
@@ -2277,13 +2276,14 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
       }
    }
 
-   if (language_is_set(LANG_CS | LANG_VALA))
+   if (  language_is_set(lang_flag_e::LANG_CS)
+      || language_is_set(lang_flag_e::LANG_VALA))
    {
       // check for non-keyword identifiers such as @if @switch, etc
       // Vala also allows numeric identifiers if prefixed with '@'
       if (  ctx.peek() == '@'                          // 64
          && (  CharTable::IsKw1(ctx.peek(1))
-            || (  language_is_set(LANG_VALA)
+            || (  language_is_set(lang_flag_e::LANG_VALA)
                && CharTable::IsKw2(ctx.peek(1)))))
       {
          parse_word(ctx, pc, true);
@@ -2292,7 +2292,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    }
 
    // handle VALA """ strings """
-   if (  language_is_set(LANG_VALA)
+   if (  language_is_set(lang_flag_e::LANG_VALA)
       && (ctx.peek() == '"')                 // 34
       && (ctx.peek(1) == '"')                // 34
       && (ctx.peek(2) == '"'))               // 34
@@ -2306,7 +2306,8 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
     */
    auto ch = ctx.peek();
 
-   if (  language_is_set(LANG_C | LANG_CPP)
+   if (  (  language_is_set(lang_flag_e::LANG_C)
+         || language_is_set(lang_flag_e::LANG_CPP))
       && (  ch == 'u'                     // 117
          || ch == 'U'                     // 85
          || ch == 'R'                     // 82
@@ -2326,7 +2327,8 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
          idx++;
       }
 
-      if (  language_is_set(LANG_C | LANG_CPP)
+      if (  (  language_is_set(lang_flag_e::LANG_C)
+            || language_is_set(lang_flag_e::LANG_CPP))
          && ctx.peek(idx) == 'R')             // 82
       {
          idx++;
@@ -2351,7 +2353,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    }
 
    // PAWN specific stuff
-   if (language_is_set(LANG_PAWN))
+   if (language_is_set(lang_flag_e::LANG_PAWN))
    {
       if (  cpd.preproc_ncnl_count == 1
          && (  cpd.in_preproc == CT_PP_DEFINE
@@ -2399,7 +2401,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
       return(true);
    }
 
-   if (language_is_set(LANG_D))
+   if (language_is_set(lang_flag_e::LANG_D))
    {
       // D specific stuff
       if (d_parse_string(ctx, pc))
@@ -2457,7 +2459,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    }
 
    // Check for Vala string templates
-   if (  language_is_set(LANG_VALA)
+   if (  language_is_set(lang_flag_e::LANG_VALA)
       && (ctx.peek() == '@'))            // 64
    {
       size_t nc = ctx.peek(1);
@@ -2471,7 +2473,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    }
 
    // Check for Objective C literals
-   if (  language_is_set(LANG_OC)
+   if (  language_is_set(lang_flag_e::LANG_OC)
       && (ctx.peek() == '@'))            // 64
    {
       size_t nc = ctx.peek(1);
@@ -2520,10 +2522,10 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    }
 
    // Check for C++11/14/17/20 attribute specifier sequences
-   if (  language_is_set(LANG_CPP)
+   if (  language_is_set(lang_flag_e::LANG_CPP)
       && ctx.peek() == '[')                   // 91
    {
-      if (  !language_is_set(LANG_OC)
+      if (  !language_is_set(lang_flag_e::LANG_OC)
          || (  prev_pc->IsNotNullChunk()
             && !prev_pc->Is(CT_OC_AT)))
       {
@@ -2564,9 +2566,10 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
     */
    int probe_lang_flags = 0;
 
-   if (language_is_set(LANG_C | LANG_CPP))
+   if (  language_is_set(lang_flag_e::LANG_C)
+      || language_is_set(lang_flag_e::LANG_CPP))
    {
-      probe_lang_flags = cpd.lang_flags | LANG_OC;
+      probe_lang_flags = cpd.lang_flags | e_LANG_OC;
    }
 
    if (probe_lang_flags != 0)
@@ -2728,7 +2731,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
          exit(EX_SOFTWARE);
       }
 
-      if (  language_is_set(LANG_JAVA)
+      if (  language_is_set(lang_flag_e::LANG_JAVA)
          && chunk.GetType() == CT_MEMBER
          && !memcmp(chunk.Text(), "->", 2))
       {

@@ -227,7 +227,7 @@ void brace_cleanup()
               __func__, __LINE__, pp_level);
 
       // Do before assigning stuff from the frame
-      if (  language_is_set(LANG_PAWN)
+      if (  language_is_set(lang_flag_e::LANG_PAWN)
          && frm.top().GetOpenToken() == CT_VBRACE_OPEN
          && pc->Is(CT_NEWLINE))
       {
@@ -431,12 +431,12 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
          braceState.consumed = true;
          close_statement(frm, pc, braceState);
       }
-      else if (  language_is_set(LANG_PAWN)
+      else if (  language_is_set(lang_flag_e::LANG_PAWN)
               && pc->Is(CT_BRACE_CLOSE))
       {
          close_statement(frm, pc, braceState);
       }
-      else if (  language_is_set(LANG_D)
+      else if (  language_is_set(lang_flag_e::LANG_D)
               && pc->Is(CT_BRACE_CLOSE))
       {
          close_statement(frm, pc, braceState);
@@ -523,7 +523,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
          frm.pop(__func__, __LINE__, pc);
          print_stack(LBCSPOP, "-Close  ", frm);
 
-         if (  language_is_set(LANG_D)
+         if (  language_is_set(lang_flag_e::LANG_D)
             && frm.top().GetStage() == E_BraceStage::NONE
             && (  pc->Is(CT_VBRACE_CLOSE)
                || pc->Is(CT_BRACE_CLOSE)
@@ -559,7 +559,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
           * PAWN: Check the next chunk for a semicolon. If it isn't, then
           * add a virtual semicolon, which will get handled on the next pass.
           */
-         if (language_is_set(LANG_PAWN))
+         if (language_is_set(lang_flag_e::LANG_PAWN))
          {
             Chunk *tmp = pc->GetNextNcNnl();
 
@@ -630,7 +630,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
             }
             // NS_ENUM and NS_OPTIONS are followed by a (type, name) pair
             else if (  prev->Is(CT_ENUM)
-                    && language_is_set(LANG_OC))
+                    && language_is_set(lang_flag_e::LANG_OC))
             {
                // Treat both as CT_ENUM since the syntax is identical
                pc->SetType(CT_FPAREN_OPEN);
@@ -655,14 +655,14 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
                parentType = CT_ASSIGN;
             }
             else if (  prev->Is(CT_RETURN)
-                    && language_is_set(LANG_CPP))
+                    && language_is_set(lang_flag_e::LANG_CPP))
             {
                parentType = CT_RETURN;
             }
             // Carry through CT_ENUM parent in NS_ENUM (type, name) {
             // only to help the vim command }
             else if (  prev->Is(CT_FPAREN_CLOSE)
-                    && language_is_set(LANG_OC)
+                    && language_is_set(lang_flag_e::LANG_OC)
                     && prev->GetParentType() == CT_ENUM)
             {
                parentType = CT_ENUM;
@@ -987,7 +987,8 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
          // Replace CT_TRY with CT_CATCH or CT_FINALLY on the stack & we are done
          frm.top().SetOpenToken(pc->GetType());
 
-         if (language_is_set(LANG_CS | LANG_VALA))
+         if (  language_is_set(lang_flag_e::LANG_CS)
+            || language_is_set(lang_flag_e::LANG_VALA))
          {
             frm.top().SetStage((pc->Is(CT_CATCH)) ? E_BraceStage::CATCH_WHEN : E_BraceStage::BRACE2);
          }
@@ -1074,7 +1075,7 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
    {
       log_rule_B("indent_using_block");
 
-      if (  language_is_set(LANG_CS)
+      if (  language_is_set(lang_flag_e::LANG_CS)
          && pc->Is(CT_USING_STMT)
          && (!options::indent_using_block()))
       {

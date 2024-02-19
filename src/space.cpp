@@ -182,7 +182,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_before_nl_cont());
    }
 
-   if (  language_is_set(LANG_D)
+   if (  language_is_set(lang_flag_e::LANG_D)
       && (  first->Is(CT_D_ARRAY_COLON)
          || second->Is(CT_D_ARRAY_COLON)))
    {
@@ -280,7 +280,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_cond_colon());
    }
 
-   if (  language_is_set(LANG_D)
+   if (  language_is_set(lang_flag_e::LANG_D)
       && (  first->Is(CT_RANGE)
          || second->Is(CT_RANGE)))
    {
@@ -620,7 +620,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (first->Is(CT_COMMA))                         // see the tests cpp:34520-34524
    // see the tests c-sharp:12200-12202
    {
-      if (  language_is_set(LANG_CS | LANG_VALA)
+      if (  (  language_is_set(lang_flag_e::LANG_CS)
+            || language_is_set(lang_flag_e::LANG_VALA))
          && first->GetParentType() == CT_TYPE)
       {
          // (C#, Vala) multidimensional array type: ',,' vs. ', ,' or ',]' vs. ', ]'
@@ -665,7 +666,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (second->Is(CT_COMMA))
    {
-      if (  language_is_set(LANG_CS | LANG_VALA)
+      if (  (  language_is_set(lang_flag_e::LANG_CS)
+            || language_is_set(lang_flag_e::LANG_VALA))
          && first->Is(CT_SQUARE_OPEN)
          && first->GetParentType() == CT_TYPE)
       {
@@ -767,7 +769,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
    }
 
-   if (  language_is_set(LANG_PAWN)
+   if (  language_is_set(lang_flag_e::LANG_PAWN)
       && first->Is(CT_TAG_COLON))
    {
       // (Pawn) Add or remove space after the tag keyword.
@@ -788,7 +790,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(IARF_REMOVE);
    }
 
-   if (  language_is_set(LANG_OC)
+   if (  language_is_set(lang_flag_e::LANG_OC)
       && first->Is(CT_CATCH)
       && second->Is(CT_SPAREN_OPEN)
       && (options::sp_oc_catch_paren() != IARF_IGNORE))
@@ -799,7 +801,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_oc_catch_paren());
    }
 
-   if (  language_is_set(LANG_OC)
+   if (  language_is_set(lang_flag_e::LANG_OC)
       && (  first->Is(CT_PAREN_CLOSE)
          || first->Is(CT_OC_CLASS)
          || first->Is(CT_WORD))
@@ -814,7 +816,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_before_oc_proto_list());
    }
 
-   if (  language_is_set(LANG_OC)
+   if (  language_is_set(lang_flag_e::LANG_OC)
       && first->Is(CT_OC_CLASS)
       && second->Is(CT_PAREN_OPEN)
       && (options::sp_oc_classname_paren() != IARF_IGNORE))
@@ -835,7 +837,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_catch_paren());
    }
 
-   if (  language_is_set(LANG_D)
+   if (  language_is_set(lang_flag_e::LANG_D)
       && first->Is(CT_D_VERSION_IF)
       && second->Is(CT_SPAREN_OPEN)
       && (options::sp_version_paren() != IARF_IGNORE))
@@ -846,7 +848,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_version_paren());
    }
 
-   if (  language_is_set(LANG_D)
+   if (  language_is_set(lang_flag_e::LANG_D)
       && first->Is(CT_D_SCOPE_IF)
       && second->Is(CT_SPAREN_OPEN)
       && (options::sp_scope_paren() != IARF_IGNORE))
@@ -857,7 +859,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_scope_paren());
    }
 
-   if (  language_is_set(LANG_OC)
+   if (  language_is_set(lang_flag_e::LANG_OC)
       && first->Is(CT_SYNCHRONIZED)
       && second->Is(CT_SPAREN_OPEN))
    {
@@ -1155,7 +1157,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(IARF_IGNORE);
    }
 
-   if (language_is_set(LANG_OC))
+   if (language_is_set(lang_flag_e::LANG_OC))
    {
       if (second->Is(CT_OC_BLOCK_CARET))
       {
@@ -1192,7 +1194,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    // c++17 structured bindings e.g., "auto [x, y, z]" vs. a[x, y, z]" or "auto const [x, y, z]" vs. "auto const[x, y, z]"
    // after byref.
-   if (  language_is_set(LANG_CPP)
+   if (  language_is_set(lang_flag_e::LANG_CPP)
       && first->Is(CT_BYREF)
       && second->Is(CT_SQUARE_OPEN)
       && second->GetParentType() != CT_OC_MSG
@@ -1205,7 +1207,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    // c++17 structured bindings e.g., "auto [x, y, z]" vs. a[x, y, z]" or "auto const [x, y, z]" vs. "auto const[x, y, z]"
-   if (  language_is_set(LANG_CPP)
+   if (  language_is_set(lang_flag_e::LANG_CPP)
       && (  first->Is(CT_QUALIFIER)
          || first->Is(CT_TYPE))
       && second->Is(CT_SQUARE_OPEN)
@@ -1457,7 +1459,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       {
          if (second->GetParentType() == CT_CATCH)
          {
-            if (  language_is_set(LANG_OC)
+            if (  language_is_set(lang_flag_e::LANG_OC)
                && (options::sp_oc_catch_brace() != IARF_IGNORE))
             {
                // (OC) Add or remove space before the '{' of a '@catch' statement, if the '{'
@@ -1512,7 +1514,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    // Issue #2270
    // Translations under vala
-   if (  language_is_set(LANG_VALA)
+   if (  language_is_set(lang_flag_e::LANG_VALA)
       && first->Is(CT_FUNC_CALL))
    {
       if (  first->IsString("_")
@@ -1801,7 +1803,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          log_rule("sp_inside_braces_struct");
          return(options::sp_inside_braces_struct());
       }
-      else if (  language_is_set(LANG_OC)
+      else if (  language_is_set(lang_flag_e::LANG_OC)
               && second->GetParentType() == CT_OC_AT
               && options::sp_inside_braces_oc_dict() != IARF_IGNORE)
       {
@@ -1923,7 +1925,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (  first->Is(CT_FPAREN_CLOSE)
       && second->Is(CT_BRACE_OPEN))
    {
-      if (  language_is_set(LANG_JAVA)
+      if (  language_is_set(lang_flag_e::LANG_JAVA)
          && second->GetParentType() == CT_DOUBLE_BRACE)
       {
          // (Java) Add or remove space between ')' and '{{' of double brace initializer.
@@ -2010,7 +2012,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
    }
 
-   if (  language_is_set(LANG_D)
+   if (  language_is_set(lang_flag_e::LANG_D)
       && second->Is(CT_PAREN_OPEN)
       && second->GetParentType() == CT_INVARIANT)
    {
@@ -2022,7 +2024,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (  first->Is(CT_PAREN_CLOSE)
       && first->GetParentType() != CT_DECLTYPE)
    {
-      if (  language_is_set(LANG_D)
+      if (  language_is_set(lang_flag_e::LANG_D)
          && first->GetParentType() == CT_INVARIANT)
       {
          // (D) Add or remove space after the ')' in 'invariant (C) c'.
@@ -2152,7 +2154,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_inside_tparen());
    }
 
-   if (  language_is_set(LANG_OC)
+   if (  language_is_set(lang_flag_e::LANG_OC)
       && first->Is(CT_PAREN_CLOSE))
    {
       if (  first->TestFlags(PCF_OC_RTYPE) // == CT_OC_RTYPE)
@@ -2184,7 +2186,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
    }
 
-   if (  language_is_set(LANG_OC)
+   if (  language_is_set(lang_flag_e::LANG_OC)
       && options::sp_inside_oc_at_sel_parens() != IARF_IGNORE)
    {
       if (  (  first->Is(CT_PAREN_OPEN)
@@ -2301,7 +2303,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (  first->Is(CT_SQUARE_OPEN)
       || second->Is(CT_SQUARE_CLOSE))
    {
-      if (  language_is_set(LANG_OC)
+      if (  language_is_set(lang_flag_e::LANG_OC)
          && (  (  first->GetParentType() == CT_OC_AT
                && first->Is(CT_SQUARE_OPEN))
             || (  second->GetParentType() == CT_OC_AT
@@ -2423,7 +2425,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (second->Is(CT_CLASS_COLON))
    {
-      if (  language_is_set(LANG_OC)
+      if (  language_is_set(lang_flag_e::LANG_OC)
          && second->GetParentType() == CT_OC_CLASS
          && (  second->GetPrevType(CT_OC_INTF, second->GetLevel(), E_Scope::ALL)->IsNullChunk()
             && second->GetPrevType(CT_OC_IMPL, second->GetLevel(), E_Scope::ALL)->IsNullChunk()))
@@ -2488,7 +2490,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       || second->Is(CT_NULLCOND))
    {
       // TODO: provide some test data to check this block
-      // LANG_CS  null conditional operator
+      // lang_flag_e::LANG_CS  null conditional operator
       // Add or remove space around the '.' or '->' operators.
       log_rule("sp_member");
       return(options::sp_member());
@@ -2826,7 +2828,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          return(options::sp_brace_else());
       }
 
-      if (  language_is_set(LANG_OC)
+      if (  language_is_set(lang_flag_e::LANG_OC)
          && second->Is(CT_CATCH)
          && (options::sp_oc_brace_catch() != IARF_IGNORE))
       {
@@ -2938,7 +2940,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_brace_typedef());
    }
 
-   if (  language_is_set(LANG_D)
+   if (  language_is_set(lang_flag_e::LANG_D)
       && second->Is(CT_PAREN_OPEN)
       && second->GetParentType() == CT_TEMPLATE)
    {
@@ -2962,7 +2964,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    // Issue #3080
-   if (  !language_is_set(LANG_D)
+   if (  !language_is_set(lang_flag_e::LANG_D)
       && first->Is(CT_PAREN_CLOSE)
       && second->Is(CT_WORD))
    {
@@ -2972,7 +2974,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    // see if the D template expression is used as a type
-   if (  language_is_set(LANG_D)
+   if (  language_is_set(lang_flag_e::LANG_D)
       && first->Is(CT_PAREN_CLOSE)
       && first->GetParentType() == CT_D_TEMPLATE)
    {
@@ -3100,7 +3102,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(IARF_FORCE);
    }
 
-   if (  language_is_set(LANG_OC)
+   if (  language_is_set(lang_flag_e::LANG_OC)
       && first->Is(CT_OC_SCOPE))
    {
       // (OC) Add or remove space after the scope '+' or '-', as in '-(void) foo;'
@@ -3109,7 +3111,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_after_oc_scope());
    }
 
-   if (  language_is_set(LANG_OC)
+   if (  language_is_set(lang_flag_e::LANG_OC)
       && first->Is(CT_OC_DICT_COLON))
    {
       // (OC) Add or remove space after the colon in immutable dictionary expression
@@ -3118,7 +3120,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_after_oc_dict_colon());
    }
 
-   if (  language_is_set(LANG_OC)
+   if (  language_is_set(lang_flag_e::LANG_OC)
       && second->Is(CT_OC_DICT_COLON))
    {
       // (OC) Add or remove space before the colon in immutable dictionary expression
@@ -3127,7 +3129,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_before_oc_dict_colon());
    }
 
-   if (  language_is_set(LANG_OC)
+   if (  language_is_set(lang_flag_e::LANG_OC)
       && first->Is(CT_OC_COLON))
    {
       if (first->TestFlags(PCF_IN_OC_MSG))
@@ -3143,7 +3145,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_after_oc_colon());
    }
 
-   if (  language_is_set(LANG_OC)
+   if (  language_is_set(lang_flag_e::LANG_OC)
       && second->Is(CT_OC_COLON))
    {
       if (  first->TestFlags(PCF_IN_OC_MSG)
@@ -3199,7 +3201,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_after_new());
    }
 
-   if (  language_is_set(LANG_JAVA)
+   if (  language_is_set(lang_flag_e::LANG_JAVA)
       && first->Is(CT_ANNOTATION)
       && second->IsParenOpen())
    {
@@ -3208,7 +3210,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_annotation_paren());
    }
 
-   if (  language_is_set(LANG_OC)
+   if (  language_is_set(lang_flag_e::LANG_OC)
       && first->Is(CT_OC_PROPERTY))
    {
       // (OC) Add or remove space after '@property'.
@@ -3216,7 +3218,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_after_oc_property());
    }
 
-   if (  language_is_set(LANG_D)
+   if (  language_is_set(lang_flag_e::LANG_D)
       && first->Is(CT_EXTERN)
       && second->Is(CT_PAREN_OPEN))
    {
@@ -3640,9 +3642,12 @@ void space_text()
                       */
                      // (C++11) Permit removal of the space between '>>' in 'foo<bar<int> >'. Note
                      // that sp_angle_shift cannot remove the space without this option.
-                     if (  (  (  language_is_set(LANG_CPP)
+                     if (  (  (  language_is_set(lang_flag_e::LANG_CPP)
                               && options::sp_permit_cpp11_shift())
-                           || (language_is_set(LANG_JAVA | LANG_CS | LANG_VALA | LANG_OC)))
+                           || language_is_set(lang_flag_e::LANG_JAVA)
+                           || language_is_set(lang_flag_e::LANG_CS)
+                           || language_is_set(lang_flag_e::LANG_VALA)
+                           || language_is_set(lang_flag_e::LANG_OC))
                         && pc->Is(CT_ANGLE_CLOSE)
                         && next->Is(CT_ANGLE_CLOSE))
                      {

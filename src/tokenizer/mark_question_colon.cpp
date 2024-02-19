@@ -153,7 +153,7 @@ void mark_question_colon()
       log_pcf_flags(LCOMBINE, pc->GetFlags());
 
       if (  pc->Is(CT_QUESTION)
-         && !language_is_set(LANG_JAVA))
+         && !language_is_set(lang_flag_e::LANG_JAVA))
       {
          pc_question = pc;
          // look for E2, COLON, E3...

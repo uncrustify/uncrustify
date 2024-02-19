@@ -1663,7 +1663,8 @@ inline bool Chunk::IsWord() const
 
 inline bool Chunk::IsNullable() const
 {
-   return(  language_is_set(LANG_CS | LANG_VALA)
+   return(  (  language_is_set(lang_flag_e::LANG_CS)
+            || language_is_set(lang_flag_e::LANG_VALA))
          && Len() == 1
          && m_str[0] == '?');
 }
@@ -1671,7 +1672,7 @@ inline bool Chunk::IsNullable() const
 
 inline bool Chunk::IsMsRef() const
 {
-   return(  language_is_set(LANG_CPP)
+   return(  language_is_set(lang_flag_e::LANG_CPP)
          && Len() == 1
          && m_str[0] == '^'
          && IsNot(CT_OPERATOR_VAL));

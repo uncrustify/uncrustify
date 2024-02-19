@@ -68,9 +68,9 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
       log_rule_B("enable_digraphs");
 
       if (  parent->tag != nullptr
-         && (parent->tag->lang_flags & lang_flags) != 0  // punctuator lang and processing lang match
-         && (  (parent->tag->lang_flags & FLAG_DIG) == 0 // punctuator is not a di/tri-graph
-            || options::enable_digraphs()))              // or di/tri-graph processing is enabled
+         && (parent->tag->lang_flags & lang_flags) != 0    // punctuator lang and processing lang match
+         && (  (parent->tag->lang_flags & e_FLAG_DIG) == 0 // punctuator is not a di/tri-graph
+            || options::enable_digraphs()))                // or di/tri-graph processing is enabled
       {
          match = parent->tag;
       }

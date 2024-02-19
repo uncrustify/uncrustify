@@ -7,12 +7,13 @@
 #ifndef LANGUAGE_TOOLS_H_INCLUDED
 #define LANGUAGE_TOOLS_H_INCLUDED
 
+#include "keywords.h"
 #include "uncrustify_types.h"
 
 
 /**
  * check if the language(s) is/are set
  */
-bool language_is_set(size_t lang);
+bool language_is_set(lang_flag_e lang);
 
 #endif /* LANGUAGE_TOOLS_H_INCLUDED */
