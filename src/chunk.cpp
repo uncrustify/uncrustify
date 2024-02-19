@@ -699,12 +699,15 @@ Chunk *Chunk::GetPpStart() const
       return(Chunk::NullChunkPtr);
    }
    Chunk *pc = const_cast<Chunk *>(this);
+   Chunk *prev;
 
-   while (pc->IsNot(CT_PREPROC))
+   do
    {
-      pc = pc->GetPrev(E_Scope::PREPROC);
-   }
-   return(pc);
+      prev = pc;
+      pc   = pc->GetPrev(E_Scope::PREPROC);
+   } while (pc->IsPreproc());
+
+   return(prev);
 }
 
 
