@@ -1,3 +1,5 @@
+#ifndef CHUNK_TAG_T_H_INCLUDED
+#define CHUNK_TAG_T_H_INCLUDED
 static chunk_tag_t keywords[] =
 {
    // TODO: it might be useful if users could add their custom keywords to this list
@@ -308,3 +310,4 @@ static chunk_tag_t keywords[] =
    { "xor",                             CT_SARITH,           e_LANG_CPP                                                                                },
    { "xor_eq",                          CT_SASSIGN,          e_LANG_CPP                                                                                },
 };
+#endif /* CHUNK_TAG_T_H_INCLUDED */
