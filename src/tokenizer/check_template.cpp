@@ -354,7 +354,7 @@ void check_template(Chunk *start, bool in_type_cast)
             num_tokens++;
          }
          else if (  pc->Is(CT_QUESTION)                    // Issue #2949
-                 && language_is_set(LANG_CPP))
+                 && language_is_set(lang_flag_e::LANG_CPP))
          {
             break;
          }

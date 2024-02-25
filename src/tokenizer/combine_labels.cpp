@@ -4,7 +4,6 @@
  * @author  Guy Maurel
  * @license GPL v2+
  */
-
 #include "tokenizer/combine_labels.h"
 
 #include "chunk.h"
@@ -221,7 +220,7 @@ void combine_labels()
                return;
             }
 
-            if (language_is_set(LANG_PAWN))
+            if (language_is_set(lang_flag_e::LANG_PAWN))
             {
                if (  cur->Is(CT_WORD)
                   || cur->Is(CT_BRACE_CLOSE))
@@ -298,8 +297,10 @@ void combine_labels()
                   // Fix for #1242
                   // For MIDL_INTERFACE classes class name is tokenized as Label.
                   // Corrected the identification of Label in c style languages.
-                  if (  language_is_set(LANG_C | LANG_CPP | LANG_CS)
-                     && (!language_is_set(LANG_OC)))
+                  if (  (  language_is_set(lang_flag_e::LANG_C)
+                        || language_is_set(lang_flag_e::LANG_CPP)
+                        || language_is_set(lang_flag_e::LANG_CS))
+                     && (!language_is_set(lang_flag_e::LANG_OC)))
                   {
                      Chunk *labelPrev = prev;
 
@@ -420,7 +421,8 @@ void combine_labels()
                   {
                      // ignore it, as it is a C# base thingy
                   }
-                  else if (language_is_set(LANG_CS | LANG_D))
+                  else if (  language_is_set(lang_flag_e::LANG_CS)
+                          || language_is_set(lang_flag_e::LANG_D))
                   {
                      // there should be a better solution for that
                   }
@@ -433,7 +435,7 @@ void combine_labels()
                              get_token_name(cur->GetParentType()),
                              next->GetLevel(), next->GetBraceLevel());
 
-                     if (language_is_set(LANG_OC))
+                     if (language_is_set(lang_flag_e::LANG_OC))
                      {
                         // TO DO: what is to do? any expert?
                      }

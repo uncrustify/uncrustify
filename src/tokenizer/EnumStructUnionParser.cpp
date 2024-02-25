@@ -4,7 +4,6 @@
  * @author
  * @license GPL v2+
  */
-
 #include "tokenizer/EnumStructUnionParser.h"
 
 #include "lang_pawn.h"
@@ -169,7 +168,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - a qualifier (const, etc.)
           * - an identifier
           */
-         return(  language_is_set(LANG_CPP)
+         return(  language_is_set(lang_flag_e::LANG_CPP)
                && (  next->IsPointerOrReference()
                   || next_token_type == CT_QUALIFIER
                   || next_token_type == CT_WORD));
@@ -416,8 +415,8 @@ static bool chunk_is_macro_reference(Chunk *pc)
 
    Chunk *next = Chunk::GetHead();
 
-   if (  (  language_is_set(LANG_CPP)
-         || language_is_set(LANG_C))
+   if (  (  language_is_set(lang_flag_e::LANG_CPP)
+         || language_is_set(lang_flag_e::LANG_C))
       && pc->Is(CT_WORD)
       && !pc->TestFlags(PCF_IN_PREPROC))
    {
@@ -998,7 +997,7 @@ void EnumStructUnionParser::analyze_identifiers()
 
    if (  m_start->IsClassOrStruct()
       && (  m_start->IsNot(CT_STRUCT)
-         || !language_is_set(LANG_C)))
+         || !language_is_set(lang_flag_e::LANG_C)))
    {
       /**
        * if a type has been identified, mark any constructor matching constructor
@@ -2070,21 +2069,21 @@ void EnumStructUnionParser::parse(Chunk *pc)
          next = parse_double_colon(next);
       }
       else if (  next->IsParenOpen()
-              && (  language_is_set(LANG_D)
-                 || (  language_is_set(LANG_PAWN)
+              && (  language_is_set(lang_flag_e::LANG_D)
+                 || (  language_is_set(lang_flag_e::LANG_PAWN)
                     && m_start->IsEnum())))
       {
          set_paren_parent(next, m_start->GetType());
 
          if (  prev->Is(CT_WORD)
-            && language_is_set(LANG_D))
+            && language_is_set(lang_flag_e::LANG_D))
          {
             mark_template(next);
          }
          next = next->GetClosingParen(E_Scope::PREPROC);
       }
       else if (  next->Is(CT_QUALIFIER)
-              && language_is_set(LANG_JAVA)
+              && language_is_set(lang_flag_e::LANG_JAVA)
               && std::strncmp(next->GetStr().c_str(), "implements", 10) == 0)
       {
          mark_base_classes(next);
@@ -2249,8 +2248,8 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
        */
       bool is_potential_function_definition = false;
 
-      if (  (  language_is_set(LANG_C)
-            || language_is_set(LANG_CPP))
+      if (  (  language_is_set(lang_flag_e::LANG_C)
+            || language_is_set(lang_flag_e::LANG_CPP))
          && prev->IsParenClose())
       {
          /**
@@ -2279,8 +2278,8 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
          }
       }
 
-      if (  language_is_set(LANG_D)
-         || language_is_set(LANG_PAWN)
+      if (  language_is_set(lang_flag_e::LANG_D)
+         || language_is_set(lang_flag_e::LANG_PAWN)
          || !prev->IsParenClose()
          || is_potential_function_definition
          || chunk_is_between(prev, enum_base_start, brace_open)
@@ -2292,7 +2291,7 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
           * D does not require a semicolon after an enum, but we add one to make
           * other code happy.
           */
-         if (  language_is_set(LANG_D)
+         if (  language_is_set(lang_flag_e::LANG_D)
             && m_start->IsEnum())
          {
             pawn_add_vsemi_after(brace_close); // Issue #2279
@@ -2373,7 +2372,7 @@ Chunk *EnumStructUnionParser::parse_double_colon(Chunk *double_colon)
 
    auto *pc = double_colon;
 
-   if (  language_is_set(LANG_CPP)
+   if (  language_is_set(lang_flag_e::LANG_CPP)
       && pc->Is(CT_DC_MEMBER))
    {
       mark_nested_name_specifiers(pc);
@@ -2430,8 +2429,8 @@ Chunk *EnumStructUnionParser::refine_end_chunk(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (  (  language_is_set(LANG_C)
-         || language_is_set(LANG_CPP))
+   if (  (  language_is_set(lang_flag_e::LANG_C)
+         || language_is_set(lang_flag_e::LANG_CPP))
       && pc->Is(CT_BRACE_CLOSE))
    {
       /**
@@ -2661,7 +2660,7 @@ void EnumStructUnionParser::try_post_identify_macro_calls()
 {
    LOG_FUNC_ENTRY();
 
-   if (  language_is_set(LANG_CPP)
+   if (  language_is_set(lang_flag_e::LANG_CPP)
       && type_identified())
    {
       /**
@@ -2761,7 +2760,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
 
    Chunk *pc = get_body_start();
 
-   if (  language_is_set(LANG_PAWN)
+   if (  language_is_set(lang_flag_e::LANG_PAWN)
       && m_start->IsEnum())
    {
       set_paren_parent(pc, m_start->GetType());
@@ -2907,7 +2906,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
          pc = pc->GetPrevNcNnlNi(E_Scope::PREPROC);
       }
 
-      if (  language_is_set(LANG_D)
+      if (  language_is_set(lang_flag_e::LANG_D)
          && pc->IsParenClose())
       {
          pc = pc->GetOpeningParen();

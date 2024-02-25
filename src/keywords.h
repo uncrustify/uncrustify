@@ -9,6 +9,7 @@
 #ifndef KEYWORDS_H_INCLUDED
 #define KEYWORDS_H_INCLUDED
 
+#include "language_names.h"
 #include "uncrustify_types.h"
 
 /**
@@ -80,6 +81,23 @@ pattern_class_e get_token_pattern_class(E_Token tok);
 
 
 bool keywords_are_sorted();
+
+
+static constexpr size_t e_LANG_C          = (size_t)lang_flag_e::LANG_C;
+static constexpr size_t e_LANG_CPP        = (size_t)lang_flag_e::LANG_CPP;
+static constexpr size_t e_LANG_D          = (size_t)lang_flag_e::LANG_D;
+static constexpr size_t e_LANG_CS         = (size_t)lang_flag_e::LANG_CS;
+static constexpr size_t e_LANG_JAVA       = (size_t)lang_flag_e::LANG_JAVA;
+static constexpr size_t e_LANG_OC         = (size_t)lang_flag_e::LANG_OC;
+static constexpr size_t e_LANG_VALA       = (size_t)lang_flag_e::LANG_VALA;
+static constexpr size_t e_LANG_PAWN       = (size_t)lang_flag_e::LANG_PAWN;
+static constexpr size_t e_LANG_ECMA       = (size_t)lang_flag_e::LANG_ECMA;
+static constexpr size_t e_LANG_ALLC_NOT_C = (size_t)lang_flag_e::LANG_ALLC_NOT_C;
+static constexpr size_t e_LANG_ALLC       = (size_t)lang_flag_e::LANG_ALLC;
+static constexpr size_t e_LANG_ALL        = (size_t)lang_flag_e::LANG_ALL;
+static constexpr size_t e_FLAG_HDR        = (size_t)lang_flag_e::FLAG_HDR;
+static constexpr size_t e_FLAG_DIG        = (size_t)lang_flag_e::FLAG_DIG;
+static constexpr size_t e_FLAG_PP         = (size_t)lang_flag_e::FLAG_PP;
 
 
 #endif /* KEYWORDS_H_INCLUDED */

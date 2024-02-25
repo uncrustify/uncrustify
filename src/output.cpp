@@ -6,7 +6,6 @@
  * @author  Guy Maurel October 2015, 2021
  * @license GPL v2+
  */
-
 #include "output.h"
 
 #include "align/tab_column.h"
@@ -2809,7 +2808,7 @@ static void output_comment_multi(Chunk *pc)
                   else
                   {
                      // bug #653
-                     if (language_is_set(LANG_D))
+                     if (language_is_set(lang_flag_e::LANG_D))
                      {
                         // 0=no lead char present
                         add_text(cmt.cont_text);
@@ -2857,7 +2856,8 @@ static bool kw_fcn_class(Chunk *cmt, UncText &out_txt)
 {
    Chunk *tmp = Chunk::NullChunkPtr;
 
-   if (language_is_set(LANG_CPP | LANG_OC))
+   if ((  language_is_set(lang_flag_e::LANG_CPP)
+       || language_is_set(lang_flag_e::LANG_OC)))
    {
       Chunk *fcn = get_next_function(cmt);
 
@@ -2870,7 +2870,7 @@ static bool kw_fcn_class(Chunk *cmt, UncText &out_txt)
          tmp = get_next_class(cmt);
       }
    }
-   else if (language_is_set(LANG_OC))
+   else if (language_is_set(lang_flag_e::LANG_OC))
    {
       tmp = get_prev_oc_class(cmt);
    }
@@ -3552,7 +3552,7 @@ void add_long_preprocessor_conditional_block_comment()
                   && nl_count > nl_min) // nl_count is 1 too large at all times as #if line was counted too
                {
                   // determine the added comment style
-                  E_Token style = (language_is_set(LANG_CPP)) ?
+                  E_Token style = (language_is_set(lang_flag_e::LANG_CPP)) ?
                                   CT_COMMENT_CPP : CT_COMMENT;
 
                   UncText str;

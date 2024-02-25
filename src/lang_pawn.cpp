@@ -294,7 +294,7 @@ void pawn_add_virtual_semicolons()
    LOG_FUNC_ENTRY();
 
    // Add Pawn virtual semicolons
-   if (language_is_set(LANG_PAWN))
+   if (language_is_set(lang_flag_e::LANG_PAWN))
    {
       Chunk *prev = Chunk::NullChunkPtr;
       Chunk *pc   = Chunk::GetHead();

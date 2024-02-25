@@ -67,7 +67,7 @@ static void handle_oc_class(Chunk *pc);
  *  The syntax and usage is exactly like C function pointers
  *  but instead of an asterisk they have a caret as pointer symbol.
  *  Although it may look expensive this functions is only triggered
- *  on appearance of an OC_BLOCK_CARET for LANG_OC.
+ *  on appearance of an OC_BLOCK_CARET for lang_flag_e::LANG_OC.
  *  repeat(10, ^{ putc('0'+d); });
  *  typedef void (^workBlk_t)(void);
  *
@@ -380,7 +380,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    }
 
    // D stuff
-   if (  language_is_set(LANG_D)
+   if (  language_is_set(lang_flag_e::LANG_D)
       && pc->Is(CT_QUALIFIER)
       && pc->IsString("const")
       && next->Is(CT_PAREN_OPEN))
@@ -512,7 +512,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    }
 
    // clang stuff - A new derived type is introduced to C and, by extension, Objective-C, C++, and Objective-C++
-   if (language_is_set(LANG_C | LANG_CPP | LANG_OC))
+   if (  language_is_set(lang_flag_e::LANG_C)
+      || language_is_set(lang_flag_e::LANG_CPP)
+      || language_is_set(lang_flag_e::LANG_OC))
    {
       if (pc->Is(CT_CARET))
       {
@@ -526,7 +528,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    }
 
    // Objective C stuff
-   if (language_is_set(LANG_OC))
+   if (language_is_set(lang_flag_e::LANG_OC))
    {
       // Check for message declarations
       if (pc->TestFlags(PCF_STMT_START))
@@ -570,10 +572,11 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    }
 
    // C# and Vala stuff
-   if (language_is_set(LANG_CS | LANG_VALA))
+   if (  language_is_set(lang_flag_e::LANG_CS)
+      || language_is_set(lang_flag_e::LANG_VALA))
    {
       // '[assembly: xxx]' stuff
-      if (  language_is_set(LANG_CS)
+      if (  language_is_set(lang_flag_e::LANG_CS)
          && pc->TestFlags(PCF_EXPR_START)
          && pc->Is(CT_SQUARE_OPEN))
       {
@@ -581,7 +584,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          return;
       }
 
-      if (  language_is_set(LANG_CS)
+      if (  language_is_set(lang_flag_e::LANG_CS)
          && next->Is(CT_BRACE_OPEN)
          && next->GetParentType() == CT_NONE
          && (  pc->Is(CT_SQUARE_CLOSE)
@@ -607,7 +610,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          return;
       }
 
-      if (  language_is_set(LANG_CS)
+      if (  language_is_set(lang_flag_e::LANG_CS)
          && pc->Is(CT_WHEN)
          && pc->GetNext()->IsNotNullChunk()
          && pc->GetNext()->IsNot(CT_SPAREN_OPEN))
@@ -617,7 +620,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       }
    }
 
-   if (  language_is_set(LANG_JAVA)
+   if (  language_is_set(lang_flag_e::LANG_JAVA)
       && pc->Is(CT_LAMBDA)
       && next->Is(CT_BRACE_OPEN))
    {
@@ -650,7 +653,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    }
 
    // C++11 Lambda stuff
-   if (  language_is_set(LANG_CPP)
+   if (  language_is_set(lang_flag_e::LANG_CPP)
       && (  pc->Is(CT_SQUARE_OPEN)
          || pc->Is(CT_TSQUARE)))
    {
@@ -659,7 +662,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
    // FIXME: which language does this apply to?
    // Issue #2432
-   if (!language_is_set(LANG_OC))
+   if (!language_is_set(lang_flag_e::LANG_OC))
    {
       if (  pc->Is(CT_ASSIGN)
          && next->Is(CT_SQUARE_OPEN))
@@ -706,7 +709,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    }
 
    if (  pc->Is(CT_SIZEOF)
-      && language_is_set(LANG_ALLC))
+      && language_is_set(lang_flag_e::LANG_ALLC))
    {
       Chunk *tmp = pc->GetNextNcNnl();
 
@@ -749,7 +752,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
    // A [] in C#, D and Vala only follows a type
    if (  pc->Is(CT_TSQUARE)
-      && language_is_set(LANG_D | LANG_CS | LANG_VALA))
+      && (  language_is_set(lang_flag_e::LANG_D)
+         || language_is_set(lang_flag_e::LANG_CS)
+         || language_is_set(lang_flag_e::LANG_VALA)))
    {
       if (prev->Is(CT_WORD))
       {
@@ -837,7 +842,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
    if (pc->Is(CT_TEMPLATE))
    {
-      if (language_is_set(LANG_D))
+      if (language_is_set(lang_flag_e::LANG_D))
       {
          handle_d_template(pc);
       }
@@ -892,7 +897,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    {
       Chunk *tmp = next->GetNextNcNnl();
 
-      if (  language_is_set(LANG_C | LANG_CPP | LANG_OC)
+      if (  (  language_is_set(lang_flag_e::LANG_C)
+            || language_is_set(lang_flag_e::LANG_CPP)
+            || language_is_set(lang_flag_e::LANG_OC))
          && tmp->Is(CT_CARET))
       {
          handle_oc_block_type(tmp);
@@ -935,7 +942,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
          bool is_byref_array = false;
 
-         if (language_is_set(LANG_CPP))
+         if (language_is_set(lang_flag_e::LANG_CPP))
          {
             // If the open paren is followed by an ampersand, an optional word,
             // a close parenthesis, and an open square bracket, then it is an
@@ -1001,7 +1008,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       }
    }
 
-   if (language_is_set(LANG_PAWN))
+   if (language_is_set(lang_flag_e::LANG_PAWN))
    {
       if (  pc->Is(CT_FUNCTION)
          && pc->GetBraceLevel() > 0)
@@ -1133,7 +1140,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          || pc->Is(CT_FUNC_TYPE))
       && next->IsString("("))
    {
-      if (language_is_set(LANG_D))
+      if (language_is_set(lang_flag_e::LANG_D))
       {
          flag_parens(next, PCF_NONE, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
       }
@@ -1151,7 +1158,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    }
    // TODO: Check for stuff that can only occur at the start of an statement
 
-   if (!language_is_set(LANG_D))
+   if (!language_is_set(lang_flag_e::LANG_D))
    {
       /*
        * Check a parenthesis pair to see if it is a cast.
@@ -1181,7 +1188,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       }
    }
 
-   if (language_is_set(LANG_CPP))
+   if (language_is_set(lang_flag_e::LANG_CPP))
    {
       Chunk *nnext = next->GetNextNcNnl();
 
@@ -1266,14 +1273,15 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          }
       }
 
-      if (  language_is_set(LANG_CPP)
+      if (  language_is_set(lang_flag_e::LANG_CPP)
          && pc->Is(CT_CARET)
          && prev->Is(CT_ANGLE_CLOSE))
       {
          pc->SetType(CT_PTR_TYPE);
       }
 
-      if (  language_is_set(LANG_CS | LANG_VALA)
+      if (  (  language_is_set(lang_flag_e::LANG_CS)
+            || language_is_set(lang_flag_e::LANG_VALA))
          && pc->Is(CT_QUESTION)
          && prev->Is(CT_ANGLE_CLOSE))
       {
@@ -1309,7 +1317,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
       else if (pc->Is(CT_CARET))
       {
-         if (language_is_set(LANG_C | LANG_CPP | LANG_OC))
+         if (  language_is_set(lang_flag_e::LANG_C)
+            || language_is_set(lang_flag_e::LANG_CPP)
+            || language_is_set(lang_flag_e::LANG_OC))
          {
             // This is likely the start of a block literal
             handle_oc_block_literal(pc);
@@ -1344,7 +1354,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
    // Change CT_STAR to CT_PTR_TYPE or CT_ARITH or CT_DEREF
    if (  pc->Is(CT_STAR)
-      || (  language_is_set(LANG_CPP)
+      || (  language_is_set(lang_flag_e::LANG_CPP)
          && pc->Is(CT_CARET)))
    {
       if (  next->IsParenClose()
@@ -1352,7 +1362,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          pc->SetType(CT_PTR_TYPE);
       }
-      else if (  language_is_set(LANG_OC)
+      else if (  language_is_set(lang_flag_e::LANG_OC)
               && next->Is(CT_STAR))
       {
          /*
@@ -1412,7 +1422,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          }
       }
       else if (  next->Is(CT_SQUARE_OPEN)
-              && !language_is_set(LANG_OC))  // Issue #408
+              && !language_is_set(lang_flag_e::LANG_OC))  // Issue #408
       {
          pc->SetType(CT_PTR_TYPE);
       }
@@ -1427,7 +1437,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          //    ::some::name * foo;
          if (  prev->Is(CT_WORD)
             && prev->GetPrev()->Is(CT_DC_MEMBER)
-            && language_is_set(LANG_CPP))
+            && language_is_set(lang_flag_e::LANG_CPP))
          {
             // Issue 1402
             bool  is_multiplication = false;
@@ -1803,7 +1813,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          return(false);
       };
 
-      const bool assign_found = language_is_set(LANG_D) || search_assign();
+      const bool assign_found = language_is_set(lang_flag_e::LANG_D) || search_assign();
 
       if (assign_found)
       {
@@ -1900,8 +1910,8 @@ void fix_symbols()
 
    mark_define_expressions();
 
-   bool is_cpp  = language_is_set(LANG_CPP);
-   bool is_java = language_is_set(LANG_JAVA);
+   bool is_cpp  = language_is_set(lang_flag_e::LANG_CPP);
+   bool is_java = language_is_set(lang_flag_e::LANG_JAVA);
 
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
@@ -2032,7 +2042,7 @@ void fix_symbols()
       }
 
       if (  pc->Is(CT_EXTERN)
-         && language_is_set(LANG_ALLC))
+         && language_is_set(lang_flag_e::LANG_ALLC))
       {
          Chunk *next = pc->GetNextNcNnl();
 
@@ -2061,7 +2071,7 @@ void fix_symbols()
       }
 
       if (  pc->Is(CT_ATTRIBUTE)
-         && language_is_set(LANG_ALLC))
+         && language_is_set(lang_flag_e::LANG_ALLC))
       {
          Chunk *tmp = skip_attribute_next(pc);
 
@@ -2097,7 +2107,7 @@ void fix_symbols()
             || pc->Is(CT_DC_MEMBER)                   // Issue #2478
             || (  pc->Is(CT_WORD)
                && !pc->TestFlags(PCF_IN_CONDITIONAL)  // Issue #3558
-//               && language_is_set(LANG_CPP)
+//               && language_is_set(lang_flag_e::LANG_CPP)
                   )
                )
          && pc->GetParentType() != CT_BIT_COLON
@@ -2267,7 +2277,7 @@ static Chunk *process_return_or_throw(Chunk *pc)
    // Never add parens to a braced init list; that breaks the code
    //   return {args...};    // C++11 type elision; okay
    //   return ({args...});  // ill-formed
-   if (  language_is_set(LANG_CPP)
+   if (  language_is_set(lang_flag_e::LANG_CPP)
       && next->Is(CT_BRACE_OPEN)
       && next->GetParentType() == CT_BRACED_INIT_LIST)
    {

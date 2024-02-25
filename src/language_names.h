@@ -23,7 +23,7 @@ struct lang_name_t
 };
 
 //! list of all programming languages Uncrustify supports
-enum lang_flag_e
+enum class lang_flag_e
 {
    LANG_C          = 0x0001,
    LANG_CPP        = 0x0002,

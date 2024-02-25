@@ -23,7 +23,7 @@ void align_struct_initializers()
 
       if (  prev->Is(CT_ASSIGN)
          && (  pc->Is(CT_BRACE_OPEN)
-            || (  language_is_set(LANG_D)
+            || (  language_is_set(lang_flag_e::LANG_D)
                && pc->Is(CT_SQUARE_OPEN))))
       {
          align_init_brace(pc);

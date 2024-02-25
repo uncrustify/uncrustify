@@ -9,7 +9,6 @@
  * @author  Guy Maurel 2015, 2022
  * @license GPL v2+
  */
-
 #include "tokenizer/tokenize_cleanup.h"
 
 #include "chunk.h"
@@ -303,13 +302,13 @@ void tokenize_cleanup()
          && next->IsNotNullChunk())
    {
       if (  pc->Is(CT_DOT)
-         && language_is_set(LANG_ALLC))
+         && language_is_set(lang_flag_e::LANG_ALLC))
       {
          pc->SetType(CT_MEMBER);
       }
 
       if (  pc->Is(CT_NULLCOND)
-         && language_is_set(LANG_CS))
+         && language_is_set(lang_flag_e::LANG_CS))
       {
          pc->SetType(CT_MEMBER);
       }
@@ -365,7 +364,7 @@ void tokenize_cleanup()
       {
          next->SetType(CT_ENUM_CLASS);
       }
-      Chunk *next_non_attr = language_is_set(LANG_CPP) ? skip_attribute_next(next) : next;
+      Chunk *next_non_attr = language_is_set(lang_flag_e::LANG_CPP) ? skip_attribute_next(next) : next;
 
       /*
        * Change CT_WORD after CT_ENUM, CT_UNION, CT_STRUCT, or CT_CLASS to CT_TYPE
@@ -418,9 +417,10 @@ void tokenize_cleanup()
        *     CT_WORD which is preceded by CT_DC_MEMBER: '::aaa *b'
        */
       if (  (next->Is(CT_STAR))
-         || (  language_is_set(LANG_CPP)
+         || (  language_is_set(lang_flag_e::LANG_CPP)
             && (next->Is(CT_CARET)))
-         || (  language_is_set(LANG_CS | LANG_VALA)
+         || (  (  language_is_set(lang_flag_e::LANG_CS)
+               || language_is_set(lang_flag_e::LANG_VALA))
             && (next->Is(CT_QUESTION))
             && (strcmp(pc->Text(), "null") != 0)))
       {
@@ -430,7 +430,8 @@ void tokenize_cleanup()
          {
             next->SetType(CT_PTR_TYPE);
          }
-         else if (  language_is_set(LANG_CS | LANG_VALA)
+         else if (  (  language_is_set(lang_flag_e::LANG_CS)
+                    || language_is_set(lang_flag_e::LANG_VALA))
                  && next->Is(CT_QUESTION))
          {
             Chunk *tmp = next->GetNextNcNnl();
@@ -463,7 +464,11 @@ void tokenize_cleanup()
           * pretty much all languages except C use <> for something other than
           * comparisons.  "#include<xxx>" is handled elsewhere.
           */
-         if (language_is_set(LANG_OC | LANG_CPP | LANG_CS | LANG_JAVA | LANG_VALA))
+         if (  language_is_set(lang_flag_e::LANG_OC)
+            || language_is_set(lang_flag_e::LANG_CPP)
+            || language_is_set(lang_flag_e::LANG_CS)
+            || language_is_set(lang_flag_e::LANG_JAVA)
+            || language_is_set(lang_flag_e::LANG_VALA))
          {
             // bug #663
             check_template(pc, in_type_cast);
@@ -489,7 +494,7 @@ void tokenize_cleanup()
          }
       }
 
-      if (language_is_set(LANG_D))
+      if (language_is_set(lang_flag_e::LANG_D))
       {
          // Check for the D string concat symbol '~'
          if (  pc->Is(CT_INV)
@@ -540,7 +545,7 @@ void tokenize_cleanup()
          }
       }
 
-      if (language_is_set(LANG_CPP))
+      if (language_is_set(lang_flag_e::LANG_CPP))
       {
          // Change Word before '::' into a type
          if (  pc->Is(CT_WORD)
@@ -758,7 +763,7 @@ void tokenize_cleanup()
          || (  (*pc->GetStr().c_str() == '$')
             && pc->IsNot(CT_SQL_WORD)
                /* but avoid breaking tokenization for C# 6 interpolated strings. */
-            && (  !language_is_set(LANG_CS)
+            && (  !language_is_set(lang_flag_e::LANG_CS)
                || (  pc->Is(CT_STRING)
                   && (!pc->GetStr().startswith("$\""))
                   && (!pc->GetStr().startswith("$@\""))))))
@@ -857,7 +862,7 @@ void tokenize_cleanup()
        * ObjectiveC allows keywords to be used as identifiers in some situations
        * This is a dirty hack to allow some of the more common situations.
        */
-      if (language_is_set(LANG_OC))
+      if (language_is_set(lang_flag_e::LANG_OC))
       {
          if (  (  pc->Is(CT_IF)
                || pc->Is(CT_FOR)
@@ -894,7 +899,7 @@ void tokenize_cleanup()
       }
 
       // Vala allows keywords to be used as identifiers
-      if (language_is_set(LANG_VALA))
+      if (language_is_set(lang_flag_e::LANG_VALA))
       {
          if (  find_keyword_type(pc->Text(), pc->Len()) != CT_WORD
             && (  prev->Is(CT_DOT)
@@ -1069,7 +1074,7 @@ void tokenize_cleanup()
       }
 
       // Change 'default(' into a sizeof-like statement
-      if (  language_is_set(LANG_CS)
+      if (  language_is_set(lang_flag_e::LANG_CS)
          && pc->Is(CT_DEFAULT)
          && next->Is(CT_PAREN_OPEN))
       {
@@ -1084,7 +1089,7 @@ void tokenize_cleanup()
 
       if (  (  pc->Is(CT_USING)
             || (  pc->Is(CT_TRY)
-               && language_is_set(LANG_JAVA)))
+               && language_is_set(lang_flag_e::LANG_JAVA)))
          && next->Is(CT_PAREN_OPEN))
       {
          pc->SetType(CT_USING_STMT);
@@ -1092,7 +1097,7 @@ void tokenize_cleanup()
 
       // Add minimal support for C++0x rvalue references
       if (  pc->Is(CT_BOOL)
-         && language_is_set(LANG_CPP)
+         && language_is_set(lang_flag_e::LANG_CPP)
          && pc->IsString("&&"))
       {
          if (prev->Is(CT_TYPE))
@@ -1120,7 +1125,7 @@ void tokenize_cleanup()
        * If Java's 'synchronized' is in a method declaration, it should be
        * a qualifier.
        */
-      if (  language_is_set(LANG_JAVA)
+      if (  language_is_set(lang_flag_e::LANG_JAVA)
          && pc->Is(CT_SYNCHRONIZED)
          && next->IsNot(CT_PAREN_OPEN))
       {

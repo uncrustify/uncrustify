@@ -113,19 +113,19 @@ const char *get_char_encoding(char_encoding_e encoding)
    switch (encoding)
    {
    case char_encoding_e::e_ASCII:
-      return("e_ASCII");
+      return("ASCII");
 
    case char_encoding_e::e_BYTE:
-      return("e_BYTE");
+      return("BYTE");
 
    case char_encoding_e::e_UTF8:
-      return("e_UTF8");
+      return("UTF8");
 
    case char_encoding_e::e_UTF16_LE:
-      return("e_UTF16_LE");
+      return("UTF16_LE");
 
    case char_encoding_e::e_UTF16_BE:
-      return("e_UTF16_BE");
+      return("UTF16_BE");
    }
    return("?????");
 } // get_char_encoding

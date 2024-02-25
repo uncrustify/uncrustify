@@ -4,7 +4,6 @@
  * @author  Guy Maurel
  * @license GPL v2+
  */
-
 #include "tokenizer/combine_tools.h"
 
 #include "ChunkStack.h"
@@ -222,7 +221,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
                  __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()));
       }
       else if (  word_count == 1
-              && language_is_set(LANG_CPP)
+              && language_is_set(lang_flag_e::LANG_CPP)
               && pc->IsString("&&"))
       {
          // ignore possible 'move' operator
@@ -338,11 +337,13 @@ bool chunk_ends_type(Chunk *start)
          || pc->Is(CT_DC_MEMBER)
          || pc->Is(CT_PP)
          || pc->Is(CT_QUALIFIER)
-         || (  language_is_set(LANG_CPP | LANG_OC)                       // Issue #2727
+         || (  (  language_is_set(lang_flag_e::LANG_CPP)
+               || language_is_set(lang_flag_e::LANG_OC))                       // Issue #2727
             && pc->GetParentType() == CT_TEMPLATE
             && (  pc->Is(CT_ANGLE_OPEN)
                || pc->Is(CT_ANGLE_CLOSE)))
-         || (  language_is_set(LANG_CS | LANG_VALA)
+         || (  (  language_is_set(lang_flag_e::LANG_CS)
+               || language_is_set(lang_flag_e::LANG_VALA))
             && (pc->Is(CT_MEMBER))))
       {
          cnt++;

@@ -1178,8 +1178,8 @@ void add_long_closebrace_comment()
          }
          else if (  br_open->GetParentType() == CT_CLASS
                  && cl_pc->IsNotNullChunk()
-                 && (  !language_is_set(LANG_CPP)   // proceed if not C++
-                    || br_close->Is(CT_SEMICOLON))) // else a C++ class needs to end with a semicolon
+                 && (  !language_is_set(lang_flag_e::LANG_CPP) // proceed if not C++
+                    || br_close->Is(CT_SEMICOLON)))            // else a C++ class needs to end with a semicolon
          {
             log_rule_B("mod_add_long_class_closebrace_comment");
             nl_min = options::mod_add_long_class_closebrace_comment();
@@ -1215,7 +1215,8 @@ void add_long_closebrace_comment()
             else
             {
                // use the comment style that fits to the selected language
-               style = language_is_set(LANG_CPP | LANG_CS)
+               style = (  language_is_set(lang_flag_e::LANG_CPP)
+                       || language_is_set(lang_flag_e::LANG_CS))
                           ? CT_COMMENT_CPP : CT_COMMENT;
             }
             // Add a comment after the close brace

@@ -755,7 +755,7 @@ int Chunk::ComparePosition(const Chunk *other) const
 
 bool Chunk::IsOCForinOpenParen() const
 {
-   if (  language_is_set(LANG_OC)
+   if (  language_is_set(lang_flag_e::LANG_OC)
       && Is(CT_SPAREN_OPEN)
       && GetPrevNcNnl()->Is(CT_FOR))
    {
@@ -826,7 +826,7 @@ Chunk *Chunk::GetOpeningParen(E_Scope scope) const
 
 bool Chunk::IsCppInheritanceAccessSpecifier() const
 {
-   return(  language_is_set(LANG_CPP)
+   return(  language_is_set(lang_flag_e::LANG_CPP)
          && (  Is(CT_ACCESS)
             || Is(CT_QUALIFIER))
          && (  IsString("private")

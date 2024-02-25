@@ -624,7 +624,7 @@ void indent_text()
       log_rule_B("indent_col1_multi_string_literal");
 
       if (  (pc->GetType() == CT_STRING_MULTI)
-         && !language_is_set(LANG_OC)                      // Issue #1795
+         && !language_is_set(lang_flag_e::LANG_OC)                      // Issue #1795
          && options::indent_col1_multi_string_literal())
       {
          string str = pc->Text();
@@ -1157,7 +1157,7 @@ void indent_text()
                   || pc->Is(CT_TYPEDEF) // Issue #2675
                   || pc->Is(CT_MACRO_OPEN)
                   || pc->Is(CT_MACRO_CLOSE)
-                  || (  language_is_set(LANG_OC)
+                  || (  language_is_set(lang_flag_e::LANG_OC)
                      && pc->IsComment()
                      && pc->GetParentType() == CT_COMMENT_WHOLE) // Issue #2675
                   || pc->IsSemicolon()))
@@ -1179,7 +1179,7 @@ void indent_text()
 
             // End Objc nested message and boxed array
             // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
-            if (  language_is_set(LANG_OC)
+            if (  language_is_set(lang_flag_e::LANG_OC)
                && pc->Is(CT_SQUARE_CLOSE)
                && pc->GetParentType() == CT_OC_AT
                && frm.top().GetOpenLevel() >= pc->GetLevel())
@@ -1466,7 +1466,7 @@ void indent_text()
 
       if (pc->Is(CT_BRACE_CLOSE))
       {
-         if (language_is_set(LANG_OC))
+         if (language_is_set(lang_flag_e::LANG_OC))
          {
             if (  frm.top().GetOpenToken() == CT_BRACE_OPEN
                && frm.top().GetOpenLevel() >= pc->GetLevel())
@@ -1704,7 +1704,7 @@ void indent_text()
             frm.prev().SetIndentTmp(frm.top().GetIndentTmp());
             log_indent_tmp();
          }
-         else if (  language_is_set(LANG_CPP)
+         else if (  language_is_set(lang_flag_e::LANG_CPP)
                  && options::indent_cpp_lambda_only_once()
                  && (pc->GetParentType() == CT_CPP_LAMBDA))
          {
@@ -1737,7 +1737,8 @@ void indent_text()
             frm.prev().SetIndentTmp(frm.top().GetIndentTmp());
             log_indent_tmp();
          }
-         else if (  language_is_set(LANG_CS | LANG_JAVA)
+         else if (  (  language_is_set(lang_flag_e::LANG_CS)
+                    || language_is_set(lang_flag_e::LANG_JAVA))
                  && options::indent_cs_delegate_brace()
                  && (  pc->GetParentType() == CT_LAMBDA
                     || pc->GetParentType() == CT_DELEGATE))
@@ -1754,7 +1755,8 @@ void indent_text()
             frm.prev().SetIndentTmp(frm.top().GetIndentTmp());
             log_indent_tmp();
          }
-         else if (  language_is_set(LANG_CS | LANG_JAVA)
+         else if (  (  language_is_set(lang_flag_e::LANG_CS)
+                    || language_is_set(lang_flag_e::LANG_JAVA))
                  && !options::indent_cs_delegate_brace()
                  && !options::indent_align_paren()
                  && (  pc->GetParentType() == CT_LAMBDA
@@ -1779,7 +1781,7 @@ void indent_text()
             log_indent_tmp();
          }
          else if (  !options::indent_paren_open_brace()
-                 && !language_is_set(LANG_CS)
+                 && !language_is_set(lang_flag_e::LANG_CS)
                  && pc->GetParentType() == CT_CPP_LAMBDA
                  && (  pc->TestFlags(PCF_IN_FCN_DEF)
                     || pc->TestFlags(PCF_IN_FCN_CTOR)) // Issue #2152
@@ -2225,7 +2227,7 @@ void indent_text()
       else if (  pc->Is(CT_SQL_BEGIN)
               || pc->Is(CT_MACRO_OPEN)
               || (  pc->Is(CT_CLASS)
-                 && language_is_set(LANG_CS))) // Issue #3536
+                 && language_is_set(lang_flag_e::LANG_CS))) // Issue #3536
       {
          frm.push(pc, __func__, __LINE__);
 
@@ -2573,7 +2575,7 @@ void indent_text()
          log_indent();
 
          if (  pc->Is(CT_SQUARE_OPEN)
-            && language_is_set(LANG_D))
+            && language_is_set(lang_flag_e::LANG_D))
          {
             frm.top().SetIndentTab(frm.top().GetIndent());
          }
@@ -2909,7 +2911,8 @@ void indent_text()
       else if (  options::indent_member_single()
               && pc->Is(CT_MEMBER)
               && (strcmp(pc->Text(), ".") == 0)
-              && language_is_set(LANG_CS | LANG_CPP))
+              && (  language_is_set(lang_flag_e::LANG_CS)
+                 || language_is_set(lang_flag_e::LANG_CPP)))
       {
          log_rule_B("indent_member_single");
 
@@ -2934,7 +2937,7 @@ void indent_text()
          if (pc->GetPrev()->IsNewline())
          {
             if (  pc->Is(CT_MEMBER)                           // Issue #2890
-               && language_is_set(LANG_CPP))
+               && language_is_set(lang_flag_e::LANG_CPP))
             {
                // will be done at another place
                // look at the comment: XXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -2993,7 +2996,7 @@ void indent_text()
       else if (  pc->Is(CT_ASSIGN)
               || pc->Is(CT_IMPORT)
               || (  pc->Is(CT_USING)
-                 && language_is_set(LANG_CS)))
+                 && language_is_set(lang_flag_e::LANG_CS)))
       {
          /*
           * if there is a newline after the '=' or the line starts with a '=',
@@ -3240,7 +3243,8 @@ void indent_text()
          log_indent_tmp();
       }
       else if (  pc->Is(CT_LAMBDA)
-              && (language_is_set(LANG_CS | LANG_JAVA))
+              && (  language_is_set(lang_flag_e::LANG_CS)
+                 || language_is_set(lang_flag_e::LANG_JAVA))
               && pc->GetNextNcNnlNpp()->IsNot(CT_BRACE_OPEN)
               && options::indent_cs_delegate_body())
       {
@@ -4090,7 +4094,7 @@ void indent_text()
                   }
                }
                else if (  pc->Is(CT_MEMBER)                      // Issue #2890
-                       && language_is_set(LANG_CPP))
+                       && language_is_set(lang_flag_e::LANG_CPP))
                {
                   // comment name: XXXXXXXXXXXXXXXXXXXXXXXXXX
                   LOG_FMT(LINDENT, "%s(%d): orig line is %zu, indent_column set to %zu, for '%s'\n",
@@ -4252,7 +4256,8 @@ void indent_text()
       log_rule_B("indent_continue_class_head");
 
       if (  pc->Is(CT_CLASS)
-         && language_is_set(LANG_CPP | LANG_JAVA)
+         && (  language_is_set(lang_flag_e::LANG_CPP)
+            || language_is_set(lang_flag_e::LANG_JAVA))
          && (  options::indent_ignore_first_continue()
             || options::indent_continue_class_head() != 0)
          && !classFound)

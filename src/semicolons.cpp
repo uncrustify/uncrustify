@@ -107,14 +107,14 @@ void remove_extra_semicolons()
          {
             remove_semicolon(pc);
          }
-         else if (  language_is_set(LANG_D)
+         else if (  language_is_set(lang_flag_e::LANG_D)
                  && (  prev->GetParentType() == CT_ENUM
                     || prev->GetParentType() == CT_STRUCT
                     || prev->GetParentType() == CT_UNION))
          {
             remove_semicolon(pc);
          }
-         else if (  language_is_set(LANG_JAVA)
+         else if (  language_is_set(lang_flag_e::LANG_JAVA)
                  && prev->GetParentType() == CT_SYNCHRONIZED)
          {
             remove_semicolon(pc);

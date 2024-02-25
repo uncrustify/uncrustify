@@ -75,13 +75,19 @@ void fix_casts(Chunk *start)
             || pc->Is(CT_TSQUARE)
             || (  (  pc->Is(CT_ANGLE_OPEN)
                   || pc->Is(CT_ANGLE_CLOSE))
-               && language_is_set(LANG_OC | LANG_JAVA | LANG_CS | LANG_VALA | LANG_CPP))
+               && (  language_is_set(lang_flag_e::LANG_OC)
+                  || language_is_set(lang_flag_e::LANG_JAVA)
+                  || language_is_set(lang_flag_e::LANG_CS)
+                  || language_is_set(lang_flag_e::LANG_VALA)
+                  || language_is_set(lang_flag_e::LANG_CPP)))
             || (  (  pc->Is(CT_QUESTION)
                   || pc->Is(CT_COMMA)
                   || pc->Is(CT_MEMBER))
-               && language_is_set(LANG_JAVA | LANG_CS | LANG_VALA))
+               && (  language_is_set(lang_flag_e::LANG_JAVA)
+                  || language_is_set(lang_flag_e::LANG_CS)
+                  || language_is_set(lang_flag_e::LANG_VALA)))
             || (  pc->Is(CT_COMMA)
-               && language_is_set(LANG_CPP))
+               && language_is_set(lang_flag_e::LANG_CPP))
             || pc->Is(CT_AMP)))
    {
       LOG_FMT(LCASTS, "%s(%d): pc->Text() is '%s', orig line is %zu, orig col is %zu, type is %s\n",
@@ -129,7 +135,11 @@ void fix_casts(Chunk *start)
       || last->Is(CT_PTR_TYPE)
       || last->Is(CT_TYPE)
       || (  last->Is(CT_ANGLE_CLOSE)
-         && language_is_set(LANG_OC | LANG_JAVA | LANG_CS | LANG_VALA | LANG_CPP)))
+         && (  language_is_set(lang_flag_e::LANG_OC)
+            || language_is_set(lang_flag_e::LANG_JAVA)
+            || language_is_set(lang_flag_e::LANG_CS)
+            || language_is_set(lang_flag_e::LANG_VALA)
+            || language_is_set(lang_flag_e::LANG_CPP))))
    {
       verb = "for sure";
    }
@@ -155,7 +165,7 @@ void fix_casts(Chunk *start)
       {
          detail = " -- upper case";
       }
-      else if (  language_is_set(LANG_OC)
+      else if (  language_is_set(lang_flag_e::LANG_OC)
               && last->IsString("id"))
       {
          detail = " -- Objective-C id";
@@ -242,7 +252,7 @@ void fix_casts(Chunk *start)
               && pc->IsNot(CT_FUNCTION)
               && pc->IsNot(CT_BRACE_OPEN)
               && (!(  pc->Is(CT_SQUARE_OPEN)
-                   && language_is_set(LANG_OC))))
+                   && language_is_set(lang_flag_e::LANG_OC))))
       {
          LOG_FMT(LCASTS, "%s(%d):  -- not a cast - followed by Text() '%s', type is %s\n",
                  __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()));
@@ -361,7 +371,7 @@ void fix_fcn_def_params(Chunk *start)
          pc->SetType(CT_PTR_TYPE);
          cs.Push_Back(pc);
       }
-      else if (  language_is_set(LANG_CPP)   // Issue #3662
+      else if (  language_is_set(lang_flag_e::LANG_CPP)   // Issue #3662
               && (  pc->Is(CT_AMP)
                  || pc->IsString("&&")))
       {
@@ -473,7 +483,7 @@ void fix_typedef(Chunk *start)
             break;
          }
 
-         if (  language_is_set(LANG_D)
+         if (  language_is_set(lang_flag_e::LANG_D)
             && next->Is(CT_ASSIGN))
          {
             next->SetParentType(CT_TYPEDEF);
@@ -496,7 +506,7 @@ void fix_typedef(Chunk *start)
 
    // avoid interpreting typedef NS_ENUM (NSInteger, MyEnum) as a function def
    if (  last_op->IsNotNullChunk()
-      && !(  language_is_set(LANG_OC)
+      && !(  language_is_set(lang_flag_e::LANG_OC)
           && last_op->GetParentType() == CT_ENUM))
    {
       flag_parens(last_op, PCF_NONE, CT_FPAREN_OPEN, CT_TYPEDEF, false);
@@ -682,7 +692,7 @@ Chunk *fix_variable_definition(Chunk *start)
       LOG_FMT(LFVD, "%s(%d):   4:pc->Text() '%s', type is %s\n",
               __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()));
 
-      if (language_is_set(LANG_JAVA))
+      if (language_is_set(lang_flag_e::LANG_JAVA))
       {
          pc = skip_tsquare_next(pc);
 
@@ -1186,7 +1196,7 @@ void mark_function(Chunk *pc)
          pc->SetType(CT_FUNC_CALL);
       }
 
-      if (language_is_set(LANG_CPP))
+      if (language_is_set(lang_flag_e::LANG_CPP))
       {
          tmp = pc;
 
@@ -1375,7 +1385,7 @@ void mark_function(Chunk *pc)
       if (  tmp3->IsString(")")
          && (  tmp1->IsStar()
             || tmp1->IsMsRef()
-            || (  language_is_set(LANG_OC)
+            || (  language_is_set(lang_flag_e::LANG_OC)
                && tmp1->Is(CT_CARET)))
          && (  tmp2->IsNullChunk()
             || tmp2->Is(CT_WORD)))
@@ -1907,7 +1917,7 @@ void mark_function(Chunk *pc)
     * and checking the parent of the containing open braces. If the parent is a
     * class or namespace, then it probably is a prototype.
     */
-   if (  language_is_set(LANG_CPP)
+   if (  language_is_set(lang_flag_e::LANG_CPP)
       && pc->Is(CT_FUNC_PROTO)
       && pc->GetParentType() != CT_OPERATOR)
    {
@@ -2074,7 +2084,7 @@ void mark_function(Chunk *pc)
    mark_function_return_type(pc, pc->GetPrevNcNnlNi(), pc->GetType());   // Issue #2279
 
    /* mark C# where chunk */
-   if (  language_is_set(LANG_CS)
+   if (  language_is_set(lang_flag_e::LANG_CS)
       && (  (pc->Is(CT_FUNC_DEF))
          || (pc->Is(CT_FUNC_PROTO))))
    {
@@ -2154,7 +2164,7 @@ bool mark_function_type(Chunk *pc)
    if (  varcnk->IsNotNullChunk()
       && !varcnk->IsWord())
    {
-      if (  language_is_set(LANG_OC)
+      if (  language_is_set(lang_flag_e::LANG_OC)
          && varcnk->IsString("^")
          && varcnk->GetPrevNcNnlNi()->IsParenOpen())   // Issue #2279
       {

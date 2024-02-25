@@ -5,23 +5,24 @@
  * extract from uncrustify.cpp
  * @license GPL v2+
  */
-
 #include "language_names.h"
+
+#include "keywords.h"
 
 static lang_name_t language_names[] =
 {
-   { "C",        LANG_C                       },      // 0x0001
-   { "CPP",      LANG_CPP                     },      // 0x0002
-   { "D",        LANG_D                       },      // 0x0004
-   { "CS",       LANG_CS                      },      // 0x0008
-   { "JAVA",     LANG_JAVA                    },      // 0x0010
-   { "OC",       LANG_OC                      },      // 0x0020
-   { "VALA",     LANG_VALA                    },      // 0x0040
-   { "PAWN",     LANG_PAWN                    },      // 0x0080
-   { "ECMA",     LANG_ECMA                    },      // 0x0100
-   { "OC+",      LANG_OC | LANG_CPP           },      // 0x0020 + 0x0002
-   { "CS+",      LANG_CS | LANG_CPP           },      // 0x0008 + 0x0002
-   { "C-Header", LANG_C | LANG_CPP | FLAG_HDR },      // 0x0001 + 0x0002 + 0x2000 = 0x2022
+   { "C",        e_LANG_C                           },  // 0x0001
+   { "CPP",      e_LANG_CPP                         },  // 0x0002
+   { "D",        e_LANG_D                           },  // 0x0004
+   { "CS",       e_LANG_CS                          },  // 0x0008
+   { "JAVA",     e_LANG_JAVA                        },  // 0x0010
+   { "OC",       e_LANG_OC                          },  // 0x0020
+   { "VALA",     e_LANG_VALA                        },  // 0x0040
+   { "PAWN",     e_LANG_PAWN                        },  // 0x0080
+   { "ECMA",     e_LANG_ECMA                        },  // 0x0100
+   { "OC+",      e_LANG_OC | e_LANG_CPP             },  // 0x0020 + 0x0002
+   { "CS+",      e_LANG_CS | e_LANG_CPP             },  // 0x0008 + 0x0002
+   { "C-Header", e_LANG_C | e_LANG_CPP | e_FLAG_HDR },  // 0x0001 + 0x0002 + 0x2000 = 0x2022
 };
 
 
@@ -223,5 +224,5 @@ size_t language_flags_from_filename(const char *filename)
       }
    }
 
-   return(LANG_C);
+   return(e_LANG_C);
 } // language_flags_from_filename
