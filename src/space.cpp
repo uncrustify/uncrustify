@@ -3472,6 +3472,29 @@ static iarf_e ensure_force_space(Chunk *first, Chunk *second, iarf_e av)
 }
 
 
+const char *decode_IARF(iarf_e av)
+{
+   switch (av)
+   {
+   case IARF_IGNORE:
+      return("IGNORE");
+
+   case IARF_ADD:
+      return("ADD");
+
+   case IARF_REMOVE:
+      return("REMOVE");
+
+   case IARF_FORCE:
+      return("FORCE");
+
+   case IARF_NOT_DEFINED:
+      return("NOT_DEFINED");
+   }
+   return("???????");
+} // decode_IARF
+
+
 static iarf_e do_space_ensured(Chunk *first, Chunk *second, int &min_sp)
 {
    return(ensure_force_space(first, second, do_space(first, second, min_sp)));
@@ -3788,9 +3811,7 @@ void space_text()
          LOG_FMT(LSPACE, "%s(%d): ",
                  __func__, __LINE__);
          LOG_FMT(LSPACE, "   rule = %s @ %zu => %zu\n",
-                 (av == IARF_IGNORE) ? "IGNORE" :
-                 (av == IARF_ADD) ? "ADD" :
-                 (av == IARF_REMOVE) ? "REMOVE" : "FORCE",
+                 decode_IARF(av),
                  column - prev_column, next->GetColumn());
 
          if (restoreValues)    // guy 2015-09-22
@@ -3915,9 +3936,7 @@ size_t space_col_align(Chunk *first, Chunk *second)
    LOG_FMT(LSPACE, "%s(%d):    => coldiff is %zu\n", __func__, __LINE__, coldiff);
 
    LOG_FMT(LSPACE, "%s(%d):    => av is %s\n", __func__, __LINE__,
-           (av == IARF_IGNORE) ? "IGNORE" :
-           (av == IARF_ADD) ? "ADD" :
-           (av == IARF_REMOVE) ? "REMOVE" : "FORCE");
+           decode_IARF(av));
 
    switch (av)
    {
