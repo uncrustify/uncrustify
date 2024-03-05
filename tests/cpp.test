@@ -943,10 +943,10 @@
 
 # __asm__
 34300  cpp/bug_1236.cfg                                     cpp/bug_1236.cpp
-34301  cpp/nl_fdef_brace_cond-f.cfg                         cpp/nl_fdef_brace_cond-f.cpp
-34302  cpp/nl_fdef_brace_cond-r.cfg                         cpp/nl_fdef_brace_cond-r.cpp
-34303  cpp/nl_fdef_brace_cond-fr.cfg                        cpp/nl_fdef_brace_cond-fr.cpp
-34304  cpp/nl_fdef_brace_cond-rf.cfg                        cpp/nl_fdef_brace_cond-rf.cpp
+34301  cpp/nl_fdef_brace_cond-f.cfg                         cpp/nl_fdef_brace_cond.cpp
+34302  cpp/nl_fdef_brace_cond-r.cfg                         cpp/nl_fdef_brace_cond.cpp
+34303  cpp/nl_fdef_brace_cond-fr.cfg                        cpp/nl_fdef_brace_cond.cpp
+34304  cpp/nl_fdef_brace_cond-rf.cfg                        cpp/nl_fdef_brace_cond.cpp
 34305  cpp/issue_2124-1.cfg                                 cpp/issue_2124-1.cpp
 34306  cpp/issue_2124-2.cfg                                 cpp/issue_2124-2.cpp
 34307  cpp/2203.cfg                                         cpp/2203.cpp
