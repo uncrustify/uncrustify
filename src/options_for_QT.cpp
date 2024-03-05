@@ -45,7 +45,7 @@ private:
    Option<iarf_e> *m_option;
    const iarf_e   m_override_value;
 
-   iarf_e         m_saved_value = IARF_NOT_DEFINED;
+   iarf_e         m_saved_value = IARF_IGNORE;
 };
 
 
@@ -61,7 +61,7 @@ void temporary_iarf_option::save_and_override()
 void temporary_iarf_option::restore()
 {
    (*m_option)   = m_saved_value;
-   m_saved_value = IARF_NOT_DEFINED;
+   m_saved_value = IARF_IGNORE;
 }
 
 //-----------------------------------------------------------------------------

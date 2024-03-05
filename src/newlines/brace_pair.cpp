@@ -255,24 +255,30 @@ void newlines_brace_pair(Chunk *br_open)
             || br_open->GetParentType() == CT_FUNC_CLASS_DEF
             || br_open->GetParentType() == CT_OC_CLASS)
          {
-            val = IARF_NOT_DEFINED;
-            log_rule_B("nl_fdef_brace_cond");
+            const iarf_e nl_fdef_brace_v      = options::nl_fdef_brace();
             const iarf_e nl_fdef_brace_cond_v = options::nl_fdef_brace_cond();
 
-            if (nl_fdef_brace_cond_v != IARF_IGNORE)
+            if (nl_fdef_brace_cond_v == IARF_IGNORE)
+            {
+               val = nl_fdef_brace_v;
+            }
+            else // nl_fdef_brace_cond_v != IARF_IGNORE
             {
                prev = br_open->GetPrevNcNnlNi();   // Issue #2279
 
                if (prev->Is(CT_FPAREN_CLOSE))
                {
+                  // Add or remove newline between function signature and '{',
+                  // if signature ends with ')'. Overrides nl_fdef_brace.
+                  log_rule_B("nl_fdef_brace_cond");
                   val = nl_fdef_brace_cond_v;
                }
-            }
-
-            if (val == IARF_NOT_DEFINED)
-            {
-               log_rule_B("nl_fdef_brace");
-               val = options::nl_fdef_brace();
+               else
+               {
+                  // Add or remove newline between function signature and '{'.
+                  log_rule_B("nl_fdef_brace");
+                  val = nl_fdef_brace_v;
+               }
             }
          }
          else

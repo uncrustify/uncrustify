@@ -62,11 +62,10 @@ enum class bool
 /// I/A/R/F values - these are bit fields
 enum class iarf_e // <IARF>
 {
-   IGNORE      = 0,              //! option ignores a given feature
-   ADD         = (1u << 0),      //! option adds a given feature
-   REMOVE      = (1u << 1),      //! option removes a given feature
-   FORCE       = (ADD | REMOVE), //! option forces the usage of a given feature
-   NOT_DEFINED = (1u << 2)       //! for debugging
+   IGNORE = 0,                   //! option ignores a given feature
+   ADD    = (1u << 0),           //! option adds a given feature
+   REMOVE = (1u << 1),           //! option removes a given feature
+   FORCE  = (ADD | REMOVE),      //! option forces the usage of a given feature
 };
 
 UNC_DECLARE_FLAGS(iarf_flags_t, iarf_e);
