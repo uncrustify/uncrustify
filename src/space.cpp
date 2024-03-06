@@ -3487,9 +3487,6 @@ const char *decode_IARF(iarf_e av)
 
    case IARF_FORCE:
       return("FORCE");
-
-   case IARF_NOT_DEFINED:
-      return("NOT_DEFINED");
    }
    return("???????");
 } // decode_IARF
@@ -3760,8 +3757,11 @@ void space_text()
             break;
 
          default:
-            // If we got here, something is wrong...
-            break;
+            // If we got here, something is wrong...     #Issue 4253
+            LOG_FMT(LSPACE, "%s(%d): the av value is wrong %zu\n",
+                    __func__, __LINE__, (size_t)av);
+            LOG_FMT(LSPACE, "Please make a call at https://github.com/uncrustify/uncrustify/issues/new\n");
+            exit(EX_SOFTWARE);
          } // switch
 
          if (  next->IsComment()
