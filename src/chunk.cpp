@@ -919,4 +919,4 @@ void shift_the_rest_of_the_line(Chunk *first)
          break;
       }
    }
-} //shift_the_rest_of_the_line
+} // shift_the_rest_of_the_line

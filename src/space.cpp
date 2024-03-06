@@ -3864,14 +3864,16 @@ void space_text_balance_nested_parens()
               && next->IsString(")"))
       {
          // insert a space between the two closing parens
-         space_add_after(first, 1);
-
+         if (first->GetOrigColEnd() == next->GetOrigCol())
+         {
+            space_add_after(first, 1);
+         }
          // test after the opening parens   Issue #1703
          Chunk *opening = next->GetPrevType((E_Token)(next->GetType() - 1), next->GetLevel());
 
          if (opening->GetOrigColEnd() == opening->GetNext()->GetOrigCol())
          {
-            space_add_after(opening, 1);
+            shift_the_rest_of_the_line(opening->GetNext());                    // Issue #4221
          }
       }
       first = next;
