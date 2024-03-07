@@ -1604,11 +1604,8 @@ void EnumStructUnionParser::mark_constructors()
       auto *body_start = get_body_start();
       auto *name       = m_type->Text();
 
-      LOG_FMT(LFTOR,
-              "%s(%d): Name of type is '%s'\n",
-              __unqualified_func__,
-              __LINE__,
-              name);
+      LOG_FMT(LFTOR, "%s(%d): Name of type is '%s'\n",
+              __unqualified_func__, __LINE__, name);
       log_pcf_flags(LFTOR, m_type->GetFlags());
 
       Chunk       *next = Chunk::NullChunkPtr;
@@ -1623,8 +1620,11 @@ void EnumStructUnionParser::mark_constructors()
          /**
           * find a chunk within the class/struct body that
           */
-         if (  prev->IsNotNullChunk()
-            && std::strcmp(prev->Text(), name) == 0
+         if (prev->IsNullChunk())
+         {
+            break;                            // Issue #4250
+         }
+         if (  std::strcmp(prev->Text(), name) == 0
             && prev->GetLevel() == level
             && next->IsParenOpen())
          {
