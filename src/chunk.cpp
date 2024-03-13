@@ -207,9 +207,14 @@ Chunk *Chunk::Search(const T_CheckFnPtr checkFn, const E_Scope scope,
    T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
    Chunk         *pc         = const_cast<Chunk *>(this);
 
+   //LOG_FMT(LSETTYP, "\n%s(%d): origLine is %zu, origCol is %zu\n",
+   //        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
+
    do                                      // loop over the chunk list
    {
       pc = (pc->*searchFnPtr)(scope);      // in either direction while
+      //LOG_FMT(LSETTYP, "%s(%d): origLine is %zu, origCol is %zu, type is %s\n",
+      //        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
    } while (  pc->IsNotNullChunk()         // the end of the list was not reached yet
            && ((pc->*checkFn)() != cond)); // and the demanded chunk was not found either
 
