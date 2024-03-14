@@ -89,6 +89,11 @@ sub_1f:
     xor     a,#$1f      ; 2
 #endasm
 
+// This odd macro triggered an out-of-bounds read before we
+// switched from memcmp to strncmp in tokenize.cpp
+#define M() _Pragma("foo"); if (false) { \
+        }
+
 int main3(int argc, char *argv[])
 {
     int a = 1;

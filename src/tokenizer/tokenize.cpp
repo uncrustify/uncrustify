@@ -2856,7 +2856,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
          // Disable indentation if a #pragma asm directive is found
          if (cpd.in_preproc == CT_PP_PRAGMA)
          {
-            if (memcmp(pc->Text(), "asm", 3) == 0)
+            if (strncmp(pc->Text(), "asm", 3) == 0)
             {
                LOG_FMT(LBCTRL, "Found a pragma %s on line %zu\n", "asm", pc->GetOrigLine());
                cpd.unc_off = true;
