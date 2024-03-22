@@ -693,7 +693,7 @@ int main(int argc, char *argv[])
 
       // Tokenize and extract key and value
       const char *tracking_art = strtok(buffer, ":");
-      const char *html_file    = strtok(nullptr, ":");
+      const char *html_file    = strtok(nullptr, "\0");
 
       if (  html_file != nullptr
          && cpd.html_file == nullptr)
