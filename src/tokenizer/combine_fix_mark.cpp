@@ -853,6 +853,19 @@ void mark_cpp_constructor(Chunk *pc)
       LOG_FMT(LFTOR, "%s(%d): tmp is '%s', orig line is %zu, orig col is %zu\n",
               __func__, __LINE__, tmp->Text(), tmp->GetOrigLine(), tmp->GetOrigCol());
       tmp->SetFlagBits(PCF_IN_CONST_ARGS);
+
+      if (tmp->Is(CT_BRACE_OPEN))
+      {
+         if (!tmp->TestFlags(PCF_IN_STRUCT))                              // Issue #4248
+         {
+            // this opens a new block,
+            // look for the end of the block
+            Chunk *closing = tmp->GetNextType(CT_BRACE_CLOSE, tmp->GetLevel());
+            LOG_FMT(LFTOR, "%s(%d): closing is '%s', orig line is %zu, orig col is %zu\n",
+                    __func__, __LINE__, closing->Text(), closing->GetOrigLine(), closing->GetOrigCol());
+            tmp = closing;
+         }
+      }
       tmp = tmp->GetNextNcNnl();
 
       if (  tmp->IsString(":")
