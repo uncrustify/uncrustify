@@ -4,6 +4,6 @@ SettingsDelta::SettingsDelta(
    , Member3{lastEffCtxData.member3().c_str()}
    , Functor{[this](const int& num) { Callback(num); }}
    , Member4{lastEffCtxData.member4().c_str()}
-, Member5{lastEffCtxData.member5()}
+   , Member5{lastEffCtxData.member5()}
 {
 }
