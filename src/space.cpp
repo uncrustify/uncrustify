@@ -889,7 +889,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       || second->Is(CT_LAMBDA))
    {
       // Add or remove space around assignment operator '=', '+=', etc.
-      log_rule("sp_assign (lambda)");
+      log_rule("sp_assign");
       return(options::sp_assign());
    }
 
@@ -3431,7 +3431,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       // The value REMOVE will be overridden with FORCE
       if (options::sp_before_ellipsis() == IARF_REMOVE)
       {
-         log_rule("sp_before_ellipsis/FORCE");
+         log_rule("sp_before_ellipsis");
          return(IARF_FORCE);
       }
       else
