@@ -442,6 +442,15 @@ bool process_option_line_compat_0_78(const std::string &cmd, const char *filenam
 
       return(true);
    }
+
+   if (cmd == "sp_balance_nested_parens")
+   {
+      OptionWarning w{ filename, OptionWarning::MINOR };
+      w("option '%s' never works; it has been replaced by '%s'.",
+        cmd.c_str(), options::sp_paren_paren.name());
+
+      return(true);
+   }
    return(false);
 } // process_option_line_compat_0_78
 

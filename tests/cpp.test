@@ -845,6 +845,7 @@
 34134  cpp/new_op_r.cfg                                     cpp/new_op.cpp
 34135  cpp/new_op_paren_open_close.cfg                      cpp/new_op.cpp
 34136  cpp/sp_balance_nested_parens.cfg                     cpp/sp_balance_nested_parens.cpp
+34137  cpp/sp_balance_nested_parens-r.cfg                     cpp/sp_balance_nested_parens.cpp
 
 34140  common/empty.cfg                                     cpp/bug_1027.cpp
 34141  common/empty.cfg                                     cpp/bug_1005.cpp

@@ -251,10 +251,6 @@ sp_paren_paren;
 extern Option<iarf_e>
 sp_cparen_oparen;
 
-// Whether to balance spaces inside nested parentheses.
-extern Option<bool>
-sp_balance_nested_parens;
-
 // Add or remove space between ')' and '{'.
 extern Option<iarf_e>
 sp_paren_brace;
