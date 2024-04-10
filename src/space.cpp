@@ -3562,7 +3562,7 @@ void space_text()
 
       // Issue # 481
       // Whether to balance spaces inside nested parentheses.
-      if (  QT_SIGNAL_SLOT_found )
+      if (QT_SIGNAL_SLOT_found)
       {
          Chunk *nn = next->GetNext();                                    // Issue #2734
 
