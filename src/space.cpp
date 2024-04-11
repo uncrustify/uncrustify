@@ -3562,8 +3562,7 @@ void space_text()
 
       // Issue # 481
       // Whether to balance spaces inside nested parentheses.
-      if (  QT_SIGNAL_SLOT_found
-         && options::sp_balance_nested_parens())
+      if (QT_SIGNAL_SLOT_found)
       {
          Chunk *nn = next->GetNext();                                    // Issue #2734
 
@@ -3828,57 +3827,6 @@ void space_text()
       }
    }
 } // space_text
-
-
-void space_text_balance_nested_parens()
-{
-   LOG_FUNC_ENTRY();
-
-   Chunk *first = Chunk::GetHead();
-
-   while (first->IsNotNullChunk())
-   {
-      Chunk *next = first->GetNext();
-
-      if (next->IsNullChunk())
-      {
-         break;
-      }
-
-      // if there are two successive opening parenthesis
-      if (  first->IsString("(")
-         && next->IsString("("))
-      {
-         // insert a space between them
-         space_add_after(first, 1);
-
-         // test after the closing parens   Issue #1703
-         Chunk *closing = first->GetNextType((E_Token)(first->GetType() + 1), first->GetLevel());
-
-         if (closing->GetOrigCol() == closing->GetPrev()->GetOrigColEnd())
-         {
-            space_add_after(closing->GetPrev(), 1);
-         }
-      }
-      else if (  first->IsString(")")
-              && next->IsString(")"))
-      {
-         // insert a space between the two closing parens
-         if (first->GetOrigColEnd() == next->GetOrigCol())
-         {
-            space_add_after(first, 1);
-         }
-         // test after the opening parens   Issue #1703
-         Chunk *opening = next->GetPrevType((E_Token)(next->GetType() - 1), next->GetLevel());
-
-         if (opening->GetOrigColEnd() == opening->GetNext()->GetOrigCol())
-         {
-            shift_the_rest_of_the_line(opening->GetNext());                    // Issue #4221
-         }
-      }
-      first = next;
-   }
-} // space_text_balance_nested_parens
 
 
 size_t space_needed(Chunk *first, Chunk *second)
