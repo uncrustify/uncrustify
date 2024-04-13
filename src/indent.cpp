@@ -6,7 +6,6 @@
  * @author  Guy Maurel October 2015- 2023
  * @license GPL v2+
  */
-
 #include "indent.h"
 
 #include "align/align.h"
@@ -4550,8 +4549,8 @@ void indent_preproc()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      LOG_FMT(LPPIS, "%s(%d): orig line is %zu, orig col is %zu, pc->Text() is '%s'\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+      LOG_FMT(LPPIS, "%s(%d): orig line is %zu, orig col is %zu, pc->Type is %s, pc->Text() is '%s'\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->Text());
 
       if (pc->IsNot(CT_PREPROC))
       {

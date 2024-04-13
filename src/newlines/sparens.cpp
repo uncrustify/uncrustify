@@ -24,8 +24,6 @@ void newlines_sparens()
 {
    LOG_FUNC_ENTRY();
 
-   //Chunk *sparen_open;
-
    for (Chunk *sparen_open = Chunk::GetHead()->GetNextType(CT_SPAREN_OPEN, ANY_LEVEL);
         sparen_open->IsNotNullChunk();
         sparen_open = sparen_open->GetNextType(CT_SPAREN_OPEN, ANY_LEVEL))

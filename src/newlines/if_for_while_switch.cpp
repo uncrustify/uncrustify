@@ -72,7 +72,8 @@ bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt)
                pc = brace_open->GetNextType(CT_VBRACE_CLOSE, brace_open->GetLevel());
 
                if (  !pc->GetPrevNc()->IsNewline()
-                  && !pc->GetNextNc()->IsNewline())
+                  && !pc->GetNextNc()->IsNewline()
+                  && pc->GetNextNc()->IsNot(CT_VBRACE_CLOSE))
                {
                   newline_add_after(pc);
                   retval = true;
