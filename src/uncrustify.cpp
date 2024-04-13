@@ -2291,13 +2291,6 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
 
    mark_comments();
 
-   // Add balanced spaces around nested params
-   if (options::sp_balance_nested_parens())
-   {
-      log_rule_B("sp_balance_nested_parens");
-      space_text_balance_nested_parens();
-   }
-
    // Scrub certain added semicolons
    if (  language_is_set(lang_flag_e::LANG_PAWN)
       && options::mod_pawn_semicolon())
