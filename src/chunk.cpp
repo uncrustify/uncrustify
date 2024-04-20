@@ -51,7 +51,7 @@ void Chunk::CopyFrom(const Chunk &o)
 
    m_str          = o.m_str;
    m_trackingList = o.m_trackingList;
-}
+} // Chunk::CopyFrom
 
 
 void Chunk::Reset()
@@ -85,7 +85,7 @@ void Chunk::Reset()
    // for debugging purpose only
    m_str.clear();
    m_trackingList = nullptr;
-}
+} // Chunk::Reset
 
 
 const char *Chunk::ElidedText(char *for_the_copy) const
@@ -121,7 +121,7 @@ const char *Chunk::ElidedText(char *for_the_copy) const
       }
    }
    return(test_it);
-}
+} // Chunk::ElidedText
 
 
 Chunk *Chunk::GetNext(const E_Scope scope) const
@@ -186,19 +186,19 @@ static void chunk_log(Chunk *pc, const char *text);
 Chunk *Chunk::GetHead()
 {
    return(gChunkList.GetHead());
-}
+} // Chunk::GetHead
 
 
 Chunk *Chunk::GetTail()
 {
    return(gChunkList.GetTail());
-}
+} // Chunk::GetTail
 
 
 Chunk::T_SearchFnPtr Chunk::GetSearchFn(const E_Direction dir)
 {
    return((dir == E_Direction::FORWARD) ? &Chunk::GetNext : &Chunk::GetPrev);
-}
+} // Chunk::GetSearchFn
 
 
 Chunk *Chunk::Search(const T_CheckFnPtr checkFn, const E_Scope scope,
@@ -219,7 +219,7 @@ Chunk *Chunk::Search(const T_CheckFnPtr checkFn, const E_Scope scope,
            && ((pc->*checkFn)() != cond)); // and the demanded chunk was not found either
 
    return(pc);                             // the latest chunk is the searched one
-}
+} // Chunk::Search
 
 
 bool Chunk::IsOnSameLine(const Chunk *end) const
@@ -240,7 +240,7 @@ bool Chunk::IsOnSameLine(const Chunk *end) const
       tmp = tmp->GetNext();
    }
    return(true);
-}
+} // Chunk::IsOnSameLine
 
 
 Chunk *Chunk::SearchTypeLevel(const E_Token type, const E_Scope scope,
@@ -256,7 +256,7 @@ Chunk *Chunk::SearchTypeLevel(const E_Token type, const E_Scope scope,
            && (!pc->IsTypeAndLevel(type, level))); // and the chunk was not found either
 
    return(pc);                                     // the latest chunk is the searched one
-}
+} // Chunk::SearchTypeLevel
 
 
 Chunk *Chunk::SearchStringLevel(const char *str, const size_t len, int level,
@@ -272,7 +272,7 @@ Chunk *Chunk::SearchStringLevel(const char *str, const size_t len, int level,
            && !pc->IsStringAndLevel(str, len, true, level)); // and the demanded chunk was not found either
 
    return(pc);                                               // the latest chunk is the searched one
-}
+} // Chunk::SearchStringLevel
 
 
 Chunk *Chunk::SearchPpa(const T_CheckFnPtr checkFn, const bool cond) const
@@ -310,7 +310,7 @@ Chunk *Chunk::SearchPpa(const T_CheckFnPtr checkFn, const bool cond) const
    }
    // Ran out of tokens
    return(Chunk::NullChunkPtr);
-}
+} // Chunk::SearchPpa
 
 
 static void chunk_log_msg(Chunk *chunk, const log_sev_t log, const char *str)
@@ -334,7 +334,7 @@ static void chunk_log_msg(Chunk *chunk, const log_sev_t log, const char *str)
    {
       LOG_FMT(log, "Text() is '%s', type is %s,\n", chunk->Text(), get_token_name(chunk->GetType()));
    }
-}
+} // chunk_log_msg
 
 
 static void chunk_log(Chunk *pc, const char *text)
@@ -367,7 +367,7 @@ static void chunk_log(Chunk *pc, const char *text)
               get_unc_stage_name(cpd.unc_stage));
       log_func_stack_inline(log);
    }
-}
+} // chunk_log
 
 
 void Chunk::Delete(Chunk * &pc)
@@ -375,7 +375,7 @@ void Chunk::Delete(Chunk * &pc)
    gChunkList.Remove(pc);
    delete pc;
    pc = Chunk::NullChunkPtr;
-}
+} // Chunk::Delete
 
 
 void Chunk::MoveAfter(Chunk *ref)
@@ -393,13 +393,13 @@ void Chunk::MoveAfter(Chunk *ref)
    m_column     = ref->m_column + space_col_align(ref, this);
    m_origCol    = m_column;
    m_origColEnd = m_origCol + Len();
-}
+} // Chunk::MoveAfter
 
 
 void Chunk::Swap(Chunk *other)
 {
    gChunkList.Swap(this, other);
-}
+} // Chunk::Swap
 
 
 bool Chunk::IsAddress() const
@@ -421,7 +421,7 @@ bool Chunk::IsAddress() const
       return(true);
    }
    return(false);
-}
+} // Chunk::IsAddress
 
 
 Chunk *Chunk::GetFirstChunkOnLine() const
@@ -438,7 +438,7 @@ Chunk *Chunk::GetFirstChunkOnLine() const
       pc    = pc->GetPrev();
    }
    return(first);
-}
+} // Chunk::GetFirstChunkOnLine
 
 
 bool Chunk::IsLastChunkOnLine() const
@@ -454,7 +454,7 @@ bool Chunk::IsLastChunkOnLine() const
       return(true);
    }
    return(false);
-}
+} // Chunk::IsLastChunkOnLine
 
 
 void Chunk::SwapLines(Chunk *other)
@@ -560,7 +560,7 @@ void Chunk::SetResetFlags(PcfFlags resetBits, PcfFlags setBits)
          m_flags = newFlags;
       }
    }
-}
+} // Chunk::SetResetFlags
 
 
 void Chunk::SetType(const E_Token token)
@@ -616,7 +616,7 @@ void Chunk::SetParentType(const E_Token token)
    LOG_FMT(LSETPAR, "   type is %s, parent type is %s => new parent type is %s\n",
            get_token_name(m_type), get_token_name(m_parentType), get_token_name(token));
    m_parentType = token;
-}
+} // Chunk::SetParentType
 
 
 Chunk *Chunk::CopyAndAdd(Chunk *pos, const E_Direction dir) const
@@ -677,7 +677,7 @@ Chunk *Chunk::GetNextNbsb() const
       pc = pc->GetNextNcNnl();
    }
    return(pc);
-}
+} // Chunk::GetNextNbsb
 
 
 Chunk *Chunk::GetPrevNbsb() const
@@ -694,7 +694,7 @@ Chunk *Chunk::GetPrevNbsb() const
       pc = pc->GetPrevNcNnl();
    }
    return(pc);
-}
+} // Chunk::GetPrevNbsb
 
 
 Chunk *Chunk::GetPpStart() const
@@ -713,7 +713,7 @@ Chunk *Chunk::GetPpStart() const
    } while (pc->IsPreproc());
 
    return(prev);
-}
+} // Chunk::GetPpStart
 
 
 Chunk *Chunk::SkipDcMember() const
@@ -734,7 +734,7 @@ Chunk *Chunk::SkipDcMember() const
       nxt = pc->GetNextNcNnl(E_Scope::ALL);
    }
    return(pc);
-}
+} // Chunk::SkipDcMember
 
 
 int Chunk::ComparePosition(const Chunk *other) const
@@ -755,7 +755,7 @@ int Chunk::ComparePosition(const Chunk *other) const
       }
    }
    return(1);
-}
+} // Chunk::ComparePosition
 
 
 bool Chunk::IsOCForinOpenParen() const
@@ -779,7 +779,7 @@ bool Chunk::IsOCForinOpenParen() const
       }
    }
    return(false);
-}
+} // Chunk::IsOCForinOpenParen
 
 
 bool Chunk::IsStringAndLevel(const char *str, const size_t len,
@@ -792,7 +792,7 @@ bool Chunk::IsStringAndLevel(const char *str, const size_t len,
                && memcmp(Text(), str, len) == 0)
             || (  !caseSensitive
                && strncasecmp(Text(), str, len) == 0)));   // the strings are equal
-}
+} // Chunk::IsStringAndLevel
 
 
 Chunk *Chunk::GetClosingParen(E_Scope scope) const
@@ -809,7 +809,7 @@ Chunk *Chunk::GetClosingParen(E_Scope scope) const
       return(GetNextType((E_Token)(m_type + 1), m_level, scope));
    }
    return(const_cast<Chunk *>(this));
-}
+} // Chunk::GetClosingParen
 
 
 Chunk *Chunk::GetOpeningParen(E_Scope scope) const
@@ -826,7 +826,7 @@ Chunk *Chunk::GetOpeningParen(E_Scope scope) const
       return(GetPrevType((E_Token)(m_type - 1), m_level, scope));
    }
    return(const_cast<Chunk *>(this));
-}
+} // Chunk::GetOpeningParen
 
 
 bool Chunk::IsCppInheritanceAccessSpecifier() const
@@ -837,7 +837,7 @@ bool Chunk::IsCppInheritanceAccessSpecifier() const
          && (  IsString("private")
             || IsString("protected")
             || IsString("public")));
-}
+} // Chunk::IsCppInheritanceAccessSpecifier
 
 
 bool Chunk::IsColon() const
@@ -859,7 +859,7 @@ bool Chunk::IsColon() const
          || Is(CT_OC_DICT_COLON)
          || Is(CT_TAG_COLON)
          || Is(CT_WHERE_COLON));
-}
+} // Chunk::IsColon
 
 
 bool Chunk::IsDoxygenComment() const
@@ -878,7 +878,7 @@ bool Chunk::IsDoxygenComment() const
    return(  (sComment[2] == '/')
          || (sComment[2] == '!')
          || (sComment[2] == '@'));
-}
+} // Chunk::IsDoxygenComment
 
 
 bool Chunk::IsTypeDefinition() const
@@ -891,7 +891,7 @@ bool Chunk::IsTypeDefinition() const
          || Is(CT_STRUCT)
          || Is(CT_ENUM)
          || Is(CT_UNION));
-}
+} // Chunk::IsTypeDefinition
 
 
 bool Chunk::IsNewlineBetween(const Chunk *other) const
@@ -907,7 +907,7 @@ bool Chunk::IsNewlineBetween(const Chunk *other) const
       pc = pc->GetNext();
    }
    return(false);
-}
+} // Chunk::IsNewlineBetween
 
 
 void shift_the_rest_of_the_line(Chunk *first)

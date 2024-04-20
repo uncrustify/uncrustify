@@ -1001,27 +1001,6 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
    if (  (ctx.peek() == '.')                 // 46
       && (ctx.peek(1) != '.'))               // 46
    {
-      // Issue #1265, 5.clamp()
-      TokenInfo ss;
-      ctx.save(ss);
-
-      while (  ctx.more()
-            && CharTable::IsKw2(ctx.peek(1)))
-      {
-         // skip characters to check for paren open
-         ctx.get();
-      }
-
-      if (ctx.peek(1) == '(')                // 40
-      {
-         ctx.restore(ss);
-         pc.SetType(CT_NUMBER);
-         return(true);
-      }
-      else
-      {
-         ctx.restore(ss);
-      }
       pc.Str().append(ctx.get());
       is_float = true;
 
@@ -2396,7 +2375,9 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    }
    // Parse strings and character constants
 
-   if (parse_number(ctx, pc))
+   bool pn = parse_number(ctx, pc);
+
+   if (pn)
    {
       return(true);
    }
