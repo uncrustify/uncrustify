@@ -42,3 +42,5 @@
 80304  java/Issue_1124-f.cfg                             java/Issue_1124.java
 80305  java/Issue_1124-r.cfg                             java/Issue_1124.java
 80306  java/leading-tabs-for-java-lambda.cfg             java/leading-tabs-for-java-lambda.java
+
+80400  java/Issue_1541.cfg                               java/Issue_1541.java
