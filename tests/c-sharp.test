@@ -122,7 +122,7 @@
 60015  cs/UNI-14131.cfg                             cs/UNI-14131.cs
 60016  cs/UNI-11662.cfg                             cs/UNI-11662.cs
 60018  common/UNI-18777.cfg                         cs/UNI-18777.cs
-##60019  common/empty.cfg                             cs/UNI-18780.cs
+60019  common/empty.cfg                             cs/UNI-18780.cs
 60020  cs/UNI-18829.cfg                             cs/UNI-18829.cs
 60023  cs/UNI-18437.cfg                             cs/UNI-18437.cs
 60024  cs/U15-Cs.cfg                                cs/UNI-19644.cs
