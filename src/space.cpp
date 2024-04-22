@@ -235,22 +235,45 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  second->Is(CT_QUESTION)
          && (options::sp_cond_question_before() != IARF_IGNORE))
       {
-         // Add or remove space before the '?' in 'b ? t : f'.
-         // Overrides sp_cond_question.
-         log_rule("sp_cond_question_before");
-         return(options::sp_cond_question_before());
+         if (second->TestFlags(PCF_IN_TEMPLATE))
+         {
+            // do nothing
+         }
+         else
+         {
+            // Add or remove space before the '?' in 'b ? t : f'.
+            // Overrides sp_cond_question.
+            log_rule("sp_cond_question_before");
+            return(options::sp_cond_question_before());
+         }
       }
 
       if (  first->Is(CT_QUESTION)
          && (options::sp_cond_question_after() != IARF_IGNORE))
       {
-         // Add or remove space after the '?' in 'b ? t : f'.
-         // Overrides sp_cond_question.
-         log_rule("sp_cond_question_after");
-         return(options::sp_cond_question_after());
+         if (first->TestFlags(PCF_IN_TEMPLATE))
+         {
+            // do nothing
+         }
+         else
+         {
+            // Add or remove space after the '?' in 'b ? t : f'.
+            // Overrides sp_cond_question.
+            log_rule("sp_cond_question_after");
+            return(options::sp_cond_question_after());
+         }
       }
-      log_rule("sp_cond_question");
-      return(options::sp_cond_question());
+
+      if (  first->TestFlags(PCF_IN_TEMPLATE)
+         || second->TestFlags(PCF_IN_TEMPLATE))
+      {
+         // do nothing
+      }
+      else
+      {
+         log_rule("sp_cond_question");
+         return(options::sp_cond_question());
+      }
    }
 
    if (  first->Is(CT_COND_COLON)

@@ -12,7 +12,7 @@ public class JavaClass {
             }
         }
 
-        Map< ? , ? > map = (Map< ? , ? >) object;
+        Map<?, ?> map = (Map<?, ?>) object;
 
         return false;
     }
