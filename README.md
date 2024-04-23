@@ -188,7 +188,7 @@ The codebase has to be formatted by the options set up in
 cause TravisCI build failures.
 
 The Command line interface (CLI) output is tested by the
-`test_cli_options.sh` script. It is located inside of `tests/cli/` and operates
+`test_cli_options.py` script. It is located inside of `tests/cli/` and operates
 on the subdirectories of that folder.
 
 If a PR is altering the CLI output, files inside those directories might
