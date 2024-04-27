@@ -5,7 +5,6 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-
 #include "align/quick_align_again.h"
 
 #include "align/stack.h"

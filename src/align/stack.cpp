@@ -7,7 +7,6 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-
 #include "align/stack.h"
 
 #include "align/tab_column.h"

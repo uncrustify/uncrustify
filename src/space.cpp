@@ -16,7 +16,6 @@
  * @author  Guy Maurel, 2015-2023
  * @license GPL v2+
  */
-
 #include "space.h"
 
 #include "add_space_table.h"
@@ -28,6 +27,7 @@
 #ifdef WIN32
 #include <algorithm>                   // to get max
 #endif // ifdef WIN32
+
 
 using namespace std;
 using namespace uncrustify;
