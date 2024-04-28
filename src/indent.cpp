@@ -3627,11 +3627,27 @@ void indent_text()
                  && options::indent_align_string())
          {
             log_rule_B("indent_align_string");
-            const int tmp = (xml_indent != 0) ? xml_indent : prev->GetColumn();
+            int indent;                                // Issue #3086
 
-            LOG_FMT(LINDENT, "%s(%d): orig line is %zu, String => %d\n",
-                    __func__, __LINE__, pc->GetOrigLine(), tmp);
-            reindent_line(pc, tmp);
+            if (xml_indent != 0)
+            {
+               indent = xml_indent;
+            }
+            else
+            {
+               Chunk *tmp = prev;
+
+               while (  tmp->GetPrev()->IsNotNullChunk()
+                     && (  tmp->GetPrev()->Is(CT_WORD)
+                        || tmp->GetPrev()->Is(CT_STRING)))
+               {
+                  tmp = tmp->GetPrev();
+               }
+               indent = tmp->GetColumn();
+            }
+            LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, String => %d\n",
+                    __func__, __LINE__, pc->GetOrigLine(), indent);
+            reindent_line(pc, indent);
          }
          else if (pc->IsComment())
          {

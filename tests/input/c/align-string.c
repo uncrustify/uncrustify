@@ -10,5 +10,7 @@ void foo(void)
 
    fprintf(stderr, "Format string: %s", "This is the first line\n"
      "And this is the second.\n");
-}
 
+   fprintf(stderr, "Format string: %s", "This is the first line\n" __FILE__ "\n"
+     "And this is the second.\n");
+}

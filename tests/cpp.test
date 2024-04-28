@@ -233,6 +233,7 @@
 30236  cpp/Issue_750.cfg                                    cpp/Issue_750.cpp
 30237  cpp/Issue_3920.cfg                                   cpp/Issue_3920.cpp
 30238  cpp/Issue_2859.cfg                                   cpp/Issue_2859.cpp
+30239  cpp/Issue_3086.cfg                                   cpp/Issue_3086.cpp
 
 30240  cpp/align_func_params-t.cfg                          cpp/align_func_params.cpp
 30241  cpp/align_func_params_span-1.cfg                     cpp/align_func_params.cpp
