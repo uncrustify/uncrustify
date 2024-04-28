@@ -293,7 +293,7 @@ void rebuild_the_line(int theLine, unsigned int actual_line, bool increment)
    {
       counter++;
    }
-   LOG_FMT(LGUY, "%s            , counter is %zu\n", rebuildLine, counter);
+   LOG_FMT(LGUY, "REBU:%s            , counter is %zu\n", rebuildLine, counter);
 
    if (has_a_virtual_brace)
    {

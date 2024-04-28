@@ -7,7 +7,6 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
-
 #include "align/align.h"
 
 #include "align/asm_colon.h"
