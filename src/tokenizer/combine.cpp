@@ -1521,9 +1521,16 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          else if (  !prev->TestFlags(PCF_PUNCTUATOR)
                  || prev->Is(CT_INCDEC_AFTER)
                  || prev->Is(CT_SQUARE_CLOSE)
-                 || prev->Is(CT_DC_MEMBER)) // Issue 1402
+                 || prev->Is(CT_DC_MEMBER)) // Issue #1402
          {
-            pc->SetType(CT_ARITH);
+            if (prev->Is(CT_SARITH))        // Issue #3120
+            {
+               pc->SetType(CT_DEREF);
+            }
+            else
+            {
+               pc->SetType(CT_ARITH);
+            }
          }
          else if (  !prev->IsParenClose()
                  || prev->Is(CT_SPAREN_CLOSE)
