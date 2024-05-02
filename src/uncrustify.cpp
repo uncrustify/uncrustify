@@ -284,6 +284,7 @@ void usage(const char *argv0)
            " -l           : Language override: C, CPP, D, CS, JAVA, PAWN, OC, OC+, VALA.\n"
            " -t           : Load a file with types (usually not needed).\n"
            " -q           : Quiet mode - no output on stderr (-L will override).\n"
+           "                refers to blocking logging info from being sent to stderr.\n"
            " --frag       : Code fragment, assume the first line is indented correctly.\n"
            " --assume FN  : Uses the filename FN for automatic language detection if reading\n"
            "                from stdin unless -l is specified.\n"
