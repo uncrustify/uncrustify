@@ -15,6 +15,7 @@
 #include "reindent_line.h"
 #include "tokenizer/tokenize.h"
 #include "unc_ctype.h"
+#include "uncrustify_version.h"
 #include "unicode.h"
 
 #include <ctime>
@@ -703,6 +704,13 @@ void output_text(FILE *pfile)
    if (pp_indent_with_tabs == -1)
    {
       pp_indent_with_tabs = options::indent_with_tabs();
+   }
+
+   if (options::debug_print_version())
+   {
+      add_text("// Version: ");
+      add_text(UNCRUSTIFY_VERSION);
+      add_char('\n');
    }
 
    // loop over the whole chunk list

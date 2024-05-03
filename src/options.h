@@ -4430,6 +4430,10 @@ debug_decode_the_flags;
 extern Option<bool>
 debug_use_the_exit_function_pop; // = true
 
+// print (or not) the version in the file defined at the command option -o.
+extern Option<bool>
+debug_print_version;
+
 // insert the number of the line at the beginning of each line
 extern Option<bool>
 set_numbering_for_html_output;
