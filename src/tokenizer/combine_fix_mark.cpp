@@ -2236,6 +2236,7 @@ bool mark_function_type(Chunk *pc)
    }
    else if (  aft->Is(CT_SEMICOLON)
            || aft->Is(CT_ASSIGN)
+           || aft->Is(CT_COMMA)                       // Issue #3259
            || aft->Is(CT_FPAREN_CLOSE))               // Issue #3259
    {
       LOG_FMT(LFTYPE, "%s(%d):\n", __func__, __LINE__);
