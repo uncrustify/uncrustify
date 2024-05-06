@@ -2171,8 +2171,14 @@ bool mark_function_type(Chunk *pc)
 
    // Scan backwards across the name, which can only be a word and single star
    Chunk *varcnk = pc->GetPrevNcNnlNi();   // Issue #2279
+   LOG_FMT(LFTYPE, "%s(%d): varcnk: text '%s', type %s, @ orig line %zu:, orig col %zu\n",
+           __func__, __LINE__, varcnk->Text(), get_token_name(varcnk->GetType()),
+           varcnk->GetOrigLine(), varcnk->GetOrigCol());
 
    varcnk = varcnk->GetPrevNbsb();
+   LOG_FMT(LFTYPE, "%s(%d): varcnk: text '%s', type %s, @ orig line %zu:, orig col %zu\n",
+           __func__, __LINE__, varcnk->Text(), get_token_name(varcnk->GetType()),
+           varcnk->GetOrigLine(), varcnk->GetOrigCol());
 
    if (  varcnk->IsNotNullChunk()
       && !varcnk->IsWord())
@@ -2192,13 +2198,22 @@ bool mark_function_type(Chunk *pc)
          goto nogo_exit;
       }
    }
+   LOG_FMT(LFTYPE, "%s(%d): pc: text is '%s', type is %s, @ orig line is %zu:, orig col is %zu\n",
+           __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()),
+           pc->GetOrigLine(), pc->GetOrigCol());
    apo = pc->GetNextNcNnl();
+   LOG_FMT(LFTYPE, "%s(%d): apo: text is '%s', type is %s, @ orig line is %zu:, orig col is %zu\n",
+           __func__, __LINE__, apo->Text(), get_token_name(apo->GetType()),
+           apo->GetOrigLine(), apo->GetOrigCol());
 
    if (apo->IsNullChunk())
    {
       return(false);
    }
    apc = apo->GetClosingParen();
+   LOG_FMT(LFTYPE, "%s(%d): apc: text is '%s', type is %s, @ orig line is %zu:, orig col is %zu\n",
+           __func__, __LINE__, apc->Text(), get_token_name(apc->GetType()),
+           apc->GetOrigLine(), apc->GetOrigCol());
 
    if (  apc->IsNotNullChunk()
       && (  !apo->IsParenOpen()
@@ -2207,15 +2222,23 @@ bool mark_function_type(Chunk *pc)
       LOG_FMT(LFTYPE, "%s(%d): not followed by parens\n", __func__, __LINE__);
       goto nogo_exit;
    }
+   LOG_FMT(LFTYPE, "%s(%d): apc: text is '%s', type is %s, @ orig line is %zu:, orig col is %zu\n",
+           __func__, __LINE__, apc->Text(), get_token_name(apc->GetType()),
+           apc->GetOrigLine(), apc->GetOrigCol());
    aft = apc->GetNextNcNnl();
+   LOG_FMT(LFTYPE, "%s(%d): aft: text is '%s', type is %s, @ orig line is %zu:, orig col is %zu\n",
+           __func__, __LINE__, aft->Text(), get_token_name(aft->GetType()),
+           aft->GetOrigLine(), aft->GetOrigCol());
 
    if (aft->Is(CT_BRACE_OPEN))
    {
       pt = CT_FUNC_DEF;
    }
    else if (  aft->Is(CT_SEMICOLON)
-           || aft->Is(CT_ASSIGN))
+           || aft->Is(CT_ASSIGN)
+           || aft->Is(CT_FPAREN_CLOSE))               // Issue #3259
    {
+      LOG_FMT(LFTYPE, "%s(%d):\n", __func__, __LINE__);
       pt = CT_FUNC_PROTO;
    }
    else
@@ -2230,7 +2253,8 @@ bool mark_function_type(Chunk *pc)
    while ((tmp = tmp->GetPrevNcNnlNi())->IsNotNullChunk()) // Issue #2279
    {
       tmp = tmp->GetPrevNbsb();
-      LOG_FMT(LFTYPE, " -- type is %s, %s on orig line %zu, orig col is %zu",
+      LOG_FMT(LFTYPE, "%s(%d):  -- type is %s, %s on orig line %zu, orig col is %zu",             // Issue #3259
+              __func__, __LINE__,
               get_token_name(tmp->GetType()), tmp->Text(),
               tmp->GetOrigLine(), tmp->GetOrigCol());
 
@@ -2269,12 +2293,14 @@ bool mark_function_type(Chunk *pc)
       }
       else
       {
-         LOG_FMT(LFTYPE, " --  unexpected token: type is %s, Text() '%s', on orig line %zu, orig col %zu\n",
+         LOG_FMT(LFTYPE, "%s(%d): --  unexpected token: type is %s, Text() '%s', on orig line %zu, orig col %zu\n",
+                 __func__, __LINE__,
                  get_token_name(tmp->GetType()), tmp->Text(),
                  tmp->GetOrigLine(), tmp->GetOrigCol());
          goto nogo_exit;
       }
    }
+   LOG_FMT(LFTYPE, "%s(%d):\n", __func__, __LINE__);
 
    // Fixes #issue 1577
    // Allow word count 2 in case of function pointer declaration.
