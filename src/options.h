@@ -2580,6 +2580,11 @@ nl_oc_msg_args_min_params;
 extern BoundedOption<unsigned, 0, 10000>
 nl_oc_msg_args_max_code_width;
 
+// (OC) Whether to apply nl_oc_msg_args if some of the parameters are already
+// on new lines. Overrides nl_oc_msg_args_min_params and nl_oc_msg_args_max_code_width.
+extern Option<bool>
+nl_oc_msg_args_finish_multi_line;
+
 // Add or remove newline between function signature and '{'.
 extern Option<iarf_e>
 nl_fdef_brace;
