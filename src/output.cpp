@@ -77,7 +77,7 @@ void print_numbering()
    if (get_numbering())
    {
       line_number++;
-      sprintf(char_number, "%d ", line_number);
+      snprintf(char_number, sizeof(char_number), "%d ", line_number);
       write_string(char_number);
    }
 }
@@ -538,7 +538,7 @@ void output_parsed(FILE *pfile, bool withOptions)
               pc->GetBraceLevel(), pc->GetLevel(), pc->GetPpLevel());
       // Print pc flags in groups of 4 hex characters
       char flag_string[24];
-      sprintf(flag_string, "%16llx", static_cast<PcfFlags::int_t>(pc->GetFlags()));
+      snprintf(flag_string, sizeof(flag_string), "%16llx", static_cast<PcfFlags::int_t>(pc->GetFlags()));
       fprintf(pfile, "[%.4s %.4s %.4s %.4s]", flag_string, flag_string + 4, flag_string + 8, flag_string + 12);
       fprintf(pfile, "[%zu-%d]",
               pc->GetNlCount(), pc->GetAfterTab());
@@ -1079,7 +1079,7 @@ void output_text(FILE *pfile)
 
                if (first_text)
                {
-                  sprintf(tempText, "%s", Bsecond);
+                  snprintf(tempText, sizeof(tempText), "%s", Bsecond);
                   add_text(tempText);
                   add_text(": ");
                   first_text = false;
@@ -1089,7 +1089,7 @@ void output_text(FILE *pfile)
             {
                add_text(", ");
             }
-            sprintf(tempText, "%zu", Bfirst);
+            snprintf(tempText, sizeof(tempText), "%zu", Bfirst);
             add_text(tempText);
          } // for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
 

@@ -3341,7 +3341,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
             || it.second == second->GetType()))
       {
          char text[80];
-         sprintf(text, "REMOVE from no_space_table @ %zu.", number);
+         snprintf(text, sizeof(text), "REMOVE from no_space_table @ %zu.", number);
          log_rule(text);
          return(IARF_REMOVE);
       }
@@ -3359,7 +3359,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          && it.second == second->GetType())
       {
          char text[80];
-         sprintf(text, "ADD from add_space_table @ %zu.", number);
+         snprintf(text, sizeof(text), "ADD from add_space_table @ %zu.", number);
          log_rule(text);
          return(IARF_ADD);
       }
