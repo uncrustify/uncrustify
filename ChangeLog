@@ -1,3 +1,19 @@
+Change highlights in uncrustify-0.79.0 (May 2024)
+-------------------------------------------------------------------------------
+   881cd25e1f0854481b002a58a7dff68f146d7ee3
+     Added   : sp_cpp_before_struct_binding_after_byref    Dec  8 2023
+   1f48216e0d87ba84bf10268c46943c47ce473512                
+     Added   : sp_string_string                            Dec 19 2023
+   364f8d77120001783c2e792821bcb4052748631d                
+     Added   : pp_unbalanced_if_action                     Feb 10 2024
+     Removed : pp_warn_unbalanced_if                       Feb 10 2024
+   9a821fe71d307613916805d4c3fee1c9ee01d96f                
+     Removed : sp_balance_nested_parens                    Apr 11 2024
+   71e9c30da59606a2ce32c561d47d6fafa49d2d7f                
+     Added   : debug_print_version                         May  3 2024
+   a50dd5480fe646059c9ea2b84243b674f9fbb575                
+     Added   : nl_oc_msg_args_finish_multi_line            May  7 2024
+
 Change highlights in uncrustify-0.78.1 (November 2023)
 -------------------------------------------------------------------------------
    24ca784086c31ce6aa0817ac9c99539a5ac52d00
