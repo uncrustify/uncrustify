@@ -88,10 +88,12 @@ void newline_oc_msg(Chunk *start)
    {
       should_nl_msg = true;
    }
-
    bool finish_multi_line = options::nl_oc_msg_args_finish_multi_line();
-   if (finish_multi_line) {
-      size_t prev_line = -1;
+
+   if (finish_multi_line)
+   {
+      size_t prev_line = 0;
+
       for (Chunk *pc = start->GetNextNcNnl(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
       {
          if (pc->GetLevel() <= start->GetLevel())
@@ -99,7 +101,7 @@ void newline_oc_msg(Chunk *start)
             break;
          }
 
-         if (prev_line != -1 && pc->GetOrigLine() != prev_line)
+         if (prev_line > 0 && pc->GetOrigLine() != prev_line)
          {
             should_nl_msg = true;
          }

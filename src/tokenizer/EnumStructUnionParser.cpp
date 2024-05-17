@@ -1624,6 +1624,7 @@ void EnumStructUnionParser::mark_constructors()
          {
             break;                            // Issue #4250
          }
+
          if (  std::strcmp(prev->Text(), name) == 0
             && prev->GetLevel() == level
             && next->IsParenOpen())

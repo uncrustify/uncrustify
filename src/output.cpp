@@ -2266,18 +2266,12 @@ static std::map<std::size_t, std::pair<std::wregex, std::wregex> > get_reflow_fo
 
          while (it_regex != it_regex_end)
          {
-            std::wsmatch match = *it_regex;
+            std::wsmatch match     = *it_regex;
+            auto         &&index   = std::stoi(match[3].str());
+            std::wregex  *p_wregex = (match[1].length() > 0) ? &regex_map[index].second
+                                                     : &regex_map[index].first;
+            *p_wregex = match[4].str();
 
-            if (  ((  match[1].matched
-                   || match[2].matched))
-               && match[3].matched
-               && match[4].matched)
-            {
-               auto        &&index   = std::stoi(match[3].str());
-               std::wregex *p_wregex = match[1].matched ? &regex_map[index].second
-                                                        : &regex_map[index].first;
-               *p_wregex = match[4].str();
-            }
             ++it_regex;
          }
       }
