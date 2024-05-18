@@ -9,8 +9,8 @@
 
 #include "align/stack.h"
 #include "chunk.h"
-#include "log_rules.h"
 #include "keywords.h"
+#include "log_rules.h"
 #include "mark_change.h"
 #include "newlines/add.h"
 #include "newlines/force.h"
