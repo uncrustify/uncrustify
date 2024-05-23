@@ -49,7 +49,7 @@ class Option(object):
     def write_declaration(self, out):
         out.write(u'{} {} = {{\n'.format(self.decl, self.name))
         out.write(u'  "{}",\n'.format(self.name))
-        out.write(u'  u8R"__(\n{}\n)__"'.format(self.desc))
+        out.write(u'  R"__(\n{}\n)__"'.format(self.desc))
         if self.dval is not None:
             out.write(u',\n  {}'.format(self.dval))
         out.write(u'\n};\n\n')
@@ -90,7 +90,7 @@ def write_declarations(out, args):
 # -----------------------------------------------------------------------------
 def write_registrations(out, args):
     for group in groups:
-        out.write(u'\n  begin_option_group(u8R"__(\n{}\n)__");\n\n'.format(
+        out.write(u'\n  begin_option_group(R"__(\n{}\n)__");\n\n'.format(
             group.desc))
 
         for option in group.options:

@@ -28,7 +28,7 @@ namespace uncrustify
 namespace
 {
 
-static const char *DOC_TEXT_END = u8R"___(
+static const char *DOC_TEXT_END = R"___(
 # Meaning of the settings:
 #   Ignore - do not do any changes
 #   Add    - makes sure there is 1 or more space/brace/newline/etc
