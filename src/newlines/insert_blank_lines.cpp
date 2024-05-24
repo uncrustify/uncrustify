@@ -6,14 +6,13 @@
  * @license GPL v2+
  */
 
+#include "newlines/if_for_while_switch.h"
 #include "newlines/insert_blank_lines.h"
+#include "newlines/one_liner.h"
 
 #include "chunk.h"
-#include "is_class_one_liner.h"
 #include "log_rules.h"
 #include "newlines/func_pre_blank_lines.h"
-#include "newlines/if_for_while_switch_post_blank_lines.h"
-#include "newlines/if_for_while_switch_pre_blank_lines.h"
 
 
 using namespace uncrustify;
