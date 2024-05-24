@@ -50,13 +50,13 @@ public:
       : m_i{static_cast<int_t>(flag)}
    {}
 
-   inline bool operator==(Enum const &other)
+   inline bool operator==(Enum const &other) const
    { return(m_i == static_cast<int_t>(other)); }
-   inline bool operator==(flags const &other)
+   inline bool operator==(flags const &other) const
    { return(m_i == other.m_i); }
-   inline bool operator!=(Enum const &other)
+   inline bool operator!=(Enum const &other) const
    { return(m_i != static_cast<int_t>(other)); }
-   inline bool operator!=(flags const &other)
+   inline bool operator!=(flags const &other) const
    { return(m_i != other.m_i); }
 
    template<typename T, integral<T> = true>
