@@ -32,7 +32,6 @@
 #include "newlines/cleanup.h"
 #include "newlines/eat_start_end.h"
 #include "newlines/functions_remove_extra_blank_lines.h"
-#include "newlines/insert_blank_lines.h"
 #include "newlines/remove.h"
 #include "newlines/sparens.h"
 #include "newlines/squeeze.h"
