@@ -50,13 +50,13 @@
 #   4>            TYPEDEF|               NONE|     PARENT_NOT_SET[  1/  1/  8/  0][0/0/0][             e 0000][0-0] typedef
 #   4>               TYPE|               NONE|     PARENT_NOT_SET[  9/  9/ 13/  1][0/0/0][             2 0080][0-1]         void
 #   4>          FUNC_TYPE|            TYPEDEF|     PARENT_NOT_SET[ 14/ 14/ 22/  1][0/0/0][                 80][0-0]              function
-#   4>        FPAREN_OPEN|          FUNC_CALL|     PARENT_NOT_SET[ 22/ 22/ 23/  0][0/0/0][        2 0000 0080][0-0]                      (
-#   4>               TYPE|               NONE|     PARENT_NOT_SET[ 23/ 23/ 26/  0][0/1/0][            8a 0088][0-0]                       int
-#   4>               WORD|               NONE|     PARENT_NOT_SET[ 27/ 27/ 28/  1][0/1/0][           100 0088][0-0]                           i
-#   4>              COMMA|               NONE|     PARENT_NOT_SET[ 28/ 28/ 29/  0][0/1/0][        2 0000 0088][0-0]                            ,
-#   4>               TYPE|               NONE|     PARENT_NOT_SET[ 30/ 30/ 36/  1][0/1/0][            8a 0088][0-0]                              double
-#   4>               WORD|               NONE|     PARENT_NOT_SET[ 37/ 37/ 38/  1][0/1/0][           100 0088][0-0]                                     d
-#   4>       FPAREN_CLOSE|          FUNC_CALL|     PARENT_NOT_SET[ 38/ 38/ 39/  0][0/0/0][        2 0000 0088][0-0]                                      )
+#   4>        FPAREN_OPEN|            TYPEDEF|     PARENT_NOT_SET[ 22/ 22/ 23/  0][0/0/0][        2 0000 0080][0-0]                      (
+#   4>               TYPE|               NONE|     PARENT_NOT_SET[ 23/ 23/ 26/  0][0/1/0][            8a 0080][0-0]                       int
+#   4>               WORD|               NONE|     PARENT_NOT_SET[ 27/ 27/ 28/  1][0/1/0][           100 0080][0-0]                           i
+#   4>              COMMA|               NONE|     PARENT_NOT_SET[ 28/ 28/ 29/  0][0/1/0][        2 0000 0080][0-0]                            ,
+#   4>               TYPE|               NONE|     PARENT_NOT_SET[ 30/ 30/ 36/  1][0/1/0][            8a 0080][0-0]                              double
+#   4>               WORD|               NONE|     PARENT_NOT_SET[ 37/ 37/ 38/  1][0/1/0][           100 0080][0-0]                                     d
+#   4>       FPAREN_CLOSE|            TYPEDEF|     PARENT_NOT_SET[ 38/ 38/ 39/  0][0/0/0][        2 0000 0080][0-0]                                      )
 #   4>          SEMICOLON|            TYPEDEF|     PARENT_NOT_SET[ 39/ 39/ 40/  0][0/0/0][        2 0000 0080][0-0]                                       ;
 #   4>            NEWLINE|               NONE|     PARENT_NOT_SET[ 40/ 40/  1/  0][0/0/0][                  0][2-0]
 # -=====-
