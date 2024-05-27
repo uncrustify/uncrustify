@@ -312,8 +312,12 @@ void prot_some_lines(const char *func_name, int theLine_of_code, size_t from_lin
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (  pc->GetOrigLine() >= from_line
-         && pc->GetOrigLine() <= to_line)
+      if (pc->GetOrigLine() > to_line)
+      {
+         break;
+      }
+
+      if (pc->GetOrigLine() >= from_line)
       {
          tokenCounter++;
 
