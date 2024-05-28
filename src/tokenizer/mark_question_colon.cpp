@@ -28,6 +28,10 @@ Chunk *search_for_colon(Chunk *pc_question, int depth)
            __func__, __LINE__, pc_question->GetOrigLine(), pc_question->GetOrigCol(), pc_question->GetLevel(),
            pc_question->Text());
 
+   if (pc2->Is(CT_COLON)) {
+      return pc2;
+   }
+
    // examine the next tokens, look for E2, E3, COLON, might be for a next CT_QUESTION
    while (pc2->IsNotNullChunk())
    {
