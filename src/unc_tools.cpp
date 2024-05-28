@@ -42,7 +42,7 @@ static size_t tokenCounter;
  *   prot_the_source(__LINE__);
  *   log_pcf_flags(LSYS, pc->GetFlags());
  *
- * if actual_line is zero, use the option debug_line_number_to_protocol.
+ * if the_line_to_be_prot is zero, use the option debug_line_number_to_protocol.
  * if the value is zero, don't make any protocol and return.
  *
  * if partNumber is zero, all the tokens of the line are shown,
@@ -51,20 +51,20 @@ static size_t tokenCounter;
  *   prot_the_line_pc(pc_sub, __func__, __LINE__, 6, 5);
  * to get a protocol of a sub branch, which begins with pc_sub
  */
-void prot_the_line(const char *func_name, int theLine, unsigned int actual_line, size_t partNumber)
+void prot_the_line(const char *func_name, int theLine_of_code, size_t the_line_to_be_prot, size_t partNumber)
 {
-   prot_the_line_pc(Chunk::GetHead(), func_name, theLine, actual_line, partNumber);
+   prot_the_line_pc(Chunk::GetHead(), func_name, theLine_of_code, the_line_to_be_prot, partNumber);
 }
 
 
-void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigned int actual_line, size_t partNumber)
+void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine_of_code, size_t the_line_to_be_prot, size_t partNumber)
 {
-   if (actual_line == 0)
+   if (the_line_to_be_prot == 0)
    {
       // use the option debug_line_number_to_protocol.
-      actual_line = options::debug_line_number_to_protocol();
+      the_line_to_be_prot = options::debug_line_number_to_protocol();
 
-      if (actual_line == 0)
+      if (the_line_to_be_prot == 0)
       {
          // don't make any protocol.
          return;
@@ -72,18 +72,18 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
    }
    counter++;
    tokenCounter = 0;
-   LOG_FMT(LGUY, "Prot_the_line:(%s:%d)(%zu)\n", func_name, theLine, counter);
+   LOG_FMT(LGUY, "Prot_the_line:(%s:%d)(%zu)\n", func_name, theLine_of_code, counter);
 
    for (Chunk *pc = pc_sub; pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (pc->GetOrigLine() == actual_line)
+      if (pc->GetOrigLine() == the_line_to_be_prot)
       {
          tokenCounter++;
 
          if (  partNumber == 0
             || partNumber == tokenCounter)
          {
-            LOG_FMT(LGUY, " orig line is %d, (%zu) ", actual_line, tokenCounter);
+            LOG_FMT(LGUY, " orig line is %zu, (%zu) ", the_line_to_be_prot, tokenCounter);
 
             if (pc->Is(CT_VBRACE_OPEN))
             {
@@ -157,25 +157,25 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
 } // prot_the_line_pc
 
 
-void prot_the_columns(int theLine, unsigned int actual_line)
+void prot_the_columns(int theLine_of_code, size_t the_line_to_be_prot)
 {
-   if (actual_line == 0)
+   if (the_line_to_be_prot == 0)
    {
       // use the option debug_line_number_to_protocol.
-      actual_line = options::debug_line_number_to_protocol();
+      the_line_to_be_prot = options::debug_line_number_to_protocol();
 
-      if (actual_line == 0)
+      if (the_line_to_be_prot == 0)
       {
          // don't make any protocol.
          return;
       }
    }
    counter++;
-   LOG_FMT(LGUY, "%4d:", theLine);
+   LOG_FMT(LGUY, "%4d:", theLine_of_code);
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (pc->GetOrigLine() == actual_line)
+      if (pc->GetOrigLine() == the_line_to_be_prot)
       {
          LOG_FMT(LGUY, "%4zu,",
                  pc->GetColumn());
@@ -186,25 +186,25 @@ void prot_the_columns(int theLine, unsigned int actual_line)
 } // prot_the_columns
 
 
-void prot_the_OrigCols(int theLine, unsigned int actual_line)
+void prot_the_OrigCols(int theLine_of_code, size_t the_line_to_be_prot)
 {
-   if (actual_line == 0)
+   if (the_line_to_be_prot == 0)
    {
       // use the option debug_line_number_to_protocol.
-      actual_line = options::debug_line_number_to_protocol();
+      the_line_to_be_prot = options::debug_line_number_to_protocol();
 
-      if (actual_line == 0)
+      if (the_line_to_be_prot == 0)
       {
          // don't make any protocol.
          return;
       }
    }
    counter++;
-   LOG_FMT(LGUY, "%4d:", theLine);
+   LOG_FMT(LGUY, "%4d:", theLine_of_code);
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (pc->GetOrigLine() == actual_line)
+      if (pc->GetOrigLine() == the_line_to_be_prot)
       {
          LOG_FMT(LGUY, "%4zu,",
                  pc->GetOrigCol());
@@ -215,16 +215,16 @@ void prot_the_OrigCols(int theLine, unsigned int actual_line)
 } // prot_the_OrigCols
 
 
-void rebuild_the_line(int theLine, unsigned int actual_line, bool increment)
+void rebuild_the_line(int theLine_of_code, size_t the_line_to_be_prot, bool increment)
 {
 #define MANY    1000
 
-   if (actual_line == 0)
+   if (the_line_to_be_prot == 0)
    {
       // use the option debug_line_number_to_protocol.
-      actual_line = options::debug_line_number_to_protocol();
+      the_line_to_be_prot = options::debug_line_number_to_protocol();
 
-      if (actual_line == 0)
+      if (the_line_to_be_prot == 0)
       {
          // don't make any protocol.
          return;
@@ -242,7 +242,7 @@ void rebuild_the_line(int theLine, unsigned int actual_line, bool increment)
 
    rebuildLine[MANY - 1] = '\0';
    virtualLine[MANY - 1] = '\0';
-   LOG_FMT(LGUY, "%4d:", theLine);
+   LOG_FMT(LGUY, "%4d:", theLine_of_code);
 
    size_t len0 = 0;
    bool   has_a_virtual_brace;
@@ -250,7 +250,7 @@ void rebuild_the_line(int theLine, unsigned int actual_line, bool increment)
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (pc->GetOrigLine() == actual_line)
+      if (pc->GetOrigLine() == the_line_to_be_prot)
       {
          if (pc->Is(CT_NEWLINE))
          {
@@ -280,7 +280,7 @@ void rebuild_the_line(int theLine, unsigned int actual_line, bool increment)
 
                if (col + x >= MANY)
                {
-                  LOG_FMT(LGUY, " ***** MANY is too little for this line %d\n", theLine);
+                  LOG_FMT(LGUY, " ***** MANY is too little for this line %d\n", theLine_of_code);
                   exit(EX_SOFTWARE);
                }
                rebuildLine[col + x - 1] = B;
@@ -302,13 +302,105 @@ void rebuild_the_line(int theLine, unsigned int actual_line, bool increment)
 } // rebuild_the_line
 
 
-void prot_all_lines(const char *func_name, int theLine)
+void prot_some_lines(const char *func_name, int theLine_of_code, size_t from_line, size_t to_line)
+{
+   counter++;
+   tokenCounter = 0;
+   size_t lineNumber = from_line;
+
+   LOG_FMT(LGUY, "Prot_some_lines:(%s:%d)(%zu)\n", func_name, theLine_of_code, counter);
+
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+   {
+      if (pc->GetOrigLine() > to_line)
+      {
+         break;
+      }
+
+      if (pc->GetOrigLine() >= from_line)
+      {
+         tokenCounter++;
+
+         LOG_FMT(LGUY, " orig line is %zu, (%zu), ", lineNumber, tokenCounter);
+
+         if (pc->Is(CT_VBRACE_OPEN))
+         {
+            LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
+         }
+         else if (pc->Is(CT_NEWLINE))
+         {
+            LOG_FMT(LGUY, "<NL>(new line count is %zu), ", pc->GetNlCount());
+            tokenCounter = 0;
+            lineNumber   = lineNumber + pc->GetNlCount();
+         }
+         else if (pc->Is(CT_VBRACE_CLOSE))
+         {
+            LOG_FMT(LGUY, "<CT_VBRACE_CLOSE>, ");
+         }
+         else if (pc->Is(CT_VBRACE_OPEN))
+         {
+            LOG_FMT(LGUY, "<CT_VBRACE_OPEN>, ");
+         }
+         else if (pc->Is(CT_SPACE))
+         {
+            LOG_FMT(LGUY, "<CT_SPACE>, ");
+         }
+         else if (pc->Is(CT_IGNORED))
+         {
+            LOG_FMT(LGUY, "<IGNORED> ");
+         }
+         else
+         {
+            LOG_FMT(LGUY, "Text() '%s', ", pc->Text());
+         }
+         LOG_FMT(LGUY, " column is %zu, pp level is %zu, type is %s, parent type is %s, orig col is %zu,",
+                 pc->GetColumn(), pc->GetPpLevel(), get_token_name(pc->GetType()),
+                 get_token_name(pc->GetParentType()), pc->GetOrigCol());
+
+         if (pc->Is(CT_IGNORED))
+         {
+            LOG_FMT(LGUY, "\n");
+         }
+         else
+         {
+            LOG_FMT(LGUY, " pc->GetFlags(): ");
+            log_pcf_flags(LGUY, pc->GetFlags());
+         }
+
+         if (pc->Is(CT_COND_COLON))
+         {
+            Chunk *pa = pc->GetParent();
+            LOG_FMT(LGUY, "<> pa-type is %s, orig_line is %zu\n", get_token_name(pa->GetType()), pa->GetOrigLine());
+         }
+
+         if (pc->GetTrackingData() != nullptr)
+         {
+            LOG_FMT(LGUY, " Tracking info are: \n");
+            LOG_FMT(LGUY, "  number of track(s) %zu\n", pc->GetTrackingData()->size());
+
+            for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
+            {
+               const TrackList   *A       = pc->GetTrackingData();
+               const TrackNumber B        = A->at(track);
+               size_t            Bfirst   = B.first;
+               char              *Bsecond = B.second;
+
+               LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
+               LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
+            }
+         }
+      }
+   }
+} // prot_some_lines
+
+
+void prot_all_lines(const char *func_name, int theLine_of_code)
 {
    counter++;
    tokenCounter = 0;
    size_t lineNumber = 1;
 
-   LOG_FMT(LGUY, "Prot_all_lines:(%s:%d)(%zu)\n", func_name, theLine, counter);
+   LOG_FMT(LGUY, "Prot_all_lines:(%s:%d)(%zu)\n", func_name, theLine_of_code, counter);
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
@@ -352,17 +444,17 @@ void prot_all_lines(const char *func_name, int theLine)
 } // prot_all_lines
 
 
-void prot_the_source(int theLine)
+void prot_the_source(int theLine_of_code)
 {
    counter++;
-   LOG_FMT(LGUY, "Prot_the_source:(%d)(%zu)\n", theLine, counter);
+   LOG_FMT(LGUY, "Prot_the_source:(%d)(%zu)\n", theLine_of_code, counter);
    output_text(stderr);
 }
 
 
 // examples:
 //   examine_Data(__func__, 5, n);
-void examine_Data(const char *func_name, int theLine, int what)
+void examine_Data(const char *func_name, int theLine_of_code, int what)
 {
    LOG_FMT(LGUY, "\n%s:", func_name);
 
@@ -378,7 +470,7 @@ void examine_Data(const char *func_name, int theLine, int what)
             || pc->Is(CT_TSQUARE))
          {
             LOG_FMT(LGUY, "\n");
-            LOG_FMT(LGUY, "1:(%d),", theLine);
+            LOG_FMT(LGUY, "1:(%d),", theLine_of_code);
             LOG_FMT(LGUY, "%s, orig col=%zu, orig col end=%zu\n", pc->Text(), pc->GetOrigCol(), pc->GetOrigColEnd());
          }
       }
@@ -386,7 +478,7 @@ void examine_Data(const char *func_name, int theLine, int what)
       break;
 
    case 2:
-      LOG_FMT(LGUY, "2:(%d)\n", theLine);
+      LOG_FMT(LGUY, "2:(%d)\n", theLine_of_code);
 
       for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
@@ -406,7 +498,7 @@ void examine_Data(const char *func_name, int theLine, int what)
       break;
 
    case 3:
-      LOG_FMT(LGUY, "3:(%d)\n", theLine);
+      LOG_FMT(LGUY, "3:(%d)\n", theLine_of_code);
 
       for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
@@ -423,7 +515,7 @@ void examine_Data(const char *func_name, int theLine, int what)
       break;
 
    case 4:
-      LOG_FMT(LGUY, "4:(%d)\n", theLine);
+      LOG_FMT(LGUY, "4:(%d)\n", theLine_of_code);
 
       for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
@@ -448,17 +540,17 @@ void examine_Data(const char *func_name, int theLine, int what)
 }    // examine_Data
 
 
-void dump_out(unsigned int type)
+void dump_out(size_t type)
 {
    char dumpFileName[300];
 
    if (cpd.dumped_file == nullptr)
    {
-      snprintf(dumpFileName, sizeof(dumpFileName), "%s.%u", cpd.filename.c_str(), type);
+      snprintf(dumpFileName, sizeof(dumpFileName), "%s.%zu", cpd.filename.c_str(), type);
    }
    else
    {
-      snprintf(dumpFileName, sizeof(dumpFileName), "%s.%u", cpd.dumped_file, type);
+      snprintf(dumpFileName, sizeof(dumpFileName), "%s.%zu", cpd.dumped_file, type);
    }
    FILE *D_file = fopen(dumpFileName, "w");
 
@@ -523,7 +615,7 @@ void dump_out(unsigned int type)
 } // dump_out
 
 
-void dump_in(unsigned int type)
+void dump_in(size_t type)
 {
    char  buffer[256];
    bool  aNewChunkIsFound = false;
@@ -532,17 +624,17 @@ void dump_in(unsigned int type)
 
    if (cpd.dumped_file == nullptr)
    {
-      snprintf(dumpFileName, sizeof(dumpFileName), "%s.%u", cpd.filename.c_str(), type);
+      snprintf(dumpFileName, sizeof(dumpFileName), "%s.%zu", cpd.filename.c_str(), type);
    }
    else
    {
-      snprintf(dumpFileName, sizeof(dumpFileName), "%s.%u", cpd.dumped_file, type);
+      snprintf(dumpFileName, sizeof(dumpFileName), "%s.%zu", cpd.dumped_file, type);
    }
    FILE *D_file = fopen(dumpFileName, "r");
 
    if (D_file != nullptr)
    {
-      unsigned int lineNumber = 0;
+      size_t lineNumber = 0;
 
       while (fgets(buffer, sizeof(buffer), D_file) != nullptr)
       {
@@ -612,7 +704,7 @@ void dump_in(unsigned int type)
             }
             else
             {
-               fprintf(stderr, "on line=%d, for '%s'\n", lineNumber, parts[0]);
+               fprintf(stderr, "on line=%zu, for '%s'\n", lineNumber, parts[0]);
                log_flush(true);
                exit(EX_SOFTWARE);
             }
@@ -728,7 +820,7 @@ void set_dump_file_name(const char *name)
 
 //! give the oportunity to examine most(all) the data members of a single token
 //! may be inserted everythere to follow a value
-void examine_token(const char *func_name, int theLine, size_t orig_line_to_examine, size_t orig_column_to_examine)
+void examine_token(const char *func_name, int theLine_of_code, size_t orig_line_to_examine, size_t orig_column_to_examine)
 {
    bool  line_found   = false;
    bool  column_found = false;
@@ -766,7 +858,7 @@ void examine_token(const char *func_name, int theLine, size_t orig_line_to_exami
             {
                column_found = true;
                counter++;
-               LOG_FMT(LGUY, "Examine:(%s:%d)(%zu), ", func_name, theLine, counter);
+               LOG_FMT(LGUY, "Examine:(%s:%d)(%zu), ", func_name, theLine_of_code, counter);
                LOG_FMT(LGUY, "for the token at orig line is %zu, ", pc->GetOrigLine());
                LOG_FMT(LGUY, "at orig column %zu, type is %s :\n", pc->GetColumn(), get_token_name(pc->GetType()));
 
