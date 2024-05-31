@@ -2167,7 +2167,8 @@ bool mark_function_type(Chunk *pc)
    Chunk   *apc;
    Chunk   *aft;
    bool    anon = false;
-   E_Token pt, ptp;
+   E_Token pt;
+   E_Token ptp;
 
    // Scan backwards across the name, which can only be a word and single star
    Chunk *varcnk = pc->GetPrevNcNnlNi();   // Issue #2279
@@ -2236,9 +2237,9 @@ bool mark_function_type(Chunk *pc)
    }
    else if (  aft->Is(CT_SEMICOLON)
            || aft->Is(CT_ASSIGN)
+           || aft->Is(CT_COMMA)                       // Issue #3259
            || aft->Is(CT_FPAREN_CLOSE))               // Issue #3259
    {
-      LOG_FMT(LFTYPE, "%s(%d):\n", __func__, __LINE__);
       pt = CT_FUNC_PROTO;
    }
    else
@@ -2300,7 +2301,6 @@ bool mark_function_type(Chunk *pc)
          goto nogo_exit;
       }
    }
-   LOG_FMT(LFTYPE, "%s(%d):\n", __func__, __LINE__);
 
    // Fixes #issue 1577
    // Allow word count 2 in case of function pointer declaration.
@@ -2362,13 +2362,19 @@ bool mark_function_type(Chunk *pc)
 
    while ((tmp = tmp->GetPrevNcNnlNi())->IsNotNullChunk()) // Issue #2279
    {
-      LOG_FMT(LFTYPE, " ++ type is %s, Text() '%s', on orig line %zu, orig col %zu\n",
-              get_token_name(tmp->GetType()), tmp->Text(),
+      LOG_FMT(LFTYPE, "%s(%d):  ++ type is %s, Text() '%s', on orig line %zu, orig col %zu\n",
+              __func__, __LINE__, get_token_name(tmp->GetType()), tmp->Text(),
               tmp->GetOrigLine(), tmp->GetOrigCol());
 
-      if (*tmp->GetStr().c_str() == '(')
+      LOG_FMT(LFTYPE, "%s(%d):  ++ unbekannt: '%d'\n",
+              __func__, __LINE__, *tmp->GetStr().c_str());
+      log_pcf_flags(LFTYPE, pc->GetFlags());
+
+      if (*tmp->GetStr().c_str() == '(')                          // 3259 ??
       {
-         if (!pc->TestFlags(PCF_IN_TYPEDEF))
+         //if (!pc->TestFlags(PCF_IN_TYPEDEF))
+         if (  !tmp->TestFlags(PCF_IN_TYPEDEF)                   // Issue #3259
+            && !tmp->TestFlags(PCF_IN_FCN_DEF))                  // Issue #3259
          {
             tmp->SetFlagBits(PCF_VAR_1ST_DEF);
          }

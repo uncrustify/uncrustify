@@ -360,6 +360,8 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
    }
    LOG_FMT(LAS, "AlignStack::%s(%3d): end of add\n", __func__, __LINE__);
    // produces much more log output. Use it only debugging purpose
+   // WITH_STACKID_DEBUG;
+   // AlignStack::Debug();
 } // AlignStack::Add
 
 

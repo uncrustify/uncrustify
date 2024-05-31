@@ -5,7 +5,6 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-
 #include "align/func_params.h"
 
 #include "align/stack.h"
@@ -83,6 +82,25 @@ Chunk *align_func_param(Chunk *start)
                // change the types and the level
                before->SetType(CT_PPAREN_OPEN);
                after->SetType(CT_PPAREN_CLOSE);
+               pc->SetLevel(before->GetLevel());
+               Chunk *tmp = pc->GetPrevNc();
+
+               if (tmp->Is(CT_PTR_TYPE))
+               {
+                  tmp->SetLevel(before->GetLevel());
+               }
+            }
+         }
+         else if (after->Is(CT_TPAREN_CLOSE))
+         {
+            Chunk *before = after->GetPrevType(CT_TPAREN_OPEN, after->GetLevel());
+
+            if (before->IsNotNullChunk())
+            {
+               // these are 'protect parenthesis'
+               // change the types and the level
+               before->SetType(CT_TPAREN_OPEN);
+               after->SetType(CT_TPAREN_CLOSE);
                pc->SetLevel(before->GetLevel());
                Chunk *tmp = pc->GetPrevNc();
 
