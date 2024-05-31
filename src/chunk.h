@@ -1712,22 +1712,24 @@ inline bool Chunk::IsBraceClose() const
 inline bool Chunk::IsParenOpen() const
 {
    return(  Is(CT_PAREN_OPEN)
-         || Is(CT_SPAREN_OPEN)
-         || Is(CT_PPAREN_OPEN)
-         || Is(CT_TPAREN_OPEN)
          || Is(CT_FPAREN_OPEN)
-         || Is(CT_LPAREN_OPEN));
+         || Is(CT_LPAREN_OPEN)
+         || Is(CT_PPAREN_OPEN)
+         || Is(CT_RPAREN_OPEN)
+         || Is(CT_SPAREN_OPEN)
+         || Is(CT_TPAREN_OPEN));
 }
 
 
 inline bool Chunk::IsParenClose() const
 {
    return(  Is(CT_PAREN_CLOSE)
-         || Is(CT_SPAREN_CLOSE)
-         || Is(CT_PPAREN_CLOSE)
-         || Is(CT_TPAREN_CLOSE)
          || Is(CT_FPAREN_CLOSE)
-         || Is(CT_LPAREN_CLOSE));
+         || Is(CT_LPAREN_CLOSE)
+         || Is(CT_PPAREN_CLOSE)
+         || Is(CT_RPAREN_CLOSE)
+         || Is(CT_SPAREN_CLOSE)
+         || Is(CT_TPAREN_CLOSE));
 }
 
 
