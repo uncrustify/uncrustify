@@ -568,6 +568,6 @@
 10121  c/sp_after_sparen-a.cfg                    c/sp_after_sparen.c
 10122  c/sp_after_sparen-r.cfg                    c/sp_after_sparen.c
 10123  c/sp_after_sparen-f.cfg                    c/sp_after_sparen.c
-
 10124  common/tde.cfg                             c/Issue_3985.c
 10125  common/tde.cfg                             c/Issue_3992.c
+10126  c/Issue_3259.cfg                           c/Issue_3259.h
