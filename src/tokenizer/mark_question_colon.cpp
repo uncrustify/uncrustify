@@ -18,7 +18,7 @@
  * return the chunk colon if found or Chunk::NullChunkPtr
  * if a ; (CT_SEMI_COLON) chunk is found
  */
-Chunk *search_for_colon(Chunk *pc_question)
+Chunk *search_for_colon(Chunk *pc_question, int depth)
 {
    Chunk *pc2        = pc_question->GetNextNcNnl();
    bool  colon_found = false;
@@ -67,7 +67,7 @@ Chunk *search_for_colon(Chunk *pc_question)
       {
          LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                  __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
-         pc2 = search_for_colon(pc2);
+         pc2 = search_for_colon(pc2, depth + 1);
          LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                  __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
          continue;
@@ -107,12 +107,13 @@ Chunk *search_for_colon(Chunk *pc_question)
          LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                  __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
 
-         if (colon_found)
+         if (colon_found && depth > 0)
          {
+            // There can only be another CT_COND_COLON if there is more than 1 CT_QUESTION (ie. depth > 0)
             pc2->SetType(CT_COND_COLON);
             return(pc2);
          }
-         else
+         else if (!colon_found)
          {
             // E2 found   orig line is 23, orig col is 3
             pc2->SetType(CT_COND_COLON);
@@ -157,7 +158,7 @@ void mark_question_colon()
       {
          pc_question = pc;
          // look for E2, COLON, E3...
-         pc = search_for_colon(pc);
+         pc = search_for_colon(pc, 0);
 
          LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->Text());
