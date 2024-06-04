@@ -1136,8 +1136,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       && !is_oc_block(pc)
       && pc->GetParentType() != CT_OC_MSG_DECL
       && pc->GetParentType() != CT_OC_MSG_SPEC
-      && (  pc->IsString(")")
-         || pc->Is(CT_FUNC_TYPE))
+      && pc->IsString(")")
       && next->IsString("("))
    {
       if (language_is_set(lang_flag_e::LANG_D))
