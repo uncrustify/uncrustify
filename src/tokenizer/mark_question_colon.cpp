@@ -20,8 +20,9 @@
  */
 Chunk *search_for_colon(Chunk *pc_question, int depth)
 {
-   Chunk *pc2        = pc_question->GetNextNcNnl();
-   bool  colon_found = false;
+   Chunk *pc2                 = pc_question->GetNextNcNnl();
+   bool           colon_found = false;
+   int   square_bracket_depth = 0;
 
    LOG_FMT(LCOMBINE, "%s(%d): pc_question.orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
            __func__, __LINE__, pc_question->GetOrigLine(), pc_question->GetOrigCol(), pc_question->GetLevel(),
@@ -102,7 +103,8 @@ Chunk *search_for_colon(Chunk *pc_question, int depth)
             }
          }
       }
-      else if (pc2->Is(CT_COLON))
+      else if (pc2->Is(CT_COLON)
+              && square_bracket_depth == 0)
       {
          LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                  __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
@@ -125,6 +127,12 @@ Chunk *search_for_colon(Chunk *pc_question, int depth)
             // look for E3
             colon_found = true;
          }
+      }
+      else if (pc2->Is(CT_SQUARE_OPEN)) {
+         square_bracket_depth++;
+      }
+      else if (pc2->Is(CT_SQUARE_CLOSE)) {
+         square_bracket_depth--;
       }
       pc2 = pc2->GetNextNcNnl();
    }
