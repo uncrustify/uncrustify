@@ -497,7 +497,7 @@ void fix_typedef(Chunk *start)
          }
          next->ResetFlagBits(PCF_VAR_1ST_DEF);
 
-         if (*next->GetStr().c_str() == '(')
+         if (next->Is(CT_PAREN_OPEN))
          {
             last_op = next;
          }
@@ -2370,7 +2370,7 @@ bool mark_function_type(Chunk *pc)
               __func__, __LINE__, *tmp->GetStr().c_str());
       log_pcf_flags(LFTYPE, pc->GetFlags());
 
-      if (*tmp->GetStr().c_str() == '(')                          // 3259 ??
+      if (tmp->IsParenOpen())                          // 3259 ??
       {
          //if (!pc->TestFlags(PCF_IN_TYPEDEF))
          if (  !tmp->TestFlags(PCF_IN_TYPEDEF)                   // Issue #3259
