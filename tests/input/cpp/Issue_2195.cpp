@@ -6,8 +6,9 @@ void Launcher::signal(int code)
     15 TERM    16 STKFLT  17 CHLD    18 CONT    19 STOP    20 TSTP    21 TTIN
     22 TTOU    23 URG     24 XCPU    25 XFSZ    26 VTALRM  27 PROF    28 WINCH
     29 POLL    30 PWR     31 SYS
+    */
 
-
+    /*
         Operation          WinCode     NixCode
         Status             128          1 (HUP)
         Terminate          N/A          2 (INT) Linux or macOS uses this for CTRL-C.
@@ -23,11 +24,15 @@ void Launcher::signal(int code)
                                     12
                                     13
                                     14
+    
+    */
+
+    /*
         Terminate          N/A         15 (TERM) Linux or macOS uses this for CTRL-C.
                                     16
                        N/A         17 (CHILD) Child process exited.
                         N/A         28 WINCH, window changed size.
-        */
+    */
 
     // Convert to lower range
     if (code >= 128)
