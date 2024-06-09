@@ -441,6 +441,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    {
       // Add or remove space before a trailing comment.
       // Number of spaces before a trailing comment.
+      log_rule("sp_before_tr_cmt");
       log_rule("sp_num_before_tr_cmt");
       min_sp = options::sp_num_before_tr_cmt();
       return(options::sp_before_tr_cmt());
