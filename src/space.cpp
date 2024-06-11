@@ -62,8 +62,10 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s(%d): orig line %zu, orig col %zu, first text '%s', type %s\n",
+   LOG_FMT(LSPACE, "%s(%d): first:  orig line %zu, orig col %zu, text '%s', type %s\n",
            __func__, __LINE__, first->GetOrigLine(), first->GetOrigCol(), first->Text(), get_token_name(first->GetType()));
+   LOG_FMT(LSPACE, "%s(%d): second: orig line %zu, orig col %zu, text '%s', type %s\n",
+           __func__, __LINE__, second->GetOrigLine(), second->GetOrigCol(), second->Text(), get_token_name(second->GetType()));
 
    min_sp = 1;
 

@@ -8,33 +8,54 @@
 10001  cs/getset.cfg                                cs/getset.cs
 10002  cs/ben_032.cfg                               cs/simple.cs
 10003  cs/ben_033.cfg                               cs/region.cs
+
 10010  cs/ben_034.cfg                               cs/var-member.cs
 10011  common/indent_columns-3.cfg                  cs/strings.cs
+10012  common/empty.cfg                             cs/621_this-spacing.cs
 10013  cs/625_where-constraints.cfg                 cs/625_where-constraints.cs
+10014  common/empty.cfg                             cs/630_bad-new-init-semicolon-removal.cs
+10015  cs/misc-failures.cfg                         cs/misc-failures.cs
+10016  cs/new-constraint-paren-space.cfg            cs/new-constraint-paren-space.cs
 
 10020  common/region-0.cfg                          cs/region.cs
 10021  common/region-1.cfg                          cs/region.cs
 10022  common/region-2.cfg                          cs/region.cs
 10023  common/region-3.cfg                          cs/region.cs
+10027  cs/U01-Cs.cfg                                cs/oneline_property.cs
+10028  cs/U02-Cs.cfg                                cs/ifcolalign.cs
+10029  cs/U03-Cs.cfg                                cs/when.cs
 
 10030  common/sort_imports.cfg                      cs/sort_using.cs
 10031  cs/mod_sort_using-t.cfg                      cs/bug_i_935.cs
 10032  cs/sort_using_categ.cfg                      cs/sort_using_categ.cs
+10039  cs/615_nested_usings.cfg                     cs/615_nested-usings.cs
 
 10040  cs/tcf.cfg                                   cs/tcf.cs
 10041  cs/tcf.cfg                                   cs/gs.cs
 10042  cs/ben_036.cfg                               cs/exception-filters.cs
+10043  cs/tcsf.cfg                                  cs/tcsf.cs
+10044  cs/U04-Cs.cfg                                cs/ifcomment.cs
+10045  cs/UNI-1288.cfg                              cs/UNI-1288.cs
+10046  cs/tscsf.cfg                                 cs/tscsf.cs
 
 10050  cs/cs_generics.cfg                           cs/generics.cs
+10051  cs/UNI-1338.cfg                              cs/UNI-1338.cs
+10055  cs/U06-Cs.cfg                                cs/UNI-1345.cs
 
 10060  cs/ben_037.cfg                               cs/unsafe.cs
 10065  cs/UNI-1975.cfg                              cs/UNI-1975.cs
+10066  cs/UNI-1977.cfg                              cs/UNI-1977.cs
+10067  cs/UNI-1978.cfg                              cs/UNI-1978.cs
 
 10070  cs/ben_038.cfg                               cs/utf16le.cs
 10071  cs/ben_038.cfg                               cs/utf16be.cs
 10072  cs/ben_038.cfg                               cs/utf16le_no_bom.cs
 10073  cs/ben_038.cfg                               cs/utf16be_no_bom.cs
 10074  cs/UNI-2020.cfg                              cs/UNI-2020.cs
+10075  cs/UNI-2021.cfg                              cs/UNI-2021.cs
+10076  cs/UNI-1343.cfg                              cs/UNI-1343.cs
+10077  cs/U09-Cs.cfg                                cs/UNI-1919.cs
+10078  cs/U10-Cs.cfg                                cs/UNI-3484.cs
 
 10080  common/ben_042.cfg                           cs/property.cs
 
@@ -42,12 +63,14 @@
 
 10100  cs/bug_600.cfg                               cs/bug_600.cs
 10101  cs/sf607.cfg                                 cs/sf607.cs
+10103  cs/U11-Cs.cfg                                cs/UNI-2506.cs
+10104  common/empty.cfg                             cs/UNI-2505.cs
 
 10110  cs/mda_space_a.cfg                           cs/mdarray_space.cs
 10111  cs/sp_after_comma-a.cfg                      cs/mdarray_space.cs
 10112  cs/mda_space_c.cfg                           cs/mdarray_space.cs
-
 10119  common/empty.cfg                             cs/preserveTabs.cs
+
 10120  common/empty.cfg                             cs/cmt_backslash_eol.cs
 
 10130  cs/sp_between_new_paren.cfg                  cs/sp_between_new_paren.cs
@@ -57,13 +80,19 @@
 10150  cs/ben_045.cfg                               cs/operator-null-conditional.cs
 10151  cs/sp_assign-a.cfg                           cs/operator_null-coalescing-assignment.cs
 
+10160  common/empty.cfg                             cs/delegate.cs
+10161  cs/indent_cs_delegate_brace-t.cfg            cs/delegate.cs
+
 10200  common/empty.cfg                             cs/logger.cs
 
 10300  common/empty.cfg                             cs/1822.cs
 
 10628  common/empty.cfg                             cs/sf628.cs
-10160  common/empty.cfg                             cs/delegate.cs
-10161  cs/indent_cs_delegate_brace-t.cfg            cs/delegate.cs
+
+11011  cs/620_getset-brace.cfg                      cs/620_getset-brace.cs
+11072  cs/U07-Cs.cfg                                cs/UNI-2007.cs
+11073  cs/U08-Cs.cfg                                cs/UNI-2008.cs
+
 12001  cs/bug_620.cfg                               cs/bug_620.cs
 12002  common/empty.cfg                             cs/nullable_prop.cs
 12003  cs/ben_043.cfg                               cs/fncall_as_ctor_in_attr.cs
@@ -71,7 +100,6 @@
 12005  common/empty.cfg                             cs/bug_1591.cs
 
 12101  cs/indent_using_block-f.cfg                  cs/bug_i_679.cs
-
 12102  cs/mod_full_brace_nl_block_rem_mlcond-0.cfg  cs/mod_full_brace_nl_block_rem_mlcond.cs
 12103  cs/mod_full_brace_nl_block_rem_mlcond-1.cfg  cs/mod_full_brace_nl_block_rem_mlcond.cs
 12104  cs/bug_1637.cfg                              cs/bug_1637.cs
@@ -80,35 +108,10 @@
 12107  cs/mod_full_paren_if_bool.cfg                cs/mod_full_paren_if_bool.cs
 12108  cs/Issue_2705.cfg                            cs/Issue_2705.cs
 
-# test the options sp_ with the value "ignore"
 12200  cs/comma-cs-f.cfg                            cs/comma.cs
 12201  cs/comma-cs-i.cfg                            cs/comma.cs
 12202  cs/comma-cs-r.cfg                            cs/comma.cs
 
-# Adopt some UT tests
-10012  common/empty.cfg                             cs/621_this-spacing.cs
-10014  common/empty.cfg                             cs/630_bad-new-init-semicolon-removal.cs
-10015  cs/misc-failures.cfg                         cs/misc-failures.cs
-10016  cs/new-constraint-paren-space.cfg            cs/new-constraint-paren-space.cs
-10027  cs/U01-Cs.cfg                                cs/oneline_property.cs
-10028  cs/U02-Cs.cfg                                cs/ifcolalign.cs
-10029  cs/U03-Cs.cfg                                cs/when.cs
-10039  cs/615_nested_usings.cfg                     cs/615_nested-usings.cs
-10044  cs/U04-Cs.cfg                                cs/ifcomment.cs
-10045  cs/UNI-1288.cfg                              cs/UNI-1288.cs
-10051  cs/UNI-1338.cfg                              cs/UNI-1338.cs
-10055  cs/U06-Cs.cfg                                cs/UNI-1345.cs
-10066  cs/UNI-1977.cfg                              cs/UNI-1977.cs
-10067  cs/UNI-1978.cfg                              cs/UNI-1978.cs
-10075  cs/UNI-2021.cfg                              cs/UNI-2021.cs
-10076  cs/UNI-1343.cfg                              cs/UNI-1343.cs
-10077  cs/U09-Cs.cfg                                cs/UNI-1919.cs
-10078  cs/U10-Cs.cfg                                cs/UNI-3484.cs
-10103  cs/U11-Cs.cfg                                cs/UNI-2506.cs
-10104  common/empty.cfg                             cs/UNI-2505.cs
-11011  cs/620_getset-brace.cfg                      cs/620_getset-brace.cs
-11072  cs/U07-Cs.cfg                                cs/UNI-2007.cs
-11073  cs/U08-Cs.cfg                                cs/UNI-2008.cs
 20010  cs/UNI-32658.cfg                             cs/UNI-32658.cs
 20011  cs/bug_1620.cfg                              cs/bug_1620.cs
 
@@ -117,19 +120,23 @@
 60007  cs/UNI-3083.cfg                              cs/UNI-3083.cs
 60008  cs/U-J.cfg                                   cs/UNI-17253.cs
 60009  cs/UNI-9917.cfg                              cs/UNI-9917.cs
+
 60012  cs/U13-Cs.cfg                                cs/UNI-12303.cs
 60013  cs/UNI-13955.cfg                             cs/UNI-13955.cs
 60015  cs/UNI-14131.cfg                             cs/UNI-14131.cs
 60016  cs/UNI-11662.cfg                             cs/UNI-11662.cs
 60018  common/UNI-18777.cfg                         cs/UNI-18777.cs
 60019  common/empty.cfg                             cs/UNI-18780.cs
+
 60020  cs/UNI-18829.cfg                             cs/UNI-18829.cs
 60023  cs/UNI-18437.cfg                             cs/UNI-18437.cs
 60024  cs/U15-Cs.cfg                                cs/UNI-19644.cs
 60026  cs/UNI-19895.cfg                             cs/UNI-19895.cs
+
 60033  cs/UNI-21730.cfg                             cs/UNI-21730.cs
 60036  cs/UNI-11993.cfg                             cs/UNI-11993.cs
 60037  cs/UNI-29933.cfg                             cs/UNI-29933.cs
+
 60040  cs/UNI-30498_2.cfg                           cs/UNI-30498_2.cs
 60041  cs/squeeze-paren-close-Option.cfg            cs/squeeze-paren-close-Option.cs
 60042  cs/indent-multistring-coulmn1.cfg            cs/indent-multistring-coulmn1.cs

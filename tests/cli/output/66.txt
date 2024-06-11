@@ -1,7 +1,8 @@
 space_text : orig line is 1, orig col is 1, 'struct' type is STRUCT
 space_text : back-to-back words need a space: pc->Text() 'struct', next->Text() 'TelegramIndex'
 space_text : orig line is 1, orig col is 1, pc-Text() 'struct', type is STRUCT
-do_space : orig line 1, orig col 1, first text 'struct', type STRUCT
+do_space : first:  orig line 1, orig col 1, text 'struct', type STRUCT
+do_space : second: orig line 1, orig col 8, text 'TelegramIndex', type TYPE
 do_space : first orig line is 1, orig col is 1, Text() is 'struct', [STRUCT/NONE] <===>
            second orig line is 1, orig col is 8, Text() is 'TelegramIndex', [TYPE/STRUCT] : rule ADD from add_space_table @ 235.[ ]
 ensure_force_space : force between 'struct' and 'TelegramIndex'
@@ -9,26 +10,30 @@ space_text : orig line is 1, orig col is 1, pc-Text() 'struct', type is STRUCT
 space_text :    rule = ADD @ 1 => 8
 space_text : orig line is 1, orig col is 8, 'TelegramIndex' type is TYPE
 space_text : orig line is 1, orig col is 8, pc-Text() 'TelegramIndex', type is TYPE
-do_space : orig line 1, orig col 8, first text 'TelegramIndex', type TYPE
+do_space : first:  orig line 1, orig col 8, text 'TelegramIndex', type TYPE
+do_space : second: orig line 1, orig col 21, text '', type NEWLINE
 space_text : orig line is 1, orig col is 8, pc-Text() 'TelegramIndex', type is TYPE
 space_text :    rule = REMOVE @ 0 => 21
 space_text : orig line is 1, orig col is 21, <Newline>, nl is 1
 space_text : orig line is 2, orig col is 1, '{' type is BRACE_OPEN
 space_text : orig line is 2, orig col is 1, pc-Text() '{', type is BRACE_OPEN
-do_space : orig line 2, orig col 1, first text '{', type BRACE_OPEN
+do_space : first:  orig line 2, orig col 1, text '{', type BRACE_OPEN
+do_space : second: orig line 2, orig col 2, text '', type NEWLINE
 space_text : orig line is 2, orig col is 1, pc-Text() '{', type is BRACE_OPEN
 space_text :    rule = REMOVE @ 0 => 2
 space_text : orig line is 2, orig col is 2, <Newline>, nl is 1
 space_text : orig line is 3, orig col is 1, 'TelegramIndex' type is FUNC_CLASS_DEF
 space_text : orig line is 3, orig col is 1, pc-Text() 'TelegramIndex', type is FUNC_CLASS_DEF
-do_space : orig line 3, orig col 1, first text 'TelegramIndex', type FUNC_CLASS_DEF
+do_space : first:  orig line 3, orig col 1, text 'TelegramIndex', type FUNC_CLASS_DEF
+do_space : second: orig line 3, orig col 14, text '(', type FPAREN_OPEN
 do_space : first orig line is 3, orig col is 1, Text() is 'TelegramIndex', [FUNC_CLASS_DEF/NONE] <===>
            second orig line is 3, orig col is 14, Text() is '(', [FPAREN_OPEN/FUNC_CLASS_DEF] : rule sp_func_class_paren[ ]
 space_text : orig line is 3, orig col is 1, pc-Text() 'TelegramIndex', type is FUNC_CLASS_DEF
 space_text :    rule = IGNORE @ 0 => 14
 space_text : orig line is 3, orig col is 14, '(' type is FPAREN_OPEN
 space_text : orig line is 3, orig col is 14, pc-Text() '(', type is FPAREN_OPEN
-do_space : orig line 3, orig col 14, first text '(', type FPAREN_OPEN
+do_space : first:  orig line 3, orig col 14, text '(', type FPAREN_OPEN
+do_space : second: orig line 3, orig col 15, text 'const', type QUALIFIER
 do_space : first orig line is 3, orig col is 14, Text() is '(', [FPAREN_OPEN/FUNC_CLASS_DEF] <===>
            second orig line is 3, orig col is 15, Text() is 'const', [QUALIFIER/NONE] : rule sp_inside_fparen[ ]
 space_text : orig line is 3, orig col is 14, pc-Text() '(', type is FPAREN_OPEN
@@ -36,7 +41,8 @@ space_text :    rule = IGNORE @ 0 => 15
 space_text : orig line is 3, orig col is 15, 'const' type is QUALIFIER
 space_text : back-to-back words need a space: pc->Text() 'const', next->Text() 'char'
 space_text : orig line is 3, orig col is 15, pc-Text() 'const', type is QUALIFIER
-do_space : orig line 3, orig col 15, first text 'const', type QUALIFIER
+do_space : first:  orig line 3, orig col 15, text 'const', type QUALIFIER
+do_space : second: orig line 3, orig col 21, text 'char', type TYPE
 do_space : first orig line is 3, orig col is 15, Text() is 'const', [QUALIFIER/NONE] <===>
            second orig line is 3, orig col is 21, Text() is 'char', [TYPE/NONE] : rule sp_after_type[ ]
 ensure_force_space : force between 'const' and 'char'
@@ -44,28 +50,32 @@ space_text : orig line is 3, orig col is 15, pc-Text() 'const', type is QUALIFIE
 space_text :    rule = FORCE @ 1 => 21
 space_text : orig line is 3, orig col is 21, 'char' type is TYPE
 space_text : orig line is 3, orig col is 21, pc-Text() 'char', type is TYPE
-do_space : orig line 3, orig col 21, first text 'char', type TYPE
+do_space : first:  orig line 3, orig col 21, text 'char', type TYPE
+do_space : second: orig line 3, orig col 25, text '*', type PTR_TYPE
 do_space : first orig line is 3, orig col is 21, Text() is 'char', [TYPE/NONE] <===>
            second orig line is 3, orig col is 25, Text() is '*', [PTR_TYPE/NONE] : rule IGNORE[ ]
 space_text : orig line is 3, orig col is 21, pc-Text() 'char', type is TYPE
 space_text :    rule = IGNORE @ 0 => 25
 space_text : orig line is 3, orig col is 25, '*' type is PTR_TYPE
 space_text : orig line is 3, orig col is 25, pc-Text() '*', type is PTR_TYPE
-do_space : orig line 3, orig col 25, first text '*', type PTR_TYPE
+do_space : first:  orig line 3, orig col 25, text '*', type PTR_TYPE
+do_space : second: orig line 3, orig col 27, text 'pN', type WORD
 do_space : first orig line is 3, orig col is 25, Text() is '*', [PTR_TYPE/NONE] <===>
            second orig line is 3, orig col is 27, Text() is 'pN', [WORD/NONE] : rule sp_after_ptr_star[ ]
 space_text : orig line is 3, orig col is 25, pc-Text() '*', type is PTR_TYPE
 space_text :    rule = IGNORE @ 1 => 27
 space_text : orig line is 3, orig col is 27, 'pN' type is WORD
 space_text : orig line is 3, orig col is 27, pc-Text() 'pN', type is WORD
-do_space : orig line 3, orig col 27, first text 'pN', type WORD
+do_space : first:  orig line 3, orig col 27, text 'pN', type WORD
+do_space : second: orig line 3, orig col 29, text ',', type COMMA
 do_space : first orig line is 3, orig col is 27, Text() is 'pN', [WORD/NONE] <===>
            second orig line is 3, orig col is 29, Text() is ',', [COMMA/NONE] : rule sp_before_comma[ ]
 space_text : orig line is 3, orig col is 27, pc-Text() 'pN', type is WORD
 space_text :    rule = REMOVE @ 0 => 29
 space_text : orig line is 3, orig col is 29, ',' type is COMMA
 space_text : orig line is 3, orig col is 29, pc-Text() ',', type is COMMA
-do_space : orig line 3, orig col 29, first text ',', type COMMA
+do_space : first:  orig line 3, orig col 29, text ',', type COMMA
+do_space : second: orig line 3, orig col 31, text 'unsigned', type TYPE
 do_space : first orig line is 3, orig col is 29, Text() is ',', [COMMA/NONE] <===>
            second orig line is 3, orig col is 31, Text() is 'unsigned', [TYPE/NONE] : rule sp_after_comma[ ]
 space_text : orig line is 3, orig col is 29, pc-Text() ',', type is COMMA
@@ -73,7 +83,8 @@ space_text :    rule = IGNORE @ 1 => 31
 space_text : orig line is 3, orig col is 31, 'unsigned' type is TYPE
 space_text : back-to-back words need a space: pc->Text() 'unsigned', next->Text() 'long'
 space_text : orig line is 3, orig col is 31, pc-Text() 'unsigned', type is TYPE
-do_space : orig line 3, orig col 31, first text 'unsigned', type TYPE
+do_space : first:  orig line 3, orig col 31, text 'unsigned', type TYPE
+do_space : second: orig line 3, orig col 40, text 'long', type TYPE
 do_space : first orig line is 3, orig col is 31, Text() is 'unsigned', [TYPE/NONE] <===>
            second orig line is 3, orig col is 40, Text() is 'long', [TYPE/NONE] : rule sp_after_type[ ]
 ensure_force_space : force between 'unsigned' and 'long'
@@ -82,7 +93,8 @@ space_text :    rule = FORCE @ 1 => 40
 space_text : orig line is 3, orig col is 40, 'long' type is TYPE
 space_text : back-to-back words need a space: pc->Text() 'long', next->Text() 'nI'
 space_text : orig line is 3, orig col is 40, pc-Text() 'long', type is TYPE
-do_space : orig line 3, orig col 40, first text 'long', type TYPE
+do_space : first:  orig line 3, orig col 40, text 'long', type TYPE
+do_space : second: orig line 3, orig col 45, text 'nI', type WORD
 do_space : first orig line is 3, orig col is 40, Text() is 'long', [TYPE/NONE] <===>
            second orig line is 3, orig col is 45, Text() is 'nI', [WORD/NONE] : rule sp_after_type[ ]
 ensure_force_space : force between 'long' and 'nI'
@@ -90,140 +102,161 @@ space_text : orig line is 3, orig col is 40, pc-Text() 'long', type is TYPE
 space_text :    rule = FORCE @ 1 => 45
 space_text : orig line is 3, orig col is 45, 'nI' type is WORD
 space_text : orig line is 3, orig col is 45, pc-Text() 'nI', type is WORD
-do_space : orig line 3, orig col 45, first text 'nI', type WORD
+do_space : first:  orig line 3, orig col 45, text 'nI', type WORD
+do_space : second: orig line 3, orig col 47, text ')', type FPAREN_CLOSE
 do_space : first orig line is 3, orig col is 45, Text() is 'nI', [WORD/NONE] <===>
            second orig line is 3, orig col is 47, Text() is ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] : rule sp_inside_fparen[ ]
 space_text : orig line is 3, orig col is 45, pc-Text() 'nI', type is WORD
 space_text :    rule = IGNORE @ 0 => 47
 space_text : orig line is 3, orig col is 47, ')' type is FPAREN_CLOSE
 space_text : orig line is 3, orig col is 47, pc-Text() ')', type is FPAREN_CLOSE
-do_space : orig line 3, orig col 47, first text ')', type FPAREN_CLOSE
+do_space : first:  orig line 3, orig col 47, text ')', type FPAREN_CLOSE
+do_space : second: orig line 3, orig col 49, text ':', type CONSTR_COLON
 do_space : first orig line is 3, orig col is 47, Text() is ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] <===>
            second orig line is 3, orig col is 49, Text() is ':', [CONSTR_COLON/NONE] : rule sp_before_constr_colon[ ]
 space_text : orig line is 3, orig col is 47, pc-Text() ')', type is FPAREN_CLOSE
 space_text :    rule = ADD @ 1 => 49
 space_text : orig line is 3, orig col is 49, ':' type is CONSTR_COLON
 space_text : orig line is 3, orig col is 49, pc-Text() ':', type is CONSTR_COLON
-do_space : orig line 3, orig col 49, first text ':', type CONSTR_COLON
+do_space : first:  orig line 3, orig col 49, text ':', type CONSTR_COLON
+do_space : second: orig line 3, orig col 50, text '', type NEWLINE
 space_text : orig line is 3, orig col is 49, pc-Text() ':', type is CONSTR_COLON
 space_text :    rule = REMOVE @ 0 => 50
 space_text : orig line is 3, orig col is 50, <Newline>, nl is 1
 space_text : orig line is 4, orig col is 1, 'pTelName' type is FUNC_CTOR_VAR
 space_text : orig line is 4, orig col is 1, pc-Text() 'pTelName', type is FUNC_CTOR_VAR
-do_space : orig line 4, orig col 1, first text 'pTelName', type FUNC_CTOR_VAR
+do_space : first:  orig line 4, orig col 1, text 'pTelName', type FUNC_CTOR_VAR
+do_space : second: orig line 4, orig col 9, text '(', type FPAREN_OPEN
 do_space : first orig line is 4, orig col is 1, Text() is 'pTelName', [FUNC_CTOR_VAR/NONE] <===>
            second orig line is 4, orig col is 9, Text() is '(', [FPAREN_OPEN/FUNC_CTOR_VAR] : rule sp_func_call_paren[ ]
 space_text : orig line is 4, orig col is 1, pc-Text() 'pTelName', type is FUNC_CTOR_VAR
 space_text :    rule = IGNORE @ 0 => 9
 space_text : orig line is 4, orig col is 9, '(' type is FPAREN_OPEN
 space_text : orig line is 4, orig col is 9, pc-Text() '(', type is FPAREN_OPEN
-do_space : orig line 4, orig col 9, first text '(', type FPAREN_OPEN
+do_space : first:  orig line 4, orig col 9, text '(', type FPAREN_OPEN
+do_space : second: orig line 4, orig col 10, text 'pN', type WORD
 do_space : first orig line is 4, orig col is 9, Text() is '(', [FPAREN_OPEN/FUNC_CTOR_VAR] <===>
            second orig line is 4, orig col is 10, Text() is 'pN', [WORD/NONE] : rule sp_inside_fparen[ ]
 space_text : orig line is 4, orig col is 9, pc-Text() '(', type is FPAREN_OPEN
 space_text :    rule = IGNORE @ 0 => 10
 space_text : orig line is 4, orig col is 10, 'pN' type is WORD
 space_text : orig line is 4, orig col is 10, pc-Text() 'pN', type is WORD
-do_space : orig line 4, orig col 10, first text 'pN', type WORD
+do_space : first:  orig line 4, orig col 10, text 'pN', type WORD
+do_space : second: orig line 4, orig col 12, text ')', type FPAREN_CLOSE
 do_space : first orig line is 4, orig col is 10, Text() is 'pN', [WORD/NONE] <===>
            second orig line is 4, orig col is 12, Text() is ')', [FPAREN_CLOSE/FUNC_CTOR_VAR] : rule sp_inside_fparen[ ]
 space_text : orig line is 4, orig col is 10, pc-Text() 'pN', type is WORD
 space_text :    rule = IGNORE @ 0 => 12
 space_text : orig line is 4, orig col is 12, ')' type is FPAREN_CLOSE
 space_text : orig line is 4, orig col is 12, pc-Text() ')', type is FPAREN_CLOSE
-do_space : orig line 4, orig col 12, first text ')', type FPAREN_CLOSE
+do_space : first:  orig line 4, orig col 12, text ')', type FPAREN_CLOSE
+do_space : second: orig line 4, orig col 13, text ',', type COMMA
 do_space : first orig line is 4, orig col is 12, Text() is ')', [FPAREN_CLOSE/FUNC_CTOR_VAR] <===>
            second orig line is 4, orig col is 13, Text() is ',', [COMMA/NONE] : rule sp_before_comma[ ]
 space_text : orig line is 4, orig col is 12, pc-Text() ')', type is FPAREN_CLOSE
 space_text :    rule = REMOVE @ 0 => 13
 space_text : orig line is 4, orig col is 13, ',' type is COMMA
 space_text : orig line is 4, orig col is 13, pc-Text() ',', type is COMMA
-do_space : orig line 4, orig col 13, first text ',', type COMMA
+do_space : first:  orig line 4, orig col 13, text ',', type COMMA
+do_space : second: orig line 4, orig col 14, text '', type NEWLINE
 space_text : orig line is 4, orig col is 13, pc-Text() ',', type is COMMA
 space_text :    rule = REMOVE @ 0 => 14
 space_text : orig line is 4, orig col is 14, <Newline>, nl is 1
 space_text : orig line is 5, orig col is 1, 'nTelIndex' type is FUNC_CTOR_VAR
 space_text : orig line is 5, orig col is 1, pc-Text() 'nTelIndex', type is FUNC_CTOR_VAR
-do_space : orig line 5, orig col 1, first text 'nTelIndex', type FUNC_CTOR_VAR
+do_space : first:  orig line 5, orig col 1, text 'nTelIndex', type FUNC_CTOR_VAR
+do_space : second: orig line 5, orig col 10, text '(', type FPAREN_OPEN
 do_space : first orig line is 5, orig col is 1, Text() is 'nTelIndex', [FUNC_CTOR_VAR/NONE] <===>
            second orig line is 5, orig col is 10, Text() is '(', [FPAREN_OPEN/FUNC_CTOR_VAR] : rule sp_func_call_paren[ ]
 space_text : orig line is 5, orig col is 1, pc-Text() 'nTelIndex', type is FUNC_CTOR_VAR
 space_text :    rule = IGNORE @ 0 => 10
 space_text : orig line is 5, orig col is 10, '(' type is FPAREN_OPEN
 space_text : orig line is 5, orig col is 10, pc-Text() '(', type is FPAREN_OPEN
-do_space : orig line 5, orig col 10, first text '(', type FPAREN_OPEN
+do_space : first:  orig line 5, orig col 10, text '(', type FPAREN_OPEN
+do_space : second: orig line 5, orig col 11, text 'n', type WORD
 do_space : first orig line is 5, orig col is 10, Text() is '(', [FPAREN_OPEN/FUNC_CTOR_VAR] <===>
            second orig line is 5, orig col is 11, Text() is 'n', [WORD/NONE] : rule sp_inside_fparen[ ]
 space_text : orig line is 5, orig col is 10, pc-Text() '(', type is FPAREN_OPEN
 space_text :    rule = IGNORE @ 0 => 11
 space_text : orig line is 5, orig col is 11, 'n' type is WORD
 space_text : orig line is 5, orig col is 11, pc-Text() 'n', type is WORD
-do_space : orig line 5, orig col 11, first text 'n', type WORD
+do_space : first:  orig line 5, orig col 11, text 'n', type WORD
+do_space : second: orig line 5, orig col 12, text ')', type FPAREN_CLOSE
 do_space : first orig line is 5, orig col is 11, Text() is 'n', [WORD/NONE] <===>
            second orig line is 5, orig col is 12, Text() is ')', [FPAREN_CLOSE/FUNC_CTOR_VAR] : rule sp_inside_fparen[ ]
 space_text : orig line is 5, orig col is 11, pc-Text() 'n', type is WORD
 space_text :    rule = IGNORE @ 0 => 12
 space_text : orig line is 5, orig col is 12, ')' type is FPAREN_CLOSE
 space_text : orig line is 5, orig col is 12, pc-Text() ')', type is FPAREN_CLOSE
-do_space : orig line 5, orig col 12, first text ')', type FPAREN_CLOSE
+do_space : first:  orig line 5, orig col 12, text ')', type FPAREN_CLOSE
+do_space : second: orig line 5, orig col 13, text '', type NEWLINE
 space_text : orig line is 5, orig col is 12, pc-Text() ')', type is FPAREN_CLOSE
 space_text :    rule = REMOVE @ 0 => 13
 space_text : orig line is 5, orig col is 13, <Newline>, nl is 1
 space_text : orig line is 6, orig col is 1, '{' type is BRACE_OPEN
 space_text : orig line is 6, orig col is 1, pc-Text() '{', type is BRACE_OPEN
-do_space : orig line 6, orig col 1, first text '{', type BRACE_OPEN
+do_space : first:  orig line 6, orig col 1, text '{', type BRACE_OPEN
+do_space : second: orig line 6, orig col 2, text '', type NEWLINE
 space_text : orig line is 6, orig col is 1, pc-Text() '{', type is BRACE_OPEN
 space_text :    rule = REMOVE @ 0 => 2
 space_text : orig line is 6, orig col is 2, <Newline>, nl is 1
 space_text : orig line is 7, orig col is 1, '}' type is BRACE_CLOSE
 space_text : orig line is 7, orig col is 1, pc-Text() '}', type is BRACE_CLOSE
-do_space : orig line 7, orig col 1, first text '}', type BRACE_CLOSE
+do_space : first:  orig line 7, orig col 1, text '}', type BRACE_CLOSE
+do_space : second: orig line 7, orig col 2, text '', type NEWLINE
 space_text : orig line is 7, orig col is 1, pc-Text() '}', type is BRACE_CLOSE
 space_text :    rule = REMOVE @ 0 => 2
 space_text : orig line is 7, orig col is 2, <Newline>, nl is 2
 space_text : orig line is 9, orig col is 1, '~' type is DESTRUCTOR
 space_text : orig line is 9, orig col is 1, pc-Text() '~', type is DESTRUCTOR
-do_space : orig line 9, orig col 1, first text '~', type DESTRUCTOR
+do_space : first:  orig line 9, orig col 1, text '~', type DESTRUCTOR
+do_space : second: orig line 9, orig col 2, text 'TelegramIndex', type FUNC_CLASS_DEF
 do_space : first orig line is 9, orig col is 1, Text() is '~', [DESTRUCTOR/FUNC_CLASS_DEF] <===>
            second orig line is 9, orig col is 2, Text() is 'TelegramIndex', [FUNC_CLASS_DEF/DESTRUCTOR] : rule REMOVE[ ]
 space_text : orig line is 9, orig col is 1, pc-Text() '~', type is DESTRUCTOR
 space_text :    rule = REMOVE @ 0 => 2
 space_text : orig line is 9, orig col is 2, 'TelegramIndex' type is FUNC_CLASS_DEF
 space_text : orig line is 9, orig col is 2, pc-Text() 'TelegramIndex', type is FUNC_CLASS_DEF
-do_space : orig line 9, orig col 2, first text 'TelegramIndex', type FUNC_CLASS_DEF
+do_space : first:  orig line 9, orig col 2, text 'TelegramIndex', type FUNC_CLASS_DEF
+do_space : second: orig line 9, orig col 15, text '(', type FPAREN_OPEN
 do_space : first orig line is 9, orig col is 2, Text() is 'TelegramIndex', [FUNC_CLASS_DEF/DESTRUCTOR] <===>
            second orig line is 9, orig col is 15, Text() is '(', [FPAREN_OPEN/FUNC_CLASS_DEF] : rule sp_func_class_paren[ ]
 space_text : orig line is 9, orig col is 2, pc-Text() 'TelegramIndex', type is FUNC_CLASS_DEF
 space_text :    rule = IGNORE @ 0 => 15
 space_text : orig line is 9, orig col is 15, '(' type is FPAREN_OPEN
 space_text : orig line is 9, orig col is 15, pc-Text() '(', type is FPAREN_OPEN
-do_space : orig line 9, orig col 15, first text '(', type FPAREN_OPEN
+do_space : first:  orig line 9, orig col 15, text '(', type FPAREN_OPEN
+do_space : second: orig line 9, orig col 16, text ')', type FPAREN_CLOSE
 do_space : first orig line is 9, orig col is 15, Text() is '(', [FPAREN_OPEN/FUNC_CLASS_DEF] <===>
            second orig line is 9, orig col is 16, Text() is ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] : rule sp_inside_fparens[ ]
 space_text : orig line is 9, orig col is 15, pc-Text() '(', type is FPAREN_OPEN
 space_text :    rule = IGNORE @ 0 => 16
 space_text : orig line is 9, orig col is 16, ')' type is FPAREN_CLOSE
 space_text : orig line is 9, orig col is 16, pc-Text() ')', type is FPAREN_CLOSE
-do_space : orig line 9, orig col 16, first text ')', type FPAREN_CLOSE
+do_space : first:  orig line 9, orig col 16, text ')', type FPAREN_CLOSE
+do_space : second: orig line 9, orig col 17, text '', type NEWLINE
 space_text : orig line is 9, orig col is 16, pc-Text() ')', type is FPAREN_CLOSE
 space_text :    rule = REMOVE @ 0 => 17
 space_text : orig line is 9, orig col is 17, <Newline>, nl is 1
 space_text : orig line is 10, orig col is 1, '{' type is BRACE_OPEN
 space_text : orig line is 10, orig col is 1, pc-Text() '{', type is BRACE_OPEN
-do_space : orig line 10, orig col 1, first text '{', type BRACE_OPEN
+do_space : first:  orig line 10, orig col 1, text '{', type BRACE_OPEN
+do_space : second: orig line 10, orig col 2, text '', type NEWLINE
 space_text : orig line is 10, orig col is 1, pc-Text() '{', type is BRACE_OPEN
 space_text :    rule = REMOVE @ 0 => 2
 space_text : orig line is 10, orig col is 2, <Newline>, nl is 1
 space_text : orig line is 11, orig col is 1, '}' type is BRACE_CLOSE
 space_text : orig line is 11, orig col is 1, pc-Text() '}', type is BRACE_CLOSE
-do_space : orig line 11, orig col 1, first text '}', type BRACE_CLOSE
+do_space : first:  orig line 11, orig col 1, text '}', type BRACE_CLOSE
+do_space : second: orig line 11, orig col 2, text '', type NEWLINE
 space_text : orig line is 11, orig col is 1, pc-Text() '}', type is BRACE_CLOSE
 space_text :    rule = REMOVE @ 0 => 2
 space_text : orig line is 11, orig col is 2, <Newline>, nl is 2
 space_text : orig line is 13, orig col is 1, 'const' type is QUALIFIER
 space_text : back-to-back words need a space: pc->Text() 'const', next->Text() 'char'
 space_text : orig line is 13, orig col is 1, pc-Text() 'const', type is QUALIFIER
-do_space : orig line 13, orig col 1, first text 'const', type QUALIFIER
+do_space : first:  orig line 13, orig col 1, text 'const', type QUALIFIER
+do_space : second: orig line 13, orig col 7, text 'char', type TYPE
 do_space : first orig line is 13, orig col is 1, Text() is 'const', [QUALIFIER/NONE] <===>
            second orig line is 13, orig col is 7, Text() is 'char', [TYPE/NONE] : rule sp_after_type[ ]
 ensure_force_space : force between 'const' and 'char'
@@ -231,14 +264,16 @@ space_text : orig line is 13, orig col is 1, pc-Text() 'const', type is QUALIFIE
 space_text :    rule = FORCE @ 1 => 7
 space_text : orig line is 13, orig col is 7, 'char' type is TYPE
 space_text : orig line is 13, orig col is 7, pc-Text() 'char', type is TYPE
-do_space : orig line 13, orig col 7, first text 'char', type TYPE
+do_space : first:  orig line 13, orig col 7, text 'char', type TYPE
+do_space : second: orig line 13, orig col 11, text '*', type PTR_TYPE
 do_space : first orig line is 13, orig col is 7, Text() is 'char', [TYPE/NONE] <===>
            second orig line is 13, orig col is 11, Text() is '*', [PTR_TYPE/NONE] : rule IGNORE[ ]
 space_text : orig line is 13, orig col is 7, pc-Text() 'char', type is TYPE
 space_text :    rule = IGNORE @ 0 => 11
 space_text : orig line is 13, orig col is 11, '*' type is PTR_TYPE
 space_text : orig line is 13, orig col is 11, pc-Text() '*', type is PTR_TYPE
-do_space : orig line 13, orig col 11, first text '*', type PTR_TYPE
+do_space : first:  orig line 13, orig col 11, text '*', type PTR_TYPE
+do_space : second: orig line 13, orig col 13, text 'const', type QUALIFIER
 do_space : first orig line is 13, orig col is 11, Text() is '*', [PTR_TYPE/NONE] <===>
            second orig line is 13, orig col is 13, Text() is 'const', [QUALIFIER/NONE] : rule sp_after_ptr_star_qualifier[ ]
 space_text : orig line is 13, orig col is 11, pc-Text() '*', type is PTR_TYPE
@@ -246,7 +281,8 @@ space_text :    rule = IGNORE @ 1 => 13
 space_text : orig line is 13, orig col is 13, 'const' type is QUALIFIER
 space_text : back-to-back words need a space: pc->Text() 'const', next->Text() 'pTelName'
 space_text : orig line is 13, orig col is 13, pc-Text() 'const', type is QUALIFIER
-do_space : orig line 13, orig col 13, first text 'const', type QUALIFIER
+do_space : first:  orig line 13, orig col 13, text 'const', type QUALIFIER
+do_space : second: orig line 13, orig col 19, text 'pTelName', type WORD
 do_space : first orig line is 13, orig col is 13, Text() is 'const', [QUALIFIER/NONE] <===>
            second orig line is 13, orig col is 19, Text() is 'pTelName', [WORD/NONE] : rule sp_after_type[ ]
 ensure_force_space : force between 'const' and 'pTelName'
@@ -254,21 +290,24 @@ space_text : orig line is 13, orig col is 13, pc-Text() 'const', type is QUALIFI
 space_text :    rule = FORCE @ 1 => 19
 space_text : orig line is 13, orig col is 19, 'pTelName' type is WORD
 space_text : orig line is 13, orig col is 19, pc-Text() 'pTelName', type is WORD
-do_space : orig line 13, orig col 19, first text 'pTelName', type WORD
+do_space : first:  orig line 13, orig col 19, text 'pTelName', type WORD
+do_space : second: orig line 13, orig col 27, text ';', type SEMICOLON
 do_space : first orig line is 13, orig col is 19, Text() is 'pTelName', [WORD/NONE] <===>
            second orig line is 13, orig col is 27, Text() is ';', [SEMICOLON/NONE] : rule sp_before_semi[ ]
 space_text : orig line is 13, orig col is 19, pc-Text() 'pTelName', type is WORD
 space_text :    rule = REMOVE @ 0 => 27
 space_text : orig line is 13, orig col is 27, ';' type is SEMICOLON
 space_text : orig line is 13, orig col is 27, pc-Text() ';', type is SEMICOLON
-do_space : orig line 13, orig col 27, first text ';', type SEMICOLON
+do_space : first:  orig line 13, orig col 27, text ';', type SEMICOLON
+do_space : second: orig line 13, orig col 28, text '', type NEWLINE
 space_text : orig line is 13, orig col is 27, pc-Text() ';', type is SEMICOLON
 space_text :    rule = REMOVE @ 0 => 28
 space_text : orig line is 13, orig col is 28, <Newline>, nl is 1
 space_text : orig line is 14, orig col is 1, 'unsigned' type is TYPE
 space_text : back-to-back words need a space: pc->Text() 'unsigned', next->Text() 'long'
 space_text : orig line is 14, orig col is 1, pc-Text() 'unsigned', type is TYPE
-do_space : orig line 14, orig col 1, first text 'unsigned', type TYPE
+do_space : first:  orig line 14, orig col 1, text 'unsigned', type TYPE
+do_space : second: orig line 14, orig col 10, text 'long', type TYPE
 do_space : first orig line is 14, orig col is 1, Text() is 'unsigned', [TYPE/NONE] <===>
            second orig line is 14, orig col is 10, Text() is 'long', [TYPE/NONE] : rule sp_after_type[ ]
 ensure_force_space : force between 'unsigned' and 'long'
@@ -277,7 +316,8 @@ space_text :    rule = FORCE @ 1 => 10
 space_text : orig line is 14, orig col is 10, 'long' type is TYPE
 space_text : back-to-back words need a space: pc->Text() 'long', next->Text() 'nTelIndex'
 space_text : orig line is 14, orig col is 10, pc-Text() 'long', type is TYPE
-do_space : orig line 14, orig col 10, first text 'long', type TYPE
+do_space : first:  orig line 14, orig col 10, text 'long', type TYPE
+do_space : second: orig line 14, orig col 15, text 'nTelIndex', type WORD
 do_space : first orig line is 14, orig col is 10, Text() is 'long', [TYPE/NONE] <===>
            second orig line is 14, orig col is 15, Text() is 'nTelIndex', [WORD/NONE] : rule sp_after_type[ ]
 ensure_force_space : force between 'long' and 'nTelIndex'
@@ -285,34 +325,39 @@ space_text : orig line is 14, orig col is 10, pc-Text() 'long', type is TYPE
 space_text :    rule = FORCE @ 1 => 15
 space_text : orig line is 14, orig col is 15, 'nTelIndex' type is WORD
 space_text : orig line is 14, orig col is 15, pc-Text() 'nTelIndex', type is WORD
-do_space : orig line 14, orig col 15, first text 'nTelIndex', type WORD
+do_space : first:  orig line 14, orig col 15, text 'nTelIndex', type WORD
+do_space : second: orig line 14, orig col 24, text ';', type SEMICOLON
 do_space : first orig line is 14, orig col is 15, Text() is 'nTelIndex', [WORD/NONE] <===>
            second orig line is 14, orig col is 24, Text() is ';', [SEMICOLON/NONE] : rule sp_before_semi[ ]
 space_text : orig line is 14, orig col is 15, pc-Text() 'nTelIndex', type is WORD
 space_text :    rule = REMOVE @ 0 => 24
 space_text : orig line is 14, orig col is 24, ';' type is SEMICOLON
 space_text : orig line is 14, orig col is 24, pc-Text() ';', type is SEMICOLON
-do_space : orig line 14, orig col 24, first text ';', type SEMICOLON
+do_space : first:  orig line 14, orig col 24, text ';', type SEMICOLON
+do_space : second: orig line 14, orig col 25, text '', type NEWLINE
 space_text : orig line is 14, orig col is 24, pc-Text() ';', type is SEMICOLON
 space_text :    rule = REMOVE @ 0 => 25
 space_text : orig line is 14, orig col is 25, <Newline>, nl is 1
 space_text : orig line is 15, orig col is 1, '}' type is BRACE_CLOSE
 space_text : orig line is 15, orig col is 1, pc-Text() '}', type is BRACE_CLOSE
-do_space : orig line 15, orig col 1, first text '}', type BRACE_CLOSE
+do_space : first:  orig line 15, orig col 1, text '}', type BRACE_CLOSE
+do_space : second: orig line 15, orig col 2, text ';', type SEMICOLON
 do_space : first orig line is 15, orig col is 1, Text() is '}', [BRACE_CLOSE/STRUCT] <===>
            second orig line is 15, orig col is 2, Text() is ';', [SEMICOLON/STRUCT] : rule sp_before_semi[ ]
 space_text : orig line is 15, orig col is 1, pc-Text() '}', type is BRACE_CLOSE
 space_text :    rule = REMOVE @ 0 => 2
 space_text : orig line is 15, orig col is 2, ';' type is SEMICOLON
 space_text : orig line is 15, orig col is 2, pc-Text() ';', type is SEMICOLON
-do_space : orig line 15, orig col 2, first text ';', type SEMICOLON
+do_space : first:  orig line 15, orig col 2, text ';', type SEMICOLON
+do_space : second: orig line 15, orig col 3, text '', type NEWLINE
 space_text : orig line is 15, orig col is 2, pc-Text() ';', type is SEMICOLON
 space_text :    rule = REMOVE @ 0 => 3
 space_text : orig line is 15, orig col is 3, <Newline>, nl is 2
 space_col_align : 1st orig line 3, orig col 1, [FUNC_CLASS_DEF/NONE], text 'TelegramIndex' <==>
 space_col_align : 2nd orig line 3, orig col 14, [FPAREN_OPEN/FUNC_CLASS_DEF], text '('
  [CallStack]
-do_space : orig line 3, orig col 1, first text 'TelegramIndex', type FUNC_CLASS_DEF
+do_space : first:  orig line 3, orig col 1, text 'TelegramIndex', type FUNC_CLASS_DEF
+do_space : second: orig line 3, orig col 14, text '(', type FPAREN_OPEN
 do_space : first orig line is 3, orig col is 1, Text() is 'TelegramIndex', [FUNC_CLASS_DEF/NONE] <===>
            second orig line is 3, orig col is 14, Text() is '(', [FPAREN_OPEN/FUNC_CLASS_DEF] : rule sp_func_class_paren[ ]
 space_col_align : av is ignore
@@ -330,7 +375,8 @@ space_col_align :    => coldiff is 13
 space_col_align : 1st orig line 3, orig col 14, [FPAREN_OPEN/FUNC_CLASS_DEF], text '(' <==>
 space_col_align : 2nd orig line 3, orig col 15, [QUALIFIER/NONE], text 'const'
  [CallStack]
-do_space : orig line 3, orig col 14, first text '(', type FPAREN_OPEN
+do_space : first:  orig line 3, orig col 14, text '(', type FPAREN_OPEN
+do_space : second: orig line 3, orig col 15, text 'const', type QUALIFIER
 do_space : first orig line is 3, orig col is 14, Text() is '(', [FPAREN_OPEN/FUNC_CLASS_DEF] <===>
            second orig line is 3, orig col is 15, Text() is 'const', [QUALIFIER/NONE] : rule sp_inside_fparen[ ]
 space_col_align : av is ignore
@@ -348,7 +394,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 3, orig col 15, [QUALIFIER/NONE], text 'const' <==>
 space_col_align : 2nd orig line 3, orig col 21, [TYPE/NONE], text 'char'
  [CallStack]
-do_space : orig line 3, orig col 15, first text 'const', type QUALIFIER
+do_space : first:  orig line 3, orig col 15, text 'const', type QUALIFIER
+do_space : second: orig line 3, orig col 21, text 'char', type TYPE
 do_space : first orig line is 3, orig col is 15, Text() is 'const', [QUALIFIER/NONE] <===>
            second orig line is 3, orig col is 21, Text() is 'char', [TYPE/NONE] : rule sp_after_type[ ]
 ensure_force_space : force between 'const' and 'char'
@@ -360,7 +407,8 @@ space_col_align :    => coldiff is 6
 space_col_align : 1st orig line 3, orig col 21, [TYPE/NONE], text 'char' <==>
 space_col_align : 2nd orig line 3, orig col 25, [PTR_TYPE/NONE], text '*'
  [CallStack]
-do_space : orig line 3, orig col 21, first text 'char', type TYPE
+do_space : first:  orig line 3, orig col 21, text 'char', type TYPE
+do_space : second: orig line 3, orig col 25, text '*', type PTR_TYPE
 do_space : first orig line is 3, orig col is 21, Text() is 'char', [TYPE/NONE] <===>
            second orig line is 3, orig col is 25, Text() is '*', [PTR_TYPE/NONE] : rule IGNORE[ ]
 space_col_align : av is ignore
@@ -378,7 +426,8 @@ space_col_align :    => coldiff is 4
 space_col_align : 1st orig line 3, orig col 25, [PTR_TYPE/NONE], text '*' <==>
 space_col_align : 2nd orig line 3, orig col 27, [WORD/NONE], text 'pN'
  [CallStack]
-do_space : orig line 3, orig col 25, first text '*', type PTR_TYPE
+do_space : first:  orig line 3, orig col 25, text '*', type PTR_TYPE
+do_space : second: orig line 3, orig col 27, text 'pN', type WORD
 do_space : first orig line is 3, orig col is 25, Text() is '*', [PTR_TYPE/NONE] <===>
            second orig line is 3, orig col is 27, Text() is 'pN', [WORD/NONE] : rule sp_after_ptr_star[ ]
 space_col_align : av is ignore
@@ -396,7 +445,8 @@ space_col_align :    => coldiff is 2
 space_col_align : 1st orig line 3, orig col 27, [WORD/NONE], text 'pN' <==>
 space_col_align : 2nd orig line 3, orig col 29, [COMMA/NONE], text ','
  [CallStack]
-do_space : orig line 3, orig col 27, first text 'pN', type WORD
+do_space : first:  orig line 3, orig col 27, text 'pN', type WORD
+do_space : second: orig line 3, orig col 29, text ',', type COMMA
 do_space : first orig line is 3, orig col is 27, Text() is 'pN', [WORD/NONE] <===>
            second orig line is 3, orig col is 29, Text() is ',', [COMMA/NONE] : rule sp_before_comma[ ]
 space_col_align : av is remove
@@ -407,7 +457,8 @@ space_col_align :    => coldiff is 2
 space_col_align : 1st orig line 3, orig col 29, [COMMA/NONE], text ',' <==>
 space_col_align : 2nd orig line 3, orig col 31, [TYPE/NONE], text 'unsigned'
  [CallStack]
-do_space : orig line 3, orig col 29, first text ',', type COMMA
+do_space : first:  orig line 3, orig col 29, text ',', type COMMA
+do_space : second: orig line 3, orig col 31, text 'unsigned', type TYPE
 do_space : first orig line is 3, orig col is 29, Text() is ',', [COMMA/NONE] <===>
            second orig line is 3, orig col is 31, Text() is 'unsigned', [TYPE/NONE] : rule sp_after_comma[ ]
 space_col_align : av is ignore
@@ -425,7 +476,8 @@ space_col_align :    => coldiff is 2
 space_col_align : 1st orig line 3, orig col 31, [TYPE/NONE], text 'unsigned' <==>
 space_col_align : 2nd orig line 3, orig col 40, [TYPE/NONE], text 'long'
  [CallStack]
-do_space : orig line 3, orig col 31, first text 'unsigned', type TYPE
+do_space : first:  orig line 3, orig col 31, text 'unsigned', type TYPE
+do_space : second: orig line 3, orig col 40, text 'long', type TYPE
 do_space : first orig line is 3, orig col is 31, Text() is 'unsigned', [TYPE/NONE] <===>
            second orig line is 3, orig col is 40, Text() is 'long', [TYPE/NONE] : rule sp_after_type[ ]
 ensure_force_space : force between 'unsigned' and 'long'
@@ -437,7 +489,8 @@ space_col_align :    => coldiff is 9
 space_col_align : 1st orig line 3, orig col 40, [TYPE/NONE], text 'long' <==>
 space_col_align : 2nd orig line 3, orig col 45, [WORD/NONE], text 'nI'
  [CallStack]
-do_space : orig line 3, orig col 40, first text 'long', type TYPE
+do_space : first:  orig line 3, orig col 40, text 'long', type TYPE
+do_space : second: orig line 3, orig col 45, text 'nI', type WORD
 do_space : first orig line is 3, orig col is 40, Text() is 'long', [TYPE/NONE] <===>
            second orig line is 3, orig col is 45, Text() is 'nI', [WORD/NONE] : rule sp_after_type[ ]
 ensure_force_space : force between 'long' and 'nI'
@@ -449,7 +502,8 @@ space_col_align :    => coldiff is 5
 space_col_align : 1st orig line 3, orig col 45, [WORD/NONE], text 'nI' <==>
 space_col_align : 2nd orig line 3, orig col 47, [FPAREN_CLOSE/FUNC_CLASS_DEF], text ')'
  [CallStack]
-do_space : orig line 3, orig col 45, first text 'nI', type WORD
+do_space : first:  orig line 3, orig col 45, text 'nI', type WORD
+do_space : second: orig line 3, orig col 47, text ')', type FPAREN_CLOSE
 do_space : first orig line is 3, orig col is 45, Text() is 'nI', [WORD/NONE] <===>
            second orig line is 3, orig col is 47, Text() is ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] : rule sp_inside_fparen[ ]
 space_col_align : av is ignore
@@ -467,7 +521,8 @@ space_col_align :    => coldiff is 2
 space_col_align : 1st orig line 3, orig col 47, [FPAREN_CLOSE/FUNC_CLASS_DEF], text ')' <==>
 space_col_align : 2nd orig line 3, orig col 49, [CONSTR_COLON/NONE], text ':'
  [CallStack]
-do_space : orig line 3, orig col 47, first text ')', type FPAREN_CLOSE
+do_space : first:  orig line 3, orig col 47, text ')', type FPAREN_CLOSE
+do_space : second: orig line 3, orig col 49, text ':', type CONSTR_COLON
 do_space : first orig line is 3, orig col is 47, Text() is ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] <===>
            second orig line is 3, orig col is 49, Text() is ':', [CONSTR_COLON/NONE] : rule sp_before_constr_colon[ ]
 space_col_align : av is add
@@ -478,7 +533,8 @@ space_col_align :    => coldiff is 2
 space_col_align : 1st orig line 3, orig col 49, [CONSTR_COLON/NONE], text ':' <==>
 space_col_align : 2nd orig line 3, orig col 50, [NEWLINE/NONE], text ''
  [CallStack]
-do_space : orig line 3, orig col 49, first text ':', type CONSTR_COLON
+do_space : first:  orig line 3, orig col 49, text ':', type CONSTR_COLON
+do_space : second: orig line 3, orig col 50, text '', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
@@ -487,7 +543,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 4, orig col 1, [FUNC_CTOR_VAR/NONE], text 'pTelName' <==>
 space_col_align : 2nd orig line 4, orig col 9, [FPAREN_OPEN/FUNC_CTOR_VAR], text '('
  [CallStack]
-do_space : orig line 4, orig col 1, first text 'pTelName', type FUNC_CTOR_VAR
+do_space : first:  orig line 4, orig col 1, text 'pTelName', type FUNC_CTOR_VAR
+do_space : second: orig line 4, orig col 9, text '(', type FPAREN_OPEN
 do_space : first orig line is 4, orig col is 1, Text() is 'pTelName', [FUNC_CTOR_VAR/NONE] <===>
            second orig line is 4, orig col is 9, Text() is '(', [FPAREN_OPEN/FUNC_CTOR_VAR] : rule sp_func_call_paren[ ]
 space_col_align : av is ignore
@@ -505,7 +562,8 @@ space_col_align :    => coldiff is 8
 space_col_align : 1st orig line 4, orig col 9, [FPAREN_OPEN/FUNC_CTOR_VAR], text '(' <==>
 space_col_align : 2nd orig line 4, orig col 10, [WORD/NONE], text 'pN'
  [CallStack]
-do_space : orig line 4, orig col 9, first text '(', type FPAREN_OPEN
+do_space : first:  orig line 4, orig col 9, text '(', type FPAREN_OPEN
+do_space : second: orig line 4, orig col 10, text 'pN', type WORD
 do_space : first orig line is 4, orig col is 9, Text() is '(', [FPAREN_OPEN/FUNC_CTOR_VAR] <===>
            second orig line is 4, orig col is 10, Text() is 'pN', [WORD/NONE] : rule sp_inside_fparen[ ]
 space_col_align : av is ignore
@@ -523,7 +581,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 4, orig col 10, [WORD/NONE], text 'pN' <==>
 space_col_align : 2nd orig line 4, orig col 12, [FPAREN_CLOSE/FUNC_CTOR_VAR], text ')'
  [CallStack]
-do_space : orig line 4, orig col 10, first text 'pN', type WORD
+do_space : first:  orig line 4, orig col 10, text 'pN', type WORD
+do_space : second: orig line 4, orig col 12, text ')', type FPAREN_CLOSE
 do_space : first orig line is 4, orig col is 10, Text() is 'pN', [WORD/NONE] <===>
            second orig line is 4, orig col is 12, Text() is ')', [FPAREN_CLOSE/FUNC_CTOR_VAR] : rule sp_inside_fparen[ ]
 space_col_align : av is ignore
@@ -541,7 +600,8 @@ space_col_align :    => coldiff is 2
 space_col_align : 1st orig line 4, orig col 12, [FPAREN_CLOSE/FUNC_CTOR_VAR], text ')' <==>
 space_col_align : 2nd orig line 4, orig col 13, [COMMA/NONE], text ','
  [CallStack]
-do_space : orig line 4, orig col 12, first text ')', type FPAREN_CLOSE
+do_space : first:  orig line 4, orig col 12, text ')', type FPAREN_CLOSE
+do_space : second: orig line 4, orig col 13, text ',', type COMMA
 do_space : first orig line is 4, orig col is 12, Text() is ')', [FPAREN_CLOSE/FUNC_CTOR_VAR] <===>
            second orig line is 4, orig col is 13, Text() is ',', [COMMA/NONE] : rule sp_before_comma[ ]
 space_col_align : av is remove
@@ -552,7 +612,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 4, orig col 13, [COMMA/NONE], text ',' <==>
 space_col_align : 2nd orig line 4, orig col 14, [NEWLINE/NONE], text ''
  [CallStack]
-do_space : orig line 4, orig col 13, first text ',', type COMMA
+do_space : first:  orig line 4, orig col 13, text ',', type COMMA
+do_space : second: orig line 4, orig col 14, text '', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
@@ -561,7 +622,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 5, orig col 1, [FUNC_CTOR_VAR/NONE], text 'nTelIndex' <==>
 space_col_align : 2nd orig line 5, orig col 10, [FPAREN_OPEN/FUNC_CTOR_VAR], text '('
  [CallStack]
-do_space : orig line 5, orig col 1, first text 'nTelIndex', type FUNC_CTOR_VAR
+do_space : first:  orig line 5, orig col 1, text 'nTelIndex', type FUNC_CTOR_VAR
+do_space : second: orig line 5, orig col 10, text '(', type FPAREN_OPEN
 do_space : first orig line is 5, orig col is 1, Text() is 'nTelIndex', [FUNC_CTOR_VAR/NONE] <===>
            second orig line is 5, orig col is 10, Text() is '(', [FPAREN_OPEN/FUNC_CTOR_VAR] : rule sp_func_call_paren[ ]
 space_col_align : av is ignore
@@ -579,7 +641,8 @@ space_col_align :    => coldiff is 9
 space_col_align : 1st orig line 5, orig col 10, [FPAREN_OPEN/FUNC_CTOR_VAR], text '(' <==>
 space_col_align : 2nd orig line 5, orig col 11, [WORD/NONE], text 'n'
  [CallStack]
-do_space : orig line 5, orig col 10, first text '(', type FPAREN_OPEN
+do_space : first:  orig line 5, orig col 10, text '(', type FPAREN_OPEN
+do_space : second: orig line 5, orig col 11, text 'n', type WORD
 do_space : first orig line is 5, orig col is 10, Text() is '(', [FPAREN_OPEN/FUNC_CTOR_VAR] <===>
            second orig line is 5, orig col is 11, Text() is 'n', [WORD/NONE] : rule sp_inside_fparen[ ]
 space_col_align : av is ignore
@@ -597,7 +660,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 5, orig col 11, [WORD/NONE], text 'n' <==>
 space_col_align : 2nd orig line 5, orig col 12, [FPAREN_CLOSE/FUNC_CTOR_VAR], text ')'
  [CallStack]
-do_space : orig line 5, orig col 11, first text 'n', type WORD
+do_space : first:  orig line 5, orig col 11, text 'n', type WORD
+do_space : second: orig line 5, orig col 12, text ')', type FPAREN_CLOSE
 do_space : first orig line is 5, orig col is 11, Text() is 'n', [WORD/NONE] <===>
            second orig line is 5, orig col is 12, Text() is ')', [FPAREN_CLOSE/FUNC_CTOR_VAR] : rule sp_inside_fparen[ ]
 space_col_align : av is ignore
@@ -615,7 +679,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 5, orig col 12, [FPAREN_CLOSE/FUNC_CTOR_VAR], text ')' <==>
 space_col_align : 2nd orig line 5, orig col 13, [NEWLINE/NONE], text ''
  [CallStack]
-do_space : orig line 5, orig col 12, first text ')', type FPAREN_CLOSE
+do_space : first:  orig line 5, orig col 12, text ')', type FPAREN_CLOSE
+do_space : second: orig line 5, orig col 13, text '', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
@@ -624,7 +689,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 6, orig col 1, [BRACE_OPEN/FUNC_CLASS_DEF], text '{' <==>
 space_col_align : 2nd orig line 6, orig col 2, [NEWLINE/NONE], text ''
  [CallStack]
-do_space : orig line 6, orig col 1, first text '{', type BRACE_OPEN
+do_space : first:  orig line 6, orig col 1, text '{', type BRACE_OPEN
+do_space : second: orig line 6, orig col 2, text '', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
@@ -633,7 +699,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 7, orig col 1, [BRACE_CLOSE/FUNC_CLASS_DEF], text '}' <==>
 space_col_align : 2nd orig line 7, orig col 2, [NEWLINE/NONE], text ''
  [CallStack]
-do_space : orig line 7, orig col 1, first text '}', type BRACE_CLOSE
+do_space : first:  orig line 7, orig col 1, text '}', type BRACE_CLOSE
+do_space : second: orig line 7, orig col 2, text '', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
@@ -642,7 +709,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 9, orig col 1, [DESTRUCTOR/FUNC_CLASS_DEF], text '~' <==>
 space_col_align : 2nd orig line 9, orig col 2, [FUNC_CLASS_DEF/DESTRUCTOR], text 'TelegramIndex'
  [CallStack]
-do_space : orig line 9, orig col 1, first text '~', type DESTRUCTOR
+do_space : first:  orig line 9, orig col 1, text '~', type DESTRUCTOR
+do_space : second: orig line 9, orig col 2, text 'TelegramIndex', type FUNC_CLASS_DEF
 do_space : first orig line is 9, orig col is 1, Text() is '~', [DESTRUCTOR/FUNC_CLASS_DEF] <===>
            second orig line is 9, orig col is 2, Text() is 'TelegramIndex', [FUNC_CLASS_DEF/DESTRUCTOR] : rule REMOVE[ ]
 space_col_align : av is remove
@@ -653,7 +721,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 9, orig col 2, [FUNC_CLASS_DEF/DESTRUCTOR], text 'TelegramIndex' <==>
 space_col_align : 2nd orig line 9, orig col 15, [FPAREN_OPEN/FUNC_CLASS_DEF], text '('
  [CallStack]
-do_space : orig line 9, orig col 2, first text 'TelegramIndex', type FUNC_CLASS_DEF
+do_space : first:  orig line 9, orig col 2, text 'TelegramIndex', type FUNC_CLASS_DEF
+do_space : second: orig line 9, orig col 15, text '(', type FPAREN_OPEN
 do_space : first orig line is 9, orig col is 2, Text() is 'TelegramIndex', [FUNC_CLASS_DEF/DESTRUCTOR] <===>
            second orig line is 9, orig col is 15, Text() is '(', [FPAREN_OPEN/FUNC_CLASS_DEF] : rule sp_func_class_paren[ ]
 space_col_align : av is ignore
@@ -671,7 +740,8 @@ space_col_align :    => coldiff is 13
 space_col_align : 1st orig line 9, orig col 15, [FPAREN_OPEN/FUNC_CLASS_DEF], text '(' <==>
 space_col_align : 2nd orig line 9, orig col 16, [FPAREN_CLOSE/FUNC_CLASS_DEF], text ')'
  [CallStack]
-do_space : orig line 9, orig col 15, first text '(', type FPAREN_OPEN
+do_space : first:  orig line 9, orig col 15, text '(', type FPAREN_OPEN
+do_space : second: orig line 9, orig col 16, text ')', type FPAREN_CLOSE
 do_space : first orig line is 9, orig col is 15, Text() is '(', [FPAREN_OPEN/FUNC_CLASS_DEF] <===>
            second orig line is 9, orig col is 16, Text() is ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] : rule sp_inside_fparens[ ]
 space_col_align : av is ignore
@@ -689,7 +759,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 9, orig col 16, [FPAREN_CLOSE/FUNC_CLASS_DEF], text ')' <==>
 space_col_align : 2nd orig line 9, orig col 17, [NEWLINE/NONE], text ''
  [CallStack]
-do_space : orig line 9, orig col 16, first text ')', type FPAREN_CLOSE
+do_space : first:  orig line 9, orig col 16, text ')', type FPAREN_CLOSE
+do_space : second: orig line 9, orig col 17, text '', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
@@ -698,7 +769,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 10, orig col 1, [BRACE_OPEN/FUNC_CLASS_DEF], text '{' <==>
 space_col_align : 2nd orig line 10, orig col 2, [NEWLINE/NONE], text ''
  [CallStack]
-do_space : orig line 10, orig col 1, first text '{', type BRACE_OPEN
+do_space : first:  orig line 10, orig col 1, text '{', type BRACE_OPEN
+do_space : second: orig line 10, orig col 2, text '', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
@@ -707,7 +779,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 11, orig col 1, [BRACE_CLOSE/FUNC_CLASS_DEF], text '}' <==>
 space_col_align : 2nd orig line 11, orig col 2, [NEWLINE/NONE], text ''
  [CallStack]
-do_space : orig line 11, orig col 1, first text '}', type BRACE_CLOSE
+do_space : first:  orig line 11, orig col 1, text '}', type BRACE_CLOSE
+do_space : second: orig line 11, orig col 2, text '', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
@@ -716,7 +789,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 13, orig col 1, [QUALIFIER/NONE], text 'const' <==>
 space_col_align : 2nd orig line 13, orig col 7, [TYPE/NONE], text 'char'
  [CallStack]
-do_space : orig line 13, orig col 1, first text 'const', type QUALIFIER
+do_space : first:  orig line 13, orig col 1, text 'const', type QUALIFIER
+do_space : second: orig line 13, orig col 7, text 'char', type TYPE
 do_space : first orig line is 13, orig col is 1, Text() is 'const', [QUALIFIER/NONE] <===>
            second orig line is 13, orig col is 7, Text() is 'char', [TYPE/NONE] : rule sp_after_type[ ]
 ensure_force_space : force between 'const' and 'char'
@@ -728,7 +802,8 @@ space_col_align :    => coldiff is 6
 space_col_align : 1st orig line 13, orig col 7, [TYPE/NONE], text 'char' <==>
 space_col_align : 2nd orig line 13, orig col 11, [PTR_TYPE/NONE], text '*'
  [CallStack]
-do_space : orig line 13, orig col 7, first text 'char', type TYPE
+do_space : first:  orig line 13, orig col 7, text 'char', type TYPE
+do_space : second: orig line 13, orig col 11, text '*', type PTR_TYPE
 do_space : first orig line is 13, orig col is 7, Text() is 'char', [TYPE/NONE] <===>
            second orig line is 13, orig col is 11, Text() is '*', [PTR_TYPE/NONE] : rule IGNORE[ ]
 space_col_align : av is ignore
@@ -746,7 +821,8 @@ space_col_align :    => coldiff is 4
 space_col_align : 1st orig line 13, orig col 11, [PTR_TYPE/NONE], text '*' <==>
 space_col_align : 2nd orig line 13, orig col 13, [QUALIFIER/NONE], text 'const'
  [CallStack]
-do_space : orig line 13, orig col 11, first text '*', type PTR_TYPE
+do_space : first:  orig line 13, orig col 11, text '*', type PTR_TYPE
+do_space : second: orig line 13, orig col 13, text 'const', type QUALIFIER
 do_space : first orig line is 13, orig col is 11, Text() is '*', [PTR_TYPE/NONE] <===>
            second orig line is 13, orig col is 13, Text() is 'const', [QUALIFIER/NONE] : rule sp_after_ptr_star_qualifier[ ]
 space_col_align : av is ignore
@@ -764,7 +840,8 @@ space_col_align :    => coldiff is 2
 space_col_align : 1st orig line 13, orig col 13, [QUALIFIER/NONE], text 'const' <==>
 space_col_align : 2nd orig line 13, orig col 19, [WORD/NONE], text 'pTelName'
  [CallStack]
-do_space : orig line 13, orig col 13, first text 'const', type QUALIFIER
+do_space : first:  orig line 13, orig col 13, text 'const', type QUALIFIER
+do_space : second: orig line 13, orig col 19, text 'pTelName', type WORD
 do_space : first orig line is 13, orig col is 13, Text() is 'const', [QUALIFIER/NONE] <===>
            second orig line is 13, orig col is 19, Text() is 'pTelName', [WORD/NONE] : rule sp_after_type[ ]
 ensure_force_space : force between 'const' and 'pTelName'
@@ -776,7 +853,8 @@ space_col_align :    => coldiff is 6
 space_col_align : 1st orig line 13, orig col 19, [WORD/NONE], text 'pTelName' <==>
 space_col_align : 2nd orig line 13, orig col 27, [SEMICOLON/NONE], text ';'
  [CallStack]
-do_space : orig line 13, orig col 19, first text 'pTelName', type WORD
+do_space : first:  orig line 13, orig col 19, text 'pTelName', type WORD
+do_space : second: orig line 13, orig col 27, text ';', type SEMICOLON
 do_space : first orig line is 13, orig col is 19, Text() is 'pTelName', [WORD/NONE] <===>
            second orig line is 13, orig col is 27, Text() is ';', [SEMICOLON/NONE] : rule sp_before_semi[ ]
 space_col_align : av is remove
@@ -787,7 +865,8 @@ space_col_align :    => coldiff is 8
 space_col_align : 1st orig line 13, orig col 27, [SEMICOLON/NONE], text ';' <==>
 space_col_align : 2nd orig line 13, orig col 28, [NEWLINE/NONE], text ''
  [CallStack]
-do_space : orig line 13, orig col 27, first text ';', type SEMICOLON
+do_space : first:  orig line 13, orig col 27, text ';', type SEMICOLON
+do_space : second: orig line 13, orig col 28, text '', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
@@ -796,7 +875,8 @@ space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 14, orig col 1, [TYPE/NONE], text 'unsigned' <==>
 space_col_align : 2nd orig line 14, orig col 10, [TYPE/NONE], text 'long'
  [CallStack]
-do_space : orig line 14, orig col 1, first text 'unsigned', type TYPE
+do_space : first:  orig line 14, orig col 1, text 'unsigned', type TYPE
+do_space : second: orig line 14, orig col 10, text 'long', type TYPE
 do_space : first orig line is 14, orig col is 1, Text() is 'unsigned', [TYPE/NONE] <===>
            second orig line is 14, orig col is 10, Text() is 'long', [TYPE/NONE] : rule sp_after_type[ ]
 ensure_force_space : force between 'unsigned' and 'long'
@@ -808,7 +888,8 @@ space_col_align :    => coldiff is 9
 space_col_align : 1st orig line 14, orig col 10, [TYPE/NONE], text 'long' <==>
 space_col_align : 2nd orig line 14, orig col 15, [WORD/NONE], text 'nTelIndex'
  [CallStack]
-do_space : orig line 14, orig col 10, first text 'long', type TYPE
+do_space : first:  orig line 14, orig col 10, text 'long', type TYPE
+do_space : second: orig line 14, orig col 15, text 'nTelIndex', type WORD
 do_space : first orig line is 14, orig col is 10, Text() is 'long', [TYPE/NONE] <===>
            second orig line is 14, orig col is 15, Text() is 'nTelIndex', [WORD/NONE] : rule sp_after_type[ ]
 ensure_force_space : force between 'long' and 'nTelIndex'
@@ -820,7 +901,8 @@ space_col_align :    => coldiff is 5
 space_col_align : 1st orig line 14, orig col 15, [WORD/NONE], text 'nTelIndex' <==>
 space_col_align : 2nd orig line 14, orig col 24, [SEMICOLON/NONE], text ';'
  [CallStack]
-do_space : orig line 14, orig col 15, first text 'nTelIndex', type WORD
+do_space : first:  orig line 14, orig col 15, text 'nTelIndex', type WORD
+do_space : second: orig line 14, orig col 24, text ';', type SEMICOLON
 do_space : first orig line is 14, orig col is 15, Text() is 'nTelIndex', [WORD/NONE] <===>
            second orig line is 14, orig col is 24, Text() is ';', [SEMICOLON/NONE] : rule sp_before_semi[ ]
 space_col_align : av is remove
@@ -831,7 +913,8 @@ space_col_align :    => coldiff is 9
 space_col_align : 1st orig line 14, orig col 24, [SEMICOLON/NONE], text ';' <==>
 space_col_align : 2nd orig line 14, orig col 25, [NEWLINE/NONE], text ''
  [CallStack]
-do_space : orig line 14, orig col 24, first text ';', type SEMICOLON
+do_space : first:  orig line 14, orig col 24, text ';', type SEMICOLON
+do_space : second: orig line 14, orig col 25, text '', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
