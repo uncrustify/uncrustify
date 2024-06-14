@@ -2022,7 +2022,7 @@ static Chunk *output_comment_cpp(Chunk *first)
 
    if (!options::cmt_cpp_to_c())
    {
-      auto const *cmt_text = first->GetStr().c_str() + 2;
+      char const *cmt_text = first->GetStr().c_str() + 2;
       // Add or remove space after the opening of a C++ comment,
       // i.e. '// A' vs. '//A'.
       auto *sp_cmt = &options::sp_cmt_cpp_start;
@@ -2053,6 +2053,7 @@ static Chunk *output_comment_cpp(Chunk *first)
       // i.e. '// A' vs. '//A'.
       log_rule_B(sp_cmt->name());
 
+      //iarf_e a = (*sp_cmt)();
       if ((*sp_cmt)() != IARF_REMOVE)
       {
          cmt.cont_text += ' ';
