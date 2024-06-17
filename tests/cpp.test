@@ -467,6 +467,9 @@
 
 30880  common/empty.cfg                                     cpp/bug_1758.cpp
 30881  cpp/bug_1758-f.cfg                                   cpp/bug_1758-f.cpp
+30882  cpp/sp_cmt_cpp_start.cfg                             cpp/sp_cmt_cpp_start.cpp
+30883  cpp/sp_cmt_cpp_lint.cfg                              cpp/sp_cmt_cpp_lint.cpp
+30884  cpp/sp_cmt_cpp_pvs.cfg                               cpp/sp_cmt_cpp_pvs.cpp
 
 30900  common/region-0.cfg                                  cpp/region.cpp
 30901  common/region-1.cfg                                  cpp/region.cpp
