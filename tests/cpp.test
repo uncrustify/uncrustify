@@ -288,6 +288,7 @@
 30286  cpp/Issue_3558.cfg                                   cpp/Issue_3558.cpp
 30287! cpp/Issue_3786.cfg                                   cpp/Issue_3786.cpp
 30288  cpp/sp_cmt_cpp_doxygen.cfg                           cpp/sp_cmt_cpp_doxygen.cpp
+30289  cpp/sp_func_call_user_inside_rparen.cfg              cpp/sp_func_call_user_inside_rparen.cpp
 
 30290  cpp/indent_shift.cfg                                 cpp/align_left_shift.cpp
 30291  cpp/indent_shift.cfg                                 cpp/indent_shift.cpp
