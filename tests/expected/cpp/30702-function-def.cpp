@@ -15,7 +15,7 @@ void foo3(int param1,
           int param2,                                        // comment
           char *param2);
 
-struct whoopee *foo4(int param1, int param2, char *param2 /* comment */);
+struct whoopee *foo4(int param1, int param2, char *param2 /* comment */ );
 
 const struct snickers *foo5(int param1, int param2, char *param2);
 
