@@ -29,6 +29,8 @@
 #endif // ifdef WIN32
 
 
+constexpr static auto LCURRENT = LSPACE;
+
 using namespace std;
 using namespace uncrustify;
 
@@ -3687,6 +3689,8 @@ void space_text()
                       */
                      // (C++11) Permit removal of the space between '>>' in 'foo<bar<int> >'. Note
                      // that sp_angle_shift cannot remove the space without this option.
+                     log_rule_B("sp_permit_cpp11_shift");
+
                      if (  (  (  language_is_set(lang_flag_e::LANG_CPP)
                               && options::sp_permit_cpp11_shift())
                            || language_is_set(lang_flag_e::LANG_JAVA)
