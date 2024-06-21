@@ -38,6 +38,7 @@ git log --format='%aN' \
    | grep -v "^micheleCTDEAdmin$" \
    | grep -v "^nivekkagicom$" \
    | grep -v "^Pawel Benetkiewicz$" \
+   | grep -v "^PoeticPeteAdmin$" \
    | grep -v "^popipo$" \
    | grep -v "^raefaldhia$" \
    | grep -v "^rdan$" \
