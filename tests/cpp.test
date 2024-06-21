@@ -296,6 +296,7 @@
 30293  cpp/pos_shift-lead.cfg                               cpp/pos_shift.cpp
 30294  cpp/pos_shift-trail.cfg                              cpp/pos_shift.cpp
 30295  cpp/pos_shift-join.cfg                               cpp/pos_shift.cpp
+30296  cpp/sp_inside_for.cfg                                cpp/sp_inside_for.cpp
 
 30300  cpp/ben_020.cfg                                      cpp/enum_shr.cpp
 30301  cpp/al.cfg                                           cpp/enum_class.h
