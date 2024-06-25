@@ -348,7 +348,7 @@
 30706  cpp/bug_1020.cfg                                     cpp/bug_1020.cpp
 
 30711  common/del_semicolon.cfg                             cpp/semicolons.cpp
-30712  common/empty.cfg                                     cpp/bug_1158.cpp
+30712  cpp/Issue_1158.cfg                                   cpp/bug_1158.cpp
 30713  common/empty.cfg                                     cpp/fix_for_relational_operators.cpp
 30714  common/empty.cfg                                     cpp/Issue_1733.cpp
 30715  cpp/Issue_2942.cfg                                   cpp/Issue_2942.cpp
