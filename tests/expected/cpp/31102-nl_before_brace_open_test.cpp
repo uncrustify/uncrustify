@@ -42,7 +42,8 @@ static const kjs_double_t NaN_Bytes =
 
 static struct LanguageForEncoding
 {
-	const char *index; int data;
+	const char *index;
+	int data;
 } const language_for_encoding[] =
 {
 	{"iso 8859-1", 13},
