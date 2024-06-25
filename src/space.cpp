@@ -3563,6 +3563,7 @@ void space_text()
          // save the values
          save_set_options_for_QT(pc->GetLevel());
       }
+      log_rule_B("sp_skip_vbrace_tokens");
 
       // Bug # 637
       // If true, vbrace tokens are dropped to the previous token and skipped.
@@ -3574,6 +3575,7 @@ void space_text()
                && !next->IsNewline()
                && next->IsVBrace())
          {
+            log_rule_B("sp_skip_vbrace_tokens JA 3");
             LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, Skip %s (%zu+%zu)\n",
                     __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()),
                     pc->GetColumn(), pc->GetStr().size());
