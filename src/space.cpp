@@ -371,11 +371,15 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (second->Is(CT_SEMICOLON))                       // see the tests cpp:34517-34519
    {
-      if (first->Is(CT_VBRACE_OPEN))
+      if (  first->Is(CT_VBRACE_OPEN)                  // Issue #2942
+         && first->GetPrev()->Is(CT_SPAREN_CLOSE)
+         && (  first->GetParentType() == CT_IF
+            || first->GetParentType() == CT_FOR
+            || first->GetParentType() == CT_WHILE))
       {
-         // Add or remove space before ';'.
-         log_rule("sp_before_semi");
-         return(options::sp_before_semi());
+         // Add or remove space before empty statement ';' on 'if', 'for' and 'while'.
+         log_rule("sp_special_semi");
+         return(options::sp_special_semi());
       }
 
       // Issue #4094-03
@@ -404,22 +408,20 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          log_rule("sp_before_semi_for");
          return(options::sp_before_semi_for());
       }
-      iarf_e arg = options::sp_before_semi();          // see the tests cpp:34517-34519
-
-      if (  first->Is(CT_VBRACE_OPEN)                  // Issue #2942
-         && first->GetPrev()->Is(CT_SPAREN_CLOSE)
-         && first->GetParentType() != CT_WHILE_OF_DO)
+      else if (  first->Is(CT_VBRACE_OPEN)                  // Issue #2942
+              && first->GetPrev()->Is(CT_SPAREN_CLOSE)
+              && first->GetParentType() != CT_WHILE_OF_DO)
       {
          // Add or remove space before empty statement ';' on 'if', 'for' and 'while'.
          log_rule("sp_special_semi");
-         arg = arg | options::sp_special_semi();
+         return(options::sp_special_semi());
       }
       else
       {
          // Add or remove space before ';'.
          log_rule("sp_before_semi");
+         return(options::sp_before_semi());
       }
-      return(arg);
    }
 
    if (  (  second->Is(CT_COMMENT)
