@@ -31,7 +31,7 @@ bool unc_getenv(const char *name, std::string &str)
 
    if (buf != nullptr)
    {
-      len = GetEnvironmentVariableA(name, buf, len);
+      len      = GetEnvironmentVariableA(name, buf, len);
       buf[len] = 0;
 
       str = buf;
@@ -40,11 +40,7 @@ bool unc_getenv(const char *name, std::string &str)
 
       return(true);
    }
-   else
-   {
-      return(false);
-   }
-
+   return(false);
 }
 
 
