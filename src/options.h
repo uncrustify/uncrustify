@@ -542,6 +542,10 @@ extern Option<iarf_e>
 sp_after_invariant_paren;
 
 // Add or remove space before empty statement ';' on 'if', 'for' and 'while'.
+// examples:
+//   if (b) <here> ;
+//   for (a=1; a<10; a++) <here> ;
+//   while (*p++ = ' ') <here> ;
 extern Option<iarf_e>
 sp_special_semi;
 
