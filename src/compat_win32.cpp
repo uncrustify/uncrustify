@@ -31,15 +31,16 @@ bool unc_getenv(const char *name, std::string &str)
 
    if (buf != nullptr)
    {
-      len = GetEnvironmentVariableA(name, buf, len);
+      len      = GetEnvironmentVariableA(name, buf, len);
+      buf[len] = 0;
+
+      str = buf;
+      //printf("%s: name=%s len=%zu value=%s\n", __func__, name, len, str.c_str());
+      free(buf);
+
+      return(true);
    }
-   buf[len] = 0;
-
-   str = buf;
-   //printf("%s: name=%s len=%zu value=%s\n", __func__, name, len, str.c_str());
-   free(buf);
-
-   return(true);
+   return(false);
 }
 
 
