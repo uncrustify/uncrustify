@@ -1454,7 +1454,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          && (  next->Is(CT_COMMA)
             || next->Is(CT_PAREN_CLOSE)                            // Issue #3691
             || next->Is(CT_FPAREN_CLOSE)
-            || next->Is(CT_SEMICOLON)))
+            || next->Is(CT_SEMICOLON)
+            || next->Is(CT_ANGLE_CLOSE)))                          // Issue #4064
       {
          if (options::sp_before_unnamed_byref() != IARF_IGNORE)    // Issue #3691
          {
