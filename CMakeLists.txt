@@ -613,7 +613,10 @@ include(CPack)
 #
 # Install
 #
-if(MSVC)
+
+option(FORCE_GNUINSTALLDIRS "Force UNIX installation layout under MSVC" OFF)
+
+if(MSVC AND NOT FORCE_GNUINSTALLDIRS)
   install(TARGETS uncrustify DESTINATION ".")
   install(FILES ${uncrustify_docs}
     DESTINATION "."
