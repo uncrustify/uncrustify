@@ -68,7 +68,6 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
            __func__, __LINE__, first->GetOrigLine(), first->GetOrigCol(), first->Text(), get_token_name(first->GetType()));
    LOG_FMT(LSPACE, "%s(%d): second: orig line %zu, orig col %zu, text '%s', type %s\n",
            __func__, __LINE__, second->GetOrigLine(), second->GetOrigCol(), second->Text(), get_token_name(second->GetType()));
-
    min_sp = 1;
 
    if (  first->Is(CT_VBRACE_OPEN)
@@ -3471,6 +3470,36 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       {
          log_rule("sp_before_ellipsis");
          return(options::sp_before_ellipsis());
+      }
+   }
+
+   if (first->Is(CT_PP_F_PRAGMA))
+   {
+      if (second->Is(CT_GPAREN_OPEN))
+      {
+         // Add or remove space between '_Pragma' and the opening paarenthesis
+         log_rule("sp_pragma_open_parenthesis");
+         return(options::sp_pragma_open_parenthesis());
+      }
+   }
+
+   if (first->Is(CT_GPAREN_OPEN))
+   {
+      if (second->Is(CT_PP_F_DATA))
+      {
+         // Add or remove space inside '(' and ')' of _Pragma.
+         log_rule("sp_inside_gparen");
+         return(options::sp_inside_gparen());
+      }
+   }
+
+   if (second->Is(CT_GPAREN_CLOSE))
+   {
+      if (first->Is(CT_PP_F_DATA))
+      {
+         // Add or remove space inside '(' and ')' of _Pragma.
+         log_rule("sp_inside_gparen");
+         return(options::sp_inside_gparen());
       }
    }
    // =============================================================

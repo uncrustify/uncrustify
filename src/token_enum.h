@@ -7,7 +7,6 @@
  *          October 2015
  * @license GPL v2+
  */
-
 #ifndef TOKEN_ENUM_H_INCLUDED
 #define TOKEN_ENUM_H_INCLUDED
 
@@ -21,6 +20,10 @@
  * This is an enum of all the different chunks/tokens/elements that the
  * program can work with. The parser and scanner assigns one of these to
  * each chunk/token.
+ */
+/*
+ * a function to get the text of a token
+ * const char *get_token_name(E_Token token)
  */
 enum E_Token
 {
@@ -215,6 +218,9 @@ enum E_Token
    CT_FPAREN_OPEN,      // 'function' parenthetis after fcn/macro fcn
    CT_FPAREN_CLOSE,
 
+   CT_GPAREN_OPEN,      // parenthetis after _Pragma                                     Issue #2286
+   CT_GPAREN_CLOSE,
+
    CT_LPAREN_OPEN,      // lambda-declarator parenthetis
    CT_LPAREN_CLOSE,
 
@@ -323,6 +329,13 @@ enum E_Token
    CT_PP_ASM,           // start of assembly code section
    CT_PP_UNDEF,
    CT_PP_PROPERTY,
+
+   // the next two PP types MUSST be BEFORE CT_PP_BODYCHUNK or AFTER CT_PP_OTHER
+   CT_PP_F_PRAGMA,                                                                         // Issue #3386
+   // Removes the L prefix (if any), the outer quotes, and leading/trailing whitespace
+   // from string-literal, replaces each \" with " and each \\ with \, then tokenizes
+   // the result (as in translation phase 3), and then uses the result as if the input to #pragma
+   CT_PP_F_DATA,        // the part string-literal, without the parenthesis
 
    CT_PP_BODYCHUNK,     // everything after this gets put in CT_PREPROC_BODY
 

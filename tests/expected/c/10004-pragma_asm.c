@@ -96,7 +96,7 @@ sub_1f:
 // This odd macro triggered an out-of-bounds read before we
 // switched from memcmp to strncmp in tokenize.cpp
 #define M() _Pragma("foo"); if (false) { \
-	}
+}
 
 int main3(int argc, char *argv[])
 {
