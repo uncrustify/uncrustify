@@ -1908,14 +1908,12 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    if (pc->Is(CT_PP_F_PRAGMA))
    {
       // such as  _Pragma("P2")
-      LOG_FMT(LFCNR, "%s(%d): GGG orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
+      LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(),
               pc->Text(), get_token_name(pc->GetType()));
       Chunk *g_opening = pc->GetNext();
       Chunk *g_data    = g_opening->GetNext();
-      //Chunk *g_closing = g_data->GetNext();
       Chunk *g_closing = g_data->GetNextType(CT_PAREN_CLOSE, g_opening->GetLevel());
-      //Chunk *L_closing = g_data->GetNextType(CT_PAREN_CLOSE, g_opening->GetLevel());
       // mark the parenthesis
       g_opening->SetType(CT_GPAREN_OPEN);
       g_closing->SetType(CT_GPAREN_CLOSE);
@@ -1924,10 +1922,6 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
       while ((tmp = tmp->GetNext()) != g_closing)
       {
-         //if (g_data == g_closing)
-         //{
-         //   break;
-         //}
          tmp->SetType(CT_PP_F_DATA);
       }
    }
