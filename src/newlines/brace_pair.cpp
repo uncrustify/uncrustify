@@ -428,6 +428,13 @@ void newlines_brace_pair(Chunk *br_open)
 
    if (nl_close_brace)
    {
+      Chunk *tmp = br_close->GetNext();
+      Chunk *tm2 = tmp->GetNext();
+      if (tm2->IsNullChunk())
+      {
+         // br_close is the last token in this file
+         return;
+      }
       newline_add_between(prev, br_close);
    }
    else
