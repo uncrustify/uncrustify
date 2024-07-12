@@ -242,11 +242,11 @@ void rebuild_the_line(int theLine_of_code, size_t the_line_to_be_prot, bool incr
 
    rebuildLine[MANY - 1] = '\0';
    virtualLine[MANY - 1] = '\0';
-   LOG_FMT(LGUY, "%4d:", theLine_of_code);
+   LOG_FMT(LGUY, "%5d:(%5zu)", theLine_of_code, the_line_to_be_prot);
 
-   size_t len0 = 0;
-   bool   has_a_virtual_brace;
-   has_a_virtual_brace = false;
+   bool   has_a_virtual_brace = false;
+
+   size_t where = 0;
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
@@ -254,11 +254,10 @@ void rebuild_the_line(int theLine_of_code, size_t the_line_to_be_prot, bool incr
       {
          if (pc->Is(CT_NEWLINE))
          {
-            size_t col  = pc->GetColumn();
-            size_t len1 = pc->Len();
-            len0              = col + len1 - 1;
-            rebuildLine[len0] = '\0';
-            virtualLine[len0] = '\0';
+            where              = pc->GetColumn();
+            rebuildLine[where] = '\0';
+            virtualLine[where] = '\0';
+
             break;
          }
          else if (  pc->Is(CT_VBRACE_OPEN)
@@ -283,17 +282,26 @@ void rebuild_the_line(int theLine_of_code, size_t the_line_to_be_prot, bool incr
                   LOG_FMT(LGUY, " ***** MANY is too little for this line %d\n", theLine_of_code);
                   exit(EX_SOFTWARE);
                }
-               rebuildLine[col + x - 1] = B;
+               //rebuildLine[col + x - 1] = B;
+               where              = col + x;
+               rebuildLine[where] = B;
             }
          }
+      } // if (pc->GetOrigLine() ...
+      else if (pc->GetOrigLine() > the_line_to_be_prot)
+      {
+         //rebuildLine[where] = '\0';
+         //virtualLine[where] = '\0';
+         break;
       }
-   }
+   } // for (Chunk *pc ...
 
    if (increment)
    {
       counter++;
    }
-   LOG_FMT(LGUY, "REBU:%s            , counter is %zu\n", rebuildLine, counter);
+   //LOG_FMT(LGUY, "REBU:%s            , counter is %zu\n", rebuildLine, counter);
+   LOG_FMT(LGUY, "REBU:%s\n", rebuildLine);
 
    if (has_a_virtual_brace)
    {
@@ -406,7 +414,7 @@ void prot_all_lines(const char *func_name, int theLine_of_code)
    {
       tokenCounter++;
 
-      LOG_FMT(LGUY, " orig line is %zu,%zu, pp level is %zu, ", lineNumber, tokenCounter, pc->GetPpLevel());
+      LOG_FMT(LGUY, " orig line is %zu,%zu, orig column is %zu, ", pc->GetOrigLine(), tokenCounter, pc->GetOrigCol());
 
       if (pc->Is(CT_VBRACE_OPEN))
       {
