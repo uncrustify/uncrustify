@@ -428,7 +428,38 @@ void newlines_brace_pair(Chunk *br_open)
 
    if (nl_close_brace)
    {
-      newline_add_between(prev, br_close);
+      Chunk *tmp = br_close->GetNext();                   // Issue #3386
+      Chunk *tm2 = tmp->GetNext();
+      LOG_FMT(LNL1LINE, "%s(%d): br_tm2 orig line is %zu, orig col is %zu, Type is %s\n",
+              __func__, __LINE__, tm2->GetOrigLine(), tm2->GetOrigCol(), get_token_name(tm2->GetType()));
+
+      Chunk *tm3 = br_close->GetPrev();                   // Issue #3386
+      LOG_FMT(LNL1LINE, "%s(%d): br_tm3 orig line is %zu, orig col is %zu, Type is %s\n",
+              __func__, __LINE__, tm3->GetOrigLine(), tm3->GetOrigCol(), get_token_name(tm3->GetType()));
+      bool OK = false;
+
+      if (tm3->Is(CT_BRACE_CLOSE))
+      {
+         OK = true;
+      }
+      else
+      {
+         if (tm2->IsNullChunk())
+         {
+            // br_close is the last token in this file
+            return;
+         }
+         else
+         {
+            OK = true;
+         }
+      }
+
+      if (OK)
+      {
+         LOG_FMT(LNL1LINE, "%s(%d): Do it\n", __func__, __LINE__);
+         newline_add_between(prev, br_close);
+      }
    }
    else
    {

@@ -1713,6 +1713,7 @@ inline bool Chunk::IsParenOpen() const
 {
    return(  Is(CT_PAREN_OPEN)
          || Is(CT_FPAREN_OPEN)
+         || Is(CT_GPAREN_OPEN)
          || Is(CT_LPAREN_OPEN)
          || Is(CT_PPAREN_OPEN)
          || Is(CT_RPAREN_OPEN)
@@ -1725,6 +1726,7 @@ inline bool Chunk::IsParenClose() const
 {
    return(  Is(CT_PAREN_CLOSE)
          || Is(CT_FPAREN_CLOSE)
+         || Is(CT_GPAREN_CLOSE)
          || Is(CT_LPAREN_CLOSE)
          || Is(CT_PPAREN_CLOSE)
          || Is(CT_RPAREN_CLOSE)
