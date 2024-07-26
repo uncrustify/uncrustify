@@ -48,8 +48,8 @@ struct cmt_reflow
 
 // for tracking line numbering
 bool numbering_status = false;
+char char_number[16]  = { 0 };
 int  line_number;
-char char_number[16] = { 0 };
 
 
 void set_numbering(bool status)
@@ -656,7 +656,12 @@ bool compareTrack(TrackNumber t1, TrackNumber t2)
 
 void output_text(FILE *pfile)
 {
-   bool tracking = cpd.html_type != tracking_type_e::TT_NONE;                 // special for debugging
+   // tracking_is_on is "false" if we have the standard output
+   // tracking_is_on is "true"  if we use the tracking with the command option:
+   //    uncrustify ... --tracking space:FILE
+   //    uncrustify ... --tracking nl:FILE
+   // such character "<", ">" needs to be changed to their equivalent &lt; or &gt;
+   bool tracking_is_on = cpd.html_type != tracking_type_e::TT_NONE;                 // special for debugging
 
    cpd.fout        = pfile;
    cpd.did_newline = true;
@@ -682,7 +687,7 @@ void output_text(FILE *pfile)
       cpd.frag_cols = 0;
    }
 
-   if (tracking)
+   if (tracking_is_on)
    {
       set_numbering(false);
       add_text("<html>\n");
@@ -698,8 +703,7 @@ void output_text(FILE *pfile)
       set_line_number();
       print_numbering();
    }
-   bool write_in_tracking   = false;
-   int  pp_indent_with_tabs = options::pp_indent_with_tabs();
+   int pp_indent_with_tabs = options::pp_indent_with_tabs();
 
    if (pp_indent_with_tabs == -1)
    {
@@ -947,6 +951,7 @@ void output_text(FILE *pfile)
              * This has to be done here because comments are not formatted
              * until the output phase.
              */
+
             if (pc->GetColumn() < cpd.column)
             {
                reindent_line(pc, cpd.column);
@@ -969,39 +974,113 @@ void output_text(FILE *pfile)
          }
          output_to_column(pc->GetColumn(), allow_tabs);
 
-         if (write_in_tracking)
+         if (tracking_is_on) // we use the tracking
          {
             if (pc->Is(CT_ANGLE_OPEN))
             {
-               add_text("&lt;", false, false);
+               add_text("&lt;");
             }
             else if (pc->Is(CT_ANGLE_CLOSE))
             {
-               add_text("&gt;", false, false);
+               add_text("&gt;");
             }
             else
             {
-               if (tracking)
-               {
-                  if (pc->GetStr()[0] == '<')
-                  {
-                     add_text("&lt;", false, false);
-                     size_t lang = pc->GetStr().size();
-
-                     for (size_t idx = 1; idx < lang - 1; idx++)
-                     {
-                        int ch = pc->GetStr()[idx];
-                        add_char(ch);
-                     }
-
-                     add_text("&gt;", false, false);
-                  }
-               }
                add_text(pc->GetStr(), false, pc->Is(CT_STRING));
             }
-            write_in_tracking = false;
+
+            // insert <here> the HTML code for the tracking
+            if (pc->GetTrackingData() != nullptr)
+            {
+               LOG_FMT(LGUY, "%s(%d): Text is %s, orig_line is %zu, column is %zu\n",
+                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetColumn());
+               LOG_FMT(LGUY, " Tracking info are: \n");
+               LOG_FMT(LGUY, "  number of track(s) %zu\n", pc->GetTrackingData()->size());
+               // is sorting necessary?
+               size_t many = pc->GetTrackingData()->size();
+
+               if (many > 1)                                  // there is only one track
+               {
+#ifdef EXTRA_LOG
+                  // protocol before sort
+                  for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
+                  {
+                     const TrackList   *A       = pc->GetTrackingData();
+                     const TrackNumber B        = A->at(track);
+                     size_t            Bfirst   = B.first;
+                     char              *Bsecond = B.second;
+
+                     LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
+                     LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
+                  }
+#endif
+
+                  if (options::debug_sort_the_tracks())
+                  {
+                     TrackList *A1 = pc->TrackingData();
+                     sort(A1->begin(), A1->end(), compareTrack);
+                  }
+               }
+               else
+               {
+                  // sorting is not necessary
+               }
+#ifdef EXTRA_LOG
+               // protocol ( after sort )
+               for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
+               {
+                  const TrackList   *A       = pc->GetTrackingData();
+                  const TrackNumber B        = A->at(track);
+                  size_t            Bfirst   = B.first;
+                  char              *Bsecond = B.second;
+
+                  LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
+                  LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
+               }
+#endif
+            }
+            char *old_one   = nullptr;
+            bool first_text = true;
+            char tempText[80];
+
+            add_text("<a title=\"");
+
+            for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
+            {
+               const TrackList   *A       = pc->GetTrackingData();
+               const TrackNumber B        = A->at(track);
+               size_t            Bfirst   = B.first;
+               char              *Bsecond = B.second;
+
+               if (  old_one == nullptr
+                  || strcmp(old_one, Bsecond) != 0)
+               {
+                  // first time this option
+                  if (old_one != nullptr)
+                  {
+                     add_text("&#010;");
+                  }
+                  old_one = Bsecond;
+
+                  if (first_text)
+                  {
+                     snprintf(tempText, sizeof(tempText), "%s", Bsecond);
+                     add_text(tempText);
+                     add_text(": ");
+                     first_text = false;
+                  }
+               }
+               else
+               {
+                  add_text(", ");
+               }
+               snprintf(tempText, sizeof(tempText), "%zu", Bfirst);
+               add_text(tempText);
+            } // for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
+
+            add_text("\"><font color=\"red\">M</font></a>");
          }
-         else
+         else              // standard output
          {
             add_text(pc->GetStr(), false, pc->Is(CT_STRING));
          }
@@ -1019,94 +1098,9 @@ void output_text(FILE *pfile)
          cpd.did_newline       = pc->IsNewline();
          cpd.output_trailspace = false;
       }
-
-      if (pc->GetTrackingData() != nullptr)
-      {
-         LOG_FMT(LGUY, " Tracking info are: \n");
-         LOG_FMT(LGUY, "  number of track(s) %zu\n", pc->GetTrackingData()->size());
-         add_text("<a title=\"");
-         char tempText[80];
-
-         // is sorting necessary?
-         size_t many = pc->GetTrackingData()->size();
-
-         if (many > 1)
-         {
-#ifdef EXTRA_LOG
-            // protocol before sort
-            for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
-            {
-               const TrackList   *A       = pc->GetTrackingData();
-               const TrackNumber B        = A->at(track);
-               size_t            Bfirst   = B.first;
-               char              *Bsecond = B.second;
-
-               LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
-               LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
-            }
-#endif
-
-            if (options::debug_sort_the_tracks())
-            {
-               TrackList *A1 = pc->TrackingData();
-               sort(A1->begin(), A1->end(), compareTrack);
-            }
-#ifdef EXTRA_LOG
-            // protocol after sort
-            for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
-            {
-               const TrackList   *A       = pc->GetTrackingData();
-               const TrackNumber B        = A->at(track);
-               size_t            Bfirst   = B.first;
-               char              *Bsecond = B.second;
-
-               LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
-               LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
-            }
-#endif
-         }
-         char *old_one   = nullptr;
-         bool first_text = true;
-
-         for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
-         {
-            const TrackList   *A       = pc->GetTrackingData();
-            const TrackNumber B        = A->at(track);
-            size_t            Bfirst   = B.first;
-            char              *Bsecond = B.second;
-
-            if (  old_one == nullptr
-               || strcmp(old_one, Bsecond) != 0)
-            {
-               // first time this option
-               if (old_one != nullptr)
-               {
-                  add_text("&#010;");
-               }
-               old_one = Bsecond;
-
-               if (first_text)
-               {
-                  snprintf(tempText, sizeof(tempText), "%s", Bsecond);
-                  add_text(tempText);
-                  add_text(": ");
-                  first_text = false;
-               }
-            }
-            else
-            {
-               add_text(", ");
-            }
-            snprintf(tempText, sizeof(tempText), "%zu", Bfirst);
-            add_text(tempText);
-         } // for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
-
-         add_text("\"><font color=\"red\">M</font></a>");
-         write_in_tracking = true;
-      }
    } // loop over the whole chunk list
 
-   if (tracking)
+   if (tracking_is_on)
    {
       set_numbering(false);
       add_text("</pre>\n");
