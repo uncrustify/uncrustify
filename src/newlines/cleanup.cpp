@@ -282,7 +282,7 @@ void newlines_cleanup_braces(bool first)
             if (pc->GetLevel() == pc->GetBraceLevel())
             {
                log_rule_B("nl_class_brace");
-               log_ruleNL("nl_class_brace", pc->GetPrevNnl());
+               log_ruleNL("nl_class_brace", pc);                                    // this is still a beta test
                newlines_do_else(pc->GetPrevNnl(), options::nl_class_brace());
             }
             break;
@@ -874,7 +874,7 @@ void newlines_cleanup_braces(bool first)
       else if (pc->Is(CT_SEMICOLON))
       {
          log_rule_B("nl_after_semicolon");
-         log_rule_NL("nl_after_semicolon");
+         //log_rule_NL("nl_after_semicolon");                      // this is still a beta test
 
          if (  !pc->TestFlags(PCF_IN_SPAREN)
             && !pc->TestFlags(PCF_IN_PREPROC)
@@ -1226,7 +1226,7 @@ void newlines_cleanup_braces(bool first)
               && !pc->TestFlags(PCF_IN_PREPROC))
       {
          log_rule_B("nl_remove_extra_newlines");
-         log_rule_NL("nl_remove_extra_newlines");
+         //log_rule_NL("nl_remove_extra_newlines");                          // this is still a beta test
          newline_iarf(pc, IARF_REMOVE);
       }
       else if (  pc->Is(CT_MEMBER)

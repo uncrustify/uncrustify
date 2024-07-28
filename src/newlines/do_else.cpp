@@ -25,7 +25,7 @@ void newlines_do_else(Chunk *start, iarf_e nl_opt)
    LOG_FUNC_ENTRY();
 
    log_rule_B("nl_define_macro");
-   log_ruleNL("nl_define_macro", start);
+   //log_ruleNL("nl_define_macro", start);                    // this is still a beta test
 
    if (  nl_opt == IARF_IGNORE
       || (  start->TestFlags(PCF_IN_PREPROC)
