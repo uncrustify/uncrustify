@@ -1002,6 +1002,8 @@ void output_text(FILE *pfile)
                if (many > 1)                                  // there is only one track
                {
 #ifdef EXTRA_LOG
+                  LOG_FMT(LGUY, "  tracking before\n");
+
                   // protocol before sort
                   for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
                   {
@@ -1026,6 +1028,8 @@ void output_text(FILE *pfile)
                   // sorting is not necessary
                }
 #ifdef EXTRA_LOG
+               LOG_FMT(LGUY, "  tracking after\n");
+
                // protocol ( after sort )
                for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
                {
@@ -1038,47 +1042,50 @@ void output_text(FILE *pfile)
                   LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
                }
 #endif
+               char *old_one   = nullptr;
+               bool first_text = true;
+               char tempText[80];
+
+               add_text("<a title=\"");
+
+               for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
+               {
+                  const TrackList   *A       = pc->GetTrackingData();
+                  const TrackNumber B        = A->at(track);
+                  size_t            Bfirst   = B.first;
+                  char              *Bsecond = B.second;
+
+                  if (  old_one == nullptr
+                     || strcmp(old_one, Bsecond) != 0)
+                  {
+                     // first time this option
+                     if (old_one != nullptr)
+                     {
+                        // newline
+                        add_text("&#010;");
+                        add_text(Bsecond);
+                        add_text(": ");
+                     }
+                     old_one = Bsecond;
+
+                     if (first_text)
+                     {
+                        snprintf(tempText, sizeof(tempText), "%s", Bsecond);
+                        add_text(tempText);
+                        add_text(": ");
+                        first_text = false;
+                     }
+                  }
+                  else
+                  {
+                     add_text(", ");
+                  }
+                  snprintf(tempText, sizeof(tempText), "%zu", Bfirst);
+                  add_text(tempText);
+               } // for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
+
+               add_text("\"><font color=\"red\">M</font></a>");
             }
-            char *old_one   = nullptr;
-            bool first_text = true;
-            char tempText[80];
-
-            add_text("<a title=\"");
-
-            for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
-            {
-               const TrackList   *A       = pc->GetTrackingData();
-               const TrackNumber B        = A->at(track);
-               size_t            Bfirst   = B.first;
-               char              *Bsecond = B.second;
-
-               if (  old_one == nullptr
-                  || strcmp(old_one, Bsecond) != 0)
-               {
-                  // first time this option
-                  if (old_one != nullptr)
-                  {
-                     add_text("&#010;");
-                  }
-                  old_one = Bsecond;
-
-                  if (first_text)
-                  {
-                     snprintf(tempText, sizeof(tempText), "%s", Bsecond);
-                     add_text(tempText);
-                     add_text(": ");
-                     first_text = false;
-                  }
-               }
-               else
-               {
-                  add_text(", ");
-               }
-               snprintf(tempText, sizeof(tempText), "%zu", Bfirst);
-               add_text(tempText);
-            } // for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
-
-            add_text("\"><font color=\"red\">M</font></a>");
          }
          else              // standard output
          {
