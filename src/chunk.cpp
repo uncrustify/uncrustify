@@ -339,34 +339,35 @@ static void chunk_log_msg(Chunk *chunk, const log_sev_t log, const char *str)
 
 static void chunk_log(Chunk *pc, const char *text)
 {
-   if (  pc->IsNotNullChunk()
-      && (cpd.unc_stage != unc_stage_e::TOKENIZE)
-      && (cpd.unc_stage != unc_stage_e::CLEANUP))
+   if (  pc->IsNullChunk()
+      || (cpd.unc_stage != unc_stage_e::TOKENIZE)
+      || (cpd.unc_stage != unc_stage_e::CLEANUP))
    {
-      const log_sev_t log   = LCHUNK;
-      Chunk           *prev = pc->GetPrev();
-      Chunk           *next = pc->GetNext();
-
-      chunk_log_msg(pc, log, text);
-
-      if (  prev->IsNotNullChunk()
-         && next->IsNotNullChunk())
-      {
-         chunk_log_msg(prev, log, "   @ between");
-         chunk_log_msg(next, log, "   and");
-      }
-      else if (next->IsNotNullChunk())
-      {
-         chunk_log_msg(next, log, "   @ before");
-      }
-      else if (prev->IsNotNullChunk())
-      {
-         chunk_log_msg(prev, log, "   @ after");
-      }
-      LOG_FMT(log, "   stage is %s",                             // Issue #3034
-              get_unc_stage_name(cpd.unc_stage));
-      log_func_stack_inline(log);
+      return;
    }
+   const log_sev_t log   = LCHUNK;
+   Chunk           *prev = pc->GetPrev();
+   Chunk           *next = pc->GetNext();
+
+   chunk_log_msg(pc, log, text);
+
+   if (  prev->IsNotNullChunk()
+      && next->IsNotNullChunk())
+   {
+      chunk_log_msg(prev, log, "   @ between");
+      chunk_log_msg(next, log, "   and");
+   }
+   else if (next->IsNotNullChunk())
+   {
+      chunk_log_msg(next, log, "   @ before");
+   }
+   else if (prev->IsNotNullChunk())
+   {
+      chunk_log_msg(prev, log, "   @ after");
+   }
+   LOG_FMT(log, "   stage is %s",                             // Issue #3034
+           get_unc_stage_name(cpd.unc_stage));
+   log_func_stack_inline(log);
 } // chunk_log
 
 
