@@ -372,6 +372,7 @@ void newlines_cleanup_braces(bool first)
                   newline_iarf_pair(pc->GetPrev(), pc, options::nl_before_opening_brace_func_class_def());
                }
             }
+            break;
          }
 
          default:
