@@ -5,7 +5,6 @@
  * @author  Guy Maurel
  * @license GPL v2+
  */
-
 #include "newlines/can_increase_nl.h"
 
 #include "chunk.h"
@@ -136,7 +135,7 @@ bool can_increase_nl(Chunk *nl)
    }
    log_rule_B("nl_start_of_file");
 
-   if (  !pcmt
+   if (  pcmt->IsNullChunk()
       && (options::nl_start_of_file() != IARF_IGNORE))
    {
       LOG_FMT(LBLANKD, "%s(%d): SOF no prev %zu\n", __func__, __LINE__, nl->GetOrigLine());
