@@ -5,7 +5,6 @@
  * @author  Guy Maurel
  * @license GPL v2+
  */
-
 #include "newlines/double_newline.h"
 
 #include "chunk.h"
@@ -27,14 +26,15 @@ void double_newline(Chunk *nl)
 
    if (prev->Is(CT_VBRACE_CLOSE))
    {
-      LOG_FMT(LNEWLINE, "VBRACE_CLOSE ");
+      LOG_FMT(LNEWLINE, "VBRACE_CLOSE \n");
    }
    else
    {
-      LOG_FMT(LNEWLINE, "'%s' ", prev->Text());
+      LOG_FMT(LNEWLINE, "'%s' \n", prev->Text());
    }
    LOG_FMT(LNEWLINE, "on line %zu", prev->GetOrigLine());
 
+   LOG_FMT(LNEWLINE, "%s(%d): ", __func__, __LINE__);
    if (!can_increase_nl(nl))
    {
       LOG_FMT(LNEWLINE, " - denied\n");
