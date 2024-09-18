@@ -217,6 +217,7 @@ bool one_liner_nl_ok(Chunk *pc)
          return(false);
       }
       log_rule_B("nl_func_leave_one_liners");
+      log_ruleNL("nl_func_leave_one_liners", pc);
 
       if (  options::nl_func_leave_one_liners()
          && (  pc->GetParentType() == CT_FUNC_DEF
