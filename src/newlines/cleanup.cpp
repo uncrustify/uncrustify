@@ -282,7 +282,7 @@ void newlines_cleanup_braces(bool first)
             if (pc->GetLevel() == pc->GetBraceLevel())
             {
                log_rule_B("nl_class_brace");
-               log_ruleNL("nl_class_brace", pc);                                    // this is still a beta test
+               log_ruleNL("nl_class_brace", pc);
                newlines_do_else(pc->GetPrevNnl(), options::nl_class_brace());
             }
             break;
@@ -470,6 +470,7 @@ void newlines_cleanup_braces(bool first)
               && options::nl_type_brace_init_lst_open() == IARF_IGNORE
               && options::nl_type_brace_init_lst_close() == IARF_IGNORE))
          {
+            log_ruleNL("nl_type_brace_init_lst_close", pc);
             newlines_brace_pair(pc);
          }
 
@@ -556,6 +557,7 @@ void newlines_cleanup_braces(bool first)
             && options::nl_type_brace_init_lst_close() != IARF_IGNORE)
          {
             // Handle unnamed temporary direct-list-initialization
+            log_ruleNL("nl_after_brace_close", pc);
             newline_iarf_pair(pc->GetPrevNnl(), pc,
                               options::nl_type_brace_init_lst_close(), true);
          }

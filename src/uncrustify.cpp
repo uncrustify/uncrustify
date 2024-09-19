@@ -2417,8 +2417,13 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
                  __func__, cpd.html_file, strerror(errno), errno);
          exit(EX_IOERR);
       }
+      else
+      {
+         LOG_FMT(LDATA, "tracking is opened = %s\n", (cpd.html_file != nullptr) ? cpd.html_file : "null");
+      }
       output_text(t_file);
       fclose(t_file);
+      LOG_FMT(LDATA, "tracking is closed = %s\n", (cpd.html_file != nullptr) ? cpd.html_file : "null");
       exit(EX_OK);
    }
 
