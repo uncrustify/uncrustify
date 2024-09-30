@@ -1383,6 +1383,10 @@ force_tab_after_define;
 extern Option<iarf_e>
 sp_string_string;
 
+// Add or remove space 'struct' and a type.
+extern Option<iarf_e>
+sp_struct_type;
+
 // Add or remove space between '_Pragma' and the opening paarenthesis
 extern Option<iarf_e>
 sp_pragma_open_parenthesis;

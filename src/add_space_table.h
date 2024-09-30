@@ -252,7 +252,6 @@ const no_space_table_t add_space_table[] =
    { CT_STRUCT,                CT_BRACE_OPEN            },
    { CT_STRUCT,                CT_CLASS_COLON           },
    { CT_STRUCT,                CT_MACRO_FUNC_CALL       },
-   { CT_STRUCT,                CT_TYPE                  },
    { CT_STRUCT,                CT_WORD                  },
    { CT_TEMPLATE,              CT_CLASS                 },
    { CT_TEMPLATE,              CT_TYPE                  },

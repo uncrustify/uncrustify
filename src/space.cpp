@@ -3344,6 +3344,15 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(IARF_IGNORE);
    }
 
+   // Issue #4376
+   if (  first->Is(CT_STRUCT)
+      && second->Is(CT_TYPE))
+   {
+      // Add or remove space 'struct' and a type.
+      log_rule("sp_struct_type");
+      return(options::sp_struct_type());
+   }
+
    // =============================================================
    // category 0
    // this table lists out all combos where nothing is to do
