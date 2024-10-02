@@ -1,0 +1,12 @@
+uncrustify has may options (today 266) for "space".
+There are named wit sp_ at the beginning.
+
+If you dont know which option(s) you need for a place in your code, try this:
+
+uncrustify -f <your_config_file> -c  <your_code_file> --tracking space:a.html
+
+The a.html file can be used with any browser.
+
+You can see some more "red M" which show your where an option is available.
+Go with your mouse to the "red M". You can see which option(s) work(s) at this
+place of your code.
