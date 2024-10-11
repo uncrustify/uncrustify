@@ -154,6 +154,10 @@
 00313  c/comment_conversion.cfg                   c/comment_conversion_long_lines.c
 00314  c/comment_conversion.cfg                   c/comment_conversion_javadoc_single.c
 00315  common/tde.cfg                             c/comment_conversion_trailing_c_multiline.c
+00316  c/emb_cmt_normal.cfg                       c/emb_cmt_spacing.c
+00317  c/emb_cmt_high_priority.cfg                c/emb_cmt_spacing.c
+00318  c/emb_cmt_high_priority_before.cfg         c/emb_cmt_spacing.c
+00319  c/emb_cmt_high_priority_after.cfg          c/emb_cmt_spacing.c
 
 00320  c/rdan.cfg                                 c/indent_first_bool_expr.c
 

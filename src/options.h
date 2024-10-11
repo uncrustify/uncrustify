@@ -1351,6 +1351,11 @@ sp_after_emb_cmt; // = IARF_FORCE
 extern BoundedOption<unsigned, 0, 16>
 sp_num_after_emb_cmt; // = 1
 
+// Embedded comment spacing options have higher priority (== override)
+// than other spacing options (comma, parenthesis, braces, ...)
+extern Option<bool>
+sp_emb_cmt_priority; // = false
+
 // (Java) Add or remove space between an annotation and the open parenthesis.
 extern Option<iarf_e>
 sp_annotation_paren;
