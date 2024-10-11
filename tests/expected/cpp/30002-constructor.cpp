@@ -1,7 +1,7 @@
 
 IMPLEMENT_DYNAMIC(CPropertiesDlg, CDialog)
 CPropertiesDlg::CPropertiesDlg(CPtcMsgSimControlModule *pcmPtcMsg,
-                               CWnd                    *pParent /*=NULL*/ ) :
+                               CWnd                    *pParent /*=NULL*/) :
    CDialog(CPropertiesDlg::IDD, pParent),
    m_pspRouter(pcmPtcMsg),
    m_pspScm(pcmPtcMsg)
@@ -18,7 +18,7 @@ void CPropertiesDlg::DoDataExchange(CDataExchange *pDX)
    CDialog::DoDataExchange(pDX);
 }
 
-CFooBar::CFooBar(CWnd *pParent /*=NULL*/ )
+CFooBar::CFooBar(CWnd *pParent /*=NULL*/)
    : CDialog(CFooBar::IDD, pParent),
    m_parent(pParent)
 {

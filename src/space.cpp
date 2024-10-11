@@ -2122,17 +2122,6 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_paren_paren());
    }
 
-   if (  first->Is(CT_COMMENT)                                      // Issue #4327
-      && first->GetParentType() == CT_COMMENT_EMBED)
-   {
-      // Add or remove space after an embedded comment.
-      // Number of spaces after an embedded comment.
-      log_rule("sp_after_emb_cmt");
-      log_rule("sp_num_after_emb_cmt");
-      min_sp = options::sp_num_after_emb_cmt();
-      return(options::sp_after_emb_cmt());
-   }
-
    // "foo(...)" vs. "foo( ... )"
    if (  first->Is(CT_FPAREN_OPEN)
       || second->Is(CT_FPAREN_CLOSE))
@@ -3210,9 +3199,17 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       // Add or remove space before an embedded comment.
       // Number of spaces before an embedded comment.
       log_rule("sp_before_emb_cmt");
-      log_rule("sp_num_before_emb_cmt");
       min_sp = options::sp_num_before_emb_cmt();
       return(options::sp_before_emb_cmt());
+   }
+
+   if (first->Is(CT_COMMENT))
+   {
+      // Add or remove space after an embedded comment.
+      // Number of spaces after an embedded comment.
+      log_rule("sp_after_emb_cmt");
+      min_sp = options::sp_num_after_emb_cmt();
+      return(options::sp_after_emb_cmt());
    }
 
    if (  first->Is(CT_NEW)
