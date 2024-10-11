@@ -340,8 +340,8 @@ static void chunk_log_msg(Chunk *chunk, const log_sev_t log, const char *str)
 static void chunk_log(Chunk *pc, const char *text)
 {
    if (  pc->IsNullChunk()
-      || (cpd.unc_stage != unc_stage_e::TOKENIZE)
-      || (cpd.unc_stage != unc_stage_e::CLEANUP))
+      || (  cpd.unc_stage != unc_stage_e::TOKENIZE
+         && cpd.unc_stage != unc_stage_e::CLEANUP))
    {
       return;
    }
