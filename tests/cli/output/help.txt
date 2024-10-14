@@ -66,6 +66,7 @@ Debug Options:
  --tracking nl:FILE    : Prepare newline tracking information for debugging.
  --tracking start:FILE : Prepare start of statement tracking information for debugging.
                          Cannot be used with the -o option'
+ --find_deprecated     : look for deprecated option(s) and exit.
 
 Usage Examples
 cat foo.d | uncrustify -q -c my.cfg -l d
