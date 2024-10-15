@@ -7,7 +7,6 @@
  * @author  Matthew Woehlke since version 0.67
  * @license GPL v2+
  */
-
 #include "option.h"
 
 #include "keywords.h"
@@ -310,6 +309,16 @@ void print_description(FILE *pfile, std::string description,
 
 
 //-----------------------------------------------------------------------------
+void deprecated_stop_or_not()
+{
+   if (cpd.find_deprecated)
+   {
+      exit(EX_OK);
+   }
+}
+
+
+//-----------------------------------------------------------------------------
 bool process_option_line_compat_0_68(const std::string              &cmd,
                                      const std::vector<std::string> &args,
                                      const char                     *filename)
@@ -317,9 +326,8 @@ bool process_option_line_compat_0_68(const std::string              &cmd,
    if (cmd == "sp_cpp_lambda_paren")
    {
       OptionWarning w{ filename, OptionWarning::MINOR };
-      w("option '%s' is deprecated; use '%s' instead",
+      w("option '%s' is deprecated; use '%s' instead.\n",
         cmd.c_str(), options::sp_cpp_lambda_square_paren.name());
-
       UNUSED(options::sp_cpp_lambda_square_paren.read(args[1].c_str()));
       return(true);
    }
@@ -332,10 +340,9 @@ bool process_option_line_compat_0_70(const std::string &cmd, const char *filenam
    if (cmd == "sp_word_brace")                     // Issue #2428
    {
       OptionWarning w{ filename, OptionWarning::MINOR };
-      w("option '%s' is deprecated; did you want to use '%s' instead?",
+      w("option '%s' is deprecated; did you want to use '%s' instead?\n",
         cmd.c_str(), options::sp_type_brace_init_lst.name());
-
-      //UNUSED(options::sp_type_brace_init_lst.read(args[1].c_str()));
+      deprecated_stop_or_not();
       return(true);
    }
    return(false);
@@ -347,30 +354,27 @@ bool process_option_line_compat_0_73(const std::string &cmd, const char *filenam
    if (cmd == "indent_sing_line_comments")         // Issue #3249
    {
       OptionWarning w{ filename, OptionWarning::MINOR };
-      w("option '%s' is deprecated; did you want to use '%s' instead?",
+      w("option '%s' is deprecated; did you want to use '%s' instead?\n",
         cmd.c_str(), options::indent_single_line_comments_before.name());
-
-      //UNUSED(options::indent_single_line_comments_before.read(args[1].c_str()));
+      deprecated_stop_or_not();
       return(true);
    }
 
    if (cmd == "sp_before_tr_emb_cmt")              // Issue #3339
    {
       OptionWarning w{ filename, OptionWarning::MINOR };
-      w("option '%s' is deprecated; did you want to use '%s' instead?",
+      w("option '%s' is deprecated; did you want to use '%s' instead?\n",
         cmd.c_str(), options::sp_before_tr_cmt.name());
-
-      //UNUSED(options::sp_before_tr_cmt.read(args[1].c_str()));
+      deprecated_stop_or_not();
       return(true);
    }
 
    if (cmd == "sp_num_before_tr_emb_cmt")          // Issue #3339
    {
       OptionWarning w{ filename, OptionWarning::MINOR };
-      w("option '%s' is deprecated; did you want to use '%s' instead?",
+      w("option '%s' is deprecated; did you want to use '%s' instead?\n",
         cmd.c_str(), options::sp_num_before_tr_cmt.name());
-
-      //UNUSED(options::sp_num_before_tr_cmt.read(args[1].c_str()));
+      deprecated_stop_or_not();
       return(true);
    }
    return(false);
@@ -382,9 +386,9 @@ bool process_option_line_compat_0_74(const std::string &cmd, const char *filenam
    if (cmd == "sp_type_question")         // PR #3638
    {
       OptionWarning w{ filename, OptionWarning::MINOR };
-      w("option '%s' is deprecated; did you want to use '%s' instead?",
+      w("option '%s' is deprecated; did you want to use '%s' instead?\n",
         cmd.c_str(), options::sp_before_ptr_star.name());
-
+      deprecated_stop_or_not();
       return(true);
    }
    return(false);
@@ -396,9 +400,9 @@ bool process_option_line_compat_0_75(const std::string &cmd, const char *filenam
    if (cmd == "pp_space")
    {
       OptionWarning w{ filename, OptionWarning::MINOR };
-      w("option '%s' is deprecated; it has been replaced by '%s'.",
+      w("option '%s' is deprecated; it has been replaced by '%s'.\n",
         cmd.c_str(), options::pp_space_after.name());
-
+      deprecated_stop_or_not();
       return(true);
    }
 
@@ -406,7 +410,7 @@ bool process_option_line_compat_0_75(const std::string &cmd, const char *filenam
    {
       OptionWarning w{ filename, OptionWarning::MINOR };
       w("option '%s' is deprecated; it was a temporary option used\n"
-        "during the development of version 0.76. Use '%s' and '%s' instead.",
+        "during the development of version 0.76. Use '%s' and '%s' instead.\n",
         cmd.c_str(), options::pp_indent.name(), options::pp_indent_count.name());
 
       return(true);
@@ -421,10 +425,10 @@ bool process_option_line_compat_0_76(const std::string &cmd, const std::vector<s
    {
       OptionWarning w{ filename, OptionWarning::MINOR };
       w("option '%s' is deprecated; it has been replaced by '%s'.\n"
-        "You can also use '%s' for additional functionality",
+        "You can also use '%s' for additional functionality.\n",
         cmd.c_str(), options::nl_var_def_blk_end_func_top.name(),
         options::nl_var_def_blk_end.name());
-
+      deprecated_stop_or_not();
       UNUSED(options::nl_var_def_blk_end_func_top.read(args[1].c_str()));
       return(true);
    }
@@ -437,18 +441,18 @@ bool process_option_line_compat_0_78(const std::string &cmd, const char *filenam
    if (cmd == "pp_warn_unbalanced_if")
    {
       OptionWarning w{ filename, OptionWarning::MINOR };
-      w("option '%s' is deprecated; it has been replaced by '%s'.",
+      w("option '%s' is deprecated; it has been replaced by '%s'.\n",
         cmd.c_str(), options::pp_unbalanced_if_action.name());
-
+      deprecated_stop_or_not();
       return(true);
    }
 
    if (cmd == "sp_balance_nested_parens")
    {
       OptionWarning w{ filename, OptionWarning::MINOR };
-      w("option '%s' never works; it has been replaced by '%s'.",
+      w("option '%s' never works; it has been replaced by '%s'.\n",
         cmd.c_str(), options::sp_paren_paren.name());
-
+      deprecated_stop_or_not();
       return(true);
    }
    return(false);
@@ -1240,6 +1244,12 @@ bool load_option_file(const char *filename, int compat_level)
 
       ++cpd.line_number;
       process_option_line(line, filename, compat_level);
+   }
+
+   if (cpd.find_deprecated)
+   {
+      fprintf(stderr, "no deprecated option found.\n");
+      exit(EX_OK);
    }
    return(true);
 } // load_option_file

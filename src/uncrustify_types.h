@@ -264,8 +264,9 @@ struct cp_data_t
    const char        *phase_name;
    const char        *dumped_file;
    // for debugging purpose only
-   tracking_type_e   html_type  = tracking_type_e::TT_NONE;
-   const char        *html_file = nullptr;
+   tracking_type_e   html_type       = tracking_type_e::TT_NONE;
+   const char        *html_file      = nullptr;
+   bool              find_deprecated = false;
 };
 
 extern cp_data_t cpd;  // TODO: can we avoid this external variable?

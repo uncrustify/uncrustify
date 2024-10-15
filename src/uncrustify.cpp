@@ -315,6 +315,7 @@ void usage(const char *argv0)
            " --tracking nl:FILE    : Prepare newline tracking information for debugging.\n"
            " --tracking start:FILE : Prepare start of statement tracking information for debugging.\n"
            "                         Cannot be used with the -o option'\n"
+           " --find_deprecated     : look for deprecated option(s) and exit.\n"
            "\n"
            "Usage Examples\n"
            "cat foo.d | uncrustify -q -c my.cfg -l d\n"
@@ -502,6 +503,11 @@ int main(int argc, char *argv[])
    {
       logmask_from_string("", mask);
       log_set_mask(mask);
+   }
+
+   if (arg.Present("--find_deprecated"))
+   {
+      cpd.find_deprecated = true;
    }
    const char *p_arg;
 
