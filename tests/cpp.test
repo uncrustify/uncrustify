@@ -328,6 +328,7 @@
 30329  cpp/nl_type_brace_init_lst-r.cfg                     cpp/call_brace_init_lst.cpp
 
 30330  cpp/Issue_3080.cfg                                   cpp/Issue_3080.cpp
+30331  cpp/Issue_4376.cfg                                   cpp/Issue_4376.cpp
 
 30340  cpp/issue_3105_1_neg.cfg                             cpp/issue_3105_1.cpp
 30341  cpp/issue_3105_1_pos.cfg                             cpp/issue_3105_1.cpp

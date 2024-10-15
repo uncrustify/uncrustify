@@ -544,6 +544,7 @@ def main(args):
         first_char = L[0]
         if first_char == '#' :
             continue
+        print("Test nl tracking for: %s" % L)
         tr_input    = "tracking/nl/input/"    + L + ".cpp"
         tr_config   = "tracking/nl/config/"   + L + ".cfg"
         tr_expected = "tracking/nl/expected/" + L + ".exp"
@@ -570,7 +571,6 @@ def main(args):
             sys_exit()
 
     print("Test nl tracking is OK")
-    #sys_exit()
 
     print("Test too big ...")
     # test option(s) too big against the option 'nl_max'
@@ -618,7 +618,7 @@ def main(args):
             'nl_after_whole_file_endif'
             ]
     for L in Ls_B:
-        print("Test too big %s" % L)
+        print("Test too big: %s" % L)
         if not check_uncrustify_output(
                 uncr_bin,
                 parsed_args,
@@ -881,8 +881,6 @@ def main(args):
                 return_flag = False
         print("Test --tracking space:FILE is OK")
 
-    #sys_exit()
-
     print("Test --replace ...")
     #
     # Test --replace
@@ -995,6 +993,7 @@ def main(args):
         return_flag = False
     print("Test $(year) keyword is OK")
 
+    return_flag = True
     if return_flag:
         print("all tests are OK")
         sys_exit(EX_OK)

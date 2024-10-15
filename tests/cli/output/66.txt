@@ -5,7 +5,7 @@ space_text : orig line is 1, orig col is 1, pc-Text() 'struct', type is STRUCT
 do_space : first:  orig line 1, orig col 1, text 'struct', type STRUCT
 do_space : second: orig line 1, orig col 8, text 'TelegramIndex', type TYPE
 do_space : first orig line is 1, orig col is 1, Text() is 'struct', [STRUCT/NONE] <===>
-           second orig line is 1, orig col is 8, Text() is 'TelegramIndex', [TYPE/STRUCT] : rule ADD from add_space_table @ 235.[ ]
+           second orig line is 1, orig col is 8, Text() is 'TelegramIndex', [TYPE/STRUCT] : rule sp_struct_type[ ]
 ensure_force_space : force between 'struct' and 'TelegramIndex'
 space_text : orig line is 1, orig col is 1, pc-Text() 'struct', type is STRUCT
 space_text :    rule = ADD @ 1 => 8
