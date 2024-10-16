@@ -35,6 +35,7 @@ void double_newline(Chunk *nl)
    LOG_FMT(LNEWLINE, "on line %zu", prev->GetOrigLine());
 
    LOG_FMT(LNEWLINE, "%s(%d): ", __func__, __LINE__);
+
    if (!can_increase_nl(nl))
    {
       LOG_FMT(LNEWLINE, " - denied\n");

@@ -20,6 +20,7 @@
 
 #include "add_space_table.h"
 #include "log_rules.h"
+#include "options.h"
 #include "options_for_QT.h"
 #include "punctuators.h"
 #include "token_is_within_trailing_return.h"
@@ -69,6 +70,26 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    LOG_FMT(LSPACE, "%s(%d): second: orig line %zu, orig col %zu, text '%s', type %s\n",
            __func__, __LINE__, second->GetOrigLine(), second->GetOrigCol(), second->Text(), get_token_name(second->GetType()));
    min_sp = 1;
+
+   if (  first->Is(CT_COMMENT)                                      // Issue #4327
+      && first->GetParentType() == CT_COMMENT_EMBED
+      && (options::sp_emb_cmt_priority()))
+   {
+      // Add or remove space bewteen an embedded comment and a close parenthesis.
+      log_rule("sp_emb_cmt_priority (after)");
+      min_sp = options::sp_num_after_emb_cmt();
+      return(options::sp_after_emb_cmt());
+   }
+
+   if (  second->Is(CT_COMMENT)                                     // Issue #4327
+      && second->GetParentType() == CT_COMMENT_EMBED
+      && (options::sp_emb_cmt_priority()))
+   {
+      // Add or remove space bewteen an open parenthesis and an embedded comment.
+      log_rule("sp_between_open_paren_and_emb_cmt (before)");
+      min_sp = options::sp_num_before_emb_cmt();
+      return(options::sp_before_emb_cmt());
+   }
 
    if (  first->Is(CT_VBRACE_OPEN)
       && first->GetPrev()->Is(CT_SPAREN_CLOSE)
@@ -2122,17 +2143,6 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_paren_paren());
    }
 
-   if (  first->Is(CT_COMMENT)                                      // Issue #4327
-      && first->GetParentType() == CT_COMMENT_EMBED)
-   {
-      // Add or remove space after an embedded comment.
-      // Number of spaces after an embedded comment.
-      log_rule("sp_after_emb_cmt");
-      log_rule("sp_num_after_emb_cmt");
-      min_sp = options::sp_num_after_emb_cmt();
-      return(options::sp_after_emb_cmt());
-   }
-
    // "foo(...)" vs. "foo( ... )"
    if (  first->Is(CT_FPAREN_OPEN)
       || second->Is(CT_FPAREN_CLOSE))
@@ -3213,6 +3223,17 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       log_rule("sp_num_before_emb_cmt");
       min_sp = options::sp_num_before_emb_cmt();
       return(options::sp_before_emb_cmt());
+   }
+
+   if (  first->Is(CT_COMMENT)
+      && first->GetParentType() == CT_COMMENT_EMBED)
+   {
+      // Add or remove space after an embedded comment.
+      // Number of spaces after an embedded comment.
+      log_rule("sp_after_emb_cmt");
+      log_rule("sp_num_after_emb_cmt");
+      min_sp = options::sp_num_after_emb_cmt();
+      return(options::sp_after_emb_cmt());
    }
 
    if (  first->Is(CT_NEW)

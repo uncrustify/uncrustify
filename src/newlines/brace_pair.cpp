@@ -45,8 +45,6 @@ using namespace uncrustify;
  * void foo() {
  * }
  */
-
-
 void newlines_brace_pair(Chunk *br_open)
 {
    LOG_FUNC_ENTRY();

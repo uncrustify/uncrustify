@@ -7,7 +7,7 @@ template <bool a, bool b> struct X {
 
 template <class T> class new_alloc {
 public:
-   void deallocate(int* p, int /*num*/ )
+   void deallocate(int* p, int /*num*/)
    {
       T::operator delete((void*) p);
    }
