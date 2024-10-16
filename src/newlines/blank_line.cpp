@@ -59,7 +59,7 @@ void blank_line_set(Chunk *pc, Option<unsigned> &opt)
    if (  (optval > 0)
       && (pc->GetNlCount() != optval))
    {
-      LOG_FMT(LBLANKD, "%s(%d): blank lines: %s set line %zu to %u\n",
+      LOG_FMT(LBLANKD, "%s(%d): %s set line %zu to %u\n",
               __func__, __LINE__, opt.name(), pc->GetOrigLine(), optval);
       pc->SetNlCount(optval);
       MARK_CHANGE();
