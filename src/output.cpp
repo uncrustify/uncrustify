@@ -2473,6 +2473,15 @@ static void output_comment_multi(Chunk *pc)
             {
                line.append(' ');
             }
+
+            if (pc->GetStr()[end_idx] == 10)
+            {
+               // Issue #4378
+               fprintf(stderr, "%s\n", pc->ElidedText(copy));
+               fprintf(stderr, "FATAL: a doygen argument is missing.\n");
+               log_flush(true);
+               exit(EX_SOFTWARE);
+            }
             cmt_idx += (end_idx - start_idx);
             line.append(match.c_str());
 
