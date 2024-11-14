@@ -372,7 +372,14 @@ if the program did what you wanted. Repeat until your style is refined.
 To ease the process a bit, some 3rd party tools are available:
 - [Universal Indent GUI](http://universalindent.sourceforge.net/) - A
   cross-platform graphical configuration file editor for many code
-  beautifiers, including Uncrustify.
+  beautifiers, including Uncrustify. This is currently unmaintained.
+- [Universal Indent GUI TQt](https://mirror.git.trinitydesktop.org/gitea/TDE/universal-indent-gui-tqt) - A
+  maintained port of the above tool provided by the Trinity Desktop Environment (TDE) team.
+  See how to install binary packages for your distro
+  [here](https://wiki.trinitydesktop.org/Category:Documentation#Installing_from_a_Package_Manager).
+  <br/>**Note** you don't need to install TDE to run Universal Indent GUI TQt,
+  it only needs a few libraries. Therefore it can easily be used in any
+  other desktop environment.
 - [uncrustify_config](https://github.com/CDanU/uncrustify_config) - A web
   configuration tool based on Uncrustify's emscripten interface.
 - [UncrustifyX](https://github.com/ryanmaxwell/UncrustifyX) - Uncrustify
