@@ -1,3 +1,13 @@
+Change highlights in uncrustify-0.80.0 (November 2024)
+-------------------------------------------------------------------------------
+   273a37afbf5500d19011d4a392339160fffbfb11
+     Added   : sp_inside_gparen                     Jul  5 2024
+     Added   : sp_pragma_open_parenthesis           Jul  5 2024
+   6337585b03cdfdfa1f9b8ba33d8e31048a5c2eee
+     Added   : sp_struct_type                       Sep 30 2024
+   fc325e3a2ff8eeff5011f9bb2905b30ccc0a4772
+     Added   : sp_emb_cmt_priority                  Oct 11 2024
+
 Change highlights in uncrustify-0.79.0 (May 2024)
 -------------------------------------------------------------------------------
    881cd25e1f0854481b002a58a7dff68f146d7ee3
