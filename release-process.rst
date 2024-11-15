@@ -53,10 +53,6 @@ Before starting the release process, first check that:
     (don't use your uncrustify fork clone for preparing a release)
   - you are on the ``master`` branch
   - ``CMAKE_BUILD_TYPE`` is set to ``Release`` (or ``RelWithDebInfo``)
-  - your build is up to date.
-  - builds for Windows are successful (see section "Create Binaries"
-    further below for the required steps)
-  - check the list of authors with scripts/prepare_list_of_authors.sh
   - you have a valid PAT for your admin account. See below on how
     to get a new PAT if needed.
   - ``.git/config`` contains your PAT information. Again see below. 
@@ -82,7 +78,7 @@ To get a new PAT for your admin account follow these steps:
   - click on "repo"
   - scroll down to bottom and click on "Generate token"
   - make sure to copy your personal access token now. You won’t be able to see it again!
-  - copy the token "ghp_otx****"
+  - copy the token "ghp_******"
   - update the file ``.git/config`` using the new token
       [remote "origin"]
           url = https://<admin account>:<PAT>@github.com/uncrustify/uncrustify.git
@@ -93,6 +89,16 @@ To get a new PAT for your admin account follow these steps:
 
 Preparing a Candidate
 =====================
+
+First update the version number and date at the beginning of this document
+and then update the list of authors with:
+
+  .. code::
+
+     $ ./scripts/prepare_list_of_authors.sh
+
+Build uncrustify (including builds for Windows) and verify that they are successful
+and all tests are passed. See section "Create Binaries" below for the required steps.
 
 Run the following commands to start the release preparation:
 
@@ -152,12 +158,8 @@ Finalize the Code Changes
 Inspect your working tree.
 Use ``git add -p`` to stage the changes made to the documentation
 and other artifacts that contain version-dependent information.
-Verify that only desired changes are staged,
-and that your working tree is otherwise clean.
-
-Now is a good time to recheck
-that everything builds, and that all the tests pass.
-This is also a good time to manually test 32 and 64 bit builds.
+Verify that only desired changes are staged and that your working
+tree is otherwise clean.
 
 When you are ready, commit the changes using:
 
@@ -174,6 +176,14 @@ Submit and Tag the Release
 Push the release candidate branch to GitHub and create a pull request.
 Make sure to use your NON-admin account for creating the pull request,
 so that later you can use your admin account to approve it.
+
+.. code::
+
+   $ git push -u origin HEAD
+
+This will push the branch and commit to the remote upstream and will print
+out a link that you can use to create a pull request in a web browser.
+
 Once the pull request has completed the various CI checks, merge it.
 
 Switch to ``master`` branch and check out the latest commit that includes
@@ -194,10 +204,17 @@ all existing tags locally and remotely, respectively
 .. code::
 
    git tag
-   git ls-remote --tags origin 
+   git ls-remote --tags origin
 
 (Tagging the release does not need to be done on any particular branch.
 The command will not affect or look at your work tree at all.)
+
+Finally, delete the release branch upstream and locally
+
+.. code::
+
+   $ git push -d origin <release branch name>
+   $ git branch -D <release branch name>
 
 Create Binaries
 ===============
@@ -207,16 +224,17 @@ Create a tarball:
 .. code::
 
    $ cd /path/to/uncrustify
-   $ git archive -o uncrustify-0.1.2.tar.gz --prefix=uncrustify-0.1.2/ uncrustify-0.1.2
+   $ git archive -o ../uncrustify-0.1.2.tar.gz --prefix=uncrustify-uncrustify-0.1.2/ uncrustify-0.1.2
 
-Now grab a copy of the sources from GitHub:
+Grab a copy of the sources from GitHub:
 
 .. code::
 
+   $ cd /path/to/uncrustify/..
    $ wget https://github.com/uncrustify/uncrustify/archive/uncrustify-0.1.2.zip
    $ unzip -e uncrustify-0.1.2.zip
 
-And build the Linux binaries:
+Build the Linux binaries:
 
 .. code::
 
@@ -256,12 +274,6 @@ Next, build the 32 and 64 bit Windows binaries:
    $ ninja
    $ cpack
 
-Finally, delete the release branch upstream
-
-.. code::
-
-   $ git push -d origin <release branch name>
-
 Create a release on github
 ==========================
 
@@ -270,11 +282,13 @@ Create a release on github
   the "Draft a new release" button at the top of the page
 - Select the corresponding release tag under the "Choose a tag" combobox
 - Add the release version under "Release title" as "Uncrustify 0.xx.y"
-- Add release text in describing section. It is recommended to copy the text
-  from previous releases and update the related files
 - Upload the Windows binaries and the source code zip/tarball files in the section
   "Attach binaries by dropping them here or selecting them": these will show up as
-  "Assets" under the release text.
+  "Assets" under the release text. Executables for Windows 32 and 64 and source
+  code in tar.gz and zip format need to be uploaded.
+- Add release text in describing section. It is recommended to copy the text
+  from previous releases and update the related files. Make sure to use bold text
+  to highlight the various sections (use '### ' at the beginning of the line)
 - Publish the release by clicking on the "Publish release" button.
 
 Upload to SourceForge
@@ -287,15 +301,15 @@ Upload to SourceForge
   (e.g. https://sourceforge.net/projects/uncrustify/files/uncrustify-0.1.2/)
 - Click "Add File" and upload the following files
   (adjusting for the actual version number):
+  Click "Done" when all files have been uploaded.
 
-  - README.md
-  - uncrustify-0.1.2.tar.gz
-  - uncrustify-0.1.2.zip
-  - buildwin-32/uncrustify-0.1.2_f-win32.zip
-  - buildwin-64/uncrustify-0.1.2_f-win64.zip
+  * README.md
+  * uncrustify-0.1.2.tar.gz
+  * uncrustify-0.1.2.zip
+  * buildwin-32/uncrustify-0.1.2_f-win32.zip
+  * buildwin-64/uncrustify-0.1.2_f-win64.zip
 
-- Click "Done"
-- Upload the documentation:
+- Upload the documentation using the following commands:
 
   .. code::
 
