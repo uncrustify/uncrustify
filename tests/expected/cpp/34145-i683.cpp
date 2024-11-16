@@ -43,4 +43,5 @@ void x()
 // digraph {, }
 int y()
 <%
-	return 1; %>
+	return 1;
+%>

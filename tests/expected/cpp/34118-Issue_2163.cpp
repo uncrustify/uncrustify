@@ -19,4 +19,5 @@ n(){
  */
 int&
 n( int& x ){
-	return x; }
+	return x;
+}

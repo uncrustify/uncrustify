@@ -72,4 +72,5 @@ void m(){
  * n
  */
 void n(){
-	return 0; }
+	return 0;
+}
