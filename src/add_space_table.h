@@ -364,9 +364,8 @@ const no_space_table_t no_space_table[] =
 const no_space_table_t IGNORE_space_table[] =
 {
    { CT_NUMBER_FP,    CT_PAREN_OPEN},
-   { CT_PAREN_CLOSE,  CT_SIZEOF},
-   { CT_PP_F_DATA,    CT_PP_F_DATA},
-   { CT_SQUARE_CLOSE, CT_INCDEC_BEFORE},
+   { CT_PAREN_CLOSE,    CT_SIZEOF},
+   { CT_SQUARE_CLOSE,   CT_INCDEC_BEFORE},
 };
 
 

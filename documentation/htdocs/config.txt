@@ -1138,12 +1138,6 @@ sp_string_string                = ignore   # ignore/add/remove/force
 # Add or remove space 'struct' and a type.
 sp_struct_type                  = ignore   # ignore/add/remove/force
 
-# Add or remove space between '_Pragma' and the opening paarenthesis
-sp_pragma_open_parenthesis      = ignore   # ignore/add/remove/force
-
-# Add or remove space inside '(' and ')' of _Pragma.
-sp_inside_gparen                = ignore   # ignore/add/remove/force
-
 #
 # Indenting options
 #

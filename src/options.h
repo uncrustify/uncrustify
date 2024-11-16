@@ -1392,13 +1392,6 @@ sp_string_string;
 extern Option<iarf_e>
 sp_struct_type;
 
-// Add or remove space between '_Pragma' and the opening paarenthesis
-extern Option<iarf_e>
-sp_pragma_open_parenthesis;
-
-// Add or remove space inside '(' and ')' of _Pragma.
-extern Option<iarf_e>
-sp_inside_gparen;
 //END
 
 ///////////////////////////////////////////////////////////////////////////////

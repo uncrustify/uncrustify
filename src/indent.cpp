@@ -1395,9 +1395,8 @@ void indent_text()
          && log_sev_on(LINDPC))
       {
          LOG_FMT(LINDPC, "%s(%d):\n", __func__, __LINE__);
-         LOG_FMT(LINDPC, "   -=[ pc orig line is %zu, orig col is %zu, Text() is '%s' ]=-, frm_count is %zu, frm.size() is %zu\n",
-                 pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), frm.size() - 1, frm.size());
-         // index 0 is reserved
+         LOG_FMT(LINDPC, "   -=[ pc orig line is %zu, orig col is %zu, Text() is '%s' ]=-, frm.size() is %zu\n",
+                 pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), frm.size());
 
          for (size_t ttidx = frm.size() - 1; ttidx > 0; ttidx--)
          {
