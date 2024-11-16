@@ -567,8 +567,9 @@ def main(args):
                 gen_result_path   = p_html,
             )
 
+        # Issue 4379
         if not return_value:
-            sys_exit()
+            sys_exit(EX_SOFTWARE)
 
     print("Test nl tracking is OK")
 
