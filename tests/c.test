@@ -430,6 +430,7 @@
 02550  c/Issue_3852.cfg                           c/func_var_multi_paren.c
 02551  common/neovim.cfg                          c/line_multi_split_1.c
 02552  common/tde.cfg                             c/line_multi_split_2.c
+02553  common/empty.cfg                           c/homebrew.c
 
 07630  c/indent-vbrace.cfg                        c/indent-vbrace.c
 
