@@ -6,6 +6,7 @@
  * @author  Guy Maurel
  * @license GPL v2+
  */
+
 #include "tokenizer/combine.h"
 
 #include "ChunkStack.h"
@@ -1901,28 +1902,6 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       if (tmp_2->Is(CT_WORD))
       {
          pc->SetType(CT_INCDEC_BEFORE);
-      }
-   }
-
-   // Issue #3386
-   if (pc->Is(CT_PP_F_PRAGMA))
-   {
-      // such as  _Pragma("P2")
-      LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(),
-              pc->Text(), get_token_name(pc->GetType()));
-      Chunk *g_opening = pc->GetNext();
-      Chunk *g_data    = g_opening->GetNext();
-      Chunk *g_closing = g_data->GetNextType(CT_PAREN_CLOSE, g_opening->GetLevel());
-      // mark the parenthesis
-      g_opening->SetType(CT_GPAREN_OPEN);
-      g_closing->SetType(CT_GPAREN_CLOSE);
-      // mark the data
-      Chunk *tmp = g_opening;
-
-      while ((tmp = tmp->GetNext()) != g_closing)
-      {
-         tmp->SetType(CT_PP_F_DATA);
       }
    }
 } // do_symbol_check

@@ -56,7 +56,6 @@
 00075  common/tde.cfg                             c/function_prototypes_alignment.c
 00076  c/1225.cfg                                 c/1225.c
 00077  common/empty.cfg                           c/Issue_4176.c
-00078  c/Issue_3386.cfg                           c/Issue_3386.c
 
 00081  c/else-if-1.cfg                            c/else-if.c
 00082  c/else-if-2.cfg                            c/else-if.c
@@ -431,6 +430,7 @@
 02550  c/Issue_3852.cfg                           c/func_var_multi_paren.c
 02551  common/neovim.cfg                          c/line_multi_split_1.c
 02552  common/tde.cfg                             c/line_multi_split_2.c
+02553  common/empty.cfg                           c/homebrew.c
 
 07630  c/indent-vbrace.cfg                        c/indent-vbrace.c
 

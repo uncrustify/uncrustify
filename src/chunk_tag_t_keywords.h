@@ -51,10 +51,7 @@ static chunk_tag_t keywords[] =
    { "_Nonnull",                        CT_QUALIFIER,        e_LANG_OC                                                                                 },
    { "_Null_unspecified",               CT_QUALIFIER,        e_LANG_OC                                                                                 },
    { "_Nullable",                       CT_QUALIFIER,        e_LANG_OC                                                                                 },
-   { "_Pragma",                         CT_PP_F_PRAGMA,      e_LANG_ALL | e_FLAG_PP                                                                    },
-   // Removes the L prefix (if any), the outer quotes, and leading/trailing whitespace
-   // from string-literal, replaces each \" with " and each \\ with \, then tokenizes
-   // the result (as in translation phase 3), and then uses the result as if the input to #pragma
+   { "_Pragma",                         CT_PP_PRAGMA,        e_LANG_ALL | e_FLAG_PP                                                                    },
    { "__DI__",                          CT_DI,               e_LANG_C | e_LANG_CPP                                                                     },
    { "__HI__",                          CT_HI,               e_LANG_C | e_LANG_CPP                                                                     },
    { "__QI__",                          CT_QI,               e_LANG_C | e_LANG_CPP                                                                     },
@@ -77,11 +74,7 @@ static chunk_tag_t keywords[] =
    { "__nothrow__",                     CT_NOTHROW,          e_LANG_C | e_LANG_CPP                                                                     },
    { "__null_unspecified",              CT_QUALIFIER,        e_LANG_OC                                                                                 },
    { "__nullable",                      CT_QUALIFIER,        e_LANG_OC                                                                                 },
-   { "__pragma",                        CT_PP_F_PRAGMA,      e_LANG_ALL | e_FLAG_PP                                                                    },
-   // The __pragma keyword, which is specific to the Microsoft compiler
-   // Removes the L prefix (if any), the outer quotes, and leading/trailing whitespace
-   // from string-literal, replaces each \" with " and each \\ with \, then tokenizes
-   // the result (as in translation phase 3), and then uses the result as if the input to #pragma
+   { "__pragma",                        CT_PP_PRAGMA,        e_LANG_ALL | e_FLAG_PP                                                                    },
    { "__restrict",                      CT_QUALIFIER,        e_LANG_C | e_LANG_CPP                                                                     },
    { "__signed__",                      CT_TYPE,             e_LANG_C | e_LANG_CPP                                                                     },
    { "__strong",                        CT_QUALIFIER,        e_LANG_C | e_LANG_CPP                                                                     },

@@ -1656,20 +1656,7 @@ static bool parse_word(TokenContext &ctx, Chunk &pc, bool skipcheck)
       {
          // Turn it into a keyword now
          // Issue #1460 will return "COMMENT_CPP"
-#ifdef DEBUG
-         size_t     a_size  = pc.GetStr().size();
-         const char *a_Text = pc.Text();
-         E_Token    a_key   = find_keyword_type(a_Text, a_size);
-         pc.SetType(a_key);
-#else
          pc.SetType(find_keyword_type(pc.Text(), pc.GetStr().size()));
-#endif
-         LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig col is %zu, type is %s, parentType is %s\n",
-                 __func__, __LINE__, pc.GetOrigLine(), pc.GetOrigCol(),
-                 get_token_name(pc.GetType()), get_token_name(pc.GetParentType()));
-         LOG_FMT(LGUY, "%s(%d): cpd.in_preproc is %s\n",
-                 __func__, __LINE__, get_token_name(cpd.in_preproc));
-         // Issue #3386
 
          /* Special pattern: if we're trying to redirect a preprocessor directive to PP_IGNORE,
           * then ensure we're actually part of a preprocessor before doing the swap, or we'll
@@ -1737,11 +1724,6 @@ static bool parse_word(TokenContext &ctx, Chunk &pc, bool skipcheck)
             }
             // Store off the end column
             pc.SetOrigColEnd(ctx.c.col);
-         }
-         else if (pc.GetType() == CT_PP_F_PRAGMA)   // Issue #3386
-         {
-            // nothing to do here
-            // the next work is done at combine.cpp
          }
       }
    }

@@ -41,4 +41,5 @@ enum longer_enum_that {
 	e,
 	r,
 	t,
-	y};
+	y
+};
