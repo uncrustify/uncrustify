@@ -330,7 +330,7 @@ enum E_Token
    CT_PP_UNDEF,
    CT_PP_PROPERTY,
 
-   // the next two PP types MUST be BEFORE CT_PP_BODYCHUNK or AFTER CT_PP_OTHER
+   // the next two PP types MUSST be BEFORE CT_PP_BODYCHUNK or AFTER CT_PP_OTHER
    CT_PP_F_PRAGMA,                                                                         // Issue #3386
    // Removes the L prefix (if any), the outer quotes, and leading/trailing whitespace
    // from string-literal, replaces each \" with " and each \\ with \, then tokenizes
