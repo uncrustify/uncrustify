@@ -1,3 +1,9 @@
+Change highlights in uncrustify-0.80.1 (November 2024)
+-------------------------------------------------------------------------------
+   d0ad61170436df7afab2b8041b49837f06f087ec
+     Removed : sp_pragma_open_parenthesis           Nov 16 2024
+     Removed : sp_inside_gparen                     Nov 16 2024
+
 Change highlights in uncrustify-0.80.0 (November 2024)
 -------------------------------------------------------------------------------
    273a37afbf5500d19011d4a392339160fffbfb11
