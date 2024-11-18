@@ -251,6 +251,9 @@
 00632  c/nl_assign2.cfg                           c/nl_assign.c
 00633  c/nl_assign1.cfg                           c/bug_3156.c
 
+00650  common/nl_bool_expression_multiline_lead.cfg     c/nl_bool_expression_multiline.c
+00651  common/nl_bool_expression_multiline_trail.cfg    c/nl_bool_expression_multiline.c
+
 # function def newlines
 
 00701  common/func-def-1.cfg                      c/function-def.c
