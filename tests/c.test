@@ -252,6 +252,9 @@
 00632  c/nl_assign2.cfg                           c/nl_assign.c
 00633  c/nl_assign1.cfg                           c/bug_3156.c
 
+00650  common/nl_bool_expr_hierarchical_lead.cfg        c/nl_bool_expr_hierarchical.c
+00651  common/nl_bool_expr_hierarchical_trail.cfg       c/nl_bool_expr_hierarchical.c
+
 # function def newlines
 
 00701  common/func-def-1.cfg                      c/function-def.c
