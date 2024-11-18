@@ -795,6 +795,9 @@
 33110  cpp/enum.cfg                                         cpp/enum.cpp
 33120  cpp/Issue_2149.cfg                                   cpp/Issue_2149.cpp
 
+33130  common/nl_bool_expression_multiline_lead.cfg         cpp/nl_bool_expression_multiline.cpp
+33131  common/nl_bool_expression_multiline_trail.cfg        cpp/nl_bool_expression_multiline.cpp
+
 33150  cpp/indent_columns-4.cfg                             cpp/bug_i_753.cpp
 33151  cpp/bug_i_752.cfg                                    cpp/bug_i_752.cpp
 33152  cpp/bug_1004.cfg                                     cpp/bug_1004.cpp
