@@ -1814,6 +1814,11 @@ indent_bool_paren;
 extern Option<bool>
 indent_ignore_bool;
 
+
+// Whether to indent lines that are nested in boolean expression one more level for each nesting
+extern Option<bool>
+indent_bool_nested_all; // = false
+
 // Whether to ignore the indentation of an arithmetic operator.
 extern Option<bool>
 indent_ignore_arith;

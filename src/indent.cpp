@@ -2572,7 +2572,38 @@ void indent_text()
                     __func__, __LINE__, pc->GetOrigLine(), indent_column, pc->Text());
             reindent_line(pc, indent_column);
          }
-         frm.top().SetIndent(pc->GetColumn() + pc->Len());
+         Chunk *open_paren  = pc;
+         Chunk *close_paren = pc->GetClosingParen();
+
+         bool  indent_bool_more = false;
+
+         if (options::indent_bool_nested_all())
+         {
+            Chunk *prev = open_paren->GetPrevNcNnl();
+
+            // open paren is preceeded by a bool and that is preceeded or followed by a new line
+            if (prev->Is(CT_BOOL) && (prev->GetPrevNc()->IsNewline() || prev->GetNextNc()->IsNewline()))
+            {
+               indent_bool_more = true;
+            }
+            Chunk *next = close_paren->GetNextNcNnl();
+
+            // close paren is followed by a bool and that is preceeded or followed by a new line
+            if (next->Is(CT_BOOL) && (next->GetNextNc()->IsNewline() || next->GetPrevNc()->IsNewline()))
+            {
+               indent_bool_more = true;
+            }
+         }
+
+         if (indent_bool_more)
+         {
+            log_rule_B("indent_bool_nested_all");
+            frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
+         }
+         else
+         {
+            frm.top().SetIndent(pc->GetColumn() + pc->Len());
+         }
          log_indent();
 
          if (  pc->Is(CT_SQUARE_OPEN)
@@ -2803,7 +2834,14 @@ void indent_text()
                   }
                   else
                   {
-                     frm.top().SetIndent(next->GetColumn());
+                     if (indent_bool_more)
+                     {
+                        frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
+                     }
+                     else
+                     {
+                        frm.top().SetIndent(next->GetColumn());
+                     }
                   }
                   log_indent();
                }
@@ -2847,7 +2885,7 @@ void indent_text()
             {
                frm.top().SetIndent(get_indent_first_continue(pc->GetNext()));
             }
-            else
+            else if (!indent_bool_more)
             {
                frm.top().SetIndent(frm.prev().GetIndent());
             }
