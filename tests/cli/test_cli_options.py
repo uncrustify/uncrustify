@@ -620,15 +620,19 @@ def main(args):
             ]
     for L in Ls_B:
         print("Test too big: %s" % L)
-        if not check_uncrustify_output(
+
+        return_value = check_uncrustify_output(
                 uncr_bin,
                 parsed_args,
                 args_arr=['-c', s_path_join(script_dir, 'config/%s.cfg' % L),
                           '-f', s_path_join(script_dir, 'input/too_big.cpp')],
                 out_expected_path=s_path_join(script_dir, 'output/%s.txt' % L),
                 out_result_path=s_path_join(test_dir, 'results/%s.txt' %  L),
-            ):
-            return_flag = False
+            )
+
+        # Issue 4379
+        if not return_value:
+            sys_exit(EX_SOFTWARE)
 
     print("Test too big is OK")
 
