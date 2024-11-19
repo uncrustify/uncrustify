@@ -640,7 +640,7 @@ def main(args):
     #
     # Test help
     #   -h -? --help --usage
-    if not check_uncrustify_output(
+    return_value = check_uncrustify_output(
             uncr_bin,
             parsed_args,
             out_expected_path=s_path_join(script_dir, 'output/help.txt'),
@@ -649,8 +649,11 @@ def main(args):
                 string_replace(' --mtime      : Preserve mtime on replaced files.\n', ''),
                 string_replace('.exe', ''),
                 reg_replace(r'currently \d+ options', 'currently x options')
-            ]):
-        return_flag = False
+            ])
+    # Issue 4379
+    if not return_value:
+        sys_exit(EX_SOFTWARE)
+
     print("Test help is OK")
 
     print("Test false parameter ...")
