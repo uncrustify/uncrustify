@@ -34,7 +34,7 @@ void f() {
             << "World!"
             << std::endl);
     A_LONG_MACRO_NAME(
-	    std::cout << "Hello, "
+	std::cout << "Hello, "
 	    << "World!"
 	    << std::endl);
 }
