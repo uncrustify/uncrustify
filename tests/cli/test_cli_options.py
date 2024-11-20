@@ -660,14 +660,17 @@ def main(args):
     #
     # Test false parameter
     #   --xyz
-    if not check_uncrustify_output(
-            uncr_bin,
-            parsed_args,
-            args_arr=['--xyz'],
-            err_expected_path=s_path_join(script_dir, 'output/xyz-err.txt'),
-            err_result_path=s_path_join(test_dir, 'results/xyz-err.txt')
-            ):
-        return_flag = False
+    return_value = check_uncrustify_output(
+        uncr_bin,
+        parsed_args,
+        args_arr=['--xyz'],
+        err_expected_path=s_path_join(script_dir, 'output/xyz-err.txt'),
+        err_result_path=s_path_join(test_dir, 'results/xyz-err.txt')
+        )
+    # Issue 4379
+    if not return_value:
+        sys_exit(EX_SOFTWARE)
+
     print("Test false parameter is OK")
 
     print("Test Version ...")
