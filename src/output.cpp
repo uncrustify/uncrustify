@@ -849,11 +849,11 @@ void output_text(FILE *pfile)
 
                if (pc->IsPreproc())
                {
-                  output_to_column(pc->GetNlColumn(), (pp_indent_with_tabs == 2));
+                  output_to_column(pc->GetNlColumn(), (pp_indent_with_tabs >= 1));
                }
                else
                {
-                  output_to_column(pc->GetNlColumn(), (options::indent_with_tabs() == 2));
+                  output_to_column(pc->GetNlColumn(), (options::indent_with_tabs() >= 1));
                }
             }
             add_char('\n');

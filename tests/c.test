@@ -576,3 +576,6 @@
 10124  common/tde.cfg                             c/Issue_3985.c
 10125  common/tde.cfg                             c/Issue_3992.c
 10126  c/Issue_3259.cfg                           c/Issue_3259.h
+10127  c/indent_single_newlines_indent_0.cfg      c/indent_single_newlines.c
+10128  c/indent_single_newlines_indent_1.cfg      c/indent_single_newlines.c
+10129  c/indent_single_newlines_indent_2.cfg      c/indent_single_newlines.c
