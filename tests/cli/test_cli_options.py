@@ -656,23 +656,6 @@ def main(args):
 
     print("Test help is OK")
 
-    print("Test false parameter ...")
-    #
-    # Test false parameter
-    #   --xyz
-    return_value = check_uncrustify_output(
-        uncr_bin,
-        parsed_args,
-        args_arr=['--xyz'],
-        err_expected_path=s_path_join(script_dir, 'output/xyz-err.txt'),
-        err_result_path=s_path_join(test_dir, 'results/xyz-err.txt')
-        )
-    # Issue 4379
-    if not return_value:
-        sys_exit(EX_SOFTWARE)
-
-    print("Test false parameter is OK")
-
     print("Test Version ...")
     #
     # Test Version
@@ -691,21 +674,42 @@ def main(args):
 
     print("Test Version is OK")
 
-    # temporary removed
-    #print("Test --show-config ...")
-    ##
-    ## Test --show-config
-    ##
-    #if not check_uncrustify_output(
-    #        uncr_bin,
-    #        parsed_args,
-    #        args_arr=['--show-config'],
-    #        out_expected_path=s_path_join(script_dir, 'output/show_config.txt'),
-    #        out_result_path=s_path_join(test_dir, 'results/show_config.txt'),
-    #        out_result_manip=reg_replace(r'\# Uncrustify.+', '')
-    #        ):
-    #    return_flag = False
-    #print("Test --show-config is OK")
+    print("Test help is OK")
+
+    print("Test false parameter ...")
+    #
+    # Test false parameter
+    #   --xyz
+    return_value = check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['--xyz'],
+            err_expected_path=s_path_join(script_dir, 'output/xyz-err.txt'),
+            err_result_path=s_path_join(test_dir, 'results/xyz-err.txt')
+            )
+    # Issue 4379
+    if not return_value:
+        sys_exit(EX_SOFTWARE)
+
+    print("Test false parameter is OK")
+
+    print("Test show-config ...")
+    #
+    # Test --show-config
+    #
+    return_value = check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['--show-config'],
+            out_expected_path=s_path_join(script_dir, 'output/show_config.txt'),
+            out_result_path=s_path_join(test_dir, 'results/show_config.txt'),
+            out_result_manip=reg_replace(r'Uncrustify.+', 'Uncrustify')
+            )
+    # Issue 4379
+    if not return_value:
+        sys_exit(EX_SOFTWARE)
+
+    print("Test show-config is OK")
 
     print("Test the truncate option ...")
     #
@@ -726,10 +730,10 @@ def main(args):
         return_flag = False
     print("Test the truncate option is OK")
 
-    #print("Test --update-config ...")
+    #print("Test update-config ...")
     # temporary removed
     ##
-    ## Test --update-config
+    ## Test update-config
     ##
     #if not check_uncrustify_output(
     #        uncr_bin,
@@ -758,11 +762,11 @@ def main(args):
     #        err_result_manip=string_replace('\\', '/')
     #        ):
     #    return_flag = False
-    #print("Test --update-config is OK")
+    #print("Test update-config is OK")
 
-    #print("Test --update-config-with-doc ...")
+    #print("Test update-config-with-doc ...")
     ##
-    ## Test --update-config-with-doc
+    ## Test update-config-with-doc
     ##
     #if not check_uncrustify_output(
     #        uncr_bin,
@@ -777,7 +781,7 @@ def main(args):
     #        err_result_manip=string_replace('\\', '/')
     #        ):
     #    return_flag = False
-    #print("Test --update-config-with-doc is OK")
+    #print("Test update-config-with-doc is OK")
 
     #if not check_uncrustify_output(
     #        uncr_bin,
@@ -793,9 +797,9 @@ def main(args):
     #        ):
     #    return_flag = False
 
-    print("Test -p ...")
+    print("Test p ...")
     #
-    # Test -p
+    # Test p
     #
     if os_name != 'nt':
         if not check_uncrustify_output(
@@ -831,9 +835,9 @@ def main(args):
                 gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
                 ):
             return_flag = False
-    print("Test -p is OK")
+    print("Test p is OK")
 
-    #print("Test -p and -c with '-' input ...")
+    #print("Test p and -c with '-' input ...")
     if os_name == 'nt' or check_uncrustify_output(
             uncr_bin,
             parsed_args,
@@ -846,17 +850,17 @@ def main(args):
     ):
         pass
 
-    #print("Test -p and -c with '-' input ...")
+    #print("Test p and -c with '-' input ...")
     #
-    # Test -p and -c with '-' input
+    # Test p and -c with '-' input
     #
     else:
         return_flag = False
-    #print("Test -p and -c with '-' input is OK")
+    #print("Test p and -c with '-' input is OK")
 
-    print("Test -p and --debug-csv-format option ...")
+    print("Test p and debug-csv-format option ...")
     #
-    # Test -p and --debug-csv-format option
+    # Test p and debug-csv-format option
     #
     if os_name != 'nt' and not check_uncrustify_output(
             uncr_bin,
@@ -869,13 +873,13 @@ def main(args):
             gen_result_path=s_path_join(test_dir, 'results/class_enum_struct_union.csv'),
             ):
         return_flag = False
-    print("Test -p and --debug-csv-format option is OK")
+    print("Test p and debug-csv-format option is OK")
 
     if parsed_args.config.lower() == 'debug':
-        print("Test --tracking space:FILE ...")
+        print("Test tracking space:FILE ...")
         print("  config is Debug")
         #
-        # Test --tracking space:FILE
+        # Test tracking space:FILE
         #
         if os_name != 'nt':
             # doesn't work under windows
@@ -893,11 +897,11 @@ def main(args):
                     gen_result_path=temp_result_path
                     ):
                 return_flag = False
-        print("Test --tracking space:FILE is OK")
+        print("Test tracking space:FILE is OK")
 
-    print("Test --replace ...")
+    print("Test replace ...")
     #
-    # Test --replace
+    # Test replace
     #
     copyfile("input/backup.h-save", "input/backup.h")
     if not check_uncrustify_output(
@@ -912,9 +916,9 @@ def main(args):
             err_result_path=s_path_join(test_dir, 'results/replace.txt'),
             ):
         return_flag = False
-    print("Test --replace is OK")
+    print("Test replace is OK")
 
-    print("Test --universalindent ...")
+    print("Test universalindent ...")
     # The flag CMAKE_BUILD_TYPE must be set to "Release", or all lines with
     # 'Description="<html>(<number>)text abc.</html>" must be changed to
     # 'Description="<html>text abc.</html>"
@@ -937,11 +941,11 @@ def main(args):
                               reg_replace(r'\r', '')]
             ):
         return_flag = False
-    print("Test --universalindent is OK")
+    print("Test universalindent is OK")
 
-    print("Test -L ...")
+    print("Test L ...")
     # Debug Options:
-    #   -L
+    #   L
     # look at src/log_levels.h
     Ls_A = ['9', '21', '25', '28', '31', '36', '66', '92']
     for L in Ls_A:
@@ -965,7 +969,7 @@ def main(args):
                                   reg_replace(r'Chunk::', '')]
             ):
             return_flag = False
-    print("Test -L is OK")
+    print("Test L is OK")
 
     ### Test logger buffer overflow
     ##if not check_uncrustify_output(
