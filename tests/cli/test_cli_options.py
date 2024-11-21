@@ -677,15 +677,18 @@ def main(args):
     #
     # Test Version
     #   -v
-    if not check_uncrustify_output(
+    return_value = check_uncrustify_output(
             uncr_bin,
             parsed_args,
             args_arr=['-v'],
             out_expected_path=s_path_join(script_dir, 'output/v-out.txt'),
             out_result_path=s_path_join(test_dir, 'results/v-out.txt'),
             out_result_manip=reg_replace(r'Uncrustify.+', 'Uncrustify')
-            ):
-        return_flag = False
+            )
+    # Issue 4379
+    if not return_value:
+        sys_exit(EX_SOFTWARE)
+
     print("Test Version is OK")
 
     # temporary removed
