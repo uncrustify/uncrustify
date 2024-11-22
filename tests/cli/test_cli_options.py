@@ -674,8 +674,6 @@ def main(args):
 
     print("Test Version is OK")
 
-    print("Test help is OK")
-
     print("Test false parameter ...")
     #
     # Test false parameter
