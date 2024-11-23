@@ -46,8 +46,8 @@ struct include_category
 
 
 include_category                 *include_categories[kIncludeCategoriesCount];
-unordered_map<Chunk *, int>      chunk_priority_cache;
-unordered_map<std::string, bool> filename_without_ext_cache;
+std::unordered_map<Chunk *, int>      chunk_priority_cache;
+std::unordered_map<std::string, bool> filename_without_ext_cache;
 
 
 /**

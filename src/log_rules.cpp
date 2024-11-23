@@ -69,7 +69,7 @@ void log_rule4(const char *rule, Chunk *first)
 
    strcpy(r, rule);
    size_t      a_number = get_A_Number();
-   TrackNumber A        = make_pair(a_number, r);
+   TrackNumber A        = std::make_pair(a_number, r);
 
    first->TrackingData()->push_back(A);
    size_t sizeOfTrack = first->GetTrackingData()->size();
@@ -96,7 +96,7 @@ void log_ruleStart(const char *rule, Chunk *first)
 
    strcpy(r, rule);
    size_t      a_number = get_A_Number();
-   TrackNumber A        = make_pair(a_number, r);
+   TrackNumber A        = std::make_pair(a_number, r);
 
    first->TrackingData()->push_back(A);
    size_t sizeOfTrack = first->GetTrackingData()->size();
@@ -123,7 +123,7 @@ void log_ruleNL(const char *rule, Chunk *pc)
 
    strcpy(r, rule);
    size_t      a_number = get_A_Number();
-   TrackNumber A        = make_pair(a_number, r);
+   TrackNumber A        = std::make_pair(a_number, r);
 
    pc->TrackingData()->push_back(A);
    size_t sizeOfTrack = pc->GetTrackingData()->size();

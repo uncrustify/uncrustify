@@ -16,9 +16,6 @@
 //#define ARRAY_SIZE(x)    (sizeof(x) / sizeof((x)[0]))
 //#endif
 
-using namespace std;
-
-
 constexpr auto pcf_bit(size_t b) -> decltype(0ULL)
 {
    return(1ULL << b);

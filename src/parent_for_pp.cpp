@@ -14,7 +14,7 @@ void do_parent_for_pp()
 {
    LOG_FUNC_ENTRY();
 
-   vector<Chunk *> viz;
+   std::vector<Chunk *> viz;
 
    Chunk           *pc = Chunk::GetHead()->GetNextNcNnl();
 
