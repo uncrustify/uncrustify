@@ -12,18 +12,6 @@
 #include "logger.h"
 
 
-//// and the ever-so-important array size macro
-
-
-//#ifndef ARRAY_SIZE
-
-
-//#define ARRAY_SIZE(x)    (sizeof(x) / sizeof((x)[0]))
-
-
-//#endif
-
-
 constexpr auto pcf_bit(size_t b) -> decltype(0ULL)
 {
    return(1ULL << b);
