@@ -1216,7 +1216,6 @@ void mark_function(Chunk *pc)
          while ((tmp = tmp->GetPrevNcNnlNi())->IsNotNullChunk()) // Issue #2279
          {
             if (  tmp->Is(CT_BRACE_CLOSE)
-               || tmp->Is(CT_BRACE_OPEN)             // Issue 575
                || tmp->Is(CT_SEMICOLON))
             {
                break;
