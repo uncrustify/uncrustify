@@ -713,7 +713,7 @@ def main(args):
     #
     # Test the truncate option
     #
-    if not check_uncrustify_output(
+    return_value = check_uncrustify_output(
             uncr_bin,
             parsed_args,
             args_arr=['-c', s_path_join(script_dir, 'config/truncate.cfg'),
@@ -724,8 +724,11 @@ def main(args):
             err_result_path=s_path_join(test_dir, 'results/truncate.txt'),
             err_result_manip=[reg_replace(r'\([0-9]+\)', ' '),
                               reg_replace(RE_DO_SPACE, '')]
-            ):
-        return_flag = False
+            )
+    # Issue 4379
+    if not return_value:
+        sys_exit(EX_SOFTWARE)
+
     print("Test the truncate option is OK")
 
     #print("Test update-config ...")
