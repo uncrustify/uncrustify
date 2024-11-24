@@ -286,7 +286,7 @@ void usage(const char *argv0)
            "                refers to blocking logging info from being sent to stderr.\n"
            " --frag       : Code fragment, assume the first line is indented correctly.\n"
            " --assume FN  : Uses the filename FN for automatic language detection if reading\n"
-           "                from stdin unless -l is specified.\n"
+           "                from stdin unless -l is specified. The filename is also used for formatting logic (ie. sorting headers).\n"
            "\n"
            "Config/Help Options:\n"
            " -h -? --help --usage     : Print this message and exit.\n"
@@ -1028,7 +1028,7 @@ int main(int argc, char *argv[])
          LOG_FMT(LERR, "Failed to read stdin\n");
          exit(EX_IOERR);
       }
-      cpd.filename = "stdin";
+      cpd.filename = assume != nullptr ? assume : "stdin";
 
       // Done reading from stdin
       LOG_FMT(LSYS, "%s(%d): Parsing: %zu bytes (%zu chars) from stdin as language %s\n",

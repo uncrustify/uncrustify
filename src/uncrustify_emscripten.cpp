@@ -20,7 +20,6 @@
  *   --files ( no batch processing will be available )
  *   --prefix
  *   --suffix
- *   --assume
  *   --no-backup
  *   --replace
  *   --mtime
