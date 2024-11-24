@@ -139,13 +139,21 @@ static bool text_contains_filename_without_ext(const char *text)
       return(filename_without_ext_cache[text]);
    }
    std::string filepath             = cpd.filename;
-   size_t      slash_idx            = filepath.find_last_of("/\\");
    std::string filename_without_ext = filepath;
+   size_t      startIndex           = filepath.find_last_of("/\\");
 
-   if (  slash_idx != std::string::npos
-      && slash_idx < (filepath.size() - 1))
+   if (startIndex == std::string::npos)
    {
-      std::string filename = filepath.substr(slash_idx + 1);
+      startIndex = 0;
+   }
+   else
+   {
+      startIndex += 1;
+   }
+
+   if (startIndex < filepath.size())
+   {
+      std::string filename = filepath.substr(startIndex);
       size_t      dot_idx  = filename.find_last_of('.');
       filename_without_ext = filename.substr(0, dot_idx);
    }
