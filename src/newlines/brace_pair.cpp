@@ -121,7 +121,7 @@ void newlines_brace_pair(Chunk *br_open)
             // Issue 2795
             // we have to check if it could be too long for code_width
             // make a vector to save the chunk
-            vector<Chunk> saved_chunk;
+            std::vector<Chunk> saved_chunk;
             log_rule_B("code_width");
 
             if (options::code_width() > 0)

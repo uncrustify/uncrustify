@@ -135,7 +135,7 @@ Chunk *align_func_param(Chunk *start)
                log_flush(true);
                exit(EX_SOFTWARE);
             }
-            max_level_is = max(max_level_is, pc->GetLevel());
+            max_level_is = std::max(max_level_is, pc->GetLevel());
             many_as[pc->GetLevel()].Add(pc);
          }
       }

@@ -31,8 +31,8 @@ void align_same_func_call_params()
    Chunk             *align_fcn;
    UncText           align_fcn_name;
    UncText           align_root_name;
-   deque<Chunk *>    chunks;
-   deque<AlignStack> array_of_AlignStack;
+   std::deque<Chunk *>    chunks;
+   std::deque<AlignStack> array_of_AlignStack;
    AlignStack        fcn_as;
    const char        *add_str;
 
@@ -247,7 +247,7 @@ void align_same_func_call_params()
 } // align_same_func_call_params
 
 
-void align_params(Chunk *start, deque<Chunk *> &chunks)
+void align_params(Chunk *start, std::deque<Chunk *> &chunks)
 {
    LOG_FUNC_ENTRY();
 

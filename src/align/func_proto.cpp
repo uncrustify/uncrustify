@@ -51,13 +51,13 @@ void align_func_proto(size_t span)
 
 
    // Issue #2984
-   vector<vector<AlignStack *> > many_as;
+   std::vector<std::vector<AlignStack *> > many_as;
    // Issue #2771
-   vector<vector<AlignStack *> > many_as_brace;
+   std::vector<std::vector<AlignStack *> > many_as_brace;
 
    // init the vector ...
-   many_as.resize(num_of_column, vector<AlignStack *>(num_of_row, stack_init_value));
-   many_as_brace.resize(num_of_column, vector<AlignStack *>(num_of_row, stack_init_value));
+   many_as.resize(num_of_column, std::vector<AlignStack *>(num_of_row, stack_init_value));
+   many_as_brace.resize(num_of_column, std::vector<AlignStack *>(num_of_row, stack_init_value));
 
    log_rule_B("align_single_line_brace_gap");
    size_t mybr_gap = options::align_single_line_brace_gap();
