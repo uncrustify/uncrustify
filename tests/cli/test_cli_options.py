@@ -803,7 +803,7 @@ def main(args):
     # Test p
     #
     if os_name != 'nt':
-        if not check_uncrustify_output(
+        return_value = check_uncrustify_output(
                 uncr_bin,
                 parsed_args,
                 args_arr=['-c', s_path_join(script_dir, 'config/mini_nd.cfg'),
@@ -812,10 +812,13 @@ def main(args):
                 gen_expected_path=s_path_join(script_dir, 'output/p.txt'),
                 gen_result_path=s_path_join(test_dir, 'results/p.txt'),
                 gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
-                ):
-            return_flag = False
+                )
 
-        if not check_uncrustify_output(
+        # Issue 4379
+        if not return_value:
+            sys_exit(EX_SOFTWARE)
+
+        return_value = check_uncrustify_output(
                 uncr_bin,
                 parsed_args,
                 args_arr=['-f', s_path_join(script_dir, 'input/class_enum_struct_union.cpp'),
@@ -823,10 +826,12 @@ def main(args):
                 gen_expected_path=s_path_join(script_dir, 'output/class_enum_struct_union.txt'),
                 gen_result_path=s_path_join(test_dir, 'results/class_enum_struct_union.txt'),
                 gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
-                ):
-            return_flag = False
+                )
+        # Issue 4379
+        if not return_value:
+            sys_exit(EX_SOFTWARE)
 
-        if not check_uncrustify_output(
+        return_value = check_uncrustify_output(
                 uncr_bin,
                 parsed_args,
                 args_arr=['-f', s_path_join(script_dir, 'input/in_fcn_def.cpp'),
@@ -834,8 +839,11 @@ def main(args):
                 gen_expected_path=s_path_join(script_dir, 'output/in_fcn_def.txt'),
                 gen_result_path=s_path_join(test_dir, 'results/in_fcn_def.txt'),
                 gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
-                ):
-            return_flag = False
+                )
+        # Issue 4379
+        if not return_value:
+            sys_exit(EX_SOFTWARE)
+
     print("Test p is OK")
 
     #print("Test p and -c with '-' input ...")
