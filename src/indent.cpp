@@ -3336,65 +3336,14 @@ void indent_text()
          bool in_shift    = false;
          bool is_operator = false;
 
-         // Are we in such an expression? Go both forwards and backwards.
-         Chunk *tmp = pc;
-
-         do
+         // Are we in continued shift expressions?
+         if (  (  pc->GetPrevNcNnl()->Is(CT_SHIFT)
+               && pc->GetPrevNc()->IsNewline())
+            || (  pc->Is(CT_SHIFT)
+               && pc->GetPrev()->IsNewline()))
          {
-            if (tmp->Is(CT_SHIFT))
-            {
-               in_shift = true;
-               LOG_FMT(LINDENT2, "%s(%d): in_shift set to TRUE\n",
-                       __func__, __LINE__);
-
-               tmp = tmp->GetPrevNcNnl();
-
-               if (tmp->Is(CT_OPERATOR))
-               {
-                  is_operator = true;
-               }
-               break;
-            }
-            tmp = tmp->GetPrevNcNnl();
-         } while (  !in_shift
-                 && tmp->IsNotNullChunk()
-                 && tmp->IsNot(CT_SEMICOLON)
-                 && tmp->IsNot(CT_BRACE_OPEN)
-                 && tmp->IsNot(CT_BRACE_CLOSE)
-                 && tmp->IsNot(CT_COMMA)
-                 && tmp->IsNot(CT_SPAREN_OPEN)
-                 && tmp->IsNot(CT_SPAREN_CLOSE));
-
-         tmp = pc;
-
-         do
-         {
-            tmp = tmp->GetNextNcNnl();
-
-            if (  tmp->IsNotNullChunk()
-               && tmp->Is(CT_SHIFT))
-            {
-               in_shift = true;
-               LOG_FMT(LINDENT2, "%s(%d): in_shift set to TRUE\n",
-                       __func__, __LINE__);
-
-               tmp = tmp->GetPrevNcNnl();
-
-               if (tmp->Is(CT_OPERATOR))
-               {
-                  is_operator = true;
-               }
-               break;
-            }
-         } while (  !in_shift
-                 && tmp->IsNotNullChunk()
-                 && tmp->IsNot(CT_SEMICOLON)
-                 && tmp->IsNot(CT_BRACE_OPEN)
-                 && tmp->IsNot(CT_BRACE_CLOSE)
-                 && tmp->IsNot(CT_COMMA)
-                 && tmp->IsNot(CT_SPAREN_OPEN)
-                 && tmp->IsNot(CT_SPAREN_CLOSE));
-
+            in_shift = true;
+         }
          LOG_FMT(LINDENT2, "%s(%d): in_shift is %s\n",
                  __func__, __LINE__, in_shift ? "TRUE" : "FALSE");
          Chunk *prev_nonl = pc->GetPrevNcNnl();

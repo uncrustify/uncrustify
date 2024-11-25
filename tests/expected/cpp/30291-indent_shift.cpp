@@ -33,7 +33,7 @@ int case2() {
 	    << "hi"
 	    << "and"
 	    << "more"
-	    ;
+	;
 
     switch (var) {
     case 0:
@@ -50,7 +50,7 @@ int case2() {
     return log
         >> var
         >> second
-        ;
+    ;
 }
 
 
@@ -134,6 +134,6 @@ void check() {
         " terminated by signal " << WTERMSIG(exitStatus);
 
     return theAddr.addrN().family() == AF_INET6 ?
-        (theAddr.octet(idx * 2) << 8) + theAddr.octet(idx * 2 + 1) :
-        theAddr.octet(idx);
+           (theAddr.octet(idx * 2) << 8) + theAddr.octet(idx * 2 + 1) :
+           theAddr.octet(idx);
 }
