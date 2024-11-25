@@ -153,13 +153,6 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_before_pp_stringify());
    }
 
-   if (  first->Is(CT_SPACE)
-      || second->Is(CT_SPACE))
-   {
-      log_rule("REMOVE");
-      return(IARF_REMOVE);
-   }
-
    if (first->Is(CT_DECLSPEC))  // Issue 1289
    {
       log_rule("REMOVE");
