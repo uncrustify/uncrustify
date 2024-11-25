@@ -913,7 +913,7 @@ def main(args):
     # Test replace
     #
     copyfile("input/backup.h-save", "input/backup.h")
-    if not check_uncrustify_output(
+    return_value = check_uncrustify_output(
             uncr_bin,
             parsed_args,
             args_arr=['-c', s_path_join(script_dir, 'config/replace.cfg'),
@@ -923,8 +923,11 @@ def main(args):
             gen_result_path=s_path_join(script_dir, 'input/backup.h'),
             err_expected_path=s_path_join(script_dir, 'output/replace.txt'),
             err_result_path=s_path_join(test_dir, 'results/replace.txt'),
-            ):
-        return_flag = False
+            )
+    # Issue 4379
+    if not return_value:
+        sys_exit(EX_SOFTWARE)
+
     print("Test replace is OK")
 
     print("Test universalindent ...")
