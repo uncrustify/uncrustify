@@ -941,7 +941,7 @@ def main(args):
     # fprintf puts a \r\n at the end of a line. To make the check, we use
     # output/universalindent.cfg, generated under Linux, with only \n at the
     # end of a line.
-    if not check_uncrustify_output(
+    return_value = check_uncrustify_output(
             uncr_bin,
             parsed_args,
             args_arr=['-o', s_path_join(test_dir, 'results/universalindent.cfg'),
@@ -951,8 +951,11 @@ def main(args):
             gen_result_manip=[reg_replace(r'version=U.+', ''),
                               reg_replace(r'\(\d+\)', ''),
                               reg_replace(r'\r', '')]
-            ):
-        return_flag = False
+            )
+    # Issue 4379
+    if not return_value:
+        sys_exit(EX_SOFTWARE)
+
     print("Test universalindent is OK")
 
     print("Test L ...")
