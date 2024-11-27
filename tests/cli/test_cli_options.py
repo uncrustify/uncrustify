@@ -989,22 +989,29 @@ def main(args):
 
     print("Test L is OK")
 
-    ### Test logger buffer overflow
-    ##if not check_uncrustify_output(
-    ##        uncr_bin,
-    ##        parsed_args,
-    ##        args_arr=['-c', NULL_DEVICE, '-L', '99', '-o', NULL_DEVICE,
-    ##                  '-f', s_path_join(script_dir, 'input/logger.cs')],
-    ##        err_expected_path=s_path_join(script_dir, 'output/logger_cs_L_99.txt'),
-    ##        err_result_path=s_path_join(test_dir, 'results/logger_cs_L_99.txt'),
-    ##        err_result_manip=reg_replace(r'[0-9]', '')
-    ##        ):
-    ##    return_flag = False
+    #print("Test logger buffer overflow ...")
+
+    ## Test logger buffer overflow
+    #return_value = check_uncrustify_output(
+    #        uncr_bin,
+    #        parsed_args,
+    #        args_arr=['-c', NULL_DEVICE, '-L', '99', '-o', NULL_DEVICE,
+    #                  '-f', s_path_join(script_dir, 'input/logger.cs')],
+    #        err_expected_path=s_path_join(script_dir, 'output/logger_cs_L_99.txt'),
+    #        err_result_path=s_path_join(test_dir, 'results/logger_cs_L_99.txt'),
+    #        err_result_manip=reg_replace(r'[0-9]', '')
+    #        )
+    ## Issue 4379
+    #if not return_value:
+    #    sys_exit(EX_SOFTWARE)
+
+    #print("Test logger buffer overflow is OK")
 
     # misc error_tests
+    print("Test error_tests ...")
     error_tests = ["I-842", "unmatched_close_pp"]
     for test in error_tests:
-        if not check_uncrustify_output(
+        return_value = check_uncrustify_output(
                 uncr_bin,
                 parsed_args,
                 args_arr=['-c', s_path_join(script_dir, 'config/%s.cfg' % test),
@@ -1012,8 +1019,12 @@ def main(args):
                           '-o', NULL_DEVICE, '-q'],
                 err_expected_path=s_path_join(script_dir, 'output/%s.txt' % test),
                 err_result_path=s_path_join(test_dir, 'results/%s.txt' % test)
-                ):
-            return_flag = False
+                )
+        # Issue 4379
+        if not return_value:
+            sys_exit(EX_SOFTWARE)
+
+    print("Test error_tests is OK")
 
     print("Test $(year) keyword ...")
     # Test $(year) keyword (issue #3251)
