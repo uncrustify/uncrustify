@@ -964,7 +964,7 @@ def main(args):
     # look at src/log_levels.h
     Ls_A = ['9', '21', '25', '28', '31', '36', '66', '92']
     for L in Ls_A:
-        if not check_uncrustify_output(
+        return_value = check_uncrustify_output(
                 uncr_bin,
                 parsed_args,
                 args_arr=['-c', NULL_DEVICE, '-L', L, '-o', NULL_DEVICE,
@@ -982,8 +982,11 @@ def main(args):
                                   reg_replace(RE_CALLSTACK, '[CallStack]'),
                                   reg_replace(RE_DO_SPACE, ''),
                                   reg_replace(r'Chunk::', '')]
-            ):
-            return_flag = False
+            )
+        # Issue 4379
+        if not return_value:
+            sys_exit(EX_SOFTWARE)
+
     print("Test L is OK")
 
     ### Test logger buffer overflow
