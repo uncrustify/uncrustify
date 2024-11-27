@@ -110,6 +110,14 @@ void case4()
 }
 
 void foo() {
+    logError("Exception occurred while checking other exception %1\n%2")
+        << std::string(
+	    reinterpret_cast<const char*>(error.getMessage().data()),
+	    error.getMessage().size()
+        )
+        << foo() +
+        bar()
+        << "something";
 
     if (head())
 	os << "HEAD,";

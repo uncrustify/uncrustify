@@ -570,8 +570,10 @@ void indent_text()
    ParsingFrame      frm;
 
 
-   Chunk *pc        = Chunk::GetHead();
-   bool  classFound = false;                                 // Issue #672
+   Chunk *pc            = Chunk::GetHead();
+   bool  classFound     = false;                             // Issue #672
+   bool  in_shift       = false;
+   Chunk *current_shift = Chunk::NullChunkPtr;
 
    while (pc->IsNotNullChunk())
    {
@@ -3330,36 +3332,32 @@ void indent_text()
          && pc->GetParentType() != CT_OPERATOR
          && !pc->IsComment()
          && pc->IsNot(CT_BRACE_OPEN)
-         && pc->GetLevel() > 0
          && !pc->IsEmptyText())
       {
-         bool in_shift    = false;
-         bool is_operator = false;
-
-         // Are we in continued shift expressions?
-         if (  (  pc->GetPrevNcNnl()->Is(CT_SHIFT)
-               && pc->GetPrevNc()->IsNewline())
-            || (  pc->Is(CT_SHIFT)
-               && pc->GetPrev()->IsNewline()))
+         if (pc->Is(CT_SHIFT))
          {
-            in_shift = true;
+            in_shift      = true;
+            current_shift = pc;
+         }
+
+         if (  in_shift
+            && (  (  pc->GetLevel() < current_shift->GetLevel()
+                  && (  pc->IsParenClose()
+                     || pc->Is(CT_BRACE_CLOSE)))
+               || (  pc->GetLevel() == current_shift->GetLevel()
+                  && (  pc->Is(CT_COMMA)
+                     || pc->Is(CT_SEMICOLON)
+                     || pc->Is(CT_COMPARE)
+                     || pc->Is(CT_SCOMPARE)
+                     || pc->Is(CT_BOOL)
+                     || pc->Is(CT_SBOOL)))))
+         {
+            in_shift      = false;
+            current_shift = Chunk::NullChunkPtr;
          }
          LOG_FMT(LINDENT2, "%s(%d): in_shift is %s\n",
                  __func__, __LINE__, in_shift ? "TRUE" : "FALSE");
-         Chunk *prev_nonl = pc->GetPrevNcNnl();
-         Chunk *prev2     = pc->GetPrevNc();
-
-         if ((  prev_nonl->IsSemicolon()
-             || prev_nonl->IsBraceOpen()
-             || prev_nonl->IsBraceClose()
-             || prev_nonl->Is(CT_CASE_COLON)
-             || (  prev_nonl->IsNotNullChunk()
-                && prev_nonl->TestFlags(PCF_IN_PREPROC)) != pc->TestFlags(PCF_IN_PREPROC)
-             || prev_nonl->Is(CT_COMMA)
-             || is_operator))
-         {
-            in_shift = false;
-         }
+         Chunk *prev2 = pc->GetPrevNc();
          LOG_FMT(LINDENT2, "%s(%d): in_shift is %s\n",
                  __func__, __LINE__, in_shift ? "TRUE" : "FALSE");
 
