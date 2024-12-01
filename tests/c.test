@@ -225,6 +225,7 @@
 00512  common/bool-pos-eol-force.cfg              c/bool-pos.c
 00513  c/bool-pos-sol-force.cfg                   c/bool-pos.c
 00514  c/my_conf.cfg                              c/my_infile.c
+00515  c/indent_bool_nested_all.cfg               c/indent_bool_nested_all.c
 
 00600  common/indent_columns-3.cfg                c/dos.c
 00601  common/indent_columns-3.cfg                c/mac.c
