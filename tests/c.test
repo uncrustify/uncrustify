@@ -6,580 +6,580 @@
 
 # little general tests ====================================================
 
-00000  common/indent_columns-3.cfg                c/comment-indent.c
-00001  c/cpp_to_c-1.cfg                           c/comment-indent.c
-00002  c/cpp_to_c-2.cfg                           c/comment-indent.c
-00003  c/cpp_to_c-3.cfg                           c/comment-indent.c
-00004  c/indent-1.cfg                             c/switch.c
-00005  c/ben_047.cfg                              c/cmt-align.c
-00006  common/indent_columns-3.cfg                c/comment-convert.c
-00007  c/cpp_to_c-1.cfg                           c/comment-convert.c
-00008  c/cpp_to_c-2.cfg                           c/comment-convert.c
-00009  c/cpp_to_c-3.cfg                           c/comment-convert.c
+00000  common/indent_columns-3.cfg                      c/comment-indent.c
+00001  c/cpp_to_c-1.cfg                                 c/comment-indent.c
+00002  c/cpp_to_c-2.cfg                                 c/comment-indent.c
+00003  c/cpp_to_c-3.cfg                                 c/comment-indent.c
+00004  c/indent-1.cfg                                   c/switch.c
+00005  c/ben_047.cfg                                    c/cmt-align.c
+00006  common/indent_columns-3.cfg                      c/comment-convert.c
+00007  c/cpp_to_c-1.cfg                                 c/comment-convert.c
+00008  c/cpp_to_c-2.cfg                                 c/comment-convert.c
+00009  c/cpp_to_c-3.cfg                                 c/comment-convert.c
 
 # brace styles
 
-00010  c/ben_048.cfg                              c/braces.c
-00011  common/brace-allman.cfg                    c/braces.c
-00012! c/brace-banner.cfg                         c/braces.c
-00013  c/brace-gnu.cfg                            c/braces.c
-00014  c/brace-kr.cfg                             c/braces.c
-00015  c/brace-ws.cfg                             c/braces.c
-00016  c/brace-ws2.cfg                            c/braces.c
-00017  c/brace-force.cfg                          c/brace-force.c
+00010  c/ben_048.cfg                                    c/braces.c
+00011  common/brace-allman.cfg                          c/braces.c
+00012! c/brace-banner.cfg                               c/braces.c
+00013  c/brace-gnu.cfg                                  c/braces.c
+00014  c/brace-kr.cfg                                   c/braces.c
+00015  c/brace-ws.cfg                                   c/braces.c
+00016  c/brace-ws2.cfg                                  c/braces.c
+00017  c/brace-force.cfg                                c/brace-force.c
 
-00020  c/ben_049.cfg                              c/define-if-indent.c
-00050  c/brace-remove-2.cfg                       c/brace-remove.c
-00051  c/brace-remove-all.cfg                     c/brace-remove.c
-00052  c/brace-remove-all.cfg                     c/brace-remove2.c
-00053  c/nl_brace_test.cfg                        c/brace.c
-00054  c/if_chain.cfg                             c/if_chain.c
-00055  c/cgal.cfg                                 c/braces-2.c
-00056  c/brace-remove-all.cfg                     c/brace-remove3.c
-00057  c/if_chain.cfg                             c/brace-remove3.c
-00058  c/brace-kr-nobr.cfg                        c/if_chain.c
-00059  c/Issue_2205.cfg                           c/Issue_2205.c
+00020  c/ben_049.cfg                                    c/define-if-indent.c
+00050  c/brace-remove-2.cfg                             c/brace-remove.c
+00051  c/brace-remove-all.cfg                           c/brace-remove.c
+00052  c/brace-remove-all.cfg                           c/brace-remove2.c
+00053  c/nl_brace_test.cfg                              c/brace.c
+00054  c/if_chain.cfg                                   c/if_chain.c
+00055  c/cgal.cfg                                       c/braces-2.c
+00056  c/brace-remove-all.cfg                           c/brace-remove3.c
+00057  c/if_chain.cfg                                   c/brace-remove3.c
+00058  c/brace-kr-nobr.cfg                              c/if_chain.c
+00059  c/Issue_2205.cfg                                 c/Issue_2205.c
 
-00060  c/ben_050.cfg                              c/braces-2.c
-00061  c/ben_051.cfg                              c/braces-3.c
-00062  c/ben_052.cfg                              c/braces-4.c
-00065  c/ben_053.cfg                              c/braces-5.c
-00066  c/ben_054.cfg                              c/vb-while.c
-00067  c/ben_055.cfg                              c/vb-do.c
-00068  c/ben_056.cfg                              c/bsnl.c
-00069  c/ben_057.cfg                              c/vb-pp.c
+00060  c/ben_050.cfg                                    c/braces-2.c
+00061  c/ben_051.cfg                                    c/braces-3.c
+00062  c/ben_052.cfg                                    c/braces-4.c
+00065  c/ben_053.cfg                                    c/braces-5.c
+00066  c/ben_054.cfg                                    c/vb-while.c
+00067  c/ben_055.cfg                                    c/vb-do.c
+00068  c/ben_056.cfg                                    c/bsnl.c
+00069  c/ben_057.cfg                                    c/vb-pp.c
 
-00070  c/ben_058.cfg                              c/return-multi.c
-00071  common/ben_042.cfg                         c/include_define.h
-00072  common/star_pos-0.cfg                      c/align-proto.c
-00073  common/empty.cfg                           c/nl_proto_endif.c
-00074  c/clang-has_include.cfg                    c/clang-has_include.h
-00075  common/tde.cfg                             c/function_prototypes_alignment.c
-00076  c/1225.cfg                                 c/1225.c
-00077  common/empty.cfg                           c/Issue_4176.c
+00070  c/ben_058.cfg                                    c/return-multi.c
+00071  common/ben_042.cfg                               c/include_define.h
+00072  common/star_pos-0.cfg                            c/align-proto.c
+00073  common/empty.cfg                                 c/nl_proto_endif.c
+00074  c/clang-has_include.cfg                          c/clang-has_include.h
+00075  common/tde.cfg                                   c/function_prototypes_alignment.c
+00076  c/1225.cfg                                       c/1225.c
+00077  common/empty.cfg                                 c/Issue_4176.c
 
-00081  c/else-if-1.cfg                            c/else-if.c
-00082  c/else-if-2.cfg                            c/else-if.c
-00083  c/Issue_3601.cfg                           c/Issue_3601.c
+00081  c/else-if-1.cfg                                  c/else-if.c
+00082  c/else-if-2.cfg                                  c/else-if.c
+00083  c/Issue_3601.cfg                                 c/Issue_3601.c
 
-00091  c/cond-1.cfg                               c/cond.c
-00092  common/indent_columns-3.cfg                c/cond.c
-00093  c/sp_cond_colon.cfg                        c/cond.c
-00094  c/Issue_3457.cfg                           c/Issue_3457.c
+00091  c/cond-1.cfg                                     c/cond.c
+00092  common/indent_columns-3.cfg                      c/cond.c
+00093  c/sp_cond_colon.cfg                              c/cond.c
+00094  c/Issue_3457.cfg                                 c/Issue_3457.c
 
-00101  c/ben_061.cfg                              c/bugs-1.c
-00102  c/space_indent_columns-3.cfg               c/bugs-2.c
-00103  c/ben_063.cfg                              c/bugs-3.c
-00104  c/ben_064.cfg                              c/bugs-4.c
-00105  c/ben_065.cfg                              c/bugs-5.c
-00106  common/ben_011.cfg                         c/bugs-6.c
-00107  common/ben_011.cfg                         c/bugs-7.c
-00108  common/indent_columns-3.cfg                c/bugs-8.c
+00101  c/ben_061.cfg                                    c/bugs-1.c
+00102  c/space_indent_columns-3.cfg                     c/bugs-2.c
+00103  c/ben_063.cfg                                    c/bugs-3.c
+00104  c/ben_064.cfg                                    c/bugs-4.c
+00105  c/ben_065.cfg                                    c/bugs-5.c
+00106  common/ben_011.cfg                               c/bugs-6.c
+00107  common/ben_011.cfg                               c/bugs-7.c
+00108  common/indent_columns-3.cfg                      c/bugs-8.c
 
-00110  c/ben_069.cfg                              c/misc.c
-00111  c/brace-kr-br.cfg                          c/misc.c
-00112  common/empty.cfg                           c/Issue_4182.c
+00110  c/ben_069.cfg                                    c/misc.c
+00111  c/brace-kr-br.cfg                                c/misc.c
+00112  common/empty.cfg                                 c/Issue_4182.c
 
-00120  c/sp_cmt_cpp_start-r.cfg                   c/sp_cmt_cpp_start.c
-00121  common/sp_cmt_cpp_start-a.cfg              c/sp_cmt_cpp_start.c
-00122  common/sp_cmt_cpp_start_force.cfg          c/sp_cmt_cpp_start.c
-00123  c/cmt_reflow.cfg                           c/cmt_reflow.c
+00120  c/sp_cmt_cpp_start-r.cfg                         c/sp_cmt_cpp_start.c
+00121  common/sp_cmt_cpp_start-a.cfg                    c/sp_cmt_cpp_start.c
+00122  common/sp_cmt_cpp_start_force.cfg                c/sp_cmt_cpp_start.c
+00123  c/cmt_reflow.cfg                                 c/cmt_reflow.c
 
-00130  c/ben_070.cfg                              c/minus-minus.c
-00131  c/Issue_3873.cfg                           c/Issue_3873.c
-00135  c/nepenthes.cfg                            c/br_cmt.c
-00136  common/empty.cfg                           c/Issue_4044.c
+00130  c/ben_070.cfg                                    c/minus-minus.c
+00131  c/Issue_3873.cfg                                 c/Issue_3873.c
+00135  c/nepenthes.cfg                                  c/br_cmt.c
+00136  common/empty.cfg                                 c/Issue_4044.c
 
-00140  c/ben_071.cfg                              c/global-vars.c
-00141  c/ben_072.cfg                              c/deref.c
-00142  c/ben_073.cfg                              c/type-cast.c
-00143  c/ben_074.cfg                              c/t3.in.c
-00144  c/ben_075.cfg                              c/align-proto-vars.c
-00145  c/ben_076.cfg                              c/vardefcol.c
-00146  c/Issue_3516.cfg                           c/Issue_3516.c
-00147  c/Issue_3517.cfg                           c/Issue_3516.c
-00148  c/Issue_3518.cfg                           c/Issue_3518.c
+00140  c/ben_071.cfg                                    c/global-vars.c
+00141  c/ben_072.cfg                                    c/deref.c
+00142  c/ben_073.cfg                                    c/type-cast.c
+00143  c/ben_074.cfg                                    c/t3.in.c
+00144  c/ben_075.cfg                                    c/align-proto-vars.c
+00145  c/ben_076.cfg                                    c/vardefcol.c
+00146  c/Issue_3516.cfg                                 c/Issue_3516.c
+00147  c/Issue_3517.cfg                                 c/Issue_3516.c
+00148  c/Issue_3518.cfg                                 c/Issue_3518.c
 
 # casts
 
-00150  c/ben_077.cfg                              c/casts.c
-00151  c/cast-sp-r.cfg                            c/casts.c
-00152  c/cast-sp-a.cfg                            c/casts.c
-00153  c/cast-type.cfg                            c/casts.c
-00154  common/sp_after_cast.cfg                   c/casts.c
-00155  c/ben_078.cfg                              c/cast_brace.c
+00150  c/ben_077.cfg                                    c/casts.c
+00151  c/cast-sp-r.cfg                                  c/casts.c
+00152  c/cast-sp-a.cfg                                  c/casts.c
+00153  c/cast-type.cfg                                  c/casts.c
+00154  common/sp_after_cast.cfg                         c/casts.c
+00155  c/ben_078.cfg                                    c/cast_brace.c
 
-00156  c/nl_collapse_empty_1.cfg                  c/empty-braces.c
-00157  c/nl_collapse_empty_2.cfg                  c/empty-braces.c
-00158  c/nl_collapse_empty_3.cfg                  c/empty-braces.c
-00159  c/nl_collapse_empty_4.cfg                  c/empty-braces.c
+00156  c/nl_collapse_empty_1.cfg                        c/empty-braces.c
+00157  c/nl_collapse_empty_2.cfg                        c/empty-braces.c
+00158  c/nl_collapse_empty_3.cfg                        c/empty-braces.c
+00159  c/nl_collapse_empty_4.cfg                        c/empty-braces.c
 
 # fcn indents
 
-00160  c/indent_func_param.cfg                    c/fcn_indent.c
-00161  c/indent_func_call_param.cfg               c/fcn_indent.c
-00162  c/indent_func_def_param.cfg                c/fcn_indent.c
-00163  c/indent_func_proto_param.cfg              c/fcn_indent.c
-00164  c/rdan.cfg                                 c/fcn_indent_func_def_col1.c
-00165  c/sp_func_call_user_inside_fparen.cfg      c/sp_func_call_user_inside_fparen.c
+00160  c/indent_func_param.cfg                          c/fcn_indent.c
+00161  c/indent_func_call_param.cfg                     c/fcn_indent.c
+00162  c/indent_func_def_param.cfg                      c/fcn_indent.c
+00163  c/indent_func_proto_param.cfg                    c/fcn_indent.c
+00164  c/rdan.cfg                                       c/fcn_indent_func_def_col1.c
+00165  c/sp_func_call_user_inside_fparen.cfg            c/sp_func_call_user_inside_fparen.c
 
-00170  common/empty.cfg                           c/beautifier-off.c
-00180  c/sf538.cfg                                c/lvalue.c
+00170  common/empty.cfg                                 c/beautifier-off.c
+00180  c/sf538.cfg                                      c/lvalue.c
 
-00190  common/empty.cfg                           c/Issue_3559.c
+00190  common/empty.cfg                                 c/Issue_3559.c
 
 
 # switch & case stuff
 
-00201  c/case-1.cfg                               c/case.c
-00202  c/case-2.cfg                               c/case.c
-00203  c/case-3.cfg                               c/case.c
-00204  c/bug_1718.cfg                             c/bug_1718.c
-00205  c/nl_before_return_false.cfg               c/case-nl_before_return.c
-00206  c/nl_before_return_true.cfg                c/case-nl_before_return.c
-00207  common/nl_before_ignore_after_case.cfg     c/nl_before_ignore_after_case.c
+00201  c/case-1.cfg                                     c/case.c
+00202  c/case-2.cfg                                     c/case.c
+00203  c/case-3.cfg                                     c/case.c
+00204  c/bug_1718.cfg                                   c/bug_1718.c
+00205  c/nl_before_return_false.cfg                     c/case-nl_before_return.c
+00206  c/nl_before_return_true.cfg                      c/case-nl_before_return.c
+00207  common/nl_before_ignore_after_case.cfg           c/nl_before_ignore_after_case.c
 
 
 # structure initializers
 
-00301  c/ben_079.cfg                              c/align-struct-init.c
-00302  c/ben_080.cfg                              c/one-liner-init.c
-00303  c/1liner-split.cfg                         c/one-liner-init.c
-00304  c/1liner-no-split.cfg                      c/one-liner-init.c
-00305  c/ben_081.cfg                              c/one-liner-define.c
+00301  c/ben_079.cfg                                    c/align-struct-init.c
+00302  c/ben_080.cfg                                    c/one-liner-init.c
+00303  c/1liner-split.cfg                               c/one-liner-init.c
+00304  c/1liner-no-split.cfg                            c/one-liner-init.c
+00305  c/ben_081.cfg                                    c/one-liner-define.c
 
-00310  common/empty.cfg                           c/sp_embed_comment.c
-00311  c/comment_conversion.cfg                   c/comment_conversion_define.c
-00312  c/comment_conversion.cfg                   c/comment_conversion_endif.c
-00313  c/comment_conversion.cfg                   c/comment_conversion_long_lines.c
-00314  c/comment_conversion.cfg                   c/comment_conversion_javadoc_single.c
-00315  common/tde.cfg                             c/comment_conversion_trailing_c_multiline.c
-00316  c/emb_cmt_normal.cfg                       c/emb_cmt_spacing.c
-00317  c/emb_cmt_high_priority.cfg                c/emb_cmt_spacing.c
-00318  c/emb_cmt_high_priority_before.cfg         c/emb_cmt_spacing.c
-00319  c/emb_cmt_high_priority_after.cfg          c/emb_cmt_spacing.c
+00310  common/empty.cfg                                 c/sp_embed_comment.c
+00311  c/comment_conversion.cfg                         c/comment_conversion_define.c
+00312  c/comment_conversion.cfg                         c/comment_conversion_endif.c
+00313  c/comment_conversion.cfg                         c/comment_conversion_long_lines.c
+00314  c/comment_conversion.cfg                         c/comment_conversion_javadoc_single.c
+00315  common/tde.cfg                                   c/comment_conversion_trailing_c_multiline.c
+00316  c/emb_cmt_normal.cfg                             c/emb_cmt_spacing.c
+00317  c/emb_cmt_high_priority.cfg                      c/emb_cmt_spacing.c
+00318  c/emb_cmt_high_priority_before.cfg               c/emb_cmt_spacing.c
+00319  c/emb_cmt_high_priority_after.cfg                c/emb_cmt_spacing.c
 
-00320  c/rdan.cfg                                 c/indent_first_bool_expr.c
+00320  c/rdan.cfg                                       c/indent_first_bool_expr.c
 
 
 # aligning tresholds
 
-00401  common/align-1.cfg                         c/align-equ.c
-00402  common/align-1.cfg                         c/align-var.c
-00403  c/align-2.cfg                              c/align-var.c
-00404  c/align-3.cfg                              c/align-var.c
-00405  c/align-3.cfg                              c/bits.c
-00406  c/bug_i_771.cfg                            c/bug_i_771.c
-00407  c/star-style-0.cfg                         c/star-style.c
-00408  c/star-style-1.cfg                         c/star-style.c
-00409  c/star-style-2.cfg                         c/star-style.c
+00401  common/align-1.cfg                               c/align-equ.c
+00402  common/align-1.cfg                               c/align-var.c
+00403  c/align-2.cfg                                    c/align-var.c
+00404  c/align-3.cfg                                    c/align-var.c
+00405  c/align-3.cfg                                    c/bits.c
+00406  c/bug_i_771.cfg                                  c/bug_i_771.c
+00407  c/star-style-0.cfg                               c/star-style.c
+00408  c/star-style-1.cfg                               c/star-style.c
+00409  c/star-style-2.cfg                               c/star-style.c
 
-00411  c/align_typedef_gap-3_span-5.cfg           c/align-typedef.c
-00412  c/align_typedef_gap-3_span-5.cfg           c/align-typedef.c
-00413  c/align_typedef_func-1.cfg                 c/align-typedef.c
-00414  c/align_typedef_func-2.cfg                 c/align-typedef.c
-00415  c/align_stack.cfg                          c/align_stack.c
-00416  c/align_sf_call_thresh_416.cfg             c/align_sf_call_thresh_416.c
-00417  c/align_sf_call_thresh_417.cfg             c/align_sf_call_thresh_417.c
-00418  c/align_sf_call_span_418.cfg               c/align_sf_call_span_418.c
-00419  c/align_sf_call_span_419.cfg               c/align_sf_call_span_419.c
-00420  c/Issue_2278.cfg                           c/Issue_2278.c
+00411  c/align_typedef_gap-3_span-5.cfg                 c/align-typedef.c
+00412  c/align_typedef_gap-3_span-5.cfg                 c/align-typedef.c
+00413  c/align_typedef_func-1.cfg                       c/align-typedef.c
+00414  c/align_typedef_func-2.cfg                       c/align-typedef.c
+00415  c/align_stack.cfg                                c/align_stack.c
+00416  c/align_sf_call_thresh_416.cfg                   c/align_sf_call_thresh_416.c
+00417  c/align_sf_call_thresh_417.cfg                   c/align_sf_call_thresh_417.c
+00418  c/align_sf_call_span_418.cfg                     c/align_sf_call_span_418.c
+00419  c/align_sf_call_span_419.cfg                     c/align_sf_call_span_419.c
+00420  c/Issue_2278.cfg                                 c/Issue_2278.c
 
-00421  c/nl_ds_struct_enum_cmt-t.cfg              c/nl_ds_struct_enum.c
-00422  c/nl_ds_struct_enum-2.cfg                  c/nl_ds_struct_enum.c
-00423  c/bug_1702.cfg                             c/bug_1702.c
-00424  c/Issue_3506.cfg                           c/Issue_3506.c
+00421  c/nl_ds_struct_enum_cmt-t.cfg                    c/nl_ds_struct_enum.c
+00422  c/nl_ds_struct_enum-2.cfg                        c/nl_ds_struct_enum.c
+00423  c/bug_1702.cfg                                   c/bug_1702.c
+00424  c/Issue_3506.cfg                                 c/Issue_3506.c
 
-00430  common/empty.cfg                           c/paren-indent.c
-00431  c/indent_paren_close-1.cfg                 c/paren-indent.c
-00432  c/indent_paren_close-2.cfg                 c/paren-indent.c
+00430  common/empty.cfg                                 c/paren-indent.c
+00431  c/indent_paren_close-1.cfg                       c/paren-indent.c
+00432  c/indent_paren_close-2.cfg                       c/paren-indent.c
 
-00440  c/bug_489.cfg                              c/bug_489.c
+00440  c/bug_489.cfg                                    c/bug_489.c
 
-00451  c/code_width-80.cfg                        c/enum_gallery.c
-00452  c/nl_enum_own_lines-a.cfg                  c/enum_gallery.c
-00453! c/nl_enum_own_lines-3.cfg                  c/enum_gallery.c
-00454  c/nl_enum_own_lines-4.cfg                  c/enum_gallery.c
+00451  c/code_width-80.cfg                              c/enum_gallery.c
+00452  c/nl_enum_own_lines-a.cfg                        c/enum_gallery.c
+00453! c/nl_enum_own_lines-3.cfg                        c/enum_gallery.c
+00454  c/nl_enum_own_lines-4.cfg                        c/enum_gallery.c
 
-00461  c/align_func_proto_star_amp-1.cfg          c/align_func_proto_star_amp.h
-00462  c/align_func_proto_star_amp-2.cfg          c/align_func_proto_star_amp.h
-00463  c/align_func_proto_star_amp-3.cfg          c/align_func_proto_star_amp.h
-00464  c/align_func_proto_star_amp-4.cfg          c/align_func_proto_star_amp.h
-00465  c/align_func_proto_star_amp-5.cfg          c/align_func_proto_star_amp.h
-00466  c/align_func_proto_star_amp-6.cfg          c/align_func_proto_star_amp.h
-00467  c/align_func_proto_star_amp-7.cfg          c/align_func_proto_star_amp.h
-00468  c/align_func_proto_star_amp-8.cfg          c/align_func_proto_star_amp.h
-00469  c/align_func_proto_star_amp-9.cfg          c/align_func_proto_star_amp.h
+00461  c/align_func_proto_star_amp-1.cfg                c/align_func_proto_star_amp.h
+00462  c/align_func_proto_star_amp-2.cfg                c/align_func_proto_star_amp.h
+00463  c/align_func_proto_star_amp-3.cfg                c/align_func_proto_star_amp.h
+00464  c/align_func_proto_star_amp-4.cfg                c/align_func_proto_star_amp.h
+00465  c/align_func_proto_star_amp-5.cfg                c/align_func_proto_star_amp.h
+00466  c/align_func_proto_star_amp-6.cfg                c/align_func_proto_star_amp.h
+00467  c/align_func_proto_star_amp-7.cfg                c/align_func_proto_star_amp.h
+00468  c/align_func_proto_star_amp-8.cfg                c/align_func_proto_star_amp.h
+00469  c/align_func_proto_star_amp-9.cfg                c/align_func_proto_star_amp.h
 
-00470  c/align_trailing_do_cmt.cfg                c/align_trailing_do_cmt.c
+00470  c/align_trailing_do_cmt.cfg                      c/align_trailing_do_cmt.c
 
 # boolean and comma positioning
 
-00501  c/bool-pos-eol.cfg                         c/bool-pos.c
-00502  c/bool-pos-sol.cfg                         c/bool-pos.c
-00503  c/pos_compare-sol.cfg                      c/pos_compare.c
-00504  c/pos_compare-eol.cfg                      c/pos_compare.c
-00505  c/pos_conditional-l.cfg                    c/pos_conditional.c
-00506  c/pos_conditional-t.cfg                    c/pos_conditional.c
-00510  c/bool-pos-eol-break.cfg                   c/bool-pos.c
-00511  c/bool-pos-sol-break.cfg                   c/bool-pos.c
-00512  common/bool-pos-eol-force.cfg              c/bool-pos.c
-00513  c/bool-pos-sol-force.cfg                   c/bool-pos.c
-00514  c/my_conf.cfg                              c/my_infile.c
+00501  c/bool-pos-eol.cfg                               c/bool-pos.c
+00502  c/bool-pos-sol.cfg                               c/bool-pos.c
+00503  c/pos_compare-sol.cfg                            c/pos_compare.c
+00504  c/pos_compare-eol.cfg                            c/pos_compare.c
+00505  c/pos_conditional-l.cfg                          c/pos_conditional.c
+00506  c/pos_conditional-t.cfg                          c/pos_conditional.c
+00510  c/bool-pos-eol-break.cfg                         c/bool-pos.c
+00511  c/bool-pos-sol-break.cfg                         c/bool-pos.c
+00512  common/bool-pos-eol-force.cfg                    c/bool-pos.c
+00513  c/bool-pos-sol-force.cfg                         c/bool-pos.c
+00514  c/my_conf.cfg                                    c/my_infile.c
 
-00600  common/indent_columns-3.cfg                c/dos.c
-00601  common/indent_columns-3.cfg                c/mac.c
-00611  common/empty.cfg                           c/pp-space.c
-00612  c/pp-indent-2.cfg                          c/pp-space.c
-00613  c/pp_indent-a.cfg                          c/pp-space.c
-00614  c/pp-space.cfg                             c/pp-space.c
-00615  c/pp-indent-2.cfg                          c/pp-nest.c
-00616  c/pp_if_indent-1.cfg                       c/pp-if-indent.c
-00617  c/rdan.cfg                                 c/pp-if-indent.c
-00618  c/pp_if_indent-4.cfg                       c/pp-if-indent.c
-00619  c/Issue_3169.cfg                           c/Issue_3169.c
+00600  common/indent_columns-3.cfg                      c/dos.c
+00601  common/indent_columns-3.cfg                      c/mac.c
+00611  common/empty.cfg                                 c/pp-space.c
+00612  c/pp-indent-2.cfg                                c/pp-space.c
+00613  c/pp_indent-a.cfg                                c/pp-space.c
+00614  c/pp-space.cfg                                   c/pp-space.c
+00615  c/pp-indent-2.cfg                                c/pp-nest.c
+00616  c/pp_if_indent-1.cfg                             c/pp-if-indent.c
+00617  c/rdan.cfg                                       c/pp-if-indent.c
+00618  c/pp_if_indent-4.cfg                             c/pp-if-indent.c
+00619  c/Issue_3169.cfg                                 c/Issue_3169.c
 
-00620  c/ben_083.cfg                              c/indent-assign.c
-00621  c/nl_endif.cfg                             c/nl_endif.c
-00622  c/indent_assign.cfg                        c/indent-off-after-assign.c
+00620  c/ben_083.cfg                                    c/indent-assign.c
+00621  c/nl_endif.cfg                                   c/nl_endif.c
+00622  c/indent_assign.cfg                              c/indent-off-after-assign.c
 
-00623  c/pp_space_none.cfg                        c/pp_space_before_after.c
-00624  c/pp_space_after.cfg                       c/pp_space_before_after.c
-00625  c/pp_space_before.cfg                      c/pp_space_before_after.c
-00626  c/pp_space_before_after.cfg                c/pp_space_before_after.c
+00623  c/pp_space_none.cfg                              c/pp_space_before_after.c
+00624  c/pp_space_after.cfg                             c/pp_space_before_after.c
+00625  c/pp_space_before.cfg                            c/pp_space_before_after.c
+00626  c/pp_space_before_after.cfg                      c/pp_space_before_after.c
 
-00631  c/nl_assign1.cfg                           c/nl_assign.c
-00632  c/nl_assign2.cfg                           c/nl_assign.c
-00633  c/nl_assign1.cfg                           c/bug_3156.c
+00631  c/nl_assign1.cfg                                 c/nl_assign.c
+00632  c/nl_assign2.cfg                                 c/nl_assign.c
+00633  c/nl_assign1.cfg                                 c/bug_3156.c
 
 00650  common/nl_bool_expr_hierarchical_lead.cfg        c/nl_bool_expr_hierarchical.c
 00651  common/nl_bool_expr_hierarchical_trail.cfg       c/nl_bool_expr_hierarchical.c
 
 # function def newlines
 
-00701  common/func-def-1.cfg                      c/function-def.c
-00702  common/func-def-2.cfg                      c/function-def.c
-00703  common/func-def-3.cfg                      c/function-def.c
+00701  common/func-def-1.cfg                            c/function-def.c
+00702  common/func-def-2.cfg                            c/function-def.c
+00703  common/func-def-3.cfg                            c/function-def.c
 
-00710  c/add_long_closebrace_comment_1.cfg        c/add_long_comment.c
+00710  c/add_long_closebrace_comment_1.cfg              c/add_long_comment.c
 
 # nl_after_semicolon and nl_after_open_brace
 
-00721  c/nl_semicolon.cfg                         c/nl-semicolon.c
+00721  c/nl_semicolon.cfg                               c/nl-semicolon.c
 
 # function call newlines
 
-00730  c/nl_func_call-1.cfg                       c/nl_func_call.c
-00731  c/nl_func_call-2.cfg                       c/nl_func_call.c
-00732  c/nl_func_call-3.cfg                       c/nl_func_call.c
-00733  c/nl_func_call-4.cfg                       c/nl_func_call.c
-00734  c/nl_func_call-5.cfg                       c/nl_func_call.c
+00730  c/nl_func_call-1.cfg                             c/nl_func_call.c
+00731  c/nl_func_call-2.cfg                             c/nl_func_call.c
+00732  c/nl_func_call-3.cfg                             c/nl_func_call.c
+00733  c/nl_func_call-4.cfg                             c/nl_func_call.c
+00734  c/nl_func_call-5.cfg                             c/nl_func_call.c
 
 # function types
 
-00801  c/ben_084.cfg                              c/fcn_type.c
-00802  c/ben_085.cfg                              c/funcfunc.c
-00803  c/sf537.cfg                                c/fcn_type.c
+00801  c/ben_084.cfg                                    c/fcn_type.c
+00802  c/ben_085.cfg                                    c/funcfunc.c
+00803  c/sf537.cfg                                      c/fcn_type.c
 
 # code width
 
-00901  c/width.cfg                                c/code_width.c
-00902  common/width-2.cfg                         c/code_width.c
-00903  c/width-3.cfg                              c/code_width.c
+00901  c/width.cfg                                      c/code_width.c
+00902  common/width-2.cfg                               c/code_width.c
+00903  c/width-3.cfg                                    c/code_width.c
 
 # pascal ptr_type
 
-00910  c/pascal_ptr.cfg                           c/pascal_ptr.c
-00911  c/empty_body.cfg                           c/pascal_ptr.c
+00910  c/pascal_ptr.cfg                                 c/pascal_ptr.c
+00911  c/empty_body.cfg                                 c/pascal_ptr.c
 
-01000  c/mod-paren.cfg                            c/mod-paren.c
-01001  c/nl-comment.cfg                           c/nl-comment.c
-01002  c/mod-paren2.cfg                           c/mod-paren.c
+01000  c/mod-paren.cfg                                  c/mod-paren.c
+01001  c/nl-comment.cfg                                 c/nl-comment.c
+01002  c/mod-paren2.cfg                                 c/mod-paren.c
 
-01005  c/mod_case_brace_add.cfg                   c/mod_case_brace.c
-01006  common/mod_case_brace_rm.cfg               c/mod_case_brace.c
-01007  c/mod_move_case_brace.cfg                  c/mod_case_brace.c
-01008  c/mod_case_brace_add.cfg                   c/Issue_3366.c
-01009  c/mod_move_case_return.cfg                 c/mod_move_case_return.c
-01010  c/mod_move_case_return.cfg                 c/mod_move_case_return_bad.c
+01005  c/mod_case_brace_add.cfg                         c/mod_case_brace.c
+01006  common/mod_case_brace_rm.cfg                     c/mod_case_brace.c
+01007  c/mod_move_case_brace.cfg                        c/mod_case_brace.c
+01008  c/mod_case_brace_add.cfg                         c/Issue_3366.c
+01009  c/mod_move_case_return.cfg                       c/mod_move_case_return.c
+01010  c/mod_move_case_return.cfg                       c/mod_move_case_return_bad.c
 
-01011  common/del_semicolon.cfg                   c/semicolons.c
-01012  c/ben_086.cfg                              c/semicolons.c
+01011  common/del_semicolon.cfg                         c/semicolons.c
+01012  c/ben_086.cfg                                    c/semicolons.c
 
-01015  common/empty.cfg                           c/paren_indent.c
-01016  c/align_attr.cfg                           c/align_attr.c
+01015  common/empty.cfg                                 c/paren_indent.c
+01016  c/align_attr.cfg                                 c/align_attr.c
 
-01020  common/kw_subst.cfg                        c/kw_subst.c
-01021  common/kw_subst3.cfg                       c/hello.c
-01022  common/kw_subst3.cfg                       c/kw_subst.c
+01020  common/kw_subst.cfg                              c/kw_subst.c
+01021  common/kw_subst3.cfg                             c/hello.c
+01022  common/kw_subst3.cfg                             c/kw_subst.c
 
-01030  c/cmt_indent_multi-f.cfg                   c/multi.h
+01030  c/cmt_indent_multi-f.cfg                         c/multi.h
 
-01035  common/empty.cfg                           c/func_wrap.c
-01036  common/sp_inside_fparen-f.cfg              c/func_wrap.c
-01037  c/type_wrap.cfg                            c/type_wrap.c
+01035  common/empty.cfg                                 c/func_wrap.c
+01036  common/sp_inside_fparen-f.cfg                    c/func_wrap.c
+01037  c/type_wrap.cfg                                  c/type_wrap.c
 
-01040  c/newline_after_endif.cfg                  c/newline_after_endif.c
+01040  c/newline_after_endif.cfg                        c/newline_after_endif.c
 
-01050  c/func_call_user.cfg                       c/func_call_user.c
+01050  c/func_call_user.cfg                             c/func_call_user.c
 
-01060  common/empty.cfg                           c/backslash-newline-lex.c
+01060  common/empty.cfg                                 c/backslash-newline-lex.c
 
-01070  c/label_colon_nl_1.cfg                     c/various_colons.c
-01071  c/label_colon_nl_2.cfg                     c/various_colons.c
+01070  c/label_colon_nl_1.cfg                           c/various_colons.c
+01071  c/label_colon_nl_2.cfg                           c/various_colons.c
 
-01080  common/empty.cfg                           c/bug_1196.c
+01080  common/empty.cfg                                 c/bug_1196.c
 
 # big general tests
 
-02000  c/ben_087.cfg                              c/i2c-core.c
-02001  c/preproc-cleanup.cfg                      c/directfb.h
-02002  common/ben2.cfg                            c/i2c-core.c
-02003  c/Issue_3353.cfg                           c/Issue_3353.h
+02000  c/ben_087.cfg                                    c/i2c-core.c
+02001  c/preproc-cleanup.cfg                            c/directfb.h
+02002  common/ben2.cfg                                  c/i2c-core.c
+02003  c/Issue_3353.cfg                                 c/Issue_3353.h
 
 # clark's style - blank lines before and after flow control, indented comments
 
-02100  common/clark.cfg                           c/i2c-core.c
-02101  common/clark.cfg                           c/comment-indent.c
+02100  common/clark.cfg                                 c/i2c-core.c
+02101  common/clark.cfg                                 c/comment-indent.c
 
-02200  c/xml-str.cfg                              c/xml.c
-02201  c/xml-str.cfg                              c/align-string.c
+02200  c/xml-str.cfg                                    c/xml.c
+02201  c/xml-str.cfg                                    c/align-string.c
 
-02300  c/ben_088.cfg                              c/preproc-if.c
-02301  common/d.cfg                               c/preproc-if.c
-02302  c/cpp_to_c-1.cfg                           c/nl-cont.c
-02303  c/cpp_to_c-1.cfg                           c/nl-cont2.c
+02300  c/ben_088.cfg                                    c/preproc-if.c
+02301  common/d.cfg                                     c/preproc-if.c
+02302  c/cpp_to_c-1.cfg                                 c/nl-cont.c
+02303  c/cpp_to_c-1.cfg                                 c/nl-cont2.c
 
-02310  c/ben_089.cfg                              c/empty-for.c
-02311  c/ben_090.cfg                              c/pragma.c
+02310  c/ben_089.cfg                                    c/empty-for.c
+02311  c/ben_090.cfg                                    c/pragma.c
 
-02315  c/pp_ret.cfg                               c/pp_ret.c
+02315  c/pp_ret.cfg                                     c/pp_ret.c
 
-02320  c/nl_create_one_liner.cfg                  c/nl_create_one_liner.c
-02325  common/sort_imports.cfg                    c/sort_include.c
+02320  c/nl_create_one_liner.cfg                        c/nl_create_one_liner.c
+02325  common/sort_imports.cfg                          c/sort_include.c
 
-02330  c/leave_one_liners.cfg                     c/one_liners.c
+02330  c/leave_one_liners.cfg                           c/one_liners.c
 
 # some embedded sql stuff
 
-02400  c/ben_091.cfg                              sql/mysql.sqc                   C
-02401  c/ben_092.cfg                              sql/sta-select.sqc              C
-02402  c/issue_527.cfg                            sql/issue_527.sqc               C
+02400  c/ben_091.cfg                                    sql/mysql.sqc                   C
+02401  c/ben_092.cfg                                    sql/sta-select.sqc              C
+02402  c/issue_527.cfg                                  sql/issue_527.sqc               C
 
-02410  c/pp_if_indent-0.cfg                       c/ifdef-indent.c
-02411  c/pp_if_indent-1.cfg                       c/ifdef-indent.c
-02412  c/pp_if_indent-2.cfg                       c/ifdef-indent.c
-02413  c/pp_if_indent-3.cfg                       c/ifdef-indent.c
-02414  c/nl_whole_file_ifdef.cfg                  c/whole_file_ifdef.c
-02415  c/endif.cfg                                c/endif.c
-02416  c/cmt_nl_end.cfg                           c/cmt_nl_end.c
+02410  c/pp_if_indent-0.cfg                             c/ifdef-indent.c
+02411  c/pp_if_indent-1.cfg                             c/ifdef-indent.c
+02412  c/pp_if_indent-2.cfg                             c/ifdef-indent.c
+02413  c/pp_if_indent-3.cfg                             c/ifdef-indent.c
+02414  c/nl_whole_file_ifdef.cfg                        c/whole_file_ifdef.c
+02415  c/endif.cfg                                      c/endif.c
+02416  c/cmt_nl_end.cfg                                 c/cmt_nl_end.c
 
-02421  c/cmt_multi_check_last-f.cfg               c/cmt_multi.c
-02422  common/empty.cfg                           c/cmt_multi.c
-02423  common/empty.cfg                           c/cmt_multi_utf8.c
+02421  c/cmt_multi_check_last-f.cfg                     c/cmt_multi.c
+02422  common/empty.cfg                                 c/cmt_multi.c
+02423  common/empty.cfg                                 c/cmt_multi_utf8.c
 
-02431  c/align_right_cmt_gap-1.cfg                c/cmt_right_align.c
-02432  c/space_indent_columns-3.cfg               c/cmt_right_align.c
+02431  c/align_right_cmt_gap-1.cfg                      c/cmt_right_align.c
+02432  c/space_indent_columns-3.cfg                     c/cmt_right_align.c
 
-02440  common/empty.cfg                           c/string_utf8.c
-02441  common/empty.cfg                           c/utf8-identifiers.c
+02440  common/empty.cfg                                 c/string_utf8.c
+02441  common/empty.cfg                                 c/utf8-identifiers.c
 
-02451  c/return-1.cfg                             c/nl_return_expr.c
-02452  c/return-2.cfg                             c/nl_return_expr.c
-02453  c/return-3.cfg                             c/nl_return_expr.c
-02454  c/return-4.cfg                             c/nl_return_expr.c
+02451  c/return-1.cfg                                   c/nl_return_expr.c
+02452  c/return-2.cfg                                   c/nl_return_expr.c
+02453  c/return-3.cfg                                   c/nl_return_expr.c
+02454  c/return-4.cfg                                   c/nl_return_expr.c
 
-02455  common/mod_paren_on_return-a.cfg           c/macro-returns.c
-02456  common/mod_paren_on_return-r.cfg           c/macro-returns.c
-02457  c/nl_before_return_true.cfg                c/nl_before_return.c
+02455  common/mod_paren_on_return-a.cfg                 c/macro-returns.c
+02456  common/mod_paren_on_return-r.cfg                 c/macro-returns.c
+02457  c/nl_before_return_true.cfg                      c/nl_before_return.c
 
-02460  c/freebsd.cfg                              c/freebsd.c
+02460  c/freebsd.cfg                                    c/freebsd.c
 
-02486  c/doxy-comment-no.cfg                      c/doxy-comment.c
-02487  c/doxy-comment-yes.cfg                     c/doxy-comment.c
+02486  c/doxy-comment-no.cfg                            c/doxy-comment.c
+02487  c/doxy-comment-yes.cfg                           c/doxy-comment.c
 
-02501  c/ger.cfg                                  c/custom_types_ssl.c
-02502  c/custom_types_ssl.cfg                     c/custom_types_ssl.c
-#02503  ger.cfg                                    c/pp_concat_asn1.h
+02501  c/ger.cfg                                        c/custom_types_ssl.c
+02502  c/custom_types_ssl.cfg                           c/custom_types_ssl.c
+#02503  ger.cfg                                          c/pp_concat_asn1.h
 
-02504  c/align_keep_extra.cfg                     c/align_keep_extra.c
-02505  c/align_multi.cfg                          c/align_assigns.c
-02506  c/align-4.cfg                              c/align_assign_var_defs.c
+02504  c/align_keep_extra.cfg                           c/align_keep_extra.c
+02505  c/align_multi.cfg                                c/align_assigns.c
+02506  c/align-4.cfg                                    c/align_assign_var_defs.c
 
-02510  c/ben_093.cfg                              c/asm.c
+02510  c/ben_093.cfg                                    c/asm.c
 
-02520  c/pp_indent_with_tabs_0.cfg                c/pp_indent_with_tabs.c
-02521  c/pp_indent_with_tabs_1.cfg                c/pp_indent_with_tabs.c
-02522  c/pp_indent_with_tabs_2.cfg                c/pp_indent_with_tabs.c
-02523  c/pp_indent_with_tabs_-1_0.cfg             c/pp_indent_with_tabs.c
-02524  c/pp_indent_with_tabs_-1_1.cfg             c/pp_indent_with_tabs.c
-02525  c/pp_indent_with_tabs_-1_2.cfg             c/pp_indent_with_tabs.c
+02520  c/pp_indent_with_tabs_0.cfg                      c/pp_indent_with_tabs.c
+02521  c/pp_indent_with_tabs_1.cfg                      c/pp_indent_with_tabs.c
+02522  c/pp_indent_with_tabs_2.cfg                      c/pp_indent_with_tabs.c
+02523  c/pp_indent_with_tabs_-1_0.cfg                   c/pp_indent_with_tabs.c
+02524  c/pp_indent_with_tabs_-1_1.cfg                   c/pp_indent_with_tabs.c
+02525  c/pp_indent_with_tabs_-1_2.cfg                   c/pp_indent_with_tabs.c
 
-02530  common/empty.cfg                           c/pp_multiline_define.c
-02531  common/Issue_3052.cfg                      c/pp_multiline_define.c
-02532  c/pp_multiline_define_ignore_body.cfg      c/pp_multiline_define.c
-02533  c/pp_multiline_define_with_spaces.cfg      c/pp_multiline_define.c
-02534  c/pp_multiline_define_align_nl.cfg         c/pp_multiline_define.c
-02535  c/pp_multiline_define_align_pp_col1.cfg    c/pp_multiline_define.c
-02536  c/pp_multiline_define_align_pp_cnt3.cfg    c/pp_multiline_define.c
-02537  c/pp_multiline_define_align_pp_ml4.cfg     c/pp_multiline_define.c
-02538  c/pp_multiline_define_align_pp_ml2.cfg     c/pp_multiline_define.c
-02539  c/pp_multiline_define_align_pp_ml0.cfg     c/pp_multiline_define.c
-02540  c/pp_multiline_define_align_pp_ml-1.cfg    c/pp_multiline_define.c
-02541  c/pp_multiline_define_align_pp_ml-5.cfg    c/pp_multiline_define.c
-02542  c/align_nl_cont-2.cfg                      c/pp_multiline_define.c
-02543  c/align_nl_cont-3.cfg                      c/pp_multiline_define.c
-02544  c/align_nl_cont_spaces-5.cfg               c/pp_multiline_define.c
+02530  common/empty.cfg                                 c/pp_multiline_define.c
+02531  common/Issue_3052.cfg                            c/pp_multiline_define.c
+02532  c/pp_multiline_define_ignore_body.cfg            c/pp_multiline_define.c
+02533  c/pp_multiline_define_with_spaces.cfg            c/pp_multiline_define.c
+02534  c/pp_multiline_define_align_nl.cfg               c/pp_multiline_define.c
+02535  c/pp_multiline_define_align_pp_col1.cfg          c/pp_multiline_define.c
+02536  c/pp_multiline_define_align_pp_cnt3.cfg          c/pp_multiline_define.c
+02537  c/pp_multiline_define_align_pp_ml4.cfg           c/pp_multiline_define.c
+02538  c/pp_multiline_define_align_pp_ml2.cfg           c/pp_multiline_define.c
+02539  c/pp_multiline_define_align_pp_ml0.cfg           c/pp_multiline_define.c
+02540  c/pp_multiline_define_align_pp_ml-1.cfg          c/pp_multiline_define.c
+02541  c/pp_multiline_define_align_pp_ml-5.cfg          c/pp_multiline_define.c
+02542  c/align_nl_cont-2.cfg                            c/pp_multiline_define.c
+02543  c/align_nl_cont-3.cfg                            c/pp_multiline_define.c
+02544  c/align_nl_cont_spaces-5.cfg                     c/pp_multiline_define.c
 
-02550  c/Issue_3852.cfg                           c/func_var_multi_paren.c
-02551  common/neovim.cfg                          c/line_multi_split_1.c
-02552  common/tde.cfg                             c/line_multi_split_2.c
-02553  common/empty.cfg                           c/homebrew.c
+02550  c/Issue_3852.cfg                                 c/func_var_multi_paren.c
+02551  common/neovim.cfg                                c/line_multi_split_1.c
+02552  common/tde.cfg                                   c/line_multi_split_2.c
+02553  common/empty.cfg                                 c/homebrew.c
 
-07630  c/indent-vbrace.cfg                        c/indent-vbrace.c
+07630  c/indent-vbrace.cfg                              c/indent-vbrace.c
 
-08399  c/ben_095.cfg                              c/gh399.c
+08399  c/ben_095.cfg                                    c/gh399.c
 
-09594  common/indent_columns-3.cfg                c/sf594.c
-09588  common/empty.cfg                           c/sf588.c
+09594  common/indent_columns-3.cfg                      c/sf594.c
+09588  common/empty.cfg                                 c/sf588.c
 
-09601  common/bug_637.cfg                         c/bug_637.c
-09602  common/bug_671.cfg                         c/bug_671.c
-09603  common/indent_ternary_operator-1.cfg       c/indent_ternary-1.c
-09604  common/indent_ternary_operator-2.cfg       c/indent_ternary-2.c
-09605  common/sp_arith-f.cfg                      c/negative_value.c
-09606  c/ptr-arith.cfg                            c/extern.c
-09607  c/ptr-arith.cfg                            c/attribute.c
-09608  common/aet-func_call_user.cfg              c/func_call_user2.c
-09609  c/Issue_2279.cfg                           c/Issue_2279.c
+09601  common/bug_637.cfg                               c/bug_637.c
+09602  common/bug_671.cfg                               c/bug_671.c
+09603  common/indent_ternary_operator-1.cfg             c/indent_ternary-1.c
+09604  common/indent_ternary_operator-2.cfg             c/indent_ternary-2.c
+09605  common/sp_arith-f.cfg                            c/negative_value.c
+09606  c/ptr-arith.cfg                                  c/extern.c
+09607  c/ptr-arith.cfg                                  c/attribute.c
+09608  common/aet-func_call_user.cfg                    c/func_call_user2.c
+09609  c/Issue_2279.cfg                                 c/Issue_2279.c
 
-09610  c/force_tab_after_define-t.cfg             c/bug_i_876.c
-09611  common/space_indent_columns-4.cfg          c/bug_i_222.c
-09612  common/empty.cfg                           c/bug_1041.c
-09613  common/empty.cfg                           c/i1413.c
-09614  common/empty.cfg                           c/string_prefixes.c
-09615  c/i1564.cfg                                c/i1564.c
-09616  c/enum_comma_ifdef.cfg                     c/enum_comma_ifdef.c
-09617  c/Issue_2360-a.cfg                         c/Issue_2360.c
-09618  c/Issue_2360-b.cfg                         c/Issue_2360.c
-09619  c/Issue_2411.cfg                           c/Issue_2411.c
+09610  c/force_tab_after_define-t.cfg                   c/bug_i_876.c
+09611  common/space_indent_columns-4.cfg                c/bug_i_222.c
+09612  common/empty.cfg                                 c/bug_1041.c
+09613  common/empty.cfg                                 c/i1413.c
+09614  common/empty.cfg                                 c/string_prefixes.c
+09615  c/i1564.cfg                                      c/i1564.c
+09616  c/enum_comma_ifdef.cfg                           c/enum_comma_ifdef.c
+09617  c/Issue_2360-a.cfg                               c/Issue_2360.c
+09618  c/Issue_2360-b.cfg                               c/Issue_2360.c
+09619  c/Issue_2411.cfg                                 c/Issue_2411.c
 
-09620  c/Issue_2640.cfg                           c/Issue_2640.c
-09621  c/preproc-cleanup.cfg                      c/pp-before-func-def.c
-09622  c/Issue_3356.cfg                           c/Issue_3356.c
-09623  c/convert_cmt_vbrace_one_line.cfg          c/vbrace_one_liner.c
+09620  c/Issue_2640.cfg                                 c/Issue_2640.c
+09621  c/preproc-cleanup.cfg                            c/pp-before-func-def.c
+09622  c/Issue_3356.cfg                                 c/Issue_3356.c
+09623  c/convert_cmt_vbrace_one_line.cfg                c/vbrace_one_liner.c
 
-10003  common/empty.cfg                           c/incdec_postfix_multiply.c
-10004  c/ben_094.cfg                              c/pragma_asm.c
-10005  common/empty.cfg                           c/i1270.c
-10006  c/bug_2331.cfg                             c/bug_2331.c
-10007  c/indent_macro_brace-true.cfg              c/indent-macro-brace.c
-10008  c/indent_macro_brace-false.cfg             c/indent-macro-brace.c
-10009  common/empty.cfg                           c/return-compound-literal.c
+10003  common/empty.cfg                                 c/incdec_postfix_multiply.c
+10004  c/ben_094.cfg                                    c/pragma_asm.c
+10005  common/empty.cfg                                 c/i1270.c
+10006  c/bug_2331.cfg                                   c/bug_2331.c
+10007  c/indent_macro_brace-true.cfg                    c/indent-macro-brace.c
+10008  c/indent_macro_brace-false.cfg                   c/indent-macro-brace.c
+10009  common/empty.cfg                                 c/return-compound-literal.c
 
-10010  c/indent_compound_literal_return-false.cfg c/return-compound-literal.c
-10011  c/indent_compound_literal_return-true.cfg  c/return-compound-literal.c
-10012  c/indent_sparen_extra-8.cfg                c/sparen-indent.c
-10013  common/empty.cfg                           c/sparen-indent.c
-10014  common/indent_continue-8.cfg               c/sparen-indent.c
-10015  common/empty.cfg                           c/Issue_2845.h
-10016  c/Issue_3233.cfg                           c/Issue_3233.c
-10017  c/sp_sparen_paren-a.cfg                    c/double-sparen.c
-10018  c/sp_sparen_paren-i.cfg                    c/double-sparen.c
-10019  c/pp_indent_in_guard.cfg                   c/include-guard.h
-10020  c/indent_single_line_comments_after.cfg    c/single_line_comment_after.c
-10021  common/sp_cparen_oparen-f.cfg              c/parenthesized_indirect_call.c
-10022  c/Issue_3269.cfg                           c/Issue_3269.c
-10023  c/Issue_3272.cfg                           c/Issue_3272.h
-10024  c/Issue_3274.cfg                           c/Issue_3274.c
-10025  c/sp_between_semi_for_empty-r.cfg          c/forever.c
-10026  c/sp_between_semi_for_empty-i.cfg          c/forever.c
-10027  c/Issue_3327.cfg                           c/Issue_3327.c
-10028  c/sp_emb_cmt-i.cfg                         c/Issue_3339.c
-10029  c/sp_emb_cmt-f.cfg                         c/Issue_3339.c
-10030  c/sp_emb_cmt-r.cfg                         c/Issue_3339.c
-10031  c/sp_after_pointer_star-r.cfg              c/Issue_3342.c
-10032  c/sp_after_pointer_star-r.cfg              c/Issue_3345.c
-10033  c/pp_include_at_level-true.cfg             c/Issue_3343.c
-10034  c/pp_include_at_level-false.cfg            c/Issue_3343.c
-10035  c/indent_comment_align_thresh-0.cfg        c/comment-indent.c
-10036  c/Issue_3350.cfg                           c/comment-indent.c
-10037  c/indent_case_comment-true.cfg             c/Issue_3362.c
-10038  c/indent_case_comment-false.cfg            c/Issue_3362.c
-10039  c/Issue_3370.cfg                           c/Issue_3370.c
-10040  c/Issue_3377.cfg                           c/Issue_3377.c
-10041  c/Issue_3351.cfg                           c/Issue_3351.c
-10042  c/sp_ptr_star_func_var-i.cfg               c/Issue_3376.c
-10043  c/sp_ptr_star_func_var-a.cfg               c/Issue_3376.c
-10044  c/sp_ptr_star_func_var-r.cfg               c/Issue_3376.c
-10045  c/sp_ptr_star_func_var-f.cfg               c/Issue_3376.c
-10046  c/Issue_3402.cfg                           c/Issue_3402.c
-10047  c/pp_if_indent_code-true.cfg               c/Issue_3421.h
-10048  c/Issue_3431.cfg                           c/Issue_3431.c
-10049  c/indent_paren_close--1.cfg                c/Issue_3436.c
-10050  common/empty.cfg                           c/Issue_3192.c
-10051  c/Issue_3454.cfg                           c/Issue_3454.c
-10052  c/Issue_3472.cfg                           c/Issue_3472.c
-10053  c/Issue_3476.cfg                           c/Issue_3476.c
-10054  c/Issue_3480.cfg                           c/Issue_3480.c
-10055  c/Issue_3493.cfg                           c/Issue_3493.c
-10056  c/sp_enum_brace-i.cfg                      c/Issue_3496.h
-10057  c/sp_enum_brace-a.cfg                      c/Issue_3496.h
-10058  c/sp_enum_brace-r.cfg                      c/Issue_3496.h
-10059  c/sp_enum_brace-f.cfg                      c/Issue_3496.h
-10060  c/indent_ignore_bool-true.cfg              c/Issue_3548.c
-10061  c/Issue_3556.cfg                           c/Issue_3556.c
-10062  c/Issue_3561.cfg                           c/Issue_3561.c
-10063  c/Issue_3565.cfg                           c/Issue_3565.c
-10064  c/Issue_3567-a.cfg                         c/Issue_3567.c
-10065  c/Issue_3567-b.cfg                         c/Issue_3567.c
-10066  c/Issue_3580.cfg                           c/Issue_3580.c
-10077  c/Issue_3582.cfg                           c/Issue_3582.c
-10078  c/pp_indent_brace--1.cfg                   c/Issue_3587.h
-10079  c/Issue_3662.cfg                           c/Issue_3662.c
-10080  c/mod_infinite_loop-0.cfg                  c/infinite-loops.c
-10081  c/mod_infinite_loop-1.cfg                  c/infinite-loops.c
-10082  c/mod_infinite_loop-2.cfg                  c/infinite-loops.c
-10083  c/mod_infinite_loop-3.cfg                  c/infinite-loops.c
-10084  c/mod_infinite_loop-4.cfg                  c/infinite-loops.c
-10085  c/mod_infinite_loop-5.cfg                  c/infinite-loops.c
-10086  c/Issue_3716-1.cfg                         c/infinite-loops.c
-10087  c/Issue_3716-2.cfg                         c/infinite-loops.c
-10088  c/Issue_3716-3.cfg                         c/infinite-loops.c
-10089  c/Issue_3716-4.cfg                         c/infinite-loops.c
-10090  c/Issue_3716-5.cfg                         c/infinite-loops.c
-10091  c/mod_short_int-a.cfg                      c/int-types.c
-10092  c/mod_short_int-r.cfg                      c/int-types.c
-10093  c/mod_long_int-a.cfg                       c/int-types.c
-10094  c/mod_long_int-r.cfg                       c/int-types.c
-10095  c/mod_signed_int-a.cfg                     c/int-types.c
-10096  c/mod_signed_int-r.cfg                     c/int-types.c
-10097  c/mod_unsigned_int-a.cfg                   c/int-types.c
-10098  c/mod_unsigned_int-r.cfg                   c/int-types.c
-10099  c/mod_int_short-a.cfg                      c/int-types.c
-10100  c/mod_int_short-r.cfg                      c/int-types.c
-10101  c/mod_int_long-a.cfg                       c/int-types.c
-10102  c/mod_int_long-r.cfg                       c/int-types.c
-10103  c/mod_int_signed-a.cfg                     c/int-types.c
-10104  c/mod_int_signed-r.cfg                     c/int-types.c
-10105  c/mod_int_unsigned-a.cfg                   c/int-types.c
-10106  c/mod_int_unsigned-r.cfg                   c/int-types.c
-10107  c/mod_int-shift-left.cfg                   c/int-types.c
-10108  c/mod_int-shift-right.cfg                  c/int-types.c
-10109  c/mod_int-add-all-prefer-left.cfg          c/int-types.c
-10110  c/mod_int-add-all-prefer-right.cfg         c/int-types.c
-10111  c/mod_int-remove-left.cfg                  c/int-types.c
-10112  c/mod_int-remove-right.cfg                 c/int-types.c
-10113  c/mod_int-remove-all.cfg                   c/int-types.c
-10114  c/Issue_3989.cfg                           c/Issue_3989.c
+10010  c/indent_compound_literal_return-false.cfg       c/return-compound-literal.c
+10011  c/indent_compound_literal_return-true.cfg        c/return-compound-literal.c
+10012  c/indent_sparen_extra-8.cfg                      c/sparen-indent.c
+10013  common/empty.cfg                                 c/sparen-indent.c
+10014  common/indent_continue-8.cfg                     c/sparen-indent.c
+10015  common/empty.cfg                                 c/Issue_2845.h
+10016  c/Issue_3233.cfg                                 c/Issue_3233.c
+10017  c/sp_sparen_paren-a.cfg                          c/double-sparen.c
+10018  c/sp_sparen_paren-i.cfg                          c/double-sparen.c
+10019  c/pp_indent_in_guard.cfg                         c/include-guard.h
+10020  c/indent_single_line_comments_after.cfg          c/single_line_comment_after.c
+10021  common/sp_cparen_oparen-f.cfg                    c/parenthesized_indirect_call.c
+10022  c/Issue_3269.cfg                                 c/Issue_3269.c
+10023  c/Issue_3272.cfg                                 c/Issue_3272.h
+10024  c/Issue_3274.cfg                                 c/Issue_3274.c
+10025  c/sp_between_semi_for_empty-r.cfg                c/forever.c
+10026  c/sp_between_semi_for_empty-i.cfg                c/forever.c
+10027  c/Issue_3327.cfg                                 c/Issue_3327.c
+10028  c/sp_emb_cmt-i.cfg                               c/Issue_3339.c
+10029  c/sp_emb_cmt-f.cfg                               c/Issue_3339.c
+10030  c/sp_emb_cmt-r.cfg                               c/Issue_3339.c
+10031  c/sp_after_pointer_star-r.cfg                    c/Issue_3342.c
+10032  c/sp_after_pointer_star-r.cfg                    c/Issue_3345.c
+10033  c/pp_include_at_level-true.cfg                   c/Issue_3343.c
+10034  c/pp_include_at_level-false.cfg                  c/Issue_3343.c
+10035  c/indent_comment_align_thresh-0.cfg              c/comment-indent.c
+10036  c/Issue_3350.cfg                                 c/comment-indent.c
+10037  c/indent_case_comment-true.cfg                   c/Issue_3362.c
+10038  c/indent_case_comment-false.cfg                  c/Issue_3362.c
+10039  c/Issue_3370.cfg                                 c/Issue_3370.c
+10040  c/Issue_3377.cfg                                 c/Issue_3377.c
+10041  c/Issue_3351.cfg                                 c/Issue_3351.c
+10042  c/sp_ptr_star_func_var-i.cfg                     c/Issue_3376.c
+10043  c/sp_ptr_star_func_var-a.cfg                     c/Issue_3376.c
+10044  c/sp_ptr_star_func_var-r.cfg                     c/Issue_3376.c
+10045  c/sp_ptr_star_func_var-f.cfg                     c/Issue_3376.c
+10046  c/Issue_3402.cfg                                 c/Issue_3402.c
+10047  c/pp_if_indent_code-true.cfg                     c/Issue_3421.h
+10048  c/Issue_3431.cfg                                 c/Issue_3431.c
+10049  c/indent_paren_close--1.cfg                      c/Issue_3436.c
+10050  common/empty.cfg                                 c/Issue_3192.c
+10051  c/Issue_3454.cfg                                 c/Issue_3454.c
+10052  c/Issue_3472.cfg                                 c/Issue_3472.c
+10053  c/Issue_3476.cfg                                 c/Issue_3476.c
+10054  c/Issue_3480.cfg                                 c/Issue_3480.c
+10055  c/Issue_3493.cfg                                 c/Issue_3493.c
+10056  c/sp_enum_brace-i.cfg                            c/Issue_3496.h
+10057  c/sp_enum_brace-a.cfg                            c/Issue_3496.h
+10058  c/sp_enum_brace-r.cfg                            c/Issue_3496.h
+10059  c/sp_enum_brace-f.cfg                            c/Issue_3496.h
+10060  c/indent_ignore_bool-true.cfg                    c/Issue_3548.c
+10061  c/Issue_3556.cfg                                 c/Issue_3556.c
+10062  c/Issue_3561.cfg                                 c/Issue_3561.c
+10063  c/Issue_3565.cfg                                 c/Issue_3565.c
+10064  c/Issue_3567-a.cfg                               c/Issue_3567.c
+10065  c/Issue_3567-b.cfg                               c/Issue_3567.c
+10066  c/Issue_3580.cfg                                 c/Issue_3580.c
+10077  c/Issue_3582.cfg                                 c/Issue_3582.c
+10078  c/pp_indent_brace--1.cfg                         c/Issue_3587.h
+10079  c/Issue_3662.cfg                                 c/Issue_3662.c
+10080  c/mod_infinite_loop-0.cfg                        c/infinite-loops.c
+10081  c/mod_infinite_loop-1.cfg                        c/infinite-loops.c
+10082  c/mod_infinite_loop-2.cfg                        c/infinite-loops.c
+10083  c/mod_infinite_loop-3.cfg                        c/infinite-loops.c
+10084  c/mod_infinite_loop-4.cfg                        c/infinite-loops.c
+10085  c/mod_infinite_loop-5.cfg                        c/infinite-loops.c
+10086  c/Issue_3716-1.cfg                               c/infinite-loops.c
+10087  c/Issue_3716-2.cfg                               c/infinite-loops.c
+10088  c/Issue_3716-3.cfg                               c/infinite-loops.c
+10089  c/Issue_3716-4.cfg                               c/infinite-loops.c
+10090  c/Issue_3716-5.cfg                               c/infinite-loops.c
+10091  c/mod_short_int-a.cfg                            c/int-types.c
+10092  c/mod_short_int-r.cfg                            c/int-types.c
+10093  c/mod_long_int-a.cfg                             c/int-types.c
+10094  c/mod_long_int-r.cfg                             c/int-types.c
+10095  c/mod_signed_int-a.cfg                           c/int-types.c
+10096  c/mod_signed_int-r.cfg                           c/int-types.c
+10097  c/mod_unsigned_int-a.cfg                         c/int-types.c
+10098  c/mod_unsigned_int-r.cfg                         c/int-types.c
+10099  c/mod_int_short-a.cfg                            c/int-types.c
+10100  c/mod_int_short-r.cfg                            c/int-types.c
+10101  c/mod_int_long-a.cfg                             c/int-types.c
+10102  c/mod_int_long-r.cfg                             c/int-types.c
+10103  c/mod_int_signed-a.cfg                           c/int-types.c
+10104  c/mod_int_signed-r.cfg                           c/int-types.c
+10105  c/mod_int_unsigned-a.cfg                         c/int-types.c
+10106  c/mod_int_unsigned-r.cfg                         c/int-types.c
+10107  c/mod_int-shift-left.cfg                         c/int-types.c
+10108  c/mod_int-shift-right.cfg                        c/int-types.c
+10109  c/mod_int-add-all-prefer-left.cfg                c/int-types.c
+10110  c/mod_int-add-all-prefer-right.cfg               c/int-types.c
+10111  c/mod_int-remove-left.cfg                        c/int-types.c
+10112  c/mod_int-remove-right.cfg                       c/int-types.c
+10113  c/mod_int-remove-all.cfg                         c/int-types.c
+10114  c/Issue_3989.cfg                                 c/Issue_3989.c
 
-10120  c/sp_after_sparen-i.cfg                    c/sp_after_sparen.c
-10121  c/sp_after_sparen-a.cfg                    c/sp_after_sparen.c
-10122  c/sp_after_sparen-r.cfg                    c/sp_after_sparen.c
-10123  c/sp_after_sparen-f.cfg                    c/sp_after_sparen.c
-10124  common/tde.cfg                             c/Issue_3985.c
-10125  common/tde.cfg                             c/Issue_3992.c
-10126  c/Issue_3259.cfg                           c/Issue_3259.h
-10127  c/indent_single_newlines_indent_0.cfg      c/indent_single_newlines.c
-10128  c/indent_single_newlines_indent_1.cfg      c/indent_single_newlines.c
-10129  c/indent_single_newlines_indent_2.cfg      c/indent_single_newlines.c
+10120  c/sp_after_sparen-i.cfg                          c/sp_after_sparen.c
+10121  c/sp_after_sparen-a.cfg                          c/sp_after_sparen.c
+10122  c/sp_after_sparen-r.cfg                          c/sp_after_sparen.c
+10123  c/sp_after_sparen-f.cfg                          c/sp_after_sparen.c
+10124  common/tde.cfg                                   c/Issue_3985.c
+10125  common/tde.cfg                                   c/Issue_3992.c
+10126  c/Issue_3259.cfg                                 c/Issue_3259.h
+10127  c/indent_single_newlines_indent_0.cfg            c/indent_single_newlines.c
+10128  c/indent_single_newlines_indent_1.cfg            c/indent_single_newlines.c
+10129  c/indent_single_newlines_indent_2.cfg            c/indent_single_newlines.c
