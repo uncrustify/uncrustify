@@ -2189,6 +2189,11 @@ nl_after_vbrace_close           = false    # true/false
 # structures. If set to ignore, uses nl_after_brace_close.
 nl_brace_struct_var             = ignore   # ignore/add/remove/force
 
+# Whether to add a newline after each '&&' or `||` on the same nesting level
+# in a boolean expression if boolean expression will not fit on a line.
+# code_width needs to be positive for this option to have any effect.
+nl_bool_expression_multiline    = false    # true/false
+
 # Whether to alter newlines in '#define' macros.
 nl_define_macro                 = false    # true/false
 
