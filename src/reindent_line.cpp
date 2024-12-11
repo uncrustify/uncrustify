@@ -6,7 +6,6 @@
  * extract from indent.cpp
  * @license GPL v2+
  */
-
 #include "reindent_line.h"
 
 #include "chunk.h"
@@ -79,7 +78,7 @@ void reindent_line(Chunk *pc, size_t column)
          break;
       }
 
-      if (pc->GetNlCount())
+      if (pc->GetNlCount() > 0)
       {
          min_col   = 0;
          col_delta = 0;
