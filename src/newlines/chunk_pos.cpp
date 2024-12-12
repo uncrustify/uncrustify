@@ -25,6 +25,15 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
 {
    LOG_FUNC_ENTRY();
 
+   if (  chunk_type == CT_BOOL
+      && options::code_width() > 0
+      && options::nl_bool_expression_multiline()
+      && (  options::pos_bool() == TP_LEAD
+         || options::pos_bool() == TP_TRAIL))
+   {
+      // here treat as join and let do_code_width do the heavy lifting
+      mode = TP_JOIN;
+   }
    LOG_FMT(LNEWLINE, "%s(%d): mode is %s\n",
            __func__, __LINE__, to_string(mode));
 

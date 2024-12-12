@@ -2679,6 +2679,12 @@ nl_after_vbrace_close;
 extern Option<iarf_e>
 nl_brace_struct_var;
 
+// Whether to add a newline after each '&&' or `||` on the same nesting level
+// in a boolean expression if boolean expression will not fit on a line.
+// code_width needs to be positive for this option to have any effect.
+extern Option<bool>
+nl_bool_expression_multiline; // = false
+
 // Whether to alter newlines in '#define' macros.
 extern Option<bool>
 nl_define_macro;
