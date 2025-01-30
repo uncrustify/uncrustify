@@ -610,14 +610,14 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          return;
       }
 
-      if (  language_is_set(lang_flag_e::LANG_CS)
-         && pc->Is(CT_WHEN)
-         && pc->GetNext()->IsNotNullChunk()
-         && pc->GetNext()->IsNot(CT_SPAREN_OPEN))
-      {
-         pc->SetType(CT_WORD);
-         return;
-      }
+      //if (  language_is_set(lang_flag_e::LANG_CS)
+      //   && pc->Is(CT_WHEN)
+      //   && pc->GetNext()->IsNotNullChunk()
+      //   && pc->GetNext()->IsNot(CT_SPAREN_OPEN))
+      //{
+      //   pc->SetType(CT_WORD);
+      //   return;
+      //}
    }
 
    if (  language_is_set(lang_flag_e::LANG_JAVA)

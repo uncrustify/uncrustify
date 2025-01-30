@@ -3,7 +3,7 @@ class Test
 {
 void TestExceptionFilter()
 {
-var when = new Object();
+var whe2 = new Object();
 try {
   int i = 0;
 } catch (Exception e)
@@ -23,8 +23,8 @@ try {
   int j = -1;
 }
 try {
-  int a = (int)when.foo();
+  int a = (int)whe2.foo();
 } catch (Exception e)when (DateTime.Now.DayOfWeek == DayOfWeek.Saturday)
 {
-  string b = ((int)when.prop).ToString();
+  string b = ((int)whe2.prop).ToString();
 }}}
