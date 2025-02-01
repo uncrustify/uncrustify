@@ -610,6 +610,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          return;
       }
 
+      // TODO: check the c-sharp language for the next 8 lines
       //if (  language_is_set(lang_flag_e::LANG_CS)
       //   && pc->Is(CT_WHEN)
       //   && pc->GetNext()->IsNotNullChunk()
