@@ -102,6 +102,14 @@ static void split_fcn_params_full(Chunk *start);
 
 
 /**
+ * Splits line on every boolean expression at the top level and then
+ * recursively on nested levels in case splitted lines are still too long.
+ * @param start
+ */
+static void split_bool_expr(Chunk *start);
+
+
+/**
  * A for statement is too long.
  * Step backwards and forwards to find the semicolons
  * Try splitting at the semicolons first.
@@ -336,6 +344,30 @@ static void try_split_here(SplitEntry &ent, Chunk *pc)
       }
    }
 
+   if (  options::nl_bool_expression_multiline()
+      && (  options::pos_bool() == TP_LEAD
+         || options::pos_bool() == TP_TRAIL))
+   {
+      // comma has a higher priority than bool, but in case nl_bool_expression_multiline is turned on
+      // we want to break on bool if it is less nested than comma, so here the priority inversion is handled
+      if (  pc->Is(CT_COMMA)
+         && ent.pc->Is(CT_BOOL)
+         && ent.pc->GetLevel() < pc->GetLevel())
+      {
+         LOG_FMT(LSPLIT, "%s(%d): don't break after comma if there is a bool on less nested level\n", __func__, __LINE__);
+         return;
+      }
+
+      if (  pc->Is(CT_BOOL)
+         && ent.pc->Is(CT_COMMA)
+         && ent.pc->GetLevel() > pc->GetLevel())
+      {
+         LOG_FMT(LSPLIT, "%s(%d): found possible split on bool, because comma is on more nested level\n",
+                 __func__, __LINE__);
+         return;
+      }
+   }
+
    if (  ent.pc->IsNullChunk()
       || pc_pri < ent.pri
       || (  pc_pri == ent.pri
@@ -477,6 +509,17 @@ static bool split_line(Chunk *start)
       log_rule_B("pos_conditional");
       log_rule_B("pos_shift");
       log_rule_B("pos_bool");
+
+      if (ent.pc->Is(CT_BOOL))
+      {
+         if (  options::nl_bool_expression_multiline()
+            && (  options::pos_bool() == TP_LEAD
+               || options::pos_bool() == TP_TRAIL))
+         {
+            split_bool_expr(ent.pc);
+            return(true);
+         }
+      }
 
       if (  (  ent.pc->Is(CT_SHIFT)
             && (options::pos_shift() & TP_LEAD))
@@ -752,6 +795,97 @@ static void split_fcn_params_full(Chunk *start)
       pc = pc->GetNextNcNnl();
    }
 }
+
+
+void split_bool_expr(Chunk *start)
+{
+   LOG_FUNC_ENTRY();
+   LOG_FMT(LSPLIT, "%s(%d): start at '%s'\n", __func__, __LINE__, start->Text());
+   bool   lead = options::pos_bool() & TP_LEAD ? true : false;
+
+   Chunk  *pc                 = start;
+   Chunk  *last_operator_bool = pc;
+   Chunk  *return_statement   = Chunk::NullChunkPtr;
+
+   size_t top_level = start->GetLevel();
+
+   LOG_FMT(LSPLIT, "  %s(%d): search for boolean operators\n", __func__, __LINE__);
+
+   // find last boolean operator on the line
+   while (  (pc = pc->GetNext())->IsNotNullChunk()
+         && !pc->IsNewline())
+   {
+      LOG_FMT(LSPLIT, "  %s(%d): %s, orig col is %zu, level is %zu\n",
+              __func__, __LINE__, pc->Text(), pc->GetOrigCol(), pc->GetLevel());
+
+      if (pc->Is(CT_BOOL))
+      {
+         last_operator_bool = pc;
+      }
+   }
+   pc = last_operator_bool;
+
+   // go through all bool operators on the same line to find out which level is top level
+   do
+   {
+      // in case this operator is preceeded/succeeded by newline, it is already broken on it, skip it
+      if (pc->Is(CT_BOOL))
+      {
+         bool already_broken = lead ? pc->GetPrev()->IsNewline() : pc->GetNext()->IsNewline();
+
+         if (!already_broken && pc->GetLevel() < top_level)
+         {
+            top_level = pc->GetLevel();
+         }
+      }
+
+      if (pc->Is(CT_RETURN))
+      {
+         return_statement = pc;
+      }
+   } while (  (pc = pc->GetPrev())->IsNotNullChunk()
+           && !pc->IsNewline());
+
+   // pass operators in reverse order and split on each of them if they are top level
+   pc = last_operator_bool;
+
+   do
+   {
+      if (  pc->Is(CT_BOOL)
+         && pc->GetLevel() == top_level)
+      {
+         // in case of TP_TRAIL_BREAK and last operator is already at the end of line, skip it
+         if (  !lead
+            && pc->GetNext()->IsNewline())
+         {
+            continue;
+         }
+         Chunk *split_point = lead ? pc : pc->GetNext();
+         split_before_chunk(split_point);
+         pc = split_point->GetPrev(); // this yealds newline that we added that we need to skip
+
+         if (  return_statement->IsNotNullChunk()
+            && return_statement->GetLevel() == top_level)
+         {
+            split_point->ResetFlagBits(PCF_CONT_LINE);
+         }
+
+         // split previous line if too long
+         if (is_past_width(pc->GetPrev()))
+         {
+            split_line(pc->GetPrev());
+         }
+         Chunk *nextNewLine = split_point->GetNextNl();
+
+         // split following line if too long
+         if (is_past_width(nextNewLine->GetPrev()))
+         {
+            split_line(nextNewLine->GetPrev());
+         }
+      }
+   } while (  (pc = pc->GetPrev())->IsNotNullChunk()
+           && !pc->IsNewline());
+} // split_bool_expr
 
 
 static void split_template(Chunk *start)
