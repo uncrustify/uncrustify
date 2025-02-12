@@ -193,6 +193,7 @@
 30163  cpp/Issue_4220.cfg                                   cpp/Issue_4220.cpp
 30164  cpp/Issue_3120.cfg                                   cpp/Issue_3120.cpp
 30165  cpp/Issue_3259.cfg                                   cpp/Issue_3259.h
+30166  cpp/sp_func_call_user_inside_rparen.cfg              cpp/sp_func_call_user_inside_rparen.cpp
 
 30200  cpp/bug_1862.cfg                                     cpp/bug_1862.cpp
 30201  cpp/cmt_indent-1.cfg                                 cpp/cmt_indent.cpp
