@@ -4,7 +4,7 @@
  *
  * September 2020
  * @author  Ben Gardner
- * @author  Guy Maurel
+ * @author  Guy Maurel, 2025
  * @author  Matthew Woehlke
  * @license GPL v2+
  */
@@ -1090,6 +1090,7 @@ extern Option<iarf_e>
 sp_addr; // = IARF_REMOVE
 
 // Add or remove space around the '.' or '->' operators.
+// also the c-sharp null-conditional operator '?.'
 extern Option<iarf_e>
 sp_member; // = IARF_REMOVE
 

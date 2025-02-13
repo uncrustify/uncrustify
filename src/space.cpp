@@ -13,7 +13,7 @@
  *   Rmk: spaces = space + nl
  *
  * @author  Ben Gardner
- * @author  Guy Maurel, 2015-2023
+ * @author  Guy Maurel, 2015-2025
  * @license GPL v2+
  */
 #include "space.h"
@@ -2528,9 +2528,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (  first->Is(CT_NULLCOND)
       || second->Is(CT_NULLCOND))
    {
-      // TODO: provide some test data to check this block
-      // lang_flag_e::LANG_CS  null conditional operator
       // Add or remove space around the '.' or '->' operators.
+      // also the c-sharp null-conditional operator '?.'
       log_rule("sp_member");
       return(options::sp_member());
    }

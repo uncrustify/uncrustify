@@ -881,6 +881,7 @@ sp_inv                          = remove   # ignore/add/remove/force
 sp_addr                         = remove   # ignore/add/remove/force
 
 # Add or remove space around the '.' or '->' operators.
+# also the c-sharp null-conditional operator '?.'
 #
 # Default: remove
 sp_member                       = remove   # ignore/add/remove/force
