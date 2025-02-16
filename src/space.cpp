@@ -2612,13 +2612,6 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          log_rule("sp_between_ptr_star");                             // ptr_star 9
          return(options::sp_between_ptr_star());
       }
-      else if (second->Is(CT_BYREF))
-      {
-         // Add or remove space between pointer and Ref.
-         // as in 'int *& a'.
-         log_rule("sp_between_ptr_ref");                             // ptr_ref 1
-         return(options::sp_between_ptr_ref());
-      }
       else if (second->Is(CT_FUNC_VAR))
       {
          // Add or remove space between the pointer star '*' and the name of the
