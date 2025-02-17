@@ -2590,8 +2590,9 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       && second->Is(CT_PTR_TYPE))
    {
       // TODO: provide some test data to check this block
-      log_rule("REMOVE");
-      return(IARF_REMOVE);
+      // TODO: create a new option
+      log_rule("IGNORE");
+      return(IARF_IGNORE);
    }
 
    if (first->Is(CT_PTR_TYPE))                            // see the tests cpp:34505-34508
@@ -2610,13 +2611,6 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          // as in 'int ***a;'.
          log_rule("sp_between_ptr_star");                             // ptr_star 9
          return(options::sp_between_ptr_star());
-      }
-      else if (second->Is(CT_BYREF))
-      {
-         // Add or remove space between pointer and Ref.
-         // as in 'int *& a'.
-         log_rule("sp_between_ptr_ref");                             // ptr_ref 1
-         return(options::sp_between_ptr_ref());
       }
       else if (second->Is(CT_FUNC_VAR))
       {
