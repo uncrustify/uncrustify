@@ -2591,8 +2591,9 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       && second->Is(CT_PTR_TYPE))
    {
       // TODO: provide some test data to check this block
-      log_rule("REMOVE");
-      return(IARF_REMOVE);
+      // TODO: create a new option
+      log_rule("IGNORE");
+      return(IARF_IGNORE);
    }
 
    if (first->Is(CT_PTR_TYPE))                            // see the tests cpp:34505-34508
