@@ -6,7 +6,7 @@
  *  - detect "version = 10;" vs "version (xxx) {"
  *
  * @author  Ben Gardner
- * @author  Guy Maurel 2015, 2022
+ * @author  Guy Maurel 2015, 2025
  * @license GPL v2+
  */
 #include "tokenizer/tokenize_cleanup.h"
@@ -303,12 +303,6 @@ void tokenize_cleanup()
    {
       if (  pc->Is(CT_DOT)
          && language_is_set(lang_flag_e::LANG_ALLC))
-      {
-         pc->SetType(CT_MEMBER);
-      }
-
-      if (  pc->Is(CT_NULLCOND)
-         && language_is_set(lang_flag_e::LANG_CS))
       {
          pc->SetType(CT_MEMBER);
       }
