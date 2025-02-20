@@ -2630,6 +2630,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
               || first->GetParentType() == CT_FUNC_PROTO
               || first->GetParentType() == CT_FUNC_VAR)
       {
+         // must be placed at the end of the block
+         // look back for '->' type is TRAILING_RET
          if (token_is_within_trailing_return(first))
          {
             // Add or remove space after a pointer star '*', in the trailing return
@@ -2678,14 +2680,6 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          // Add or remove space after pointer star '*', if followed by a word.
          log_rule("sp_after_ptr_star");                               // ptr_star 1
          return(options::sp_after_ptr_star());
-      }
-
-      // must be placed at the end of the block
-      // look back for '->' type is TRAILING_RET
-      if (token_is_within_trailing_return(first))
-      {
-         log_rule("sp_after_ptr_star_trailing");                      // ptr_star 3
-         return(options::sp_after_ptr_star_trailing());
       }
    }
 
