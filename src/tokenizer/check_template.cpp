@@ -31,11 +31,14 @@ bool invalid_open_angle_template(Chunk *prev)
       return(false);
    }
    // A template requires a word/type right before the open angle
+   // It can also appear after the square brackets of a lambda
    return(  prev->IsNot(CT_WORD)
          && prev->IsNot(CT_TYPE)
          && prev->IsNot(CT_COMMA)
          && prev->IsNot(CT_QUALIFIER)
          && prev->IsNot(CT_OPERATOR_VAL)
+         && prev->IsNot(CT_SQUARE_CLOSE)
+         && prev->IsNot(CT_TSQUARE)
          && prev->GetParentType() != CT_OPERATOR);
 }
 

@@ -108,7 +108,7 @@ void h1()
       return(33);
    }();
 
-   [] () noexcept ->int
+   [] () noexcept -> int
    {
       return(33);
    }();
@@ -121,7 +121,7 @@ void h2()
       return(a + 33);
    }(21);
 
-   [] (int a) noexcept ->int
+   [] (int a) noexcept -> int
    {
       return(a + 33);
    }(21);
