@@ -9,8 +9,8 @@
 
 #include "tokenizer/combine.h"
 
-#include "ChunkStack.h"
 #include "check_template.h"
+#include "ChunkStack.h"
 #include "lang_pawn.h"
 #include "log_rules.h"
 #include "newlines/iarf.h"
@@ -610,7 +610,6 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          set_paren_parent(next, pc->GetType());
          return;
       }
-
       // TODO: check the c-sharp language for the next 8 lines
       //if (  language_is_set(lang_flag_e::LANG_CS)
       //   && pc->Is(CT_WHEN)
@@ -2519,7 +2518,6 @@ static void handle_cpp_lambda(Chunk *sq_o)
          return;
       }
    }
-
    Chunk *angle_open  = sq_c->GetNextNcNnl();
    Chunk *angle_close = Chunk::NullChunkPtr;
 
@@ -2563,14 +2561,34 @@ static void handle_cpp_lambda(Chunk *sq_o)
          return;
       }
    }
-   // Check for 'mutable' keyword: '[]() mutable {}' or []() mutable -> ret {}
+   // Check for keywords and attributes: '[]() <keywords|attr> {}' or []() <keywords|attr> -> ret {}
    Chunk *br_o = pa_c->IsNotNullChunk() ? pa_c->GetNextNcNnl() : pa_o;
 
-   if (br_o->IsString("mutable"))
+   while (  br_o->IsString("mutable")
+         || br_o->IsString("constexpr")
+         || br_o->IsString("consteval")
+         || br_o->IsString("static")
+         || br_o->IsString("noexcept"))
    {
+      // check if we have noexcept(...)
+      if (br_o->IsString("noexcept"))
+      {
+         Chunk *closing_paren = br_o->GetNextNcNnl();
+
+         // skip to the closing paren
+         if (closing_paren->IsNotNullChunk() && closing_paren->Is(CT_PAREN_OPEN))
+         {
+            br_o = closing_paren->GetClosingParen();
+
+            if (br_o->IsNullChunk())
+            {
+               LOG_FMT(LFCNR, "%s(%d): noexcept without matching closing paren. Return\n", __func__, __LINE__);
+               return;
+            }
+         }
+      }
       br_o = br_o->GetNextNcNnl();
    }
-   //TODO: also check for exception and attribute between [] ... {}
 
    // skip possible arrow syntax: '-> ret'
    if (br_o->IsString("->"))
