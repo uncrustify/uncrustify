@@ -1237,3 +1237,4 @@
 60162  cpp/nl_max_after_func_body.cfg                       cpp/nl_func.cpp
 60163  cpp/nl_max_after_func_body.cfg                       cpp/nl_func-2.cpp
 60164  cpp/Issue_3191.cfg                                   cpp/Issue_3191.cpp
+60165  cpp/Issue_4242.cfg                                   cpp/Issue_4242.cpp

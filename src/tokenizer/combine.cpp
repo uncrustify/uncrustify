@@ -10,6 +10,7 @@
 #include "tokenizer/combine.h"
 
 #include "ChunkStack.h"
+#include "check_template.h"
 #include "lang_pawn.h"
 #include "log_rules.h"
 #include "newlines/iarf.h"
@@ -2518,7 +2519,22 @@ static void handle_cpp_lambda(Chunk *sq_o)
          return;
       }
    }
-   Chunk *pa_o = sq_c->GetNextNcNnl();
+
+   Chunk *angle_open  = sq_c->GetNextNcNnl();
+   Chunk *angle_close = Chunk::NullChunkPtr;
+
+   if (angle_open->Is(CT_ANGLE_OPEN))
+   {
+      // make sure there is a '>'
+      angle_close = angle_open->GetClosingParen();
+
+      if (angle_close->IsNullChunk())
+      {
+         LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
+         return;
+      }
+   }
+   Chunk *pa_o = (angle_close == Chunk::NullChunkPtr) ? sq_c->GetNextNcNnl() : angle_close->GetNextNcNnl();
 
    // check to see if there is a lambda-specifier in the pa_o chunk;
    // assuming chunk is CT_EXECUTION_CONTEXT, ignore lambda-specifier
