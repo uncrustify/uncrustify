@@ -2500,7 +2500,9 @@ static void handle_cpp_lambda(Chunk *sq_o)
          && prev->IsNot(CT_SQUARE_OPEN)
          && prev->IsNot(CT_BRACE_OPEN)
          && prev->IsNot(CT_SEMICOLON)
-         && prev->IsNot(CT_RETURN)))
+         && prev->IsNot(CT_RETURN)
+         && prev->IsNot(CT_ARITH)
+         && prev->IsNot(CT_POS)))
    {
       LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
       return;
