@@ -3419,29 +3419,6 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       log_rule("IGNORE");
       return(IARF_IGNORE);
    }
-   //// TODO: if necessary create a new option
-   //if (  first->Is(CT_RPAREN_OPEN)
-   //   && second->Is(CT_RPAREN_CLOSE))
-   //{
-   //   log_rule("IGNORE");
-   //   return(IARF_IGNORE);
-   //}
-
-   //// TODO: if necessary create a new option
-   //if (  first->Is(CT_RPAREN_OPEN)
-   //   && second->Is(CT_UNKNOWN))
-   //{
-   //   log_rule("IGNORE");
-   //   return(IARF_IGNORE);
-   //}
-
-   //// TODO: if necessary create a new option
-   //if (  first->Is(CT_UNKNOWN)
-   //   && second->Is(CT_RPAREN_CLOSE))
-   //{
-   //   log_rule("IGNORE");
-   //   return(IARF_IGNORE);
-   //}
 
    if (  first->Is(CT_CASE_ELLIPSIS)
       && second->Is(CT_NUMBER))
