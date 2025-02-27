@@ -3577,19 +3577,6 @@ void space_text()
          break;
       }
 
-      // Issue # 481
-      // Whether to balance spaces inside nested parentheses.
-      if (QT_SIGNAL_SLOT_found)
-      {
-         Chunk *nn = next->GetNext();                                    // Issue #2734
-
-         if (  nn->IsNotNullChunk()
-            && nn->Is(CT_SPACE))
-         {
-            Chunk::Delete(nn); // remove the space
-         }
-      }
-
       /*
        * If the current chunk contains a newline, do not change the column
        * of the next item
