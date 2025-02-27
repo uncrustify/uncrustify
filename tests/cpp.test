@@ -1094,6 +1094,8 @@
 10028  cpp/sp_before_ellipsis-f.cfg                         cpp/gcc_case_ellipsis.cpp
 10029  cpp/sp_after_ellipsis-f.cfg                          cpp/gcc_case_ellipsis.cpp
 
+10030  cpp/Space-3473.cfg                                   cpp/Space-3473.cpp
+
 10047  cpp/U16-Cpp.cfg                                      cpp/UNI-1334.cpp
 10048  common/empty.cfg                                     cpp/UNI-1335.cpp
 
