@@ -32,7 +32,7 @@ Basic Options:
  --no-backup  : Do not create backup and md5 files. Useful if files are under source control.
  --if-changed : Write to stdout (or create output FILE) only if a change was detected.
  -l           : Language override: C, CPP, D, CS, JAVA, PAWN, OC, OC+, VALA.
- -t           : Load a file with types (usually not needed).
+ -t FILE      : Load a file FILE with types (usually not needed).
  -q           : Quiet mode - no output on stderr (-L will override).
                 refers to blocking logging info from being sent to stderr.
  --frag       : Code fragment, assume the first line is indented correctly.
