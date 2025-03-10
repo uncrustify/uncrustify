@@ -27,6 +27,7 @@
 00015  c/brace-ws.cfg                                   c/braces.c
 00016  c/brace-ws2.cfg                                  c/braces.c
 00017  c/brace-force.cfg                                c/brace-force.c
+00018  c/Space-3839.cfg                                 c/Space-3839.c
 
 00020  c/ben_049.cfg                                    c/define-if-indent.c
 00050  c/brace-remove-2.cfg                             c/brace-remove.c
