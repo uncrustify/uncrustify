@@ -1,0 +1,14 @@
+It is possible to define some type(s) which cannot be tokenized easily.
+Use the command line:
+-t FILE
+
+FILE is a file with a new type per line.
+The comment sign is # at the beginning of a line.
+
+Example:
+
+      +---------------------+
+      | # this is a comment |
+      | abc                 |
+      | a_new_type_for_now  |
+      +---------------------+
