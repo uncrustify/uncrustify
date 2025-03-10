@@ -39,9 +39,6 @@ size_t space_needed(Chunk *first, Chunk *second);
 size_t space_col_align(Chunk *first, Chunk *second);
 
 
-void space_add_after(Chunk *pc, size_t count);
-
-
 const char *decode_IARF(uncrustify::iarf_e av);
 
 #endif /* SPACE_H_INCLUDED */
