@@ -76,6 +76,10 @@ Replace files, no backup. Useful if files are under source control
 .br
 This cannot be combined with \fB\-f\fR, \fB\-\-prefix\fR, or \fB\-\-suffix\fR.
 .TP
+\fB\-\-if\-changed\fR
+Write to stdout (or create output FILE) only if a change was detected.
+.br
+.TP
 \fB\-\-mtime\fR
 Preserve mtime on replaced files.
 .TP
@@ -113,6 +117,15 @@ Output a config file for Universal Indent GUI.
 \fB\-\-detect\fR
 Detects the config from a source file. Use with '\-f \fIFILE\fR'.
 Detection is currently fairly limited.
+.TP
+\fB\-\-tracking space:FILE\fR
+Prepare space tracking information for debugging.
+.TP
+\fB\-\-tracking nl:FILE\fR
+Prepare newline tracking information for debugging.
+.TP
+\fB\-\-tracking start:FILE\fR
+Prepare start of statement tracking information for debugging. Cannot be used with the -o option.
 
 .SS "Debug Options:"
 .TP
