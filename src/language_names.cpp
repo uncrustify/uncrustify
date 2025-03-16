@@ -71,7 +71,7 @@ size_t language_flags_from_name(const char *name)
       }
    }
 
-   return(0);
+   return(0); // will never been reached
 }
 
 
