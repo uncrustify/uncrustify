@@ -58,6 +58,7 @@
 00075  common/tde.cfg                                   c/function_prototypes_alignment.c
 00076  c/1225.cfg                                       c/1225.c
 00077  common/empty.cfg                                 c/Issue_4176.c
+00078  c/if_chain.cfg                                   c/if_chain-M.c
 
 00081  c/else-if-1.cfg                                  c/else-if.c
 00082  c/else-if-2.cfg                                  c/else-if.c
