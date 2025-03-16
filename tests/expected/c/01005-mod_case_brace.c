@@ -17,7 +17,8 @@ int foo(int bar)
 
    case 2:
       {
-         break;
+         break; // CT_COMMENT_CPP, a test for the function "calculate_closing_brace_position"
+
       }
 
    case 3:
