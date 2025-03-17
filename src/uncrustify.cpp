@@ -237,7 +237,11 @@ static void tease()
 {
    fprintf(stdout,
            "There are currently %zu options and minimal documentation.\n"
-           "Try UniversalIndentGUI and good luck.\n", get_option_count());
+           "Try Universal Indent GUI TQt\n"
+           "  at https://mirror.git.trinitydesktop.org/gitea/TDE/universal-indent-gui-tqt\n"
+           " or UniversalIndentGUI\n"
+           "  at http://universalindent.sourceforge.net\n",
+           get_option_count());
 }
 
 
