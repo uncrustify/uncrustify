@@ -84,4 +84,7 @@ Note: Use comments containing ' *INDENT-OFF*' and ' *INDENT-ON*' to disable
       enable_processing_cmt and disable_processing_cmt).
 
 There are currently x options and minimal documentation.
-Try UniversalIndentGUI and good luck.
+Try Universal Indent GUI TQt
+  at https://mirror.git.trinitydesktop.org/gitea/TDE/universal-indent-gui-tqt
+ or UniversalIndentGUI
+  at http://universalindent.sourceforge.net
