@@ -1399,8 +1399,10 @@ static const char *make_output_filename(char *buf, size_t buf_size,
 
 static bool file_content_matches(const string &filename1, const string &filename2)
 {
-   struct stat st1, st2;
-   int         fd1, fd2;
+   struct stat st1;
+   struct stat st2;
+   int         fd1;
+   int         fd2;
 
    // Check the file sizes first
    if (  (stat(filename1.c_str(), &st1) != 0)
