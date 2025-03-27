@@ -13,4 +13,9 @@ void foo()
 	cout << x <<
 	        y;
 	cout << x << y;
+cout
+<<
+x
+<<
+y;
 }

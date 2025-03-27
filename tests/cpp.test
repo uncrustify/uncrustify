@@ -294,9 +294,9 @@
 30290  cpp/indent_shift.cfg                                 cpp/align_left_shift.cpp
 30291  cpp/indent_shift.cfg                                 cpp/indent_shift.cpp
 30292  cpp/align_eigen_comma_init.cfg                       cpp/eigen.cpp
-30293  cpp/pos_shift-lead.cfg                               cpp/pos_shift.cpp
-30294  cpp/pos_shift-trail.cfg                              cpp/pos_shift.cpp
-30295  cpp/pos_shift-join.cfg                               cpp/pos_shift.cpp
+#30293
+#30294
+#30295
 30296  cpp/sp_inside_for.cfg                                cpp/sp_inside_for.cpp
 30297  cpp/Issue_4064.cfg                                   cpp/Issue_4064.cpp
 
@@ -341,6 +341,17 @@
 30400  common/attribute_specifier_seqs.cfg                  cpp/attribute_specifier_seqs.cpp
 30401  cpp/Issue_2570.cfg                                   cpp/Issue_2570.cpp
 30402  common/tde.cfg                                       cpp/Issue_4157.cpp
+
+30500  cpp/pos_shift-ignore.cfg                             cpp/pos_shift.cpp
+30501  cpp/pos_shift-break.cfg                              cpp/pos_shift.cpp
+30502  cpp/pos_shift-force.cfg                              cpp/pos_shift.cpp
+30503  cpp/pos_shift-lead.cfg                               cpp/pos_shift.cpp
+30504  cpp/pos_shift-trail.cfg                              cpp/pos_shift.cpp
+30505  cpp/pos_shift-join.cfg                               cpp/pos_shift.cpp
+30506  cpp/pos_shift-lead_break.cfg                         cpp/pos_shift.cpp
+30507  cpp/pos_shift-lead_force.cfg                         cpp/pos_shift.cpp
+30508  cpp/pos_shift-trail_break.cfg                        cpp/pos_shift.cpp
+30509  cpp/pos_shift-trail_force.cfg                        cpp/pos_shift.cpp
 
 # function def newlines
 30701  common/func-def-1.cfg                                cpp/function-def.cpp
