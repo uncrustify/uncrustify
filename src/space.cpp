@@ -1456,6 +1456,14 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          log_rule("sp_before_byref_func");                         // byref 4
          return(options::sp_before_byref_func());
       }
+
+      if (first->Is(CT_PTR_TYPE))
+      {
+         // Add or remove space between pointer and Ref.
+         // as in 'int *& a'.
+         log_rule("sp_between_ptr_ref");                           // ptr_ref 1
+         return(options::sp_between_ptr_ref());
+      }
       Chunk *next = second->GetNext();
 
       if (  next->IsNotNullChunk()
@@ -1478,14 +1486,6 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
             log_rule("sp_before_byref");                           // byref 3
             return(options::sp_before_byref());
          }
-      }
-
-      if (first->Is(CT_PTR_TYPE))
-      {
-         // Add or remove space between pointer and Ref.
-         // as in 'int *& a'.
-         log_rule("sp_between_ptr_ref");                           // ptr_ref 1
-         return(options::sp_between_ptr_ref());
       }
       // Add or remove space before a reference sign '&'.
       log_rule("sp_before_byref");                                 // byref 3
@@ -2739,7 +2739,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
          next = second->GetNextNc();
 
-         while (next->Is(CT_PTR_TYPE))
+         while (  next->Is(CT_PTR_TYPE)
+               || next->Is(CT_BYREF))   // Issue #4438
          {
             next = next->GetNextNc();
          }

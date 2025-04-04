@@ -15,6 +15,8 @@ int a = b[0] * c;
 }
 
 int*X(int *i, int*);
+int*Y(int*& i, int*&);
+int*Z(int**& i, int**&);
 
 int *i = &a;
 int *i = *b;
