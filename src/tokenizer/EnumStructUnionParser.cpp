@@ -1600,16 +1600,16 @@ void EnumStructUnionParser::mark_constructors()
       /**
        * get the name of the type
        */
-      auto *body_end   = get_body_end();
-      auto *body_start = get_body_start();
-      auto *name       = m_type->Text();
+      auto *name = m_type->Text();
 
       LOG_FMT(LFTOR, "%s(%d): Name of type is '%s'\n",
               __unqualified_func__, __LINE__, name);
       log_pcf_flags(LFTOR, m_type->GetFlags());
 
-      Chunk       *next = Chunk::NullChunkPtr;
-      std::size_t level = m_type->GetBraceLevel() + 1;
+      Chunk       *body_start = get_body_start();
+      Chunk       *body_end   = get_body_end();
+      Chunk       *next       = Chunk::NullChunkPtr;
+      std::size_t braceLevel  = m_type->GetBraceLevel() + 1;
 
       for (auto *prev = body_start; next != body_end; prev = next)
       {
@@ -1626,7 +1626,7 @@ void EnumStructUnionParser::mark_constructors()
          }
 
          if (  std::strcmp(prev->Text(), name) == 0
-            && prev->GetLevel() == level
+            && prev->GetBraceLevel() == braceLevel
             && next->IsParenOpen())
          {
             prev->SetType(CT_FUNC_CLASS_DEF);

@@ -305,6 +305,7 @@
 30301  cpp/al.cfg                                           cpp/enum_class.h
 30302  cpp/bug_1315.cfg                                     cpp/bug_1315.cpp
 30303  cpp/Issue_2902.cfg                                   cpp/Issue_2902.cpp
+30304  cpp/Issue_4346.cfg                                   cpp/Issue_4346.cpp
 
 # TODO: Make a tests for a braced_init_list. See also 34153-34166.
 30310  cpp/sp_word_brace_force.cfg                          cpp/braced_init_list.cpp
