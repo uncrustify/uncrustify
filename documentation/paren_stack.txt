@@ -19,7 +19,7 @@ Complex statements go through some of these BS_ stages:
 	BS_ELSE     - expecting 'else' after 'if'
 	BS_ELSEIF   - expecting 'if' after 'else'
 	BS_WHILE    - expecting 'while' after 'do'
-	
+
 The file is processed one token at a time to support #if/#else/#endif
 preprocessors at any point.
 
@@ -217,5 +217,3 @@ Right after the #else, we hit another close paren after the "release".
 
 At the #endif, the top of stack is thrown out, which restores us to the #if path.
   Top>  [BRACE OPEN]
-
-

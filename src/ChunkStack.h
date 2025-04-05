@@ -16,23 +16,20 @@ class ChunkStack
 public:
    struct Entry
    {
-      Entry()
-         : m_seqnum(0)
-         , m_pc(Chunk::NullChunkPtr)
+      Entry() : m_seqnum(0),
+         m_pc(Chunk::NullChunkPtr)
       {
       }
 
 
-      Entry(const Entry &ref)
-         : m_seqnum(ref.m_seqnum)
-         , m_pc(ref.m_pc)
+      Entry(const Entry &ref) : m_seqnum(ref.m_seqnum),
+         m_pc(ref.m_pc)
       {
       }
 
 
-      Entry(size_t sn, Chunk *pc)
-         : m_seqnum(sn)
-         , m_pc(pc)
+      Entry(size_t sn, Chunk * pc) : m_seqnum(sn),
+         m_pc(pc)
       {
       }
 

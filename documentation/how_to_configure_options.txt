@@ -9,7 +9,7 @@ It is recommended to use a backup-update-compare cycle to ease your testing.
 
 1. save a copy of the last configuration and the last output
 2. modify the config file
-3. run uncrustify again on the original unmodified files with the new configuration 
+3. run uncrustify again on the original unmodified files with the new configuration
 4. compare the new output with the saved one to see the effects of the changed configuration.
 
 If you discover an issue or you need some extra functionality, please report an issue at https://github.com/uncrustify/uncrustify/issues

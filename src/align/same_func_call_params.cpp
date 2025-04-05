@@ -22,19 +22,19 @@ void align_same_func_call_params()
 {
    LOG_FUNC_ENTRY();
 
-   Chunk             *pc;
-   Chunk             *align_root = Chunk::NullChunkPtr;
-   Chunk             *align_cur  = Chunk::NullChunkPtr;
-   size_t            align_len   = 0;
-   size_t            span        = 3;
-   size_t            thresh;
-   Chunk             *align_fcn;
-   UncText           align_fcn_name;
-   UncText           align_root_name;
+   Chunk                  *pc;
+   Chunk                  *align_root = Chunk::NullChunkPtr;
+   Chunk                  *align_cur  = Chunk::NullChunkPtr;
+   size_t                 align_len   = 0;
+   size_t                 span        = 3;
+   size_t                 thresh;
+   Chunk                  *align_fcn;
+   UncText                align_fcn_name;
+   UncText                align_root_name;
    std::deque<Chunk *>    chunks;
    std::deque<AlignStack> array_of_AlignStack;
-   AlignStack        fcn_as;
-   const char        *add_str;
+   AlignStack             fcn_as;
+   const char             *add_str;
 
    // Default span is 3 if align_same_func_call_params is true
    log_rule_B("align_same_func_call_params_span");
