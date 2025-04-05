@@ -70,7 +70,7 @@ Pre compiled binaries for Windows can be downloaded from the [Releases](https://
 To generate a build system for Uncrustify using CMake on UNIX-like systems, create a
 build folder and run CMake from it, making sure to specify Release mode:
 
-```bash
+```console
 $ mkdir build
 $ cd build
 $ cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -81,7 +81,7 @@ Then use the build tools of your build system (in many cases this will
 simply be `make`, but on Windows it could be MSBuild or Visual Studio).
 Or use CMake to invoke it:
 
-```bash
+```console
 $ cmake --build . --config Release
 ```
 
@@ -89,7 +89,7 @@ If testing is enabled, CMake generates a `test` target, which you can
 _build_ using your build system tools (usually `make test`). This can also
 be invoked using CTest:
 
-```bash
+```console
 $ ctest -V -C Debug
 ```
 
@@ -104,12 +104,12 @@ variable), and the generated files then build that configuration.
 An example of a single-configuration build system are Makefiles. You can
 build the Release or Debug configurations of Uncrustify (from the build folder) with:
 
-```bash
+```console
 $ cmake -DCMAKE_BUILD_TYPE=Release ..
 $ make
 ```
 or
-```bash
+```console
 $ cmake -DCMAKE_BUILD_TYPE=Debug ..
 $ make
 ```
@@ -222,14 +222,14 @@ tokenize(2351): orig line is 1, orig col is 15, Text() '{', type is BRACE_OPEN, 
 ```
 
 You can also dump the parsing information of each formatting step using the 'dump steps' option.
-```.txt
+```bash
    uncrustify -c myExample.cfg -f myExample.cpp -ds dump
 ```
 This will create a series of 'dump_nnn.log' files, each containing the parsing information at
 specific points of the formatting process ('dump_000.log' will list the formatting options in use).
 
 You can combine this option with -p and -L to get a lot of detailed debugging information.
-```.txt
+```bash
    uncrustify -c myExample.cfg -f myExample.cpp -p myExample.p -L A 2>myExample.A -ds dump
 ```
 
@@ -310,7 +310,7 @@ __NOTE__ This application works reasonably well but it has bugs. Do __not__
 apply it on your whole codebase without checking the results!
 
 Here are ways to run it:
-```
+```console
 $ uncrustify -c mystyle.cfg -f somefile.c -o somefile.c.unc
 $ uncrustify -c mystyle.cfg -f somefile.c > somefile.c.unc
 $ uncrustify -c mystyle.cfg somefile.c
@@ -329,7 +329,7 @@ If the flag `--no-backup` is missing, every file is saved with the initial
 name and an additional suffix (can be changed with --suffix).
 
 For more options descriptions call:
-```bash
+```console
 $ uncrustify -h
 ```
 
