@@ -2126,7 +2126,7 @@ Date:   Mon Oct 28 16:26:50 2013 -0700
     Differentiate between normal ternary (a ? b : c) and short ternary, (b ?: c) with option sp_cond_ternary_short
 
 commit 4b83d06c86ab949d1bc71d8eaa2cee9e9c7332bb
-Author: Time Hütz <time@huetz.biz>
+Author: Tim Hütz <tim@huetz.biz>
 Date:   Sun Dec 29 12:35:48 2013 +0100
 
     Fix build on Windows
