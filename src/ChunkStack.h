@@ -8,6 +8,8 @@
 #ifndef CHUNKSTACK_H_INCLUDED
 #define CHUNKSTACK_H_INCLUDED
 
+#include <deque>
+
 #include "chunk.h"
 #include "uncrustify_types.h"
 

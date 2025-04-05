@@ -411,4 +411,3 @@ check(236): orig line is 35, unbalanced #if block braces (1), in-level is 3, out
 check(291): orig line is 37, unbalanced #if-#else block braces (2), #else out-level is 3, #if out-level is 4
 check(321): orig line is 48, unbalanced #if block braces (2), in-level is 4, out-level is 2
 check(321): orig line is 52, unbalanced #if block braces (2), in-level is 4, out-level is 3
-

@@ -1,14 +1,14 @@
-/ uncrustify policy
--passes(2)              // number of analysis passes (higher values give better detection but slower)                                           
--static_depth(2)        // number of analyzed redirection for static variables 
-//-w2                   // suppress informational messages  
+// uncrustify policy
+-passes(2)              // number of analysis passes (higher values give better detection but slower)
+-static_depth(2)        // number of analyzed redirection for static variables
+//-w2                   // suppress informational messages
 // -strong(AJX)    		// All typedefs must match exactly
--w3						// display informational messages  
+-w3						// display informational messages
 //-w4      				// use the maximum warning level
 //+fpn     				// warns about the use of pointer parameters without first checking for NULL
 //+fsc       			// assumes string constants are const char*
 
-// all checks from 0 to 599 are enabled by +w2 
+// all checks from 0 to 599 are enabled by +w2
 -e10					// Expecting identifier or other declarator
 -e18					// symbol redefined
 -e19					// useless declaration
@@ -32,7 +32,7 @@
 -e85 					// array has dimension 0
 -e96					// unmatched left brace for linkage specification
 -e114					// inconsistent
--e119					// too many arguments 
+-e119					// too many arguments
 -e123					// macro defined with arguments
 -e129					// declaration expected
 -e200					// internal error
@@ -349,14 +349,14 @@
 -e1052					// a type was expected, class assumed
 -e1054					// template variable declaration expects a type
 -e1055					// symbol undeclared, assumed to return int
--e1057					// member cannot be used without an object				
+-e1057					// member cannot be used without an object
 -e1058					// initializing a non-const reference
 -e1065					// symbol not declared as "C"
 -e1062					// template must be either a class or a function
--e1066					// symbol declared as "C" 
+-e1066					// symbol declared as "C"
 -e1075					// Ambiguous reference to symbol
--e1077					// could not evaluate default template parameter			
--e1086					// do not warn about compound literals
+-e1077					// could not evaluate default template parameter
+-e1086					// do not warn about compount literals
 -e1087					// previous declaration is incompatible
 -e1401					// member not initialized by constructor
 -e1502					// object has no nonstatic data member
@@ -364,14 +364,14 @@
 -e1529					// symbol not first checking for assignment to this
 -e1536					// exposing low access member
 -e1540					// pointer member neither freed nor zeroed by destructor
--e1551					// function may throw exception in destructor 			
+-e1551					// function may throw exception in destructor
 -e1554					// direct pointer copy of member within copy constructor
 -e1561					// reference initialization causes loss of const/volatile
 -e1566					// member might have been initialized by a separate function
 -e1702					// operator is both an ordinary function and a member function
 -e1704					// constructor has private access specification
 -e1711					// function needs not to be virtual
--e1712					// default constructor not defined for class			
+-e1712					// default constructor not defined for class
 -e1714					// Member function not referenced
 -e1725					// class member is a reference
 -e1732					// constructor for class has no assignment operator
@@ -381,7 +381,7 @@
 -e1746					// parameter could be made const reference
 -e1757					// discarded instance of post decrement/increment
 -e1762					// member could be made const
--e1764					// reference parameter could be declared const 
+-e1764					// reference parameter could be declared const
 -e1776					// converting a string literal to char*
 -e1786					// implicit conversion to bool
 -e1788					// variable is referenced only by its constructor or destructor

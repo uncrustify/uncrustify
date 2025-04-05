@@ -1,8 +1,8 @@
 // These are generale configuration options used for pcLint
-// throughout all kind of projects. 
+// throughout all kind of projects.
 // This was adjusted to nuinno policy.
 // See  manual (chapter LIVING WITH LINT) for further details.
-// 
+//
 // Project specific settings shall be included from a separate file
 // at the end of this file
 
@@ -22,10 +22,10 @@
 
 +fan					// allow anonymous unions
 ++fim					// use multiple include directories
-+fus					// automatically recognize std namespace 
++fus					// automatically recognize std namespace
 +fbo					// activate keyword bool, true, false
--fkp					// allow ANSI/ISO standard do not insist on Kernighan Richy style  
--fdh					// do not append a .h to header names                                   
+-fkp					// allow ANSI/ISO standard do not insist on Kernighan Richy style
+-fdh					// do not append a .h to header names
 -ffb					// do not establish a separate scope for declares within for clauses
 +fsv					// track static variables
 +fll					// enable long long types
@@ -47,12 +47,12 @@ scripts\pclint\policy.lnt	// pclint rules from nuinno
 +ffn 					// force full path names
 -width(0) 				// don't insert line breaks (unlimited output width).
 -hF1 					// set message height one
-+program_info(output_prefix = "tests\pclint\pclint_")  
++program_info(output_prefix = "tests\pclint\pclint_")
 
 // make error format same as GCC to display it in Eclipse
 -"format=%(%f:%l:%C:%) %t %n: %m"
 -frl	// Enable warning 831
 +flm	// make sure no foreign includes change the format
-// env-xml.lnt 			// create output in xml format 
+// env-xml.lnt 			// create output in xml format
 // -"format_stack=%-20f %5a %-20t %5n %c %e"
 // +stack( &file=test\pclint\pclint-stack-report.txt )

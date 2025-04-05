@@ -64,4 +64,3 @@ otherwise processed.
 I also selectively turn on log levels (the -L command line option) to aid
 debugging of specific areas of interest.
 Don't turn on all log levels -- the result is excessive and not at all helpful.
-
