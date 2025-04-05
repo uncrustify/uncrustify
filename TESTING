@@ -46,7 +46,7 @@ Adding new tests
   tests/config/ger-full-cmt-reflow.cfg and 'c/cmt-not-a-boxed-cmt.c'
   will be fetched from tests/c/cmt-not-a-boxed-cmt.c when you run
   the tests.
-  
+
 
 Features
 --------
@@ -56,7 +56,7 @@ Features
 
   # clark's style - blank lines before and after flow control,
   indented comments:
-  
+
     20100 clark.cfg c/i2c-core.c
     20101 clark.cfg c/comment-indent.c
     20102 clark.cfg c/indent.cpp

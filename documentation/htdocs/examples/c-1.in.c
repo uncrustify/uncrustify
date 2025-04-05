@@ -54,7 +54,7 @@ static int i2c_bus_suspend(struct device * dev, pm_message_t state)
 static int i2c_bus_resume(struct device * dev)
 {
 	int rc = 0;
-	
+
 	if (dev->driver && dev->driver->resume)
 		rc = dev->driver->resume(dev,0);
 	return rc;
@@ -298,7 +298,7 @@ int i2c_add_driver(struct i2c_driver *driver)
 	res = driver_register(&driver->driver);
 	if (res)
 		goto out_unlock;
-	
+
 	list_add_tail(&driver->list,&drivers);
 	pr_debug("i2c-core: driver [%s] registered\n", driver->name);
 
@@ -320,7 +320,7 @@ int i2c_del_driver(struct i2c_driver *driver)
 	struct list_head   *item1, *item2, *_n;
 	struct i2c_client  *client;
 	struct i2c_adapter *adap;
-	
+
 	int res = 0;
 
 	down(&core_lists);
@@ -404,7 +404,7 @@ int i2c_attach_client(struct i2c_client *client)
 	}
 	list_add_tail(&client->list,&adapter->clients);
 	up(&adapter->clist_lock);
-	
+
 	if (adapter->client_register)  {
 		if (adapter->client_register(client))  {
 			dev_dbg(&adapter->dev, "client_register "
@@ -420,14 +420,14 @@ int i2c_attach_client(struct i2c_client *client)
 	client->dev.driver = &client->driver->driver;
 	client->dev.bus = &i2c_bus_type;
 	client->dev.release = &i2c_client_release;
-	
+
 	snprintf(&client->dev.bus_id[0], sizeof(client->dev.bus_id),
 		"%d-%04x", i2c_adapter_id(adapter), client->addr);
 	dev_dbg(&adapter->dev, "client [%s] registered with bus id %s\n",
 		client->name, client->dev.bus_id);
 	device_register(&client->dev);
 	device_create_file(&client->dev, &dev_attr_client_name);
-	
+
 	return 0;
 }
 
@@ -436,7 +436,7 @@ int i2c_detach_client(struct i2c_client *client)
 {
 	struct i2c_adapter *adapter = client->adapter;
 	int res = 0;
-	
+
 	if ((client->flags & I2C_CLIENT_ALLOW_USE)
 	 && (client->usage_count > 0)) {
 		dev_warn(&client->dev, "Client [%s] still busy, "
@@ -519,9 +519,9 @@ int i2c_release_client(struct i2c_client *client)
 			return -EPERM;
 		}
 	}
-	
+
 	i2c_dec_use_client(client);
-	
+
 	return 0;
 }
 
@@ -607,7 +607,7 @@ int i2c_master_send(struct i2c_client *client,const char *buf ,int count)
 	msg.flags = client->flags & I2C_M_TEN;
 	msg.len = count;
 	msg.buf = (char *)buf;
-	
+
 	ret = i2c_transfer(adap, &msg, 1);
 
 	/* If everything went ok (i.e. 1 msg transmitted), return #bytes
@@ -788,7 +788,7 @@ int i2c_probe(struct i2c_adapter *adapter,
 struct i2c_adapter* i2c_get_adapter(int id)
 {
 	struct i2c_adapter *adapter;
-	
+
 	down(&core_lists);
 	adapter = (struct i2c_adapter *)idr_find(&i2c_adapter_idr, id);
 	if (adapter && !try_module_get(adapter->owner))
@@ -869,7 +869,7 @@ static int i2c_smbus_add_pec(u16 addr, u8 command, int size,
 			size = I2C_SMBUS_BLOCK_DATA_PEC;
 			break;
 	}
-	return size;	
+	return size;
 }
 
 static int i2c_smbus_check_pec(u16 addr, u8 command, int size, u8 partial,
@@ -919,7 +919,7 @@ static int i2c_smbus_check_pec(u16 addr, u8 command, int size, u8 partial,
 			rpec, cpec);
 		return -1;
 	}
-	return 0;	
+	return 0;
 }
 
 s32 i2c_smbus_write_quick(struct i2c_client *client, u8 value)
