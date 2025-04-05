@@ -55,7 +55,7 @@ Before starting the release process, first check that:
   - ``CMAKE_BUILD_TYPE`` is set to ``Release`` (or ``RelWithDebInfo``)
   - you have a valid PAT for your admin account. See below on how
     to get a new PAT if needed.
-  - ``.git/config`` contains your PAT information. Again see below. 
+  - ``.git/config`` contains your PAT information. Again see below.
 
 Getting a new GitHub PAT and set up git correctly
 =================================================

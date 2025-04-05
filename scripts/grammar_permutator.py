@@ -13,14 +13,14 @@ DEMO_GRAMMAR = """
     ImportBindings -> Import ' : ' ImportBindList
     ImportBindList -> ImportBind | ImportBind ', ' ImportBindList
     ImportBind -> Identifier | Identifier ' = ' Identifier
-    
+
     ModuleAliasIdentifier -> Identifier
-    
+
     Packages -> PackageName | Packages '.' PackageName
     ModuleFullyQualifiedName -> ModuleName | Packages '.' ModuleName
     PackageName -> Identifier
     ModuleName -> Identifier
-    
+
     Identifier -> 'x'
 """
 

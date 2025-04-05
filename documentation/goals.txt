@@ -21,4 +21,3 @@ Non-whitespace modifications
  + Add braces for 'fully braced' format
 
 (TODO: update the list to include more available features)
-

@@ -22,7 +22,7 @@ FILE_TS = "%s/emscripten/libUncrustify.d.ts" % ROOT_DIR
 REGION_START = "region enum bindings"
 REGION_END = "endregion enum bindings"
 
-''' Enums which values need to be updated in the binding code '''
+# Enums which values need to be updated in the binding code
 ENUMS_INFO = [
     {
         'name': 'option_type_e',
