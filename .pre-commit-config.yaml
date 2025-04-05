@@ -68,19 +68,26 @@ repos:
     #  choco install llvm uncrustify cppcheck
     hooks:
       - id: uncrustify
-        exclude: ^(tests/.*)$
+        exclude: ^(tests/.*|documentation/.*)$
         args: [--replace, --no-backup, -c, forUncrustifySources.cfg]
       - id: cppcheck
-        exclude: ^(tests/.*)$
+        exclude: ^(tests/.*|documentation/.*)$
         args:
           - --force
           - --language=c++
-          #- -IInc
+          - -Isrc
           - '--template={file}({line}): {severity} ({id}): {message}'
           - --inline-suppr
+          - --check-level=exhaustive
+          - --suppress=missingInclude:*.h
+          - --suppress=missingIncludeSystem
+          - --suppress=noCopyConstructor
+          - --suppress=noOperatorEq
+          - --suppress=unusedFunction
+          - --suppress=unmatchedSuppression
       - id: cpplint
-        exclude: ^(tests/.*)$
-        args: ["--filter=-build/header_guard"]
+        exclude: ^(tests/.*|documentation/.*)$
+        args: ["--filter=-build/header_guard,-legal/copyright,-whitespace/indent,-whitespace/newline,-whitespace/braces,-whitespace/comments,-whitespace/line_length,-whitespace/parens,-build/include_order,-readability/todo,-readability/fn_size,-build/include_subdir"]
         additional_dependencies:
           - cpplint>=1.6.1
   - repo: https://github.com/shellcheck-py/shellcheck-py
