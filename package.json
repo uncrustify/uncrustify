@@ -15,7 +15,13 @@
     "uncrustify",
     "source code beautifier"
   ],
-  "author": "Ben Gardner",
-  "author": "Guy Maurel",
+  "contributors": [
+    {
+      "name": "Ben Gardner"
+    },
+    {
+      "name": "Guy Maurel"
+    }
+  ],
   "license": "GPL-2.0-or-later"
 }
