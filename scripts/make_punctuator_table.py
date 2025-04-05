@@ -83,15 +83,15 @@ def add_to_db(entry, db_top):
     """
     find or create the entry for the first char
     """
-    strng = entry[0]
+    string = entry[0]
     db_cur = db_top
-    for idx in range(0, len(strng)):
-        if not strng[idx] in db_cur:
-            db_cur[strng[idx]] = [strng[idx], 0, None, {}]
+    for idx in range(0, len(string)):
+        if not string[idx] in db_cur:
+            db_cur[string[idx]] = [string[idx], 0, None, {}]
 
-        dbe = db_cur[strng[idx]]
+        dbe = db_cur[string[idx]]
 
-        if idx == len(strng) - 1:
+        if idx == len(string) - 1:
             dbe[2] = entry
         else:
             db_cur = dbe[3]

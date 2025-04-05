@@ -1,4 +1,4 @@
-// Note: Some tests running on this _input_ file rely upon that the tripple
+// Note: Some tests running on this _input_ file rely upon that the triple
 // closing '>' are not separated by spaces or anything else!
 public class TestClass {
 private static void initMap(void) {

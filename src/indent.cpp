@@ -2581,14 +2581,14 @@ void indent_text()
          {
             Chunk *prev = open_paren->GetPrevNcNnl();
 
-            // open paren is preceeded by a bool and that is preceeded or followed by a new line
+            // open paren is preceded by a bool and that is preceded or followed by a new line
             if (prev->Is(CT_BOOL) && (prev->GetPrevNc()->IsNewline() || prev->GetNextNc()->IsNewline()))
             {
                indent_bool_more = true;
             }
             Chunk *next = close_paren->GetNextNcNnl();
 
-            // close paren is followed by a bool and that is preceeded or followed by a new line
+            // close paren is followed by a bool and that is preceded or followed by a new line
             if (next->Is(CT_BOOL) && (next->GetNextNc()->IsNewline() || next->GetPrevNc()->IsNewline()))
             {
                indent_bool_more = true;

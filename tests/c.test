@@ -166,7 +166,7 @@
 00320  c/rdan.cfg                                       c/indent_first_bool_expr.c
 
 
-# aligning tresholds
+# aligning thresholds
 
 00401  common/align-1.cfg                               c/align-equ.c
 00402  common/align-1.cfg                               c/align-var.c

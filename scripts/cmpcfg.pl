@@ -6,7 +6,7 @@
 # License: GPL
 
 # Purpose of this script is to process config files and
-# produce a comparision chart of values.  The input files
+# produce a comparison chart of values.  The input files
 # are simple series of parameter definitions, of the form
 # 'name=value' pairs, whitespace and comments are correctly
 # ignored.  Invoke on multiple config files to compare

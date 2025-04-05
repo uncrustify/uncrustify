@@ -51,7 +51,7 @@ Adding new tests
 Features
 --------
 
-- You can re-use config files and input files for multiple tests. So
+- You can reuse config files and input files for multiple tests. So
   one might observe test sets like these:
 
   # clark's style - blank lines before and after flow control,

@@ -1392,7 +1392,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    // look for the opening brace of the switch
    Chunk *open = swit->GetNextType(CT_BRACE_OPEN, swit->GetLevel());
    // look for the closing brace of the switch
-   Chunk *clos = open->GetClosingParen();
+   Chunk *close = open->GetClosingParen();
 
    // find the end of the case-block
    pc = pc->GetNextNcNnl(E_Scope::PREPROC);
@@ -1414,7 +1414,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
       }
       else if (pc->GetLevel() == cl_colon->GetLevel() - 1)
       {
-         if (pc == clos)
+         if (pc == close)
          {
             LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig col is %zu\n",
                     __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());

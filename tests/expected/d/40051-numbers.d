@@ -6,7 +6,7 @@ int foo(int bar)
     int a;
 
     /*
-     *  Interger Literals
+     *  Integer Literals
      */
 
     /* Suffixes */

@@ -1,4 +1,4 @@
-// uncrustify policy
+/ uncrustify policy
 -passes(2)              // number of analysis passes (higher values give better detection but slower)                                           
 -static_depth(2)        // number of analyzed redirection for static variables 
 //-w2                   // suppress informational messages  
@@ -177,7 +177,7 @@
 -e726 					// Extraneous comma ignored
 +e727 					// local static variable not explicitly initialized
 +e728 					// global static variable not explicitly initialized
-+e729 					// exteral variable not explicitly initialized
++e729 					// external variable not explicitly initialized
 -e730 					// Boolean argument to function
 -e731					// Boolean argument to equal/not equal
 -e732 					// Loss of sign
@@ -356,7 +356,7 @@
 -e1066					// symbol declared as "C" 
 -e1075					// Ambiguous reference to symbol
 -e1077					// could not evaluate default template parameter			
--e1086					// do not warn about compount literals
+-e1086					// do not warn about compound literals
 -e1087					// previous declaration is incompatible
 -e1401					// member not initialized by constructor
 -e1502					// object has no nonstatic data member

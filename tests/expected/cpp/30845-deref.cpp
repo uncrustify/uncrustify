@@ -1,6 +1,6 @@
 
 myNewValue = something[arrayNumber] * someOtherValue;
-myNewValue = multidimentional[arrayNumber][anotherNumber] * someOtherValue;
+myNewValue = multidimensional[arrayNumber][anotherNumber] * someOtherValue;
 myNewValue = noArrayVariableWorksFine * someOtherValue;
 
 

@@ -101,7 +101,7 @@ void mark_functor()
             }
             else
             {
-               LOG_FMT(LCOMBINE, "%s(%d): NOT useable\n", __func__, __LINE__);
+               LOG_FMT(LCOMBINE, "%s(%d): NOT usable\n", __func__, __LINE__);
                continue;
             }
          }

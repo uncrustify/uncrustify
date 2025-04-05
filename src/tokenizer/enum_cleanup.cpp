@@ -2,7 +2,7 @@
  * @file enum_cleanup.cpp
  * works on the last comma within enum
  *
- * @author  Guy Maurel Juli 2018
+ * @author  Guy Maurel July 2018
  * @license GPL v2+
  */
 

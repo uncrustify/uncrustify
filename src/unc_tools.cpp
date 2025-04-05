@@ -826,7 +826,7 @@ void set_dump_file_name(const char *name)
 }
 
 
-//! give the oportunity to examine most(all) the data members of a single token
+//! give the opportunity to examine most(all) the data members of a single token
 //! may be inserted everythere to follow a value
 void examine_token(const char *func_name, int theLine_of_code, size_t orig_line_to_examine, size_t orig_column_to_examine)
 {

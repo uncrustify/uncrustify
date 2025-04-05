@@ -26,7 +26,7 @@ _libUncrustify.js_ example usage
     uncrustify.loadConfig( "configFileFormatString" )
     ```
 
-3. set the language of the to be formated file string
+3. set the language of the to be formatted file string
     ```js
     uncrustify.set_language( languageInt );
     ```

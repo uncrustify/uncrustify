@@ -1983,7 +1983,7 @@ static Chunk *output_comment_cpp(Chunk *first)
    log_rule_B("cmt_reflow_mode");
    cmt.reflow = (options::cmt_reflow_mode() != 1);
 
-   UncText leadin = "//";             // default setting to keep previous behaviour
+   UncText leading = "//";             // default setting to keep previous behaviour
 
    // If true, space is added with sp_cmt_cpp_start will be added after doxygen
    // sequences like '///', '///<', '//!' and '//!<'.
@@ -1998,11 +1998,11 @@ static Chunk *output_comment_cpp(Chunk *first)
       if (  sComment[2] == '/'
          || sComment[2] == '!') // doxygen style found!
       {
-         leadin += sComment[2];                     // at least one additional char (either "///" or "//!")
+         leading += sComment[2];                    // at least one additional char (either "///" or "//!")
 
          if (sComment[3] == '<')                    // and a further one (either "///<" or "//!<")
          {
-            leadin += '<';
+            leading += '<';
          }
          else
          {
@@ -2015,8 +2015,8 @@ static Chunk *output_comment_cpp(Chunk *first)
          && (  sComment[brace] == '{'
             || sComment[brace] == '}'))
       {
-         leadin += '@';
-         leadin += sComment[brace];
+         leading += '@';
+         leading += sComment[brace];
       }
    }
    // Special treatment for Qt translator or meta-data comments (treat as unity)
@@ -2032,7 +2032,7 @@ static Chunk *output_comment_cpp(Chunk *first)
          || c == '='
          || c == '~')
       {
-         leadin += c;
+         leading += c;
       }
    }
    // CPP comments can't be grouped unless they are converted to C comments
@@ -2045,7 +2045,7 @@ static Chunk *output_comment_cpp(Chunk *first)
       // i.e. '// A' vs. '//A'.
       auto *sp_cmt = &options::sp_cmt_cpp_start;
 
-      cmt.cont_text = leadin;
+      cmt.cont_text = leading;
 
       // Get start of comment text
       while (  *cmt_text != '\0'
@@ -2088,7 +2088,7 @@ static Chunk *output_comment_cpp(Chunk *first)
       }
       else
       {
-         size_t  iLISz = leadin.size();
+         size_t  iLISz = leading.size();
          UncText tmp(first->GetStr(), 0, iLISz);
          add_comment_text(tmp, cmt, false);
 
@@ -2478,7 +2478,7 @@ static void output_comment_multi(Chunk *pc)
             {
                // Issue #4378
                fprintf(stderr, "%s\n", pc->ElidedText(copy));
-               fprintf(stderr, "FATAL: a doygen argument is missing.\n");
+               fprintf(stderr, "FATAL: a doxygen argument is missing.\n");
                log_flush(true);
                exit(EX_SOFTWARE);
             }

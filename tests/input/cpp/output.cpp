@@ -269,7 +269,7 @@ void output_text(FILE *pfile)
 
 
 /**
- * Given a multi-line comemnt block that starts in column X, figure out how
+ * Given a multi-line comment block that starts in column X, figure out how
  * much subsequent lines should be indented.
  *
  * The answer is either 0 or 1.
@@ -618,7 +618,7 @@ void output_comment_multi(Chunk *pc)
 
             if (line[0] == '\n')
             {
-               /* Emtpy line - just a '\n' */
+               /* Empty line - just a '\n' */
                if (cpd.settings[UO_cmt_star_cont].b)
                {
                   output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].b);

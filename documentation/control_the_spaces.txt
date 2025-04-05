@@ -18,5 +18,5 @@ Add or remove space before assignment operator '=', '+=', etc.
 in such a statement:
   a =5;
 
-The second categorie is used for all positions where no option is coded.
-The third categorie is a debug for the developer, who still have something to do.
+The second category is used for all positions where no option is coded.
+The third category is a debug for the developer, who still have something to do.

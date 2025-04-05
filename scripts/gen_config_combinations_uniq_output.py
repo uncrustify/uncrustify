@@ -471,7 +471,7 @@ def main(args):
     output_dict_path = path.join(config["out_dir"], "out.txt")
     write_output_dict_pretty(output_dict, output_dict_path)
 
-    # read ouput txt file to print it
+    # read output txt file to print it
     with open(output_dict_path, 'r') as f:
         print()
         print(f.read())

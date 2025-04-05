@@ -1,4 +1,4 @@
-// Example for not indenting preprocesser statements inside switch statements
+// Example for not indenting preprocessor statements inside switch statements
 switch(...)
 {
 case 1:

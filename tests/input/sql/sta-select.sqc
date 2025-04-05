@@ -44,7 +44,7 @@ if (sqlca.sqlcode != 0) {
         exit(1);
 }
 
-/* cursor delcaration. Have to declare a cursor each time you
+/* cursor declaration. Have to declare a cursor each time you
    want tuples back from db2
 */
 

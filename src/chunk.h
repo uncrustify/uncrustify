@@ -582,7 +582,7 @@ public:
    /**
     * @brief defines a member function pointer for a function of type
     * bool Chunk::function() const;
-    * that checks whether a chunk satisty a specific condition
+    * that checks whether a chunk satisfy a specific condition
     */
    typedef bool (Chunk::*T_CheckFnPtr)() const;
 

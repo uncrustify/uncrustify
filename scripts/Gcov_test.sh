@@ -17,9 +17,9 @@
 # The name of the file is ${source_file}.total
 # The line(s) of code which are still not used by any of the tests cases are
 # marked which the token "#####" at the beginning of the line.
-# As the testing part (unc_tools.cpp, backup.cpp) are only used by a developper,
+# As the testing part (unc_tools.cpp, backup.cpp) are only used by a developer,
 # all the lines are marked.
-# Also the detect.cpp part of uncrustify is completly marked.
+# Also the detect.cpp part of uncrustify is completely marked.
 #
 # TAKE ATTENTION:
 # ===============
@@ -109,7 +109,7 @@ then
   do
     echo "source_file is ${source_file}"
     I_file="blabla"
-    # this file doesn' exists
+    # this file doesn't exist
     for test_number in ${NUMBER_LIST}
     do
       echo "source_file is ${source_file}: test_number=${test_number}"

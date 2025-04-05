@@ -1,7 +1,7 @@
 /**
  * @file check_template.cpp
  *
- * splitted from tokenize_cleanup.cpp
+ * split from tokenize_cleanup.cpp
  *
  * @author  Guy Maurel 2022
  * @license GPL v2+
