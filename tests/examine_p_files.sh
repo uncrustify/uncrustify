@@ -1,3 +1,4 @@
+# shellcheck shell=sh
 # 28. 5.2022
 #
 # Guy Maurel
@@ -6,8 +7,8 @@
 #
 P_FILES="../build/P-files"
 #
-cd ${P_FILES}
-grep "BRACED_INIT_LIST" * | grep -v CT_BRACED_INIT_LIST | grep -v _INCLUDED > BRACED_INIT_LIST_found_list.txt
+cd "${P_FILES}" || exit 1
+grep "BRACED_INIT_LIST" -- * | grep -v CT_BRACED_INIT_LIST | grep -v _INCLUDED > BRACED_INIT_LIST_found_list.txt
 # split with : to get the filenames only
 gawk -f ../../tests/BRACED_INIT_LIST_found_list.awk < BRACED_INIT_LIST_found_list.txt > BRACED_INIT_LIST_only_FN.txt
 set -x
