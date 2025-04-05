@@ -31,36 +31,36 @@
 #
 SCRIPT_NAME=$0
 #echo "SCRIPT_NAME="${SCRIPT_NAME}
-BASE_NAME=`basename ${SCRIPT_NAME}`
-DIR_NAME=`dirname ${SCRIPT_NAME}`
-if [ ${DIR_NAME} != "." ] ;
+#BASE_NAME=$(basename "${SCRIPT_NAME}") # Unused
+DIR_NAME=$(dirname "${SCRIPT_NAME}")
+if [ "${DIR_NAME}" != "." ] ;
 then
   echo "you must use the script at the directory <uncrustify_directory>/scripts"
   exit
 fi
 cd ..
-SOURCES_LIST_H=`ls -1 src/*.h | cut -b 5-`
-SOURCES_LIST_CPP=`ls -1 src/*.cpp | cut -b 5-`
+SOURCES_LIST_H=$(cd src || exit ; echo *.h)
+SOURCES_LIST_CPP=$(cd src || exit ; echo *.cpp)
 #
 rm -rf gcov_test
 mkdir gcov_test
 #
-cd gcov_test
+cd gcov_test || exit 1
 # build a new uncrustify binary
 cmake -D CMAKE_BUILD_TYPE=Release \
-      -D CMAKE_C_FLAGS="-fprofile-arcs -ftest-coverage" \
-      -D CMAKE_CXX_FLAGS="-fprofile-arcs -ftest-coverage" ..
+  -D CMAKE_C_FLAGS="-fprofile-arcs -ftest-coverage" \
+  -D CMAKE_CXX_FLAGS="-fprofile-arcs -ftest-coverage" ..
 make
 # use uncrustify without parameter
 ./uncrustify
 #
-GCNO_LIST=`ls -1 ./CMakeFiles/uncrustify.dir/src/*.gcno`
+GCNO_LIST=$(ls -1 ./CMakeFiles/uncrustify.dir/src/*.gcno)
 for gcno_file in ${GCNO_LIST}
 do
   echo "gcno_file=${gcno_file}"
-  gcno_base_name=`basename ${gcno_file} .gcno`
-  echo ${gcno_base_name}
-  gcov ${gcno_file} -m
+  gcno_base_name=$(basename "${gcno_file}" .gcno)
+  echo "${gcno_base_name}"
+  gcov "${gcno_file}" -m
 done
 #
 ADD_TEST_LIST="add_test_list.txt"
@@ -74,12 +74,12 @@ grep add_test ../build/tests/CTestTestfile.cmake > ${ADD_TEST_LIST}
 cut -b 10- < ${ADD_TEST_LIST} > ${ADD_TEST_LIST_10}
 cut --delimiter=" " --fields=1 < ${ADD_TEST_LIST_10} > ${ADD_TEST_LIST_NUMBER}
 #
-NUMBER_LIST=`cat ${ADD_TEST_LIST_NUMBER}`
+NUMBER_LIST=$(cat ${ADD_TEST_LIST_NUMBER})
 #
 # prepare a new script file to use uncrustify with all the tests cases
 gawk --file ${ADD_TEST_LIST_AWK} \
-     --assign sources_cpp="${SOURCES_LIST_CPP}" \
-     --assign sources_h="${SOURCES_LIST_H}" < ${ADD_TEST_LIST} > ${ADD_TEST_LIST_CMD}
+  --assign sources_cpp="${SOURCES_LIST_CPP}" \
+  --assign sources_h="${SOURCES_LIST_H}" < ${ADD_TEST_LIST} > ${ADD_TEST_LIST_CMD}
 chmod +x ${ADD_TEST_LIST_CMD}
 #
 # ATTENTION: this takes about 10 minutes
@@ -102,6 +102,7 @@ then
   # to save the last file of each test
   for test_number in ${NUMBER_LIST}
   do
+    # shellcheck disable=2034
     last_test_number=${test_number}
   done
   #
@@ -114,14 +115,14 @@ then
     do
       echo "source_file is ${source_file}: test_number=${test_number}"
       H_DIR="${source_file}_Dir"
-      mkdir -p ${TOTALS_DIR}/${H_DIR}
+      mkdir -p "${TOTALS_DIR}/${H_DIR}"
       TEST_FILE=${test_number}/${source_file}.gcov
-      if [ -s ${TEST_FILE} ] ;
+      if [ -s "${TEST_FILE}" ] ;
       then
         O_file="${TOTALS_DIR}/${H_DIR}/${test_number}"
         gawk --file ${COMPARE_AND_ADD} \
-             --assign  in_file="${I_file}" \
-             --assign out_file="${O_file}" < ${TEST_FILE}
+          --assign  in_file="${I_file}" \
+          --assign out_file="${O_file}" < "${TEST_FILE}"
         I_file=${O_file}
       fi
       # to brake before the end
@@ -133,7 +134,7 @@ then
       #fi
     done
     # save the last file of each test
-    cp ${O_file} ${TOTALS_DIR}/${source_file}.total
+    cp "${O_file}" "${TOTALS_DIR}/${source_file}.total"
   done
 else
   # do it directly, without intermediate files
@@ -144,11 +145,11 @@ else
       echo "source_file is ${source_file}: test_number=${test_number}"
       TEST_FILE=${test_number}/${source_file}.gcov
       TOTALS_FILE=${source_file}
-      if [ -s ${TEST_FILE} ] ;
+      if [ -s "${TEST_FILE}" ] ;
       then
         gawk --file ${COMPARE_AND_ADD} \
-             --assign  in_file="${TOTALS_DIR}/${TOTALS_FILE}" \
-             --assign out_file="${TOTALS_DIR}/${TOTALS_FILE}" < ${TEST_FILE}
+          --assign  in_file="${TOTALS_DIR}/${TOTALS_FILE}" \
+          --assign out_file="${TOTALS_DIR}/${TOTALS_FILE}" < "${TEST_FILE}"
       fi
       # to brake before the end
       #if [ "${test_number}" == "c-sharp_10010" ]

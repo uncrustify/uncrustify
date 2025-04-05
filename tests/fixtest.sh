@@ -5,36 +5,36 @@
 #
 
 if [ -z "$1" ] ; then
-    fn=$(basename $0)
-    echo "Usage: $fn TEST [...]"
-    echo
-    echo "  TEST : the test number pattern, may contain wildcards"
-    echo "         You can put multiple test numbers on the command line"
-    echo
-    echo "The script will find all matching tests in the results folder and copy them"
-    echo "into the output folder."
-    echo
-    echo "Examples:"
-    echo "$fn 30014        # copy test 30014"
-    echo "$fn 30014 00110  # copy tests 30014 and 00110"
-    echo "$fn '*'          # copy all tests"
-    exit 1
+  fn=$(basename "$0")
+  echo "Usage: $fn TEST [...]"
+  echo
+  echo "  TEST : the test number pattern, may contain wildcards"
+  echo "         You can put multiple test numbers on the command line"
+  echo
+  echo "The script will find all matching tests in the results folder and copy them"
+  echo "into the output folder."
+  echo
+  echo "Examples:"
+  echo "$fn 30014        # copy test 30014"
+  echo "$fn 30014 00110  # copy tests 30014 and 00110"
+  echo "$fn '*'          # copy all tests"
+  exit 1
 fi
 
 while [ -n "$1" ] ; do
-    # Use '*' as the pattern if one wasn't defined
-    patt=$1
-    path="results"
+  # Use '*' as the pattern if one wasn't defined
+  patt=$1
+  path="results"
 
-    # Find the tests that match, remove the .svn folders
-    files=$(find $path -name "$patt-*" -type f | sed "/\.svn/d")
+  # Find the tests that match, exclude the .svn and .git folders
+  files=$(find "$path" \( -name ".svn" -o -name ".git" \) -prune -o -name "$patt-*" -type f)
 
-    did1=''
-    for t in $files ; do
-        other=$(echo $t | sed "s/^results/output/")
-        echo "cp $t $other"
-        cp $t $other
-    done
+  # did1='' # unused
+  for t in $files ; do
+    other=$(echo "$t" | sed "s/^results/output/")
+    echo "cp '$t' '$other'"
+    cp "$t" "$other"
+  done
 
-    shift 1
+  shift 1
 done
