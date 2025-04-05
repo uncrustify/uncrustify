@@ -532,7 +532,7 @@ Date:   Wed Feb 18 08:45:32 2015 +0100
     Bugfix: Undesired effect of disable_processing_cmt
 
     The new option disable_processing_cmt that has been added recently had
-    an undesired side effect. Unfortunatly, due to its nature, it was
+    an undesired side effect. Unfortunately, due to its nature, it was
     not revealed by the test facility.
 
     Configuration created before the option was introduced works fine
@@ -611,7 +611,7 @@ Date:   Sat Feb 14 13:53:40 2015 +0100
 
     Introduced new options indent_min_vbrace_open and indent_vbrace_open_on_tabstop.
 
-    The new options allow to applay special indent after virtual braces and
+    The new options allow to apply special indent after virtual braces and
     newline.
 
 commit fa34bee5a08abff08a71dddf019f1ffaf352afa9
@@ -620,7 +620,7 @@ Date:   Sat Feb 14 13:24:55 2015 +0100
 
     Fixed wrong tabstop behaviour in case --frag is used.
 
-    calc_next_tab_column() did not take indent of first line into accout
+    calc_next_tab_column() did not take indent of first line into account
     when command line option --frag was used.
 
 commit f0f17a1599f8a775942f2796761c80b06abee1b7
@@ -2126,7 +2126,7 @@ Date:   Mon Oct 28 16:26:50 2013 -0700
     Differentiate between normal ternary (a ? b : c) and short ternary, (b ?: c) with option sp_cond_ternary_short
 
 commit 4b83d06c86ab949d1bc71d8eaa2cee9e9c7332bb
-Author: Tim Hütz <tim@huetz.biz>
+Author: Time Hütz <time@huetz.biz>
 Date:   Sun Dec 29 12:35:48 2013 +0100
 
     Fix build on Windows
@@ -2224,7 +2224,7 @@ commit 5c571d415182a668bf053ba31130575079b8bd22
 Author: ipaterson <ipaterson@newstex.com>
 Date:   Mon Oct 7 16:10:54 2013 -0400
 
-    Fixed handling of multiline arrays to match disctionaries. Previously the closing bracket was being aligned with the opening bracket, producing a very odd indentation.
+    Fixed handling of multiline arrays to match dictionaries. Previously the closing bracket was being aligned with the opening bracket, producing a very odd indentation.
 
 commit de982885cb09c2d91f1086e6473faaffab645029
 Author: ipaterson <ipaterson@newstex.com>
@@ -4659,7 +4659,7 @@ commit 31265d3337be44b4499d3a673ff4a3622e27af53
 Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Nov 15 20:18:57 2011 -0600
 
-    Fix spelling recommed => recommend
+    Fix spelling recommend => recommend
 
 commit 122b7e7b3f44d3c0ae72f703874d123ef6d5d053
 Author: Ben Gardner <gardner.ben@gmail.com>
@@ -5907,7 +5907,7 @@ commit 92a6a6b2ccb7916d56aa6d3956b2e773bd9f82c8
 Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Jun 7 20:50:38 2011 -0500
 
-    Remove diagnostic code about unexpect chunk in struct/enum/union
+    Remove diagnostic code about unexpected chunk in struct/enum/union
 
 commit 2cc9f6d51ba0d091c6e4e1b3f876528a6d2648b2
 Author: Ben Gardner <gardner.ben@gmail.com>
@@ -6582,7 +6582,7 @@ commit e635598c2ccf3a8d017bd2d88df59e3aa18326e4
 Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Wed Apr 21 07:56:03 2010 -0500
 
-    Fix spelling (paramter -> parameter) and regenerate the default configs.
+    Fix spelling (parameter -> parameter) and regenerate the default configs.
 
 commit d256f0dfb9ec59b74d145da2b02bcbfc969980fa
 Author: Ben Gardner <gardner.ben@gmail.com>
@@ -6746,7 +6746,7 @@ commit 8909c9fc0c8f9f308c1ccef1bfc4cef5ce889d5d
 Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Sun Jan 24 21:02:19 2010 -0600
 
-    Spelling: statment -> statement
+    Spelling: statement -> statement
 
 commit 5b4be42d368a2d8c049cd3361b1901649ec57c63
 Author: Ben Gardner <gardner.ben@gmail.com>
@@ -7415,7 +7415,7 @@ commit fc97bf3fb1396f7f2928ff59c0e74aabcfc91db2
 Author: Ben Gardner <ben@ben-desktop.(none)>
 Date:   Thu Nov 5 17:46:27 2009 -0600
 
-    Do a little whitspace cleanup in make_token_names.sh
+    Do a little whitespace cleanup in make_token_names.sh
 
 commit 30297231a5cffd865db53ec007295163bf2b15ca
 Author: Ben Gardner <ben@ben-desktop.(none)>
@@ -7475,7 +7475,7 @@ commit 5e696d6554fcec27f09ed244f1119cadcef52d89
 Author: André Berg <andre.bergmedia@googlemail.com>
 Date:   Sun Oct 25 03:07:45 2009 +0800
 
-    Spelling fix. suprisingly -> surprisingly. Minor grammar tweaks.
+    Spelling fix. surprisingly -> surprisingly. Minor grammar tweaks.
 
 commit 809b47f672ee55915e203986a52633a26a762c30
 Author: André Berg <andre.bergmedia@googlemail.com>
@@ -7626,7 +7626,7 @@ commit 9884f5057576248f6014bb889b740f736ed25f6d
 Author: André Berg <andre.bergmedia@googlemail.com>
 Date:   Tue Oct 20 00:23:08 2009 +0800
 
-    obj.cfg again... dunno how that change got lost in the commit
+    obj.cfg again... don't know how that change got lost in the commit
 
 commit 4ac16b0c705a0a56c83be0fdcf47bbf4cbc9a30d
 Author: André Berg <andre.bergmedia@googlemail.com>
@@ -7657,7 +7657,7 @@ commit 23632dae52e5a30a8ff595d9bd9d6c6d2eede07a
 Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Sat Oct 17 14:02:39 2009 -0500
 
-    Spelling fix: preceeded -> preceded
+    Spelling fix: prece\eded -> preceded
 
 commit fe25b6d06401b0a523e15a896831720c488bd5ce
 Author: Ben Gardner <gardner.ben@gmail.com>

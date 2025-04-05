@@ -139,7 +139,7 @@ Chunk *scan_ib_line(Chunk *start)
                      ib_shift_out(idx, min_col_diff - cur_col_diff);
                   }
                }
-               LOG_FMT(LSIB, "%s(%d): at ende of the loop: now is col %zu, len is %zu\n",
+               LOG_FMT(LSIB, "%s(%d): at end of the loop: now is col %zu, len is %zu\n",
                        __func__, __LINE__, cpd.al[idx].col, cpd.al[idx].len);
                idx++;
             }

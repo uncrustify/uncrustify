@@ -10,8 +10,8 @@ osf_setsysinfo(unsigned long op, void __user *buffer, unsigned long nbytes,
 
 		/*
 		 * Alpha Architecture Handbook 4.7.7.3:
-		 * To be fully IEEE compiant, we must track the current IEEE
-		 * exception state in software, because spurrious bits can be
+		 * To be fully IEEE compliant, we must track the current IEEE
+		 * exception state in software, because spurious bits can be
 		 * set in the trap shadow of a software-complete insn.
 		 */
 
@@ -19,7 +19,7 @@ osf_setsysinfo(unsigned long op, void __user *buffer, unsigned long nbytes,
 			return -EFAULT;
 		state = &current_thread_info()->ieee_state;
 
-		/* Update softare trap enable bits.  */
+		/* Update software trap enable bits.  */
 		*state = (*state & ~IEEE_SW_MASK) | (swcr & IEEE_SW_MASK);
 
 		/* Update the real fpcr.  */
@@ -39,7 +39,7 @@ osf_setsysinfo(unsigned long op, void __user *buffer, unsigned long nbytes,
 		state = &current_thread_info()->ieee_state;
 		exc &= IEEE_STATUS_MASK;
 
-		/* Update softare trap enable bits.  */
+		/* Update software trap enable bits.  */
  		swcr = (*state & IEEE_SW_MASK) | exc;
 		*state |= exc;
 

@@ -76,7 +76,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       && first->GetParentType() == CT_COMMENT_EMBED
       && (options::sp_emb_cmt_priority()))
    {
-      // Add or remove space bewteen an embedded comment and a close parenthesis.
+      // Add or remove space between an embedded comment and a close parenthesis.
       log_rule("sp_emb_cmt_priority (after)");
       min_sp = options::sp_num_after_emb_cmt();
       return(options::sp_after_emb_cmt());
@@ -86,7 +86,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       && second->GetParentType() == CT_COMMENT_EMBED
       && (options::sp_emb_cmt_priority()))
    {
-      // Add or remove space bewteen an open parenthesis and an embedded comment.
+      // Add or remove space between an open parenthesis and an embedded comment.
       log_rule("sp_between_open_paren_and_emb_cmt (before)");
       min_sp = options::sp_num_before_emb_cmt();
       return(options::sp_before_emb_cmt());

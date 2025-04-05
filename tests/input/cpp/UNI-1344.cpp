@@ -1,4 +1,4 @@
-// Asm blocks have their own special indentation where lables must remain at indent 0 relative to __asm__ block.
+// Asm blocks have their own special indentation where labels must remain at indent 0 relative to __asm__ block.
 // They few ways of being opened and closed depending on the compiler.
 // For now, we can at least detect and ignore the contents, including alignment.
 

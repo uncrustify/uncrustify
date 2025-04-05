@@ -24,7 +24,7 @@ mkdir ${RESULTS}
 COMPILE_COMMANDS="compile_commands.json"
 cp ${BUILD}/${COMPILE_COMMANDS} ${SRC}
 #
-# choise one of list of checks
+# choose one of list of checks
 list_of_Check="\
    boost-use-to-string\
    cert-dcl21-cpp\

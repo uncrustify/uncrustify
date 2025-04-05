@@ -2,7 +2,7 @@
 
 The configuration file forUncrustifySources.cfg is the file to uncrustify the sources of uncrustify.
 
-It should be "stable". This means that if one changes (allmost) anything in a file, a new run of
+It should be "stable". This means that if one changes (almost) anything in a file, a new run of
 uncrustify with that configuration file, should produce the same output as the original input. 
 This cannot work for really anything, but one should try this approach.
 
