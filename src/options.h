@@ -3082,7 +3082,7 @@ extern BoundedOption<unsigned, 0, 16>
 nl_after_access_spec;
 
 // The number of newlines between a function definition and the function
-// comment, as in '/* comment */\n <here> void foo() {...}'.
+// comment, as in '/* comment */ <here> void foo() {...}'.
 //
 // 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
