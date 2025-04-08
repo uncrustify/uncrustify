@@ -16,6 +16,23 @@
     "source code beautifier"
   ],
   "author": "Ben Gardner",
-  "author": "Guy Maurel",
+  "contributors": [
+    {
+      "name": "Guillaume Maurel",
+      "url": "https://github.com/gmaurel"
+    },
+    {
+      "name": "Matthew Woehlke",
+      "url": "https://github.com/mwoehlke-kitware"
+    },
+    {
+      "name": "Michele Calgaro",
+      "url": "https://github.com/micheleCTDEAdmin"
+    },
+    {
+      "name": "Peter Tao",
+      "url": "https://github.com/PoeticPeteAdmin"
+    }
+  ],
   "license": "GPL-2.0-or-later"
 }
