@@ -70,10 +70,10 @@ Pre compiled binaries for Windows can be downloaded from the [Releases](https://
 To generate a build system for Uncrustify using CMake on UNIX-like systems, create a
 build folder and run CMake from it, making sure to specify Release mode:
 
-```console
-$ mkdir build
-$ cd build
-$ cmake -DCMAKE_BUILD_TYPE=Release ..
+```bash
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 Other systems may require other flags (e.g. `cmake -G Xcode ..` for Xcode).
 
@@ -81,16 +81,16 @@ Then use the build tools of your build system (in many cases this will
 simply be `make`, but on Windows it could be MSBuild or Visual Studio).
 Or use CMake to invoke it:
 
-```console
-$ cmake --build . --config Release
+```bash
+cmake --build . --config Release
 ```
 
 If testing is enabled, CMake generates a `test` target, which you can
 _build_ using your build system tools (usually `make test`). This can also
 be invoked using CTest:
 
-```console
-$ ctest -V -C Debug
+```bash
+ctest -V -C Debug
 ```
 
 There is also an `install` target, which can be used to install the
@@ -104,14 +104,14 @@ variable), and the generated files then build that configuration.
 An example of a single-configuration build system are Makefiles. You can
 build the Release or Debug configurations of Uncrustify (from the build folder) with:
 
-```console
-$ cmake -DCMAKE_BUILD_TYPE=Release ..
-$ make
+```bash
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
 ```
 or
-```console
-$ cmake -DCMAKE_BUILD_TYPE=Debug ..
-$ make
+```bash
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+make
 ```
 
 Other build systems are multi-configuration, which means you specify the
@@ -310,13 +310,13 @@ __NOTE__ This application works reasonably well but it has bugs. Do __not__
 apply it on your whole codebase without checking the results!
 
 Here are ways to run it:
-```console
-$ uncrustify -c mystyle.cfg -f somefile.c -o somefile.c.unc
-$ uncrustify -c mystyle.cfg -f somefile.c > somefile.c.unc
-$ uncrustify -c mystyle.cfg somefile.c
-$ uncrustify -c mystyle.cfg --no-backup somefile.c
-$ uncrustify -c mystyle.cfg *.c
-$ uncrustify -c mystyle.cfg --no-backup *.c
+```bash
+uncrustify -c mystyle.cfg -f somefile.c -o somefile.c.unc
+uncrustify -c mystyle.cfg -f somefile.c > somefile.c.unc
+uncrustify -c mystyle.cfg somefile.c
+uncrustify -c mystyle.cfg --no-backup somefile.c
+uncrustify -c mystyle.cfg *.c
+uncrustify -c mystyle.cfg --no-backup *.c
 ```
 The `-c` flag selects the configuration file.
 The `-f` flag specifies the input file.
@@ -329,8 +329,8 @@ If the flag `--no-backup` is missing, every file is saved with the initial
 name and an additional suffix (can be changed with --suffix).
 
 For more options descriptions call:
-```console
-$ uncrustify -h
+```bash
+uncrustify -h
 ```
 
 ## Configuring the program
