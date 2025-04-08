@@ -20,8 +20,8 @@ typedef std::list<StreamedData *>::iterator iterator;
 typedef void (T::*Routine)(void);
 
 //Similar with "sp_before_byref = remove":
-unsigned long allocate(unsigned long size, void* & p);
-//unsigned long allocate(unsigned long size, void* & p);
+unsigned long allocate(unsigned long size, void* & p, void* &);
+//unsigned long allocate(unsigned long size, void* & p, void* &);
 //------------------------------------------------^ The same here
 
 void foo(void)
