@@ -71,9 +71,9 @@ To generate a build system for Uncrustify using CMake on UNIX-like systems, crea
 build folder and run CMake from it, making sure to specify Release mode:
 
 ```bash
-$ mkdir build
-$ cd build
-$ cmake -DCMAKE_BUILD_TYPE=Release ..
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 Other systems may require other flags (e.g. `cmake -G Xcode ..` for Xcode).
 
@@ -82,7 +82,7 @@ simply be `make`, but on Windows it could be MSBuild or Visual Studio).
 Or use CMake to invoke it:
 
 ```bash
-$ cmake --build . --config Release
+cmake --build . --config Release
 ```
 
 If testing is enabled, CMake generates a `test` target, which you can
@@ -90,7 +90,7 @@ _build_ using your build system tools (usually `make test`). This can also
 be invoked using CTest:
 
 ```bash
-$ ctest -V -C Debug
+ctest -V -C Debug
 ```
 
 There is also an `install` target, which can be used to install the
@@ -105,13 +105,13 @@ An example of a single-configuration build system are Makefiles. You can
 build the Release or Debug configurations of Uncrustify (from the build folder) with:
 
 ```bash
-$ cmake -DCMAKE_BUILD_TYPE=Release ..
-$ make
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
 ```
 or
 ```bash
-$ cmake -DCMAKE_BUILD_TYPE=Debug ..
-$ make
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+make
 ```
 
 Other build systems are multi-configuration, which means you specify the
@@ -201,8 +201,8 @@ added, removed, or altered. Keep in mind that the version string line
 
 The first method is to use uncrustify itself to get debug information.
 Using:
-```.txt
-   uncrustify -c myExample.cfg -f myExample.cpp -p myExample.p -L A 2>myExample.A
+```bash
+uncrustify -c myExample.cfg -f myExample.cpp -p myExample.p -L A 2>myExample.A
 ```
 you get two files for the first information.
 The p-file gives you details of the parsing process and indentation.
@@ -222,15 +222,15 @@ tokenize(2351): orig line is 1, orig col is 15, Text() '{', type is BRACE_OPEN, 
 ```
 
 You can also dump the parsing information of each formatting step using the 'dump steps' option.
-```.txt
-   uncrustify -c myExample.cfg -f myExample.cpp -ds dump
+```bash
+uncrustify -c myExample.cfg -f myExample.cpp -ds dump
 ```
 This will create a series of 'dump_nnn.log' files, each containing the parsing information at
 specific points of the formatting process ('dump_000.log' will list the formatting options in use).
 
 You can combine this option with -p and -L to get a lot of detailed debugging information.
-```.txt
-   uncrustify -c myExample.cfg -f myExample.cpp -p myExample.p -L A 2>myExample.A -ds dump
+```bash
+uncrustify -c myExample.cfg -f myExample.cpp -p myExample.p -L A 2>myExample.A -ds dump
 ```
 
 It might be useful to add some code lines to see where something is happening.
@@ -310,13 +310,13 @@ __NOTE__ This application works reasonably well but it has bugs. Do __not__
 apply it on your whole codebase without checking the results!
 
 Here are ways to run it:
-```
-$ uncrustify -c mystyle.cfg -f somefile.c -o somefile.c.unc
-$ uncrustify -c mystyle.cfg -f somefile.c > somefile.c.unc
-$ uncrustify -c mystyle.cfg somefile.c
-$ uncrustify -c mystyle.cfg --no-backup somefile.c
-$ uncrustify -c mystyle.cfg *.c
-$ uncrustify -c mystyle.cfg --no-backup *.c
+```bash
+uncrustify -c mystyle.cfg -f somefile.c -o somefile.c.unc
+uncrustify -c mystyle.cfg -f somefile.c > somefile.c.unc
+uncrustify -c mystyle.cfg somefile.c
+uncrustify -c mystyle.cfg --no-backup somefile.c
+uncrustify -c mystyle.cfg *.c
+uncrustify -c mystyle.cfg --no-backup *.c
 ```
 The `-c` flag selects the configuration file.
 The `-f` flag specifies the input file.
@@ -330,7 +330,7 @@ name and an additional suffix (can be changed with --suffix).
 
 For more options descriptions call:
 ```bash
-$ uncrustify -h
+uncrustify -h
 ```
 
 ## Configuring the program
