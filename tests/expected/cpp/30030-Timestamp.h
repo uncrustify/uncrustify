@@ -48,7 +48,7 @@ virtual ~Timestamp();
 Timestamp operator+(const Timestamp& rhs) const;
 
 /**
- * Substracts two timestamps.
+ * Subtracts two timestamps.
  *
  * @param rhs The other timestamp
  * @return The resulting timestamp
@@ -119,7 +119,7 @@ bool isZero() const;
 
 /**
  * Gets the milliseconds.
- * @attention Negativ timestamp return zero
+ * @attention Negative timestamp returns zero
  *
  * @return The milliseconds
  */

@@ -40,8 +40,8 @@
 
       <context name="Values" attribute="String" lineEndContext="#pop" >
         <DetectSpaces attribute="Normal Text" />
-        <RegExpr contex="#stay" attribute="Number" String="-?[0-9]+" />
-        <keyword contex="#stay" attribute="Value" String="values" />
+        <RegExpr context="#stay" attribute="Number" String="-?[0-9]+" />
+        <keyword context="#stay" attribute="Value" String="values" />
         <DetectChar context="#stay" attribute="Assignment" char="=" />
         <DetectChar context="StringSQ" attribute="String" char="'" />
         <DetectChar context="StringDQ" attribute="String" char="&quot;" />

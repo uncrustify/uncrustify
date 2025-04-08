@@ -193,9 +193,9 @@ void combine_labels()
             if (  cur->Is(CT_NUMBER)
                && prev->Is(CT_ELLIPSIS))
             {
-               Chunk *pre_elipsis = prev->GetPrevNcNnlNpp();
+               Chunk *pre_ellipsis = prev->GetPrevNcNnlNpp();
 
-               if (pre_elipsis->Is(CT_NUMBER))
+               if (pre_ellipsis->Is(CT_NUMBER))
                {
                   prev->SetType(CT_CASE_ELLIPSIS);
                }

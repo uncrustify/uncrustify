@@ -1,6 +1,6 @@
-// Example for case in a preprocesser statement
+// Example for case in a preprocessor statement
 // Config uses more than tested option, uses:
-// pp_if_indent_code  = true	  to enable preprocesser indent
+// pp_if_indent_code  = true	  to enable preprocessor indent
 // pp_indent_case	  = false	  to override preprocessor indent for case blocks
 switch(...)
 {

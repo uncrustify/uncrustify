@@ -1,2 +1,2 @@
 // a cpp comment
-///<a Doygen comment
+///<a Doxygen comment

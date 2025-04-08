@@ -16,7 +16,7 @@
 
 //+libclass(ansi)	// use this if only ANSI headers are seen as unchecked libraries
 +libclass(foreign)	// ignore all headers comeing from a foreign directory using -i or the INCLUDE environment variable
-//+libclass(angle)	// ingore all headers specified with angle brackets
+//+libclass(angle)	// ignore all headers specified with angle brackets
 //+libclass(all)	// ignore all header files
 +libh(co-ggc.lnt)	// ignore this file
 //+libdir(uncrustify/scripts/*)

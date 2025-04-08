@@ -7,7 +7,7 @@ Languages not affected:
  - Java
  - ECMA (Java Script)
 
-Langauges affected:
+Languages affected:
  - C
  - C++
  - C#
@@ -19,7 +19,7 @@ Langauges affected:
 Threads of code are created for functions that navigate the tokens.
 There is the master list of the raw tokens parsed out.
 
-There is at least one thread, which, in the absense of any #if statements, is
+There is at least one thread, which, in the absence of any #if statements, is
 the same as the raw token list.
 
 In the threads, a BARRIER is placed where ever code cannot move past.

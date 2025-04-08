@@ -692,7 +692,7 @@ Bugfix:
     #518, #519, #520, #521, #522, #524, #529, #530, #533, #536, #539, #542,
     #543, #544, #546, #568 are fixed
  - Proposals #409, #477 are implemented
- - Issue #411 is partialy fixed
+ - Issue #411 is partially fixed
 
 
 Change highlights in uncrustify-0.63 (Mar 2016)
@@ -740,7 +740,7 @@ Reverse:
    I cannot anderstand this change.
    It makes some troubles: Bug # 637
    No test file for it found
-   Reverse the change until more informations could be found
+   Reverse the change until more information could be found
 
 Change:
  - CT_DC_MEMBER + CT_FOR into CT_DC_MEMBER + CT_FUNC_CALL
@@ -752,7 +752,7 @@ Some more Qt-macros:
 
 Change highlights in uncrustify4Qt-0.62 (Oct 2015)
 -------------------------------------------------------------------------------
-This is an extention of uncrustify to support Qt-macros
+This is an extension of uncrustify to support Qt-macros
  - Q_OBJECT
  - Q_EMIT
  - SLOT
@@ -1018,7 +1018,7 @@ Changes in uncrustify-0.53 (16 May 2009)
 -------------------------------------------------------------------------------
  - Fix sp_inside_braces* options, which were broken by the fix to issue #2629652
  - Fix sp_after_cast, which was broken by a previous fix
- - Be a little more agressive in removing unecessary semicolons
+ - Be a little more aggressive in removing unnecessary semicolons
  - Fix one case where the parser leaves a preprocessor #define
  - Fix indent of line starting with '(' after a function name
  - Add align_var_def_attribute
@@ -1108,7 +1108,7 @@ Changes in uncrustify-0.50 (25-Oct-2008)
  - Add sp_cpp_cast_paren
  - Add support for ObjC '@property' statements
  - Add sp_brace_typedef and sp_case_label
- - Merge in the lastest UniversalIndent support (Thanks, Thomas!)
+ - Merge in the latest UniversalIndent support (Thanks, Thomas!)
  - Fix extra '\r' in multi-line comments and strings
  - Add sp_throw_paren
  - Assume a '<' in a preprocessor can't be part of a template
@@ -1181,7 +1181,7 @@ Changes in uncrustify-0.48 (18-Jul-2008)
 
 Changes in uncrustify-0.47 (06-Jun-2008)
 -------------------------------------------------------------------------------
- - Fix inifinite loop bug in reindent_line
+ - Fix infinite loop bug in reindent_line
  - Fix prototype detection with template parameter types
  - Fix off-by-1 error on positive values for indent_access_spec and indent_label
  - Add indent_extern to control indent extern-type namespaces
@@ -1215,7 +1215,7 @@ Changes in uncrustify-0.45 (7-Mar-2008)
 -------------------------------------------------------------------------------
  - Fix buffer overflow in logger code
  - Add sp_enum_assign
- - For elipses handling in the GCC extension "case 1 ... 5:"
+ - For ellipsis handling in the GCC extension "case 1 ... 5:"
  - Add sp_after_class_colon, sp_before_class_colon, and sp_after_type
  - Send usage text to stdout instead of stderr
  - Fix mod_add_long_function_closebrace_comment if the file doesn't end in a newline
@@ -1655,7 +1655,7 @@ Changes in uncrustify-0.0.12 (30-Mar-2006)
 -------------------------------------------------------------------------------
  - Add support for D template format "Foo!(int,char)"
  - Fix a format bug in a log
- - Fix elipsis spacing (remove space before elipsis)
+ - Fix ellipsis spacing (remove space before ellipsis)
  - Don't use getopt as it isn't all that portable (at least for QNX)
  - Rename some files
  - Bugfix: don't add virtual braces on the same line as a preprocessor

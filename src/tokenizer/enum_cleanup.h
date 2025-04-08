@@ -1,7 +1,7 @@
 /**
  * @file enum_cleanup.h
  *
- * @author  Guy Maurel Juli 2018
+ * @author  Guy Maurel July 2018
  * @license GPL v2+
  */
 #ifndef TOKENIZER_ENUM_CLEANUP_H_INCLUDED

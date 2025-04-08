@@ -138,7 +138,7 @@
 -append( 1543, --- Eff. C++ 3rd Ed. item 4 )
 +e1544  // value indeterminate (order of initialization) -- [12, Item 47]
 -append(1544, -- Effective C++ #47 )
-+e1546  // throw() called within destuctor -- [23, Item 11], [30, Item 8]
++e1546  // throw() called within destructor -- [23, Item 11], [30, Item 8]
 -append(1546, -- Effective C++ #11 & Eff. C++ 3rd Ed. item 8)
 +e1547  // Assignment of array to pointer to base -- [23, Item 3]
 -append(1547, -- More Effective C++ #3 )

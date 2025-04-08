@@ -103,7 +103,7 @@ static void split_fcn_params_full(Chunk *start);
 
 /**
  * Splits line on every boolean expression at the top level and then
- * recursively on nested levels in case splitted lines are still too long.
+ * recursively on nested levels in case split lines are still too long.
  * @param start
  */
 static void split_bool_expr(Chunk *start);
@@ -242,13 +242,13 @@ void do_code_width()
             // awkward result in some cases when a line needs more that one split.
             // After the split, skip over the remainder of the line.
             Chunk *nextNl = pc->GetNextNl();
-            LOG_FMT(LSPLIT, "%s(%d): orig line %zu, orig col %zu, text '%s' splitted\n",
+            LOG_FMT(LSPLIT, "%s(%d): orig line %zu, orig col %zu, text '%s' split\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
             pc = nextNl;
          }
          else
          {
-            LOG_FMT(LSPLIT, "%s(%d): orig line %zu, orig col %zu, text '%s' not splitted\n",
+            LOG_FMT(LSPLIT, "%s(%d): orig line %zu, orig col %zu, text '%s' not split\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
             break;
          }
@@ -828,7 +828,7 @@ void split_bool_expr(Chunk *start)
    // go through all bool operators on the same line to find out which level is top level
    do
    {
-      // in case this operator is preceeded/succeeded by newline, it is already broken on it, skip it
+      // in case this operator is preceded/succeeded by newline, it is already broken on it, skip it
       if (pc->Is(CT_BOOL))
       {
          bool already_broken = lead ? pc->GetPrev()->IsNewline() : pc->GetNext()->IsNewline();
