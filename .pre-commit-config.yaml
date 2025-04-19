@@ -71,7 +71,7 @@ repos:
     hooks:
       - id: uncrustify
         exclude: ^(tests/.*|documentation/.*)$
-        args: [--replace, --no-backup, -c, forUncrustifySources.cfg]
+        args: [--replace, --no-backup, -c, forUncrustifySources.cfg, -l, CPP]
       - id: cppcheck
         exclude: ^(tests/.*|documentation/.*)$
         args:
