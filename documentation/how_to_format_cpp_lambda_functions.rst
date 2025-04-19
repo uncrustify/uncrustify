@@ -2,7 +2,7 @@
 Formatting C++ Lambda Expressions
 #################################
 
-Uncrustify supports some formatting of c++ lambda expressions, although 
+Uncrustify supports some formatting of c++ lambda expressions, although
 the support is incomplete.
 The parts of c++ lambda expressions that are currently recognized by Uncrusitify
 are:
@@ -10,16 +10,16 @@ are:
 .. code-block:: c++
 
   [ captures ] execution_context ( params ) specifiers -> ret { body }
-  
+
 Explanations for all the tokens in the above lambda expression
 (except for ``execution_context``),
 as well as a complete description of c++ lambda expressions,
 are found `here <https://en.cppreference.com/w/cpp/language/lambda>`_.
-The ``execution_context`` token is a non-standard addition to allow for 
+The ``execution_context`` token is a non-standard addition to allow for
 specification of the execution space (e.g. host or device in CUDA).
-The native specifiers for the `execution_context` for lambda expression in CUDA 
+The native specifiers for the `execution_context` for lambda expression in CUDA
 are ``__device__`` and ``__host__ __device__``.
-However, it is common for code to use a preprocessor variable in place of the 
+However, it is common for code to use a preprocessor variable in place of the
 native specifiers.
 
 The Uncrustify options for formatting of c++ lambda expressions are:
@@ -36,10 +36,10 @@ The Uncrustify options for formatting of c++ lambda expressions are:
   indent_cpp_lambda_body
   indent_cpp_lambda_only_once
 
-Please refer to the example configuration file at 
-`uncrustify/documentation/htdocs/default.cfg <https://github.com/uncrustify/uncrustify/blob/master/documentation/htdocs/default.cfg>`_ 
+Please refer to the example configuration file at
+`uncrustify/documentation/htdocs/default.cfg <https://github.com/uncrustify/uncrustify/blob/master/documentation/htdocs/default.cfg>`_
 for an explanation of the options.
-Additionally, a multiple number of ``execution_context`` tokens may be set in 
+Additionally, a multiple number of ``execution_context`` tokens may be set in
 the configuration file:
 
 .. code-block::
