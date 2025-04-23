@@ -47,6 +47,7 @@
 //! Brace stage enum used in brace_cleanup
 enum class E_BraceStage : unsigned int
 {
+   // see also: const char *get_brace_stage_name(E_BraceStage brace_stage)
    NONE,
    PAREN1,      //! expected paren after if/catch (C++)/for/switch/synchronized/while
    OP_PAREN1,   //! optional paren after catch (C#)

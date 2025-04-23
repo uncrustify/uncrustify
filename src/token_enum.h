@@ -24,6 +24,7 @@
  */
 enum E_Token
 {
+   // see also const char *get_token_name(E_Token token)
    CT_NONE,
    CT_PARENT_NOT_SET,
    CT_EOF,
