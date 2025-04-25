@@ -41,7 +41,7 @@ scripts\pclint\co-gcc.lnt 	// Compiler Options for GCC
 -dWIN32
 -d__i386__
 -dDEFINE_CHAR_TABLE
--dDEFINE_PCF_NAMES 
+-dDEFINE_PCF_NAMES
 
 // define compiler specific keywords
 

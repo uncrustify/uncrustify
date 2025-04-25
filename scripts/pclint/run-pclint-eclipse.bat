@@ -27,7 +27,7 @@ if NOT EXIST tests        md tests
 if NOT EXIST tests\pclint md tests\pclint
 
 rem create list of all C source files to analyze
-rem FIXME: works only if there are no spaces in the paths 
+rem FIXME: works only if there are no spaces in the paths
 
 dir /s/b %EXC_DIR%\*.lnt		> .\%OUT_DIR%\exceptions.lnt
 
@@ -90,15 +90,14 @@ goto END
 echo.
 echo ------------------------------------------------------
 echo pcLint Error: %prog% not found.
-echo Verify that PCLINT is correctly installed, the 
+echo Verify that PCLINT is correctly installed, the
 echo installation was added to the PATH and the
-echo environment variable PCLINT_HOME was set to its path. 
-echo ------------------------------------------------------ 
+echo environment variable PCLINT_HOME was set to its path.
+echo ------------------------------------------------------
 echo.
 goto END
 
-:END 
+:END
 echo pcLint finished
 echo ------------------------------------------------------
 endlocal
-

@@ -1,12 +1,3 @@
-from __future__ import print_function  # python >= 2.6
-from os import makedirs, path, listdir, rename, remove
-from subprocess import Popen
-from filecmp import cmp
-from glob import iglob
-from shutil import rmtree
-from json import loads as json_loads, dump as json_dump
-from sys import stderr, argv, path as sys_path
-
 """
 gen_config_combinations_uniq_output.py
 
@@ -21,6 +12,14 @@ Expects arg1 to be a filepath to a json config file
 :license: GPL v2+
 """
 
+from __future__ import print_function  # python >= 2.6
+from os import makedirs, path, listdir, rename, remove
+from subprocess import Popen
+from filecmp import cmp
+from glob import iglob
+from shutil import rmtree
+from json import loads as json_loads, dump as json_dump
+from sys import stderr, argv, path as sys_path
 
 # config = {
 #     "option_settings": {
