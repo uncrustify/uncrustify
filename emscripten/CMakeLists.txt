@@ -191,9 +191,9 @@ py_gen(option_enum.cpp
 FILE(GLOB unc_infiles "${unc_projdir}/src/*.cpp")
 
 ADD_EXECUTABLE(${project_name}
-  ${unc_infiles} 
-  ${unc_projdir}/src/token_enum.h 
-  ${unc_projdir}/src/symbols_table.h 
+  ${unc_infiles}
+  ${unc_projdir}/src/token_enum.h
+  ${unc_projdir}/src/symbols_table.h
   ${unc_projdir}/src/options.h
   ${unc_projdir}/src/option.h
   ${PROJECT_BINARY_DIR}/src/options.cpp
