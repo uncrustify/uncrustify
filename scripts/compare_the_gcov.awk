@@ -94,12 +94,12 @@ BEGIN {
         if (where_3 > 0) {
           sum = d_part_1;
           # write the sum to T_source_part1
-          T_source_part1[part_2] = d_part_1; 
+          T_source_part1[part_2] = d_part_1;
         } else {
           d_T = T_source_part1[part_2] + 0;
           sum = d_part_1 + d_T;
           # write the sum back to T_source_part1
-          T_source_part1[part_2] = sum; 
+          T_source_part1[part_2] = sum;
         }
       }
     }
@@ -111,14 +111,14 @@ END {
     T_number_of_header = number_of_header;
     T_number_of_lines  = number_of_lines;
     for(i = 1; i <= T_number_of_header; i++) {
-      T_header_part1[i] = header_part1[i]; 
-      T_header_part2[i] = header_part2[i]; 
-      T_header_part3[i] = header_part3[i]; 
+      T_header_part1[i] = header_part1[i];
+      T_header_part2[i] = header_part2[i];
+      T_header_part3[i] = header_part3[i];
     }
     for (i = 1; i <= T_number_of_lines; i++) {
-      T_source_part1[i] = source_part1[i]; 
-      T_source_part2[i] = source_part2[i]; 
-      T_source_part3[i] = source_part3[i]; 
+      T_source_part1[i] = source_part1[i];
+      T_source_part2[i] = source_part2[i];
+      T_source_part3[i] = source_part3[i];
     }
   }
   #printf("T_number_of_header is %d\n", T_number_of_header);

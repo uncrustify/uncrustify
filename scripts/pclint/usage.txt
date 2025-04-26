@@ -9,8 +9,8 @@ run-pclint-eclipse.bat
 
 To run the check from Eclipse create a new target and use the script
 as build command like that:
-${workspace_loc:/uncrustify}/scripts/pclint/run-pclint-eclipse.bat 
+${workspace_loc:/uncrustify}/scripts/pclint/run-pclint-eclipse.bat
 
 The file policy.lnt determines which tests are performed.
-The more tests are used the longer it takes but the more 
-precise will be the results. 
+The more tests are used the longer it takes but the more
+precise will be the results.

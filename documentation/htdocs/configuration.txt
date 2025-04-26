@@ -64,4 +64,3 @@ $ uncrustify --show-config
 To get a valid configuration file with all defaults, run this:
 
 $ uncrustify -c /dev/null --update-config-with-doc
-

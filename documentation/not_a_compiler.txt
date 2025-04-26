@@ -16,4 +16,4 @@ Let have a look on:
 It will produce an error, because uncrustify doesn't evaluate the value of A.
 uncrustify will read all the lines, a compiler only a part of it, depending on A.
 
-uncrustify encounter two opening braces but only one closing brace. 
+uncrustify encounter two opening braces but only one closing brace.

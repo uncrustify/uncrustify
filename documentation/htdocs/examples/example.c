@@ -114,4 +114,3 @@ void foo(void)
       break;
    }
 }
-
