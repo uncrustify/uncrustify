@@ -47,6 +47,7 @@
 //! Brace stage enum used in brace_cleanup
 enum class E_BraceStage : unsigned int
 {
+   // see also: const char *get_brace_stage_name(E_BraceStage brace_stage)
    NONE,
    PAREN1,      //! expected paren after if/catch (C++)/for/switch/synchronized/while
    OP_PAREN1,   //! optional paren after catch (C#)
@@ -64,6 +65,7 @@ enum class E_BraceStage : unsigned int
 
 enum class char_encoding_e : unsigned int
 {
+   // see also: const char *get_char_encoding(char_encoding_e encoding)
    e_ASCII,     //! 0-127
    e_BYTE,      //! 0-255, not UTF-8
    e_UTF8,      //! utf 8 bit wide
@@ -73,6 +75,7 @@ enum class char_encoding_e : unsigned int
 
 enum class tracking_type_e : unsigned int
 {
+   // see also: const char *get_tracking_type_e_name(tracking_type_e type)
    TT_NONE,
    TT_SPACE,
    TT_NEWLINE,
@@ -142,6 +145,7 @@ typedef std::vector<TrackNumber>    TrackList;     // list of tracks
 //! Pattern classes for special keywords
 enum class pattern_class_e : unsigned int
 {
+   // see also: const char *get_pattern_class(pattern_class_e p_class)
    NONE,
    BRACED,   /** keyword + braced statement:
               *    do, try, finally, body, unittest, unsafe, volatile
@@ -192,6 +196,7 @@ struct file_mem
 
 enum class unc_stage_e : unsigned int
 {
+   // see also: const char *get_unc_stage_name(unc_stage_e unc_stage)
    TOKENIZE,
    HEADER,
    TOKENIZE_CLEANUP,
