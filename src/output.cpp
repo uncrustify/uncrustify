@@ -531,10 +531,10 @@ void output_parsed(FILE *pfile, bool withOptions)
    {
 #ifdef WIN32
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
-              eol_marker, (int)pc->GetOrigLine(), get_token_name(pc->GetType()),
+              eol_marker, static_cast<int>(pc->GetOrigLine()), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              (int)pc->GetColumn(), (int)pc->GetOrigCol(), (int)pc->GetOrigColEnd(), (int)pc->GetOrigPrevSp(),
-              (int)pc->GetBraceLevel(), (int)pc->GetLevel(), (int)pc->GetPpLevel(), (int)pc->GetNlCount(), pc->GetAfterTab());
+              static_cast<int>(pc->GetColumn()), static_cast<int>(pc->GetOrigCol()), static_cast<int>(pc->GetOrigColEnd()), static_cast<int>(pc->GetOrigPrevSp()),
+              static_cast<int>(pc->GetBraceLevel()), static_cast<int>(pc->GetLevel()), static_cast<int>(pc->GetPpLevel()), static_cast<int>(pc->GetNlCount()), pc->GetAfterTab());
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3zu][%zu/%zu/%zu]",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
@@ -936,11 +936,11 @@ void output_text(FILE *pfile)
                   {
                      int orig_sp = pc->GetOrigPrevSp();
 
-                     if ((int)(cpd.column + orig_sp) < 0)
+                     if (static_cast<int>(cpd.column + orig_sp) < 0)
                      {
 #ifdef WIN32
                         fprintf(stderr, "FATAL: negative value.\n   pc->GetOrigCol() is %d, prev->GetOrigColEnd() is %d\n",
-                                (int)pc->GetOrigCol(), (int)prev->GetOrigColEnd());
+                                static_cast<int>(pc->GetOrigCol()), static_cast<int>(prev->GetOrigColEnd()));
 #else // not WIN32
                         fprintf(stderr, "FATAL: negative value.\n   pc->GetOrigCol() is %zu, prev->GetOrigColEnd() is %zu\n",
                                 pc->GetOrigCol(), prev->GetOrigColEnd());
@@ -3472,7 +3472,7 @@ static void output_comment_multi_simple(Chunk *pc)
                {
                   // apply comment column shift without underflowing
                   line_column = (col_diff<0
-                                          && (size_t)(abs(col_diff))> line_column)
+                                          && static_cast<size_t>(abs(col_diff))> line_column)
                                 ? 0 : line_column + col_diff;
                }
                cmt.column = line_column;
