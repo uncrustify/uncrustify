@@ -1354,7 +1354,7 @@ static int match_doxygen_javadoc_tag(const std::wstring &str, size_t idx)
          if (  it_block_tag != block_tags.end()
             && javaparam_tag_is_start_of_line(str, idx))
          {
-            return(int(idx + match[1].length()));
+            return(static_cast<int>(idx + match[1].length()));
          }
       }
    }
