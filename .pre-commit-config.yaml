@@ -1,7 +1,7 @@
 ---
 exclude:
-  (?x)^(
-  __NONE__)$
+  (?x)^(.cache/.*
+  |__NONE__)$
 repos:
   - repo: https://github.com/executablebooks/mdformat
     # Do this before other tools "fixing" the line endings
@@ -44,7 +44,7 @@ repos:
       - id: check-case-conflict
       - id: check-toml
   - repo: https://github.com/lovesegfault/beautysh.git
-    rev: v6.4.1
+    rev: v6.4.3
     hooks:
       - id: beautysh
         args: [--indent-size=2]
@@ -52,7 +52,7 @@ repos:
         additional_dependencies:
           - setuptools
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
+    rev: v2.4.3
     hooks:
       - id: codespell
         # scripts/updateCodespellIgnoreFile.sh updates the ignore file.
@@ -72,44 +72,49 @@ repos:
       - id: uncrustify
         exclude: ^(tests/.*|documentation/.*)$
         args: [--replace, --no-backup, -c, forUncrustifySources.cfg, -l, CPP]
-#
+
       - id: cppcheck
-# WARNING:
-# a run of cppcheck with all the files will be too long
-# these files need to be extra
-#       src/detect.cpp|src/indent.cpp|src/space.cpp
-#       detect:  18 Minuten
-#       indent: 115 Minuten
-#       space:    4 Minuten
-#
+        # Note, the following is mitigated by using cache.
+        # Note, this cans also be mitigated by using 2 different hook aliases (2 configurations).
+        # WARNING:
+        # a run of cppcheck with all the files will be too long
+        # these files need to be extra
+        #       src/detect.cpp|src/indent.cpp|src/space.cpp
+        #       detect:  18 Minuten
+        #       indent: 115 Minuten
+        #       space:    4 Minuten
+        #
         #files: indent.cpp
-# to make the big all test, do not exclude the three cpp-files
-        #exclude: ^(tests/.*|documentation/.*)$
-# to make the little test, exclude the three cpp-files
-        exclude: ^(tests/.*|src/detect.cpp|src/indent.cpp|src/space.cpp|documentation/.*)$
+        # to make the big all test, do not exclude the three cpp-files
+        exclude: ^(tests/.*|documentation/.*)$
+        # to make the little test, exclude the three cpp-files (not needed, cached)
+        # exclude: ^(tests/.*|src/detect.cpp|src/indent.cpp|src/space.cpp|documentation/.*)$
         args:
           - --quiet
           - --force
           - --language=c++
+          - --cppcheck-build-dir=.cache/cppcheck/
+          - -DUNCRUSTIFY_VERSION="0.50.1-d"   # For static analysis
           - -Isrc
           - '--template={file}({line}): {severity} ({id}): {message}'
           - --inline-suppr
           - --check-level=exhaustive
-          - --suppress=returnDanglingLifetime
-          - --suppress=unusedFunction
-          - --suppress=missingIncludeSystem
-          - --suppress=missingInclude
-          - --suppress=noExplicitConstructor
-          - --suppress=unmatchedSuppression
           - --suppress=checkersReport
-          - --suppress=useStlAlgorithm
+          - --suppress=constParameterCallback
+          - --suppress=missingInclude:*.h
+          - --suppress=missingIncludeSystem
+          - --suppress=noCopyConstructor
+          - --suppress=noExplicitConstructor
+          - --suppress=noOperatorEq
+          - --suppress=returnDanglingLifetime
+          - --suppress=uninitMemberVarNoCtor
+          - --suppress=unknownMacro:uncrustify_emscripten.cpp
+          - --suppress=unmatchedSuppression
+          - --suppress=unusedFunction
+          - --suppress=unusedPrivateFunction
           - --suppress=unusedStructMember
           - --suppress=useInitializationList
-          - --suppress=unusedPrivateFunction
-          - --suppress=constParameterCallback
-          - --suppress=noCopyConstructor
-          - --suppress=noOperatorEq
-          - --suppress=unknownMacro:uncrustify_emscripten.cpp
+          - --suppress=useStlAlgorithm
 
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
