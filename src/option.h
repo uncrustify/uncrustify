@@ -26,6 +26,7 @@
 #include <vector>
 
 #include <cassert>
+#include <cstdio>
 
 #ifdef IGNORE // WinBase.h
 #undef IGNORE
@@ -185,7 +186,7 @@ public:
 
    //! resets option to its default value
    //- currently only used by the emscripten interface
-   virtual void reset() override;
+   void reset() override;
 
    bool read(const char *s) override;
    std::string str() const override;
