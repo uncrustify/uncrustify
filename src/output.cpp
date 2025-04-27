@@ -1224,7 +1224,7 @@ static int eat_line_whitespace(const String &str,
       //       think that the following is a template. This will NEED to be fixed!!!
       //       For now, reformulate the statement
       //return(forward ? i<int(str.size()) : i> = 0);
-      return(forward ? (i < int(str.size())) : (i >= 0));
+      return(forward ? (i < static_cast<int>(str.size())) : (i >= 0));
    };
 
    while (  index_in_range(idx)
@@ -1369,7 +1369,7 @@ static void calculate_doxygen_javadoc_indent_alignment(const std::wstring &str,
 
          size_t param_name_width = 0;
 
-         if (str.find(L"@param", start_idx) == size_t(start_idx))
+         if (str.find(L"@param", start_idx) == static_cast<size_t>(start_idx))
          {
             param_name_width = 1;
 
@@ -2378,7 +2378,7 @@ static void output_comment_multi(Chunk *pc)
       int ch = pc->GetStr()[cmt_idx];
       cmt_idx++;
 
-      if (  cmt_idx > std::size_t(disable_processing_cmt_idx)
+      if (  cmt_idx > static_cast<size_t>(disable_processing_cmt_idx)
          && enable_processing_cmt_idx > disable_processing_cmt_idx)
       {
          auto    length = enable_processing_cmt_idx - disable_processing_cmt_idx;
@@ -2436,7 +2436,7 @@ static void output_comment_multi(Chunk *pc)
          }
          else
          {
-            LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, char(ch));
+            LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, static_cast<char>(ch));
          }
       }
 
@@ -2497,7 +2497,7 @@ static void output_comment_multi(Chunk *pc)
                || is_param_tag
                || is_throws_tag)
             {
-               indent = int(doxygen_javadoc_param_name_indent) - int(line.size());
+               indent = static_cast<int>(doxygen_javadoc_param_name_indent) - static_cast<int>(line.size());
 
                while (indent-- > -line_size_before_indent)
                {
@@ -2536,7 +2536,7 @@ static void output_comment_multi(Chunk *pc)
             }
             cmt_idx = eat_line_whitespace(pc->GetStr(),
                                           cmt_idx);
-            indent = int(doxygen_javadoc_continuation_indent) - int(line.size());
+            indent = static_cast<int>(doxygen_javadoc_continuation_indent) - static_cast<int>(line.size());
 
             while (indent-- > -line_size_before_indent)
             {
@@ -2616,7 +2616,7 @@ static void output_comment_multi(Chunk *pc)
             {
                ++cmt_star_indent;
             }
-            reflow_paragraph_continuation_indent = size_t(cmt_star_indent);
+            reflow_paragraph_continuation_indent = static_cast<size_t>(cmt_star_indent);
          }
 
          /*
@@ -2650,7 +2650,7 @@ static void output_comment_multi(Chunk *pc)
           * (the ambiguous '*'-for-bullet case!)
           */
          if (  prev_nonempty_line >= 0
-            && next_nonempty_line >= int(cmt_idx))
+            && next_nonempty_line >= static_cast<int>(cmt_idx))
          {
             std::wstring prev_line(line.get().cbegin(),
                                    line.get().cend());
@@ -2689,7 +2689,7 @@ static void output_comment_multi(Chunk *pc)
       }
       else
       {
-         LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, char(ch));
+         LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, static_cast<char>(ch));
       }
       line.append(ch);
 
@@ -2703,7 +2703,7 @@ static void output_comment_multi(Chunk *pc)
          }
          else
          {
-            LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, char(ch));
+            LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, static_cast<char>(ch));
          }
          line_count++;
          LOG_FMT(LCONTTEXT, "%s(%d):line_count is %zu\n", __func__, __LINE__, line_count);
@@ -3351,7 +3351,7 @@ static void output_comment_multi_simple(Chunk *pc)
       int ch = pc->GetStr()[cmt_idx];
       cmt_idx++;
 
-      if (  cmt_idx > std::size_t(disable_processing_cmt_idx)
+      if (  cmt_idx > static_cast<size_t>(disable_processing_cmt_idx)
          && enable_processing_cmt_idx > disable_processing_cmt_idx)
       {
          auto    length = enable_processing_cmt_idx - disable_processing_cmt_idx;
@@ -3396,7 +3396,7 @@ static void output_comment_multi_simple(Chunk *pc)
          }
          else
          {
-            LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, char(ch));
+            LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, static_cast<char>(ch));
          }
       }
 
