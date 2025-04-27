@@ -356,7 +356,7 @@
 -e1066					// symbol declared as "C"
 -e1075					// Ambiguous reference to symbol
 -e1077					// could not evaluate default template parameter
--e1086					// do not warn about compount literals
+-e1086					// do not warn about compound literals
 -e1087					// previous declaration is incompatible
 -e1401					// member not initialized by constructor
 -e1502					// object has no nonstatic data member
