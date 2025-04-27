@@ -5,6 +5,8 @@
  * @license GPL v2+
  */
 
+#include <cstdio>   // for fprintf
+
 #include "calculate_closing_brace_position.h"
 
 #include "chunk.h"
