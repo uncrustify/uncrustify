@@ -1743,7 +1743,7 @@ inline bool Chunk::IsSamePreproc(const Chunk *other) const
 
 inline bool Chunk::SafeToDeleteNl() const
 {
-   Chunk *tmp = GetPrev();
+   const Chunk *tmp = GetPrev();
 
    if (tmp->Is(CT_COMMENT_CPP))
    {

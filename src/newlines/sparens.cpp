@@ -59,7 +59,7 @@ void newlines_sparens()
       else
       {
          // add/remove trailing newline in an if condition
-         Chunk *ctrl_structure = sparen_open->GetPrevNcNnl();
+         const Chunk *ctrl_structure = sparen_open->GetPrevNcNnl();
 
          if (  ctrl_structure->Is(CT_IF)
             || ctrl_structure->Is(CT_ELSEIF))
