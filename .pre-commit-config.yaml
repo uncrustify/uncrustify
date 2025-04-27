@@ -1,0 +1,104 @@
+---
+exclude:
+  (?x)^(
+  __NONE__)$
+repos:
+  - repo: https://github.com/executablebooks/mdformat
+    # Do this before other tools "fixing" the line endings
+    rev: 1.0.0
+    hooks:
+      - id: mdformat
+        name: Format Markdown
+        stages: [manual]
+        entry: mdformat  # Executable to run, with fixed options
+        language: python
+        types: [markdown]
+        args: [--wrap, '75', --number]
+        additional_dependencies:
+          - mdformat-toc
+          - mdformat-gfm
+          - mdformat-beautysh
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      # - id: no-commit-to-branch
+      #  args: [--branch, main]
+      - id: debug-statements
+      - id: end-of-file-fixer
+        exclude: ^(tests/.*)$
+      - id: trailing-whitespace
+        exclude: ^(tests/.*|.*\.md)$
+      - id: check-json
+      - id: mixed-line-ending
+        exclude: ^(tests/.*)$
+      - id: check-builtin-literals
+        args: [--ignore=dict]
+      - id: check-ast
+      - id: check-merge-conflict
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+        exclude: ^(test/.*)$
+      - id: check-docstring-first
+      - id: fix-byte-order-marker
+        exclude: ^(tests/.*)$
+      - id: check-case-conflict
+      - id: check-toml
+  - repo: https://github.com/lovesegfault/beautysh.git
+    rev: v6.4.1
+    hooks:
+      - id: beautysh
+        args: [--indent-size=2]
+        exclude: (?x)^(test/test\..*|config/missing|configure|autogen\.sh)$
+        additional_dependencies:
+          - setuptools
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+        # scripts/updateCodespellIgnoreFile.sh updates the ignore file.
+        exclude: (?x)^(emscripten/build\.sh)$
+        args:
+          - --builtin=clear,informal,names
+          - -xscripts/codespell-lines-ignore.txt
+        #  - --toml
+        #  - pyproject.toml
+        additional_dependencies:
+          - tomli
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    # Install dependencies on windows:
+    #  choco install llvm uncrustify cppcheck
+    hooks:
+      - id: uncrustify
+        exclude: ^(tests/.*|documentation/.*)$
+        args: [--replace, --no-backup, -c, forUncrustifySources.cfg, -l, CPP]
+      - id: cppcheck
+        exclude: ^(tests/.*|documentation/.*)$
+        args:
+          - --force
+          - --language=c++
+          - -Isrc
+          - '--template={file}({line}): {severity} ({id}): {message}'
+          - --inline-suppr
+          - --check-level=exhaustive
+          - --suppress=constParameterPointer
+          - --suppress=constVariablePointer
+          - --suppress=missingInclude:*.h
+          - --suppress=missingIncludeSystem
+          - --suppress=noCopyConstructor
+          - --suppress=noExplicitConstructor
+          - --suppress=noOperatorEq
+          - --suppress=unmatchedSuppression
+          - --suppress=unusedFunction
+          - --suppress=variableScope
+      - id: cpplint
+        exclude: ^(tests/.*|documentation/.*)$
+        args: ["--filter=-build/header_guard,-legal/copyright,-whitespace/indent,-whitespace/newline,-whitespace/braces,-whitespace/comments,-whitespace/line_length,-whitespace/parens,-build/include_order,-readability/todo,-readability/fn_size,-build/include_subdir,-runtime/int,-readability/multiline_comment,-build/namespaces,-runtime/references,-runtime/explicit,-runtime/threadsafe_fn"]
+        additional_dependencies:
+          - cpplint>=1.6.1
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+        # exclude: (?x)^(__NONE__)$
+        # args: [-x,-e1007,-e1009,-e1072,-e1073]
