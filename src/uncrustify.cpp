@@ -62,8 +62,10 @@
 #include "width.h"
 
 #include <cerrno>
+#include <deque>
 #include <fcntl.h>
 #include <map>
+#include <string>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -699,7 +701,7 @@ int main(int argc, char *argv[])
          exit(EX_SOFTWARE);
       }
       char buffer[max_args_length];
-      strcpy(buffer, html_arg);
+      strncpy(buffer, html_arg, sizeof(buffer));
 
       // Tokenize and extract key and value
       const char *tracking_art = strtok(buffer, ":");
@@ -829,7 +831,7 @@ int main(int argc, char *argv[])
          exit(EX_SOFTWARE);
       }
       char buffer[max_args_length];
-      strcpy(buffer, p_arg);
+      strncpy(buffer, p_arg, sizeof(buffer));
 
       // Tokenize and extract key and value
       const char *token  = strtok(buffer, "=");
@@ -1057,7 +1059,7 @@ int main(int argc, char *argv[])
          exit(EX_CONFIG);
       }
 
-      if (dump_file_name[0] != char(0))                // Issue #3976
+      if (dump_file_name[0] != static_cast<char>(0))                // Issue #3976
       {
          fprintf(stderr, "FAIL: -ds/--dump-steps option must be used with the -f option\n");
          log_flush(true);
