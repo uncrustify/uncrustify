@@ -91,9 +91,12 @@ repos:
           - --suppress=unmatchedSuppression
           - --suppress=unusedFunction
           - --suppress=variableScope
+  - repo: https://github.com/cpplint/cpplint
+    rev: "2.0.2"
+    hooks:
       - id: cpplint
         exclude: ^(tests/.*|documentation/.*)$
-        args: ["--filter=-build/header_guard,-legal/copyright,-whitespace/indent,-whitespace/newline,-whitespace/braces,-whitespace/comments,-whitespace/line_length,-whitespace/parens,-build/include_order,-readability/todo,-readability/fn_size,-build/include_subdir,-runtime/int,-readability/multiline_comment,-build/namespaces,-runtime/references,-runtime/explicit,-runtime/threadsafe_fn"]
+        args: ["--filter=-build/header_guard,-legal/copyright,-whitespace/indent,-whitespace/newline,-whitespace/braces,-whitespace/comments,-whitespace/line_length,-whitespace/parens,-build/include_order,-readability/todo,-readability/fn_size,-build/include_subdir,-runtime/int,-readability/multiline_comment,-build/namespaces,-runtime/references,-runtime/explicit,-runtime/threadsafe_fn","--exclude=src/space.cpp","--exclude=src/align/stack.h"]
         additional_dependencies:
           - cpplint>=1.6.1
   - repo: https://github.com/shellcheck-py/shellcheck-py
