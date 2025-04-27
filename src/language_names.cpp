@@ -9,6 +9,10 @@
 
 #include "keywords.h"
 
+#include <cstdio>  // to get fprintf
+#include <string>  // to get string
+
+
 static lang_name_t language_names[] =
 {
    { "C",        e_LANG_C                           },  // 0x0001
@@ -101,13 +105,12 @@ const char *language_name_from_flags(size_t lang)
       {
          if (lang_liste[0] == '\0')
          {
-            strcpy(lang_liste, language_name.name);
+            snprintf(lang_liste, sizeof(lang_liste), "%s", language_name.name);
          }
          else
          {
             int ll = strlen(lang_liste);
-            strcpy(&lang_liste[ll], ", ");
-            strcpy(&lang_liste[ll + 2], language_name.name);
+            snprintf(lang_liste + ll, sizeof(lang_liste) - ll, ", %s", language_name.name);
          }
       }
    }
