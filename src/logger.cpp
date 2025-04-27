@@ -15,6 +15,9 @@
 #include "compat.h"
 
 #include <cstdarg>                   // to get va_start, va_end
+#include <cstdio>                    // to get fprintf
+#include <deque>                     // to get deque<>
+#include <vector>                    // to get vector<>
 
 
 struct log_fcn_info
