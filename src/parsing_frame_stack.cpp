@@ -6,9 +6,11 @@
  * @license GPL v2+
  */
 #include "parsing_frame_stack.h"
-#include <vector>
 
 #include "prototypes.h"
+
+#include <cstdio>
+#include <vector>
 
 
 using namespace uncrustify;
