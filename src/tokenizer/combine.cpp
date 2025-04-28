@@ -1309,9 +1309,78 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          {
             pc->SetType(CT_BYREF);
          }
-         else
+         else if (prev->Is(CT_FPAREN_OPEN))         // Issue 4506, 4502, 2205
          {
             pc->SetType(CT_ADDR);
+         }
+         else if (prev->Is(CT_ASSIGN))
+         {
+            pc->SetType(CT_ADDR);
+         }
+         else if (  prev->Is(CT_PAREN_CLOSE)
+                 || prev->GetParentType() == CT_C_CAST)
+         {
+            Chunk *pp = prev->GetPrev();
+
+            if (pp->Is(CT_PTR_TYPE))
+            {
+               pc->SetType(CT_ADDR);
+            }
+            else if (pp->Is(CT_TYPE))
+            {
+               if (pp->TestFlags(PCF_IN_PREPROC))
+               {
+                  pc->SetType(CT_ARITH);
+               }
+               else
+               {
+                  pc->SetType(CT_ADDR);
+               }
+            }
+            else
+            {
+               pc->SetType(CT_ARITH);
+            }
+         }
+         else if (prev->Is(CT_SQUARE_OPEN))
+         {
+            pc->SetType(CT_ADDR);
+         }
+         else if (prev->Is(CT_COMMA))
+         {
+            pc->SetType(CT_ADDR);
+         }
+         else if (prev->Is(CT_RETURN))
+         {
+            pc->SetType(CT_ADDR);
+         }
+         else if (prev->Is(CT_OC_COLON))
+         {
+            pc->SetType(CT_ADDR);
+         }
+         else if (prev->Is(CT_PAREN_OPEN))
+         {
+            pc->SetType(CT_ADDR);
+         }
+         else if (prev->Is(CT_COND_COLON))
+         {
+            pc->SetType(CT_ADDR);
+         }
+         else if (prev->Is(CT_COMPARE))
+         {
+            pc->SetType(CT_ADDR);
+         }
+         else if (prev->Is(CT_BRACE_OPEN))
+         {
+            pc->SetType(CT_ADDR);
+         }
+         else if (prev->Is(CT_QUESTION))
+         {
+            pc->SetType(CT_ADDR);
+         }
+         else
+         {
+            pc->SetType(CT_ARITH);
          }
       }
 
