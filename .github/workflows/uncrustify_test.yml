@@ -18,13 +18,28 @@ jobs:
             generator: Unix Makefiles
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: seanmiddleditch/gha-setup-ninja@master
       - name: cmake-part-and-tests
         env:
           BADGE: linux
+          CMAKE_CXX_FLAGS_disabled: >-
+            -fno-sanitize=alignment
+            -fsanitize=address
+            -fsanitize=bounds
+            -fsanitize=bounds-strict
+            -fsanitize=null
+          # -fsanitize-recover
+          # -fsanitize=bool
+          # -fsanitize=enum
+          # -fsanitize=integer-divide-by-zero
+          # -fsanitize=leak
+          # -fsanitize=signed-integer-overflow
+          # -fsanitize=thread
+          # -fsanitize=undefined
+          # -fsanitize=vla-bound
         run: |
-          cmake -B build -G "${{ matrix.generator }}" -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          cmake --build build
+          cmake -B build -G "${{ matrix.generator }}" -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}"
+          cmake --build build --parallel $(nproc)
           cd build
-          ../scripts/run_ctest.py
+          ../scripts/run_ctest.py -j $(nproc)
