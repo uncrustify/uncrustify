@@ -1,0 +1,66 @@
+
+		const UINT aNumber,
+	// ment is confusing without them.  Remember that other people may confuse
+	: CSuperFoo(something, positionRect, aNumber,
+	Token* peek( inout Token ct )
+                                            ontext.cend()));
+                 __func__, __LINE__, ontext.c_str(), pc.GetOrigLine());
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), nam->Text(), get_token_name(nam->GetType()));
+            idx += static_cast<int>(ontext.size());
+            nam->SetType(CT_FUNC_TYPE);
+            nam->SetType(CT_FUNC_VAR);
+            nam->SetType(CT_PTR_TYPE);
+         const auto &ontext = options::enable_processing_cmt();
+         found_enable_pattern = (pc.GetStr().find(ontext.c_str()) >= 0);
+         idx = text.find(ontext.c_str(),
+         if (nam->IsString("^"))
+         mark_function_return_type(nam, tpo->GetPrevNcNnlNi(), pt);   // Issue #2279
+         std::wregex  criteria(std::wstring(ontext.cbegin(),
+        // ment is confusing without them.  Remember that other people may confuse
+        Serial.print ( F ( "-- Erreur dans le fonction Centrer_Nombre_Int_dans_Zone : la valeur calculée de X est négative ou nulle, elle vaut :" ) );
+        float  val_num_prec;    // La valeur précédente pour la comparaison
+        int opApply (int delegate(inout char[]) dg)
+        int opApply (int delegate(inout char[], inout Object) dg)
+       * If this is a block literal instead of a block type, 'nam'
+      "somemore",
+      Chunk *nam = tpc->GetPrevNcNnlNi();  // name (if any) or '^'   Issue #2279
+      NOO = 1
+      if (  ontext != UNCRUSTIFY_ON_TEXT
+      if (nam->IsBraceClose())
+    Spelling fix: preceeded -> preceded
+    Token *peek(inout Token ct)
+    Token* peek(inout Token ct) {
+    float  temp_num_prec;   // La valeur précédente pour la comparaison
+    float  val_num_prec;    // La valeur précédente pour la comparaison
+    int    humidite_prec;   // La valeur précédente pour la comparaison
+    int opApply(int delegate(inout Type [, ...]) dg);
+    int opApply(int delegate(inout char[]) dg)
+    int opApply(int delegate(inout char[], inout Object) dg)
+   const auto &ontext = options::enable_processing_cmt();
+   enum hoo { NOO = 1 };
+   if (  !ontext.empty()
+   if (!ontext.empty())
+   { "inout",                           CT_QUALIFIER,        e_LANG_D                                                                                  },
+  "${COMMENT# initialy increase memory for big input files }"                \
+ * "afile"       => "afile"
+"4".Clamp(2, 10).ShouldBe(5);
+# GNU format (sorta)
+(-5).Clamp(2, 10).ShouldBe(5);
+5.Clamp("a", 10).ShouldBe(5);
+5.Clamp(-5, 10).ShouldBe(5);
+5.Clamp(2, 10).ShouldBe(5);
+Author: Tim Hütz <tim@huetz.biz>
+CFoo::CFoo(const DWORD something, const RECT& positionRect, const UINT aNumber, bool thisIsReadOnly, const CString& windowTitle, CInfo *pStructInfo, int widthOfSomething) : CSuperFoo(something, positionRect, aNumber,
+Tim Hütz
+UTFT myGLCD ( SSD1963_800 = 1, 38, 39, 40, 41 );    // (byte model, int RS, int WR, int CS, int RST, int SER)
+[Donot Add Nl Before Cpp Comment]
+[Donot Indent Func Def Close Paren]
+enum class option_type_e // <OT>
+float _Temp_Ext_Precedente = -99.9;     // La valeur précédente pour la comparaison
+fonction ( ( &zeze ), ( ss ) );
+fonction ();
+int fonction ( ( int *zeze ), ( ss ) ) { ksjbshjdbshjdb = 1;}
+int opApply(int delegate(inout Type[, ...]) dg);
+jodi.the.tigger@gmail.com
+namespace BA
+namespace Namepsace

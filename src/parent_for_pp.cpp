@@ -8,6 +8,7 @@
 #include "parent_for_pp.h"
 
 #include "chunk.h"
+#include <vector>
 
 
 void do_parent_for_pp()

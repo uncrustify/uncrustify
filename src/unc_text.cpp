@@ -10,6 +10,7 @@
 
 #include "unc_ctype.h"
 #include "unicode.h" // encode_utf8()
+#include <string>    // Added for string
 
 #include <algorithm>
 #include <cstdint>
