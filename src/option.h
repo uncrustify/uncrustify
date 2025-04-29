@@ -192,7 +192,7 @@ public:
    std::string str() const override;
 
    T operator()() const { return(m_val); }
-   Option &operator=(T val) { m_val = val; return(*this); }
+   Option &operator=(const T &val) { m_val = val; return(*this); }
 
 protected:
    template<typename V> friend bool read_enum(const char *s, Option<V> &o);
