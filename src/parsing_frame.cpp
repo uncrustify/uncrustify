@@ -234,8 +234,8 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
 #ifdef DEBUG_PUSH_POP
    LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d) Add is %4zu: open_line is %4zu, clos_col is %4zu, type is %12s, "
            "cpd.level   is %2d, level is %2zu, pse_tos: %2zu -> %2zu\n",
-           func, line, (size_t)this, m_parenStack.back().open_line, m_parenStack.back().open_colu,
-           get_token_name(m_parenStack.back().type), cpd.pp_level, m_parenStack.back().level,
+           func, line, (size_t)this, m_parenStack.back().GetOpenLine(), m_parenStack.back().GetOpenCol(),
+           get_token_name(m_parenStack.back().GetOpenToken()), cpd.pp_level, m_parenStack.back().GetOpenLevel(),
            (m_parenStack.size() - 1), (m_parenStack.size() - 2));
 #else /* DEBUG_PUSH_POP */
    LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d): open_line is %4zu, clos_col is %4zu, type is %12s, "
