@@ -199,6 +199,35 @@ static bool single_line_comment_indent_rule_applies(Chunk *start, bool forward);
 static bool is_end_of_assignment(Chunk *pc, const ParsingFrame &frm);
 
 
+static void list_the_frm(Chunk *pc, const ParsingFrame &frm, int lineNumber);
+
+
+static void list_the_frm(Chunk *pc, const ParsingFrame &frm, int lineNumber)
+{
+   LOG_FMT(LINDPC, "%s(%d): (%d)\n", __func__, __LINE__, lineNumber);
+   LOG_FMT(LINDPC, "   -=[ pc orig line is %zu, orig col is %zu, Text() is '%s' ]=-, frm.size() is %zu\n",
+           pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), frm.size());
+
+   for (size_t ttidx = frm.size() - 1; ttidx > 0; ttidx--)
+   {
+      LOG_FMT(LINDPC, "     [%zu %zu:%zu '%s' %s/%s tmp=%zu, indent=%zu, brace indent=%zu, indent tab=%zu, indent continue=%d, level=%zu, pc brace level=%zu]\n",
+              ttidx,
+              frm.at(ttidx).GetOpenChunk()->GetOrigLine(),
+              frm.at(ttidx).GetOpenChunk()->GetOrigCol(),
+              frm.at(ttidx).GetOpenChunk()->Text(),
+              get_token_name(frm.at(ttidx).GetOpenToken()),
+              get_token_name(frm.at(ttidx).GetOpenChunk()->GetParentType()),
+              frm.at(ttidx).GetIndentTmp(),
+              frm.at(ttidx).GetIndent(),
+              frm.at(ttidx).GetBraceIndent(),
+              frm.at(ttidx).GetIndentTab(),
+              frm.at(ttidx).GetIndentContinue(),
+              frm.at(ttidx).GetOpenLevel(),
+              frm.at(ttidx).GetOpenChunk()->GetBraceLevel());
+   }
+} // static void list_the_frm
+
+
 void indent_to_column(Chunk *pc, size_t column)
 {
    LOG_FUNC_ENTRY();
@@ -1396,27 +1425,7 @@ void indent_text()
       if (  !pc->IsCommentOrNewline()
          && log_sev_on(LINDPC))
       {
-         LOG_FMT(LINDPC, "%s(%d):\n", __func__, __LINE__);
-         LOG_FMT(LINDPC, "   -=[ pc orig line is %zu, orig col is %zu, Text() is '%s' ]=-, frm.size() is %zu\n",
-                 pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), frm.size());
-
-         for (size_t ttidx = frm.size() - 1; ttidx > 0; ttidx--)
-         {
-            LOG_FMT(LINDPC, "     [%zu %zu:%zu '%s' %s/%s tmp=%zu indent=%zu brace indent=%zu indent tab=%zu indent continue=%d level=%zu pc brace level=%zu]\n",
-                    ttidx,
-                    frm.at(ttidx).GetOpenChunk()->GetOrigLine(),
-                    frm.at(ttidx).GetOpenChunk()->GetOrigCol(),
-                    frm.at(ttidx).GetOpenChunk()->Text(),
-                    get_token_name(frm.at(ttidx).GetOpenToken()),
-                    get_token_name(frm.at(ttidx).GetOpenChunk()->GetParentType()),
-                    frm.at(ttidx).GetIndentTmp(),
-                    frm.at(ttidx).GetIndent(),
-                    frm.at(ttidx).GetBraceIndent(),
-                    frm.at(ttidx).GetIndentTab(),
-                    frm.at(ttidx).GetIndentContinue(),
-                    frm.at(ttidx).GetOpenLevel(),
-                    frm.at(ttidx).GetOpenChunk()->GetBraceLevel());
-         }
+         list_the_frm(pc, frm, __LINE__);
       }
       char copy[1000];
       LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, orig col is %zu, column is %zu, Text() is '%s'\n",
