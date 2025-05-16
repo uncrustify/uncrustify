@@ -7,6 +7,8 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include <limits>   // for numeric_limits<>
+
 #include "align/stack.h"
 
 #include "align/tab_column.h"

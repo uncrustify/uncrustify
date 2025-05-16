@@ -16,6 +16,7 @@
 #include "newlines/iarf.h"
 #include "newlines/is_func_call_or_def.h"
 #include "newlines/one_liner.h"
+#include <vector>
 
 
 constexpr static auto LCURRENT = LNEWLINE;

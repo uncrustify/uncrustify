@@ -10,6 +10,7 @@
 
 #include "align/stack.h"
 #include "log_rules.h"
+#include <deque>
 
 
 constexpr static auto LCURRENT = LALASS;

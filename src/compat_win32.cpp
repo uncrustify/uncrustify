@@ -27,7 +27,7 @@ bool unc_getenv(const char *name, std::string &str)
          return(false);
       }
    }
-   buf = (char *)malloc(len);
+   buf = reinterpret_cast<char *>(malloc(len));
 
    if (buf != nullptr)
    {

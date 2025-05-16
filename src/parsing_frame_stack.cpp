@@ -9,6 +9,9 @@
 
 #include "prototypes.h"
 
+#include <cstdio>
+#include <vector>
+
 
 using namespace uncrustify;
 

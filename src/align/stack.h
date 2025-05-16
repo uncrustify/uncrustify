@@ -12,6 +12,7 @@
 
 #include "ChunkStack.h"
 
+#include <cstdio>
 #include <limits>
 
 class AlignStack
