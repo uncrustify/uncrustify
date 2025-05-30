@@ -2356,7 +2356,8 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
       add_long_preprocessor_conditional_block_comment();
    }
    // Align everything else, reindent and break at code_width
-   first = true;
+   cpd.pass_count = 3;
+   first          = true;
 
    dump_step(dump_file, "Before second while loop");
 
@@ -2398,7 +2399,8 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
          }
       }
       dump_step(dump_file, "Inside second while loop");
-   } while (old_changes != cpd.changes);
+   } while (  old_changes != cpd.changes
+           && cpd.pass_count-- > 0);
 
    // And finally, align the backslash newline stuff
    align_right_comments();
