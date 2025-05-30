@@ -2356,7 +2356,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
       add_long_preprocessor_conditional_block_comment();
    }
    // Align everything else, reindent and break at code_width
-   cpd.pass_count = 3;
+   cpd.pass_count = 1;
    first          = true;
 
    dump_step(dump_file, "Before second while loop");
