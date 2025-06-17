@@ -297,7 +297,7 @@
 30290  cpp/indent_shift.cfg                                 cpp/align_left_shift.cpp
 30291  cpp/indent_shift.cfg                                 cpp/indent_shift.cpp
 30292  cpp/align_eigen_comma_init.cfg                       cpp/eigen.cpp
-#30293
+30293! cpp/Issue_4515.cfg                                   cpp/Issue_4515.cpp
 #30294
 #30295
 30296  cpp/sp_inside_for.cfg                                cpp/sp_inside_for.cpp
