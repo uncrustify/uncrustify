@@ -352,6 +352,20 @@ def check_uncrustify_output(
     ----------------------------------------------------------------------------
     True if all specified files match up, False otherwise
     """
+    # for debugging purpose
+    print("D: uncr_bin     is:", uncr_bin)
+    print("D: program_args is:", program_args)
+    print("D: args_arr     is:", args_arr)
+    print("D: out_expected_path is:", out_expected_path)
+    print("D: out_result_manip  is:", out_result_manip)
+    print("D: out_result_path   is:", out_result_path)
+    print("D: err_expected_path is:", err_expected_path)
+    print("D: err_result_manip  is:", err_result_manip)
+    print("D: err_result_path   is:", err_result_path)
+    print("D: gen_expected_path is:", gen_expected_path)
+    print("D: gen_result_manip  is:", gen_result_manip)
+    print("D: gen_result_path   is:", gen_result_path)
+
     # check param sanity
     if not out_expected_path and not err_expected_path and not gen_expected_path:
         eprint("No expected comparison file provided")
@@ -528,6 +542,7 @@ def main(args):
     print("Summary:")
     print("Python version is: "+sys.version)
     print("OS is: %s" % os_name)
+    print("")
 
     clear_dir(s_path_join(test_dir, 'results'))
 
@@ -884,29 +899,36 @@ def main(args):
         return_flag = False
     print("Test p and debug-csv-format option is OK")
 
+    #G#config_D_R = parsed_args.config.lower()
+    #G#print("config is", config_D_R)
     if parsed_args.config.lower() == 'debug':
         print("Test tracking space:FILE ...")
-        print("  config is Debug")
         #
         # Test tracking space:FILE
         #
-        if os_name != 'nt':
-            # doesn't work under windows
+        if os_name == 'nt':
+            print("doesn't work under windows")
+        else:
             temp_result_path = s_path_join(script_dir, 'results/Debug_tracking_space.html')
-            abc = "space:" + temp_result_path                   # Issue #4066
-            if not check_uncrustify_output(
+            args_arr=['-c', s_path_join(script_dir, 'config/tracking_space.cfg'),
+                      '-f', s_path_join(script_dir, 'input/tracking_space.cpp'),
+                      '--tracking', "space:" + temp_result_path
+                      ]
+            print(args_arr)
+            return_value = check_uncrustify_output(
                     uncr_bin,
                     parsed_args,
-                    args_arr=['-c', s_path_join(script_dir, 'config/tracking_space.cfg'),
-                              '-f', s_path_join(script_dir, 'input/tracking_space.cpp'),
-                              '--tracking',
-                              abc,
-                              ],
+                    args_arr,
                     gen_expected_path=s_path_join(script_dir, 'output/Debug_tracking_space.html'),
                     gen_result_path=temp_result_path
-                    ):
-                return_flag = False
-        print("Test tracking space:FILE is OK")
+                    )
+            if not return_value:
+                sys_exit(EX_SOFTWARE)
+    else:
+        print("nothing to do")
+
+    print("Test tracking space:FILE is OK")
+
 
     print("Test replace ...")
     #

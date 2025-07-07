@@ -836,6 +836,34 @@ void output_text(FILE *pfile)
               __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetColumn(), pc->GetNlCount());
       cpd.output_tab_as_space = false;
 
+      if (  pc->Is(CT_STRING)
+         && tracking_is_on)
+      {
+         // prepare the string for the HTML-output
+         LOG_FMT(LCONTTEXT, "%s(%d): STRING\n",
+                 __func__, __LINE__);
+         size_t  len = pc->Len();
+         UncText u   = pc->Str();
+
+         for (size_t idx = 0; idx < len; idx++)
+         {
+            int c = u[idx];
+
+            if (c == '<')
+            {
+               add_text("&lt;");       // 60
+            }
+            else if (c == '>')
+            {
+               add_text("&gt;");        // 62
+            }
+            else
+            {
+               add_char(c);
+            }
+         }
+      }
+
       if (pc->Is(CT_NEWLINE))
       {
          DecodeTrackingData(pc);
