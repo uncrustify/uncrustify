@@ -353,18 +353,18 @@ def check_uncrustify_output(
     True if all specified files match up, False otherwise
     """
     # for debugging purpose
-    print("D: uncr_bin     is:", uncr_bin)
-    print("D: program_args is:", program_args)
-    print("D: args_arr     is:", args_arr)
-    print("D: out_expected_path is:", out_expected_path)
-    print("D: out_result_manip  is:", out_result_manip)
-    print("D: out_result_path   is:", out_result_path)
-    print("D: err_expected_path is:", err_expected_path)
-    print("D: err_result_manip  is:", err_result_manip)
-    print("D: err_result_path   is:", err_result_path)
-    print("D: gen_expected_path is:", gen_expected_path)
-    print("D: gen_result_manip  is:", gen_result_manip)
-    print("D: gen_result_path   is:", gen_result_path)
+    #print("D: uncr_bin     is:", uncr_bin)
+    #print("D: program_args is:", program_args)
+    #print("D: args_arr     is:", args_arr)
+    #print("D: out_expected_path is:", out_expected_path)
+    #print("D: out_result_manip  is:", out_result_manip)
+    #print("D: out_result_path   is:", out_result_path)
+    #print("D: err_expected_path is:", err_expected_path)
+    #print("D: err_result_manip  is:", err_result_manip)
+    #print("D: err_result_path   is:", err_result_path)
+    #print("D: gen_expected_path is:", gen_expected_path)
+    #print("D: gen_result_manip  is:", gen_result_manip)
+    #print("D: gen_result_path   is:", gen_result_path)
 
     # check param sanity
     if not out_expected_path and not err_expected_path and not gen_expected_path:
@@ -944,7 +944,7 @@ def main(args):
             gen_expected_path=s_path_join(script_dir, 'output/backup.h'),
             gen_result_path=s_path_join(script_dir, 'input/backup.h'),
             err_expected_path=s_path_join(script_dir, 'output/replace.txt'),
-            err_result_path=s_path_join(test_dir, 'results/replace.txt'),
+            err_result_path=s_path_join(script_dir, 'results/replace.txt'),
             )
     # Issue 4379
     if not return_value:
