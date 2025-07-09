@@ -242,6 +242,21 @@ static bool is_oc_block(Chunk *pc);
 static void handle_java_assert(Chunk *pc);
 
 
+/**
+ * Check if a '&' or '&&' token is in a function reference qualifier context.
+ * This detects patterns like:
+ *   void foo() &
+ *   void foo() &&
+ *   void foo() const &
+ *   void foo() const &&
+ *   auto foo() && -> int
+ *
+ * @param pc  Pointer to the '&' or '&&' chunk
+ * @return    True if this is a function reference qualifier
+ */
+static bool is_function_ref_qualifier_context(Chunk *pc);
+
+
 static void flag_asm(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
@@ -1888,6 +1903,24 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             }
          }
       }
+   }
+
+   // C++ function reference qualifiers: detect && and & after function parameter lists
+   if (  language_is_set(lang_flag_e::LANG_CPP)
+      && (  (  pc->Is(CT_BOOL)
+            && pc->IsString("&&"))
+         || (  pc->Is(CT_AMP)
+            && pc->IsString("&"))
+         || (  pc->Is(CT_BYREF)  // Handle already classified single &
+            && pc->IsString("&"))
+         || (  pc->Is(CT_ARITH)  // Handle already classified single &
+            && pc->IsString("&")))
+      && is_function_ref_qualifier_context(pc))
+   {
+      LOG_FMT(LFCNR, "%s(%d): setting function reference qualifier at orig line %zu, orig col %zu, Text() '%s'\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+      pc->SetType(CT_REF_QUALIFIER);
+      return;
    }
 
    // Issue #1704
@@ -4059,3 +4092,60 @@ static void handle_java_assert(Chunk *pc)
       }
    }
 } // handle_java_assert
+
+
+/**
+ * Check if a '&' or '&&' token is in a function reference qualifier context.
+ */
+static bool is_function_ref_qualifier_context(Chunk *pc)
+{
+   // Only apply to C++
+   if (!language_is_set(lang_flag_e::LANG_CPP))
+   {
+      return false;
+   }
+
+   // Look backwards to find function signature pattern
+   Chunk *prev = pc->GetPrevNcNnlNi();
+
+   // Skip over const, noexcept, constexpr, static, etc.
+   while (prev->IsNotNullChunk() &&
+          (prev->Is(CT_QUALIFIER) ||
+           prev->IsString("noexcept") ||
+           prev->IsString("const") ||
+           prev->IsString("constexpr") ||
+           prev->IsString("static") ||
+           prev->IsString("volatile")))
+   {
+      prev = prev->GetPrevNcNnlNi();
+   }
+
+   // Should find closing parenthesis of parameter list
+   if (prev->IsNullChunk() || !prev->Is(CT_FPAREN_CLOSE))
+   {
+      return false;
+   }
+
+   // Find matching opening parenthesis
+   Chunk *paren_open = prev->GetOpeningParen();
+   if (paren_open->IsNullChunk())
+   {
+      return false;
+   }
+
+   // Find function name before opening parenthesis
+   Chunk *func_name = paren_open->GetPrevNcNnlNi();
+   if (func_name->IsNullChunk())
+   {
+      return false;
+   }
+
+   // Check if this looks like a function signature
+   // We look for function types or words that could be function names
+   return (func_name->Is(CT_FUNC_DEF) ||
+           func_name->Is(CT_FUNC_PROTO) ||
+           func_name->Is(CT_FUNC_CLASS_DEF) ||
+           func_name->Is(CT_FUNC_CLASS_PROTO) ||
+           func_name->Is(CT_WORD) ||
+           func_name->Is(CT_FUNCTION));
+}
