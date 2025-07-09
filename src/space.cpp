@@ -1318,8 +1318,14 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    // Issue #4094-01
    // spacing around template < > stuff
-   if (  first->Is(CT_ANGLE_OPEN)
-      || second->Is(CT_ANGLE_CLOSE))
+   // But don't apply sp_inside_angle when the other token is CT_BOOL inside a template,
+   // so that sp_bool can handle boolean operators inside templates
+   if (  (  first->Is(CT_ANGLE_OPEN)
+         && !(  second->Is(CT_BOOL)
+             && second->TestFlags(PCF_IN_TEMPLATE)))
+      || (  second->Is(CT_ANGLE_CLOSE)
+         && !(  first->Is(CT_BOOL)
+             && first->TestFlags(PCF_IN_TEMPLATE))))
    {
       if (  first->Is(CT_ANGLE_OPEN)
          && second->Is(CT_ANGLE_CLOSE))
@@ -1401,7 +1407,10 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  second->IsNot(CT_BYREF)
          && second->IsNot(CT_PTR_TYPE)
          && second->IsNot(CT_BRACE_OPEN)
-         && second->IsNot(CT_PAREN_CLOSE))
+         && second->IsNot(CT_PAREN_CLOSE)
+            // Let sp_bool handle boolean operators inside templates
+         && !(  second->Is(CT_BOOL)
+             && second->TestFlags(PCF_IN_TEMPLATE)))
       {
          if (  second->Is(CT_CLASS_COLON)
             && options::sp_angle_colon() != IARF_IGNORE)
@@ -1501,6 +1510,23 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       // Add or remove space before a reference sign '&'.
       log_rule("sp_before_byref");                                 // byref 3
       return(options::sp_before_byref());
+   }
+
+   // Handle spacing around ref-qualifiers (& or && on member functions)
+   if (  first->Is(CT_REF_QUALIFIER)
+      && options::sp_after_ref_qualifier() != IARF_IGNORE)
+   {
+      // Add or remove space after a ref-qualifier '&' or '&&' on a member function.
+      log_rule("sp_after_ref_qualifier");
+      return(options::sp_after_ref_qualifier());
+   }
+
+   if (  second->Is(CT_REF_QUALIFIER)
+      && options::sp_before_ref_qualifier() != IARF_IGNORE)
+   {
+      // Add or remove space before a ref-qualifier '&' or '&&' on a member function.
+      log_rule("sp_before_ref_qualifier");
+      return(options::sp_before_ref_qualifier());
    }
 
    if (first->Is(CT_SPAREN_CLOSE))

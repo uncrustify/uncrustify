@@ -1089,21 +1089,6 @@ void tokenize_cleanup()
          pc->SetType(CT_USING_STMT);
       }
 
-      // Add minimal support for C++0x rvalue references
-      if (  pc->Is(CT_BOOL)
-         && language_is_set(lang_flag_e::LANG_CPP)
-         && pc->IsString("&&"))
-      {
-         if (prev->Is(CT_TYPE))
-         {
-            // Issue # 1002
-            if (!pc->TestFlags(PCF_IN_TEMPLATE))
-            {
-               pc->SetType(CT_BYREF);
-            }
-         }
-      }
-
       /*
        * HACK: treat try followed by a colon as a qualifier to handle this:
        *   A::A(int) try : B() { } catch (...) { }
