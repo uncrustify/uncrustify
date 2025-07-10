@@ -19,6 +19,7 @@
 #include "tokenizer/check_template.h"
 #include "tokenizer/combine.h"
 #include "tokenizer/combine_skip.h"
+#include "tokenizer/combine_tools.h"
 #include "tokenizer/flag_braced_init_list.h"
 #include "tokenizer/flag_decltype.h"
 #include "unc_ctype.h"
@@ -1094,7 +1095,7 @@ void tokenize_cleanup()
          && language_is_set(lang_flag_e::LANG_CPP)
          && pc->IsString("&&"))
       {
-         if (prev->Is(CT_TYPE))
+         if (prev->Is(CT_TYPE) || chunk_ends_type(prev))
          {
             // Issue # 1002
             if (!pc->TestFlags(PCF_IN_TEMPLATE))

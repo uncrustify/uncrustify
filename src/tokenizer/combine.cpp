@@ -1871,7 +1871,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       log_pcf_flags(LFCNR, tmp->GetFlags());
       // look for a type
 
-      if (tmp->Is(CT_TYPE))
+      if (tmp->Is(CT_TYPE) || tmp->Is(CT_WORD) || tmp->Is(CT_ANGLE_CLOSE))
       {
          LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(),
