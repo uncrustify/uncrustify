@@ -1103,6 +1103,15 @@ void tokenize_cleanup()
                pc->SetType(CT_BYREF);
             }
          }
+         else if (prev->Is(CT_ANGLE_CLOSE) && prev->GetParentType() == CT_TEMPLATE)
+         {
+            // Handle complex template cases like std::map<...>&&
+            // The ANGLE_CLOSE should be considered a type ending for rvalue references
+            if (!pc->TestFlags(PCF_IN_TEMPLATE))
+            {
+               pc->SetType(CT_BYREF);
+            }
+         }
       }
 
       /*
