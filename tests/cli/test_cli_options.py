@@ -746,24 +746,24 @@ def main(args):
 
     print("Test the truncate option is OK")
 
-    #print("Test update-config ...")
-    # temporary removed
-    ##
-    ## Test update-config
-    ##
-    #if not check_uncrustify_output(
-    #        uncr_bin,
-    #        parsed_args,
-    #        args_arr=['-c', s_path_join(script_dir, 'config/mini_d.cfg'),
-    #                  '--update-config'],
-    #        out_expected_path=s_path_join(script_dir, 'output/mini_d_uc.txt'),
-    #        out_result_path=s_path_join(test_dir, 'results/mini_d_uc.txt'),
-    #        out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
-    #        err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
-    #        err_result_path=s_path_join(test_dir, 'results/mini_d_error0.txt'),
-    #        err_result_manip=string_replace('\\', '/')
-    #        ):
-    #    return_flag = False
+    print("Test update-config ...")
+    #
+    # Test update-config
+    #
+    return_value = check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            out_expected_path=s_path_join(script_dir, 'output/update.txt'),
+            out_result_path=s_path_join(script_dir, 'results/update.txt'),
+            args_arr=['--update-config'],
+            out_result_manip=reg_replace(r'Uncrustify.+', 'Uncrustify')
+            )
+
+    if not return_value:
+        sys_exit(EX_SOFTWARE)
+
+    print("Test update-config is OK")
+
 
     #if not check_uncrustify_output(
     #        uncr_bin,
