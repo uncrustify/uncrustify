@@ -787,7 +787,9 @@ def main(args):
     #
     # Test p
     #
+    print("OS B is: %s" % os_name)
     if os_name != 'nt':
+        print("!=")
         return_value = check_uncrustify_output(
                 uncr_bin,
                 parsed_args,
@@ -799,9 +801,13 @@ def main(args):
                 gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
                 )
 
+        print("return_value", return_value)
+        print("EX_SOFTWARE BB", EX_SOFTWARE)
         # Issue 4379
         if not return_value:
+            print("EX_SOFTWARE", EX_SOFTWARE)
             sys_exit(EX_SOFTWARE)
+        print("after")
 
         #return_value = check_uncrustify_output(
         #        uncr_bin,
@@ -830,9 +836,10 @@ def main(args):
         #    sys_exit(EX_SOFTWARE)
 
     print("Test p is OK")
-    sys_exit(EX_SOFTWARE)
+    print("EX_SOFTWARE", EX_SOFTWARE)
+    #sys_exit(EX_SOFTWARE)
 
-    #print("Test p and -c with '-' input ...")
+    print("Test p and -c with '-' input ...")
     if os_name == 'nt' or check_uncrustify_output(
             uncr_bin,
             parsed_args,
