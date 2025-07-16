@@ -545,6 +545,7 @@ def main(args):
     print("")
 
     clear_dir(s_path_join(test_dir, 'results'))
+    clear_dir(s_path_join(script_dir, 'results'))
 
     return_flag = True
 
