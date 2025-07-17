@@ -127,6 +127,13 @@ def get_file_content(fp):
     """
     #print("3-1: fp is "+fp)
     #print("3-1b: gen_result_path is "+gen_result_path)
+    # for debugging only: get an error if not defined
+    #try:
+    #    gen_result_path
+    #except NameError:
+    #    print("gen_result_path is not defined.")
+    #    sys_exit(EX_SOFTWARE)
+
     out = None
 
     if isfile(fp):
@@ -218,7 +225,7 @@ def check_generated_output(gen_expected_path, gen_result_path,
                   % (gen_result_path, gen_expected_path))
             return False
 
-    #remove(gen_result_path)
+    remove(gen_result_path)
 
     return True
 
@@ -353,18 +360,18 @@ def check_uncrustify_output(
     True if all specified files match up, False otherwise
     """
     # for debugging purpose
-    print("D: uncr_bin     is:", uncr_bin)
-    print("D: program_args is:", program_args)
-    print("D: args_arr     is:", args_arr)
-    print("D: out_expected_path is:", out_expected_path)
-    print("D: out_result_manip  is:", out_result_manip)
-    print("D: out_result_path   is:", out_result_path)
-    print("D: err_expected_path is:", err_expected_path)
-    print("D: err_result_manip  is:", err_result_manip)
-    print("D: err_result_path   is:", err_result_path)
-    print("D: gen_expected_path is:", gen_expected_path)
-    print("D: gen_result_manip  is:", gen_result_manip)
-    print("D: gen_result_path   is:", gen_result_path)
+    #print("D: uncr_bin     is:", uncr_bin)
+    #print("D: program_args is:", program_args)
+    #print("D: args_arr     is:", args_arr)
+    #print("D: out_expected_path is:", out_expected_path)
+    #print("D: out_result_manip  is:", out_result_manip)
+    #print("D: out_result_path   is:", out_result_path)
+    #print("D: err_expected_path is:", err_expected_path)
+    #print("D: err_result_manip  is:", err_result_manip)
+    #print("D: err_result_path   is:", err_result_path)
+    #print("D: gen_expected_path is:", gen_expected_path)
+    #print("D: gen_result_manip  is:", gen_result_manip)
+    #print("D: gen_result_path   is:", gen_result_path)
 
     # check param sanity
     if not out_expected_path and not err_expected_path and not gen_expected_path:
@@ -788,13 +795,7 @@ def main(args):
     #
     # Test p
     #
-    print("OS B is: %s" % os_name)
     if os_name != 'nt':
-        print("!=")
-        args_arR=['-c', s_path_join(script_dir, 'config/d.cfg'),
-                  '-f', s_path_join(script_dir, 'input/testSrcP.cpp'),
-                  '-p', s_path_join(script_dir, 'results/p.txt')]
-        print(args_arR)
         return_value = check_uncrustify_output(
                 uncr_bin,
                 parsed_args,
@@ -806,13 +807,9 @@ def main(args):
                 gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
                 )
 
-        print("return_value", return_value)
-        print("EX_SOFTWARE BB", EX_SOFTWARE)
         # Issue 4379
         if not return_value:
-            print("EX_SOFTWARE", EX_SOFTWARE)
             sys_exit(EX_SOFTWARE)
-        print("after")
 
         #return_value = check_uncrustify_output(
         #        uncr_bin,
@@ -841,8 +838,6 @@ def main(args):
         #    sys_exit(EX_SOFTWARE)
 
     print("Test p is OK")
-    print("EX_SOFTWARE", EX_SOFTWARE)
-    #sys_exit(EX_SOFTWARE)
 
     print("Test p and -c with '-' input ...")
     if os_name == 'nt' or check_uncrustify_output(
