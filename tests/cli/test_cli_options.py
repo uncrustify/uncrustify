@@ -127,6 +127,13 @@ def get_file_content(fp):
     """
     #print("3-1: fp is "+fp)
     #print("3-1b: gen_result_path is "+gen_result_path)
+    # for debugging only: get an error if not defined
+    #try:
+    #    gen_result_path
+    #except NameError:
+    #    print("gen_result_path is not defined.")
+    #    sys_exit(EX_SOFTWARE)
+
     out = None
 
     if isfile(fp):
@@ -545,6 +552,7 @@ def main(args):
     print("")
 
     clear_dir(s_path_join(test_dir, 'results'))
+    clear_dir(s_path_join(script_dir, 'results'))
 
     return_flag = True
 
@@ -764,54 +772,24 @@ def main(args):
 
     print("Test update-config is OK")
 
+    print("Test update-config-with-doc ...")
+    #
+    # Test update-config-with-doc
+    #
+    return_value = check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            out_expected_path=s_path_join(script_dir, 'output/update-config-with-doc.txt'),
+            out_result_path=s_path_join(script_dir, 'results/update-config-with-doc.txt'),
+            args_arr=['--update-config-with-doc'],
+            out_result_manip=reg_replace(r'Uncrustify.+', 'Uncrustify')
+            )
 
-    #if not check_uncrustify_output(
-    #        uncr_bin,
-    #        parsed_args,
-    #        args_arr=['-c', s_path_join(script_dir, 'config/mini_nd.cfg'),
-    #                  '--update-config'],
-    #        out_expected_path=s_path_join(script_dir, 'output/mini_nd_uc.txt'),
-    #        out_result_path=s_path_join(test_dir, 'results/mini_nd_uc.txt'),
-    #        out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
-    #        err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
-    #        err_result_path=s_path_join(test_dir, 'results/mini_d_error1.txt'),
-    #        err_result_manip=string_replace('\\', '/')
-    #        ):
-    #    return_flag = False
-    #print("Test update-config is OK")
+    if not return_value:
+        sys_exit(EX_SOFTWARE)
 
-    #print("Test update-config-with-doc ...")
-    ##
-    ## Test update-config-with-doc
-    ##
-    #if not check_uncrustify_output(
-    #        uncr_bin,
-    #        parsed_args,
-    #        args_arr=['-c', s_path_join(script_dir, 'config/mini_d.cfg'),
-    #                  '--update-config-with-doc'],
-    #        out_expected_path=s_path_join(script_dir, 'output/mini_d_ucwd.txt'),
-    #        out_result_path=s_path_join(test_dir, 'results/mini_d_ucwd.txt'),
-    #        out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
-    #        err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
-    #        err_result_path=s_path_join(test_dir, 'results/mini_d_error2.txt'),
-    #        err_result_manip=string_replace('\\', '/')
-    #        ):
-    #    return_flag = False
-    #print("Test update-config-with-doc is OK")
+    print("Test update-config-with-doc is OK")
 
-    #if not check_uncrustify_output(
-    #        uncr_bin,
-    #        parsed_args,
-    #        args_arr=['-c', s_path_join(script_dir, 'config/mini_nd.cfg'),
-    #                  '--update-config-with-doc'],
-    #        out_expected_path=s_path_join(script_dir, 'output/mini_nd_ucwd.txt'),
-    #        out_result_path=s_path_join(test_dir, 'results/mini_nd_ucwd.txt'),
-    #        out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
-    #        err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
-    #        err_result_path=s_path_join(test_dir, 'results/mini_d_error3.txt'),
-    #        err_result_manip=string_replace('\\', '/')
-    #        ):
-    #    return_flag = False
 
     print("Test p ...")
     #
@@ -821,11 +799,11 @@ def main(args):
         return_value = check_uncrustify_output(
                 uncr_bin,
                 parsed_args,
-                args_arr=['-c', s_path_join(script_dir, 'config/mini_nd.cfg'),
+                args_arr=['-c', s_path_join(script_dir, 'config/d.cfg'),
                           '-f', s_path_join(script_dir, 'input/testSrcP.cpp'),
-                          '-p', s_path_join(test_dir, 'results/p.txt')],
+                          '-p', s_path_join(script_dir, 'results/p.txt')],
                 gen_expected_path=s_path_join(script_dir, 'output/p.txt'),
-                gen_result_path=s_path_join(test_dir, 'results/p.txt'),
+                gen_result_path=s_path_join(script_dir, 'results/p.txt'),
                 gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
                 )
 
@@ -833,35 +811,37 @@ def main(args):
         if not return_value:
             sys_exit(EX_SOFTWARE)
 
-        return_value = check_uncrustify_output(
-                uncr_bin,
-                parsed_args,
-                args_arr=['-f', s_path_join(script_dir, 'input/class_enum_struct_union.cpp'),
-                          '-p', s_path_join(test_dir, 'results/class_enum_struct_union.txt')],
-                gen_expected_path=s_path_join(script_dir, 'output/class_enum_struct_union.txt'),
-                gen_result_path=s_path_join(test_dir, 'results/class_enum_struct_union.txt'),
-                gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
-                )
-        # Issue 4379
-        if not return_value:
-            sys_exit(EX_SOFTWARE)
+        print("Test p-A is OK")
 
-        return_value = check_uncrustify_output(
-                uncr_bin,
-                parsed_args,
-                args_arr=['-f', s_path_join(script_dir, 'input/in_fcn_def.cpp'),
-                          '-p', s_path_join(test_dir, 'results/in_fcn_def.txt')],
-                gen_expected_path=s_path_join(script_dir, 'output/in_fcn_def.txt'),
-                gen_result_path=s_path_join(test_dir, 'results/in_fcn_def.txt'),
-                gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
-                )
-        # Issue 4379
-        if not return_value:
-            sys_exit(EX_SOFTWARE)
+        #return_value = check_uncrustify_output(
+        #        uncr_bin,
+        #        parsed_args,
+        #        args_arr=['-f', s_path_join(script_dir, 'input/class_enum_struct_union.cpp'),
+        #                  '-p', s_path_join(test_dir, 'results/class_enum_struct_union.txt')],
+        #        gen_expected_path=s_path_join(script_dir, 'output/class_enum_struct_union.txt'),
+        #        gen_result_path=s_path_join(script_dir, 'results/class_enum_struct_union.txt'),
+        #        gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
+        #        )
+        ## Issue 4379
+        #if not return_value:
+        #    sys_exit(EX_SOFTWARE)
+
+        #return_value = check_uncrustify_output(
+        #        uncr_bin,
+        #        parsed_args,
+        #        args_arr=['-f', s_path_join(script_dir, 'input/in_fcn_def.cpp'),
+        #                  '-p', s_path_join(test_dir, 'results/in_fcn_def.txt')],
+        #        gen_expected_path=s_path_join(script_dir, 'output/in_fcn_def.txt'),
+        #        gen_result_path=s_path_join(test_dir, 'results/in_fcn_def.txt'),
+        #        gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
+        #        )
+        ## Issue 4379
+        #if not return_value:
+        #    sys_exit(EX_SOFTWARE)
 
     print("Test p is OK")
 
-    #print("Test p and -c with '-' input ...")
+    print("Test p and -c with '-' input ...")
     if os_name == 'nt' or check_uncrustify_output(
             uncr_bin,
             parsed_args,
