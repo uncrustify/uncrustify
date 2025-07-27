@@ -102,8 +102,14 @@ void reindent_line(Chunk *pc, size_t column)
       }
       else
       {
-         pc->SetColumn(max(pc->GetColumn() + col_delta, min_col));
-
+         if (static_cast<int>(pc->GetColumn() + col_delta) < 0)            // Issue #4515
+         {
+            pc->SetColumn(min_col);
+         }
+         else
+         {
+            pc->SetColumn(max(pc->GetColumn() + col_delta, min_col));
+         }
          LOG_FMT(LINDLINED, "%s(%d): set column of ", __func__, __LINE__);
 
          if (pc->Is(CT_NEWLINE))
