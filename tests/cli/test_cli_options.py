@@ -813,36 +813,43 @@ def main(args):
 
         print("Test p-A is OK")
 
-        #return_value = check_uncrustify_output(
-        #        uncr_bin,
-        #        parsed_args,
-        #        args_arr=['-f', s_path_join(script_dir, 'input/class_enum_struct_union.cpp'),
-        #                  '-p', s_path_join(test_dir, 'results/class_enum_struct_union.txt')],
-        #        gen_expected_path=s_path_join(script_dir, 'output/class_enum_struct_union.txt'),
-        #        gen_result_path=s_path_join(script_dir, 'results/class_enum_struct_union.txt'),
-        #        gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
-        #        )
-        ## Issue 4379
-        #if not return_value:
-        #    sys_exit(EX_SOFTWARE)
+        return_value = check_uncrustify_output(
+                uncr_bin,
+                parsed_args,
+                args_arr=['-f', s_path_join(script_dir, 'input/class_enum_struct_union.cpp'),
+                          '-p', s_path_join(script_dir, 'results/class_enum_struct_union.txt')],
+                gen_expected_path=s_path_join(script_dir, 'output/class_enum_struct_union.txt'),
+                gen_result_path=s_path_join(script_dir, 'results/class_enum_struct_union.txt'),
+                gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
+                )
 
-        #return_value = check_uncrustify_output(
-        #        uncr_bin,
-        #        parsed_args,
-        #        args_arr=['-f', s_path_join(script_dir, 'input/in_fcn_def.cpp'),
-        #                  '-p', s_path_join(test_dir, 'results/in_fcn_def.txt')],
-        #        gen_expected_path=s_path_join(script_dir, 'output/in_fcn_def.txt'),
-        #        gen_result_path=s_path_join(test_dir, 'results/in_fcn_def.txt'),
-        #        gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
-        #        )
-        ## Issue 4379
-        #if not return_value:
-        #    sys_exit(EX_SOFTWARE)
+        # Issue 4379
+        if not return_value:
+            sys_exit(EX_SOFTWARE)
+
+        print("Test p-B is OK")
+
+        return_value = check_uncrustify_output(
+                uncr_bin,
+                parsed_args,
+                args_arr=['-f', s_path_join(script_dir, 'input/in_fcn_def.cpp'),
+                          '-p', s_path_join(script_dir, 'results/in_fcn_def.txt')],
+                gen_expected_path=s_path_join(script_dir, 'output/in_fcn_def.txt'),
+                gen_result_path=s_path_join(script_dir, 'results/in_fcn_def.txt'),
+                gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
+                )
+
+        # Issue 4379
+        if not return_value:
+            sys_exit(EX_SOFTWARE)
+
+        print("Test p-C is OK")
 
     print("Test p is OK")
 
     print("Test p and -c with '-' input ...")
-    if os_name == 'nt' or check_uncrustify_output(
+    if os_name != 'nt':
+        return_value = check_uncrustify_output(
             uncr_bin,
             parsed_args,
             args_arr=['-c', '-',
@@ -850,37 +857,34 @@ def main(args):
                       '-p', '-'],
             out_expected_path=s_path_join(script_dir, 'output/pc-.txt'),
             out_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', ''),
-            out_result_path=s_path_join(test_dir, 'results/pc-.txt')
-    ):
-        pass
+            out_result_path=s_path_join(script_dir, 'results/pc-.txt')
+        )
 
-    #print("Test p and -c with '-' input ...")
-    #
-    # Test p and -c with '-' input
-    #
+        if not return_value:
+            sys_exit(EX_SOFTWARE)
     else:
-        return_flag = False
-    #print("Test p and -c with '-' input is OK")
+        print("nothing to do")
+
+    print("Test p and -c with '-' input ... is OK")
 
     print("Test p and debug-csv-format option ...")
     #
     # Test p and debug-csv-format option
     #
-    if os_name != 'nt' and not check_uncrustify_output(
+    if os_name != 'nt':
+        return_value = check_uncrustify_output(
             uncr_bin,
             parsed_args,
             args_arr=['-c', '-',
                       '-f', s_path_join(script_dir, 'input/class_enum_struct_union.cpp'),
-                      '-p', s_path_join(test_dir, 'results/class_enum_struct_union.csv'),
+                      '-p', s_path_join(script_dir, 'results/class_enum_struct_union.csv'),
                       '--debug-csv-format'],
             gen_expected_path=s_path_join(script_dir, 'output/class_enum_struct_union.csv'),
-            gen_result_path=s_path_join(test_dir, 'results/class_enum_struct_union.csv'),
-            ):
-        return_flag = False
+            gen_result_path=s_path_join(script_dir, 'results/class_enum_struct_union.csv'),
+        )
+
     print("Test p and debug-csv-format option is OK")
 
-    #G#config_D_R = parsed_args.config.lower()
-    #G#print("config is", config_D_R)
     if parsed_args.config.lower() == 'debug':
         print("Test tracking space:FILE ...")
         #
@@ -890,18 +894,16 @@ def main(args):
             print("doesn't work under windows")
         else:
             temp_result_path = s_path_join(script_dir, 'results/Debug_tracking_space.html')
-            args_arr=['-c', s_path_join(script_dir, 'config/tracking_space.cfg'),
-                      '-f', s_path_join(script_dir, 'input/tracking_space.cpp'),
-                      '--tracking', "space:" + temp_result_path
-                      ]
-            print(args_arr)
             return_value = check_uncrustify_output(
                     uncr_bin,
                     parsed_args,
-                    args_arr,
+                    args_arr=['-c', s_path_join(script_dir, 'config/tracking_space.cfg'),
+                              '-f', s_path_join(script_dir, 'input/tracking_space.cpp'),
+                              '--tracking', "space:" + temp_result_path],
                     gen_expected_path=s_path_join(script_dir, 'output/Debug_tracking_space.html'),
                     gen_result_path=temp_result_path
                     )
+
             if not return_value:
                 sys_exit(EX_SOFTWARE)
     else:
@@ -946,14 +948,15 @@ def main(args):
     return_value = check_uncrustify_output(
             uncr_bin,
             parsed_args,
-            args_arr=['-o', s_path_join(test_dir, 'results/universalindent.cfg'),
+            args_arr=['-o', s_path_join(script_dir, 'results/universalindent.cfg'),
                       '--universalindent'],
             gen_expected_path=s_path_join(script_dir, 'output/universalindent.cfg'),
-            gen_result_path=s_path_join(test_dir, 'results/universalindent.cfg'),
+            gen_result_path=s_path_join(script_dir, 'results/universalindent.cfg'),
             gen_result_manip=[reg_replace(r'version=U.+', ''),
                               reg_replace(r'\(\d+\)', ''),
                               reg_replace(r'\r', '')]
             )
+
     # Issue 4379
     if not return_value:
         sys_exit(EX_SOFTWARE)
@@ -972,7 +975,7 @@ def main(args):
                 args_arr=['-c', NULL_DEVICE, '-L', L, '-o', NULL_DEVICE,
                           '-f', s_path_join(script_dir, 'input/testSrc.cpp')],
                 err_expected_path=s_path_join(script_dir, 'output/%s.txt' % L),
-                err_result_path=s_path_join(test_dir, 'results/%s.txt' % L),
+                err_result_path=s_path_join(script_dir, 'results/%s.txt' % L),
                 err_result_manip=[reg_replace(r'\([0-9]+\)', ' '),
                                   reg_replace(r'\:[0-9]+\)', ' '),
                                   reg_replace(r'\[line [0-9]+', '[ '),
@@ -985,6 +988,7 @@ def main(args):
                                   reg_replace(RE_DO_SPACE, ''),
                                   reg_replace(r'Chunk::', '')]
             )
+
         # Issue 4379
         if not return_value:
             sys_exit(EX_SOFTWARE)
@@ -1000,9 +1004,10 @@ def main(args):
     #        args_arr=['-c', NULL_DEVICE, '-L', '99', '-o', NULL_DEVICE,
     #                  '-f', s_path_join(script_dir, 'input/logger.cs')],
     #        err_expected_path=s_path_join(script_dir, 'output/logger_cs_L_99.txt'),
-    #        err_result_path=s_path_join(test_dir, 'results/logger_cs_L_99.txt'),
+    #        err_result_path=s_path_join(script_dir, 'results/logger_cs_L_99.txt'),
     #        err_result_manip=reg_replace(r'[0-9]', '')
     #        )
+
     ## Issue 4379
     #if not return_value:
     #    sys_exit(EX_SOFTWARE)
@@ -1022,6 +1027,7 @@ def main(args):
                 err_expected_path=s_path_join(script_dir, 'output/%s.txt' % test),
                 err_result_path=s_path_join(test_dir, 'results/%s.txt' % test)
                 )
+
         # Issue 4379
         if not return_value:
             sys_exit(EX_SOFTWARE)
@@ -1030,26 +1036,20 @@ def main(args):
 
     print("Test $(year) keyword ...")
     # Test $(year) keyword (issue #3251)
-    if not check_uncrustify_output(
-            uncr_bin,
-            parsed_args,
-            args_arr=['-c', s_path_join(script_dir, 'config/copyright-header.cfg'),
-                      '-f', s_path_join(script_dir, 'input/testSrc.cpp')],
-            out_expected_path=s_path_join(script_dir, 'output/copyright-header.cpp'),
-            out_result_path=s_path_join(test_dir, 'results/copyright-header.cpp'),
-            out_result_manip=string_replace(str(date.today().year), 'this year'),
-            ):
-        return_flag = False
-    print("Test $(year) keyword is OK")
+    return_value = check_uncrustify_output(
+        uncr_bin,
+        parsed_args,
+        args_arr=['-c', s_path_join(script_dir, 'config/copyright-header.cfg'),
+                  '-f', s_path_join(script_dir, 'input/testSrc.cpp')],
+        out_expected_path=s_path_join(script_dir, 'output/copyright-header.cpp'),
+        out_result_path=s_path_join(script_dir, 'results/copyright-header.cpp'),
+        out_result_manip=string_replace(str(date.today().year), 'this year'),
+        )
 
-    return_flag = True
-    if return_flag:
-        print("all tests are OK")
-        sys_exit(EX_OK)
-    else:
-        print("some problem(s) are still present")
+    if not return_value:
         sys_exit(EX_SOFTWARE)
 
+    print("Test $(year) keyword is OK")
 
 if __name__ == "__main__":
     main(argv[1:])
