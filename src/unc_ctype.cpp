@@ -1,4 +1,5 @@
 #include "options.h"
+#include "unc_ctype.h"
 
 
 int unc_fix_ctype(int ch)

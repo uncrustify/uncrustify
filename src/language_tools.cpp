@@ -12,5 +12,5 @@
  */
 bool language_is_set(lang_flag_e lang)
 {
-   return((cpd.lang_flags & (size_t)lang) != 0);
+   return((cpd.lang_flags & static_cast<size_t>(lang)) != 0);
 }

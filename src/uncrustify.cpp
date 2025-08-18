@@ -62,8 +62,11 @@
 #include "width.h"
 
 #include <cerrno>
+#include <cstdio>
+#include <deque>
 #include <fcntl.h>
 #include <map>
+#include <string>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -689,17 +692,18 @@ int main(int argc, char *argv[])
 
    if (html_arg != nullptr)
    {
-      const size_t max_args_length = 256;
+#define MAIN_MAX_ARGS_LENGTH    (256U)
+      const size_t max_args_length = MAIN_MAX_ARGS_LENGTH;
       size_t       argLength       = strlen(html_arg);
 
-      if (argLength > max_args_length)
+      if (argLength > max_args_length - 1)
       {
-         fprintf(stderr, "The buffer is to short for the tracking argument '%s'\n", html_arg);
+         fprintf(stderr, "The buffer is too small for the tracking argument '%s'\n", html_arg);
          log_flush(true);
          exit(EX_SOFTWARE);
       }
-      char buffer[max_args_length];
-      strcpy(buffer, html_arg);
+      char buffer[MAIN_MAX_ARGS_LENGTH];
+      strncpy(buffer, html_arg, sizeof(buffer));
 
       // Tokenize and extract key and value
       const char *tracking_art = strtok(buffer, ":");
@@ -819,17 +823,17 @@ int main(int argc, char *argv[])
 
    while ((p_arg = arg.Params("--set", idx)) != nullptr)
    {
+      const size_t max_args_length = MAIN_MAX_ARGS_LENGTH;
       size_t       argLength       = strlen(p_arg);
-      const size_t max_args_length = 256;
 
-      if (argLength > max_args_length)
+      if (argLength > max_args_length - 1)
       {
-         fprintf(stderr, "The buffer is to short for the set argument '%s'\n", p_arg);
+         fprintf(stderr, "The buffer is too small for the set argument '%s'\n", p_arg);
          log_flush(true);
          exit(EX_SOFTWARE);
       }
-      char buffer[max_args_length];
-      strcpy(buffer, p_arg);
+      char buffer[MAIN_MAX_ARGS_LENGTH];
+      strncpy(buffer, p_arg, sizeof(buffer));
 
       // Tokenize and extract key and value
       const char *token  = strtok(buffer, "=");
@@ -1057,7 +1061,7 @@ int main(int argc, char *argv[])
          exit(EX_CONFIG);
       }
 
-      if (dump_file_name[0] != char(0))                // Issue #3976
+      if (dump_file_name[0] != static_cast<char>(0))                // Issue #3976
       {
          fprintf(stderr, "FAIL: -ds/--dump-steps option must be used with the -f option\n");
          log_flush(true);
@@ -1652,15 +1656,17 @@ static void do_source_file(const char *filename_in,
          {
             // Change - rename filename_tmp to filename_out
 
+            if (
 #ifdef WIN32
-            /*
-             * Atomic rename in windows can't go through stdio rename() func because underneath
-             * it calls MoveFileExW without MOVEFILE_REPLACE_EXISTING.
-             */
-            if (!MoveFileEx(filename_tmp.c_str(), filename_out, MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED))
+               /*
+                * Atomic rename in windows can't go through stdio rename() func because underneath
+                * it calls MoveFileExW without MOVEFILE_REPLACE_EXISTING.
+                */
+               !MoveFileEx(filename_tmp.c_str(), filename_out, MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED)
 #else
-            if (rename(filename_tmp.c_str(), filename_out) != 0)
+               rename(filename_tmp.c_str(), filename_out) != 0
 #endif
+               )
             {
                LOG_FMT(LERR, "%s: Unable to rename '%s' to '%s'\n",
                        __func__, filename_tmp.c_str(), filename_out);

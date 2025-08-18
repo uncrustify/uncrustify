@@ -16,7 +16,12 @@
 #include "uncrustify_limits.h"
 
 #include <assert.h>
-#include <cstddef>      // to get size_t
+#include <cstddef>     // to get size_t
+#include <cstdio>      // for FILE
+#include <deque>       // for deque<>
+#include <string>      // for vector<>
+#include <utility>     // for pair<>
+#include <vector>      // for vector<>
 
 #ifdef HAVE_UTIME_H
 #include <utime.h>
