@@ -151,6 +151,10 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine_of_code,
             }
          }
       }
+      else if (pc->GetOrigLine() > the_line_to_be_prot)
+      {
+         break;
+      }
    }
 
    LOG_FMT(LGUY, "\n");
