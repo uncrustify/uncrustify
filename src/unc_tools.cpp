@@ -59,6 +59,12 @@ void prot_the_line(const char *func_name, int theLine_of_code, size_t the_line_t
 
 void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine_of_code, size_t the_line_to_be_prot, size_t partNumber)
 {
+   if (pc_sub->IsNullChunk())
+   {
+      LOG_FMT(LGUY, "Prot_the_line:(%s:%d) Chunk::GetHead() is not set\n", func_name, theLine_of_code);
+      return;
+   }
+
    if (the_line_to_be_prot == 0)
    {
       // use the option debug_line_number_to_protocol.
