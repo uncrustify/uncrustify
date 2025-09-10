@@ -1269,6 +1269,7 @@ void newlines_cleanup_dup()
       if (  pc->Is(CT_NEWLINE)
          && next->Is(CT_NEWLINE))
       {
+         //                        size_t            size_t
          next->SetNlCount(std::max(pc->GetNlCount(), next->GetNlCount()));
          Chunk::Delete(pc);
          MARK_CHANGE();

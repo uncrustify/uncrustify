@@ -302,6 +302,7 @@ void align_to_column(Chunk *pc, size_t column)
       if (almod == align_mode_e::KEEP_ABS)
       {
          // Keep same absolute column
+         //                size_t            size_t
          pc->SetColumn(max(pc->GetOrigCol(), min_col));
       }
       else if (almod == align_mode_e::KEEP_REL)
@@ -318,6 +319,7 @@ void align_to_column(Chunk *pc, size_t column)
          pc->SetColumn((  col_delta >= 0
                        || (size_t)(abs(col_delta)) < pc->GetColumn())
                       ? pc->GetColumn() + col_delta : 0);
+         //                size_t           size_t
          pc->SetColumn(max(pc->GetColumn(), min_col));
       }
       LOG_FMT(LINDLINED, "%s(%d):   %s set column of '%s', type is %s, orig line is %zu, to col %zu (orig col was %zu)\n",
@@ -1228,6 +1230,7 @@ void indent_text()
                   count++;
                   next = next->GetNextNc();
                }
+               //               size_t
                count = std::min(count, frm.size());
 
                if (count > 0)
@@ -2088,6 +2091,7 @@ void indent_text()
                    * indent_size that was added above and then add indent_case_brace.
                    * may take negative value
                    */
+                  //                    size_t      size_t
                   indent_column_set(max(tmp_indent, 0));
                }
                // Stuff inside the brace still needs to be indented

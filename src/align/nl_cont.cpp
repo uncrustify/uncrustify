@@ -42,7 +42,9 @@ Chunk *align_nl_cont(Chunk *start)
       if (pc->Is(CT_NL_CONT))
       {
          align_add(cs, pc, align_col);
+         //            size_t   size_t
          min_col = min(min_col, pc->GetColumn());
+         //            size_t   size_t
          max_col = max(max_col, pc->GetColumn());
       }
       pc = pc->GetNext();
@@ -51,10 +53,12 @@ Chunk *align_nl_cont(Chunk *start)
 
    if (options::align_nl_cont() == 2) // align with leftmost backslash
    {
+      //               size_t    size_t
       align_col = max(align_col, min_col);
    }
    else if (options::align_nl_cont() == 3) // align with rightmost backslash
    {
+      //              size_t     size_t
       align_col = max(align_col, max_col);
    }
    // NL_CONT is always the last thing on a line
