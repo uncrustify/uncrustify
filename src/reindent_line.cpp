@@ -102,7 +102,22 @@ void reindent_line(Chunk *pc, size_t column)
       }
       else
       {
-         pc->SetColumn(max(pc->GetColumn() + col_delta, min_col));
+         LOG_FMT(LOUTIND, "%s(%d): pc->column %zu\n",
+                 __func__, __LINE__, pc->GetColumn());             // size_t
+         LOG_FMT(LOUTIND, "%s(%d): col_delta %d\n",
+                 __func__, __LINE__, col_delta);                   // int
+         LOG_FMT(LOUTIND, "%s(%d): min_col %zu\n",
+                 __func__, __LINE__, min_col);                     // size_t
+         int imin_col = min_col;
+         LOG_FMT(LOUTIND, "%s(%d): imin_col %d\n",
+                 __func__, __LINE__, imin_col);                    // int
+         int i = pc->GetColumn() + col_delta;
+         LOG_FMT(LOUTIND, "%s(%d): i %d\n",
+                 __func__, __LINE__, i);                           // int
+         int m = max(i, imin_col);
+         LOG_FMT(LOUTIND, "%s(%d): m %d\n",
+                 __func__, __LINE__, m);                           // int
+         pc->SetColumn(m);
 
          LOG_FMT(LINDLINED, "%s(%d): set column of ", __func__, __LINE__);
 
