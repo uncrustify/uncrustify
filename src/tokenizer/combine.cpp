@@ -1613,6 +1613,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          }
          else if (  pc->TestFlags(PCF_IN_PREPROC) // Issue #3559
                  && prev->IsNot(CT_WORD)          // Issue #2205
+                 && prev->IsNot(CT_PAREN_CLOSE)   // Issue #4539
                  && pc->Is(CT_AMP)
                  && next->Is(CT_WORD)
                  && !pc->TestFlags(PCF_IN_SPAREN))
