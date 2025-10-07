@@ -102,7 +102,7 @@ void reindent_line(Chunk *pc, size_t column)
       }
       else
       {
-         int imin_col = min_col;
+         int imin_col = min_col;                                            // Issue #4537
          int i        = pc->GetColumn() + col_delta;
          int m        = max(i, imin_col);
          pc->SetColumn(m);
