@@ -102,7 +102,10 @@ void reindent_line(Chunk *pc, size_t column)
       }
       else
       {
-         pc->SetColumn(max(pc->GetColumn() + col_delta, min_col));
+         int imin_col = min_col;                                            // Issue #4537
+         int i        = pc->GetColumn() + col_delta;
+         int m        = max(i, imin_col);
+         pc->SetColumn(m);
 
          LOG_FMT(LINDLINED, "%s(%d): set column of ", __func__, __LINE__);
 

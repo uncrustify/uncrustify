@@ -1388,7 +1388,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParsingFrame &frm)
    }
    chunk.SetOrigLine(ref->GetOrigLine());
    chunk.SetOrigCol(ref->GetOrigCol());
-   chunk.SetColumn(ref->GetColumn() + ref->Len() + 1);
+   chunk.SetColumn(ref->GetColumn() + ref->Len());              // Issue # 4537
    chunk.SetPpLevel(ref->GetPpLevel());                         // Issue #3055
    chunk.SetType(CT_VBRACE_OPEN);
 
