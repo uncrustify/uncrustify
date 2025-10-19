@@ -24,7 +24,12 @@
 #include "tokenizer/tokenize_cleanup.h"
 #include "uncrustify.h"
 
+#include <cstdio>                      // to get fprintf
 #include <limits>
+#include <map>
+#include <utility>
+#include <vector>
+
 
 constexpr static auto LCURRENT = LCOMBINE;
 

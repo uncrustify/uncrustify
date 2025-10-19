@@ -6,6 +6,8 @@
  * @license GPL v2+
  */
 
+#include <deque>
+
 #include "align/same_func_call_params.h"
 
 #include "align/stack.h"
