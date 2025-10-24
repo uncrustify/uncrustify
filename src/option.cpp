@@ -66,7 +66,7 @@ static const char *DOC_TEXT_END = R"___(
 #     Example:
 #       `file_ext CPP .ch .cxx .cpp.in`
 #
-#     langTypes are defined in uncrusify_types.h in the lang_flag_e enum, use
+#     langTypes are defined in uncrustify_types.h in the lang_flag_e enum, use
 #     them without the 'LANG_' prefix: 'LANG_CPP' => 'CPP'
 #
 #
