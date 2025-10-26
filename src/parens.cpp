@@ -275,7 +275,6 @@ static void add_parens_between(Chunk *first, Chunk *last)
 
    pc.SetType(CT_PAREN_CLOSE);
    pc.SetOrigLine(last_prev->GetOrigLine());
-   pc.SetOrigCol(last_prev->GetOrigCol());
    pc.SetColumn(last_prev->GetColumn() + 1);                         // Issue #3236
    pc.SetOrigCol(last_prev->GetOrigCol() + 1);                       // Issue #3236
    pc.SetOrigColEnd(last_prev->GetOrigColEnd() + 1);                 // Issue #3236
