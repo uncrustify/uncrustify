@@ -1492,6 +1492,21 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_before_byref());
    }
 
+   // Reference qualifier spacing (&& or & in function declarations)
+   if (first->Is(CT_REF_QUALIFIER))
+   {
+      // Add or remove space after reference qualifier ('&' or '&&') in function declarations.
+      log_rule("sp_after_ref_qualifier");
+      return(options::sp_after_ref_qualifier());
+   }
+
+   if (second->Is(CT_REF_QUALIFIER))
+   {
+      // Add or remove space before reference qualifier ('&' or '&&') in function declarations.
+      log_rule("sp_before_ref_qualifier");
+      return(options::sp_before_ref_qualifier());
+   }
+
    if (first->Is(CT_SPAREN_CLOSE))
    {
       if (second->Is(CT_BRACE_OPEN))
