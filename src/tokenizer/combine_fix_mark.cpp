@@ -777,14 +777,16 @@ Chunk *fix_variable_definition(Chunk *start)
    {
       return(skip_to_next_statement(end));
    }
-   LOG_FMT(LFVD2, "%s(%d): orig line is %zu, TYPE : ", __func__, __LINE__, start->GetOrigLine());
+   LOG_FMT(LFVD2, "%s(%d): orig line is %zu, TYPE : ",
+           __func__, __LINE__, start->GetOrigLine());
 
    for (size_t idxForCs = 0; idxForCs < cs.Len() - 1; idxForCs++)
    {
       tmp_pc = cs.Get(idxForCs)->m_pc;
       make_type(tmp_pc);
       tmp_pc->SetFlagBits(PCF_VAR_TYPE);
-      LOG_FMT(LFVD2, " Text() is '%s', type is %s", tmp_pc->Text(), get_token_name(tmp_pc->GetType()));
+      LOG_FMT(LFVD2, " %s(%d): GM: Text() is '%s', type is %s\n",
+              __func__, __LINE__, tmp_pc->Text(), get_token_name(tmp_pc->GetType()));
    }
 
    LOG_FMT(LFVD2, "\n");

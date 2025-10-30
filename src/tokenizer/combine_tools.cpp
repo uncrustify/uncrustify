@@ -375,7 +375,9 @@ bool chunk_ends_type(Chunk *start)
                   get_cpp_template_angle_nest_level(pc))
             && last_expr)
          || (  pc->Is(CT_SPAREN_OPEN)
-            && last_lval))
+            && last_lval)
+         || pc->TestFlags(PCF_IN_PREPROC)                                // Issue 4546
+)
       {
          ret = cnt > 0;
       }
