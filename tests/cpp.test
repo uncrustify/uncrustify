@@ -199,6 +199,7 @@
 30169  cpp/nl_comment_func_def-1.cfg                        cpp/nl_comment_func_def-1.cpp
 
 30170  common/empty.cfg                                     cpp/Issue_4539.cpp
+30171  cpp/Issue_4546.cfg                                   cpp/Issue_4546.cpp
 
 30200  cpp/bug_1862.cfg                                     cpp/bug_1862.cpp
 30201  cpp/cmt_indent-1.cfg                                 cpp/cmt_indent.cpp
