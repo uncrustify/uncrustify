@@ -23,7 +23,7 @@ debug_decode_the_flags          = true
          The flags are: [0x80001:IN_PREPROC,EXPR_START]
 #   2>               WORD|               NONE|     PARENT_NOT_SET[  9/  1/  7/  0][1/1/0][             8 0001][0-0]         s8_foo
          The flags are: [0x80001:IN_PREPROC,EXPR_START]
-#   2>              ARITH|               NONE|     PARENT_NOT_SET[ 16/  8/  9/  1][1/1/0][        2 0000 0001][0-0]                *
+#   2>           PTR_TYPE|               NONE|     PARENT_NOT_SET[ 16/  8/  9/  1][1/1/0][        2 0000 0001][0-0]                *
          The flags are: [0x200000001:IN_PREPROC,PUNCTUATOR]
 #   2>               WORD|               NONE|     PARENT_NOT_SET[ 18/ 10/ 17/  1][1/1/0][             8 0001][0-0]                  s16_bar
          The flags are: [0x80001:IN_PREPROC,EXPR_START]
