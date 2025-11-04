@@ -1549,7 +1549,7 @@ void indent_text()
                }
             }
          }
-         else if (frm.top().GetBraceIndent() != 0)             // Issue #3421, #4556
+         else if (frm.top().GetBraceIndent()) // Issue #3421
          {
             // Indent the brace to match the open brace
             indent_column_set(frm.top().GetBraceIndent());
