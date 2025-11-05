@@ -509,7 +509,16 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
             || pc->Is(CT_VBRACE_CLOSE)
             || pc->Is(CT_MACRO_CLOSE))
          {
-            frm.SetBraceLevel(frm.GetBraceLevel() - 1);
+            size_t tmp = frm.GetBraceLevel();
+
+            if (tmp == 0)
+            {
+               frm.SetBraceLevel(0);
+            }
+            else
+            {
+               frm.SetBraceLevel(frm.GetBraceLevel() - 1);
+            }
             LOG_FMT(LBCSPOP, "%s(%d): frame brace level decreased to %zu",
                     __func__, __LINE__, frm.GetBraceLevel());
             log_pcf_flags(LBCSPOP, pc->GetFlags());
