@@ -434,7 +434,7 @@ inline size_t ParenStackEntry::GetOpenLevel() const
 inline void ParenStackEntry::SetOpenLevel(size_t level)
 {
 #ifdef DEBUG
-   if(level > 10000)
+   if (level > 10000)
    {
       fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
               __func__, __LINE__, level);
