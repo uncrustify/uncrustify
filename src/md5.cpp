@@ -76,6 +76,11 @@ MD5::MD5()
    m_in8           = reinterpret_cast<UINT8 *>(m_in32);
    m_need_byteswap = *reinterpret_cast<UINT8 *>(m_buf) != 4;
    m_big_endian    = *reinterpret_cast<UINT8 *>(m_buf) == 1;
+
+   // Initialise all fields
+   m_bits[0] = 0;
+   m_bits[1] = 0;
+   memset(m_in32, 0, sizeof(m_in32));
 }
 
 
