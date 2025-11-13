@@ -54,6 +54,7 @@ static inline size_t calc_next_tab_column(size_t col, size_t tabsize)
  */
 static inline size_t next_tab_column(size_t col)
 {
+   // For log_rule_B cppcheck-suppress shadowVariable
    constexpr static auto LCURRENT = LINDENT;
 
    log_rule_B("output_tab_size");
