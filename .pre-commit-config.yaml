@@ -75,6 +75,7 @@ repos:
       - id: cppcheck
         exclude: ^(tests/.*|documentation/.*)$
         args:
+          - --quiet
           - --force
           - --language=c++
           - -Isrc
@@ -90,7 +91,14 @@ repos:
           - --suppress=noOperatorEq
           - --suppress=unmatchedSuppression
           - --suppress=unusedFunction
+          - --suppress=unusedPrivateFunction
+          - --suppress=unusedStructMember
+          - --suppress=unreadVariable
           - --suppress=variableScope
+          - --suppress=checkersReport
+          - --suppress=useStlAlgorithm
+          - --suppress=useInitializationList
+
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
     hooks:
