@@ -672,6 +672,7 @@ void dump_in(size_t type)
                // add the chunk in the list
                chunk.CopyAndAddBefore(Chunk::NullChunkPtr);
                chunk.Reset();
+               // cppcheck-suppress redundantAssignment
                aNewChunkIsFound = true;
                continue;
             }
