@@ -2324,9 +2324,9 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
             return(true);
          }
       }
-      else if (  (  quote == '"'                  // 34
-                 || quote == '\'')                // 39
-              && parse_string(ctx, pc, idx, true))
+      else if (  (  quote == '"'                   // 34
+                 || quote == '\'')                 // 39
+              && parse_string(ctx, pc, idx, true)) // cppcheck-suppress knownConditionTrueFalse
       {
          return(true);
       }
