@@ -2754,7 +2754,7 @@ void indent_text()
                   && frm.at(idx).GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()))
             {
                idx--;
-               skipped = true;
+               // skipped = true;  // Assigned true at end of code block.
             }
             frm.top().SetIndent(frm.at(idx).GetIndent() + indent_size);
             log_indent();
@@ -2807,7 +2807,7 @@ void indent_text()
                         && frm.at(sub).GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()))
                   {
                      sub--;
-                     skipped = true;
+                     // skipped = true;  // Set to true at the end of the code block
                   }
 
                   if (  (  frm.at(sub + 1).GetOpenToken() == CT_CLASS_COLON
