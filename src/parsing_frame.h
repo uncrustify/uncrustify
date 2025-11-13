@@ -12,6 +12,7 @@
 
 #include "uncrustify_types.h"
 
+#include <cstdio>
 #include <vector>
 
 
