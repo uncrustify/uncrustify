@@ -25,7 +25,7 @@ constexpr static auto LCURRENT = LNEWLINE;
 using namespace uncrustify;
 
 
-void blank_line_max(Chunk *pc, Option<unsigned> &opt)
+void blank_line_max(Chunk *pc, const Option<unsigned> &opt)
 {
    LOG_FUNC_ENTRY();
 
@@ -46,7 +46,7 @@ void blank_line_max(Chunk *pc, Option<unsigned> &opt)
 } // blank_line_max
 
 
-void blank_line_set(Chunk *pc, Option<unsigned> &opt)
+void blank_line_set(Chunk *pc, const Option<unsigned> &opt)
 {
    LOG_FUNC_ENTRY();
 
@@ -431,7 +431,7 @@ void do_blank_lines()
             || prev->GetParentType() == CT_UNION
             || prev->GetParentType() == CT_CLASS))
       {
-         auto &opt = (prev->GetParentType() == CT_CLASS
+         const auto &opt = (prev->GetParentType() == CT_CLASS
          ? options::nl_after_class
          : options::nl_after_struct);
          log_rule_B("nl_after_class");
