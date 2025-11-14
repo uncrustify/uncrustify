@@ -10,6 +10,7 @@
 #include "base_types.h"
 #include "enum_flags.h"
 #include "logger.h"
+#include <string>
 
 
 constexpr auto pcf_bit(size_t b) -> decltype(0ULL)

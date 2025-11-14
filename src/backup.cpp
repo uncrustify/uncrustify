@@ -30,6 +30,8 @@
 #include "unc_ctype.h"
 
 #include <cerrno>
+#include <cstdio>                              // to get fclose
+#include <vector>                              // to get vector<>
 
 using namespace std;
 

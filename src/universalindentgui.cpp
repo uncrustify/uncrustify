@@ -179,7 +179,7 @@ void print_universal_indent_cfg(FILE *pfile)
           * by replacing '_' by a space and use some upper case characters.
           */
          char *optionNameReadable = new char[strlen(option->name()) + 1];
-         strcpy(optionNameReadable, option->name());
+         snprintf(optionNameReadable, strlen(option->name()) + 1, "%s", option->name());
 
          bool was_space = true;
 

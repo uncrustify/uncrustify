@@ -12,6 +12,7 @@
 #include "unc_ctype.h"
 #include "uncrustify_limits.h"
 
+#include <cstdio>
 #include <cstring>
 
 Args::Args(int argc, char **argv)

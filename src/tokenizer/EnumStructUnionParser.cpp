@@ -12,6 +12,10 @@
 #include "tokenizer/combine_tools.h"
 #include "tokenizer/flag_parens.h"
 
+#include <map>             // to get map<>
+#include <tuple>
+#include <utility>
+
 
 /**
  * Extern declarations

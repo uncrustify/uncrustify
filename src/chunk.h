@@ -10,6 +10,8 @@
 #ifndef CHUNK_LIST_H_INCLUDED
 #define CHUNK_LIST_H_INCLUDED
 
+#include <cstdio>
+
 #include "uncrustify_types.h"
 // necessary to not sort it
 #include "char_table.h"
@@ -1842,7 +1844,7 @@ inline bool Chunk::IsSamePreproc(const Chunk *other) const
 
 inline bool Chunk::SafeToDeleteNl() const
 {
-   Chunk *tmp = GetPrev();
+   const Chunk *tmp = GetPrev();
 
    if (tmp->Is(CT_COMMENT_CPP))
    {

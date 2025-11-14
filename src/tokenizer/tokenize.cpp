@@ -14,6 +14,7 @@
 #include "punctuators.h"
 #include "unc_ctype.h"
 
+#include <deque>                    // to get deque<>
 #include <regex>
 #include <stack>
 
@@ -2059,9 +2060,9 @@ static bool parse_ignored(TokenContext &ctx, Chunk &pc)
 
    // HACK: turn on if we find '#endasm' or '#pragma' and 'endasm' separated by blanks
    if (  (  (  (pc.GetStr().find("#pragma ") >= 0)
-            || (pc.GetStr().find("#pragma	") >= 0))
+            || (pc.GetStr().find("#pragma\t") >= 0))
          && (  (pc.GetStr().find(" endasm") >= 0)
-            || (pc.GetStr().find("	endasm") >= 0)))
+            || (pc.GetStr().find("\tendasm") >= 0)))
       || (pc.GetStr().find("#endasm") >= 0))
    {
       cpd.unc_off = false;
@@ -2323,9 +2324,9 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
             return(true);
          }
       }
-      else if (  (  quote == '"'                  // 34
-                 || quote == '\'')                // 39
-              && parse_string(ctx, pc, idx, true))
+      else if (  (  quote == '"'                   // 34
+                 || quote == '\'')                 // 39
+              && parse_string(ctx, pc, idx, true)) // cppcheck-suppress knownConditionTrueFalse
       {
          return(true);
       }
@@ -2605,7 +2606,7 @@ int find_disable_processing_comment_marker(const UncText &text,
 
          if (!match.empty())
          {
-            idx = int(match.position() + start_idx);
+            idx = static_cast<int>(match.position() + start_idx);
          }
       }
       else
@@ -2615,7 +2616,7 @@ int find_disable_processing_comment_marker(const UncText &text,
 
          if (idx >= 0)
          {
-            idx += int(offtext.size());
+            idx += static_cast<int>(offtext.size());
          }
       }
 
@@ -2658,7 +2659,7 @@ int find_enable_processing_comment_marker(const UncText &text,
 
          if (!match.empty())
          {
-            idx = int(start_idx + match.position() + match.size());
+            idx = static_cast<int>(start_idx + match.position() + match.size());
          }
       }
       else
@@ -2668,7 +2669,7 @@ int find_enable_processing_comment_marker(const UncText &text,
 
          if (idx >= 0)
          {
-            idx += int(ontext.size());
+            idx += static_cast<int>(ontext.size());
          }
       }
 
@@ -2677,7 +2678,7 @@ int find_enable_processing_comment_marker(const UncText &text,
        */
       if (idx >= 0)
       {
-         while (  idx < int(text.size())
+         while (  idx < static_cast<int>(text.size())
                && text[idx] != '\n')
          {
             ++idx;

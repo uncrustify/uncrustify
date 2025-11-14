@@ -9,6 +9,10 @@
 
 #include "keywords.h"
 
+#include <cstdio>  // to get fprintf
+#include <string>  // to get string
+
+
 static lang_name_t language_names[] =
 {
    { "C",        e_LANG_C                           },  // 0x0001
@@ -78,7 +82,7 @@ size_t language_flags_from_name(const char *name)
 const char *language_name_from_flags(size_t lang)
 {
    // Check for an exact match first
-   for (auto &language_name : language_names)
+   for (const auto &language_name : language_names)
    {
       if (language_name.lang == lang)
       {
@@ -90,7 +94,7 @@ const char *language_name_from_flags(size_t lang)
    lang_liste[0] = '\0';
 
    // Check for the next set language bit
-   for (auto &language_name : language_names)
+   for (const auto &language_name : language_names)
    {
       if (strcmp(language_name.name, "OC+") == 0)
       {
@@ -101,13 +105,12 @@ const char *language_name_from_flags(size_t lang)
       {
          if (lang_liste[0] == '\0')
          {
-            strcpy(lang_liste, language_name.name);
+            snprintf(lang_liste, sizeof(lang_liste), "%s", language_name.name);
          }
          else
          {
             int ll = strlen(lang_liste);
-            strcpy(&lang_liste[ll], ", ");
-            strcpy(&lang_liste[ll + 2], language_name.name);
+            snprintf(lang_liste + ll, sizeof(lang_liste) - ll, ", %s", language_name.name);
          }
       }
    }
@@ -162,7 +165,7 @@ const char *extension_add(const char *ext_text, const char *lang_text)
 
 void print_extensions(FILE *pfile)
 {
-   for (auto &language : language_names)
+   for (const auto &language : language_names)
    {
       bool did_one = false;
 
@@ -216,7 +219,7 @@ size_t language_flags_from_filename(const char *filename)
       }
    }
 
-   for (auto &language : language_exts)
+   for (const auto &language : language_exts)
    {
       if (ends_with(filename, language.ext, false))
       {
