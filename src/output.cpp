@@ -15,7 +15,7 @@
 #include "reindent_line.h"
 #include "tokenizer/tokenize.h"
 #include "unc_ctype.h"
-#include "uncrustify_version.h"
+#include "uncrustify_version.h"  // cppcheck-suppress missingInclude
 #include "unicode.h"
 
 #include <algorithm>
@@ -275,7 +275,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc);
  *  2. There is exactly one newline between then
  *  3. They are indented to the same level
  */
-static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt);
+static bool can_combine_comment(Chunk *pc, const cmt_reflow &cmt);
 
 
 #define LOG_CONTTEXT() \
@@ -1862,7 +1862,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
 } // output_cmt_start
 
 
-static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt)
+static bool can_combine_comment(Chunk *pc, const cmt_reflow &cmt)
 {
    // We can't combine if there is something other than a newline next
    if (pc->GetParentType() == CT_COMMENT_START)
