@@ -44,7 +44,7 @@
 #include "semicolons.h"
 #include "sorting.h"
 #include "space.h"
-#include "token_names.h"
+#include "token_names.h" // cppcheck-suppress missingInclude
 #include "tokenizer/brace_cleanup.h"
 #include "tokenizer/combine.h"
 #include "tokenizer/enum_cleanup.h"
@@ -56,7 +56,7 @@
 #include "too_big_for_nl_max.h"
 #include "unc_ctype.h"
 #include "unc_tools.h"
-#include "uncrustify_version.h"
+#include "uncrustify_version.h" // cppcheck-suppress missingInclude
 #include "unicode.h"
 #include "universalindentgui.h"
 #include "width.h"
@@ -144,10 +144,10 @@ static void add_file_header();
 static void add_file_footer();
 
 
-static void add_func_header(E_Token type, file_mem &fm);
+static void add_func_header(E_Token type, const file_mem &fm);
 
 
-static void add_msg_header(E_Token type, file_mem &fm);
+static void add_msg_header(E_Token type, const file_mem &fm);
 
 
 static void process_source_list(const char *source_list, const char *prefix, const char *suffix, bool no_backup, bool keep_mtime, bool is_quiet);
@@ -398,7 +398,7 @@ void setup_crash_handling()
             // won't care about the difference. they just want to know it failed.
             exit(EXIT_FAILURE);
          }
-         __except (EXCEPTION_EXECUTE_HANDLER)
+         __except (EXCEPTION_EXECUTE_HANDLER)  // cppcheck-suppress unreachableCode
          {
             // have to be careful of crashes in crash handling code
          }
@@ -1480,15 +1480,15 @@ static bool bout_content_matches(const file_mem &fm, bool report_status, bool is
       if (report_status)
       {
          fprintf(stderr, "FAIL: %s (File size changed from %u to %u)\n",
-                 cpd.filename.c_str(), static_cast<int>(fm.raw.size()),
-                 static_cast<int>(cpd.bout->size()));
+                 cpd.filename.c_str(), static_cast<unsigned>(fm.raw.size()),
+                 static_cast<unsigned>(cpd.bout->size()));
          log_flush(true);
       }
       is_same = false;
    }
    else
    {
-      for (int idx = 0; idx < static_cast<int>(fm.raw.size()); idx++)
+      for (unsigned idx = 0; idx < static_cast<unsigned>(fm.raw.size()); idx++)
       {
          if (fm.raw[idx] != (*cpd.bout)[idx])
          {
@@ -1510,7 +1510,7 @@ static bool bout_content_matches(const file_mem &fm, bool report_status, bool is
       if (!is_quiet)
       {
          fprintf(stdout, "PASS: %s (%u bytes)\n",
-                 cpd.filename.c_str(), static_cast<int>(fm.raw.size()));
+                 cpd.filename.c_str(), static_cast<unsigned>(fm.raw.size()));
       }
    }
    return(is_same);
@@ -1726,7 +1726,7 @@ static void add_file_footer()
 }
 
 
-static void add_func_header(E_Token type, file_mem &fm)
+static void add_func_header(E_Token type, const file_mem &fm)
 {
    Chunk *pc;
    Chunk *ref;
@@ -1881,7 +1881,7 @@ static void add_func_header(E_Token type, file_mem &fm)
 } // add_func_header
 
 
-static void add_msg_header(E_Token type, file_mem &fm)
+static void add_msg_header(E_Token type, const file_mem &fm)
 {
    Chunk *pc;
    Chunk *ref;
