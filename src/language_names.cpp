@@ -82,7 +82,7 @@ size_t language_flags_from_name(const char *name)
 const char *language_name_from_flags(size_t lang)
 {
    // Check for an exact match first
-   for (auto &language_name : language_names)
+   for (const auto &language_name : language_names)
    {
       if (language_name.lang == lang)
       {
@@ -94,7 +94,7 @@ const char *language_name_from_flags(size_t lang)
    lang_liste[0] = '\0';
 
    // Check for the next set language bit
-   for (auto &language_name : language_names)
+   for (const auto &language_name : language_names)
    {
       if (strcmp(language_name.name, "OC+") == 0)
       {
@@ -165,7 +165,7 @@ const char *extension_add(const char *ext_text, const char *lang_text)
 
 void print_extensions(FILE *pfile)
 {
-   for (auto &language : language_names)
+   for (const auto &language : language_names)
    {
       bool did_one = false;
 
@@ -219,7 +219,7 @@ size_t language_flags_from_filename(const char *filename)
       }
    }
 
-   for (auto &language : language_exts)
+   for (const auto &language : language_exts)
    {
       if (ends_with(filename, language.ext, false))
       {
