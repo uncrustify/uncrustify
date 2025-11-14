@@ -52,16 +52,37 @@ jobs:
       - uses: actions/checkout@v4
       - run: python -m pip install pre-commit
       - uses: actions/cache/restore@v4
+        if: github.event_name == 'pull_request'
         with:
-          path: ~/.cache/pre-commit/
-          key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+          path: .cache/cppcheck
+          key: cppcheck-cache-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            cppcheck-cache-${{ github.base_ref }}-
+            cppcheck-cache-
+      - uses: actions/cache/restore@v4
+        if: github.event_name != 'pull_request'
+        with:
+          path: .cache/cppcheck
+          key: cppcheck-cache-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            cppcheck-cache-
       - name: Run pre-commit hooks
         env:
           SKIP: no-commit-to-branch
         run: |
           set -o pipefail
+          mkdir -p .cache/cppcheck
           pre-commit gc
           pre-commit run --show-diff-on-failure --color=always --all-files | tee ${RAW_LOG}
+      - uses: actions/cache/save@v4
+        if: ${{ ! cancelled() }}
+        with:
+          path: .cache/cppcheck
+          key: cppcheck-cache-${{ github.ref_name }}-${{ github.sha }}
+      - uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/pre-commit/
+          key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2025.1.1
         if: ${{ failure() }}
