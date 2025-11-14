@@ -33,7 +33,7 @@ using namespace uncrustify;
 
 #include "symbols_table.h"
 // must be positioned here, after all symbolsX[], because punc_table uses them
-#include "punctuator_table.h"
+#include "punctuator_table.h" // cppcheck-suppress missingInclude
 
 
 const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
@@ -81,7 +81,7 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
       }
       parent = &punc_table[parent->next_idx]; // point at the first child node
       ch_idx++;
-      continue;
+      // continue;  // Redundant, last statement in while block.
    }
    return(match);
 } // find_punctuator
