@@ -78,6 +78,7 @@ repos:
           - --quiet
           - --force
           - --language=c++
+          - --cppcheck-build-dir=.cache/cppcheck/
           - -Isrc
           - '--template={file}({line}): {severity} ({id}): {message}'
           - --inline-suppr
