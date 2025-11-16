@@ -2,10 +2,6 @@
  Uncrustify Release Process
 ============================
 
-.. Update the date in the next line when editing this document!
-
-*This document was last updated on 2025/05/17, for Uncrustify 0.81.0.*
-
 This document uses "0.x.0" throughout as an example version number.
 Whenever you see this, you should substitute the version number
 of the new release being prepared.
@@ -44,8 +40,8 @@ Preliminary checks
 
 Prior to making a release, verify that the repository is in a stable state
 and that all CI (continuous integration - AppVeyor) has passed.
-This should ensure all tests pass and building
-(including cross-compiling) for Windows is working.
+This should ensure all tests pass and building is working,
+including cross-compiling for Windows.
 
 Before starting the release process, first check that:
 
@@ -90,8 +86,7 @@ To get a new PAT for your admin account follow these steps:
 Preparing a Candidate
 =====================
 
-First update the version number and date at the beginning of this document
-and then update the list of authors with:
+First update the list of authors with:
 
   .. code::
 
