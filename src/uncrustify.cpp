@@ -362,10 +362,14 @@ NODISCARD static int redir_stdout(const char *output_file)
          LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
                  output_file, strerror(errno), errno);
          usage_error();
-         exit(EX_IOERR);
+         /* EX_IOERR   74   input/output error */
+         return(EX_IOERR);
       }
       LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
    }
+   /* EXIT_FAILURE   1   Failing exit status.  */
+   /* EXIT_SUCCESS   0   Successful exit status.  */
+
    return(EXIT_SUCCESS);
 }
 
