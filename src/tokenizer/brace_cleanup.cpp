@@ -18,7 +18,8 @@
 #include "tokenizer/flag_parens.h"
 #include "uncrustify.h"
 
-#include <stdexcept>            // to get std::invalid_argument
+#include <stdexcept>           // to get std::invalid_argument
+#include <string>              // to get std::string
 
 
 constexpr static auto LCURRENT = LBC;

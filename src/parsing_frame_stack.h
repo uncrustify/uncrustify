@@ -10,6 +10,7 @@
 #define PARSING_FRAME_STACK_H_INCLUDED
 
 #include "parsing_frame.h"
+#include <vector>
 
 //! Class describing a parsing frame stack
 class ParsingFrameStack

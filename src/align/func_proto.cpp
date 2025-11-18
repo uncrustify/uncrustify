@@ -11,6 +11,7 @@
 #include "align/stack.h"
 #include "align/tools.h"
 #include "log_rules.h"
+#include <vector>
 
 constexpr static auto LCURRENT = LALPROTO;
 

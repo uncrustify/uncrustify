@@ -11,6 +11,7 @@
 #include "log_rules.h"
 
 #include <algorithm>                           // to get max
+#include <cstdio>                              // to get fprintf
 
 
 constexpr static auto LCURRENT = LALIGN;

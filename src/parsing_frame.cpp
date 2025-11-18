@@ -13,7 +13,10 @@
 #include "options.h"
 #include "uncrustify.h"
 
+#include <cstdio>
 #include <stdexcept>            // to get std::logic_error
+#include <string>
+#include <vector>               // to get std::vector
 
 
 using std::string;

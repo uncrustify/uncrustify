@@ -19,7 +19,9 @@
 
 #include <cctype>                    // to get std::tolower
 #include <cstdarg>                   // to get va_start, va_end
-
+#include <cstdio>                    // to get fprintf
+#include <string>                    // to get std::string
+#include <vector>                    // to get std::vector
 
 namespace uncrustify
 {

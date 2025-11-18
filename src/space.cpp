@@ -29,6 +29,8 @@
 #include <algorithm>                   // to get max
 #endif // ifdef WIN32
 
+#include <cstdio>                      // to get snprintf
+
 
 constexpr static auto LCURRENT = LSPACE;
 

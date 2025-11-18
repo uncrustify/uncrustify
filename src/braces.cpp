@@ -6,6 +6,9 @@
  * @license GPL v2+
  */
 
+#include <cstdio>  // for fprintf
+#include <vector>  // for vector<>
+
 #include "braces.h"
 
 #include "calculate_closing_brace_position.h"
