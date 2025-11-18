@@ -91,11 +91,7 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine_of_code,
          {
             LOG_FMT(LGUY, " orig line is %zu, (%zu) ", the_line_to_be_prot, tokenCounter);
 
-            if (pc->Is(CT_VBRACE_OPEN))
-            {
-               LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
-            }
-            else if (pc->Is(CT_NEWLINE))
+            if (pc->Is(CT_NEWLINE))
             {
                LOG_FMT(LGUY, "<NL>(new line count is %zu), ", pc->GetNlCount());
             }
@@ -341,11 +337,7 @@ void prot_some_lines(const char *func_name, int theLine_of_code, size_t from_lin
 
          LOG_FMT(LGUY, " orig line is %zu, (%zu), ", lineNumber, tokenCounter);
 
-         if (pc->Is(CT_VBRACE_OPEN))
-         {
-            LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
-         }
-         else if (pc->Is(CT_NEWLINE))
+         if (pc->Is(CT_NEWLINE))
          {
             LOG_FMT(LGUY, "<NL>(new line count is %zu), ", pc->GetNlCount());
             tokenCounter = 0;
@@ -426,11 +418,7 @@ void prot_all_lines(const char *func_name, int theLine_of_code)
 
       LOG_FMT(LGUY, " orig line is %zu,%zu, orig column is %zu, ", pc->GetOrigLine(), tokenCounter, pc->GetOrigCol());
 
-      if (pc->Is(CT_VBRACE_OPEN))
-      {
-         LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
-      }
-      else if (pc->Is(CT_NEWLINE))
+      if (pc->Is(CT_NEWLINE))
       {
          LOG_FMT(LGUY, "<NL>(new line count is %zu), ", pc->GetNlCount());
          tokenCounter = 0;
