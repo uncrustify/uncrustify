@@ -10,6 +10,7 @@
 
 #include "chunk.h"
 #include "uncrustify.h"
+#include <vector> // Added this line
 
 using std::vector;
 

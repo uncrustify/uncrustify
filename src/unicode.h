@@ -9,6 +9,8 @@
 #define UNICODE_H_INCLUDED
 
 #include "uncrustify_types.h"
+#include <deque>
+#include <vector>
 
 
 void write_bom();

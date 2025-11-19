@@ -17,6 +17,9 @@
 #include "tokenizer/flag_decltype.h"
 #include "uncrustify.h"
 
+#include <cstdio>         // to get fprintf
+#include <vector>
+
 
 constexpr static auto LCURRENT = LTEMPL;
 

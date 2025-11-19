@@ -62,6 +62,8 @@
 #include "width.h"
 
 #include <cerrno>
+#include <cstdio>
+#include <deque>
 #include <fcntl.h>
 #include <map>
 #ifdef HAVE_UNISTD_H

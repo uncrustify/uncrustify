@@ -18,10 +18,14 @@
 #include "uncrustify_version.h"
 #include "unicode.h"
 
+#include <algorithm>
+#include <cstdio>
 #include <ctime>
 #include <map>
 #include <regex>
 #include <set>
+#include <string>
+#include <utility>
 
 // if you need more logs, commented out the next define line
 #define EXTRA_LOG

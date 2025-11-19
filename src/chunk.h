@@ -10,6 +10,8 @@
 #ifndef CHUNK_LIST_H_INCLUDED
 #define CHUNK_LIST_H_INCLUDED
 
+#include <cstdio>
+
 #include "uncrustify_types.h"
 // necessary to not sort it
 #include "char_table.h"

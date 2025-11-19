@@ -8,6 +8,8 @@
 
 #ifndef WIN32
 
+#include <string>
+
 #include "uncrustify_types.h"
 
 

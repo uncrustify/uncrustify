@@ -111,7 +111,6 @@ void newlines_class_colon_pos(E_Token tok)
          if (  !prev->IsNewline()
             && !next->IsNewline()
             && (anc & IARF_ADD))                   // nl_class_colon, nl_constr_colon: 1
-
          {
             newline_add_after(pc);
             prev = pc->GetPrevNc();
