@@ -73,9 +73,14 @@ MD5::MD5()
     * The MD5 stuff is written for little endian.
     */
 
-   m_in8           = (UINT8 *)m_in32;
-   m_need_byteswap = *(UINT8 *)m_buf != 4;
-   m_big_endian    = *(UINT8 *)m_buf == 1;
+   m_in8           = reinterpret_cast<UINT8 *>(m_in32);
+   m_need_byteswap = *reinterpret_cast<UINT8 *>(m_buf) != 4;
+   m_big_endian    = *reinterpret_cast<UINT8 *>(m_buf) == 1;
+
+   // Initialise all fields
+   m_bits[0] = 0;
+   m_bits[1] = 0;
+   memset(m_in32, 0, sizeof(m_in32));
 }
 
 
@@ -95,7 +100,7 @@ void MD5::Init()
 //! Update context to reflect the concatenation of another buffer full of bytes.
 void MD5::Update(const void *data, UINT32 len)
 {
-   const UINT8 *buf = (const UINT8 *)data;
+   const UINT8 *buf = reinterpret_cast<const UINT8 *>(data);
 
    UINT32      t = m_bits[0]; // Update bitcount
 
@@ -197,7 +202,7 @@ void MD5::Final(UINT8 digest[16])
 
    if (m_need_byteswap)
    {
-      reverse_u32((UINT8 *)m_buf, 4);
+      reverse_u32(reinterpret_cast<UINT8 *>(m_buf), 4);
    }
    memcpy(digest, m_buf, 16);
 } // MD5::Final
