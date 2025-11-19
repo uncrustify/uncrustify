@@ -15,7 +15,7 @@
 #include "reindent_line.h"
 #include "tokenizer/tokenize.h"
 #include "unc_ctype.h"
-#include "uncrustify_version.h"
+#include "uncrustify_version.h"  // cppcheck-suppress missingInclude
 #include "unicode.h"
 
 #include <algorithm>
@@ -275,7 +275,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc);
  *  2. There is exactly one newline between then
  *  3. They are indented to the same level
  */
-static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt);
+static bool can_combine_comment(Chunk *pc, const cmt_reflow &cmt);
 
 
 #define LOG_CONTTEXT() \
@@ -531,10 +531,10 @@ void output_parsed(FILE *pfile, bool withOptions)
    {
 #ifdef WIN32
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
-              eol_marker, (int)pc->GetOrigLine(), get_token_name(pc->GetType()),
+              eol_marker, static_cast<int>(pc->GetOrigLine()), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              (int)pc->GetColumn(), (int)pc->GetOrigCol(), (int)pc->GetOrigColEnd(), (int)pc->GetOrigPrevSp(),
-              (int)pc->GetBraceLevel(), (int)pc->GetLevel(), (int)pc->GetPpLevel(), (int)pc->GetNlCount(), pc->GetAfterTab());
+              static_cast<int>(pc->GetColumn()), static_cast<int>(pc->GetOrigCol()), static_cast<int>(pc->GetOrigColEnd()), static_cast<int>(pc->GetOrigPrevSp()),
+              static_cast<int>(pc->GetBraceLevel()), static_cast<int>(pc->GetLevel()), static_cast<int>(pc->GetPpLevel()), static_cast<int>(pc->GetNlCount()), pc->GetAfterTab());
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3zu][%zu/%zu/%zu]",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
@@ -936,11 +936,11 @@ void output_text(FILE *pfile)
                   {
                      int orig_sp = pc->GetOrigPrevSp();
 
-                     if ((int)(cpd.column + orig_sp) < 0)
+                     if (static_cast<int>(cpd.column + orig_sp) < 0)
                      {
 #ifdef WIN32
                         fprintf(stderr, "FATAL: negative value.\n   pc->GetOrigCol() is %d, prev->GetOrigColEnd() is %d\n",
-                                (int)pc->GetOrigCol(), (int)prev->GetOrigColEnd());
+                                static_cast<int>(pc->GetOrigCol()), static_cast<int>(prev->GetOrigColEnd()));
 #else // not WIN32
                         fprintf(stderr, "FATAL: negative value.\n   pc->GetOrigCol() is %zu, prev->GetOrigColEnd() is %zu\n",
                                 pc->GetOrigCol(), prev->GetOrigColEnd());
@@ -1252,7 +1252,7 @@ static int eat_line_whitespace(const String &str,
       //       think that the following is a template. This will NEED to be fixed!!!
       //       For now, reformulate the statement
       //return(forward ? i<int(str.size()) : i> = 0);
-      return(forward ? (i < int(str.size())) : (i >= 0));
+      return(forward ? (i < static_cast<int>(str.size())) : (i >= 0));
    };
 
    while (  index_in_range(idx)
@@ -1354,7 +1354,7 @@ static int match_doxygen_javadoc_tag(const std::wstring &str, size_t idx)
          if (  it_block_tag != block_tags.end()
             && javaparam_tag_is_start_of_line(str, idx))
          {
-            return(int(idx + match[1].length()));
+            return(static_cast<int>(idx + match[1].length()));
          }
       }
    }
@@ -1397,7 +1397,7 @@ static void calculate_doxygen_javadoc_indent_alignment(const std::wstring &str,
 
          size_t param_name_width = 0;
 
-         if (str.find(L"@param", start_idx) == size_t(start_idx))
+         if (str.find(L"@param", start_idx) == static_cast<size_t>(start_idx))
          {
             param_name_width = 1;
 
@@ -1862,7 +1862,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
 } // output_cmt_start
 
 
-static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt)
+static bool can_combine_comment(Chunk *pc, const cmt_reflow &cmt)
 {
    // We can't combine if there is something other than a newline next
    if (pc->GetParentType() == CT_COMMENT_START)
@@ -2406,7 +2406,7 @@ static void output_comment_multi(Chunk *pc)
       int ch = pc->GetStr()[cmt_idx];
       cmt_idx++;
 
-      if (  cmt_idx > std::size_t(disable_processing_cmt_idx)
+      if (  cmt_idx > static_cast<size_t>(disable_processing_cmt_idx)
          && enable_processing_cmt_idx > disable_processing_cmt_idx)
       {
          auto    length = enable_processing_cmt_idx - disable_processing_cmt_idx;
@@ -2464,7 +2464,7 @@ static void output_comment_multi(Chunk *pc)
          }
          else
          {
-            LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, char(ch));
+            LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, static_cast<char>(ch));
          }
       }
 
@@ -2525,7 +2525,7 @@ static void output_comment_multi(Chunk *pc)
                || is_param_tag
                || is_throws_tag)
             {
-               indent = int(doxygen_javadoc_param_name_indent) - int(line.size());
+               indent = static_cast<int>(doxygen_javadoc_param_name_indent) - static_cast<int>(line.size());
 
                while (indent-- > -line_size_before_indent)
                {
@@ -2564,7 +2564,7 @@ static void output_comment_multi(Chunk *pc)
             }
             cmt_idx = eat_line_whitespace(pc->GetStr(),
                                           cmt_idx);
-            indent = int(doxygen_javadoc_continuation_indent) - int(line.size());
+            indent = static_cast<int>(doxygen_javadoc_continuation_indent) - static_cast<int>(line.size());
 
             while (indent-- > -line_size_before_indent)
             {
@@ -2644,7 +2644,7 @@ static void output_comment_multi(Chunk *pc)
             {
                ++cmt_star_indent;
             }
-            reflow_paragraph_continuation_indent = size_t(cmt_star_indent);
+            reflow_paragraph_continuation_indent = static_cast<size_t>(cmt_star_indent);
          }
 
          /*
@@ -2678,7 +2678,7 @@ static void output_comment_multi(Chunk *pc)
           * (the ambiguous '*'-for-bullet case!)
           */
          if (  prev_nonempty_line >= 0
-            && next_nonempty_line >= int(cmt_idx))
+            && next_nonempty_line >= static_cast<int>(cmt_idx))
          {
             std::wstring prev_line(line.get().cbegin(),
                                    line.get().cend());
@@ -2717,7 +2717,7 @@ static void output_comment_multi(Chunk *pc)
       }
       else
       {
-         LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, char(ch));
+         LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, static_cast<char>(ch));
       }
       line.append(ch);
 
@@ -2731,7 +2731,7 @@ static void output_comment_multi(Chunk *pc)
          }
          else
          {
-            LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, char(ch));
+            LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, static_cast<char>(ch));
          }
          line_count++;
          LOG_FMT(LCONTTEXT, "%s(%d):line_count is %zu\n", __func__, __LINE__, line_count);
@@ -3379,7 +3379,7 @@ static void output_comment_multi_simple(Chunk *pc)
       int ch = pc->GetStr()[cmt_idx];
       cmt_idx++;
 
-      if (  cmt_idx > std::size_t(disable_processing_cmt_idx)
+      if (  cmt_idx > static_cast<size_t>(disable_processing_cmt_idx)
          && enable_processing_cmt_idx > disable_processing_cmt_idx)
       {
          auto    length = enable_processing_cmt_idx - disable_processing_cmt_idx;
@@ -3424,7 +3424,7 @@ static void output_comment_multi_simple(Chunk *pc)
          }
          else
          {
-            LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, char(ch));
+            LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, static_cast<char>(ch));
          }
       }
 
@@ -3472,7 +3472,7 @@ static void output_comment_multi_simple(Chunk *pc)
                {
                   // apply comment column shift without underflowing
                   line_column = (col_diff<0
-                                          && (size_t)(abs(col_diff))> line_column)
+                                          && static_cast<size_t>(abs(col_diff))> line_column)
                                 ? 0 : line_column + col_diff;
                }
                cmt.column = line_column;
