@@ -3753,7 +3753,7 @@ static void handle_oc_property_decl(Chunk *os)
          {
             std::vector<ChunkGroup> chunk_groups = (*it).second;
 
-            for (auto chunk_group : chunk_groups)
+            for (const auto &chunk_group : chunk_groups)
             {
                for (auto chunk : chunk_group)
                {
