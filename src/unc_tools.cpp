@@ -6,6 +6,9 @@
  *          October 2015- 2024
  * @license GPL v2+
  */
+#include <cstdio>
+#include <string>
+
 #include "unc_tools.h"
 
 #include "args.h"
@@ -657,6 +660,7 @@ void dump_in(size_t type)
                // add the chunk in the list
                chunk.CopyAndAddBefore(Chunk::NullChunkPtr);
                chunk.Reset();
+               // cppcheck-suppress redundantAssignment
                aNewChunkIsFound = true;
                continue;
             }
@@ -785,10 +789,10 @@ void dump_step(const char *filename, const char *step_description)
    // On the first call, also save the options in use
    if (file_num == 0)
    {
-      snprintf(buffer, 256, "New dump file: %s_%03d.log - Options in use", filename, file_num);
+      snprintf(buffer, sizeof(buffer), "New dump file: %s_%03d.log - Options in use", filename, file_num);
       log_rule_B(buffer);
 
-      snprintf(buffer, 256, "%s_%03d.log", filename, file_num);
+      snprintf(buffer, sizeof(buffer), "%s_%03d.log", filename, file_num);
       ++file_num;
 
       dump_file = fopen(buffer, "wb");
@@ -799,10 +803,10 @@ void dump_step(const char *filename, const char *step_description)
          fclose(dump_file);
       }
    }
-   snprintf(buffer, 256, "New dump file: %s_%03d.log - %s", filename, file_num, step_description);
+   snprintf(buffer, sizeof(buffer), "New dump file: %s_%03d.log - %s", filename, file_num, step_description);
    log_rule_B(buffer);
 
-   snprintf(buffer, 256, "%s_%03d.log", filename, file_num);
+   snprintf(buffer, sizeof(buffer), "%s_%03d.log", filename, file_num);
    ++file_num;
 
    dump_file = fopen(buffer, "wb");
