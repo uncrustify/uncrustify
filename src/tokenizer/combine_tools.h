@@ -44,7 +44,7 @@ bool can_be_full_param(Chunk *start, Chunk *end);
 bool chunk_ends_type(Chunk *start);
 
 
-bool chunkstack_match(ChunkStack &cs, Chunk *pc);
+bool chunkstack_match(const ChunkStack &cs, Chunk *pc);
 
 
 ///**
