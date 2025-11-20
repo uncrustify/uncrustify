@@ -26,6 +26,7 @@
 #include <vector>
 
 #include <cassert>
+#include <cstdio>
 
 #ifdef IGNORE // WinBase.h
 #undef IGNORE
@@ -185,13 +186,13 @@ public:
 
    //! resets option to its default value
    //- currently only used by the emscripten interface
-   virtual void reset() override;
+   void reset() override;
 
    bool read(const char *s) override;
    std::string str() const override;
 
    T operator()() const { return(m_val); }
-   Option &operator=(T val) { m_val = val; return(*this); }
+   Option &operator=(const T &val) { m_val = val; return(*this); }
 
 protected:
    template<typename V> friend bool read_enum(const char *s, Option<V> &o);
