@@ -122,7 +122,7 @@ bool keywords_are_sorted()
       if (kw_compare(&keywords[idx - 1], &keywords[idx]) > 0)
       {
          fprintf(stderr, "%s: bad sort order at idx %d, words '%s' and '%s'\n",
-                 __func__, (int)idx - 1, keywords[idx - 1].tag, keywords[idx].tag);
+                 __func__, static_cast<int>(idx) - 1, keywords[idx - 1].tag, keywords[idx].tag);
          // coveralls will always complain.
          // these lines are only needed for the developer.
          log_flush(true);
