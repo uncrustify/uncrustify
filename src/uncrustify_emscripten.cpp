@@ -64,6 +64,7 @@
 #include <memory>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -496,7 +497,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    }
    else
    {
-      cpd.lang_flags = (size_t)langIDX;
+      cpd.lang_flags = static_cast<size_t>(langIDX);
    }
    // embind complains about char* so we use an intptr_t to get the pointer and
    // cast it, memory management is done in /emscripten/postfix_module.js

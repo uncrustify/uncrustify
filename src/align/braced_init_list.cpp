@@ -134,7 +134,6 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
               && !pc->TestFlags(PCF_IN_TEMPLATE)
               && pc->Is(CT_BRACE_OPEN)
               && (pc->GetParentType() == CT_BRACED_INIT_LIST))
-
       {
          equ_count++;
          LOG_FMT(LALASS, "%s(%d)OK: align_braced_init_list_span() is %d\n",
