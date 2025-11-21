@@ -16,7 +16,7 @@ void double_newline(Chunk *nl)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *prev = nl->GetPrev();
+   const Chunk *prev = nl->GetPrev();
 
    if (prev->IsNullChunk())
    {

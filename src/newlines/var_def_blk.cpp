@@ -253,7 +253,7 @@ Chunk *newline_var_def_blk(Chunk *start)
          else if (var_blk)
          {
             LOG_FMT(LVARDFBLK, "%s(%d): var_blk %s, first_var_blk %s, fn_top %s\n",
-                    __func__, __LINE__, var_blk ? "TRUE" : "FALSE",
+                    __func__, __LINE__, /* var_blk ? */ "TRUE" /* : "FALSE" */,
                     first_var_blk ? "TRUE" : "FALSE", fn_top ? "TRUE" : "FALSE");
             log_rule_B("nl_var_def_blk_end_func_top");
             log_rule_B("nl_var_def_blk_end");
