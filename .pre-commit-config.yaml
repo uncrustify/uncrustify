@@ -99,15 +99,6 @@ repos:
           - --suppress=checkersReport
           - --suppress=useStlAlgorithm
           - --suppress=useInitializationList
-          # Next: specific notices/wranings/errors in specific files to let ci pass until fixed
-          - --suppress=nullPointerRedundantCheck:src/uncrustify.cpp
-          - --suppress=knownConditionTrueFalse:src/tokenizer/combine_fix_mark.cpp
-          - --suppress=knownConditionTrueFalse:src/tokenizer/combine_labels.cpp
-          - --suppress=unsignedLessThanZero:src/keywords.cpp
-          - --suppress=uninitvar:src/keywords.cpp
-          - --suppress=constParameterReference:src/unc_text.cpp
-          - --suppress=knownConditionTrueFalse:src/align/var_def_brace.cpp
-          - --suppress=knownConditionTrueFalse:src/tokenizer/mark_question_colon.cpp
 
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
