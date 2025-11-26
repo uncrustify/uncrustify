@@ -35,12 +35,12 @@ static void toLogTextUtf8(int c, UncText::log_type &container);
  *
  * throws if char is greater than 0x7fffffff
  */
-static int getLogTextUtf8Len(UncText::value_type &c0, size_t end);
+int getLogTextUtf8Len(const UncText::value_type &c0, size_t end);
 
-static int getLogTextUtf8Len(UncText::value_type &c0, size_t start, size_t end);
+static int getLogTextUtf8Len(const UncText::value_type &c0, size_t start, size_t end);
 
 
-static int getLogTextUtf8Len(UncText::value_type &c0, size_t start, size_t end)
+static int getLogTextUtf8Len(const UncText::value_type &c0, size_t start, size_t end)
 {
    size_t c1_idx = 0;
 
