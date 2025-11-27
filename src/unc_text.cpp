@@ -92,7 +92,7 @@ static int getLogTextUtf8Len(const UncText::value_type &c0, size_t start, size_t
 } // getLogTextUTF8Len
 
 
-static int getLogTextUtf8Len(UncText::value_type &c0, size_t end)
+int getLogTextUtf8Len(const UncText::value_type &c0, size_t end)
 {
    return(getLogTextUtf8Len(c0, 0, end));
 }
