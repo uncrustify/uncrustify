@@ -604,3 +604,19 @@
 10141  c/align_var_struct_span_num_mixed-3.cfg            c/align_var_struct_span_num_mixed.c
 10142  c/align_var_struct_span_num_mixed-4.cfg            c/align_var_struct_span_num_mixed.c
 10143  c/align_var_struct_span_num_mixed-5.cfg            c/align_var_struct_span_num_mixed.c
+
+# align_var_def_span_num_* tests
+10144  c/align_var_def_span_num_empty_lines-1.cfg         c/align_var_def_span_num_empty_lines.c
+10145  c/align_var_def_span_num_empty_lines-2.cfg         c/align_var_def_span_num_empty_lines.c
+10146  c/align_var_def_span_num_empty_lines-3.cfg         c/align_var_def_span_num_empty_lines.c
+10147  c/align_var_def_span_num_cmt_lines-1.cfg           c/align_var_def_span_num_cmt_lines.c
+10148  c/align_var_def_span_num_cmt_lines-2.cfg           c/align_var_def_span_num_cmt_lines.c
+10149  c/align_var_def_span_num_cmt_lines-3.cfg           c/align_var_def_span_num_cmt_lines.c
+10150  c/align_var_def_span_num_pp_lines-1.cfg            c/align_var_def_span_num_pp_lines.c
+10151  c/align_var_def_span_num_pp_lines-2.cfg            c/align_var_def_span_num_pp_lines.c
+10152  c/align_var_def_span_num_pp_lines-3.cfg            c/align_var_def_span_num_pp_lines.c
+10153  c/align_var_def_span_num_mixed-1.cfg               c/align_var_def_span_num_mixed.c
+10154  c/align_var_def_span_num_mixed-2.cfg               c/align_var_def_span_num_mixed.c
+10155  c/align_var_def_span_num_mixed-3.cfg               c/align_var_def_span_num_mixed.c
+10156  c/align_var_def_span_num_mixed-4.cfg               c/align_var_def_span_num_mixed.c
+10157  c/align_var_def_span_num_mixed-5.cfg               c/align_var_def_span_num_mixed.c
