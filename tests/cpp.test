@@ -1222,6 +1222,22 @@
 34732  cpp/align_var_class_span_num_mixed-4.cfg              cpp/align_var_class_span_num_mixed.cpp
 34733  cpp/align_var_class_span_num_mixed-5.cfg              cpp/align_var_class_span_num_mixed.cpp
 
+# align_var_def_span_num_* tests (local variables in methods)
+34734  cpp/align_var_def_span_num_empty_lines-1.cfg          cpp/align_var_def_span_num_empty_lines.cpp
+34735  cpp/align_var_def_span_num_empty_lines-2.cfg          cpp/align_var_def_span_num_empty_lines.cpp
+34736  cpp/align_var_def_span_num_empty_lines-3.cfg          cpp/align_var_def_span_num_empty_lines.cpp
+34737  cpp/align_var_def_span_num_cmt_lines-1.cfg            cpp/align_var_def_span_num_cmt_lines.cpp
+34738  cpp/align_var_def_span_num_cmt_lines-2.cfg            cpp/align_var_def_span_num_cmt_lines.cpp
+34739  cpp/align_var_def_span_num_cmt_lines-3.cfg            cpp/align_var_def_span_num_cmt_lines.cpp
+34740  cpp/align_var_def_span_num_pp_lines-1.cfg             cpp/align_var_def_span_num_pp_lines.cpp
+34741  cpp/align_var_def_span_num_pp_lines-2.cfg             cpp/align_var_def_span_num_pp_lines.cpp
+34742  cpp/align_var_def_span_num_pp_lines-3.cfg             cpp/align_var_def_span_num_pp_lines.cpp
+34743  cpp/align_var_def_span_num_mixed-1.cfg                cpp/align_var_def_span_num_mixed.cpp
+34744  cpp/align_var_def_span_num_mixed-2.cfg                cpp/align_var_def_span_num_mixed.cpp
+34745  cpp/align_var_def_span_num_mixed-3.cfg                cpp/align_var_def_span_num_mixed.cpp
+34746  cpp/align_var_def_span_num_mixed-4.cfg                cpp/align_var_def_span_num_mixed.cpp
+34747  cpp/align_var_def_span_num_mixed-5.cfg                cpp/align_var_def_span_num_mixed.cpp
+
 # Adopt some UT tests
 10000  common/empty.cfg                                     cpp/621_this-spacing.cpp
 10001  common/empty.cfg                                     cpp/622_ifdef-indentation.cpp
