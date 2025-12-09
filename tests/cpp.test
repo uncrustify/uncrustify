@@ -1200,6 +1200,28 @@
 34718  cpp/pos_shift_trail_break.cfg                        cpp/pos_shift.cpp
 34719  cpp/pos_shift_trail_force.cfg                        cpp/pos_shift.cpp
 
+# Tests for skipping empty lines in class span
+34720  cpp/align_var_class_span_num_empty_lines-1.cfg        cpp/align_var_class_span_num_empty_lines.cpp
+34721  cpp/align_var_class_span_num_empty_lines-2.cfg        cpp/align_var_class_span_num_empty_lines.cpp
+34722  cpp/align_var_class_span_num_empty_lines-3.cfg        cpp/align_var_class_span_num_empty_lines.cpp
+
+# Tests for skipping comment lines in class span
+34723  cpp/align_var_class_span_num_cmt_lines-1.cfg          cpp/align_var_class_span_num_cmt_lines.cpp
+34724  cpp/align_var_class_span_num_cmt_lines-2.cfg          cpp/align_var_class_span_num_cmt_lines.cpp
+34725  cpp/align_var_class_span_num_cmt_lines-3.cfg          cpp/align_var_class_span_num_cmt_lines.cpp
+
+# Tests for skipping preprocessor lines in class span
+34726  cpp/align_var_class_span_num_pp_lines-1.cfg           cpp/align_var_class_span_num_pp_lines.cpp
+34727  cpp/align_var_class_span_num_pp_lines-2.cfg           cpp/align_var_class_span_num_pp_lines.cpp
+34728  cpp/align_var_class_span_num_pp_lines-3.cfg           cpp/align_var_class_span_num_pp_lines.cpp
+
+# Tests for skipping mixed types of empty/comment/preprocessor lines in class span
+34729  cpp/align_var_class_span_num_mixed-1.cfg              cpp/align_var_class_span_num_mixed.cpp
+34730  cpp/align_var_class_span_num_mixed-2.cfg              cpp/align_var_class_span_num_mixed.cpp
+34731  cpp/align_var_class_span_num_mixed-3.cfg              cpp/align_var_class_span_num_mixed.cpp
+34732  cpp/align_var_class_span_num_mixed-4.cfg              cpp/align_var_class_span_num_mixed.cpp
+34733  cpp/align_var_class_span_num_mixed-5.cfg              cpp/align_var_class_span_num_mixed.cpp
+
 # Adopt some UT tests
 10000  common/empty.cfg                                     cpp/621_this-spacing.cpp
 10001  common/empty.cfg                                     cpp/622_ifdef-indentation.cpp
