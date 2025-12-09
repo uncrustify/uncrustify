@@ -588,3 +588,19 @@
 10127  c/indent_single_newlines_indent_0.cfg            c/indent_single_newlines.c
 10128  c/indent_single_newlines_indent_1.cfg            c/indent_single_newlines.c
 10129  c/indent_single_newlines_indent_2.cfg            c/indent_single_newlines.c
+
+# align_var_struct_span_num_* tests
+10130  c/align_var_struct_span_num_empty_lines-1.cfg      c/align_var_struct_span_num_empty_lines.c
+10131  c/align_var_struct_span_num_empty_lines-2.cfg      c/align_var_struct_span_num_empty_lines.c
+10132  c/align_var_struct_span_num_empty_lines-3.cfg      c/align_var_struct_span_num_empty_lines.c
+10133  c/align_var_struct_span_num_cmt_lines-1.cfg        c/align_var_struct_span_num_cmt_lines.c
+10134  c/align_var_struct_span_num_cmt_lines-2.cfg        c/align_var_struct_span_num_cmt_lines.c
+10135  c/align_var_struct_span_num_cmt_lines-3.cfg        c/align_var_struct_span_num_cmt_lines.c
+10136  c/align_var_struct_span_num_pp_lines-1.cfg         c/align_var_struct_span_num_pp_lines.c
+10137  c/align_var_struct_span_num_pp_lines-2.cfg         c/align_var_struct_span_num_pp_lines.c
+10138  c/align_var_struct_span_num_pp_lines-3.cfg         c/align_var_struct_span_num_pp_lines.c
+10139  c/align_var_struct_span_num_mixed-1.cfg            c/align_var_struct_span_num_mixed.c
+10140  c/align_var_struct_span_num_mixed-2.cfg            c/align_var_struct_span_num_mixed.c
+10141  c/align_var_struct_span_num_mixed-3.cfg            c/align_var_struct_span_num_mixed.c
+10142  c/align_var_struct_span_num_mixed-4.cfg            c/align_var_struct_span_num_mixed.c
+10143  c/align_var_struct_span_num_mixed-5.cfg            c/align_var_struct_span_num_mixed.c
