@@ -315,6 +315,18 @@ void print_custom_keywords(FILE *pfile)
                  uncrustify::limits::MAX_OPTION_NAME_LEN - 11, " ",
                  keyword_pair.first.c_str());
       }
+      else if (tt == CT_MACRO_NO_INDENT)
+      {
+         fprintf(pfile, "macro-no-indent %*.s%s\n",
+                 uncrustify::limits::MAX_OPTION_NAME_LEN - 16, " ",
+                 keyword_pair.first.c_str());
+      }
+      else if (tt == CT_MACRO_NO_FMT_ARGS)
+      {
+         fprintf(pfile, "macro-no-format-args %*.s%s\n",
+                 uncrustify::limits::MAX_OPTION_NAME_LEN - 21, " ",
+                 keyword_pair.first.c_str());
+      }
       else
       {
          const char *tn = get_token_name(tt);

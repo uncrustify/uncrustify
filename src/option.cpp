@@ -1026,6 +1026,14 @@ void process_option_line(const std::string &config_line, const char *filename,
    {
       add_keyword(args[1], CT_MACRO_ELSE);
    }
+   else if (cmd == "macro-no-indent")
+   {
+      add_keyword(args[1], CT_MACRO_NO_INDENT);
+   }
+   else if (cmd == "macro-no-format-args")
+   {
+      add_keyword(args[1], CT_MACRO_NO_FMT_ARGS);
+   }
    else if (cmd == "set")
    {
       const auto token = find_token_name(args[1].c_str());

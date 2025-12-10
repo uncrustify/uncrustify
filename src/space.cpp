@@ -74,6 +74,17 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    min_sp = 1;
 
+   // test if we are within a macro-no-format-args call
+   // Tokens inside these macros were marked with PCF_IN_MACRO_NO_FMT_ARGS
+   // during tokenize_cleanup(), so we just need to check the flag
+   // This check must be early to prevent other rules from modifying spacing
+   if (  first->TestFlags(PCF_IN_MACRO_NO_FMT_ARGS)
+      || second->TestFlags(PCF_IN_MACRO_NO_FMT_ARGS))
+   {
+      log_rule("IGNORE (inside macro-no-format-args)");
+      return(IARF_IGNORE);
+   }
+
    if (  first->Is(CT_COMMENT)                                      // Issue #4327
       && first->GetParentType() == CT_COMMENT_EMBED
       && (options::sp_emb_cmt_priority()))
@@ -1579,7 +1590,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (  first->Is(CT_MACRO_OPEN)
       || first->Is(CT_MACRO_CLOSE)
-      || first->Is(CT_MACRO_ELSE))
+      || first->Is(CT_MACRO_ELSE)
+      || first->Is(CT_MACRO_NO_INDENT))
    {
       if (second->Is(CT_FPAREN_OPEN))
       {
