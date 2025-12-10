@@ -239,6 +239,7 @@ enum E_Token
    CT_MACRO_OPEN,       // stuff specified via custom-pair
    CT_MACRO_CLOSE,
    CT_MACRO_ELSE,
+   CT_MACRO_NO_INDENT,  // macro that should not affect indentation
 
    // aggregate types
    CT_LABEL,              // a non-case label
@@ -256,9 +257,10 @@ enum E_Token
    CT_FUNC_CTOR_VAR,      // variable or class initialization
    CT_FUNC_WRAP,          // macro that wraps the function name
    CT_PROTO_WRAP,         // macro: "RETVAL PROTO_WRAP( fcn_name, (PARAMS))". Parens for PARAMS are optional.
-   CT_MACRO_FUNC,         // function-like macro
-   CT_MACRO_FUNC_CALL,    // function-like macro call
-   CT_MACRO,              // a macro def
+   CT_MACRO_FUNC,              // function-like macro
+   CT_MACRO_FUNC_CALL,         // function-like macro call
+   CT_MACRO_NO_FORMAT_ARGS,    // macros whose args should not be formatted (e.g. NS_SWIFT_NAME(getter:description()) will not format the `getter:description()` part)
+   CT_MACRO,                   // a macro def
    CT_QUALIFIER,          // static, const, etc
    CT_EXTERN,             // extern
    CT_DECLSPEC,           // __declspec

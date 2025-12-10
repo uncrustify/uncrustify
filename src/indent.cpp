@@ -2573,390 +2573,411 @@ void indent_text()
           * Open parenthesis and squares - never update indent_column,
           * unless right after a newline.
           */
-         frm.push(pc, __func__, __LINE__);
 
-         if (  pc->GetPrev()->IsNewline()
-            && pc->GetColumn() != indent_column
-            && !pc->TestFlags(PCF_DONT_INDENT))
+         Chunk *prev_ncnl = pc->GetPrevNcNnl();
+
+         // Check if this paren belongs to a macro-no-indent or macro-no-format-args - if so, skip indent changes
+         if (  prev_ncnl->IsNotNullChunk()
+            && (  prev_ncnl->Is(CT_MACRO_NO_INDENT)
+               || prev_ncnl->Is(CT_MACRO_NO_FORMAT_ARGS)))
          {
-            LOG_FMT(LINDENT, "%s(%d): orig line is %zu, indent => %zu, text is '%s'\n",
-                    __func__, __LINE__, pc->GetOrigLine(), indent_column, pc->Text());
-            reindent_line(pc, indent_column);
-         }
-         Chunk *open_paren  = pc;
-         Chunk *close_paren = pc->GetClosingParen();
-
-         bool  indent_bool_more = false;
-
-         if (options::indent_bool_nested_all())
-         {
-            Chunk *prev = open_paren->GetPrevNcNnl();
-
-            // open paren is preceded by a bool and that is preceded or followed by a new line
-            if (prev->Is(CT_BOOL) && (prev->GetPrevNc()->IsNewline() || prev->GetNextNc()->IsNewline()))
-            {
-               indent_bool_more = true;
-            }
-            Chunk *next = close_paren->GetNextNcNnl();
-
-            // close paren is followed by a bool and that is preceded or followed by a new line
-            if (next->Is(CT_BOOL) && (next->GetNextNc()->IsNewline() || next->GetPrevNc()->IsNewline()))
-            {
-               indent_bool_more = true;
-            }
-         }
-
-         if (indent_bool_more)
-         {
-            log_rule_B("indent_bool_nested_all");
-            frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
+            // For macro-no-indent and macro-no-format-args, we still push the frame to track matching parens,
+            // but we don't change the indentation
+            frm.push(pc, __func__, __LINE__);
+            // Keep indent at the current level (don't increase)
+            frm.top().SetIndent(frm.prev().GetIndent());
+            log_indent();
+            frm.top().SetIndentTmp(frm.top().GetIndent());
+            log_indent_tmp();
+            frm.SetParenCount(frm.GetParenCount() + 1);
          }
          else
          {
-            frm.top().SetIndent(pc->GetColumn() + pc->Len());
-         }
-         log_indent();
+            frm.push(pc, __func__, __LINE__);
 
-         if (  pc->Is(CT_SQUARE_OPEN)
-            && language_is_set(lang_flag_e::LANG_D))
-         {
-            frm.top().SetIndentTab(frm.top().GetIndent());
-         }
-         bool skipped = false;
-         log_rule_B("indent_inside_ternary_operator");
-         log_rule_B("indent_align_paren");
-
-         if (  options::indent_inside_ternary_operator()
-            && (  pc->Is(CT_FPAREN_OPEN)
-               || pc->Is(CT_PAREN_OPEN))
-            && frm.size() > 2
-            && (  frm.prev().GetOpenToken() == CT_QUESTION
-               || frm.prev().GetOpenToken() == CT_COND_COLON)
-            && !options::indent_align_paren())
-         {
-            frm.top().SetIndent(frm.prev().GetIndentTmp() + indent_size);
-            log_indent();
-            frm.top().SetIndentTab(frm.top().GetIndent());
-            frm.top().SetIndentTmp(frm.top().GetIndent());
-            log_indent_tmp();
-         }
-         else if (  (  pc->Is(CT_FPAREN_OPEN)
-                    || pc->Is(CT_ANGLE_OPEN))
-                 && (  (  options::indent_func_call_param()
-                       && (  pc->GetParentType() == CT_FUNC_CALL
-                          || pc->GetParentType() == CT_FUNC_CALL_USER))
-                    || (  options::indent_func_proto_param()
-                       && pc->GetParentType() == CT_FUNC_PROTO)
-                    || (  options::indent_func_class_param()
-                       && (  pc->GetParentType() == CT_FUNC_CLASS_DEF
-                          || pc->GetParentType() == CT_FUNC_CLASS_PROTO))
-                    || (  options::indent_template_param()
-                       && pc->GetParentType() == CT_TEMPLATE)
-                    || (  options::indent_func_ctor_var_param()
-                       && pc->GetParentType() == CT_FUNC_CTOR_VAR)
-                    || (  options::indent_func_def_param()
-                       && pc->GetParentType() == CT_FUNC_DEF)
-                    || (  !options::indent_func_def_param()          // Issue #931
-                       && pc->GetParentType() == CT_FUNC_DEF
-                       && options::indent_func_def_param_paren_pos_threshold() > 0
-                       && pc->GetOrigCol() > options::indent_func_def_param_paren_pos_threshold())))
-         {
-            log_rule_B("indent_func_call_param");
-            log_rule_B("indent_func_proto_param");
-            log_rule_B("indent_func_class_param");
-            log_rule_B("indent_template_param");
-            log_rule_B("indent_func_ctor_var_param");
-            log_rule_B("indent_func_def_param");
-            log_rule_B("indent_func_def_param_paren_pos_threshold");
-            // Skip any continuation indents
-            size_t idx = (!frm.empty()) ? frm.size() - 2 : 0;
-
-            while (  (  (  idx > 0
-                        && frm.at(idx).GetOpenToken() != CT_BRACE_OPEN
-                        && frm.at(idx).GetOpenToken() != CT_VBRACE_OPEN
-                        && frm.at(idx).GetOpenToken() != CT_PAREN_OPEN
-                        && frm.at(idx).GetOpenToken() != CT_FPAREN_OPEN
-                        && frm.at(idx).GetOpenToken() != CT_RPAREN_OPEN                     // Issue #3914
-                        && frm.at(idx).GetOpenToken() != CT_SPAREN_OPEN
-                        && frm.at(idx).GetOpenToken() != CT_SQUARE_OPEN
-                        && frm.at(idx).GetOpenToken() != CT_ANGLE_OPEN
-                        && frm.at(idx).GetOpenToken() != CT_CASE
-                        && frm.at(idx).GetOpenToken() != CT_MEMBER
-                        && frm.at(idx).GetOpenToken() != CT_QUESTION
-                        && frm.at(idx).GetOpenToken() != CT_COND_COLON
-                        && frm.at(idx).GetOpenToken() != CT_LAMBDA
-                        && frm.at(idx).GetOpenToken() != CT_ASSIGN_NL)
-                     || frm.at(idx).GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()))
-                  && (  frm.at(idx).GetOpenToken() != CT_CLASS_COLON
-                     && frm.at(idx).GetOpenToken() != CT_CONSTR_COLON
-                     && !(  frm.at(idx).GetOpenToken() == CT_LAMBDA
-                         && frm.at(idx).GetOpenChunk()->GetPrevNc()->GetType() == CT_NEWLINE)))
+            if (  pc->GetPrev()->IsNewline()
+               && pc->GetColumn() != indent_column
+               && !pc->TestFlags(PCF_DONT_INDENT))
             {
-               if (idx == 0)
-               {
-                  fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                          __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
-                  log_flush(true);
-                  exit(EX_SOFTWARE);
-               }
-               idx--;
-               skipped = true;
+               LOG_FMT(LINDENT, "%s(%d): orig line is %zu, indent => %zu, text is '%s'\n",
+                     __func__, __LINE__, pc->GetOrigLine(), indent_column, pc->Text());
+               reindent_line(pc, indent_column);
             }
-            // PR#381
-            log_rule_B("indent_param");
+            Chunk *open_paren  = pc;
+            Chunk *close_paren = pc->GetClosingParen();
 
-            if (options::indent_param() != 0)
+            bool  indent_bool_more = false;
+
+            if (options::indent_bool_nested_all())
             {
-               frm.top().SetIndent(frm.at(idx).GetIndent() + options::indent_param());
-               log_indent();
+               Chunk *prev = open_paren->GetPrevNcNnl();
+
+               // open paren is preceded by a bool and that is preceded or followed by a new line
+               if (prev->Is(CT_BOOL) && (prev->GetPrevNc()->IsNewline() || prev->GetNextNc()->IsNewline()))
+               {
+                  indent_bool_more = true;
+               }
+               Chunk *next = close_paren->GetNextNcNnl();
+
+               // close paren is followed by a bool and that is preceded or followed by a new line
+               if (next->Is(CT_BOOL) && (next->GetNextNc()->IsNewline() || next->GetPrevNc()->IsNewline()))
+               {
+                  indent_bool_more = true;
+               }
+            }
+
+            if (indent_bool_more)
+            {
+               log_rule_B("indent_bool_nested_all");
+               frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
             }
             else
             {
-               frm.top().SetIndent(frm.at(idx).GetIndent() + indent_size);
-               log_indent();
+               frm.top().SetIndent(pc->GetColumn() + pc->Len());
             }
-            log_rule_B("indent_func_param_double");
-
-            if (options::indent_func_param_double())
-            {
-               // double is: Use both values of the options indent_columns and indent_param
-               frm.top().SetIndent(frm.top().GetIndent() + indent_size);
-               log_indent();
-            }
-            frm.top().SetIndentTab(frm.top().GetIndent());
-         }
-         else if (  options::indent_oc_inside_msg_sel()
-                 && pc->Is(CT_PAREN_OPEN)
-                 && frm.size() > 2
-                 && (  frm.prev().GetOpenToken() == CT_OC_MSG_FUNC
-                    || frm.prev().GetOpenToken() == CT_OC_MSG_NAME)
-                 && !options::indent_align_paren()) // Issue #2658
-         {
-            log_rule_B("indent_oc_inside_msg_sel");
-            log_rule_B("indent_align_paren");
-            // When parens are inside OC messages, push on the parse frame stack
-            // [Class Message:(<here>
-            frm.top().SetIndent(frm.prev().GetOpenChunk()->GetColumn() + indent_size);
-            log_indent();
-            frm.top().SetIndentTab(frm.top().GetIndent());
-            frm.top().SetIndentTmp(frm.top().GetIndent());
-            log_indent_tmp();
-         }
-         else if (  pc->Is(CT_PAREN_OPEN)
-                 && !pc->GetNext()->IsNewline()
-                 && !options::indent_align_paren()
-                 && !pc->TestFlags(PCF_IN_SPAREN))
-         {
-            log_rule_B("indent_align_paren");
-            size_t idx = frm.size() - 2;
-
-            while (  idx > 0
-                  && frm.at(idx).GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()))
-            {
-               idx--;
-               // skipped = true;  // Assigned true at end of code block.
-            }
-            frm.top().SetIndent(frm.at(idx).GetIndent() + indent_size);
             log_indent();
 
-            frm.top().SetIndentTab(frm.top().GetIndent());
-            skipped = true;
-         }
-         else if (  (  pc->IsString("(")
-                    && !options::indent_paren_nl())
-                 || (  pc->IsString("<")
-                    && !options::indent_paren_nl())    // TODO: add indent_angle_nl?
-                 || (  pc->IsString("[")
-                    && !options::indent_square_nl()))
-         {
-            log_rule_B("indent_paren_nl");
-            log_rule_B("indent_square_nl");
-            Chunk *next = pc->GetNextNc();
-
-            if (next->IsNullChunk())
+            if (  pc->Is(CT_SQUARE_OPEN)
+               && language_is_set(lang_flag_e::LANG_D))
             {
-               break;
+               frm.top().SetIndentTab(frm.top().GetIndent());
             }
-            log_rule_B("indent_paren_after_func_def");
-            log_rule_B("indent_paren_after_func_decl");
-            log_rule_B("indent_paren_after_func_call");
+            bool skipped = false;
+            log_rule_B("indent_inside_ternary_operator");
+            log_rule_B("indent_align_paren");
 
-            if (  next->IsNewline()
-               && !options::indent_paren_after_func_def()
-               && !options::indent_paren_after_func_decl()
-               && !options::indent_paren_after_func_call()
-               && (  !pc->TestFlags(PCF_CONT_LINE)
-                  || options::indent_continue() >= 0))
+            if (  options::indent_inside_ternary_operator()
+               && (  pc->Is(CT_FPAREN_OPEN)
+                  || pc->Is(CT_PAREN_OPEN))
+               && frm.size() > 2
+               && (  frm.prev().GetOpenToken() == CT_QUESTION
+                  || frm.prev().GetOpenToken() == CT_COND_COLON)
+               && !options::indent_align_paren())
             {
-               size_t sub = 2;
+               frm.top().SetIndent(frm.prev().GetIndentTmp() + indent_size);
+               log_indent();
+               frm.top().SetIndentTab(frm.top().GetIndent());
+               frm.top().SetIndentTmp(frm.top().GetIndent());
+               log_indent_tmp();
+            }
+            else if (  (  pc->Is(CT_FPAREN_OPEN)
+                     || pc->Is(CT_ANGLE_OPEN))
+                  && (  (  options::indent_func_call_param()
+                        && (  pc->GetParentType() == CT_FUNC_CALL
+                           || pc->GetParentType() == CT_FUNC_CALL_USER))
+                     || (  options::indent_func_proto_param()
+                        && pc->GetParentType() == CT_FUNC_PROTO)
+                     || (  options::indent_func_class_param()
+                        && (  pc->GetParentType() == CT_FUNC_CLASS_DEF
+                           || pc->GetParentType() == CT_FUNC_CLASS_PROTO))
+                     || (  options::indent_template_param()
+                        && pc->GetParentType() == CT_TEMPLATE)
+                     || (  options::indent_func_ctor_var_param()
+                        && pc->GetParentType() == CT_FUNC_CTOR_VAR)
+                     || (  options::indent_func_def_param()
+                        && pc->GetParentType() == CT_FUNC_DEF)
+                     || (  !options::indent_func_def_param()          // Issue #931
+                        && pc->GetParentType() == CT_FUNC_DEF
+                        && options::indent_func_def_param_paren_pos_threshold() > 0
+                        && pc->GetOrigCol() > options::indent_func_def_param_paren_pos_threshold())))
+            {
+               log_rule_B("indent_func_call_param");
+               log_rule_B("indent_func_proto_param");
+               log_rule_B("indent_func_class_param");
+               log_rule_B("indent_template_param");
+               log_rule_B("indent_func_ctor_var_param");
+               log_rule_B("indent_func_def_param");
+               log_rule_B("indent_func_def_param_paren_pos_threshold");
+               // Skip any continuation indents
+               size_t idx = (!frm.empty()) ? frm.size() - 2 : 0;
 
-               if (  (frm.prev().GetOpenToken() == CT_ASSIGN)
-                  || (frm.prev().GetOpenToken() == CT_RETURN))
+               while (  (  (  idx > 0
+                           && frm.at(idx).GetOpenToken() != CT_BRACE_OPEN
+                           && frm.at(idx).GetOpenToken() != CT_VBRACE_OPEN
+                           && frm.at(idx).GetOpenToken() != CT_PAREN_OPEN
+                           && frm.at(idx).GetOpenToken() != CT_FPAREN_OPEN
+                           && frm.at(idx).GetOpenToken() != CT_RPAREN_OPEN                     // Issue #3914
+                           && frm.at(idx).GetOpenToken() != CT_SPAREN_OPEN
+                           && frm.at(idx).GetOpenToken() != CT_SQUARE_OPEN
+                           && frm.at(idx).GetOpenToken() != CT_ANGLE_OPEN
+                           && frm.at(idx).GetOpenToken() != CT_CASE
+                           && frm.at(idx).GetOpenToken() != CT_MEMBER
+                           && frm.at(idx).GetOpenToken() != CT_QUESTION
+                           && frm.at(idx).GetOpenToken() != CT_COND_COLON
+                           && frm.at(idx).GetOpenToken() != CT_LAMBDA
+                           && frm.at(idx).GetOpenToken() != CT_ASSIGN_NL)
+                        || frm.at(idx).GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()))
+                     && (  frm.at(idx).GetOpenToken() != CT_CLASS_COLON
+                        && frm.at(idx).GetOpenToken() != CT_CONSTR_COLON
+                        && !(  frm.at(idx).GetOpenToken() == CT_LAMBDA
+                           && frm.at(idx).GetOpenChunk()->GetPrevNc()->GetType() == CT_NEWLINE)))
                {
-                  sub = 3;
+                  if (idx == 0)
+                  {
+                     fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
+                     log_flush(true);
+                     exit(EX_SOFTWARE);
+                  }
+                  idx--;
+                  skipped = true;
                }
-               sub = frm.size() - sub;
+               // PR#381
+               log_rule_B("indent_param");
 
+               if (options::indent_param() != 0)
+               {
+                  frm.top().SetIndent(frm.at(idx).GetIndent() + options::indent_param());
+                  log_indent();
+               }
+               else
+               {
+                  frm.top().SetIndent(frm.at(idx).GetIndent() + indent_size);
+                  log_indent();
+               }
+               log_rule_B("indent_func_param_double");
+
+               if (options::indent_func_param_double())
+               {
+                  // double is: Use both values of the options indent_columns and indent_param
+                  frm.top().SetIndent(frm.top().GetIndent() + indent_size);
+                  log_indent();
+               }
+               frm.top().SetIndentTab(frm.top().GetIndent());
+            }
+            else if (  options::indent_oc_inside_msg_sel()
+                  && pc->Is(CT_PAREN_OPEN)
+                  && frm.size() > 2
+                  && (  frm.prev().GetOpenToken() == CT_OC_MSG_FUNC
+                     || frm.prev().GetOpenToken() == CT_OC_MSG_NAME)
+                  && !options::indent_align_paren()) // Issue #2658
+            {
+               log_rule_B("indent_oc_inside_msg_sel");
                log_rule_B("indent_align_paren");
+               // When parens are inside OC messages, push on the parse frame stack
+               // [Class Message:(<here>
+               frm.top().SetIndent(frm.prev().GetOpenChunk()->GetColumn() + indent_size);
+               log_indent();
+               frm.top().SetIndentTab(frm.top().GetIndent());
+               frm.top().SetIndentTmp(frm.top().GetIndent());
+               log_indent_tmp();
+            }
+            else if (  pc->Is(CT_PAREN_OPEN)
+                  && !pc->GetNext()->IsNewline()
+                  && !options::indent_align_paren()
+                  && !pc->TestFlags(PCF_IN_SPAREN))
+            {
+               log_rule_B("indent_align_paren");
+               size_t idx = frm.size() - 2;
 
-               if (!options::indent_align_paren())
+               while (  idx > 0
+                     && frm.at(idx).GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()))
                {
-                  sub = frm.size() - 2;
-
-                  while (  sub > 0
-                        && frm.at(sub).GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()))
-                  {
-                     sub--;
-                     // skipped = true;  // Set to true at the end of the code block
-                  }
-
-                  if (  (  frm.at(sub + 1).GetOpenToken() == CT_CLASS_COLON
-                        || frm.at(sub + 1).GetOpenToken() == CT_CONSTR_COLON)
-                     && (frm.at(sub + 1).GetOpenChunk()->GetPrev()->Is(CT_NEWLINE)))
-                  {
-                     sub = sub + 1;
-                  }
+                  idx--;
+                  // skipped = true;  // Assigned true at end of code block.
                }
-               frm.top().SetIndent(frm.at(sub).GetIndent() + indent_size);
+               frm.top().SetIndent(frm.at(idx).GetIndent() + indent_size);
                log_indent();
 
                frm.top().SetIndentTab(frm.top().GetIndent());
                skipped = true;
             }
-            else
+            else if (  (  pc->IsString("(")
+                     && !options::indent_paren_nl())
+                  || (  pc->IsString("<")
+                     && !options::indent_paren_nl())    // TODO: add indent_angle_nl?
+                  || (  pc->IsString("[")
+                     && !options::indent_square_nl()))
             {
-               if (  next->IsNotNullChunk()
-                  && !next->IsComment())
+               log_rule_B("indent_paren_nl");
+               log_rule_B("indent_square_nl");
+               Chunk *next = pc->GetNextNc();
+
+               if (next->IsNullChunk())
                {
-                  if (next->Is(CT_SPACE))
-                  {
-                     next = next->GetNextNc();
-
-                     if (next->IsNullChunk())
-                     {
-                        break;
-                     }
-                  }
-
-                  if (next->GetPrev()->IsComment())
-                  {
-                     // Issue #2099
-                     frm.top().SetIndent(next->GetPrev()->GetColumn());
-                  }
-                  else
-                  {
-                     if (indent_bool_more)
-                     {
-                        frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
-                     }
-                     else
-                     {
-                        frm.top().SetIndent(next->GetColumn());
-                     }
-                  }
-                  log_indent();
+                  break;
                }
-            }
-         }
-         log_rule_B("use_indent_continue_only_once");
-         log_rule_B("indent_paren_after_func_decl");
-         log_rule_B("indent_paren_after_func_def");
-         log_rule_B("indent_paren_after_func_call");
+               log_rule_B("indent_paren_after_func_def");
+               log_rule_B("indent_paren_after_func_decl");
+               log_rule_B("indent_paren_after_func_call");
 
-         if (  (  (  !frm.top().GetIndentContinue()             // Issue #3567
-                  && vardefcol == 0)
-               || (  !options::use_indent_continue_only_once()  // Issue #1160
-                  && !options::indent_ignore_first_continue())) // Issue #3561
-            && (  pc->Is(CT_FPAREN_OPEN)
-               && pc->GetPrev()->IsNewline())
-            && (  (  (  pc->GetParentType() == CT_FUNC_PROTO
-                     || pc->GetParentType() == CT_FUNC_CLASS_PROTO)
-                  && options::indent_paren_after_func_decl())
-               || (  (  pc->GetParentType() == CT_FUNC_DEF
-                     || pc->GetParentType() == CT_FUNC_CLASS_DEF)
-                  && options::indent_paren_after_func_def())
-               || (  (  pc->GetParentType() == CT_FUNC_CALL
-                     || pc->GetParentType() == CT_FUNC_CALL_USER)
-                  && options::indent_paren_after_func_call())
-               || !pc->GetNext()->IsNewline()))
-         {
-            frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
-            log_indent();
-
-            indent_column_set(frm.top().GetIndent());
-         }
-         log_rule_B("indent_continue");
-
-         if (  pc->GetParentType() != CT_OC_AT
-            && (  options::indent_ignore_first_continue()
-               || options::indent_continue() != 0)
-            && !skipped)
-         {
-            if (options::indent_ignore_first_continue())
-            {
-               frm.top().SetIndent(get_indent_first_continue(pc->GetNext()));
-            }
-            else if (!indent_bool_more)
-            {
-               frm.top().SetIndent(frm.prev().GetIndent());
-            }
-            log_indent();
-
-            if (  pc->GetLevel() == pc->GetBraceLevel()
-               && !options::indent_ignore_first_continue()
-               && (  pc->Is(CT_FPAREN_OPEN)
-                  || pc->Is(CT_RPAREN_OPEN)                   // Issue #1170
-                  || pc->Is(CT_SPAREN_OPEN)
-                  || (  pc->Is(CT_SQUARE_OPEN)
-                     && pc->GetParentType() != CT_OC_MSG)
-                  || pc->Is(CT_ANGLE_OPEN)))                  // Issue #1170
-            {
-               log_rule_B("use_indent_continue_only_once");
-
-               if (  (options::use_indent_continue_only_once())
-                  && (frm.top().GetIndentContinue())
-                  && vardefcol != 0)
+               if (  next->IsNewline()
+                  && !options::indent_paren_after_func_def()
+                  && !options::indent_paren_after_func_decl()
+                  && !options::indent_paren_after_func_call()
+                  && (  !pc->TestFlags(PCF_CONT_LINE)
+                     || options::indent_continue() >= 0))
                {
-                  /*
-                   * The value of the indentation for a continuation line is calculate
-                   * differently if the line is:
-                   *   a declaration :your case with QString fileName ...
-                   *   an assignment  :your case with pSettings = new QSettings( ...
-                   * At the second case the option value might be used twice:
-                   *   at the assignment
-                   *   at the function call (if present)
-                   * If you want to prevent the double use of the option value
-                   * you may use the new option :
-                   *   use_indent_continue_only_once
-                   * with the value "true".
-                   * use/don't use indent_continue once Guy 2016-05-16
-                   */
+                  size_t sub = 2;
 
-                  // if vardefcol isn't zero, use it
-                  frm.top().SetIndent(vardefcol);
+                  if (  (frm.prev().GetOpenToken() == CT_ASSIGN)
+                     || (frm.prev().GetOpenToken() == CT_RETURN))
+                  {
+                     sub = 3;
+                  }
+                  sub = frm.size() - sub;
+
+                  log_rule_B("indent_align_paren");
+
+                  if (!options::indent_align_paren())
+                  {
+                     sub = frm.size() - 2;
+
+                     while (  sub > 0
+                           && frm.at(sub).GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()))
+                     {
+                        sub--;
+                        // skipped = true;  // Set to true at the end of the code block
+                     }
+
+                     if (  (  frm.at(sub + 1).GetOpenToken() == CT_CLASS_COLON
+                           || frm.at(sub + 1).GetOpenToken() == CT_CONSTR_COLON)
+                        && (frm.at(sub + 1).GetOpenChunk()->GetPrev()->Is(CT_NEWLINE)))
+                     {
+                        sub = sub + 1;
+                     }
+                  }
+                  frm.top().SetIndent(frm.at(sub).GetIndent() + indent_size);
                   log_indent();
+
+                  frm.top().SetIndentTab(frm.top().GetIndent());
+                  skipped = true;
                }
                else
                {
-                  frm.top().SetIndent(calc_indent_continue(frm));
-                  log_indent();
-                  frm.top().SetIndentContinue(true);
-
-                  log_rule_B("indent_sparen_extra");
-
-                  if (  pc->Is(CT_SPAREN_OPEN)
-                     && options::indent_sparen_extra() != 0)
+                  if (  next->IsNotNullChunk()
+                     && !next->IsComment())
                   {
-                     frm.top().SetIndent(frm.top().GetIndent() + options::indent_sparen_extra());
+                     if (next->Is(CT_SPACE))
+                     {
+                        next = next->GetNextNc();
+
+                        if (next->IsNullChunk())
+                        {
+                           break;
+                        }
+                     }
+
+                     if (next->GetPrev()->IsComment())
+                     {
+                        // Issue #2099
+                        frm.top().SetIndent(next->GetPrev()->GetColumn());
+                     }
+                     else
+                     {
+                        if (indent_bool_more)
+                        {
+                           frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
+                        }
+                        else
+                        {
+                           frm.top().SetIndent(next->GetColumn());
+                        }
+                     }
                      log_indent();
                   }
                }
             }
-         }
-         frm.top().SetIndentTmp(frm.top().GetIndent());
-         log_indent_tmp();
+            log_rule_B("use_indent_continue_only_once");
+            log_rule_B("indent_paren_after_func_decl");
+            log_rule_B("indent_paren_after_func_def");
+            log_rule_B("indent_paren_after_func_call");
 
-         frm.SetParenCount(frm.GetParenCount() + 1);
+            if (  (  (  !frm.top().GetIndentContinue()             // Issue #3567
+                     && vardefcol == 0)
+                  || (  !options::use_indent_continue_only_once()  // Issue #1160
+                     && !options::indent_ignore_first_continue())) // Issue #3561
+               && (  pc->Is(CT_FPAREN_OPEN)
+                  && pc->GetPrev()->IsNewline())
+               && (  (  (  pc->GetParentType() == CT_FUNC_PROTO
+                        || pc->GetParentType() == CT_FUNC_CLASS_PROTO)
+                     && options::indent_paren_after_func_decl())
+                  || (  (  pc->GetParentType() == CT_FUNC_DEF
+                        || pc->GetParentType() == CT_FUNC_CLASS_DEF)
+                     && options::indent_paren_after_func_def())
+                  || (  (  pc->GetParentType() == CT_FUNC_CALL
+                        || pc->GetParentType() == CT_FUNC_CALL_USER)
+                     && options::indent_paren_after_func_call())
+                  || !pc->GetNext()->IsNewline()))
+            {
+               frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
+               log_indent();
+
+               indent_column_set(frm.top().GetIndent());
+            }
+            log_rule_B("indent_continue");
+
+            if (  pc->GetParentType() != CT_OC_AT
+               && (  options::indent_ignore_first_continue()
+                  || options::indent_continue() != 0)
+               && !skipped)
+            {
+               if (options::indent_ignore_first_continue())
+               {
+                  frm.top().SetIndent(get_indent_first_continue(pc->GetNext()));
+               }
+               else if (!indent_bool_more)
+               {
+                  frm.top().SetIndent(frm.prev().GetIndent());
+               }
+               log_indent();
+
+               if (  pc->GetLevel() == pc->GetBraceLevel()
+                  && !options::indent_ignore_first_continue()
+                  && (  pc->Is(CT_FPAREN_OPEN)
+                     || pc->Is(CT_RPAREN_OPEN)                   // Issue #1170
+                     || pc->Is(CT_SPAREN_OPEN)
+                     || (  pc->Is(CT_SQUARE_OPEN)
+                        && pc->GetParentType() != CT_OC_MSG)
+                     || pc->Is(CT_ANGLE_OPEN)))                  // Issue #1170
+               {
+                  log_rule_B("use_indent_continue_only_once");
+
+                  if (  (options::use_indent_continue_only_once())
+                     && (frm.top().GetIndentContinue())
+                     && vardefcol != 0)
+                  {
+                     /*
+                     * The value of the indentation for a continuation line is calculate
+                     * differently if the line is:
+                     *   a declaration :your case with QString fileName ...
+                     *   an assignment  :your case with pSettings = new QSettings( ...
+                     * At the second case the option value might be used twice:
+                     *   at the assignment
+                     *   at the function call (if present)
+                     * If you want to prevent the double use of the option value
+                     * you may use the new option :
+                     *   use_indent_continue_only_once
+                     * with the value "true".
+                     * use/don't use indent_continue once Guy 2016-05-16
+                     */
+
+                     // if vardefcol isn't zero, use it
+                     frm.top().SetIndent(vardefcol);
+                     log_indent();
+                  }
+                  else
+                  {
+                     frm.top().SetIndent(calc_indent_continue(frm));
+                     log_indent();
+                     frm.top().SetIndentContinue(true);
+
+                     log_rule_B("indent_sparen_extra");
+
+                     if (  pc->Is(CT_SPAREN_OPEN)
+                        && options::indent_sparen_extra() != 0)
+                     {
+                        frm.top().SetIndent(frm.top().GetIndent() + options::indent_sparen_extra());
+                        log_indent();
+                     }
+                  }
+               }
+            }
+            frm.top().SetIndentTmp(frm.top().GetIndent());
+            log_indent_tmp();
+
+            frm.SetParenCount(frm.GetParenCount() + 1);
+         }  // end else (not macro-no-indent)
       }
       else if (  options::indent_member_single()
               && pc->Is(CT_MEMBER)

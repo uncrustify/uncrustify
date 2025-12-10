@@ -171,6 +171,9 @@
 50816  oc/issue_2675.cfg                        oc/issue_2675.m
 50817  common/aet.cfg                           oc/issue_2722.m
 
+50818  common/aet.cfg                           oc/detect_oc_header.h
+50819  common/aet.cfg                           oc/detect_c_header.h
+
 50900  oc/1927.cfg                              oc/1927.m
 50901  oc/Issue_2172.cfg                        oc/Issue_2172.m
 50902  common/empty.cfg                         oc/Issue_2289.m
@@ -198,6 +201,14 @@
 51002  oc/sp_oc_catch-i.cfg                     oc/sp_oc_catch.m
 51003  oc/sp_oc_catch-r.cfg                     oc/sp_oc_catch.m
 51004  oc/block_pointer.cfg                     oc/block_pointer.m
+
+# Test macro-no-format-args feature for fragile macros with args (like NS_SWIFT_ENUM)
+52000  oc/macro_no_format_args.cfg              oc/macro_no_format_args.m
+52001  oc/macro_no_format_args_edge.cfg         oc/macro_no_format_args_edge.m
+
+# Test macro-no-indent feature for attribute macros
+52002  oc/macro_no_indent.cfg                   oc/macro_no_indent.m
+52003  oc/macro_no_indent_edge.cfg              oc/macro_no_indent_edge.m
 
 #
 # adopt tests from UT
