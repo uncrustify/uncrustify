@@ -1238,6 +1238,16 @@
 34746  cpp/align_var_def_span_num_mixed-4.cfg                cpp/align_var_def_span_num_mixed.cpp
 34747  cpp/align_var_def_span_num_mixed-5.cfg                cpp/align_var_def_span_num_mixed.cpp
 
+# Tests for skipping with span=2 and mixed types of empty/comment/preprocessor lines in in methods
+34748  cpp/align_var_def_span_num_mixed-6.cfg                cpp/align_var_def_span_num_mixed.cpp
+34749  cpp/align_var_def_span_num_mixed-7.cfg                cpp/align_var_def_span_num_mixed.cpp
+34750  cpp/align_var_def_span_num_mixed-8.cfg                cpp/align_var_def_span_num_mixed.cpp
+34751  cpp/align_var_def_span_num_mixed-9.cfg                cpp/align_var_def_span_num_mixed.cpp
+34752  cpp/align_var_def_span_num_mixed-10.cfg               cpp/align_var_def_span_num_mixed.cpp
+
+# Tests for skipping with span=0 and mixed types of empty/comment/preprocessor lines in in methods
+34753  cpp/align_var_def_span_0_num_mixed.cfg                cpp/align_var_def_span_num_mixed.cpp
+
 # Adopt some UT tests
 10000  common/empty.cfg                                     cpp/621_this-spacing.cpp
 10001  common/empty.cfg                                     cpp/622_ifdef-indentation.cpp
