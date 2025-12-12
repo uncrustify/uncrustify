@@ -1248,6 +1248,9 @@
 # Tests for skipping with span=0 and mixed types of empty/comment/preprocessor lines in in methods
 34753  cpp/align_var_def_span_0_num_mixed.cfg                cpp/align_var_def_span_num_mixed.cpp
 
+# Test for recursive align_var_def_brace with nested braces, comments and preprocessor directives
+34754  cpp/nested_brace_alignment.cfg                       cpp/nested_brace_alignment.cpp
+
 # Adopt some UT tests
 10000  common/empty.cfg                                     cpp/621_this-spacing.cpp
 10001  common/empty.cfg                                     cpp/622_ifdef-indentation.cpp
