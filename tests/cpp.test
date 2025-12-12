@@ -1251,6 +1251,9 @@
 # Test for recursive align_var_def_brace with nested braces, comments and preprocessor directives
 34754  cpp/nested_brace_alignment.cfg                       cpp/nested_brace_alignment.cpp
 
+# Test for align_mix_var_proto option
+34755  cpp/align_var_class_span_num_mixed_mix_var_proto.cfg  cpp/align_var_class_span_num_mixed_mix_var_proto.cpp
+
 # Adopt some UT tests
 10000  common/empty.cfg                                     cpp/621_this-spacing.cpp
 10001  common/empty.cfg                                     cpp/622_ifdef-indentation.cpp
