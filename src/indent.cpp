@@ -1946,12 +1946,16 @@ void indent_text()
                     && !pc->TestFlags(PCF_ONE_LINER))
             {
                log_rule_B("indent_align_paren");
+
                // We are inside ({ ... }) -- where { and ( are on the same line, avoiding double indentations.
                // only to help the vim command }
-               frm.top().SetBraceIndent(frm.prev().GetIndent() - indent_size);
-               indent_column_set(frm.top().GetBraceIndent());
-               frm.top().SetIndent(frm.prev().GetIndentTmp());
-               log_indent();
+               if (frm.prev().GetIndent() != 0)
+               {
+                  frm.top().SetBraceIndent(frm.prev().GetIndent() - indent_size);
+                  indent_column_set(frm.top().GetBraceIndent());
+                  frm.top().SetIndent(frm.prev().GetIndentTmp());
+                  log_indent();
+               }
             }
             else if (  frm.prev().GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()->GetPrevNcNnlNpp())
                     && !options::indent_align_paren()
