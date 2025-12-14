@@ -121,6 +121,21 @@ struct AlignmentData
 };
 
 
+/**
+ * Configuration for which line types to skip when counting newlines
+ * for span calculations in alignment operations.
+ * Each value specifies how many lines of that type that can be skiped.
+ * 0 = don't skip any (default behavior)
+ * N > 0 = skip up to N lines of that type
+ */
+struct LineSkipConfig
+{
+   size_t empty_lines;
+   size_t pp_lines;
+   size_t cmt_lines;
+};
+
+
 // for debugging purpose only
 typedef std::pair<size_t, char *>   TrackNumber;   // track for "trackNumber" and "rule"
 typedef std::vector<TrackNumber>    TrackList;     // list of tracks

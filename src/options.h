@@ -3381,6 +3381,24 @@ align_var_def_attribute;
 extern Option<bool>
 align_var_def_inline;
 
+// Number of empty lines to ignore in span calculation for align_var_def_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_def_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_var_def_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_def_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_var_def_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_def_span_num_cmt_lines;
+
 // The span for aligning on '=' in assignments.
 //
 // 0: Don't align (default).
@@ -3447,6 +3465,24 @@ align_enum_equ_thresh;
 extern BoundedOption<unsigned, 0, 5000>
 align_var_class_span;
 
+// Number of empty lines to ignore in span calculation for align_var_class_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_class_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_var_class_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_class_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_var_class_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_class_span_num_cmt_lines;
+
 // The threshold for aligning class member definitions.
 // Use a negative number for absolute thresholds.
 //
@@ -3463,6 +3499,24 @@ align_var_class_gap;
 // 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_var_struct_span;
+
+// Number of empty lines to ignore in span calculation for align_var_struct_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_struct_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_var_struct_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_struct_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_var_struct_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_struct_span_num_cmt_lines;
 
 // The threshold for aligning struct/union member definitions.
 // Use a negative number for absolute thresholds.
