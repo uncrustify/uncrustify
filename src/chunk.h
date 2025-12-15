@@ -274,6 +274,15 @@ public:
    size_t GetNlCount() const;
 
    /**
+    * @brief Returns the effective number of newlines, excluding certain line types
+    * based on LineSkipConfig settings. This is used for span calculations in
+    * alignment operations.
+    * @param skip configuration with budgets that are decremented as lines are skipped
+    * @return effective newline count after applying skip rules
+    */
+   size_t GetNlCountFiltered(LineSkipConfig &skip) const;
+
+   /**
     * @brief Sets the number of newlines in a CT_NEWLINE chunk
     * @param cnt the number of newlines
     */

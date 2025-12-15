@@ -1201,6 +1201,60 @@
 34718  cpp/pos_shift_trail_break.cfg                        cpp/pos_shift.cpp
 34719  cpp/pos_shift_trail_force.cfg                        cpp/pos_shift.cpp
 
+# Tests for skipping empty lines in class span
+34720  cpp/align_var_class_span_num_empty_lines-1.cfg        cpp/align_var_class_span_num_empty_lines.cpp
+34721  cpp/align_var_class_span_num_empty_lines-2.cfg        cpp/align_var_class_span_num_empty_lines.cpp
+34722  cpp/align_var_class_span_num_empty_lines-3.cfg        cpp/align_var_class_span_num_empty_lines.cpp
+
+# Tests for skipping comment lines in class span
+34723  cpp/align_var_class_span_num_cmt_lines-1.cfg          cpp/align_var_class_span_num_cmt_lines.cpp
+34724  cpp/align_var_class_span_num_cmt_lines-2.cfg          cpp/align_var_class_span_num_cmt_lines.cpp
+34725  cpp/align_var_class_span_num_cmt_lines-3.cfg          cpp/align_var_class_span_num_cmt_lines.cpp
+
+# Tests for skipping preprocessor lines in class span
+34726  cpp/align_var_class_span_num_pp_lines-1.cfg           cpp/align_var_class_span_num_pp_lines.cpp
+34727  cpp/align_var_class_span_num_pp_lines-2.cfg           cpp/align_var_class_span_num_pp_lines.cpp
+34728  cpp/align_var_class_span_num_pp_lines-3.cfg           cpp/align_var_class_span_num_pp_lines.cpp
+
+# Tests for skipping mixed types of empty/comment/preprocessor lines in class span
+34729  cpp/align_var_class_span_num_mixed-1.cfg              cpp/align_var_class_span_num_mixed.cpp
+34730  cpp/align_var_class_span_num_mixed-2.cfg              cpp/align_var_class_span_num_mixed.cpp
+34731  cpp/align_var_class_span_num_mixed-3.cfg              cpp/align_var_class_span_num_mixed.cpp
+34732  cpp/align_var_class_span_num_mixed-4.cfg              cpp/align_var_class_span_num_mixed.cpp
+34733  cpp/align_var_class_span_num_mixed-5.cfg              cpp/align_var_class_span_num_mixed.cpp
+
+# align_var_def_span_num_* tests (local variables in methods)
+34734  cpp/align_var_def_span_num_empty_lines-1.cfg          cpp/align_var_def_span_num_empty_lines.cpp
+34735  cpp/align_var_def_span_num_empty_lines-2.cfg          cpp/align_var_def_span_num_empty_lines.cpp
+34736  cpp/align_var_def_span_num_empty_lines-3.cfg          cpp/align_var_def_span_num_empty_lines.cpp
+34737  cpp/align_var_def_span_num_cmt_lines-1.cfg            cpp/align_var_def_span_num_cmt_lines.cpp
+34738  cpp/align_var_def_span_num_cmt_lines-2.cfg            cpp/align_var_def_span_num_cmt_lines.cpp
+34739  cpp/align_var_def_span_num_cmt_lines-3.cfg            cpp/align_var_def_span_num_cmt_lines.cpp
+34740  cpp/align_var_def_span_num_pp_lines-1.cfg             cpp/align_var_def_span_num_pp_lines.cpp
+34741  cpp/align_var_def_span_num_pp_lines-2.cfg             cpp/align_var_def_span_num_pp_lines.cpp
+34742  cpp/align_var_def_span_num_pp_lines-3.cfg             cpp/align_var_def_span_num_pp_lines.cpp
+34743  cpp/align_var_def_span_num_mixed-1.cfg                cpp/align_var_def_span_num_mixed.cpp
+34744  cpp/align_var_def_span_num_mixed-2.cfg                cpp/align_var_def_span_num_mixed.cpp
+34745  cpp/align_var_def_span_num_mixed-3.cfg                cpp/align_var_def_span_num_mixed.cpp
+34746  cpp/align_var_def_span_num_mixed-4.cfg                cpp/align_var_def_span_num_mixed.cpp
+34747  cpp/align_var_def_span_num_mixed-5.cfg                cpp/align_var_def_span_num_mixed.cpp
+
+# Tests for skipping with span=2 and mixed types of empty/comment/preprocessor lines in in methods
+34748  cpp/align_var_def_span_num_mixed-6.cfg                cpp/align_var_def_span_num_mixed.cpp
+34749  cpp/align_var_def_span_num_mixed-7.cfg                cpp/align_var_def_span_num_mixed.cpp
+34750  cpp/align_var_def_span_num_mixed-8.cfg                cpp/align_var_def_span_num_mixed.cpp
+34751  cpp/align_var_def_span_num_mixed-9.cfg                cpp/align_var_def_span_num_mixed.cpp
+34752  cpp/align_var_def_span_num_mixed-10.cfg               cpp/align_var_def_span_num_mixed.cpp
+
+# Tests for skipping with span=0 and mixed types of empty/comment/preprocessor lines in in methods
+34753  cpp/align_var_def_span_0_num_mixed.cfg                cpp/align_var_def_span_num_mixed.cpp
+
+# Test for recursive align_var_def_brace with nested braces, comments and preprocessor directives
+34754  cpp/nested_brace_alignment.cfg                       cpp/nested_brace_alignment.cpp
+
+# Test for align_mix_var_proto option
+34755  cpp/align_var_class_span_num_mixed_mix_var_proto.cfg  cpp/align_var_class_span_num_mixed_mix_var_proto.cpp
+
 # Adopt some UT tests
 10000  common/empty.cfg                                     cpp/621_this-spacing.cpp
 10001  common/empty.cfg                                     cpp/622_ifdef-indentation.cpp

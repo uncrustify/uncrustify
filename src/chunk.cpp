@@ -6,6 +6,7 @@
  * @license GPL v2+
  */
 
+#include <algorithm>
 #include <cstdio>
 
 #include "chunk.h"
@@ -916,6 +917,77 @@ bool Chunk::IsNewlineBetween(const Chunk *other) const
    }
    return(false);
 } // Chunk::IsNewlineBetween
+
+
+size_t Chunk::GetNlCountFiltered(LineSkipConfig &skip) const
+{
+   size_t nl_count = GetNlCount(); // Initial number of newlines in this chunk
+
+   // If no newlines in this chunk, nothing to filter.
+   if (nl_count == 0)
+   {
+      return(0);
+   }
+
+   // If no budget available, directly return the raw count.
+   if (skip.empty_lines == 0 && skip.pp_lines == 0 && skip.cmt_lines == 0)
+   {
+      return(nl_count);
+   }
+
+   // 1. Handle empty lines (if nl_count > 1, it means there's at least one empty line)
+   //    The 'nl_count - 1' represents the number of purely empty lines
+   if (nl_count > 1)
+   {
+      size_t empty_lines_in_chunk = nl_count - 1;
+      size_t consumed             = std::min(empty_lines_in_chunk, skip.empty_lines);
+      skip.empty_lines -= consumed;
+      nl_count         -= consumed; // Reduce the count that will be returned
+   }
+
+   // If after handling empty lines, there's no more newlines to process, return.
+   if (nl_count == 0)
+   {
+      return(0);
+   }
+   // Check the next chunk to determine what type of line this last remaining newline precedes.
+   Chunk *next = GetNext();
+
+   if (next->IsNullChunk())
+   {
+      // If no next chunk, can't classify the last newline, so return what's left.
+      return(nl_count);
+   }
+
+   // 2. Handle preprocessor lines (the line *after* the newline chunk)
+   // We assume a single newline (nl_count=1) precedes a single line type (PP, Comment, or regular code).
+   if (next->IsPreproc() && skip.pp_lines > 0)
+   {
+      --skip.pp_lines;
+      --nl_count;  // Consume this newline from the count
+   }
+
+   // If consumed by PP, and no more newlines, return.
+   if (nl_count == 0)
+   {
+      return(0);
+   }
+
+   // 3. Handle comment lines (the line *after* the last newline chunk)
+   // This check is independent of IsPreproc(), as a line can be a comment after a PP or just a comment.
+   if (next->IsComment() && skip.cmt_lines > 0)
+   {
+      --skip.cmt_lines;
+      --nl_count;  // Consume this newline from the count
+   }
+
+   // If consumed by comment, and no more newlines, return.
+   if (nl_count == 0)
+   {
+      return(0);
+   }
+   return(nl_count); // Return the count of newlines that *could not* be ignored by any budget
+} // Chunk::GetNlCountFiltered
 
 
 void shift_the_rest_of_the_line(Chunk *first)
