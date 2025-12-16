@@ -1282,6 +1282,9 @@
 34771  cpp/align_func_proto_span_num_mixed-5.cfg             cpp/align_func_proto_span_num_mixed.cpp
 34772  cpp/align_func_proto_span_0_num_mixed.cfg             cpp/align_func_proto_span_num_mixed.cpp
 
+# Test for align_var_class_span with mixed multi-line and C++ comments
+34773  cpp/align_var_class_span_num_cmt_lines_multicmt-3.cfg cpp/align_var_class_span_num_cmt_lines_multicmt.cpp
+
 # Adopt some UT tests
 10000  common/empty.cfg                                     cpp/621_this-spacing.cpp
 10001  common/empty.cfg                                     cpp/622_ifdef-indentation.cpp
