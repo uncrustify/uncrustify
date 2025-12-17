@@ -27,10 +27,10 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    {
       return(Chunk::NullChunkPtr);
    }
-   Chunk  *next;
-   size_t myspan   = span;
-   size_t mythresh = 0;
-   size_t mygap    = 0;
+   Chunk          *next;
+   size_t         myspan     = span;
+   size_t         mythresh   = 0;
+   size_t         mygap      = 0;
    LineSkipConfig myskip_cfg = {};
 
    // Override the span, if this is a struct/union
@@ -81,7 +81,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    // Working copy of skip config - budgets are decremented as lines are skipped
    LineSkipConfig skip_budget = myskip_cfg;
    // can't be any variable definitions in a "= {" block
-   Chunk *prev = start->GetPrevNcNnl();
+   Chunk          *prev = start->GetPrevNcNnl();
 
    if (prev->Is(CT_ASSIGN))
    {
@@ -195,7 +195,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
                toadd = pc;
             }
             as.Add(step_back_over_member(toadd));
-            skip_budget = myskip_cfg;  // Reset budget for next variable transition
+            skip_budget = myskip_cfg; // Reset budget for next variable transition
             log_rule_B("align_single_line_brace");
             fp_look_bro = (pc->Is(CT_FUNC_DEF))
                           && options::align_single_line_brace();
@@ -246,9 +246,9 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       {
          fp_look_bro   = false;
          did_this_line = false;
-         
+
          size_t nl_cnt = pc->GetNlCountFiltered(skip_budget);
-         
+
          if (nl_cnt > 0)
          {
             as.NewLines(nl_cnt);
@@ -291,7 +291,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          && pc->IsNot(CT_FUNC_CLASS_DEF)
          && pc->IsNot(CT_FUNC_CLASS_PROTO)
          && ((pc->GetFlags() & align_mask) == PCF_VAR_1ST)
-         && pc->IsNot(CT_FUNC_DEF)                                   // Issue 1452
+         && pc->IsNot(CT_FUNC_DEF)                                    // Issue 1452
          && (  (pc->GetLevel() == (start->GetLevel() + 1))
             || pc->GetLevel() == 0)
          && pc->GetPrev()->IsNot(CT_MEMBER))
@@ -323,13 +323,13 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
             // we must look after the previous token
             Chunk *prev_local = pc->GetPrev();
 
-            if (prev_local->IsNot(CT_DEREF))                    // Issue #2971
+            if (prev_local->IsNot(CT_DEREF))                // Issue #2971
             {
                LOG_FMT(LAVDB, "%s(%d): add = '%s', orig line is %zu, orig col is %zu, level is %zu\n",
                        __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
 
                as.Add(step_back_over_member(pc));
-               skip_budget = myskip_cfg;  // Reset budget for next variable transition
+               skip_budget = myskip_cfg; // Reset budget for next variable transition
             }
             log_rule_B("align_var_def_colon");
 
