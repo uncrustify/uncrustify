@@ -153,17 +153,14 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
       if (pc->IsComment())
       {
-         if (pc->GetNlCount() > 0)
+         const size_t nl_cnt = pc->GetNlCountFiltered(skip_budget);
+
+         if (nl_cnt > 0)
          {
-            size_t nl_cnt = pc->GetNlCountFiltered(skip_budget);
-            
-            if (nl_cnt > 0)
-            {
-               as.NewLines(nl_cnt);
-               as_bc.NewLines(nl_cnt);
-               as_at.NewLines(nl_cnt);
-               as_br.NewLines(nl_cnt);
-            }
+            as.NewLines(nl_cnt);
+            as_bc.NewLines(nl_cnt);
+            as_at.NewLines(nl_cnt);
+            as_br.NewLines(nl_cnt);
          }
          pc = pc->GetNext();
          LOG_FMT(LAVDB, "%s(%d): pc->Text() is '%s', level is %zu, brace level is %zu\n",
