@@ -1288,6 +1288,11 @@
 # Test for align_func_proto_span with mixed multi-line and C++ comments
 34774  cpp/align_func_proto_span_num_cmt_lines-2.cfg         cpp/align_func_proto_span_num_cmt_lines_multicmt.cpp
 
+# align_func_proto_span_num_* tests - Complex multi-level alignment
+34775  cpp/align_func_proto_span_num_complex_multilevels-1.cfg  cpp/align_func_proto_span_num_complex_multilevels.cpp
+34776  cpp/align_func_proto_span_num_complex_multilevels-2.cfg  cpp/align_func_proto_span_num_complex_multilevels.cpp
+34777  cpp/align_func_proto_span_num_complex_multilevels-3.cfg  cpp/align_func_proto_span_num_complex_multilevels.cpp
+
 # Adopt some UT tests
 10000  common/empty.cfg                                     cpp/621_this-spacing.cpp
 10001  common/empty.cfg                                     cpp/622_ifdef-indentation.cpp
