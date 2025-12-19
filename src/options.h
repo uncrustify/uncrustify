@@ -3627,6 +3627,24 @@ align_struct_init_span;
 extern BoundedOption<unsigned, 0, 16>
 align_typedef_span;
 
+// Number of empty lines to ignore in span calculation for align_typedef_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_typedef_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_typedef_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_typedef_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_typedef_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_typedef_span_num_cmt_lines;
+
 // The minimum space between the type and the synonym of a typedef.
 extern BoundedOption<unsigned, 0, 16>
 align_typedef_gap;
