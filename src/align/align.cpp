@@ -161,6 +161,7 @@ void align_all()
       align_assign(Chunk::GetHead(),
                    options::align_assign_span(),
                    options::align_assign_thresh(),
+                   false,
                    nullptr);
    }
 

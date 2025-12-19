@@ -3425,6 +3425,24 @@ align_assign_func_proto_span;
 extern BoundedOption<signed, -1000, 5000>
 align_assign_thresh;
 
+// Number of empty lines to ignore in span calculation for align_assign_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_assign_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_assign_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_assign_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_assign_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_assign_span_num_cmt_lines;
+
 // Whether to align on the left most assignment when multiple
 // definitions are found on the same line.
 // Depends on 'align_assign_span' and 'align_assign_thresh' settings.
@@ -3465,6 +3483,24 @@ align_enum_equ_span;
 // 0: no limit (default).
 extern BoundedOption<signed, -1000, 5000>
 align_enum_equ_thresh;
+
+// Number of empty lines to ignore in span calculation for align_enum_equ_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_enum_equ_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_enum_equ_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_enum_equ_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_enum_equ_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_enum_equ_span_num_cmt_lines;
 
 // The span for aligning class member definitions.
 //
