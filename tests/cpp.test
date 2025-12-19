@@ -1385,6 +1385,21 @@
 34843  cpp/align_func_params_span_num_mixed-2.cfg          cpp/align_func_params_span_num_mixed_lines_macro_calls.h
 34844  cpp/align_func_params_span_num_mixed-3.cfg          cpp/align_func_params_span_num_mixed_lines_macro_calls.h
 
+# align_typedef_span_num_* tests - Empty lines
+34850  common/align_typedef_span_num_empty_lines-1.cfg      cpp/align_typedef_span_num_empty_lines.cpp
+34851  common/align_typedef_span_num_empty_lines-2.cfg      cpp/align_typedef_span_num_empty_lines.cpp
+34852  common/align_typedef_span_num_empty_lines-3.cfg      cpp/align_typedef_span_num_empty_lines.cpp
+
+# align_typedef_span_num_* tests - Comment lines
+34853  common/align_typedef_span_num_cmt_lines-1.cfg        cpp/align_typedef_span_num_cmt_lines.cpp
+34854  common/align_typedef_span_num_cmt_lines-2.cfg        cpp/align_typedef_span_num_cmt_lines.cpp
+34855  common/align_typedef_span_num_cmt_lines-3.cfg        cpp/align_typedef_span_num_cmt_lines.cpp
+
+# align_typedef_span_num_* tests - Preprocessor lines
+34856  common/align_typedef_span_num_pp_lines-1.cfg         cpp/align_typedef_span_num_pp_lines.cpp
+34857  common/align_typedef_span_num_pp_lines-2.cfg         cpp/align_typedef_span_num_pp_lines.cpp
+34858  common/align_typedef_span_num_pp_lines-3.cfg         cpp/align_typedef_span_num_pp_lines.cpp
+
 # Adopt some UT tests
 10000  common/empty.cfg                                     cpp/621_this-spacing.cpp
 10001  common/empty.cfg                                     cpp/622_ifdef-indentation.cpp
