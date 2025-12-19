@@ -46,7 +46,19 @@ Chunk *align_func_param(Chunk *start)
    const size_t HOW_MANY_AS = 16;                         // Issue #2921
    AlignStack   many_as[HOW_MANY_AS + 1];
 
-   size_t       max_level_is = 0;
+   // Line skip configuration
+   log_rule_B("align_func_params_span_num_empty_lines");
+   log_rule_B("align_func_params_span_num_pp_lines");
+   log_rule_B("align_func_params_span_num_cmt_lines");
+   LineSkipConfig skip_cfg = {};
+   skip_cfg.empty_lines = options::align_func_params_span_num_empty_lines();
+   skip_cfg.pp_lines    = options::align_func_params_span_num_pp_lines();
+   skip_cfg.cmt_lines   = options::align_func_params_span_num_cmt_lines();
+
+   // Working copy of skip config - one budget per level
+   LineSkipConfig skip_budgets[HOW_MANY_AS + 1];
+
+   size_t         max_level_is = 0;
 
    log_rule_B("align_var_def_star_style");
    log_rule_B("align_var_def_amp_style");
@@ -57,6 +69,7 @@ Chunk *align_func_param(Chunk *start)
       many_as[idx].m_gap        = mygap;
       many_as[idx].m_star_style = static_cast<AlignStack::StarStyle>(options::align_var_def_star_style());
       many_as[idx].m_amp_style  = static_cast<AlignStack::StarStyle>(options::align_var_def_amp_style());
+      skip_budgets[idx]         = skip_cfg;
    }
 
    size_t comma_count = 0;
@@ -117,7 +130,13 @@ Chunk *align_func_param(Chunk *start)
       {
          comma_count = 0;
          chunk_count = 0;
-         many_as[pc->GetLevel()].NewLines(pc->GetNlCount());
+         size_t level  = pc->GetLevel();
+         size_t nl_cnt = pc->GetNlCountFiltered(skip_budgets[level]);
+
+         if (nl_cnt > 0)
+         {
+            many_as[level].NewLines(nl_cnt);
+         }
       }
       else if (pc->GetLevel() <= start->GetLevel())
       {
@@ -138,6 +157,7 @@ Chunk *align_func_param(Chunk *start)
             }
             max_level_is = std::max(max_level_is, pc->GetLevel());
             many_as[pc->GetLevel()].Add(pc);
+            skip_budgets[pc->GetLevel()] = skip_cfg;  // Reset budget after adding
          }
       }
       else if (comma_count > 0)
