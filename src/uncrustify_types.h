@@ -124,7 +124,7 @@ struct AlignmentData
 /**
  * Configuration for which line types to skip when counting newlines
  * for span calculations in alignment operations.
- * Each value specifies how many lines of that type that can be skiped.
+ * Each value specifies how many lines of that type that can be skipped.
  * 0 = don't skip any (default behavior)
  * N > 0 = skip up to N lines of that type
  */
