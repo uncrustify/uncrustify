@@ -3,6 +3,7 @@
 	// ment is confusing without them.  Remember that other people may confuse
 	: CSuperFoo(something, positionRect, aNumber,
 	Token* peek( inout Token ct )
+	callD({
                                             ontext.cend()));
                  __func__, __LINE__, ontext.c_str(), pc.GetOrigLine());
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), nam->Text(), get_token_name(nam->GetType()));
@@ -30,6 +31,7 @@
     Spelling fix: preceeded -> preceded
     Token *peek(inout Token ct)
     Token* peek(inout Token ct) {
+    callD({
     float  temp_num_prec;   // La valeur précédente pour la comparaison
     float  val_num_prec;    // La valeur précédente pour la comparaison
     int    humidite_prec;   // La valeur précédente pour la comparaison
