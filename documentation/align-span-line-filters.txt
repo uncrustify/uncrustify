@@ -1,0 +1,166 @@
+===============================================================================
+Alignment Span Line Filters
+===============================================================================
+
+Introduction
+------------
+
+Uncrustify uses "span" options to control how far apart code elements can be
+while still being aligned together. For example, `align_var_def_span = 2`
+means variable definitions up to 2 lines apart will be aligned as a group.
+
+In real-world code, empty lines, comments, or preprocessor directives often
+appear between related code elements. These "interruptions" normally break
+the alignment span, even when you'd prefer the alignment to continue.
+
+The xxx_span_num_yyy_lines filter options solve this by letting Uncrustify ignore
+certain types of lines when counting the span distance.
+
+
+The Line Filter Options
+-----------------------
+
+For each supported span option, three filter options may be available:
+
+  <span_name>_num_empty_lines  - Number of empty/blank lines to skip
+  <span_name>_num_cmt_lines    - Number of comment-only lines to skip
+  <span_name>_num_pp_lines     - Number of preprocessor lines to skip
+
+All filter options default to 0 (disabled), preserving original behavior of <span_name>.
+
+If <span_name> is set to 0, none of these options are used, as span alignement is disabled.
+
+Currently Supported Spans
+-------------------------
+
+The following span options currently support line filters:
+
+  +--------------------------+------------------------------------------+
+  | Span Option              | Purpose                                  |
+  +--------------------------+------------------------------------------+
+  | align_var_def_span       | Local variable definitions in functions  |
+  | align_var_class_span     | Member variables in classes              |
+  | align_var_struct_span    | Member variables in structs/unions       |
+  | align_func_proto_span    | Function prototypes/declarations         |
+  +--------------------------+------------------------------------------+
+
+Each of these has the three associated filter options. For example:
+  - align_var_def_span_num_empty_lines
+  - align_var_def_span_num_cmt_lines
+  - align_var_def_span_num_pp_lines
+
+
+How It Works
+------------
+
+The filters work as a "budget" consumed while scanning between candidates:
+
+1. Count all newlines between two potential alignment candidates
+2. Subtract skippable lines (up to each filter's budget)
+3. Compare remaining count against the span value
+4. If remaining <= span, the items align together
+
+Example calculation:
+  - 4 total lines between two variables
+  - 2 are preprocessor lines, 1 is a comment, 1 is an empty line
+  - With num_pp_lines=1 and num_cmt_lines=1: skip 1 PP + 1 cmt = 2
+  - Remaining: 4 - 2 = 2 lines
+  - If span >= 2, variables will align
+
+
+Example: Function Prototypes
+----------------------------
+
+Code with mixed line types:
+
+    int         func_one(void);
+    // Helper function
+    double      func_two(int x);
+
+    // This is func_3
+    const char* func_three(void);
+
+Configuration:
+    align_func_proto_span                 = 1
+    align_func_proto_span_num_cmt_lines   = 1
+    align_func_proto_span_num_empty_lines = 1
+
+Result: All three functions align because:
+  - Comment between func_one/func_two is skipped (budget: 1)
+  - Empty line + comment between func_two/func_three are skipped
+
+
+Example: Class Members with Preprocessor
+----------------------------------------
+
+Code:
+    class Config {
+        int   m_width;
+        int   m_height;
+    #ifdef FEATURE_3D
+        float m_depth;
+    #endif
+
+        std::string m_name;
+    };
+
+Configuration:
+    align_var_class_span              = 1
+    align_var_class_span_num_pp_lines = 1
+
+Result:
+  - First 3 members align because #ifdef/#endif lines are skipped.
+  - Last member does not align because no empty lines are allowed and span=1.
+
+
+Multi-Line Comments
+-------------------
+
+Multi-line comments (/* ... */) count each internal newline:
+  - A 5-line comment consumes 5 from num_cmt_lines budget
+  - Single-line // comments consume 1 each
+
+Example with num_cmt_lines = 2:
+
+    int x;
+    /* Line 1
+       Line 2
+       Line 3 */
+    double y;  // Will NOT align (3 lines > budget of 2)
+
+
+Configuration Tips
+------------------
+
+1. Set <span_name> value = 1
+2. Start conservative for <span_name>_num_xxx_lines (values of 1-2), increase if needed
+3. Consider your codebase's comment/preprocessor density
+
+Conservative example:
+    align_var_def_span                    = 1
+    align_var_def_span_num_empty_lines    = 1
+    align_var_def_span_num_cmt_lines      = 1
+    align_var_def_span_num_pp_lines       = 1
+
+Aggressive example (maintains alignment across many interruptions):
+    align_var_def_span                    = 1
+    align_var_def_span_num_empty_lines    = 3
+    align_var_def_span_num_cmt_lines      = 5
+    align_var_def_span_num_pp_lines       = 3
+
+
+Future Extensions
+-----------------
+
+Additional span options may gain line filter support in future versions.
+The naming convention will remain consistent:
+  <existing_span_option>_num_empty_lines
+  <existing_span_option>_num_cmt_lines
+  <existing_span_option>_num_pp_lines
+
+
+See Also
+--------
+
+- documentation/align-thresholds.txt - Span and threshold concepts
+- etc/defaults.cfg - All options with default values

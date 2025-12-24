@@ -2949,6 +2949,21 @@ align_func_proto_span           = 0        # unsigned number
 # true:  continuation lines are not counted
 align_func_proto_span_ignore_cont_lines = false    # true/false
 
+# Number of empty lines to ignore in span calculation for align_func_proto_span.
+#
+# 0: Don't skip any lines (default).
+align_func_proto_span_num_empty_lines = 0        # unsigned number
+
+# Number of preprocessor directive lines to ignore in span calculation for align_func_proto_span.
+#
+# 0: Don't skip any lines (default).
+align_func_proto_span_num_pp_lines = 0        # unsigned number
+
+# Number of comment-only lines to ignore in span calculation for align_func_proto_span.
+#
+# 0: Don't skip any lines (default).
+align_func_proto_span_num_cmt_lines = 0        # unsigned number
+
 # How to consider (or treat) the '*' in the alignment of function prototypes.
 #
 # 0: Part of the type     'void *   foo();' (default)

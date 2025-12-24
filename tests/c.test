@@ -620,3 +620,28 @@
 10155  c/align_var_def_span_num_mixed-3.cfg               c/align_var_def_span_num_mixed.c
 10156  c/align_var_def_span_num_mixed-4.cfg               c/align_var_def_span_num_mixed.c
 10157  c/align_var_def_span_num_mixed-5.cfg               c/align_var_def_span_num_mixed.c
+
+# align_func_proto_span_num_* tests - Empty lines
+10158  c/align_func_proto_span_num_empty_lines-1.cfg         c/align_func_proto_span_num_empty_lines.c
+10159  c/align_func_proto_span_num_empty_lines-2.cfg         c/align_func_proto_span_num_empty_lines.c
+10160  c/align_func_proto_span_num_empty_lines-3.cfg         c/align_func_proto_span_num_empty_lines.c
+
+# align_func_proto_span_num_* tests - Comment lines
+10161  c/align_func_proto_span_num_cmt_lines-1.cfg           c/align_func_proto_span_num_cmt_lines.c
+10162  c/align_func_proto_span_num_cmt_lines-2.cfg           c/align_func_proto_span_num_cmt_lines.c
+10163  c/align_func_proto_span_num_cmt_lines-3.cfg           c/align_func_proto_span_num_cmt_lines.c
+
+# align_func_proto_span_num_* tests - Preprocessor lines
+10164  c/align_func_proto_span_num_pp_lines-1.cfg            c/align_func_proto_span_num_pp_lines.c
+10165  c/align_func_proto_span_num_pp_lines-2.cfg            c/align_func_proto_span_num_pp_lines.c
+10166  c/align_func_proto_span_num_pp_lines-3.cfg            c/align_func_proto_span_num_pp_lines.c
+
+# align_func_proto_span_num_* tests - Mixed configurations
+10167  c/align_func_proto_span_num_mixed-1.cfg               c/align_func_proto_span_num_mixed.c
+10168  c/align_func_proto_span_num_mixed-2.cfg               c/align_func_proto_span_num_mixed.c
+10169  c/align_func_proto_span_num_mixed-3.cfg               c/align_func_proto_span_num_mixed.c
+10170  c/align_func_proto_span_num_mixed-4.cfg               c/align_func_proto_span_num_mixed.c
+10171  c/align_func_proto_span_num_mixed-5.cfg               c/align_func_proto_span_num_mixed.c
+
+# Test span=0 does nothing even with num_*_lines != 0
+10172  c/align_func_proto_span_0_num_mixed.cfg               c/align_func_proto_span_num_mixed.c

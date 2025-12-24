@@ -1255,6 +1255,44 @@
 # Test for align_mix_var_proto option
 34755  cpp/align_var_class_span_num_mixed_mix_var_proto.cfg  cpp/align_var_class_span_num_mixed_mix_var_proto.cpp
 
+# align_func_proto_span_num_* tests - Empty lines with span=1
+34756  cpp/align_func_proto_span_num_empty_lines-1.cfg       cpp/align_func_proto_span_num_empty_lines.cpp
+34757  cpp/align_func_proto_span_num_empty_lines-2.cfg       cpp/align_func_proto_span_num_empty_lines.cpp
+34758  cpp/align_func_proto_span_num_empty_lines-3.cfg       cpp/align_func_proto_span_num_empty_lines.cpp
+
+# align_func_proto_span_num_* tests - Empty lines with span=2,3
+34759  cpp/align_func_proto_span_2_num_empty_lines-1.cfg     cpp/align_func_proto_span_num_empty_lines.cpp
+34760  cpp/align_func_proto_span_3_num_empty_lines-1.cfg     cpp/align_func_proto_span_num_empty_lines.cpp
+
+# align_func_proto_span_num_* tests - Comment lines
+34761  cpp/align_func_proto_span_num_cmt_lines-1.cfg         cpp/align_func_proto_span_num_cmt_lines.cpp
+34762  cpp/align_func_proto_span_num_cmt_lines-2.cfg         cpp/align_func_proto_span_num_cmt_lines.cpp
+34763  cpp/align_func_proto_span_num_cmt_lines-3.cfg         cpp/align_func_proto_span_num_cmt_lines.cpp
+
+# align_func_proto_span_num_* tests - Preprocessor lines
+34764  cpp/align_func_proto_span_num_pp_lines-1.cfg          cpp/align_func_proto_span_num_pp_lines.cpp
+34765  cpp/align_func_proto_span_num_pp_lines-2.cfg          cpp/align_func_proto_span_num_pp_lines.cpp
+34766  cpp/align_func_proto_span_num_pp_lines-3.cfg          cpp/align_func_proto_span_num_pp_lines.cpp
+
+# align_func_proto_span_num_* tests - Mixed line types
+34767  cpp/align_func_proto_span_num_mixed-1.cfg             cpp/align_func_proto_span_num_mixed.cpp
+34768  cpp/align_func_proto_span_num_mixed-2.cfg             cpp/align_func_proto_span_num_mixed.cpp
+34769  cpp/align_func_proto_span_num_mixed-3.cfg             cpp/align_func_proto_span_num_mixed.cpp
+34770  cpp/align_func_proto_span_num_mixed-4.cfg             cpp/align_func_proto_span_num_mixed.cpp
+34771  cpp/align_func_proto_span_num_mixed-5.cfg             cpp/align_func_proto_span_num_mixed.cpp
+34772  cpp/align_func_proto_span_0_num_mixed.cfg             cpp/align_func_proto_span_num_mixed.cpp
+
+# Test for align_var_class_span with mixed multi-line and C++ comments
+34773  cpp/align_var_class_span_num_cmt_lines_multicmt-3.cfg cpp/align_var_class_span_num_cmt_lines_multicmt.cpp
+
+# Test for align_func_proto_span with mixed multi-line and C++ comments
+34774  cpp/align_func_proto_span_num_cmt_lines-2.cfg         cpp/align_func_proto_span_num_cmt_lines_multicmt.cpp
+
+# align_func_proto_span_num_* tests - Complex multi-level alignment
+34775  cpp/align_func_proto_span_num_complex_multilevels-1.cfg  cpp/align_func_proto_span_num_complex_multilevels.cpp
+34776  cpp/align_func_proto_span_num_complex_multilevels-2.cfg  cpp/align_func_proto_span_num_complex_multilevels.cpp
+34777  cpp/align_func_proto_span_num_complex_multilevels-3.cfg  cpp/align_func_proto_span_num_complex_multilevels.cpp
+
 # Adopt some UT tests
 10000  common/empty.cfg                                     cpp/621_this-spacing.cpp
 10001  common/empty.cfg                                     cpp/622_ifdef-indentation.cpp

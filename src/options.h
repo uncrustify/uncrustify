@@ -3614,6 +3614,24 @@ align_func_proto_span;
 extern Option<bool>
 align_func_proto_span_ignore_cont_lines; // = false
 
+// Number of empty lines to ignore in span calculation for align_func_proto_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_func_proto_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_func_proto_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_func_proto_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_func_proto_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_func_proto_span_num_cmt_lines;
+
 // How to consider (or treat) the '*' in the alignment of function prototypes.
 //
 // 0: Part of the type     'void *   foo();' (default)
