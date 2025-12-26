@@ -1693,7 +1693,8 @@ void mark_function(Chunk *pc)
 
          // If we are on a TYPE or WORD, then this could be a proto or def
          if (  prev->Is(CT_TYPE)
-            || prev->Is(CT_WORD))
+            || prev->Is(CT_WORD)
+            || (prev->IsParenClose() && prev->GetParentType() == CT_DECLTYPE))
          {
             if (!hit_star)
             {
@@ -1798,7 +1799,8 @@ void mark_function(Chunk *pc)
          && (  (  prev->IsParenClose()
                && prev->GetParentType() != CT_D_CAST
                && prev->GetParentType() != CT_MACRO_OPEN  // Issue #2726
-               && prev->GetParentType() != CT_MACRO_CLOSE)
+               && prev->GetParentType() != CT_MACRO_CLOSE
+               && prev->GetParentType() != CT_DECLTYPE)
             || prev->Is(CT_ASSIGN)
             || prev->Is(CT_RETURN)))
       {
