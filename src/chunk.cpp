@@ -973,13 +973,11 @@ size_t Chunk::GetNlCountFiltered(LineSkipConfig &skip) const
       // We are on a comment chunk, juste count the number of newlines into this comment chunk (if any).
       assert(IsComment() && "The logic of this method is for a newline chunk or a comment chunk only.");
 
-      if (nl_count > 0)
-      {
-         const size_t cmt_lines_in_chunk = nl_count;
-         const size_t consumed           = std::min(cmt_lines_in_chunk, skip.cmt_lines);
-         skip.cmt_lines -= consumed;
-         nl_count       -= consumed; // Reduce the count that will be returned
-      }
+      // nl_count is always positive (test at start of function)
+      const size_t cmt_lines_in_chunk = nl_count;
+      const size_t consumed           = std::min(cmt_lines_in_chunk, skip.cmt_lines);
+      skip.cmt_lines -= consumed;
+      nl_count       -= consumed; // Reduce the count that will be returned
    }
    return(nl_count); // Return the count of newlines that *could not* be ignored by any budget
 } // Chunk::GetNlCountFiltered
