@@ -1729,7 +1729,8 @@ void mark_function(Chunk *pc)
             && prev->IsNot(CT_QUALIFIER)
             && prev->IsNot(CT_TYPE)
             && prev->IsNot(CT_WORD)
-            && !prev->IsPointerOperator())
+            && !prev->IsPointerOperator()
+            && !(prev->IsParenClose() && prev->GetParentType() == CT_DECLTYPE))
          {
             LOG_FMT(LFCN, "%s(%d):  --> Stopping on prev is '%s', orig line is %zu, orig col is %zu, type is %s\n",
                     __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->GetOrigCol(), get_token_name(prev->GetType()));
