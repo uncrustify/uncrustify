@@ -118,6 +118,17 @@ cp_data_t cpd;
 //static size_t language_flags_from_filename(const char *filename);
 
 
+/**
+ * Check if file content contains Objective-C patterns.
+ * This is used to upgrade C-Header files to Objective-C when they contain
+ * OC-specific keywords like @interface, @implementation, @property, etc.
+ *
+ * @param raw   The raw file content
+ * @return      true if OC patterns are detected
+ */
+static bool detect_oc_content(const std::vector<UINT8> &raw);
+
+
 static bool read_stdin(file_mem &fm);
 
 
@@ -1551,6 +1562,21 @@ static void do_source_file(const char *filename_in,
    LOG_FMT(LSYS, "%s: Parsing: %s as language %s\n",
            __func__, filename_in, language_name_from_flags(cpd.lang_flags));
 
+/*
+    * If the file is a .h header detected as C, scan the content for Objective-C
+    * patterns and upgrade the language to OC if found. This must happen
+    * before init_keywords_for_language() is called.
+    */
+   if (  (cpd.lang_flags & e_LANG_C)
+      && !cpd.lang_forced
+      && ends_with(filename_in, ".h", false /*case_sensitive*/)
+      && detect_oc_content(fm.raw))
+   {
+      cpd.lang_flags = (cpd.lang_flags | e_LANG_OC);
+      LOG_FMT(LSYS, "%s: Detected Objective-C content, upgrading to: %s\n",
+              __func__, language_name_from_flags(cpd.lang_flags));
+   }
+
    // check keyword sort
    assert(keywords_are_sorted());
 
@@ -2558,3 +2584,58 @@ E_Token find_token_name(const char *text)
    }
    return(CT_NONE);
 }
+
+
+/**
+ * Check if file content contains Objective-C patterns.
+ * Scans the file data for OC-specific keywords like @interface, @implementation,
+ * @property, @protocol, etc. to detect if a C-Header file should be upgraded
+ * to Objective-C.
+ */
+static bool detect_oc_content(const std::vector<UINT8> &raw)
+{
+   // OC keywords to search for
+   static const char *oc_keywords[] = {
+      "@import",
+      "@interface",
+      "@implementation",
+      "@property",
+      "@protocol",
+      "@end",
+      "@class",
+      "@selector",
+      "@synthesize",
+      "@dynamic",
+   };
+   static const size_t num_keywords = ARRAY_SIZE(oc_keywords);
+
+   const size_t raw_size = raw.size();
+
+   // Search for '@' characters and extract token to compare
+   for (size_t i = 0; i < raw_size; i++)
+   {
+      if (raw[i] == '@')
+      {
+         // Extract token from @ up to any whitespace (space, tab, newline, etc.)
+         size_t token_end = i + 1;
+
+         while (  token_end < raw_size
+               && !unc_isspace(raw[token_end]))  // unc_isspace checks for any whitespace
+         {
+            token_end++;
+         }
+         std::string token(raw.begin() + i, raw.begin() + token_end);
+
+         // Check if token matches any OC keyword
+         for (size_t k = 0; k < num_keywords; k++)
+         {
+            if (token == oc_keywords[k])
+            {
+               LOG_FMT(LNOTE, "%s: Found OC keyword '%s'\n", __func__, oc_keywords[k]);
+               return(true);
+            }
+         }
+      }
+   }
+   return(false);
+} // detect_oc_content

@@ -1798,7 +1798,9 @@ void mark_function(Chunk *pc)
          && (  (  prev->IsParenClose()
                && prev->GetParentType() != CT_D_CAST
                && prev->GetParentType() != CT_MACRO_OPEN  // Issue #2726
-               && prev->GetParentType() != CT_MACRO_CLOSE)
+               && prev->GetParentType() != CT_MACRO_CLOSE
+               && prev->GetParentType() != CT_MACRO_NO_INDENT
+               && prev->GetParentType() != CT_MACRO_NO_FORMAT_ARGS)
             || prev->Is(CT_ASSIGN)
             || prev->Is(CT_RETURN)))
       {
