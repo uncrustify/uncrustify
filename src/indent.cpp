@@ -1941,6 +1941,7 @@ void indent_text()
             }
             // Issue # 1620, UNI-24090.cs
             else if (  frm.prev().GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk())
+                    && language_is_set(lang_flag_e::LANG_CS)             // Issue 4556
                     && !options::indent_align_paren()
                     && frm.prev().GetOpenChunk()->IsParenOpen()
                     && !pc->TestFlags(PCF_ONE_LINER))
@@ -1949,13 +1950,10 @@ void indent_text()
 
                // We are inside ({ ... }) -- where { and ( are on the same line, avoiding double indentations.
                // only to help the vim command }
-               if (frm.prev().GetIndent() != 0)
-               {
-                  frm.top().SetBraceIndent(frm.prev().GetIndent() - indent_size);
-                  indent_column_set(frm.top().GetBraceIndent());
-                  frm.top().SetIndent(frm.prev().GetIndentTmp());
-                  log_indent();
-               }
+               frm.top().SetBraceIndent(frm.prev().GetIndent() - indent_size);
+               indent_column_set(frm.top().GetBraceIndent());
+               frm.top().SetIndent(frm.prev().GetIndentTmp());
+               log_indent();
             }
             else if (  frm.prev().GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()->GetPrevNcNnlNpp())
                     && !options::indent_align_paren()
