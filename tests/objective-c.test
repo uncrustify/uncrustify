@@ -199,6 +199,21 @@
 51003  oc/sp_oc_catch-r.cfg                     oc/sp_oc_catch.m
 51004  oc/block_pointer.cfg                     oc/block_pointer.m
 
+# Issue: OC message colon incorrectly classified as COND_COLON in nested ternary
+51006  oc/oc_msg_colon_in_ternary.cfg           oc/oc_msg_colon_in_ternary.m
+
+# Issue: OC message colon incorrectly classified as COND_COLON in multi-line message after ternary
+51007  oc/oc_msg_colon_multiline_ternary.cfg    oc/oc_msg_colon_multiline_ternary.m
+
+# Issue: Consecutive ternary expressions in OC message arguments cause incorrect line breaking
+51008  oc/oc_msg_colon_consecutive_ternary.cfg  oc/oc_msg_colon_consecutive_ternary.m
+
+# Issue: OC message colon after ternary containing nested OC messages with ternaries
+51009  oc/oc_msg_colon_nested_ternary_in_msg.cfg  oc/oc_msg_colon_nested_ternary_in_msg.m
+
+# Issue: OC message with ternary (value:nil pattern) inside outer ternary causes subsequent colons to get spaces
+51010  oc/oc_msg_colon_ternary_in_outer_ternary.cfg  oc/oc_msg_colon_ternary_in_outer_ternary.m
+
 #
 # adopt tests from UT
 10018  oc/delete-space-oc.cfg                   oc/delete-space-oc.mm
@@ -221,18 +236,3 @@
 60013  oc/60013.cfg                             oc/Issue_4306.mm
 60014  oc/60014.cfg                             oc/4309.mm
 60015  oc/60015.cfg                             oc/4310.mm
-
-# Issue: OC message colon incorrectly classified as COND_COLON in nested ternary
-51006  oc/oc_msg_colon_in_ternary.cfg           oc/oc_msg_colon_in_ternary.m
-
-# Issue: OC message colon incorrectly classified as COND_COLON in multi-line message after ternary
-51007  oc/oc_msg_colon_multiline_ternary.cfg    oc/oc_msg_colon_multiline_ternary.m
-
-# Issue: Consecutive ternary expressions in OC message arguments cause incorrect line breaking
-51008  oc/oc_msg_colon_consecutive_ternary.cfg  oc/oc_msg_colon_consecutive_ternary.m
-
-# Issue: OC message colon after ternary containing nested OC messages with ternaries
-51009  oc/oc_msg_colon_nested_ternary_in_msg.cfg  oc/oc_msg_colon_nested_ternary_in_msg.m
-
-# Issue: OC message with ternary (value:nil pattern) inside outer ternary causes subsequent colons to get spaces
-51010  oc/oc_msg_colon_ternary_in_outer_ternary.cfg  oc/oc_msg_colon_ternary_in_outer_ternary.m
