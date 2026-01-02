@@ -71,3 +71,6 @@ cmake-build-*/
 
 # Compilation database
 compile_commands.json
+
+# macOS
+.DS_Store
