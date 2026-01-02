@@ -283,6 +283,7 @@
 30273  common/sp_cparen_oparen-f.cfg                        cpp/sp_cparen_oparen.cpp
 30274  cpp/sp_cparen_oparen-r.cfg                           cpp/sp_cparen_oparen.cpp
 30275  common/empty.cfg                                     cpp/bug_1321.cpp
+30276  cpp/bug_4589.cfg                                     cpp/bug_4589.cpp
 30278  cpp/bug_1439.cfg                                     cpp/bug_1439.cpp
 30279  common/indent_inside_ternary_operator.cfg            cpp/indent-inside-ternary-operator.cpp
 
