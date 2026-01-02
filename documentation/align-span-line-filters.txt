@@ -28,7 +28,7 @@ For each supported span option, three filter options may be available:
 
 All filter options default to 0 (disabled), preserving original behavior of <span_name>.
 
-If <span_name> is set to 0, none of these options are used, as span alignement is disabled.
+If <span_name> is set to 0, none of these options are used, as span alignment is disabled.
 
 Currently Supported Spans
 -------------------------
