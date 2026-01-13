@@ -2592,9 +2592,16 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       && second->Is(CT_PTR_TYPE))
    {
       // TODO: provide some test data to check this block
-      // TODO: create a new option
-      log_rule("IGNORE");
-      return(IARF_IGNORE);
+      // TODO: create a new option ???
+      // these lines are only useful for debugging uncrustify itself               Issue #4459
+      LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unknown do_space:\n",
+              __func__, __LINE__);
+      LOG_FMT(LSPACE, "   first orig line  is %zu, orig col  is %zu, Text()  '%s', GetType() is  %s\n",
+              first->GetOrigLine(), first->GetOrigCol(), first->Text(), get_token_name(first->GetType()));
+      LOG_FMT(LSPACE, "   second orig line is %zu, orig col is %zu, Text() '%s', GetType() is %s\n",
+              second->GetOrigLine(), second->GetOrigCol(), second->Text(), get_token_name(second->GetType()));
+      LOG_FMT(LSPACE, "   Please make a call at https://github.com/uncrustify/uncrustify/issues/new\n");
+      exit(EX_SOFTWARE);
    }
 
    if (first->Is(CT_PTR_TYPE))                            // see the tests cpp:34505-34508
