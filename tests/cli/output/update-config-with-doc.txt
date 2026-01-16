@@ -2790,6 +2790,21 @@ align_assign_func_proto_span    = 0        # unsigned number
 # 0: No limit (default).
 align_assign_thresh             = 0        # number
 
+# Number of empty lines to ignore in span calculation for align_assign_span.
+#
+# 0: Don't skip any lines (default).
+align_assign_span_num_empty_lines = 0        # unsigned number
+
+# Number of preprocessor directive lines to ignore in span calculation for align_assign_span.
+#
+# 0: Don't skip any lines (default).
+align_assign_span_num_pp_lines  = 0        # unsigned number
+
+# Number of comment-only lines to ignore in span calculation for align_assign_span.
+#
+# 0: Don't skip any lines (default).
+align_assign_span_num_cmt_lines = 0        # unsigned number
+
 # Whether to align on the left most assignment when multiple
 # definitions are found on the same line.
 # Depends on 'align_assign_span' and 'align_assign_thresh' settings.
@@ -2824,6 +2839,21 @@ align_enum_equ_span             = 0        # unsigned number
 #
 # 0: no limit (default).
 align_enum_equ_thresh           = 0        # number
+
+# Number of empty lines to ignore in span calculation for align_enum_equ_span.
+#
+# 0: Don't skip any lines (default).
+align_enum_equ_span_num_empty_lines = 0        # unsigned number
+
+# Number of preprocessor directive lines to ignore in span calculation for align_enum_equ_span.
+#
+# 0: Don't skip any lines (default).
+align_enum_equ_span_num_pp_lines = 0        # unsigned number
+
+# Number of comment-only lines to ignore in span calculation for align_enum_equ_span.
+#
+# 0: Don't skip any lines (default).
+align_enum_equ_span_num_cmt_lines = 0        # unsigned number
 
 # The span for aligning class member definitions.
 #
