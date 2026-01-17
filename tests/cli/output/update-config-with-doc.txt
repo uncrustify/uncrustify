@@ -547,6 +547,12 @@ sp_paren_qualifier              = ignore   # ignore/add/remove/force
 # Add or remove space between ')' and 'noexcept'.
 sp_paren_noexcept               = ignore   # ignore/add/remove/force
 
+# Add or remove space between as PAREN '(' and '*' as deref.
+# if ((<here>*it).startsWith("SCREEN ")) {}
+# TQFileInfoListIterator it(<here>*list);
+# if(<here>*memory == NULL) return;
+sp_paren_deref                  = ignore   # ignore/add/remove/force
+
 # Add or remove space after class ':'.
 sp_after_class_colon            = ignore   # ignore/add/remove/force
 

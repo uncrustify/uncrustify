@@ -691,6 +691,13 @@ sp_paren_qualifier;
 extern Option<iarf_e>
 sp_paren_noexcept;
 
+// Add or remove space between as PAREN '(' and '*' as deref.
+// if ((<here>*it).startsWith("SCREEN ")) {}
+// TQFileInfoListIterator it(<here>*list);
+// if(<here>*memory == NULL) return;
+extern Option<iarf_e>
+sp_paren_deref;
+
 // Add or remove space after class ':'.
 extern Option<iarf_e>
 sp_after_class_colon;
