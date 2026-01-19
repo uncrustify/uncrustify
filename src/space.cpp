@@ -575,6 +575,15 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(IARF_FORCE);
    }
 
+   if (  (  first->Is(CT_FPAREN_OPEN)
+         || first->Is(CT_SPAREN_OPEN)
+         || first->Is(CT_PAREN_OPEN))
+      && second->Is(CT_DEREF))               // Issue #4459
+   {
+      log_rule("sp_paren_deref");
+      return(options::sp_paren_deref());
+   }
+
    // "decltype(foo_t)" vs. "decltype (foo_t)"
    if (first->Is(CT_DECLTYPE))
    {

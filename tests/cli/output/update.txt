@@ -131,6 +131,7 @@ sp_paren_ellipsis               = ignore
 sp_byref_ellipsis               = ignore
 sp_paren_qualifier              = ignore
 sp_paren_noexcept               = ignore
+sp_paren_deref                  = ignore
 sp_after_class_colon            = ignore
 sp_before_class_colon           = ignore
 sp_after_constr_colon           = add
