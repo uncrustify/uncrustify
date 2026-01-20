@@ -18,7 +18,7 @@
  * return the chunk colon if found or Chunk::NullChunkPtr
  * if a ; (CT_SEMI_COLON) chunk is found
  *
- * Issue #51008: Added is_sibling_ternary parameter to indicate when we're
+ * Test #51008: Added is_sibling_ternary parameter to indicate when we're
  * processing a sibling ternary in an OC message (not a nested ternary).
  * Sibling ternaries should not mark subsequent OC selector colons as CT_COND_COLON.
  */
@@ -86,7 +86,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
          // and the new ? is a sibling ternary, not nested.
          if (colon_found && colon_after_colon_found)
          {
-         // Issue #51008: This ? is a sibling ternary in an OC message, not nested.
+         // Test #51008: This ? is a sibling ternary in an OC message, not nested.
             // We still need to process it recursively so it gets properly marked,
             // but we pass is_sibling_ternary = true so it doesn't mark subsequent
             // OC selector colons as CT_COND_COLON.
@@ -175,7 +175,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
          if (colon_found && depth > 0 && !is_sibling_ternary)
          {
             // There can only be another CT_COND_COLON if there is more than 1 CT_QUESTION (ie. depth > 0)
-            // BUT: If this is a sibling ternary (Issue #51008), we should NOT mark subsequent colons
+            // BUT: If this is a sibling ternary (Test #51008), we should NOT mark subsequent colons
             // as CT_COND_COLON because they are OC selector colons, not nested ternary colons.
             pc2->SetType(CT_COND_COLON);
             return(pc2);
