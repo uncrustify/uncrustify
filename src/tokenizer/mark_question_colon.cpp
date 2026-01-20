@@ -24,10 +24,10 @@
  */
 Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary = false)
 {
-   Chunk *pc2                      = pc_question->GetNextNcNnl();
-   bool  colon_found               = false;
-   bool  colon_after_colon_found   = false;  // Issue #51007: Track if we see a colon after our ternary colon
-   int   square_bracket_depth      = 0;
+   Chunk *pc2                    = pc_question->GetNextNcNnl();
+   bool  colon_found             = false;
+   bool  colon_after_colon_found = false;    // Issue #51007: Track if we see a colon after our ternary colon
+   int   square_bracket_depth    = 0;
 
    LOG_FMT(LCOMBINE, "%s(%d): pc_question.orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
            __func__, __LINE__, pc_question->GetOrigLine(), pc_question->GetOrigCol(), pc_question->GetLevel(),
@@ -45,9 +45,9 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
               __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
 
       if (  (  pc2->Is(CT_SEMICOLON)
-          || (  pc2->Is(CT_PAREN_CLOSE)
-             && (pc_question->GetLevel() == pc2->GetLevel() + 1))
-          || pc2->Is(CT_COMMA))
+            || (  pc2->Is(CT_PAREN_CLOSE)
+               && (pc_question->GetLevel() == pc2->GetLevel() + 1))
+            || pc2->Is(CT_COMMA))
          && square_bracket_depth <= 0)  // Issue: Don't treat comma inside OC message as terminator
                                         // Use <= 0 to handle ternary starting inside OC message brackets
       {
@@ -86,7 +86,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
          // and the new ? is a sibling ternary, not nested.
          if (colon_found && colon_after_colon_found)
          {
-         // Test #51008: This ? is a sibling ternary in an OC message, not nested.
+            // Test #51008: This ? is a sibling ternary in an OC message, not nested.
             // We still need to process it recursively so it gets properly marked,
             // but we pass is_sibling_ternary = true so it doesn't mark subsequent
             // OC selector colons as CT_COND_COLON.
@@ -97,7 +97,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
                     __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
             continue;
          }
-      else
+         else
          {
             LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                     __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
@@ -160,6 +160,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
          if (colon_found)
          {
             Chunk *prev = pc2->GetPrevNcNnl();
+
             if (prev->Is(CT_WORD) || prev->Is(CT_TYPE) || prev->Is(CT_OC_MSG_NAME))
             {
                // This looks like an OC selector: "selectorName:" pattern
