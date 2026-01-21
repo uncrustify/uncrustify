@@ -44,12 +44,13 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
       LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
               __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
 
+      // Issue: Don't treat comma inside OC message as terminator
+      // Use <= 0 to handle ternary starting inside OC message brackets
       if (  (  pc2->Is(CT_SEMICOLON)
             || (  pc2->Is(CT_PAREN_CLOSE)
                && (pc_question->GetLevel() == pc2->GetLevel() + 1))
             || pc2->Is(CT_COMMA))
-         && square_bracket_depth <= 0)  // Issue: Don't treat comma inside OC message as terminator
-                                        // Use <= 0 to handle ternary starting inside OC message brackets
+         && square_bracket_depth <= 0)
       {
          LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                  __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
