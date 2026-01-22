@@ -155,7 +155,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
             return(prev_tok);
          }
 
-         // Test #5100: After finding our ternary colon, check if this new colon is an
+         // Test #51010: After finding our ternary colon, check if this new colon is an
          // OC message selector colon (pattern: WORD followed by COLON). If so, we've
          // reached the next OC message parameter and should terminate.
          if (colon_found)
