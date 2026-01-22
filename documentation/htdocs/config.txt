@@ -1,4 +1,4 @@
-# Uncrustify-0.82.0
+# Uncrustify-0.82.0-dev
 
 #
 # General options
@@ -546,6 +546,12 @@ sp_paren_qualifier              = ignore   # ignore/add/remove/force
 
 # Add or remove space between ')' and 'noexcept'.
 sp_paren_noexcept               = ignore   # ignore/add/remove/force
+
+# Add or remove space between as PAREN '(' and '*' as deref.
+# if ((<here>*it).startsWith("SCREEN ")) {}
+# TQFileInfoListIterator it(<here>*list);
+# if(<here>*memory == NULL) return;
+sp_paren_deref                  = ignore   # ignore/add/remove/force
 
 # Add or remove space after class ':'.
 sp_after_class_colon            = ignore   # ignore/add/remove/force
@@ -2328,6 +2334,26 @@ nl_split_while_one_liner        = false    # true/false
 # call.
 donot_add_nl_before_cpp_comment = false    # true/false
 
+# Whether to collapse a braced single-statement 'if' block to one line,
+# as in 'if (cond)\n{\n    stmt;\n}' => 'if (cond) { stmt; }'.
+nl_collapse_if_one_liner        = false    # true/false
+
+# Whether to collapse a braced single-statement 'for' block to one line,
+# as in 'for (...)\n{\n    stmt;\n}' => 'for (...) { stmt; }'.
+nl_collapse_for_one_liner       = false    # true/false
+
+# Whether to collapse a braced single-statement 'while' block to one line,
+# as in 'while (...)\n{\n    stmt;\n}' => 'while (...) { stmt; }'.
+nl_collapse_while_one_liner     = false    # true/false
+
+# Whether to collapse a braced single-statement 'do' block to one line,
+# as in 'do\n{\n    stmt;\n} while (...)' => 'do { stmt; } while (...)'.
+nl_collapse_do_one_liner        = false    # true/false
+
+# Whether to collapse a braced single-statement 'case' block to one line,
+# as in 'case X:\n{\n    stmt;\n}' => 'case X: { stmt; }'.
+nl_collapse_switch_one_liner    = false    # true/false
+
 #
 # Blank line options
 #
@@ -2753,6 +2779,21 @@ align_var_def_attribute         = false    # true/false
 # Whether to align inline struct/enum/union variable definitions.
 align_var_def_inline            = false    # true/false
 
+# Number of empty lines to ignore in span calculation for align_var_def_span.
+#
+# 0: Don't skip any lines (default).
+align_var_def_span_num_empty_lines = 0        # unsigned number
+
+# Number of preprocessor directive lines to ignore in span calculation for align_var_def_span.
+#
+# 0: Don't skip any lines (default).
+align_var_def_span_num_pp_lines = 0        # unsigned number
+
+# Number of comment-only lines to ignore in span calculation for align_var_def_span.
+#
+# 0: Don't skip any lines (default).
+align_var_def_span_num_cmt_lines = 0        # unsigned number
+
 # The span for aligning on '=' in assignments.
 #
 # 0: Don't align (default).
@@ -2809,6 +2850,21 @@ align_enum_equ_thresh           = 0        # number
 # 0: Don't align (default).
 align_var_class_span            = 0        # unsigned number
 
+# Number of empty lines to ignore in span calculation for align_var_class_span.
+#
+# 0: Don't skip any lines (default).
+align_var_class_span_num_empty_lines = 0        # unsigned number
+
+# Number of preprocessor directive lines to ignore in span calculation for align_var_class_span.
+#
+# 0: Don't skip any lines (default).
+align_var_class_span_num_pp_lines = 0        # unsigned number
+
+# Number of comment-only lines to ignore in span calculation for align_var_class_span.
+#
+# 0: Don't skip any lines (default).
+align_var_class_span_num_cmt_lines = 0        # unsigned number
+
 # The threshold for aligning class member definitions.
 # Use a negative number for absolute thresholds.
 #
@@ -2822,6 +2878,21 @@ align_var_class_gap             = 0        # unsigned number
 #
 # 0: Don't align (default).
 align_var_struct_span           = 0        # unsigned number
+
+# Number of empty lines to ignore in span calculation for align_var_struct_span.
+#
+# 0: Don't skip any lines (default).
+align_var_struct_span_num_empty_lines = 0        # unsigned number
+
+# Number of preprocessor directive lines to ignore in span calculation for align_var_struct_span.
+#
+# 0: Don't skip any lines (default).
+align_var_struct_span_num_pp_lines = 0        # unsigned number
+
+# Number of comment-only lines to ignore in span calculation for align_var_struct_span.
+#
+# 0: Don't skip any lines (default).
+align_var_struct_span_num_cmt_lines = 0        # unsigned number
 
 # The threshold for aligning struct/union member definitions.
 # Use a negative number for absolute thresholds.
@@ -2903,6 +2974,21 @@ align_func_proto_span           = 0        # unsigned number
 # false: continuation lines are part of the newlines count
 # true:  continuation lines are not counted
 align_func_proto_span_ignore_cont_lines = false    # true/false
+
+# Number of empty lines to ignore in span calculation for align_func_proto_span.
+#
+# 0: Don't skip any lines (default).
+align_func_proto_span_num_empty_lines = 0        # unsigned number
+
+# Number of preprocessor directive lines to ignore in span calculation for align_func_proto_span.
+#
+# 0: Don't skip any lines (default).
+align_func_proto_span_num_pp_lines = 0        # unsigned number
+
+# Number of comment-only lines to ignore in span calculation for align_func_proto_span.
+#
+# 0: Don't skip any lines (default).
+align_func_proto_span_num_cmt_lines = 0        # unsigned number
 
 # How to consider (or treat) the '*' in the alignment of function prototypes.
 #

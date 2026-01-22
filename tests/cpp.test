@@ -1465,3 +1465,4 @@
 60164  cpp/Issue_3191.cfg                                   cpp/Issue_3191.cpp
 60165  cpp/Issue_4242.cfg                                   cpp/Issue_4242.cpp
 60166  cpp/lambda_with_arith.cfg                            cpp/lambda_with_arith.cpp
+60170  cpp/nl_collapse_one_liner.cfg                       cpp/nl_collapse_one_liner.cpp

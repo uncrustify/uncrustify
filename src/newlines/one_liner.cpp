@@ -11,6 +11,9 @@
 #include "log_rules.h"
 #include "newlines/add.h"
 #include "newlines/del_between.h"
+#include "newlines/iarf.h"
+#include "options.h"
+#include <vector>
 
 
 using namespace uncrustify;
@@ -345,3 +348,74 @@ void undo_one_liner(Chunk *pc)
       LOG_FMT(LNL1LINE, "\n");
    }
 } // undo_one_liner
+
+
+bool nl_collapse_braced_one_liner(Chunk *br_open)
+{
+   LOG_FUNC_ENTRY();
+
+   if (!br_open->Is(CT_BRACE_OPEN))
+   {
+      return(false);
+   }
+   Chunk *br_close = br_open->GetClosingParen();
+
+   if (br_close->IsNullChunk())
+   {
+      return(false);
+   }
+
+   // Check line span - only collapse if body spans a reasonable number of lines
+   // Allow up to 10 lines to handle nested single-statement blocks
+   if ((br_close->GetOrigLine() - br_open->GetOrigLine()) > 10)
+   {
+      return(false);
+   }
+
+   // Count semicolons at any level inside the block, check for comments
+   size_t semi_count = 0;
+   Chunk  *tmp       = br_open;
+
+   while ((tmp = tmp->GetNext()) != br_close)
+   {
+      if (tmp->Is(CT_SEMICOLON))
+      {
+         semi_count++;
+      }
+
+      if (tmp->IsComment())
+      {
+         return(false);
+      }
+
+      if (semi_count > 1)
+      {
+         return(false);
+      }
+   }
+
+   if (semi_count != 1)
+   {
+      return(false);
+   }
+
+   // Find the control keyword or closing paren before the brace
+   Chunk *before_brace = br_open->GetPrevNcNnlNi();
+
+   // Remove all newlines from before_brace to br_close
+   newline_del_between(before_brace, br_close);
+
+   // Also remove newlines between br_close and anything after (for proper spacing)
+   Chunk *after_close = br_close->GetNext();
+
+   if (  after_close->IsNotNullChunk()
+      && after_close->IsNewline())
+   {
+      // Don't remove the final newline after the block
+   }
+
+   br_open->SetFlagBits(PCF_ONE_LINER);
+   br_close->SetFlagBits(PCF_ONE_LINER);
+
+   return(true);
+} // nl_collapse_braced_one_liner

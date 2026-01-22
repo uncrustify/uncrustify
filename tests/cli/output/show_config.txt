@@ -1,4 +1,4 @@
-# Uncrustify
+# Uncrustify_d-0.82.0-73-4b2179d02-dirty
 
 #
 # General options
@@ -2333,6 +2333,26 @@ nl_split_while_one_liner        = false    # true/false
 # Don't add a newline before a cpp-comment in a parameter list of a function
 # call.
 donot_add_nl_before_cpp_comment = false    # true/false
+
+# Whether to collapse a braced single-statement 'if' block to one line,
+# as in 'if (cond)\n{\n    stmt;\n}' => 'if (cond) { stmt; }'.
+nl_collapse_if_one_liner        = false    # true/false
+
+# Whether to collapse a braced single-statement 'for' block to one line,
+# as in 'for (...)\n{\n    stmt;\n}' => 'for (...) { stmt; }'.
+nl_collapse_for_one_liner       = false    # true/false
+
+# Whether to collapse a braced single-statement 'while' block to one line,
+# as in 'while (...)\n{\n    stmt;\n}' => 'while (...) { stmt; }'.
+nl_collapse_while_one_liner     = false    # true/false
+
+# Whether to collapse a braced single-statement 'do' block to one line,
+# as in 'do\n{\n    stmt;\n} while (...)' => 'do { stmt; } while (...)'.
+nl_collapse_do_one_liner        = false    # true/false
+
+# Whether to collapse a braced single-statement 'case' block to one line,
+# as in 'case X:\n{\n    stmt;\n}' => 'case X: { stmt; }'.
+nl_collapse_switch_one_liner    = false    # true/false
 
 #
 # Blank line options
