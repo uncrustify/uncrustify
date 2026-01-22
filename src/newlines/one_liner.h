@@ -32,4 +32,13 @@ bool one_liner_nl_ok(Chunk *pc);
  */
 void undo_one_liner(Chunk *pc);
 
+/**
+ * Collapse a braced single-statement control block to inline style.
+ * Works on real braces (not virtual braces).
+ * return value:
+ *  true: block was collapsed
+ * false: block was not collapsed
+ */
+bool nl_collapse_braced_one_liner(Chunk *br_open);
+
 #endif /* NEWLINES_ONE_LINER_H_INCLUDED */
