@@ -155,7 +155,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
             return(prev_tok);
          }
 
-         // Issue #51010: After finding our ternary colon, check if this new colon is an
+         // Test #5100: After finding our ternary colon, check if this new colon is an
          // OC message selector colon (pattern: WORD followed by COLON). If so, we've
          // reached the next OC message parameter and should terminate.
          if (colon_found)
@@ -166,7 +166,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
             {
                // This looks like an OC selector: "selectorName:" pattern
                // We should NOT mark this as a ternary colon; terminate the search.
-               LOG_FMT(LCOMBINE, "%s(%d): Issue #51010: Found OC selector colon after ternary, terminating at line %zu col %zu\n",
+               LOG_FMT(LCOMBINE, "%s(%d): Test #5100: Found OC selector colon after ternary, terminating at line %zu col %zu\n",
                        __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol());
                Chunk *prev_tok = pc2->GetPrevNcNnl();
                pc_question->SetParent(prev_tok);
