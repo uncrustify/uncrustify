@@ -26,7 +26,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
 {
    Chunk *pc2                    = pc_question->GetNextNcNnl();
    bool  colon_found             = false;
-   bool  colon_after_colon_found = false;    // Issue #51007: Track if we see a colon after our ternary colon
+   bool  colon_after_colon_found = false;    // Test #51007: Track if we see a colon after our ternary colon
    int   square_bracket_depth    = 0;
 
    LOG_FMT(LCOMBINE, "%s(%d): pc_question.orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
@@ -79,7 +79,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
       }
       else if (pc2->Is(CT_QUESTION))
       {
-         // Issue #51007: After finding our ternary's colon, we should only recurse
+         // Test #51007: After finding our ternary's colon, we should only recurse
          // into a nested ternary if there was no OC selector colon in between.
          // In true nested ternary: "a ? b : c ? d : e" - the second ? comes right after E3
          // In OC sibling ternary: "[obj sel1:a ? b : c sel2:d ? e : f]" - there's "sel2:" between
@@ -144,7 +144,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
          LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                  __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
 
-         // Issue #51009: If square_bracket_depth is negative, we've exited more brackets
+         // Test #51009: If square_bracket_depth is negative, we've exited more brackets
          // than we entered during this ternary search. This means we've left the ternary's
          // enclosing OC message, and this colon is an OC selector colon, not a ternary colon.
          // We should terminate here without marking the colon.
@@ -196,7 +196,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
          }
          else
          {
-            // Issue #51007: We've already found our ternary colon, and now we see another colon.
+            // Test #51007: We've already found our ternary colon, and now we see another colon.
             // This is likely an OC selector colon (e.g., in "[obj sel1:val1 sel2:val2]")
             colon_after_colon_found = true;
          }
