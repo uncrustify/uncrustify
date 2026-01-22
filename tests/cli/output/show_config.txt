@@ -1,4 +1,4 @@
-# Uncrustify_d-0.82.0-73-4b2179d02-dirty
+# Uncrustify
 
 #
 # General options

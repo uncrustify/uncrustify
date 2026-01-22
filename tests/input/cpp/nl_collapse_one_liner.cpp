@@ -74,3 +74,15 @@ void test_no_collapse_comment()
         return 1;
     }
 }
+
+void test_two_stmts()
+{
+    while (*end && *end != '"')
+    {
+        if (*end == '\\' && *(end + 1))
+        {
+            end++;
+        }
+        end++;
+    }
+}

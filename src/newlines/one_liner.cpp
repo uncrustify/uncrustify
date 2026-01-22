@@ -372,15 +372,29 @@ bool nl_collapse_braced_one_liner(Chunk *br_open)
       return(false);
    }
 
-   // Count semicolons at any level inside the block, check for comments
-   size_t semi_count = 0;
-   Chunk  *tmp       = br_open;
+   // Count top-level statements inside the block
+   size_t stmt_count   = 0;
+   size_t brace_depth  = 0;
+   size_t paren_depth  = 0;
+   Chunk  *tmp         = br_open;
 
    while ((tmp = tmp->GetNext()) != br_close)
    {
-      if (tmp->Is(CT_SEMICOLON))
+      if (tmp->Is(CT_BRACE_OPEN))
       {
-         semi_count++;
+         brace_depth++;
+      }
+      else if (tmp->Is(CT_BRACE_CLOSE))
+      {
+         brace_depth--;
+      }
+      else if (tmp->Is(CT_PAREN_OPEN) || tmp->Is(CT_SPAREN_OPEN) || tmp->Is(CT_FPAREN_OPEN))
+      {
+         paren_depth++;
+      }
+      else if (tmp->Is(CT_PAREN_CLOSE) || tmp->Is(CT_SPAREN_CLOSE) || tmp->Is(CT_FPAREN_CLOSE))
+      {
+         paren_depth--;
       }
 
       if (tmp->IsComment())
@@ -388,13 +402,30 @@ bool nl_collapse_braced_one_liner(Chunk *br_open)
          return(false);
       }
 
-      if (semi_count > 1)
+      if (  brace_depth == 0
+         && paren_depth == 0)
+      {
+         if (tmp->Is(CT_SEMICOLON))
+         {
+            stmt_count++;
+         }
+         else if (  tmp->Is(CT_IF)
+                 || tmp->Is(CT_FOR)
+                 || tmp->Is(CT_WHILE)
+                 || tmp->Is(CT_DO)
+                 || tmp->Is(CT_SWITCH))
+         {
+            stmt_count++;
+         }
+      }
+
+      if (stmt_count > 1)
       {
          return(false);
       }
    }
 
-   if (semi_count != 1)
+   if (stmt_count != 1)
    {
       return(false);
    }
