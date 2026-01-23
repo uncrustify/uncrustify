@@ -200,6 +200,7 @@
 
 30170  common/empty.cfg                                     cpp/Issue_4539.cpp
 30171  cpp/Issue_4556.cfg                                   cpp/Issue_4556.cpp
+30172  cpp/Issue_4593.cfg                                   cpp/Issue_4593.cpp
 
 30200  cpp/bug_1862.cfg                                     cpp/bug_1862.cpp
 30201  cpp/cmt_indent-1.cfg                                 cpp/cmt_indent.cpp

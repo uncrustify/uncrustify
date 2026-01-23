@@ -176,6 +176,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
       || pc->GetType() == CT_COMPARE                  // Issue #3915
       || pc->GetType() == CT_COND_COLON
       || pc->GetType() == CT_DC_MEMBER                // Issue #4026
+      || pc->GetType() == CT_DESTRUCTOR               // Issue #4593
       || pc->GetType() == CT_ELLIPSIS                 // Issue #4223
       || pc->GetType() == CT_FPAREN_CLOSE
       || pc->GetType() == CT_FPAREN_OPEN
