@@ -1968,7 +1968,9 @@ void mark_function(Chunk *pc)
 
       while (tmp != paren_close)
       {
-         tmp2 = tmp->GetNextNcNnl();
+         // Use Npp to skip PP directives (#ifdef, #define, etc.) that may
+         // appear inside function parameters at a lower level in nested contexts
+         tmp2 = tmp->GetNextNcNnlNpp();
 
          if (  tmp->Is(E_Token::CT_COMMA)
             && (tmp->GetLevel() == (paren_open->GetLevel() + 1)))

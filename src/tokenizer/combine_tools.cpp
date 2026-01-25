@@ -26,9 +26,10 @@ bool can_be_full_param(Chunk *start, Chunk *end)
    Chunk *first_word    = Chunk::NullChunkPtr;
    bool  first_word_set = false;
 
+   // Use Npp to skip PP directives that may appear between parameters
    for (pc = start;
         pc->IsNotNullChunk() && pc != end;
-        pc = pc->GetNextNcNnl(E_Scope::PREPROC))
+        pc = pc->GetNextNcNnlNpp(E_Scope::PREPROC))
    {
       LOG_FMT(LFPARAM, "%s(%d): text is '%s', type is %s\n",
               __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()));
