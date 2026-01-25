@@ -1351,6 +1351,40 @@
 34813  cpp/align_assign_span_num_mixed-4.cfg             cpp/align_assign_span_num_mixed.cpp
 34814  cpp/align_assign_span_num_mixed-5.cfg             cpp/align_assign_span_num_mixed.cpp
 
+# align_func_params_span_num_* tests - Empty lines
+34821  common/align_func_params_span_num_empty_lines-1.cfg  cpp/align_func_params_span_num_empty_lines.cpp
+34822  common/align_func_params_span_num_empty_lines-2.cfg  cpp/align_func_params_span_num_empty_lines.cpp
+34823  common/align_func_params_span_num_empty_lines-3.cfg  cpp/align_func_params_span_num_empty_lines.cpp
+34824  common/align_func_params_span_num_empty_lines-1.cfg  cpp/align_func_params_span_num_empty_lines.h
+34825  common/align_func_params_span_num_empty_lines-2.cfg  cpp/align_func_params_span_num_empty_lines.h
+34826  common/align_func_params_span_num_empty_lines-3.cfg  cpp/align_func_params_span_num_empty_lines.h
+
+# align_func_params_span_num_* tests - Comment lines
+34827  common/align_func_params_span_num_cmt_lines-1.cfg    cpp/align_func_params_span_num_cmt_lines.cpp
+34828  common/align_func_params_span_num_cmt_lines-2.cfg    cpp/align_func_params_span_num_cmt_lines.cpp
+34829  common/align_func_params_span_num_cmt_lines-3.cfg    cpp/align_func_params_span_num_cmt_lines.cpp
+34830  common/align_func_params_span_num_cmt_lines-1.cfg    cpp/align_func_params_span_num_cmt_lines.h
+34831  common/align_func_params_span_num_cmt_lines-2.cfg    cpp/align_func_params_span_num_cmt_lines.h
+34832  common/align_func_params_span_num_cmt_lines-3.cfg    cpp/align_func_params_span_num_cmt_lines.h
+
+# align_func_params_span_num_* tests - Preprocessor lines
+34833  common/align_func_params_span_num_pp_lines-1.cfg     cpp/align_func_params_span_num_pp_lines.cpp
+34834  common/align_func_params_span_num_pp_lines-2.cfg     cpp/align_func_params_span_num_pp_lines.cpp
+34835  common/align_func_params_span_num_pp_lines-3.cfg     cpp/align_func_params_span_num_pp_lines.cpp
+34836  common/align_func_params_span_num_pp_lines-1.cfg     cpp/align_func_params_span_num_pp_lines.h
+34837  common/align_func_params_span_num_pp_lines-2.cfg     cpp/align_func_params_span_num_pp_lines.h
+34838  common/align_func_params_span_num_pp_lines-3.cfg     cpp/align_func_params_span_num_pp_lines.h
+
+# align_func_params_span_num_* tests - Mixed types of empty/comment/preprocessor lines
+34839  cpp/align_func_params_span_num_mixed-1.cfg          cpp/align_func_params_span_num_mixed_lines.h
+34840  cpp/align_func_params_span_num_mixed-2.cfg          cpp/align_func_params_span_num_mixed_lines.h
+34841  cpp/align_func_params_span_num_mixed-3.cfg          cpp/align_func_params_span_num_mixed_lines.h
+
+# align_func_params_span_num_* tests - Methods and functions with macro calls onto parameters
+34842  cpp/align_func_params_span_num_mixed-1.cfg          cpp/align_func_params_span_num_mixed_lines_macro_calls.h
+34843  cpp/align_func_params_span_num_mixed-2.cfg          cpp/align_func_params_span_num_mixed_lines_macro_calls.h
+34844  cpp/align_func_params_span_num_mixed-3.cfg          cpp/align_func_params_span_num_mixed_lines_macro_calls.h
+
 # Adopt some UT tests
 10000  common/empty.cfg                                     cpp/621_this-spacing.cpp
 10001  common/empty.cfg                                     cpp/622_ifdef-indentation.cpp
