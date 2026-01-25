@@ -167,6 +167,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
       || pc->GetType() == CT_BRACE_CLOSE
       || pc->GetType() == CT_BRACE_OPEN
       || pc->GetType() == CT_BOOL
+      || pc->GetType() == CT_CARET                    // Issue #4593
       || pc->GetType() == CT_CASE
       || pc->GetType() == CT_CLASS_COLON
       || pc->GetType() == CT_COMMA
