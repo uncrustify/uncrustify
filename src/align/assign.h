@@ -21,6 +21,6 @@ class Chunk;
  *
  * @param first  chunk pointing to the first assignment
  */
-Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count);
+Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enum, size_t *p_nl_count);
 
 #endif /* ALIGN_ASSIGN_H_INCLUDED */

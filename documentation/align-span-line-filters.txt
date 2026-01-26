@@ -35,14 +35,17 @@ Currently Supported Spans
 
 The following span options currently support line filters:
 
-  +--------------------------+------------------------------------------+
-  | Span Option              | Purpose                                  |
-  +--------------------------+------------------------------------------+
-  | align_var_def_span       | Local variable definitions in functions  |
-  | align_var_class_span     | Member variables in classes              |
-  | align_var_struct_span    | Member variables in structs/unions       |
-  | align_func_proto_span    | Function prototypes/declarations         |
-  +--------------------------+------------------------------------------+
+  +--------------------------+-----------------------------------------------+
+  | Span Option              | Purpose                                       |
+  +--------------------------+-----------------------------------------------+
+  | align_var_def_span       | Local variable definitions in functions       |
+  | align_var_class_span     | Member variables in classes                   |
+  | align_var_struct_span    | Member variables in structs/unions            |
+  | align_func_proto_span    | Function prototypes/declarations              |
+  | align_assign_span        | Equal sign alignment for variables,           |
+  |                          | functions declarations and default parameters |
+  | align_enum_equ_span      | Equal sign alignment in enums                 |
+  +--------------------------+-----------------------------------------------+
 
 Each of these has the three associated filter options. For example:
   - align_var_def_span_num_empty_lines
@@ -68,8 +71,8 @@ Example calculation:
   - If span >= 2, variables will align
 
 
-Example: Function Prototypes
-----------------------------
+Example: Function Prototypes Alignment
+--------------------------------------
 
 Code with mixed line types:
 
@@ -90,8 +93,8 @@ Result: All three functions align because:
   - Empty line + comment between func_two/func_three are skipped
 
 
-Example: Class Members with Preprocessor
-----------------------------------------
+Example: Class Members Alignment
+--------------------------------
 
 Code:
     class Config {
@@ -128,6 +131,33 @@ Example with num_cmt_lines = 2:
        Line 3 */
     double y;  // Will NOT align (3 lines > budget of 2)
 
+Example: Equal Sign Alignment For Variable Declarations
+-------------------------------------------------------
+
+Configuration:
+    align_assign_span               = 1
+    align_assign_span_num_cmt_lines = 2
+
+Input:
+
+    int var1 = 100;
+    // comment line 1
+    // comment line 2
+    double var2 = 200;
+
+    unsigned short var3 = 300;
+
+Output:
+
+    int var1    = 100;
+    // comment line 1
+    // comment line 2
+    double var2 = 200;
+
+    unsigned short var3 = 300;
+
+The `=` of `var1` and `var2` are aligned because the 2 comment lines are skipped. But
+`var3` is not aligned because the empty line breaks the span.
 
 Configuration Tips
 ------------------
