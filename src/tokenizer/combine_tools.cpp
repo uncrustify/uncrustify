@@ -201,6 +201,15 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          word_count = 1;
          type_count = 1;
       }
+      else if (word_count >= 1 && pc->Is(CT_PAREN_OPEN))
+      {
+         // Handle macro-wrapped parameters, e.g. 'void foo(int _MACRO(param), ...)'
+         // The previous CT_PAREN_OPEN branch handles function-pointer syntax
+         // (word_count == type_count with '*' or '^' inside); this fallback
+         // covers macro calls that don't match that pattern.
+         pc = pc->GetClosingParen(E_Scope::PREPROC);
+         continue;
+      }
       else if (pc->Is(E_Token::CT_TSQUARE))
       {
          // ignore it
