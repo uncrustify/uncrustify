@@ -282,8 +282,7 @@ void combine_labels()
                   // Must be a macro thingy, assume some sort of label
                   next->SetType(CT_LABEL_COLON);
                }
-               else if (  tmp->IsNullChunk()
-                       || (  tmp->IsNot(CT_NUMBER)
+               else if (  (  tmp->IsNot(CT_NUMBER)
                           && tmp->IsNot(CT_DECLTYPE)
                           && tmp->IsNot(CT_SIZEOF)
                           && tmp->GetParentType() != CT_SIZEOF
