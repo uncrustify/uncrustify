@@ -220,6 +220,9 @@
 # Issue: Space removed before outer ternary colon when true branch contains elvis (?:)
 51011  oc/oc_ternary_after_elvis.cfg  oc/oc_ternary_after_elvis.m
 
+# Issue: Dictionary colon misclassified as ternary colon in OC message context
+51012  oc/oc_ternary_oc_dict.cfg  oc/oc_ternary_oc_dict.m
+
 #
 # adopt tests from UT
 10018  oc/delete-space-oc.cfg                   oc/delete-space-oc.mm

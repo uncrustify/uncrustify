@@ -1,4 +1,4 @@
-// Issue 51011: Space removed before outer ternary colon when true branch contains elvis (?:)
+// Test 51011: Space removed before outer ternary colon when true branch contains elvis (?:)
 // Pattern: a ? b ?: c : d - the space before the final : is incorrectly removed
 
 @implementation Test
