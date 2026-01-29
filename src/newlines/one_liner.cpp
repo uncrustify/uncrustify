@@ -371,12 +371,11 @@ bool nl_collapse_braced_one_liner(Chunk *br_open)
    {
       return(false);
    }
-
    // Count top-level statements inside the block
-   size_t stmt_count   = 0;
-   size_t brace_depth  = 0;
-   size_t paren_depth  = 0;
-   Chunk  *tmp         = br_open;
+   size_t stmt_count  = 0;
+   size_t brace_depth = 0;
+   size_t paren_depth = 0;
+   Chunk  *tmp        = br_open;
 
    while ((tmp = tmp->GetNext()) != br_close)
    {
@@ -429,7 +428,6 @@ bool nl_collapse_braced_one_liner(Chunk *br_open)
    {
       return(false);
    }
-
    // Find the control keyword or closing paren before the brace
    Chunk *before_brace = br_open->GetPrevNcNnlNi();
 
@@ -444,7 +442,6 @@ bool nl_collapse_braced_one_liner(Chunk *br_open)
    {
       // Don't remove the final newline after the block
    }
-
    br_open->SetFlagBits(PCF_ONE_LINER);
    br_close->SetFlagBits(PCF_ONE_LINER);
 
