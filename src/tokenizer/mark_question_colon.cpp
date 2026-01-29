@@ -102,10 +102,33 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
          {
             LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                     __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
-            pc2 = search_for_colon(pc2, depth + 1);
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
-            continue;
+
+            // Test #51011: Check if this is an elvis operator (?:) - the next token after ? is :
+            // If so, we need to mark the elvis colon and continue searching for the outer ternary's colon.
+            Chunk *inner_question = pc2;
+            Chunk *next_after_q   = pc2->GetNextNcNnl();
+
+            if (next_after_q->Is(CT_COLON))
+            {
+               // This is an elvis operator (?:). Mark the colon as CT_COND_COLON
+               // but do NOT set colon_found for the outer ternary - the outer ternary
+               // still needs its own colon.
+               LOG_FMT(LCOMBINE, "%s(%d): Test #51011: Elvis operator found at line %zu col %zu, marking colon and continuing search\n",
+                       __func__, __LINE__, inner_question->GetOrigLine(), inner_question->GetOrigCol());
+               next_after_q->SetType(CT_COND_COLON);
+               next_after_q->SetParent(inner_question);
+               inner_question->SetParent(next_after_q);
+               pc2 = next_after_q;
+               // Continue to next token - we still need to find the outer ternary's colon
+            }
+            else
+            {
+               // Regular nested ternary - recurse
+               pc2 = search_for_colon(pc2, depth + 1);
+               LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                       __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+               continue;
+            }
          }
       }
       else if (pc2->Is(CT_COND_COLON))

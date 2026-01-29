@@ -155,6 +155,13 @@ void combine_labels()
             hit_case = true;
          }
       }
+      else if (  next->Is(CT_COND_COLON)
+              && cs_top_is_question(cs, next->GetLevel()))
+      {
+         // Pop the question from the stack when we encounter a CT_COND_COLON
+         // that was already marked by mark_question_colon (e.g., elvis operator ?:)
+         cs.Pop_Back();
+      }
       else if (  next->Is(CT_COLON)
               || (  next->Is(CT_OC_COLON)
                  && cs_top_is_question(cs, next->GetLevel())))
