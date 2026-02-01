@@ -205,6 +205,7 @@ ADD_EXECUTABLE(${project_name}
   ${unc_projdir}/src/options.cpp.in
 )
 add_dependencies(${project_name} generate_version_header)
+target_compile_features(${project_name} PUBLIC cxx_std_17)
 
 include_directories(
   ${PROJECT_BINARY_DIR}
@@ -215,9 +216,6 @@ include_directories(
 SET(unc_compile_flags "--bind -O3")
 SET_TARGET_PROPERTIES(${project_name}
     PROPERTIES
-        CXX_STANDARD 11
-        CXX_STANDARD_REQUIRED YES
-        CXX_EXTENSIONS NO
         COMPILE_FLAGS "${unc_compile_flags}"
         LINK_FLAGS "${unc_compile_flags} \
                     -s TOTAL_MEMORY=67108864 \

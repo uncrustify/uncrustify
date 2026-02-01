@@ -43,7 +43,6 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
     -Wpointer-arith
     -Wcast-qual
     -Wcast-align
-    -Wc++11-extensions
   )
   foreach(flag ${gcc_warning_flags})
     string(REGEX REPLACE "[^a-zA-Z0-9]+" "_" flag_var "CXXFLAG_${flag}")
@@ -60,9 +59,6 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-deprecated-declarations")
 endif()
-
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 if(ENABLE_SANITIZER)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O1 -fno-omit-frame-pointer -fsanitize=${ENABLE_SANITIZER}")
@@ -543,6 +539,7 @@ set(uncrustify_docs
 
 add_executable(uncrustify ${uncrustify_sources} ${uncrustify_headers})
 add_dependencies(uncrustify generate_version_header)
+target_compile_features(uncrustify PUBLIC cxx_std_17)
 
 set_property(TARGET uncrustify APPEND PROPERTY
   COMPILE_DEFINITIONS $<$<OR:$<CONFIG:Debug>,$<CONFIG:>>:DEBUG>
