@@ -16,7 +16,12 @@
 #include "uncrustify_limits.h"
 
 #include <assert.h>
-#include <cstddef>      // to get size_t
+#include <cstddef>     // to get size_t
+#include <cstdio>      // for FILE
+#include <deque>       // for deque<>
+#include <string>      // for vector<>
+#include <utility>     // for pair<>
+#include <vector>      // for vector<>
 
 #ifdef HAVE_UTIME_H
 #include <utime.h>
@@ -113,6 +118,21 @@ struct AlignmentData
    int   col_adj;
    Chunk *ref;
    Chunk *start;
+};
+
+
+/**
+ * Configuration for which line types to skip when counting newlines
+ * for span calculations in alignment operations.
+ * Each value specifies how many lines of that type that can be skipped.
+ * 0 = don't skip any (default behavior)
+ * N > 0 = skip up to N lines of that type
+ */
+struct LineSkipConfig
+{
+   size_t empty_lines;
+   size_t pp_lines;
+   size_t cmt_lines;
 };
 
 

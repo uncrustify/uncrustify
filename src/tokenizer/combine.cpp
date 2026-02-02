@@ -24,7 +24,12 @@
 #include "tokenizer/tokenize_cleanup.h"
 #include "uncrustify.h"
 
+#include <cstdio>                      // to get fprintf
 #include <limits>
+#include <map>
+#include <utility>
+#include <vector>
+
 
 constexpr static auto LCURRENT = LCOMBINE;
 
@@ -1613,6 +1618,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          }
          else if (  pc->TestFlags(PCF_IN_PREPROC) // Issue #3559
                  && prev->IsNot(CT_WORD)          // Issue #2205
+                 && prev->IsNot(CT_PAREN_CLOSE)   // Issue #4539
                  && pc->Is(CT_AMP)
                  && next->Is(CT_WORD)
                  && !pc->TestFlags(PCF_IN_SPAREN))
@@ -3747,7 +3753,7 @@ static void handle_oc_property_decl(Chunk *os)
          {
             std::vector<ChunkGroup> chunk_groups = (*it).second;
 
-            for (auto chunk_group : chunk_groups)
+            for (const auto &chunk_group : chunk_groups)
             {
                for (auto chunk : chunk_group)
                {

@@ -2,11 +2,7 @@
  Uncrustify Release Process
 ============================
 
-.. Update the date in the next line when editing this document!
-
-*This document was last updated on 2024-11-17, for Uncrustify 0.80.1.*
-
-This document uses "0.1.2" throughout as an example version number.
+This document uses "0.x.0" throughout as an example version number.
 Whenever you see this, you should substitute the version number
 of the new release being prepared.
 
@@ -44,8 +40,8 @@ Preliminary checks
 
 Prior to making a release, verify that the repository is in a stable state
 and that all CI (continuous integration - AppVeyor) has passed.
-This should ensure all tests pass and building
-(including cross-compiling) for Windows is working.
+This should ensure all tests pass and building is working,
+including cross-compiling for Windows.
 
 Before starting the release process, first check that:
 
@@ -90,8 +86,7 @@ To get a new PAT for your admin account follow these steps:
 Preparing a Candidate
 =====================
 
-First update the version number and date at the beginning of this document
-and then update the list of authors with:
+First update the list of authors with:
 
   .. code::
 
@@ -219,26 +214,21 @@ Finally, delete the release branch upstream and locally
 Create Binaries
 ===============
 
-Create a tarball:
+Create a tarball and zip archive of the sources:
 
 .. code::
 
    $ cd /path/to/uncrustify
-   $ git archive -o ../uncrustify-0.1.2.tar.gz --prefix=uncrustify-uncrustify-0.1.2/ uncrustify-0.1.2
-
-Grab a copy of the sources from GitHub:
-
-.. code::
-
+   $ git archive -o ../uncrustify-0.x.0.tar.gz --prefix=uncrustify-uncrustify-0.x.0/ uncrustify-0.x.0
    $ cd /path/to/uncrustify/..
-   $ wget https://github.com/uncrustify/uncrustify/archive/uncrustify-0.1.2.zip
-   $ unzip -e uncrustify-0.1.2.zip
+   $ tar xzf ./uncrustify-0.x.0.tar.gz
+   $ zip -r uncrustify-0.x.0.zip uncrustify-uncrustify-0.x.0
 
 Build the Linux binaries:
 
 .. code::
 
-   $ cd /path/to/uncrustify-uncrustify-0.1.2
+   $ cd /path/to/uncrustify-uncrustify-0.x.0
    $ mkdir build
    $ cd build
    $ cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
@@ -250,7 +240,7 @@ Next, build the 32 and 64 bit Windows binaries:
 
 .. code::
 
-   $ cd /path/to/uncrustify-uncrustify-0.1.2
+   $ cd /path/to/uncrustify-uncrustify-0.x.0
    $ mkdir buildwin-32
    $ cd buildwin-32
    $ cmake -G Ninja \
@@ -263,7 +253,7 @@ Next, build the 32 and 64 bit Windows binaries:
 
 .. code::
 
-   $ cd /path/to/uncrustify-uncrustify-0.1.2
+   $ cd /path/to/uncrustify-uncrustify-0.x.0
    $ mkdir buildwin-64
    $ cd buildwin-64
    $ cmake -G Ninja \
@@ -284,11 +274,16 @@ Create a release on github
 - Add the release version under "Release title" as "Uncrustify 0.xx.y"
 - Upload the Windows binaries and the source code zip/tarball files in the section
   "Attach binaries by dropping them here or selecting them": these will show up as
-  "Assets" under the release text. Executables for Windows 32 and 64 and source
-  code in tar.gz and zip format need to be uploaded.
+  "Assets" under the release text. The following files need to be added:
+   - buildwin-32/uncrustify-0.x.0_f-win32.zip
+   - buildwin-64/uncrustify-0.x.0_f-win64.zip
+   - uncrustify-0.x.0.tar.gz
+   - uncrustify-0.x.0.zip
 - Add release text in describing section. It is recommended to copy the text
   from previous releases and update the related files. Make sure to use bold text
-  to highlight the various sections (use '### ' at the beginning of the line)
+  to highlight the various sections (use '### ' at the beginning of the line).
+  You need to drag the files into the text section to get a link to the actual
+  files there. The same files mentioned above need to be added.
 - Publish the release by clicking on the "Publish release" button.
 
 Upload to SourceForge
@@ -296,18 +291,18 @@ Upload to SourceForge
 
 - Login as admin under https://sourceforge.net/projects/uncrustify/
 - Change to https://sourceforge.net/projects/uncrustify/files/
-- "Add Folder"; the name should be e.g. "uncrustify-0.1.2"
+- "Add Folder"; the name should be e.g. "uncrustify-0.x.0"
 - Navigate to the new folder
-  (e.g. https://sourceforge.net/projects/uncrustify/files/uncrustify-0.1.2/)
+  (e.g. https://sourceforge.net/projects/uncrustify/files/uncrustify-0.x.0/)
 - Click "Add File" and upload the following files
   (adjusting for the actual version number):
   Click "Done" when all files have been uploaded.
 
   * README.md
-  * uncrustify-0.1.2.tar.gz
-  * uncrustify-0.1.2.zip
-  * buildwin-32/uncrustify-0.1.2_f-win32.zip
-  * buildwin-64/uncrustify-0.1.2_f-win64.zip
+  * uncrustify-0.x.0.tar.gz
+  * uncrustify-0.x.0.zip
+  * buildwin-32/uncrustify-0.x.0_f-win32.zip
+  * buildwin-64/uncrustify-0.x.0_f-win64.zip
 
 - Upload the documentation using the following commands:
 

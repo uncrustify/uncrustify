@@ -7,6 +7,10 @@
 
 #include "pcf_flags.h"
 
+#include <cstdio>
+#include <string>
+
+
 static const char *pcf_names[] =
 {
    "IN_PREPROC",        // 0
@@ -68,7 +72,7 @@ std::string pcf_flags_str(PcfFlags flags)
    char buffer[64];
 
    // Generate hex representation first
-   snprintf(buffer, 63, "[0x%llx:", (long long unsigned int)(flags));
+   snprintf(buffer, sizeof(buffer) - 1, "[0x%llx:", (long long unsigned int)(flags));
 
    // Add human-readable names
    auto out   = std::string{ buffer };

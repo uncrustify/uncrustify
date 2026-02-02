@@ -12,6 +12,7 @@
 
 #include "ChunkStack.h"
 
+#include <cstdio>
 #include <limits>
 
 class AlignStack
@@ -75,6 +76,7 @@ public:
       , m_star_style(ref.m_star_style)
       , m_amp_style(ref.m_amp_style)
       , m_skip_first(ref.m_skip_first)
+      , stackID(ref.stackID)
       , m_last_added(ref.m_last_added)
    {
    }

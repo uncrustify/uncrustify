@@ -8,6 +8,9 @@
 
 #include "unicode.h"
 
+#include <cstdio>
+#include <deque>
+#include <vector>
 
 using namespace std;
 

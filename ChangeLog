@@ -1,3 +1,14 @@
+Change highlights in uncrustify-0.82.0 (November 2025)
+-------------------------------------------------------------------------------
+   No changes to available options
+
+Change highlights in uncrustify-0.81.0 (May 2025)
+-------------------------------------------------------------------------------
+   61fe771bf1facb01f291f24564bba1af96636270
+     Added   : nl_bool_expr_hierarchical            Nov 18 2024
+   344657f2c0b7e4db246787c377e16965ade10679
+     Added   : indent_bool_nested_all               Nov 18 2024
+
 Change highlights in uncrustify-0.80.1 (November 2024)
 -------------------------------------------------------------------------------
    d0ad61170436df7afab2b8041b49837f06f087ec

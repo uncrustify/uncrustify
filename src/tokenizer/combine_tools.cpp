@@ -394,7 +394,7 @@ bool chunk_ends_type(Chunk *start)
 } // chunk_ends_type
 
 
-bool chunkstack_match(ChunkStack &cs, Chunk *pc)
+bool chunkstack_match(const ChunkStack &cs, Chunk *pc)
 {
    for (size_t idx = 0; idx < cs.Len(); idx++)
    {

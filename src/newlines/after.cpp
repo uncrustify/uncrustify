@@ -58,8 +58,8 @@ void newline_after_return(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *semi  = start->GetNextType(CT_SEMICOLON, start->GetLevel());
-   Chunk *after = semi->GetNextNcNnlNet();
+   const Chunk *semi  = start->GetNextType(CT_SEMICOLON, start->GetLevel());
+   const Chunk *after = semi->GetNextNcNnlNet();
 
    // If we hit a brace or an 'else', then a newline isn't needed
    if (  after->IsNullChunk()

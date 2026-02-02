@@ -14,7 +14,7 @@
 #include "prototypes.h"
 #include "unc_ctype.h"
 #include "uncrustify.h"
-#include "uncrustify_version.h"
+#include "uncrustify_version.h"   // cppcheck-suppress missingInclude
 
 #include <cstdio>
 #include <vector>
@@ -63,7 +63,7 @@ void print_option_choices(FILE *pfile, uncrustify::GenericOption *option,
 void print_universal_indent_cfg(FILE *pfile)
 {
    const char *p_name;
-   char       ch      = '=';
+   char       ch;
    const auto &groups = get_option_groups();
    size_t     idx;
 
@@ -179,7 +179,7 @@ void print_universal_indent_cfg(FILE *pfile)
           * by replacing '_' by a space and use some upper case characters.
           */
          char *optionNameReadable = new char[strlen(option->name()) + 1];
-         strcpy(optionNameReadable, option->name());
+         snprintf(optionNameReadable, strlen(option->name()) + 1, "%s", option->name());
 
          bool was_space = true;
 

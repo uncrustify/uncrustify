@@ -13,9 +13,9 @@
 class Chunk;
 
 
-void blank_line_max(Chunk *pc, uncrustify::Option<unsigned> &opt);
+void blank_line_max(Chunk *pc, const uncrustify::Option<unsigned> &opt);
 
-void blank_line_set(Chunk *pc, uncrustify::Option<unsigned> &opt);
+void blank_line_set(Chunk *pc, const uncrustify::Option<unsigned> &opt);
 
 void do_blank_lines();
 

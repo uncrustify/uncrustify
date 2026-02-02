@@ -199,6 +199,27 @@
 51003  oc/sp_oc_catch-r.cfg                     oc/sp_oc_catch.m
 51004  oc/block_pointer.cfg                     oc/block_pointer.m
 
+# Issue: Case label colons incorrectly classified as COND_COLON after ternary operator
+51005  oc/51005.cfg                             oc/case_colon_after_ternary.mm
+
+# Issue: OC message colon incorrectly classified as COND_COLON in nested ternary
+51006  oc/oc_msg_colon_in_ternary.cfg           oc/oc_msg_colon_in_ternary.m
+
+# Issue: OC message colon incorrectly classified as COND_COLON in multi-line message after ternary
+51007  oc/oc_msg_colon_multiline_ternary.cfg    oc/oc_msg_colon_multiline_ternary.m
+
+# Issue: Consecutive ternary expressions in OC message arguments cause incorrect line breaking
+51008  oc/oc_msg_colon_consecutive_ternary.cfg  oc/oc_msg_colon_consecutive_ternary.m
+
+# Issue: OC message colon after ternary containing nested OC messages with ternaries
+51009  oc/oc_msg_colon_nested_ternary_in_msg.cfg  oc/oc_msg_colon_nested_ternary_in_msg.m
+
+# Issue: OC message with ternary (value:nil pattern) inside outer ternary causes subsequent colons to get spaces
+51010  oc/oc_msg_colon_ternary_in_outer_ternary.cfg  oc/oc_msg_colon_ternary_in_outer_ternary.m
+
+# Issue: Space removed before outer ternary colon when true branch contains elvis (?:)
+51011  oc/oc_ternary_after_elvis.cfg  oc/oc_ternary_after_elvis.m
+
 #
 # adopt tests from UT
 10018  oc/delete-space-oc.cfg                   oc/delete-space-oc.mm

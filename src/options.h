@@ -30,7 +30,11 @@
  * instantiation. Note also that the line break, as shown, is required.
  */
 
+
 #include "option_enum.h"
+
+#include <string>
+
 
 namespace uncrustify
 {
@@ -686,6 +690,13 @@ sp_paren_qualifier;
 // Add or remove space between ')' and 'noexcept'.
 extern Option<iarf_e>
 sp_paren_noexcept;
+
+// Add or remove space between as PAREN '(' and '*' as deref.
+// if ((<here>*it).startsWith("SCREEN ")) {}
+// TQFileInfoListIterator it(<here>*list);
+// if(<here>*memory == NULL) return;
+extern Option<iarf_e>
+sp_paren_deref;
 
 // Add or remove space after class ':'.
 extern Option<iarf_e>
@@ -3377,6 +3388,24 @@ align_var_def_attribute;
 extern Option<bool>
 align_var_def_inline;
 
+// Number of empty lines to ignore in span calculation for align_var_def_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_def_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_var_def_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_def_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_var_def_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_def_span_num_cmt_lines;
+
 // The span for aligning on '=' in assignments.
 //
 // 0: Don't align (default).
@@ -3395,6 +3424,24 @@ align_assign_func_proto_span;
 // 0: No limit (default).
 extern BoundedOption<signed, -1000, 5000>
 align_assign_thresh;
+
+// Number of empty lines to ignore in span calculation for align_assign_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_assign_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_assign_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_assign_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_assign_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_assign_span_num_cmt_lines;
 
 // Whether to align on the left most assignment when multiple
 // definitions are found on the same line.
@@ -3437,11 +3484,47 @@ align_enum_equ_span;
 extern BoundedOption<signed, -1000, 5000>
 align_enum_equ_thresh;
 
+// Number of empty lines to ignore in span calculation for align_enum_equ_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_enum_equ_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_enum_equ_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_enum_equ_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_enum_equ_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_enum_equ_span_num_cmt_lines;
+
 // The span for aligning class member definitions.
 //
 // 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_var_class_span;
+
+// Number of empty lines to ignore in span calculation for align_var_class_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_class_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_var_class_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_class_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_var_class_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_class_span_num_cmt_lines;
 
 // The threshold for aligning class member definitions.
 // Use a negative number for absolute thresholds.
@@ -3459,6 +3542,24 @@ align_var_class_gap;
 // 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_var_struct_span;
+
+// Number of empty lines to ignore in span calculation for align_var_struct_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_struct_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_var_struct_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_struct_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_var_struct_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_var_struct_span_num_cmt_lines;
 
 // The threshold for aligning struct/union member definitions.
 // Use a negative number for absolute thresholds.
@@ -3555,6 +3656,24 @@ align_func_proto_span;
 // true:  continuation lines are not counted
 extern Option<bool>
 align_func_proto_span_ignore_cont_lines; // = false
+
+// Number of empty lines to ignore in span calculation for align_func_proto_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_func_proto_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_func_proto_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_func_proto_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_func_proto_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_func_proto_span_num_cmt_lines;
 
 // How to consider (or treat) the '*' in the alignment of function prototypes.
 //

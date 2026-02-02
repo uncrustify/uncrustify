@@ -12,6 +12,8 @@
 #include "space.h"
 #include "uncrustify.h"
 
+#include <cstdio>           // for fprintf
+
 
 Chunk *skip_c99_array(Chunk *sq_open)
 {

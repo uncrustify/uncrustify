@@ -198,6 +198,10 @@
 30168  cpp/nl_comment_func_def.cfg                          cpp/nl_comment_func_def.cpp
 30169  cpp/nl_comment_func_def-1.cfg                        cpp/nl_comment_func_def-1.cpp
 
+30170  common/empty.cfg                                     cpp/Issue_4539.cpp
+30171  cpp/Issue_4556.cfg                                   cpp/Issue_4556.cpp
+30172  cpp/Issue_4593.cfg                                   cpp/Issue_4593.cpp
+
 30200  cpp/bug_1862.cfg                                     cpp/bug_1862.cpp
 30201  cpp/cmt_indent-1.cfg                                 cpp/cmt_indent.cpp
 30202  cpp/cmt_indent-2.cfg                                 cpp/cmt_indent.cpp
@@ -280,6 +284,7 @@
 30273  common/sp_cparen_oparen-f.cfg                        cpp/sp_cparen_oparen.cpp
 30274  cpp/sp_cparen_oparen-r.cfg                           cpp/sp_cparen_oparen.cpp
 30275  common/empty.cfg                                     cpp/bug_1321.cpp
+30276  cpp/bug_4589.cfg                                     cpp/bug_4589.cpp
 30278  cpp/bug_1439.cfg                                     cpp/bug_1439.cpp
 30279  common/indent_inside_ternary_operator.cfg            cpp/indent-inside-ternary-operator.cpp
 
@@ -302,6 +307,7 @@
 #30295
 30296  cpp/sp_inside_for.cfg                                cpp/sp_inside_for.cpp
 30297  cpp/Issue_4064.cfg                                   cpp/Issue_4064.cpp
+30298  cpp/Issue_4537.cfg                                   cpp/Issue_4537.cpp
 
 30300  cpp/ben_020.cfg                                      cpp/enum_shr.cpp
 30301  cpp/al.cfg                                           cpp/enum_class.h
@@ -334,6 +340,7 @@
 
 30330  cpp/Issue_3080.cfg                                   cpp/Issue_3080.cpp
 30331  cpp/Issue_4376.cfg                                   cpp/Issue_4376.cpp
+30332  cpp/Issue_4459.cfg                                   cpp/Issue_4459.cpp
 
 30340  cpp/issue_3105_1_neg.cfg                             cpp/issue_3105_1.cpp
 30341  cpp/issue_3105_1_pos.cfg                             cpp/issue_3105_1.cpp
@@ -1196,6 +1203,153 @@
 34717  cpp/pos_shift_lead_force.cfg                         cpp/pos_shift.cpp
 34718  cpp/pos_shift_trail_break.cfg                        cpp/pos_shift.cpp
 34719  cpp/pos_shift_trail_force.cfg                        cpp/pos_shift.cpp
+
+# Tests for skipping empty lines in class span
+34720  cpp/align_var_class_span_num_empty_lines-1.cfg        cpp/align_var_class_span_num_empty_lines.cpp
+34721  cpp/align_var_class_span_num_empty_lines-2.cfg        cpp/align_var_class_span_num_empty_lines.cpp
+34722  cpp/align_var_class_span_num_empty_lines-3.cfg        cpp/align_var_class_span_num_empty_lines.cpp
+
+# Tests for skipping comment lines in class span
+34723  cpp/align_var_class_span_num_cmt_lines-1.cfg          cpp/align_var_class_span_num_cmt_lines.cpp
+34724  cpp/align_var_class_span_num_cmt_lines-2.cfg          cpp/align_var_class_span_num_cmt_lines.cpp
+34725  cpp/align_var_class_span_num_cmt_lines-3.cfg          cpp/align_var_class_span_num_cmt_lines.cpp
+
+# Tests for skipping preprocessor lines in class span
+34726  cpp/align_var_class_span_num_pp_lines-1.cfg           cpp/align_var_class_span_num_pp_lines.cpp
+34727  cpp/align_var_class_span_num_pp_lines-2.cfg           cpp/align_var_class_span_num_pp_lines.cpp
+34728  cpp/align_var_class_span_num_pp_lines-3.cfg           cpp/align_var_class_span_num_pp_lines.cpp
+
+# Tests for skipping mixed types of empty/comment/preprocessor lines in class span
+34729  cpp/align_var_class_span_num_mixed-1.cfg              cpp/align_var_class_span_num_mixed.cpp
+34730  cpp/align_var_class_span_num_mixed-2.cfg              cpp/align_var_class_span_num_mixed.cpp
+34731  cpp/align_var_class_span_num_mixed-3.cfg              cpp/align_var_class_span_num_mixed.cpp
+34732  cpp/align_var_class_span_num_mixed-4.cfg              cpp/align_var_class_span_num_mixed.cpp
+34733  cpp/align_var_class_span_num_mixed-5.cfg              cpp/align_var_class_span_num_mixed.cpp
+
+# align_var_def_span_num_* tests (local variables in methods)
+34734  cpp/align_var_def_span_num_empty_lines-1.cfg          cpp/align_var_def_span_num_empty_lines.cpp
+34735  cpp/align_var_def_span_num_empty_lines-2.cfg          cpp/align_var_def_span_num_empty_lines.cpp
+34736  cpp/align_var_def_span_num_empty_lines-3.cfg          cpp/align_var_def_span_num_empty_lines.cpp
+34737  cpp/align_var_def_span_num_cmt_lines-1.cfg            cpp/align_var_def_span_num_cmt_lines.cpp
+34738  cpp/align_var_def_span_num_cmt_lines-2.cfg            cpp/align_var_def_span_num_cmt_lines.cpp
+34739  cpp/align_var_def_span_num_cmt_lines-3.cfg            cpp/align_var_def_span_num_cmt_lines.cpp
+34740  cpp/align_var_def_span_num_pp_lines-1.cfg             cpp/align_var_def_span_num_pp_lines.cpp
+34741  cpp/align_var_def_span_num_pp_lines-2.cfg             cpp/align_var_def_span_num_pp_lines.cpp
+34742  cpp/align_var_def_span_num_pp_lines-3.cfg             cpp/align_var_def_span_num_pp_lines.cpp
+34743  cpp/align_var_def_span_num_mixed-1.cfg                cpp/align_var_def_span_num_mixed.cpp
+34744  cpp/align_var_def_span_num_mixed-2.cfg                cpp/align_var_def_span_num_mixed.cpp
+34745  cpp/align_var_def_span_num_mixed-3.cfg                cpp/align_var_def_span_num_mixed.cpp
+34746  cpp/align_var_def_span_num_mixed-4.cfg                cpp/align_var_def_span_num_mixed.cpp
+34747  cpp/align_var_def_span_num_mixed-5.cfg                cpp/align_var_def_span_num_mixed.cpp
+
+# Tests for skipping with span=2 and mixed types of empty/comment/preprocessor lines in in methods
+34748  cpp/align_var_def_span_num_mixed-6.cfg                cpp/align_var_def_span_num_mixed.cpp
+34749  cpp/align_var_def_span_num_mixed-7.cfg                cpp/align_var_def_span_num_mixed.cpp
+34750  cpp/align_var_def_span_num_mixed-8.cfg                cpp/align_var_def_span_num_mixed.cpp
+34751  cpp/align_var_def_span_num_mixed-9.cfg                cpp/align_var_def_span_num_mixed.cpp
+34752  cpp/align_var_def_span_num_mixed-10.cfg               cpp/align_var_def_span_num_mixed.cpp
+
+# Tests for skipping with span=0 and mixed types of empty/comment/preprocessor lines in in methods
+34753  cpp/align_var_def_span_0_num_mixed.cfg                cpp/align_var_def_span_num_mixed.cpp
+
+# Test for recursive align_var_def_brace with nested braces, comments and preprocessor directives
+34754  cpp/nested_brace_alignment.cfg                       cpp/nested_brace_alignment.cpp
+
+# Test for align_mix_var_proto option
+34755  cpp/align_var_class_span_num_mixed_mix_var_proto.cfg  cpp/align_var_class_span_num_mixed_mix_var_proto.cpp
+
+# align_func_proto_span_num_* tests - Empty lines with span=1
+34756  cpp/align_func_proto_span_num_empty_lines-1.cfg       cpp/align_func_proto_span_num_empty_lines.cpp
+34757  cpp/align_func_proto_span_num_empty_lines-2.cfg       cpp/align_func_proto_span_num_empty_lines.cpp
+34758  cpp/align_func_proto_span_num_empty_lines-3.cfg       cpp/align_func_proto_span_num_empty_lines.cpp
+
+# align_func_proto_span_num_* tests - Empty lines with span=2,3
+34759  cpp/align_func_proto_span_2_num_empty_lines-1.cfg     cpp/align_func_proto_span_num_empty_lines.cpp
+34760  cpp/align_func_proto_span_3_num_empty_lines-1.cfg     cpp/align_func_proto_span_num_empty_lines.cpp
+
+# align_func_proto_span_num_* tests - Comment lines
+34761  cpp/align_func_proto_span_num_cmt_lines-1.cfg         cpp/align_func_proto_span_num_cmt_lines.cpp
+34762  cpp/align_func_proto_span_num_cmt_lines-2.cfg         cpp/align_func_proto_span_num_cmt_lines.cpp
+34763  cpp/align_func_proto_span_num_cmt_lines-3.cfg         cpp/align_func_proto_span_num_cmt_lines.cpp
+
+# align_func_proto_span_num_* tests - Preprocessor lines
+34764  cpp/align_func_proto_span_num_pp_lines-1.cfg          cpp/align_func_proto_span_num_pp_lines.cpp
+34765  cpp/align_func_proto_span_num_pp_lines-2.cfg          cpp/align_func_proto_span_num_pp_lines.cpp
+34766  cpp/align_func_proto_span_num_pp_lines-3.cfg          cpp/align_func_proto_span_num_pp_lines.cpp
+
+# align_func_proto_span_num_* tests - Mixed line types
+34767  cpp/align_func_proto_span_num_mixed-1.cfg             cpp/align_func_proto_span_num_mixed.cpp
+34768  cpp/align_func_proto_span_num_mixed-2.cfg             cpp/align_func_proto_span_num_mixed.cpp
+34769  cpp/align_func_proto_span_num_mixed-3.cfg             cpp/align_func_proto_span_num_mixed.cpp
+34770  cpp/align_func_proto_span_num_mixed-4.cfg             cpp/align_func_proto_span_num_mixed.cpp
+34771  cpp/align_func_proto_span_num_mixed-5.cfg             cpp/align_func_proto_span_num_mixed.cpp
+34772  cpp/align_func_proto_span_0_num_mixed.cfg             cpp/align_func_proto_span_num_mixed.cpp
+
+# Test for align_var_class_span with mixed multi-line and C++ comments
+34773  cpp/align_var_class_span_num_cmt_lines_multicmt-3.cfg cpp/align_var_class_span_num_cmt_lines_multicmt.cpp
+
+# Test for align_func_proto_span with mixed multi-line and C++ comments
+34774  cpp/align_func_proto_span_num_cmt_lines-2.cfg         cpp/align_func_proto_span_num_cmt_lines_multicmt.cpp
+
+# align_func_proto_span_num_* tests - Complex multi-level alignment
+34775  cpp/align_func_proto_span_num_complex_multilevels-1.cfg  cpp/align_func_proto_span_num_complex_multilevels.cpp
+34776  cpp/align_func_proto_span_num_complex_multilevels-2.cfg  cpp/align_func_proto_span_num_complex_multilevels.cpp
+34777  cpp/align_func_proto_span_num_complex_multilevels-3.cfg  cpp/align_func_proto_span_num_complex_multilevels.cpp
+
+# align_assign_span_num_* tests - Empty lines
+34778  cpp/align_assign_span_num_empty_lines-1.cfg       cpp/align_assign_span_num_empty_lines.cpp
+34779  cpp/align_assign_span_num_empty_lines-2.cfg       cpp/align_assign_span_num_empty_lines.cpp
+34780  cpp/align_assign_span_num_empty_lines-3.cfg       cpp/align_assign_span_num_empty_lines.cpp
+
+# align_enum_equ_span_num_* tests - Empty lines
+34781  cpp/align_enum_equ_span_num_empty_lines-1.cfg     cpp/align_enum_equ_span_num_empty_lines.cpp
+
+# align_assign_span PP and multi-line comments
+34783  cpp/align_assign_span_num_pp_and_multicmt-1.cfg    cpp/align_assign_span_num_pp_and_multicmt.cpp
+
+# align_assign_span_num_* tests - Comment lines
+34784  cpp/align_assign_span_num_cmt_lines-1.cfg         cpp/align_assign_span_num_cmt_lines.cpp
+34785  cpp/align_assign_span_num_cmt_lines-2.cfg         cpp/align_assign_span_num_cmt_lines.cpp
+34786  cpp/align_assign_span_num_cmt_lines-3.cfg         cpp/align_assign_span_num_cmt_lines.cpp
+
+# align_assign_span_num_* tests - Preprocessor lines
+34787  cpp/align_assign_span_num_pp_lines-1.cfg          cpp/align_assign_span_num_pp_lines.cpp
+34788  cpp/align_assign_span_num_pp_lines-2.cfg          cpp/align_assign_span_num_pp_lines.cpp
+34789  cpp/align_assign_span_num_pp_lines-3.cfg          cpp/align_assign_span_num_pp_lines.cpp
+
+# align_enum_equ_span_num_* tests - Comment lines
+34790  cpp/align_enum_equ_span_num_cmt_lines-1.cfg       cpp/align_enum_equ_span_num_cmt_lines.cpp
+34791  cpp/align_enum_equ_span_num_cmt_lines-2.cfg       cpp/align_enum_equ_span_num_cmt_lines.cpp
+34792  cpp/align_enum_equ_span_num_cmt_lines-3.cfg       cpp/align_enum_equ_span_num_cmt_lines.cpp
+
+# align_enum_equ_span_num_* tests - Preprocessor lines
+34793  cpp/align_enum_equ_span_num_pp_lines-1.cfg        cpp/align_enum_equ_span_num_pp_lines.cpp
+34794  cpp/align_enum_equ_span_num_pp_lines-2.cfg        cpp/align_enum_equ_span_num_pp_lines.cpp
+34795  cpp/align_enum_equ_span_num_pp_lines-3.cfg        cpp/align_enum_equ_span_num_pp_lines.cpp
+
+# align_assign_span_num_* tests + align_assign_decl_func = 1 - Methods with default args and '=' in func_proto
+34796  cpp/align_assign_decl_func_span_num-1.cfg        cpp/align_assign_decl_func_span_num.cpp
+34797  cpp/align_assign_decl_func_span_num-2.cfg        cpp/align_assign_decl_func_span_num.cpp
+34798  cpp/align_assign_decl_func_span_num-3.cfg        cpp/align_assign_decl_func_span_num.cpp
+
+# align_assign_span_num_* tests - Recursive contexts tests (enum vs regular blocks)
+34799  cpp/align_assign_recursive_contexts-1.cfg        cpp/align_assign_recursive_contexts.cpp
+34800  cpp/align_assign_recursive_contexts-2.cfg        cpp/align_assign_recursive_contexts.cpp
+34801  cpp/align_assign_recursive_contexts-3.cfg        cpp/align_assign_recursive_contexts.cpp
+34802  cpp/align_assign_recursive_contexts-4.cfg        cpp/align_assign_recursive_contexts.cpp
+34803  cpp/align_assign_recursive_contexts-5.cfg        cpp/align_assign_recursive_contexts.cpp
+34804  cpp/align_assign_recursive_contexts-6.cfg        cpp/align_assign_recursive_contexts.cpp
+
+# align_assign_span_num_* tests + align_assign_decl_func = 1 - Interleaved default args and '=' in func_proto
+34805  cpp/align_assign_interleaved_proto_default-1.cfg       cpp/align_assign_interleaved_proto_default.cpp
+34806  cpp/align_assign_interleaved_proto_default-2.cfg       cpp/align_assign_interleaved_proto_default.cpp
+
+# align_assign_span_num_* tests - Mixed span_num_* configurations
+34810  cpp/align_assign_span_num_mixed-1.cfg             cpp/align_assign_span_num_mixed.cpp
+34811  cpp/align_assign_span_num_mixed-2.cfg             cpp/align_assign_span_num_mixed.cpp
+34812  cpp/align_assign_span_num_mixed-3.cfg             cpp/align_assign_span_num_mixed.cpp
+34813  cpp/align_assign_span_num_mixed-4.cfg             cpp/align_assign_span_num_mixed.cpp
+34814  cpp/align_assign_span_num_mixed-5.cfg             cpp/align_assign_span_num_mixed.cpp
 
 # Adopt some UT tests
 10000  common/empty.cfg                                     cpp/621_this-spacing.cpp

@@ -10,6 +10,8 @@
 
 #include "align/stack.h"
 #include "log_rules.h"
+#include <algorithm>
+#include <deque>
 
 
 constexpr static auto LCURRENT = LALASS;
@@ -18,7 +20,7 @@ constexpr static auto LCURRENT = LALASS;
 using namespace uncrustify;
 
 
-Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count)
+Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enum, size_t *p_nl_count)
 {
    LOG_FUNC_ENTRY();
 
@@ -34,6 +36,28 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
    LOG_FMT(LALASS, "%s(%d): [my_level is %zu]: start checking with '%s', on orig line %zu, span is %zu, thresh is %zu\n",
            __func__, __LINE__, my_level, first->ElidedText(copy), first->GetOrigLine(), span, thresh);
+
+   // Line skip configuration for assignments
+   log_rule_B("align_assign_span_num_empty_lines");
+   log_rule_B("align_assign_span_num_pp_lines");
+   log_rule_B("align_assign_span_num_cmt_lines");
+   LineSkipConfig assign_skip_cfg = {};
+   assign_skip_cfg.empty_lines = options::align_assign_span_num_empty_lines();
+   assign_skip_cfg.pp_lines    = options::align_assign_span_num_pp_lines();
+   assign_skip_cfg.cmt_lines   = options::align_assign_span_num_cmt_lines();
+
+   // Line skip configuration for enum assignments
+   log_rule_B("align_enum_equ_span_num_empty_lines");
+   log_rule_B("align_enum_equ_span_num_pp_lines");
+   log_rule_B("align_enum_equ_span_num_cmt_lines");
+   LineSkipConfig enum_skip_cfg = {};
+   enum_skip_cfg.empty_lines = options::align_enum_equ_span_num_empty_lines();
+   enum_skip_cfg.pp_lines    = options::align_enum_equ_span_num_pp_lines();
+   enum_skip_cfg.cmt_lines   = options::align_enum_equ_span_num_cmt_lines();
+
+   // Working copy of skip config - budget is decremented as lines are skipped
+   LineSkipConfig       skip_budget = { (parent_is_enum ? enum_skip_cfg : assign_skip_cfg) };
+   const LineSkipConfig myskip_cfg  = skip_budget;
 
    // If we are aligning on a tabstop, we shouldn't right-align
    AlignStack as;    // regular assigns
@@ -67,8 +91,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LALASS, "%s(%d): orig line is %zu, check pc->Text() is '%s', type is %s, m_parentType is %s\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
+      LOG_FMT(LALASS, "%s(%d): orig line is %zu, check pc->Text() is '%s', type is %s, m_parentType is %s, parent_type is enum : %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()), (parent_is_enum ? "true" : "false"));
 
       if (nl_count != 0)
       {
@@ -77,7 +101,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig line %zu, orig col is %zu\n",
                     __func__, __LINE__, vdas_pc->Text(), vdas_pc->GetOrigLine(), vdas_pc->GetOrigCol());
             vdas.Add(vdas_pc);
-            vdas_pc = Chunk::NullChunkPtr;
+            skip_budget = myskip_cfg;  // Reset budget after adding
+            vdas_pc     = Chunk::NullChunkPtr;
          }
 
          if (p_nl_count != nullptr)
@@ -122,10 +147,11 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             || pc->Is(CT_VBRACE_OPEN))
          && !(pc->GetParentType() == CT_BRACED_INIT_LIST))
       {
-         size_t myspan;
-         size_t mythresh;
+         size_t     myspan;
+         size_t     mythresh;
+         const bool myparent_is_enum = pc->GetParentType() == CT_ENUM;
 
-         if (pc->GetParentType() == CT_ENUM)
+         if (myparent_is_enum)
          {
             log_rule_B("align_enum_equ_span");
             myspan = options::align_enum_equ_span();
@@ -139,7 +165,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             log_rule_B("align_assign_thresh");
             mythresh = options::align_assign_thresh();
          }
-         pc = align_assign(pc->GetNext(), myspan, mythresh, &nl_count);
+         pc = align_assign(pc->GetNext(), myspan, mythresh, myparent_is_enum, &nl_count);
          continue;
       }
 
@@ -154,7 +180,27 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
       if (pc->IsNewline())
       {
-         nl_count = pc->GetNlCount();
+         // Only consume budget if we're already in a span (have a pending assignment
+         // or at least one stack has elements). Otherwise, comments/empty lines before
+         // the first assignment would consume the budget meant for lines between assignments.
+         const bool in_span = vdas_pc->IsNotNullChunk()
+                              || !as.m_aligned.Empty()
+                              || !vdas.m_aligned.Empty()
+                              || !fcnProto.m_aligned.Empty()
+                              || std::any_of(fcnDefault.begin(), fcnDefault.end(),
+                                             [](const AlignStack &s) {
+            return(!s.m_aligned.Empty());
+         });
+
+         if (in_span)
+         {
+            nl_count = pc->GetNlCountFiltered(skip_budget);
+         }
+         else
+         {
+            nl_count    = pc->GetNlCount();
+            skip_budget = myskip_cfg;  // Reset budget for the next alignment group
+         }
       }
       else if (  pc->TestFlags(PCF_VAR_DEF)
               && !pc->TestFlags(PCF_IN_CONST_ARGS) // Issue #1717
@@ -206,6 +252,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
                fcnDefault.back().m_right_align = as.m_right_align;
             }
             fcnDefault[fcn_idx].Add(pc);
+            skip_budget = myskip_cfg;  // Reset budget after adding
          }
          else if (options::align_assign_decl_func() == 1)   // Align with each other
          {
@@ -223,16 +270,19 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
                   fcnDefault.back().m_right_align = as.m_right_align;
                }
                fcnDefault[fcn_idx].Add(pc);
+               skip_budget = myskip_cfg;  // Reset budget after adding
             }
             else if (pc->Is(CT_ASSIGN_FUNC_PROTO))  // Foo( const Foo & ) = delete;
             {
                LOG_FMT(LALASS, "%s(%d): proto: fcnProto.Add on '%s' on orig line %zu, orig col is %zu\n",
                        __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
                fcnProto.Add(pc);
+               skip_budget = myskip_cfg;  // Reset budget after adding
             }
             else if (pc->Is(CT_ASSIGN)) // Issue #2197
             {
-               vdas_pc = pc;
+               vdas_pc     = pc;
+               skip_budget = myskip_cfg;  // Reset budget when capturing new assign
             }
          }
          else if (  options::align_assign_decl_func() == 2 // Don't align
@@ -245,7 +295,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
          }
          else if (var_def_cnt != 0)
          {
-            vdas_pc = pc;
+            vdas_pc     = pc;
+            skip_budget = myskip_cfg;  // Reset budget when capturing new assign
          }
          else
          {
@@ -254,6 +305,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
                LOG_FMT(LALASS, "%s(%d): as.Add on '%s' on orig line %zu, orig col is %zu\n",
                        __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
                as.Add(pc);
+               skip_budget = myskip_cfg;  // Reset budget after adding
             }
          }
       }

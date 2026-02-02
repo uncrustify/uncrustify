@@ -11,6 +11,7 @@
 #include "align/stack.h"
 #include "align/tools.h"
 #include "log_rules.h"
+#include <vector>
 
 constexpr static auto LCURRENT = LALPROTO;
 
@@ -30,6 +31,15 @@ void align_func_proto(size_t span)
 
    log_rule_B("align_func_proto_thresh");
    mythresh = options::align_func_proto_thresh();
+
+   // Line skip configuration
+   log_rule_B("align_func_proto_span_num_empty_lines");
+   log_rule_B("align_func_proto_span_num_pp_lines");
+   log_rule_B("align_func_proto_span_num_cmt_lines");
+   LineSkipConfig myskip_cfg = {};
+   myskip_cfg.empty_lines = options::align_func_proto_span_num_empty_lines();
+   myskip_cfg.pp_lines    = options::align_func_proto_span_num_pp_lines();
+   myskip_cfg.cmt_lines   = options::align_func_proto_span_num_cmt_lines();
 
    // Issue #2771
    // we align token-1 and token-2 if:
@@ -51,13 +61,16 @@ void align_func_proto(size_t span)
 
 
    // Issue #2984
-   std::vector<std::vector<AlignStack *> > many_as;
+   std::vector<std::vector<AlignStack *> >   many_as;
    // Issue #2771
-   std::vector<std::vector<AlignStack *> > many_as_brace;
+   std::vector<std::vector<AlignStack *> >   many_as_brace;
+   // Line skip budgets per (level, brace_level)
+   std::vector<std::vector<LineSkipConfig> > many_skips;
 
    // init the vector ...
    many_as.resize(num_of_column, std::vector<AlignStack *>(num_of_row, stack_init_value));
    many_as_brace.resize(num_of_column, std::vector<AlignStack *>(num_of_row, stack_init_value));
+   many_skips.resize(num_of_column, std::vector<LineSkipConfig>(num_of_row, myskip_cfg));
 
    log_rule_B("align_single_line_brace_gap");
    size_t mybr_gap = options::align_single_line_brace_gap();
@@ -82,11 +95,13 @@ void align_func_proto(size_t span)
 
          many_as.resize(num_of_column);
          many_as_brace.resize(num_of_column);
+         many_skips.resize(num_of_column);
 
          for (size_t i = 0; i < num_of_column; ++i)
          {
             many_as[i].resize(num_of_row);
             many_as_brace[i].resize(num_of_row);
+            many_skips[i].resize(num_of_row, myskip_cfg);
          }
       }
 
@@ -112,7 +127,13 @@ void align_func_proto(size_t span)
          }
          stack_at_l_bl->Debug();
 
-         for (size_t idx = 0; idx < num_of_column; idx++)
+         // Get filtered newline count once for current level/brace_level
+         // This modifies the budget which is shared across all stacks at this level
+         LineSkipConfig &current_budget = many_skips.at(pc->GetLevel()).at(pc->GetBraceLevel());
+         const size_t   nl_cnt          = pc->GetNlCountFiltered(current_budget);
+
+         // Apply (filtered) number of newlines, if any left, to all existing stacks
+         for (size_t idx = 0; (nl_cnt > 0) && (idx < num_of_column); idx++)
          {
             for (size_t idx_brace = 0; idx_brace < num_of_row; idx_brace++)
             {
@@ -120,7 +141,7 @@ void align_func_proto(size_t span)
 
                if (stack_at_l_bl != nullptr)
                {
-                  stack_at_l_bl->NewLines(pc->GetNlCount());
+                  stack_at_l_bl->NewLines(nl_cnt);
                }
             }
          }
@@ -138,7 +159,7 @@ void align_func_proto(size_t span)
             many_as_brace.at(pc->GetLevel()).at(pc->GetBraceLevel()) = stack_at_l_bl_brace;
          }
          stack_at_l_bl_brace->Debug();
-         stack_at_l_bl_brace->NewLines(pc->GetNlCount());
+         stack_at_l_bl_brace->NewLines(nl_cnt);
       }
       else if (  pc->Is(CT_FUNC_PROTO)
               || (  pc->Is(CT_FUNC_DEF)
@@ -176,6 +197,8 @@ void align_func_proto(size_t span)
             many_as.at(pc->GetLevel()).at(pc->GetBraceLevel()) = stack_at_l_bl;
          }
          stack_at_l_bl->Add(tmp);
+         // Reset budget for next prototype transition at this (level, brace_level)
+         many_skips.at(pc->GetLevel()).at(pc->GetBraceLevel()) = myskip_cfg;
          stack_at_l_bl->Debug();
          log_rule_B("align_single_line_brace");
          look_bro = (pc->Is(CT_FUNC_DEF))

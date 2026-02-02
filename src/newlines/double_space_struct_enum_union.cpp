@@ -33,7 +33,7 @@ void newlines_double_space_struct_enum_union(Chunk *open_brace)
        * it is before a comment, then make sure that the newline is
        * at least doubled
        */
-      Chunk *prev = pc->GetPrev();
+      const Chunk *prev = pc->GetPrev();
 
       if (  !prev->IsComment()
          && prev->IsNot(CT_BRACE_OPEN)

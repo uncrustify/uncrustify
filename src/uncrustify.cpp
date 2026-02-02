@@ -44,7 +44,7 @@
 #include "semicolons.h"
 #include "sorting.h"
 #include "space.h"
-#include "token_names.h"
+#include "token_names.h" // cppcheck-suppress missingInclude
 #include "tokenizer/brace_cleanup.h"
 #include "tokenizer/combine.h"
 #include "tokenizer/enum_cleanup.h"
@@ -56,14 +56,17 @@
 #include "too_big_for_nl_max.h"
 #include "unc_ctype.h"
 #include "unc_tools.h"
-#include "uncrustify_version.h"
+#include "uncrustify_version.h" // cppcheck-suppress missingInclude
 #include "unicode.h"
 #include "universalindentgui.h"
 #include "width.h"
 
 #include <cerrno>
+#include <cstdio>
+#include <deque>
 #include <fcntl.h>
 #include <map>
+#include <string>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -141,10 +144,10 @@ static void add_file_header();
 static void add_file_footer();
 
 
-static void add_func_header(E_Token type, file_mem &fm);
+static void add_func_header(E_Token type, const file_mem &fm);
 
 
-static void add_msg_header(E_Token type, file_mem &fm);
+static void add_msg_header(E_Token type, const file_mem &fm);
 
 
 static void process_source_list(const char *source_list, const char *prefix, const char *suffix, bool no_backup, bool keep_mtime, bool is_quiet);
@@ -362,10 +365,14 @@ NODISCARD static int redir_stdout(const char *output_file)
          LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
                  output_file, strerror(errno), errno);
          usage_error();
-         exit(EX_IOERR);
+         /* EX_IOERR   74   input/output error */
+         return(EX_IOERR);
       }
       LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
    }
+   /* EXIT_FAILURE   1   Failing exit status.  */
+   /* EXIT_SUCCESS   0   Successful exit status.  */
+
    return(EXIT_SUCCESS);
 }
 
@@ -395,7 +402,7 @@ void setup_crash_handling()
             // won't care about the difference. they just want to know it failed.
             exit(EXIT_FAILURE);
          }
-         __except (EXCEPTION_EXECUTE_HANDLER)
+         __except (EXCEPTION_EXECUTE_HANDLER)  // cppcheck-suppress unreachableCode
          {
             // have to be careful of crashes in crash handling code
          }
@@ -689,17 +696,18 @@ int main(int argc, char *argv[])
 
    if (html_arg != nullptr)
    {
-      const size_t max_args_length = 256;
+#define MAIN_MAX_ARGS_LENGTH    (256U)
+      const size_t max_args_length = MAIN_MAX_ARGS_LENGTH;
       size_t       argLength       = strlen(html_arg);
 
-      if (argLength > max_args_length)
+      if (argLength > max_args_length - 1)
       {
-         fprintf(stderr, "The buffer is to short for the tracking argument '%s'\n", html_arg);
+         fprintf(stderr, "The buffer is too small for the tracking argument '%s'\n", html_arg);
          log_flush(true);
          exit(EX_SOFTWARE);
       }
-      char buffer[max_args_length];
-      strcpy(buffer, html_arg);
+      char buffer[MAIN_MAX_ARGS_LENGTH];
+      strncpy(buffer, html_arg, sizeof(buffer));
 
       // Tokenize and extract key and value
       const char *tracking_art = strtok(buffer, ":");
@@ -819,17 +827,17 @@ int main(int argc, char *argv[])
 
    while ((p_arg = arg.Params("--set", idx)) != nullptr)
    {
+      const size_t max_args_length = MAIN_MAX_ARGS_LENGTH;
       size_t       argLength       = strlen(p_arg);
-      const size_t max_args_length = 256;
 
-      if (argLength > max_args_length)
+      if (argLength > max_args_length - 1)
       {
-         fprintf(stderr, "The buffer is to short for the set argument '%s'\n", p_arg);
+         fprintf(stderr, "The buffer is too small for the set argument '%s'\n", p_arg);
          log_flush(true);
          exit(EX_SOFTWARE);
       }
-      char buffer[max_args_length];
-      strcpy(buffer, p_arg);
+      char buffer[MAIN_MAX_ARGS_LENGTH];
+      strncpy(buffer, p_arg, sizeof(buffer));
 
       // Tokenize and extract key and value
       const char *token  = strtok(buffer, "=");
@@ -1057,7 +1065,7 @@ int main(int argc, char *argv[])
          exit(EX_CONFIG);
       }
 
-      if (dump_file_name[0] != char(0))                // Issue #3976
+      if (dump_file_name[0] != static_cast<char>(0))                // Issue #3976
       {
          fprintf(stderr, "FAIL: -ds/--dump-steps option must be used with the -f option\n");
          log_flush(true);
@@ -1476,15 +1484,15 @@ static bool bout_content_matches(const file_mem &fm, bool report_status, bool is
       if (report_status)
       {
          fprintf(stderr, "FAIL: %s (File size changed from %u to %u)\n",
-                 cpd.filename.c_str(), static_cast<int>(fm.raw.size()),
-                 static_cast<int>(cpd.bout->size()));
+                 cpd.filename.c_str(), static_cast<unsigned>(fm.raw.size()),
+                 static_cast<unsigned>(cpd.bout->size()));
          log_flush(true);
       }
       is_same = false;
    }
    else
    {
-      for (int idx = 0; idx < static_cast<int>(fm.raw.size()); idx++)
+      for (unsigned idx = 0; idx < static_cast<unsigned>(fm.raw.size()); idx++)
       {
          if (fm.raw[idx] != (*cpd.bout)[idx])
          {
@@ -1506,7 +1514,7 @@ static bool bout_content_matches(const file_mem &fm, bool report_status, bool is
       if (!is_quiet)
       {
          fprintf(stdout, "PASS: %s (%u bytes)\n",
-                 cpd.filename.c_str(), static_cast<int>(fm.raw.size()));
+                 cpd.filename.c_str(), static_cast<unsigned>(fm.raw.size()));
       }
    }
    return(is_same);
@@ -1652,15 +1660,17 @@ static void do_source_file(const char *filename_in,
          {
             // Change - rename filename_tmp to filename_out
 
+            if (
 #ifdef WIN32
-            /*
-             * Atomic rename in windows can't go through stdio rename() func because underneath
-             * it calls MoveFileExW without MOVEFILE_REPLACE_EXISTING.
-             */
-            if (!MoveFileEx(filename_tmp.c_str(), filename_out, MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED))
+               /*
+                * Atomic rename in windows can't go through stdio rename() func because underneath
+                * it calls MoveFileExW without MOVEFILE_REPLACE_EXISTING.
+                */
+               !MoveFileEx(filename_tmp.c_str(), filename_out, MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED)
 #else
-            if (rename(filename_tmp.c_str(), filename_out) != 0)
+               rename(filename_tmp.c_str(), filename_out) != 0
 #endif
+               )
             {
                LOG_FMT(LERR, "%s: Unable to rename '%s' to '%s'\n",
                        __func__, filename_tmp.c_str(), filename_out);
@@ -1720,7 +1730,7 @@ static void add_file_footer()
 }
 
 
-static void add_func_header(E_Token type, file_mem &fm)
+static void add_func_header(E_Token type, const file_mem &fm)
 {
    Chunk *pc;
    Chunk *ref;
@@ -1875,7 +1885,7 @@ static void add_func_header(E_Token type, file_mem &fm)
 } // add_func_header
 
 
-static void add_msg_header(E_Token type, file_mem &fm)
+static void add_msg_header(E_Token type, const file_mem &fm)
 {
    Chunk *pc;
    Chunk *ref;

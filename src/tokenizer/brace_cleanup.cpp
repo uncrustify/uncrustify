@@ -18,7 +18,8 @@
 #include "tokenizer/flag_parens.h"
 #include "uncrustify.h"
 
-#include <stdexcept>            // to get std::invalid_argument
+#include <stdexcept>           // to get std::invalid_argument
+#include <string>              // to get std::string
 
 
 constexpr static auto LCURRENT = LBC;
@@ -509,7 +510,16 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
             || pc->Is(CT_VBRACE_CLOSE)
             || pc->Is(CT_MACRO_CLOSE))
          {
-            frm.SetBraceLevel(frm.GetBraceLevel() - 1);
+            size_t tmp = frm.GetBraceLevel();
+
+            if (tmp == 0)
+            {
+               frm.SetBraceLevel(0);
+            }
+            else
+            {
+               frm.SetBraceLevel(frm.GetBraceLevel() - 1);
+            }
             LOG_FMT(LBCSPOP, "%s(%d): frame brace level decreased to %zu",
                     __func__, __LINE__, frm.GetBraceLevel());
             log_pcf_flags(LBCSPOP, pc->GetFlags());
@@ -1388,7 +1398,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParsingFrame &frm)
    }
    chunk.SetOrigLine(ref->GetOrigLine());
    chunk.SetOrigCol(ref->GetOrigCol());
-   chunk.SetColumn(ref->GetColumn() + ref->Len() + 1);
+   chunk.SetColumn(ref->GetColumn() + ref->Len());              // Issue # 4537
    chunk.SetPpLevel(ref->GetPpLevel());                         // Issue #3055
    chunk.SetType(CT_VBRACE_OPEN);
 

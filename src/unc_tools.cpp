@@ -6,6 +6,9 @@
  *          October 2015- 2024
  * @license GPL v2+
  */
+#include <cstdio>
+#include <string>
+
 #include "unc_tools.h"
 
 #include "args.h"
@@ -59,6 +62,12 @@ void prot_the_line(const char *func_name, int theLine_of_code, size_t the_line_t
 
 void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine_of_code, size_t the_line_to_be_prot, size_t partNumber)
 {
+   if (pc_sub->IsNullChunk())
+   {
+      LOG_FMT(LGUY, "Prot_the_line:(%s:%d) Chunk::GetHead() is not set\n", func_name, theLine_of_code);
+      return;
+   }
+
    if (the_line_to_be_prot == 0)
    {
       // use the option debug_line_number_to_protocol.
@@ -85,11 +94,7 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine_of_code,
          {
             LOG_FMT(LGUY, " orig line is %zu, (%zu) ", the_line_to_be_prot, tokenCounter);
 
-            if (pc->Is(CT_VBRACE_OPEN))
-            {
-               LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
-            }
-            else if (pc->Is(CT_NEWLINE))
+            if (pc->Is(CT_NEWLINE))
             {
                LOG_FMT(LGUY, "<NL>(new line count is %zu), ", pc->GetNlCount());
             }
@@ -150,6 +155,10 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine_of_code,
                }
             }
          }
+      }
+      else if (pc->GetOrigLine() > the_line_to_be_prot)
+      {
+         break;
       }
    }
 
@@ -331,11 +340,7 @@ void prot_some_lines(const char *func_name, int theLine_of_code, size_t from_lin
 
          LOG_FMT(LGUY, " orig line is %zu, (%zu), ", lineNumber, tokenCounter);
 
-         if (pc->Is(CT_VBRACE_OPEN))
-         {
-            LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
-         }
-         else if (pc->Is(CT_NEWLINE))
+         if (pc->Is(CT_NEWLINE))
          {
             LOG_FMT(LGUY, "<NL>(new line count is %zu), ", pc->GetNlCount());
             tokenCounter = 0;
@@ -416,11 +421,7 @@ void prot_all_lines(const char *func_name, int theLine_of_code)
 
       LOG_FMT(LGUY, " orig line is %zu,%zu, orig column is %zu, ", pc->GetOrigLine(), tokenCounter, pc->GetOrigCol());
 
-      if (pc->Is(CT_VBRACE_OPEN))
-      {
-         LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
-      }
-      else if (pc->Is(CT_NEWLINE))
+      if (pc->Is(CT_NEWLINE))
       {
          LOG_FMT(LGUY, "<NL>(new line count is %zu), ", pc->GetNlCount());
          tokenCounter = 0;
@@ -659,6 +660,7 @@ void dump_in(size_t type)
                // add the chunk in the list
                chunk.CopyAndAddBefore(Chunk::NullChunkPtr);
                chunk.Reset();
+               // cppcheck-suppress redundantAssignment
                aNewChunkIsFound = true;
                continue;
             }
@@ -787,10 +789,10 @@ void dump_step(const char *filename, const char *step_description)
    // On the first call, also save the options in use
    if (file_num == 0)
    {
-      snprintf(buffer, 256, "New dump file: %s_%03d.log - Options in use", filename, file_num);
+      snprintf(buffer, sizeof(buffer), "New dump file: %s_%03d.log - Options in use", filename, file_num);
       log_rule_B(buffer);
 
-      snprintf(buffer, 256, "%s_%03d.log", filename, file_num);
+      snprintf(buffer, sizeof(buffer), "%s_%03d.log", filename, file_num);
       ++file_num;
 
       dump_file = fopen(buffer, "wb");
@@ -801,10 +803,10 @@ void dump_step(const char *filename, const char *step_description)
          fclose(dump_file);
       }
    }
-   snprintf(buffer, 256, "New dump file: %s_%03d.log - %s", filename, file_num, step_description);
+   snprintf(buffer, sizeof(buffer), "New dump file: %s_%03d.log - %s", filename, file_num, step_description);
    log_rule_B(buffer);
 
-   snprintf(buffer, 256, "%s_%03d.log", filename, file_num);
+   snprintf(buffer, sizeof(buffer), "%s_%03d.log", filename, file_num);
    ++file_num;
 
    dump_file = fopen(buffer, "wb");

@@ -10,6 +10,8 @@
 
 #include "uncrustify_types.h"
 
+#include <cstdio>
+
 
 void print_universal_indent_cfg(FILE *pfile);
 

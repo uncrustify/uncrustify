@@ -12,14 +12,16 @@
 #include "keywords.h"
 #include "language_names.h"
 #include "uncrustify.h"
-#include "uncrustify_version.h"
+#include "uncrustify_version.h"      // cppcheck-suppress missingInclude
 
 #include <fstream>
 #include <unordered_map>
 
 #include <cctype>                    // to get std::tolower
 #include <cstdarg>                   // to get va_start, va_end
-
+#include <cstdio>                    // to get fprintf
+#include <string>                    // to get std::string
+#include <vector>                    // to get std::vector
 
 namespace uncrustify
 {
@@ -66,7 +68,7 @@ static const char *DOC_TEXT_END = R"___(
 #     Example:
 #       `file_ext CPP .ch .cxx .cpp.in`
 #
-#     langTypes are defined in uncrusify_types.h in the lang_flag_e enum, use
+#     langTypes are defined in uncrustify_types.h in the lang_flag_e enum, use
 #     them without the 'LANG_' prefix: 'LANG_CPP' => 'CPP'
 #
 #
@@ -283,7 +285,7 @@ bool is_path_relative(const std::string &path)
 
 
 //-----------------------------------------------------------------------------
-void print_description(FILE *pfile, std::string description,
+void print_description(FILE *pfile, const std::string &description,
                        const char *eol_marker)
 {
    // Descriptions always start with a '\n', so skip the first character
@@ -486,7 +488,7 @@ OptionWarning::OptionWarning(const GenericOption *opt, Severity severity)
 {
    UNUSED(severity);
 
-   fprintf(stderr, "Option<%s>: at %s:%d: ", to_string(opt->type()),
+   fprintf(stderr, "Option<%s>: at %s:%u: ", to_string(opt->type()),
            cpd.filename.c_str(), cpd.line_number);
 }
 
@@ -1280,7 +1282,7 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
    fprintf(pfile, "# %s%s", UNCRUSTIFY_VERSION, eol_marker);
 
    // Print the options by group
-   for (auto &og : option_groups)
+   for (const auto &og : option_groups)
    {
       bool first = true;
 

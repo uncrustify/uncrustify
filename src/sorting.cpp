@@ -14,8 +14,12 @@
 #include "newlines/add.h"
 #include "newlines/double_newline.h"
 
+#include <algorithm>
+#include <cstdio>  // to get fprintf
 #include <regex>
+#include <string>
 #include <unordered_map>
+#include <vector>
 
 
 constexpr static auto LCURRENT = LSORT;

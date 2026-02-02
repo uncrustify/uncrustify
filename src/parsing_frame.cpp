@@ -13,7 +13,10 @@
 #include "options.h"
 #include "uncrustify.h"
 
+#include <cstdio>
 #include <stdexcept>            // to get std::logic_error
+#include <string>
+#include <vector>               // to get std::vector
 
 
 using std::string;
@@ -164,6 +167,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
       || pc->GetType() == CT_BRACE_CLOSE
       || pc->GetType() == CT_BRACE_OPEN
       || pc->GetType() == CT_BOOL
+      || pc->GetType() == CT_CARET                    // Issue #4593
       || pc->GetType() == CT_CASE
       || pc->GetType() == CT_CLASS_COLON
       || pc->GetType() == CT_COMMA
@@ -173,6 +177,7 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
       || pc->GetType() == CT_COMPARE                  // Issue #3915
       || pc->GetType() == CT_COND_COLON
       || pc->GetType() == CT_DC_MEMBER                // Issue #4026
+      || pc->GetType() == CT_DESTRUCTOR               // Issue #4593
       || pc->GetType() == CT_ELLIPSIS                 // Issue #4223
       || pc->GetType() == CT_FPAREN_CLOSE
       || pc->GetType() == CT_FPAREN_OPEN
@@ -234,8 +239,8 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
 #ifdef DEBUG_PUSH_POP
    LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d) Add is %4zu: open_line is %4zu, clos_col is %4zu, type is %12s, "
            "cpd.level   is %2d, level is %2zu, pse_tos: %2zu -> %2zu\n",
-           func, line, (size_t)this, m_parenStack.back().open_line, m_parenStack.back().open_colu,
-           get_token_name(m_parenStack.back().type), cpd.pp_level, m_parenStack.back().level,
+           func, line, (size_t)this, m_parenStack.back().GetOpenLine(), m_parenStack.back().GetOpenCol(),
+           get_token_name(m_parenStack.back().GetOpenToken()), cpd.pp_level, m_parenStack.back().GetOpenLevel(),
            (m_parenStack.size() - 1), (m_parenStack.size() - 2));
 #else /* DEBUG_PUSH_POP */
    LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d): open_line is %4zu, clos_col is %4zu, type is %12s, "

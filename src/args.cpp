@@ -8,8 +8,11 @@
 
 #include "args.h"
 
+#include "logger.h"
 #include "unc_ctype.h"
+#include "uncrustify_limits.h"
 
+#include <cstdio>
 #include <cstring>
 
 Args::Args(int argc, char **argv)
@@ -121,6 +124,16 @@ bool Args::GetUsed(size_t idx)
 
 void Args::SetUsed(size_t idx)
 {
+#ifdef DEBUG
+   if (idx > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, idx);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
+
    if (  m_used != nullptr
       && idx > 0
       && idx < m_count)

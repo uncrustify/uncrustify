@@ -54,7 +54,7 @@ static inline size_t calc_next_tab_column(size_t col, size_t tabsize)
  */
 static inline size_t next_tab_column(size_t col)
 {
-   constexpr static auto LCURRENT = LINDENT;
+   constexpr static auto LCURRENT = LINDENT; // cppcheck-suppress shadowVariable
 
    log_rule_B("output_tab_size");
    return(calc_next_tab_column(col, uncrustify::options::output_tab_size()));

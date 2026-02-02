@@ -8,6 +8,7 @@
 #include "width.h"
 
 #include "indent.h"
+#include "mark_change.h"
 #include "newlines/add.h"
 #include "newlines/cleanup.h"
 #include "newlines/one_liner.h"
@@ -174,7 +175,7 @@ static void split_before_chunk(Chunk *pc)
       log_rule_B("indent_continue");
       reindent_line(pc, pc->GetBraceLevel() * options::indent_columns() +
                     abs(options::indent_continue()) + 1);
-      cpd.changes++;
+      MARK_CHANGE();
    }
 } // split_before_chunk
 
@@ -401,7 +402,7 @@ static bool split_line(Chunk *start)
       undo_one_liner(start);
       newlines_cleanup_braces(false);
       // Issue #1352
-      cpd.changes++;
+      MARK_CHANGE();
       return(false);
    }
 
@@ -929,6 +930,6 @@ static void split_template(Chunk *start)
          min_col += abs(options::indent_continue());
       }
       reindent_line(pc, min_col);
-      cpd.changes++;
+      MARK_CHANGE();
    }
 } // split_templatefcn_params

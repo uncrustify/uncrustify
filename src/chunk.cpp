@@ -6,6 +6,9 @@
  * @license GPL v2+
  */
 
+#include <algorithm>
+#include <cstdio>
+
 #include "chunk.h"
 
 #include "ListManager.h"
@@ -90,30 +93,35 @@ void Chunk::Reset()
 
 const char *Chunk::ElidedText(char *for_the_copy) const
 {
-   const char *test_it       = Text();
-   size_t     test_it_length = strlen(test_it);
+   const char *test_it = Text();
 
    size_t     truncate_value = uncrustify::options::debug_truncate();
 
    if (truncate_value != 0)
    {
+      size_t test_it_length = strlen(test_it);
+
       if (test_it_length > truncate_value)
       {
-         memset(for_the_copy, 0, 1000);
+         const char trunc_msg[31] = " ... <The string is truncated>";
 
-         if (test_it_length < truncate_value + 30)
+         memset(for_the_copy, 0, 1000);
+         size_t snprintf_len;  //!< Number of chars to copy from test_it + '\0'
+
+         if (test_it_length < truncate_value + (sizeof(trunc_msg) - 1))
          {
-            strncpy(for_the_copy, test_it, truncate_value - 30);
-            for_the_copy[truncate_value - 30] = 0;
+            snprintf_len = truncate_value - (sizeof(trunc_msg) - 2);
          }
          else
          {
-            strncpy(for_the_copy, test_it, truncate_value);
-            for_the_copy[truncate_value] = 0;
+            snprintf_len = truncate_value + 1;
          }
-         char *message = strcat(for_the_copy, " ... <The string is truncated>");
+         snprintf(for_the_copy, snprintf_len, "%s", test_it);
+         for_the_copy[snprintf_len - 1] = '\0';   // MSVC19 does not include EOS
 
-         return(message);
+         snprintf(for_the_copy + strlen(for_the_copy), 1000 - strlen(for_the_copy), trunc_msg);
+
+         return(for_the_copy);
       }
       else
       {
@@ -180,7 +188,7 @@ Chunk *Chunk::GetPrev(const E_Scope scope) const
 } // Chunk::GetPrev
 
 
-static void chunk_log(Chunk *pc, const char *text);
+static void chunk_log(const Chunk *pc, const char *text);
 
 
 Chunk *Chunk::GetHead()
@@ -228,7 +236,7 @@ bool Chunk::IsOnSameLine(const Chunk *end) const
    {
       return(false);
    }
-   Chunk *tmp = GetNext();
+   const Chunk *tmp = GetNext();
 
    while (  tmp->IsNotNullChunk()
          && tmp != end)
@@ -313,7 +321,7 @@ Chunk *Chunk::SearchPpa(const T_CheckFnPtr checkFn, const bool cond) const
 } // Chunk::SearchPpa
 
 
-static void chunk_log_msg(Chunk *chunk, const log_sev_t log, const char *str)
+static void chunk_log_msg(const Chunk *chunk, const log_sev_t log, const char *str)
 {
    LOG_FMT(log, "%s orig line is %zu, orig col is %zu, ",
            str, chunk->GetOrigLine(), chunk->GetOrigCol());
@@ -337,7 +345,7 @@ static void chunk_log_msg(Chunk *chunk, const log_sev_t log, const char *str)
 } // chunk_log_msg
 
 
-static void chunk_log(Chunk *pc, const char *text)
+static void chunk_log(const Chunk *pc, const char *text)
 {
    if (  pc->IsNullChunk()
       || (  cpd.unc_stage != unc_stage_e::TOKENIZE
@@ -346,8 +354,8 @@ static void chunk_log(Chunk *pc, const char *text)
       return;
    }
    const log_sev_t log   = LCHUNK;
-   Chunk           *prev = pc->GetPrev();
-   Chunk           *next = pc->GetNext();
+   const Chunk     *prev = pc->GetPrev();
+   const Chunk     *next = pc->GetNext();
 
    chunk_log_msg(pc, log, text);
 
@@ -411,7 +419,7 @@ bool Chunk::IsAddress() const
             && m_str[0] == '&'
             && IsNot(CT_OPERATOR_VAL))))
    {
-      Chunk *prevc = GetPrev();
+      const Chunk *prevc = GetPrev();
 
       if (  TestFlags(PCF_IN_TEMPLATE)
          && (  prevc->Is(CT_COMMA)
@@ -721,8 +729,8 @@ Chunk *Chunk::SkipDcMember() const
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *pc  = const_cast<Chunk *>(this);
-   Chunk *nxt = pc->Is(CT_DC_MEMBER) ? pc : pc->GetNextNcNnl(E_Scope::ALL);
+   Chunk       *pc  = const_cast<Chunk *>(this);
+   const Chunk *nxt = pc->Is(CT_DC_MEMBER) ? pc : pc->GetNextNcNnl(E_Scope::ALL);
 
    while (nxt->Is(CT_DC_MEMBER))
    {
@@ -765,7 +773,7 @@ bool Chunk::IsOCForinOpenParen() const
       && Is(CT_SPAREN_OPEN)
       && GetPrevNcNnl()->Is(CT_FOR))
    {
-      Chunk *nxt = const_cast<Chunk *>(this);
+      const Chunk *nxt = const_cast<Chunk *>(this);
 
       while (  nxt->IsNotNullChunk()
             && nxt->IsNot(CT_SPAREN_CLOSE)
@@ -897,7 +905,7 @@ bool Chunk::IsTypeDefinition() const
 
 bool Chunk::IsNewlineBetween(const Chunk *other) const
 {
-   Chunk *pc = const_cast<Chunk *>(this);
+   const Chunk *pc = const_cast<Chunk *>(this);
 
    while (pc != other)
    {
@@ -909,6 +917,70 @@ bool Chunk::IsNewlineBetween(const Chunk *other) const
    }
    return(false);
 } // Chunk::IsNewlineBetween
+
+
+size_t Chunk::GetNlCountFiltered(LineSkipConfig &skip) const
+{
+   size_t nl_count = GetNlCount(); // Initial number of newlines in this chunk
+
+   // If no newlines in this chunk, nothing to filter.
+   if (nl_count == 0)
+   {
+      return(0);
+   }
+
+   // If no budget available, directly return the raw count.
+   if (skip.empty_lines == 0 && skip.pp_lines == 0 && skip.cmt_lines == 0)
+   {
+      return(nl_count);
+   }
+
+   // If we are on a newline chunk, we must count the number of empty lines and look forward
+   if (IsNewline())
+   {
+      // 1. Handle empty lines (if nl_count > 1, it means there's at least one empty line)
+      //    The 'nl_count - 1' represents the number of purely empty lines
+      if (nl_count > 1)
+      {
+         const size_t empty_lines_in_chunk = nl_count - 1;
+         const size_t consumed             = std::min(empty_lines_in_chunk, skip.empty_lines);
+         skip.empty_lines -= consumed;
+         nl_count         -= consumed; // Reduce the count that will be returned
+      }
+      // Check the next chunk to determine what type of line this last remaining newline precedes.
+      Chunk *next = GetNext();
+
+      // 2. Handle preprocessor lines (the line *after* the newline chunk)
+      // We assume a newline precedes a single line type (PP, Comment, or regular code).
+      if (next->IsPreproc() && skip.pp_lines > 0)
+      {
+         --skip.pp_lines;
+         --nl_count; // Consume this newline from the count
+         return(nl_count);
+      }
+
+      // 3. Handle comment lines (the line *after* the last newline chunk)
+      // This check is independent of IsPreproc(), as a line can be a comment after a PP or just a comment.
+      if (next->IsComment() && skip.cmt_lines > 0)
+      {
+         --skip.cmt_lines;
+         --nl_count; // Consume this newline from the count
+         return(nl_count);
+      }
+   }
+   else
+   {
+      // We are on a comment chunk, juste count the number of newlines into this comment chunk (if any).
+      assert(IsComment() && "The logic of this method is for a newline chunk or a comment chunk only.");
+
+      // nl_count is always positive (test at start of function)
+      const size_t cmt_lines_in_chunk = nl_count;
+      const size_t consumed           = std::min(cmt_lines_in_chunk, skip.cmt_lines);
+      skip.cmt_lines -= consumed;
+      nl_count       -= consumed; // Reduce the count that will be returned
+   }
+   return(nl_count); // Return the count of newlines that *could not* be ignored by any budget
+} // Chunk::GetNlCountFiltered
 
 
 void shift_the_rest_of_the_line(Chunk *first)

@@ -24,7 +24,7 @@
 
 #define UNC_DECLARE_OPERATORS_FOR_FLAGS(flag_type)                        \
    inline flag_type operator&(flag_type::enum_t f1, flag_type::enum_t f2) \
-   { return(flag_type{ f1 } &f2); }                                       \
+   { return(flag_type{ f1 } & (f2)); }                                    \
    inline flag_type operator|(flag_type::enum_t f1, flag_type::enum_t f2) \
    { return(flag_type{ f1 } | f2); }                                      \
    inline flag_type operator|(flag_type::enum_t f1, flag_type f2)         \
@@ -50,6 +50,10 @@ public:
       : m_i{static_cast<int_t>(flag)}
    {}
 
+   inline flags(int_t flag)
+      : m_i{flag}
+   {}
+
    inline bool operator==(Enum const &other) const
    { return(m_i == static_cast<int_t>(other)); }
    inline bool operator==(flags const &other) const
@@ -66,34 +70,34 @@ public:
    inline flags &operator|=(flags f)
    { m_i |= f.m_i; return(*this); }
    inline flags &operator|=(Enum f)
-   { m_i |= f; return(*this); }
+   { m_i |= static_cast<int_t>(f); return(*this); }
 
    inline flags &operator^=(flags f)
    { m_i ^= f.m_i; return(*this); }
    inline flags &operator^=(Enum f)
-   { m_i ^= f; return(*this); }
+   { m_i ^= static_cast<int_t>(f); return(*this); }
 
    inline operator int_t() const { return(m_i); }
    inline operator enum_t() const { return(static_cast<enum_t>(m_i)); }
 
    inline flags operator&(Enum f) const
-   { flags g; g.m_i = m_i & static_cast<int_t>(f); return(g); }
+   { return(flags{ m_i & (static_cast<int_t>(f)) }); }
    inline flags operator&(flags f) const
-   { flags g; g.m_i = m_i & static_cast<int_t>(f); return(g); }
+   { return(flags{ m_i &f.m_i }); }
 
    template<typename T, integral<T> = true>
    inline flags operator&(T mask) const
-   { flags g; g.m_i = m_i & static_cast<int_t>(mask); return(g); }
+   { return(flags{ m_i & (static_cast<int_t>(mask)) }); }
 
    inline flags operator|(flags f) const
-   { flags g; g.m_i = m_i | f.m_i; return(g); }
+   { return(flags{ m_i | f.m_i }); }
    inline flags operator|(Enum f) const
-   { flags g; g.m_i = m_i | static_cast<int_t>(f); return(g); }
+   { return(flags{ m_i | static_cast<int_t>(f) }); }
 
    inline flags operator^(flags f) const
-   { flags g; g.m_i = m_i ^ f.m_i; return(g); }
+   { return(flags{ m_i ^f.m_i }); }
    inline flags operator^(Enum f) const
-   { flags g; g.m_i = m_i ^ static_cast<int_t>(f); return(g); }
+   { return(flags{ m_i ^static_cast<int_t>(f) }); }
 
    inline int_t operator~() const
    { return(~m_i); }

@@ -19,6 +19,8 @@
 #include "space.h"
 
 #include <cstdint>
+#include <cstdio>                      // to get fprintf
+#include <string>
 
 #ifdef WIN32
 #include <algorithm>                   // to get max
@@ -199,6 +201,35 @@ static bool single_line_comment_indent_rule_applies(Chunk *start, bool forward);
 static bool is_end_of_assignment(Chunk *pc, const ParsingFrame &frm);
 
 
+static void list_the_frm(Chunk *pc, const ParsingFrame &frm, int lineNumber);
+
+
+static void list_the_frm(Chunk *pc, const ParsingFrame &frm, int lineNumber)
+{
+   LOG_FMT(LINDPC, "%s(%d): (%d)\n", __func__, __LINE__, lineNumber);
+   LOG_FMT(LINDPC, "   -=[ pc orig line is %zu, orig col is %zu, Text() is '%s' ]=-, frm.size() is %zu\n",
+           pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), frm.size());
+
+   for (size_t ttidx = frm.size() - 1; ttidx > 0; ttidx--)
+   {
+      LOG_FMT(LINDPC, "     [%zu %zu:%zu '%s' %s/%s tmp=%zu, indent=%zu, brace indent=%zu, indent tab=%zu, indent continue=%d, level=%zu, pc brace level=%zu]\n",
+              ttidx,
+              frm.at(ttidx).GetOpenChunk()->GetOrigLine(),
+              frm.at(ttidx).GetOpenChunk()->GetOrigCol(),
+              frm.at(ttidx).GetOpenChunk()->Text(),
+              get_token_name(frm.at(ttidx).GetOpenToken()),
+              get_token_name(frm.at(ttidx).GetOpenChunk()->GetParentType()),
+              frm.at(ttidx).GetIndentTmp(),
+              frm.at(ttidx).GetIndent(),
+              frm.at(ttidx).GetBraceIndent(),
+              frm.at(ttidx).GetIndentTab(),
+              frm.at(ttidx).GetIndentContinue(),
+              frm.at(ttidx).GetOpenLevel(),
+              frm.at(ttidx).GetOpenChunk()->GetBraceLevel());
+   }
+} // static void list_the_frm
+
+
 void indent_to_column(Chunk *pc, size_t column)
 {
    LOG_FUNC_ENTRY();
@@ -287,7 +318,7 @@ void align_to_column(Chunk *pc, size_t column)
       {
          // Shift by the same amount, keep above negative values
          pc->SetColumn((  col_delta >= 0
-                       || (size_t)(abs(col_delta)) < pc->GetColumn())
+                       || static_cast<size_t>(abs(col_delta)) < pc->GetColumn())
                       ? pc->GetColumn() + col_delta : 0);
          pc->SetColumn(max(pc->GetColumn(), min_col));
       }
@@ -335,7 +366,7 @@ static size_t token_indent(E_Token type)
 #define indent_column_set(X)                                                                 \
    do {                                                                                      \
       LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, indent_column changed from %zu to %zu\n", \
-              __func__, __LINE__, pc->GetOrigLine(), indent_column, (size_t)X);              \
+              __func__, __LINE__, pc->GetOrigLine(), indent_column, static_cast<size_t>(X)); \
       indent_column = (X);                                                                   \
    } while (false)
 
@@ -1016,9 +1047,9 @@ void indent_text()
             if (val != 0)
             {
                size_t indent = frm.top().GetIndent();
-               indent = (val > 0) ? val                     // reassign if positive val,
-                        : ((size_t)(abs(val)) < indent)     // else if no underflow
-                        ? (indent + val) : 0;               // reduce, else 0
+               indent = (val > 0) ? val                            // reassign if positive val,
+                        : (static_cast<size_t>(abs(val)) < indent) // else if no underflow
+                        ? (indent + val) : 0;                      // reduce, else 0
                frm.top().SetIndent(indent);
             }
             frm.top().SetIndentTmp(frm.top().GetIndent());
@@ -1396,27 +1427,7 @@ void indent_text()
       if (  !pc->IsCommentOrNewline()
          && log_sev_on(LINDPC))
       {
-         LOG_FMT(LINDPC, "%s(%d):\n", __func__, __LINE__);
-         LOG_FMT(LINDPC, "   -=[ pc orig line is %zu, orig col is %zu, Text() is '%s' ]=-, frm.size() is %zu\n",
-                 pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), frm.size());
-
-         for (size_t ttidx = frm.size() - 1; ttidx > 0; ttidx--)
-         {
-            LOG_FMT(LINDPC, "     [%zu %zu:%zu '%s' %s/%s tmp=%zu indent=%zu brace indent=%zu indent tab=%zu indent continue=%d level=%zu pc brace level=%zu]\n",
-                    ttidx,
-                    frm.at(ttidx).GetOpenChunk()->GetOrigLine(),
-                    frm.at(ttidx).GetOpenChunk()->GetOrigCol(),
-                    frm.at(ttidx).GetOpenChunk()->Text(),
-                    get_token_name(frm.at(ttidx).GetOpenToken()),
-                    get_token_name(frm.at(ttidx).GetOpenChunk()->GetParentType()),
-                    frm.at(ttidx).GetIndentTmp(),
-                    frm.at(ttidx).GetIndent(),
-                    frm.at(ttidx).GetBraceIndent(),
-                    frm.at(ttidx).GetIndentTab(),
-                    frm.at(ttidx).GetIndentContinue(),
-                    frm.at(ttidx).GetOpenLevel(),
-                    frm.at(ttidx).GetOpenChunk()->GetBraceLevel());
-         }
+         list_the_frm(pc, frm, __LINE__);
       }
       char copy[1000];
       LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, orig col is %zu, column is %zu, Text() is '%s'\n",
@@ -1930,11 +1941,13 @@ void indent_text()
             }
             // Issue # 1620, UNI-24090.cs
             else if (  frm.prev().GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk())
+                    && language_is_set(lang_flag_e::LANG_CS)             // Issue 4556
                     && !options::indent_align_paren()
                     && frm.prev().GetOpenChunk()->IsParenOpen()
                     && !pc->TestFlags(PCF_ONE_LINER))
             {
                log_rule_B("indent_align_paren");
+
                // We are inside ({ ... }) -- where { and ( are on the same line, avoiding double indentations.
                // only to help the vim command }
                frm.top().SetBraceIndent(frm.prev().GetIndent() - indent_size);
@@ -2341,7 +2354,7 @@ void indent_text()
             }
             else
             {
-               bool no_underflow = (size_t)(abs(val)) < pse_indent;
+               bool no_underflow = static_cast<size_t>(abs(val)) < pse_indent;
                indent_column_set((no_underflow ? (pse_indent + val) : 0));
             }
          }
@@ -2398,7 +2411,7 @@ void indent_text()
             else
             {
                size_t pse_indent   = frm.top().GetIndent();
-               bool   no_underflow = (size_t)(abs(val)) < pse_indent;
+               bool   no_underflow = static_cast<size_t>(abs(val)) < pse_indent;
 
                indent_column_set(no_underflow ? (pse_indent + val) : 0);
             }
@@ -2743,7 +2756,7 @@ void indent_text()
                   && frm.at(idx).GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()))
             {
                idx--;
-               skipped = true;
+               // skipped = true;  // Assigned true at end of code block.
             }
             frm.top().SetIndent(frm.at(idx).GetIndent() + indent_size);
             log_indent();
@@ -2796,7 +2809,7 @@ void indent_text()
                         && frm.at(sub).GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()))
                   {
                      sub--;
-                     skipped = true;
+                     // skipped = true;  // Set to true at the end of the code block
                   }
 
                   if (  (  frm.at(sub + 1).GetOpenToken() == CT_CLASS_COLON
@@ -3829,14 +3842,14 @@ void indent_text()
             if (frm.top().GetOpenChunk()->IsParenOpen())
             {
                log_rule_B("indent_comma_paren");
-               indent_align  = options::indent_comma_paren() == (int)indent_mode_e::ALIGN;
-               indent_ignore = options::indent_comma_paren() == (int)indent_mode_e::IGNORE;
+               indent_align  = options::indent_comma_paren() == static_cast<int>(indent_mode_e::ALIGN);
+               indent_ignore = options::indent_comma_paren() == static_cast<int>(indent_mode_e::IGNORE);
             }
             else if (frm.top().GetOpenChunk()->IsBraceOpen())
             {
                log_rule_B("indent_comma_brace");
-               indent_align  = options::indent_comma_brace() == (int)indent_mode_e::ALIGN;
-               indent_ignore = options::indent_comma_brace() == (int)indent_mode_e::IGNORE;
+               indent_align  = options::indent_comma_brace() == static_cast<int>(indent_mode_e::ALIGN);
+               indent_ignore = options::indent_comma_brace() == static_cast<int>(indent_mode_e::IGNORE);
             }
 
             if (indent_ignore)
@@ -3916,11 +3929,11 @@ void indent_text()
             {
                log_rule_B("indent_bool_paren");
 
-               if (options::indent_bool_paren() == (int)indent_mode_e::IGNORE)
+               if (options::indent_bool_paren() == static_cast<int>(indent_mode_e::IGNORE))
                {
                   indent_column_set(pc->GetOrigCol());
                }
-               else if (options::indent_bool_paren() == (int)indent_mode_e::ALIGN)
+               else if (options::indent_bool_paren() == static_cast<int>(indent_mode_e::ALIGN))
                {
                   indent_column_set(frm.top().GetOpenChunk()->GetColumn());
 
@@ -4196,9 +4209,9 @@ void indent_text()
                if (val != 0)
                {
                   size_t indent = indent_column;
-                  indent = (val > 0) ? val                  // reassign if positive val,
-                           : ((size_t)(abs(val)) < indent)  // else if no underflow
-                           ? (indent + val) : 0;            // reduce, else 0
+                  indent = (val > 0) ? val                            // reassign if positive val,
+                           : (static_cast<size_t>(abs(val)) < indent) // else if no underflow
+                           ? (indent + val) : 0;                      // reduce, else 0
 
                   LOG_FMT(LINDENT, "%s(%d): %zu] var_type indent => %zu [%s]\n",
                           __func__, __LINE__, pc->GetOrigLine(), indent, pc->Text());

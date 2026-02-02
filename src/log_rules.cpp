@@ -9,6 +9,8 @@
 #include "log_rules.h"
 
 #include "unc_tools.h"
+#include <cstdio>  // for snprintf
+#include <utility> // for make_pair
 
 
 void log_rule2(const char *func, size_t line, const char *rule, Chunk *first, Chunk *second)
@@ -65,9 +67,16 @@ void log_rule4(const char *rule, Chunk *first)
    }
    // copy the rule
    size_t length = strlen(rule) + 1;
-   char   *r     = (char *)malloc(length);
+   char   *r     = reinterpret_cast<char *>(malloc(length));
 
-   strcpy(r, rule);
+   if (r == NULL)
+   {
+      fprintf(stderr, "%s(%d): Not enough memory for log_rule4\n",
+              __func__, __LINE__);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+   snprintf(r, length, "%s", rule);
    size_t      a_number = get_A_Number();
    TrackNumber A        = std::make_pair(a_number, r);
 
@@ -92,9 +101,16 @@ void log_ruleStart(const char *rule, Chunk *first)
    }
    // copy the rule
    size_t length = strlen(rule) + 1;
-   char   *r     = (char *)malloc(length);
+   char   *r     = reinterpret_cast<char *>(malloc(length));
 
-   strcpy(r, rule);
+   if (r == NULL)
+   {
+      fprintf(stderr, "%s(%d): Not enough memory for log_ruleStart\n",
+              __func__, __LINE__);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+   snprintf(r, length, "%s", rule);
    size_t      a_number = get_A_Number();
    TrackNumber A        = std::make_pair(a_number, r);
 
@@ -119,9 +135,16 @@ void log_ruleNL(const char *rule, Chunk *pc)
    }
    // copy the rule
    size_t length = strlen(rule) + 1;
-   char   *r     = (char *)malloc(length);
+   char   *r     = reinterpret_cast<char *>(malloc(length));
 
-   strcpy(r, rule);
+   if (r == NULL)
+   {
+      fprintf(stderr, "%s(%d): Not enough memory for log_ruleNL\n",
+              __func__, __LINE__);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+   snprintf(r, length, "%s", rule);
    size_t      a_number = get_A_Number();
    TrackNumber A        = std::make_pair(a_number, r);
 

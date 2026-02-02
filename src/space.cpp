@@ -29,6 +29,8 @@
 #include <algorithm>                   // to get max
 #endif // ifdef WIN32
 
+#include <cstdio>                      // to get snprintf
+
 
 constexpr static auto LCURRENT = LSPACE;
 
@@ -571,6 +573,15 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
       log_rule("FORCE");
       return(IARF_FORCE);
+   }
+
+   if (  (  first->Is(CT_FPAREN_OPEN)
+         || first->Is(CT_SPAREN_OPEN)
+         || first->Is(CT_PAREN_OPEN))
+      && second->Is(CT_DEREF))               // Issue #4459
+   {
+      log_rule("sp_paren_deref");
+      return(options::sp_paren_deref());
    }
 
    // "decltype(foo_t)" vs. "decltype (foo_t)"
@@ -2469,8 +2480,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          && (  second->GetPrevType(CT_OC_INTF, second->GetLevel(), E_Scope::ALL)->IsNullChunk()
             && second->GetPrevType(CT_OC_IMPL, second->GetLevel(), E_Scope::ALL)->IsNullChunk()))
       {
-         if (  second->GetParentType() == CT_OC_CLASS
-            && second->GetPrevType(CT_OC_INTF, second->GetLevel(), E_Scope::ALL)->IsNullChunk())
+         if (/* second->GetParentType() == CT_OC_CLASS && */   // Already true
+            second->GetPrevType(CT_OC_INTF, second->GetLevel(), E_Scope::ALL)->IsNullChunk())
          {
             if (options::sp_before_oc_colon() != IARF_IGNORE)
             {
@@ -2590,9 +2601,16 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       && second->Is(CT_PTR_TYPE))
    {
       // TODO: provide some test data to check this block
-      // TODO: create a new option
-      log_rule("IGNORE");
-      return(IARF_IGNORE);
+      // TODO: create a new option ???
+      // these lines are only useful for debugging uncrustify itself               Issue #4459
+      LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unknown do_space:\n",
+              __func__, __LINE__);
+      LOG_FMT(LSPACE, "   first orig line  is %zu, orig col  is %zu, Text()  '%s', GetType() is  %s\n",
+              first->GetOrigLine(), first->GetOrigCol(), first->Text(), get_token_name(first->GetType()));
+      LOG_FMT(LSPACE, "   second orig line is %zu, orig col is %zu, Text() '%s', GetType() is %s\n",
+              second->GetOrigLine(), second->GetOrigCol(), second->Text(), get_token_name(second->GetType()));
+      LOG_FMT(LSPACE, "   Please make a call at https://github.com/uncrustify/uncrustify/issues/new\n");
+      exit(EX_SOFTWARE);
    }
 
    if (first->Is(CT_PTR_TYPE))                            // see the tests cpp:34505-34508
@@ -2658,8 +2676,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
             log_rule("sp_deref");
             return(options::sp_deref());
          }
-         else if (  first->GetParentType() == CT_FUNC_VAR
-                 || first->GetParentType() == CT_FUNC_TYPE)
+         else if (/* first->GetParentType() == CT_FUNC_VAR || */    // Always false
+            first->GetParentType() == CT_FUNC_TYPE)
          {
             // Add or remove space after pointer caret '^', if followed by a word.
             log_rule("sp_after_ptr_block_caret");
@@ -2667,7 +2685,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          }
          else if (second->Is(CT_QUALIFIER))
          {
-            // Add or remove space after pointer star '*', if followed by a qualifier.
+            // Addor remove space after pointer star '*', if followed by a qualifier.
             log_rule("sp_after_ptr_star_qualifier");                  // ptr_star 4
             return(options::sp_after_ptr_star_qualifier());
          }

@@ -10,6 +10,8 @@
 #ifndef CHUNK_LIST_H_INCLUDED
 #define CHUNK_LIST_H_INCLUDED
 
+#include <cstdio>
+
 #include "uncrustify_types.h"
 // necessary to not sort it
 #include "char_table.h"
@@ -270,6 +272,15 @@ public:
     * @brief Returns the number of newlines in a CT_NEWLINE chunk
     */
    size_t GetNlCount() const;
+
+   /**
+    * @brief Returns the effective number of newlines, excluding certain line types
+    * based on LineSkipConfig settings. This is used for span calculations in
+    * alignment operations.
+    * @param skip configuration with budgets that are decremented as lines are skipped
+    * @return effective newline count after applying skip rules
+    */
+   size_t GetNlCountFiltered(LineSkipConfig &skip) const;
 
    /**
     * @brief Sets the number of newlines in a CT_NEWLINE chunk
@@ -1248,6 +1259,15 @@ inline size_t Chunk::GetOrigLine() const
 
 inline void Chunk::SetOrigLine(size_t line)
 {
+#ifdef DEBUG
+   if (line > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, line);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_origLine = line;
 }
 
@@ -1260,6 +1280,15 @@ inline size_t Chunk::GetOrigCol() const
 
 inline void Chunk::SetOrigCol(size_t col)
 {
+#ifdef DEBUG
+   if (col > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, col);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_origCol = col;
 }
 
@@ -1272,6 +1301,15 @@ inline size_t Chunk::GetOrigColEnd() const
 
 inline void Chunk::SetOrigColEnd(size_t col)
 {
+#ifdef DEBUG
+   if (col > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, col);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_origColEnd = col;
 }
 
@@ -1284,6 +1322,15 @@ inline size_t Chunk::GetOrigPrevSp() const
 
 inline void Chunk::SetOrigPrevSp(size_t col)
 {
+#ifdef DEBUG
+   if (col > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, col);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_origPrevSp = col;
 }
 
@@ -1296,6 +1343,15 @@ inline size_t Chunk::GetColumn() const
 
 inline void Chunk::SetColumn(size_t col)
 {
+#ifdef DEBUG
+   if (col > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, col);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_column = col;
 }
 
@@ -1308,6 +1364,15 @@ inline size_t Chunk::GetColumnIndent() const
 
 inline void Chunk::SetColumnIndent(size_t col)
 {
+#ifdef DEBUG
+   if (col > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, col);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_columnIndent = col;
 }
 
@@ -1320,6 +1385,15 @@ inline size_t Chunk::GetNlCount() const
 
 inline void Chunk::SetNlCount(size_t cnt)
 {
+#ifdef DEBUG
+   if (cnt > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, cnt);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_nlCount = cnt;
 }
 
@@ -1332,6 +1406,15 @@ inline size_t Chunk::GetNlColumn() const
 
 inline void Chunk::SetNlColumn(size_t col)
 {
+#ifdef DEBUG
+   if (col > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, col);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_nlColumn = col;
 }
 
@@ -1344,6 +1427,15 @@ inline size_t Chunk::GetLevel() const
 
 inline void Chunk::SetLevel(size_t level)
 {
+#ifdef DEBUG
+   if (level > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, level);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_level = level;
 }
 
@@ -1356,6 +1448,15 @@ inline size_t Chunk::GetBraceLevel() const
 
 inline void Chunk::SetBraceLevel(size_t lvl)
 {
+#ifdef DEBUG
+   if (lvl > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, lvl);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_braceLevel = lvl;
 }
 
@@ -1368,6 +1469,15 @@ inline size_t Chunk::GetPpLevel() const
 
 inline void Chunk::SetPpLevel(size_t lvl)
 {
+#ifdef DEBUG
+   if (lvl > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, lvl);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_ppLevel = lvl;
 }
 
@@ -1743,7 +1853,7 @@ inline bool Chunk::IsSamePreproc(const Chunk *other) const
 
 inline bool Chunk::SafeToDeleteNl() const
 {
-   Chunk *tmp = GetPrev();
+   const Chunk *tmp = GetPrev();
 
    if (tmp->Is(CT_COMMENT_CPP))
    {

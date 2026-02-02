@@ -12,6 +12,7 @@
 
 #include "uncrustify_types.h"
 
+#include <cstdio>
 #include <vector>
 
 
@@ -433,6 +434,15 @@ inline size_t ParenStackEntry::GetOpenLevel() const
 
 inline void ParenStackEntry::SetOpenLevel(size_t level)
 {
+#ifdef DEBUG
+   if (level > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, level);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_openLevel = level;
 }
 
@@ -445,6 +455,15 @@ inline size_t ParenStackEntry::GetOpenLine() const
 
 inline void ParenStackEntry::SetOpenLine(size_t line)
 {
+#ifdef DEBUG
+   if (line > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, line);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_openLine = line;
 }
 
@@ -457,6 +476,15 @@ inline size_t ParenStackEntry::GetOpenCol() const
 
 inline void ParenStackEntry::SetOpenCol(size_t column)
 {
+#ifdef DEBUG
+   if (column > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, column);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_openCol = column;
 }
 
@@ -469,6 +497,15 @@ inline size_t ParenStackEntry::GetBraceIndent() const
 
 inline void ParenStackEntry::SetBraceIndent(size_t indent)
 {
+#ifdef DEBUG
+   if (indent > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, indent);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_braceIndent = indent;
 }
 
@@ -481,6 +518,15 @@ inline size_t ParenStackEntry::GetIndent() const
 
 inline void ParenStackEntry::SetIndent(size_t level)
 {
+#ifdef DEBUG
+   if (level > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, level);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_indent = level;
 }
 
@@ -493,6 +539,15 @@ inline size_t ParenStackEntry::GetIndentTmp() const
 
 inline void ParenStackEntry::SetIndentTmp(size_t level)
 {
+#ifdef DEBUG
+   if (level > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, level);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_indentTmp = level;
 }
 
@@ -505,6 +560,15 @@ inline size_t ParenStackEntry::GetIndentTab() const
 
 inline void ParenStackEntry::SetIndentTab(size_t level)
 {
+#ifdef DEBUG
+   if (level > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, level);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_indentTab = level;
 }
 
@@ -517,6 +581,15 @@ inline size_t ParenStackEntry::GetNsCount() const
 
 inline void ParenStackEntry::SetNsCount(size_t count)
 {
+#ifdef DEBUG
+   if (count > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, count);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_nsCount = count;
 }
 
@@ -634,6 +707,15 @@ inline size_t ParsingFrame::GetRefNumber() const
 
 inline void ParsingFrame::SetRefNumber(const size_t refNo)
 {
+#ifdef DEBUG
+   if (refNo > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, refNo);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_refNumber = refNo;
 }
 
@@ -646,6 +728,15 @@ inline size_t ParsingFrame::GetParenLevel() const
 
 inline void ParsingFrame::SetParenLevel(const size_t parenLevel)
 {
+#ifdef DEBUG
+   if (parenLevel > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, parenLevel);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_parenLevel = parenLevel;
 }
 
@@ -658,6 +749,15 @@ inline size_t ParsingFrame::GetBraceLevel() const
 
 inline void ParsingFrame::SetBraceLevel(const size_t braceLevel)
 {
+#ifdef DEBUG
+   if (braceLevel > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, braceLevel);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_braceLevel = braceLevel;
 }
 
@@ -670,6 +770,15 @@ inline size_t ParsingFrame::GetPpLevel() const
 
 inline void ParsingFrame::SetPpLevel(const size_t ppLevel)
 {
+#ifdef DEBUG
+   if (ppLevel > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, ppLevel);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_ppLevel = ppLevel;
 }
 
@@ -682,6 +791,15 @@ inline size_t ParsingFrame::GetSParenCount() const
 
 inline void ParsingFrame::SetSParenCount(const size_t sParenCount)
 {
+#ifdef DEBUG
+   if (sParenCount > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, sParenCount);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_sParenCount = sParenCount;
 }
 
@@ -694,6 +812,15 @@ inline size_t ParsingFrame::GetParenCount() const
 
 inline void ParsingFrame::SetParenCount(const size_t parenCount)
 {
+#ifdef DEBUG
+   if (parenCount > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, parenCount);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_parenCount = parenCount;
 }
 
@@ -706,6 +833,15 @@ inline size_t ParsingFrame::GetStmtCount() const
 
 inline void ParsingFrame::SetStmtCount(const size_t stmtCount)
 {
+#ifdef DEBUG
+   if (stmtCount > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, stmtCount);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_stmtCount = stmtCount;
 }
 
@@ -718,6 +854,15 @@ inline size_t ParsingFrame::GetExprCount() const
 
 inline void ParsingFrame::SetExprCount(const size_t exprCount)
 {
+#ifdef DEBUG
+   if (exprCount > uncrustify::limits::TOO_BIG_VALUE)
+   {
+      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
+              __func__, __LINE__, exprCount);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#endif
    m_exprCount = exprCount;
 }
 

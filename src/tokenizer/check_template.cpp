@@ -17,6 +17,9 @@
 #include "tokenizer/flag_decltype.h"
 #include "uncrustify.h"
 
+#include <cstdio>         // to get fprintf
+#include <vector>
+
 
 constexpr static auto LCURRENT = LTEMPL;
 
@@ -309,7 +312,7 @@ void check_template(Chunk *start, bool in_type_cast)
             {
                handle_double_angle_close(pc);
             }
-            else if (--num_tokens <= 0)
+            else if (--num_tokens == 0)
             {
                break;
             }
