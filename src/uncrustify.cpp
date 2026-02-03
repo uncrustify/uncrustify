@@ -171,7 +171,7 @@ static bool bout_content_matches(const file_mem &fm, bool report_status, bool is
  * @retval true   file was loaded successfully
  * @retval false  file could not be loaded
  */
-static int load_mem_file(const char *filename, file_mem &fm);
+static bool load_mem_file(const char *filename, file_mem &fm);
 
 
 /**
@@ -182,7 +182,7 @@ static int load_mem_file(const char *filename, file_mem &fm);
  * @retval true   file was loaded successfully
  * @retval false  file could not be loaded
  */
-static int load_mem_file_config(const std::string &filename, file_mem &fm);
+static bool load_mem_file_config(const std::string &filename, file_mem &fm);
 
 
 //! print uncrustify version number and terminate
@@ -928,7 +928,7 @@ int main(int argc, char *argv[])
       }
 
       // Try to read in the source file
-      if (load_mem_file(source_file, fm) < 0)
+      if (!load_mem_file(source_file, fm))
       {
          LOG_FMT(LERR, "Failed to load (%s)\n", source_file);
          exit(EX_IOERR);
@@ -1250,9 +1250,8 @@ static void make_folders(const string &filename)
 } // make_folders
 
 
-static int load_mem_file(const char *filename, file_mem &fm)
+static bool load_mem_file(const char *filename, file_mem &fm)
 {
-   int         retval = -1;
    struct stat my_stat;
    FILE        *p_file;
 
@@ -1263,7 +1262,7 @@ static int load_mem_file(const char *filename, file_mem &fm)
    // Grab the stat info for the file, return if it cannot be read
    if (stat(filename, &my_stat) < 0)
    {
-      return(-1);
+      return(false);
    }
 #ifdef HAVE_UTIME_H
    // Save off modification time (mtime)
@@ -1275,115 +1274,107 @@ static int load_mem_file(const char *filename, file_mem &fm)
 
    if (p_file == nullptr)
    {
-      return(-1);
+      return(false);
    }
    fm.raw.resize(my_stat.st_size);
 
-   if (my_stat.st_size == 0) // check if file is empty
+   if (my_stat.st_size == 0)
    {
-      retval = 0;
+      // File is empty
       fm.bom = false;
       fm.enc = char_encoding_e::e_ASCII;
-      fm.data.clear();
    }
    else
    {
-      // read the raw data
+      // Read the file raw data
       if (fread(&fm.raw[0], fm.raw.size(), 1, p_file) != 1)
       {
          LOG_FMT(LERR, "%s: fread(%s) failed: %s (%d)\n",
                  __func__, filename, strerror(errno), errno);
-         exit(EX_IOERR);
+         return(false);
       }
       else if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
       {
          LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
-         exit(EX_IOERR);
+         return(false);
       }
       else
       {
          LOG_FMT(LNOTE, "%s: '%s' encoding looks like %s (%d)\n", __func__, filename,
                  get_char_encoding(fm.enc), (int)fm.enc);
-         retval = 0;
       }
    }
    fclose(p_file);
-   return(retval);
+   return(true);
 } // load_mem_file
 
 
-static int load_mem_file_config(const std::string &filename, file_mem &fm)
+static bool load_mem_file_config(const std::string &filename, file_mem &fm)
 {
-   int  retval;
    char buf[1024];
 
    snprintf(buf, sizeof(buf), "%.*s%s",
             path_dirname_len(cpd.filename.c_str()), cpd.filename.c_str(), filename.c_str());
 
-   retval = load_mem_file(buf, fm);
-
-   if (retval < 0)
+   if (!load_mem_file(buf, fm))
    {
-      retval = load_mem_file(filename.c_str(), fm);
-
-      if (retval < 0)
+      if (!load_mem_file(filename.c_str(), fm))
       {
          LOG_FMT(LERR, "Failed to load (%s) or (%s)\n", buf, filename.c_str());
-         exit(EX_IOERR);
+         return(false);
       }
    }
-   return(retval);
+   return(true);
 }
 
 
-int load_header_files()
+void load_header_files()
 {
-   int retval = 0;
+   bool read_success = true;
 
    log_rule_B("cmt_insert_file_header");
 
    if (!options::cmt_insert_file_header().empty())
    {
       // try to load the file referred to by the options string
-      retval |= load_mem_file_config(options::cmt_insert_file_header(),
-                                     cpd.file_hdr);
+      read_success &= load_mem_file_config(options::cmt_insert_file_header(), cpd.file_hdr);
    }
    log_rule_B("cmt_insert_file_footer");
 
    if (!options::cmt_insert_file_footer().empty())
    {
-      retval |= load_mem_file_config(options::cmt_insert_file_footer(),
-                                     cpd.file_ftr);
+      read_success &= load_mem_file_config(options::cmt_insert_file_footer(), cpd.file_ftr);
    }
    log_rule_B("cmt_insert_func_header");
 
    if (!options::cmt_insert_func_header().empty())
    {
-      retval |= load_mem_file_config(options::cmt_insert_func_header(),
-                                     cpd.func_hdr);
+      read_success &= load_mem_file_config(options::cmt_insert_func_header(), cpd.func_hdr);
    }
    log_rule_B("cmt_insert_class_header");
 
    if (!options::cmt_insert_class_header().empty())
    {
-      retval |= load_mem_file_config(options::cmt_insert_class_header(),
-                                     cpd.class_hdr);
+      read_success &= load_mem_file_config(options::cmt_insert_class_header(), cpd.class_hdr);
    }
    log_rule_B("cmt_insert_oc_msg_header");
 
    if (!options::cmt_insert_oc_msg_header().empty())
    {
-      retval |= load_mem_file_config(options::cmt_insert_oc_msg_header(),
-                                     cpd.oc_msg_hdr);
+      read_success &= load_mem_file_config(options::cmt_insert_oc_msg_header(), cpd.oc_msg_hdr);
    }
    log_rule_B("cmt_reflow_fold_regex_file");
 
    if (!options::cmt_reflow_fold_regex_file().empty())
    {
-      retval |= load_mem_file_config(options::cmt_reflow_fold_regex_file(),
-                                     cpd.reflow_fold_regex);
+      read_success &= load_mem_file_config(options::cmt_reflow_fold_regex_file(), cpd.reflow_fold_regex);
    }
-   return(retval);
+
+   if (!read_success)
+   {
+      LOG_FMT(LERR, "Failed to load one or more files\n");
+      exit(EX_IOERR);
+   }
 } // load_header_files
 
 
@@ -1543,7 +1534,7 @@ static void do_source_file(const char *filename_in,
    }
 
    // Try to read in the source file
-   if (load_mem_file(filename_in, fm) < 0)
+   if (!load_mem_file(filename_in, fm))
    {
       LOG_FMT(LERR, "Failed to load (%s)\n", filename_in);
       exit(EX_IOERR);
