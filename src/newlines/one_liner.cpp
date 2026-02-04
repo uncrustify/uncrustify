@@ -402,20 +402,15 @@ bool nl_collapse_braced_one_liner(Chunk *br_open)
       }
 
       if (  brace_depth == 0
-         && paren_depth == 0)
+         && paren_depth == 0
+         && (  tmp->Is(CT_SEMICOLON)
+            || tmp->Is(CT_IF)
+            || tmp->Is(CT_FOR)
+            || tmp->Is(CT_WHILE)
+            || tmp->Is(CT_DO)
+            || tmp->Is(CT_SWITCH)))
       {
-         if (tmp->Is(CT_SEMICOLON))
-         {
-            stmt_count++;
-         }
-         else if (  tmp->Is(CT_IF)
-                 || tmp->Is(CT_FOR)
-                 || tmp->Is(CT_WHILE)
-                 || tmp->Is(CT_DO)
-                 || tmp->Is(CT_SWITCH))
-         {
-            stmt_count++;
-         }
+         stmt_count++;
       }
 
       if (stmt_count > 1)
