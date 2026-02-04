@@ -65,7 +65,7 @@
 #include <cstdio>
 #include <deque>
 #include <fcntl.h>
-#include <map>
+#include <fstream>
 #include <string>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -1252,14 +1252,14 @@ static void make_folders(const string &filename)
 
 static bool load_mem_file(const char *filename, file_mem &fm)
 {
-   struct stat my_stat;
-   FILE        *p_file;
-
    fm.raw.clear();
    fm.data.clear();
+   fm.bom = false;
    fm.enc = char_encoding_e::e_ASCII;
 
    // Grab the stat info for the file, return if it cannot be read
+   struct stat my_stat;
+
    if (stat(filename, &my_stat) < 0)
    {
       return(false);
@@ -1269,42 +1269,38 @@ static bool load_mem_file(const char *filename, file_mem &fm)
    fm.utb.modtime = my_stat.st_mtime;
 #endif
 
+   if (my_stat.st_size == 0)
+   {
+      // File is empty
+      return(true);
+   }
    // Try to read in the file
-   p_file = fopen(filename, "rb");
+   std::ifstream infile(filename, std::ios::binary);
 
-   if (p_file == nullptr)
+   if (!infile)
    {
       return(false);
    }
    fm.raw.resize(my_stat.st_size);
 
-   if (my_stat.st_size == 0)
+   // Read the file raw data
+   infile.read(reinterpret_cast<char *>(fm.raw.data()), fm.raw.size());
+
+   if (infile.fail())
    {
-      // File is empty
-      fm.bom = false;
-      fm.enc = char_encoding_e::e_ASCII;
+      LOG_FMT(LERR, "%s: couldn't successfully read the file '%s'\n", __func__, filename);
+      return(false);
+   }
+   else if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
+   {
+      LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
+      return(false);
    }
    else
    {
-      // Read the file raw data
-      if (fread(&fm.raw[0], fm.raw.size(), 1, p_file) != 1)
-      {
-         LOG_FMT(LERR, "%s: fread(%s) failed: %s (%d)\n",
-                 __func__, filename, strerror(errno), errno);
-         return(false);
-      }
-      else if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
-      {
-         LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
-         return(false);
-      }
-      else
-      {
-         LOG_FMT(LNOTE, "%s: '%s' encoding looks like %s (%d)\n", __func__, filename,
-                 get_char_encoding(fm.enc), (int)fm.enc);
-      }
+      LOG_FMT(LNOTE, "%s: '%s' encoding looks like %s (%d)\n", __func__, filename,
+              get_char_encoding(fm.enc), (int)fm.enc);
    }
-   fclose(p_file);
    return(true);
 } // load_mem_file
 
