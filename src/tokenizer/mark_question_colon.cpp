@@ -26,8 +26,9 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
 {
    Chunk *pc2                    = pc_question->GetNextNcNnl();
    bool  colon_found             = false;
-   bool  colon_after_colon_found = false;    // Test #51007: Track if we see a colon after our ternary colon
+   bool  colon_after_colon_found = false;   // Test #51007: Track if we see a colon after our ternary colon
    int   square_bracket_depth    = 0;
+   int   brace_depth             = 0;       // Test #51012: Track OC dictionary @{...} depth
 
    LOG_FMT(LCOMBINE, "%s(%d): pc_question.orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
            __func__, __LINE__, pc_question->GetOrigLine(), pc_question->GetOrigCol(), pc_question->GetLevel(),
@@ -162,7 +163,8 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
          }
       }
       else if (  pc2->Is(CT_COLON)
-              && square_bracket_depth <= 0)
+              && square_bracket_depth <= 0
+              && brace_depth <= 0)  // Test #51012: Don't mark dictionary colons as ternary colons
       {
          LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                  __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
@@ -231,6 +233,26 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
       else if (pc2->Is(CT_SQUARE_CLOSE))
       {
          square_bracket_depth--;
+      }
+      // Test #51012: Track OC dictionary @{...} brace depth
+      // Check for CT_OC_AT preceding the brace to detect OC dictionary literals
+      // Note: Parent type may not be set yet during search_for_colon, so check previous token
+      else if (pc2->Is(CT_BRACE_OPEN))
+      {
+         Chunk *prev = pc2->GetPrevNcNnl();
+
+         if (prev->Is(CT_OC_AT))
+         {
+            brace_depth++;
+         }
+      }
+      else if (pc2->Is(CT_BRACE_CLOSE))
+      {
+         // If we're inside an OC dictionary, decrement brace depth
+         if (brace_depth > 0)
+         {
+            brace_depth--;
+         }
       }
       pc2 = pc2->GetNextNcNnl();
    }
