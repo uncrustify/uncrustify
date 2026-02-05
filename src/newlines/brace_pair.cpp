@@ -205,6 +205,71 @@ void newlines_brace_pair(Chunk *br_open)
          }
       }
    }
+   // Collapse braced single-statement control blocks to one-liner
+   E_Token parent = br_open->GetParentType();
+
+   if (  parent == CT_IF
+      || parent == CT_ELSEIF
+      || parent == CT_ELSE)
+   {
+      log_rule_B("nl_collapse_if_one_liner");
+
+      if (options::nl_collapse_if_one_liner())
+      {
+         if (nl_collapse_braced_one_liner(br_open))
+         {
+            return;
+         }
+      }
+   }
+   else if (parent == CT_FOR)
+   {
+      log_rule_B("nl_collapse_for_one_liner");
+
+      if (options::nl_collapse_for_one_liner())
+      {
+         if (nl_collapse_braced_one_liner(br_open))
+         {
+            return;
+         }
+      }
+   }
+   else if (parent == CT_WHILE)
+   {
+      log_rule_B("nl_collapse_while_one_liner");
+
+      if (options::nl_collapse_while_one_liner())
+      {
+         if (nl_collapse_braced_one_liner(br_open))
+         {
+            return;
+         }
+      }
+   }
+   else if (parent == CT_DO)
+   {
+      log_rule_B("nl_collapse_do_one_liner");
+
+      if (options::nl_collapse_do_one_liner())
+      {
+         if (nl_collapse_braced_one_liner(br_open))
+         {
+            return;
+         }
+      }
+   }
+   else if (parent == CT_CASE)
+   {
+      log_rule_B("nl_collapse_switch_one_liner");
+
+      if (options::nl_collapse_switch_one_liner())
+      {
+         if (nl_collapse_braced_one_liner(br_open))
+         {
+            return;
+         }
+      }
+   }
 
    // Make sure we don't break a one-liner
    if (!one_liner_nl_ok(br_open))

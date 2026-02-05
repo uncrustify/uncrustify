@@ -2867,6 +2867,31 @@ nl_split_while_one_liner;
 extern Option<bool>
 donot_add_nl_before_cpp_comment;
 
+// Whether to collapse a braced single-statement 'if' block to one line,
+// as in 'if (cond)\n{\n    stmt;\n}' => 'if (cond) { stmt; }'.
+extern Option<bool>
+nl_collapse_if_one_liner;
+
+// Whether to collapse a braced single-statement 'for' block to one line,
+// as in 'for (...)\n{\n    stmt;\n}' => 'for (...) { stmt; }'.
+extern Option<bool>
+nl_collapse_for_one_liner;
+
+// Whether to collapse a braced single-statement 'while' block to one line,
+// as in 'while (...)\n{\n    stmt;\n}' => 'while (...) { stmt; }'.
+extern Option<bool>
+nl_collapse_while_one_liner;
+
+// Whether to collapse a braced single-statement 'do' block to one line,
+// as in 'do\n{\n    stmt;\n} while (...)' => 'do { stmt; } while (...)'.
+extern Option<bool>
+nl_collapse_do_one_liner;
+
+// Whether to collapse a braced single-statement 'case' block to one line,
+// as in 'case X:\n{\n    stmt;\n}' => 'case X: { stmt; }'.
+extern Option<bool>
+nl_collapse_switch_one_liner;
+
 //END
 
 ///////////////////////////////////////////////////////////////////////////////

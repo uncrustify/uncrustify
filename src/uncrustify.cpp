@@ -65,7 +65,7 @@
 #include <cstdio>
 #include <deque>
 #include <fcntl.h>
-#include <map>
+#include <fstream>
 #include <string>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -171,7 +171,7 @@ static bool bout_content_matches(const file_mem &fm, bool report_status, bool is
  * @retval true   file was loaded successfully
  * @retval false  file could not be loaded
  */
-static int load_mem_file(const char *filename, file_mem &fm);
+static bool load_mem_file(const char *filename, file_mem &fm);
 
 
 /**
@@ -182,7 +182,7 @@ static int load_mem_file(const char *filename, file_mem &fm);
  * @retval true   file was loaded successfully
  * @retval false  file could not be loaded
  */
-static int load_mem_file_config(const std::string &filename, file_mem &fm);
+static bool load_mem_file_config(const std::string &filename, file_mem &fm);
 
 
 //! print uncrustify version number and terminate
@@ -928,7 +928,7 @@ int main(int argc, char *argv[])
       }
 
       // Try to read in the source file
-      if (load_mem_file(source_file, fm) < 0)
+      if (!load_mem_file(source_file, fm))
       {
          LOG_FMT(LERR, "Failed to load (%s)\n", source_file);
          exit(EX_IOERR);
@@ -1177,7 +1177,7 @@ static bool read_stdin(file_mem &fm)
 
    fm.raw.clear();
    fm.data.clear();
-   fm.enc = char_encoding_e::e_ASCII;
+   fm.enc = E_CharEncoding::ASCII;
 
    // Re-open stdin in binary mode to preserve newline characters
 #ifdef WIN32
@@ -1250,140 +1250,127 @@ static void make_folders(const string &filename)
 } // make_folders
 
 
-static int load_mem_file(const char *filename, file_mem &fm)
+static bool load_mem_file(const char *filename, file_mem &fm)
 {
-   int         retval = -1;
-   struct stat my_stat;
-   FILE        *p_file;
-
    fm.raw.clear();
    fm.data.clear();
-   fm.enc = char_encoding_e::e_ASCII;
+   fm.bom = false;
+   fm.enc = E_CharEncoding::ASCII;
 
    // Grab the stat info for the file, return if it cannot be read
+   struct stat my_stat;
+
    if (stat(filename, &my_stat) < 0)
    {
-      return(-1);
+      return(false);
    }
 #ifdef HAVE_UTIME_H
    // Save off modification time (mtime)
    fm.utb.modtime = my_stat.st_mtime;
 #endif
 
-   // Try to read in the file
-   p_file = fopen(filename, "rb");
-
-   if (p_file == nullptr)
+   if (my_stat.st_size == 0)
    {
-      return(-1);
+      // File is empty
+      return(true);
+   }
+   // Try to read in the file
+   std::ifstream infile(filename, std::ios::binary);
+
+   if (!infile)
+   {
+      return(false);
    }
    fm.raw.resize(my_stat.st_size);
 
-   if (my_stat.st_size == 0) // check if file is empty
+   // Read the file raw data
+   infile.read(reinterpret_cast<char *>(fm.raw.data()), fm.raw.size());
+
+   if (infile.fail())
    {
-      retval = 0;
-      fm.bom = false;
-      fm.enc = char_encoding_e::e_ASCII;
-      fm.data.clear();
+      LOG_FMT(LERR, "%s: couldn't successfully read the file '%s'\n", __func__, filename);
+      return(false);
+   }
+   else if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
+   {
+      LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
+      return(false);
    }
    else
    {
-      // read the raw data
-      if (fread(&fm.raw[0], fm.raw.size(), 1, p_file) != 1)
-      {
-         LOG_FMT(LERR, "%s: fread(%s) failed: %s (%d)\n",
-                 __func__, filename, strerror(errno), errno);
-         exit(EX_IOERR);
-      }
-      else if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
-      {
-         LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
-         exit(EX_IOERR);
-      }
-      else
-      {
-         LOG_FMT(LNOTE, "%s: '%s' encoding looks like %s (%d)\n", __func__, filename,
-                 get_char_encoding(fm.enc), (int)fm.enc);
-         retval = 0;
-      }
+      LOG_FMT(LNOTE, "%s: '%s' encoding looks like %s (%d)\n", __func__, filename,
+              get_char_encoding(fm.enc), (int)fm.enc);
    }
-   fclose(p_file);
-   return(retval);
+   return(true);
 } // load_mem_file
 
 
-static int load_mem_file_config(const std::string &filename, file_mem &fm)
+static bool load_mem_file_config(const std::string &filename, file_mem &fm)
 {
-   int  retval;
    char buf[1024];
 
    snprintf(buf, sizeof(buf), "%.*s%s",
             path_dirname_len(cpd.filename.c_str()), cpd.filename.c_str(), filename.c_str());
 
-   retval = load_mem_file(buf, fm);
-
-   if (retval < 0)
+   if (!load_mem_file(buf, fm))
    {
-      retval = load_mem_file(filename.c_str(), fm);
-
-      if (retval < 0)
+      if (!load_mem_file(filename.c_str(), fm))
       {
          LOG_FMT(LERR, "Failed to load (%s) or (%s)\n", buf, filename.c_str());
-         exit(EX_IOERR);
+         return(false);
       }
    }
-   return(retval);
+   return(true);
 }
 
 
-int load_header_files()
+void load_header_files()
 {
-   int retval = 0;
+   bool read_success = true;
 
    log_rule_B("cmt_insert_file_header");
 
    if (!options::cmt_insert_file_header().empty())
    {
       // try to load the file referred to by the options string
-      retval |= load_mem_file_config(options::cmt_insert_file_header(),
-                                     cpd.file_hdr);
+      read_success &= load_mem_file_config(options::cmt_insert_file_header(), cpd.file_hdr);
    }
    log_rule_B("cmt_insert_file_footer");
 
    if (!options::cmt_insert_file_footer().empty())
    {
-      retval |= load_mem_file_config(options::cmt_insert_file_footer(),
-                                     cpd.file_ftr);
+      read_success &= load_mem_file_config(options::cmt_insert_file_footer(), cpd.file_ftr);
    }
    log_rule_B("cmt_insert_func_header");
 
    if (!options::cmt_insert_func_header().empty())
    {
-      retval |= load_mem_file_config(options::cmt_insert_func_header(),
-                                     cpd.func_hdr);
+      read_success &= load_mem_file_config(options::cmt_insert_func_header(), cpd.func_hdr);
    }
    log_rule_B("cmt_insert_class_header");
 
    if (!options::cmt_insert_class_header().empty())
    {
-      retval |= load_mem_file_config(options::cmt_insert_class_header(),
-                                     cpd.class_hdr);
+      read_success &= load_mem_file_config(options::cmt_insert_class_header(), cpd.class_hdr);
    }
    log_rule_B("cmt_insert_oc_msg_header");
 
    if (!options::cmt_insert_oc_msg_header().empty())
    {
-      retval |= load_mem_file_config(options::cmt_insert_oc_msg_header(),
-                                     cpd.oc_msg_hdr);
+      read_success &= load_mem_file_config(options::cmt_insert_oc_msg_header(), cpd.oc_msg_hdr);
    }
    log_rule_B("cmt_reflow_fold_regex_file");
 
    if (!options::cmt_reflow_fold_regex_file().empty())
    {
-      retval |= load_mem_file_config(options::cmt_reflow_fold_regex_file(),
-                                     cpd.reflow_fold_regex);
+      read_success &= load_mem_file_config(options::cmt_reflow_fold_regex_file(), cpd.reflow_fold_regex);
    }
-   return(retval);
+
+   if (!read_success)
+   {
+      LOG_FMT(LERR, "Failed to load one or more files\n");
+      exit(EX_IOERR);
+   }
 } // load_header_files
 
 
@@ -1543,7 +1530,7 @@ static void do_source_file(const char *filename_in,
    }
 
    // Try to read in the source file
-   if (load_mem_file(filename_in, fm) < 0)
+   if (!load_mem_file(filename_in, fm))
    {
       LOG_FMT(LERR, "Failed to load (%s)\n", filename_in);
       exit(EX_IOERR);
@@ -2055,24 +2042,24 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
    cpd.enc = fm.enc;
 
    if (  options::utf8_force()
-      || (  (cpd.enc == char_encoding_e::e_BYTE)
+      || (  (cpd.enc == E_CharEncoding::BYTE)
          && options::utf8_byte()))
    {
       log_rule_B("utf8_force");
       log_rule_B("utf8_byte");
-      cpd.enc = char_encoding_e::e_UTF8;
+      cpd.enc = E_CharEncoding::UTF8;
    }
    iarf_e av;
 
    switch (cpd.enc)
    {
-   case char_encoding_e::e_UTF8:
+   case E_CharEncoding::UTF8:
       log_rule_B("utf8_bom");
       av = options::utf8_bom();
       break;
 
-   case char_encoding_e::e_UTF16_LE:
-   case char_encoding_e::e_UTF16_BE:
+   case E_CharEncoding::UTF16_LE:
+   case E_CharEncoding::UTF16_BE:
       av = IARF_FORCE;
       break;
 

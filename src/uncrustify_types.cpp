@@ -108,23 +108,23 @@ const char *get_unc_stage_name(unc_stage_e unc_stage)
 } // get_unc_stage_name
 
 
-const char *get_char_encoding(char_encoding_e encoding)
+const char *get_char_encoding(E_CharEncoding encoding)
 {
    switch (encoding)
    {
-   case char_encoding_e::e_ASCII:
+   case E_CharEncoding::ASCII:
       return("ASCII");
 
-   case char_encoding_e::e_BYTE:
+   case E_CharEncoding::BYTE:
       return("BYTE");
 
-   case char_encoding_e::e_UTF8:
+   case E_CharEncoding::UTF8:
       return("UTF8");
 
-   case char_encoding_e::e_UTF16_LE:
+   case E_CharEncoding::UTF16_LE:
       return("UTF16_LE");
 
-   case char_encoding_e::e_UTF16_BE:
+   case E_CharEncoding::UTF16_BE:
       return("UTF16_BE");
    }
    return("?????");
