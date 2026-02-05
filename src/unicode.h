@@ -26,7 +26,7 @@ void write_string(const UncText &text);
 
 
 //! Figure out the encoding and convert to an int sequence
-bool decode_unicode(const std::vector<UINT8> &in_data, std::deque<int> &out_data, char_encoding_e &enc, bool &has_bom);
+bool decode_unicode(const std::vector<UINT8> &in_data, std::deque<int> &out_data, E_CharEncoding &enc, bool &has_bom);
 
 
 void encode_utf8(int ch, std::vector<UINT8> &res);

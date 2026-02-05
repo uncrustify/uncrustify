@@ -507,7 +507,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
 
    fm.raw.clear();
    fm.data.clear();
-   fm.enc = char_encoding_e::e_ASCII;
+   fm.enc = E_CharEncoding::ASCII;
    fm.raw = vector<UINT8>();
 
    char c;

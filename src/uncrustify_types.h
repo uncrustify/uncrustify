@@ -68,14 +68,14 @@ enum class E_BraceStage : unsigned int
 };
 
 
-enum class char_encoding_e : unsigned int
+enum class E_CharEncoding : unsigned int
 {
-   // see also: const char *get_char_encoding(char_encoding_e encoding)
-   e_ASCII,     //! 0-127
-   e_BYTE,      //! 0-255, not UTF-8
-   e_UTF8,      //! utf 8 bit wide
-   e_UTF16_LE,  //! utf 16 bit wide, little endian
-   e_UTF16_BE   //! utf 16 bit wide, big endian
+   // see also: const char *get_char_encoding(E_CharEncoding encoding)
+   ASCII,     //! 0-127
+   BYTE,      //! 0-255, not UTF-8
+   UTF8,      //! utf 8 bit wide
+   UTF16_LE,  //! utf 16 bit wide, little endian
+   UTF16_BE   //! utf 16 bit wide, big endian
 };
 
 enum class tracking_type_e : unsigned int
@@ -208,7 +208,7 @@ struct file_mem
    std::vector<UINT8> raw;  //! raw content of file
    std::deque<int>    data; //! processed content of file
    bool               bom;
-   char_encoding_e    enc;  //! character encoding of file ASCII, utf, etc.
+   E_CharEncoding     enc;  //! character encoding of file ASCII, utf, etc.
 #ifdef HAVE_UTIME_H
    struct utimbuf     utb;
 #endif
@@ -272,7 +272,7 @@ struct cp_data_t
    bool              output_tab_as_space;
 
    bool              bom;
-   char_encoding_e   enc;
+   E_CharEncoding    enc;
 
    // bumped up when a line is split or indented
    int               changes;
@@ -302,7 +302,7 @@ const char *get_tracking_type_e_name(tracking_type_e type);
 
 const char *get_unc_stage_name(unc_stage_e unc_stage);
 
-const char *get_char_encoding(char_encoding_e encoding);
+const char *get_char_encoding(E_CharEncoding encoding);
 
 const char *get_pattern_class(pattern_class_e p_class);
 

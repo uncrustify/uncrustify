@@ -1177,7 +1177,7 @@ static bool read_stdin(file_mem &fm)
 
    fm.raw.clear();
    fm.data.clear();
-   fm.enc = char_encoding_e::e_ASCII;
+   fm.enc = E_CharEncoding::ASCII;
 
    // Re-open stdin in binary mode to preserve newline characters
 #ifdef WIN32
@@ -1255,7 +1255,7 @@ static bool load_mem_file(const char *filename, file_mem &fm)
    fm.raw.clear();
    fm.data.clear();
    fm.bom = false;
-   fm.enc = char_encoding_e::e_ASCII;
+   fm.enc = E_CharEncoding::ASCII;
 
    // Grab the stat info for the file, return if it cannot be read
    struct stat my_stat;
@@ -2042,24 +2042,24 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
    cpd.enc = fm.enc;
 
    if (  options::utf8_force()
-      || (  (cpd.enc == char_encoding_e::e_BYTE)
+      || (  (cpd.enc == E_CharEncoding::BYTE)
          && options::utf8_byte()))
    {
       log_rule_B("utf8_force");
       log_rule_B("utf8_byte");
-      cpd.enc = char_encoding_e::e_UTF8;
+      cpd.enc = E_CharEncoding::UTF8;
    }
    iarf_e av;
 
    switch (cpd.enc)
    {
-   case char_encoding_e::e_UTF8:
+   case E_CharEncoding::UTF8:
       log_rule_B("utf8_bom");
       av = options::utf8_bom();
       break;
 
-   case char_encoding_e::e_UTF16_LE:
-   case char_encoding_e::e_UTF16_BE:
+   case E_CharEncoding::UTF16_LE:
+   case E_CharEncoding::UTF16_BE:
       av = IARF_FORCE;
       break;
 
