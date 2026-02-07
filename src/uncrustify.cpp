@@ -1859,8 +1859,7 @@ static void add_func_header(E_Token type, const MemoryFile &fm)
          }
       }
 
-      if (  ref->IsNullChunk()
-         && !Chunk::GetHead()->IsComment()
+      if (  !Chunk::GetHead()->IsComment()
          && Chunk::GetHead()->GetParentType() == type)
       {
          /**

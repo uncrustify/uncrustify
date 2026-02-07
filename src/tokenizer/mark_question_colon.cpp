@@ -153,13 +153,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
 
          if (pc2->Is(CT_COLON))
          {
-            if (colon_found)
-            {
-               return(pc2);
-            }
-            else
-            {
-            }
+            return(pc2);
          }
       }
       else if (  pc2->Is(CT_COLON)
@@ -257,11 +251,6 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
       pc2 = pc2->GetNextNcNnl();
    }
 
-   if (pc2->IsNotNullChunk())
-   {
-      LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '?'\n",
-              __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel());
-   }
    LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '?'\n",
            __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel());
    return(pc2);

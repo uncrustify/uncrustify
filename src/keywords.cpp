@@ -196,7 +196,7 @@ static const chunk_tag_t *kw_static_match(bool orig_list, const chunk_tag_t *tag
 
 E_Token find_keyword_type(const char *word, size_t len)
 {
-   if (len <= 0)
+   if (len == 0)
    {
       return(CT_NONE);
    }
@@ -210,7 +210,9 @@ E_Token find_keyword_type(const char *word, size_t len)
    }
    chunk_tag_t key;
 
-   key.tag = ss.c_str();
+   key.tag        = ss.c_str();
+   key.type       = E_Token::CT_NONE;
+   key.lang_flags = 0;
 
    // check the static word list
    const chunk_tag_t *p_ret = static_cast<const chunk_tag_t *>(
