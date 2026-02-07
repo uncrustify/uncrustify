@@ -511,7 +511,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
       fm.raw.push_back(c);
    }
 
-   if (!decode_unicode(fm.raw, fm.data, fm.encoding, fm.hasBom))
+   if (!decode_unicode(fm))
    {
       LOG_FMT(LERR, "Failed to read code\n");
       return(0);

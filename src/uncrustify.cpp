@@ -61,6 +61,7 @@
 #include "universalindentgui.h"
 #include "width.h"
 
+#include <algorithm>
 #include <cerrno>
 #include <cstdio>
 #include <deque>
@@ -107,16 +108,6 @@ using namespace uncrustify;
 
 // Global data
 cp_data_t cpd;
-
-
-/**
- * Find the language for the file extension
- * Defaults to C
- *
- * @param filename   The name of the file
- * @return           LANG_xxx
- */
-//static size_t language_flags_from_filename(const char *filename);
 
 
 /**
@@ -1183,11 +1174,8 @@ static void process_source_list(const char *source_list,
 
 static bool read_stdin(MemoryFile &fm)
 {
-   deque<UINT8> dq;
-   char         buf[4096];
-
-   // Re-open stdin in binary mode to preserve newline characters
 #ifdef WIN32
+   // Re-open stdin in binary mode to preserve newline characters
    _setmode(_fileno(stdin), _O_BINARY);
 #endif
 
@@ -1198,16 +1186,15 @@ static bool read_stdin(MemoryFile &fm)
 
    while (!feof(stdin))
    {
-      int len = fread(buf, 1, sizeof(buf), stdin);
-
-      for (int idx = 0; idx < len; idx++)
+      char   buf[4096];
+      size_t len = fread(buf, 1, sizeof(buf), stdin);
+      std::transform(buf, buf + len, std::back_inserter(fm.raw),
+                     [](char c)
       {
-         dq.push_back(buf[idx]);
-      }
+         return(static_cast<UINT8>(c));
+      });
    }
-   // Copy the raw data from the deque to the vector
-   fm.raw.insert(fm.raw.end(), dq.begin(), dq.end());
-   return(decode_unicode(fm.raw, fm.data, fm.encoding, fm.hasBom));
+   return(decode_unicode(fm));
 }
 
 
@@ -1303,7 +1290,7 @@ static bool load_mem_file(const char *filename, MemoryFile &fm)
       LOG_FMT(LERR, "%s: couldn't successfully read the file '%s'\n", __func__, filename);
       return(false);
    }
-   else if (!decode_unicode(fm.raw, fm.data, fm.encoding, fm.hasBom))
+   else if (!decode_unicode(fm))
    {
       LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
       return(false);
