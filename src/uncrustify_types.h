@@ -203,15 +203,21 @@ struct align_t
 };
 
 //! holds information and data of a file
-struct file_mem
+struct MemoryFile
 {
-   std::vector<UINT8> raw;  //! raw content of file
-   std::deque<int>    data; //! processed content of file
-   bool               bom;
-   E_CharEncoding     enc;  //! character encoding of file ASCII, utf, etc.
+   std::vector<UINT8> raw;       //! raw content of file
+   std::deque<int>    data;      //! processed content of file
+   bool               hasBom;    //! true if the file has BOM
+   E_CharEncoding     encoding;  //! character encoding of file ASCII, utf, etc.
 #ifdef HAVE_UTIME_H
-   struct utimbuf     utb;
+   struct utimbuf     utb;       //! utime info (access, modified time)
 #endif
+
+   MemoryFile()
+      : raw()
+      , data()
+      , hasBom(false)
+      , encoding(E_CharEncoding::ASCII) {}
 };
 
 enum class unc_stage_e : unsigned int
@@ -240,12 +246,12 @@ struct cp_data_t
 
    std::string       filename;
 
-   file_mem          file_hdr;          // for cmt_insert_file_header
-   file_mem          file_ftr;          // for cmt_insert_file_footer
-   file_mem          func_hdr;          // for cmt_insert_func_header
-   file_mem          oc_msg_hdr;        // for cmt_insert_oc_msg_header
-   file_mem          class_hdr;         // for cmt_insert_class_header
-   file_mem          reflow_fold_regex; // for cmt_reflow_fold_regex_file
+   MemoryFile        file_hdr;          // for cmt_insert_file_header
+   MemoryFile        file_ftr;          // for cmt_insert_file_footer
+   MemoryFile        func_hdr;          // for cmt_insert_func_header
+   MemoryFile        oc_msg_hdr;        // for cmt_insert_oc_msg_header
+   MemoryFile        class_hdr;         // for cmt_insert_class_header
+   MemoryFile        reflow_fold_regex; // for cmt_reflow_fold_regex_file
 
    size_t            lang_flags;        //! defines the language of the source input
    bool              lang_forced;       //! overwrites automatic language detection

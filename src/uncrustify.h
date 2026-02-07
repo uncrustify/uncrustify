@@ -15,7 +15,7 @@
 
 void load_header_files();
 
-void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, const char *dump_filename, bool is_quiet, bool defer_uncrustify_end = false);
+void uncrustify_file(const MemoryFile &fm, FILE *pfout, const char *parsed_file, const char *dump_filename, bool is_quiet, bool defer_uncrustify_end = false);
 void uncrustify_end();
 
 const char *get_token_name(E_Token token);

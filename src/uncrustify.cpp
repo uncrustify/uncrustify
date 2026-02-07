@@ -61,6 +61,7 @@
 #include "universalindentgui.h"
 #include "width.h"
 
+#include <algorithm>
 #include <cerrno>
 #include <cstdio>
 #include <deque>
@@ -110,16 +111,6 @@ cp_data_t cpd;
 
 
 /**
- * Find the language for the file extension
- * Defaults to C
- *
- * @param filename   The name of the file
- * @return           LANG_xxx
- */
-//static size_t language_flags_from_filename(const char *filename);
-
-
-/**
  * Check if file content contains Objective-C patterns.
  * This is used to upgrade C-Header files to Objective-C when they contain
  * OC-specific keywords like @interface, @implementation, @property, etc.
@@ -130,7 +121,7 @@ cp_data_t cpd;
 static bool detect_oc_content(const std::vector<UINT8> &raw);
 
 
-static bool read_stdin(file_mem &fm);
+static bool read_stdin(MemoryFile &fm);
 
 
 static void uncrustify_start(const deque<int> &data);
@@ -156,10 +147,10 @@ static void add_file_header();
 static void add_file_footer();
 
 
-static void add_func_header(E_Token type, const file_mem &fm);
+static void add_func_header(E_Token type, const MemoryFile &fm);
 
 
-static void add_msg_header(E_Token type, const file_mem &fm);
+static void add_msg_header(E_Token type, const MemoryFile &fm);
 
 
 static void process_source_list(const char *source_list, const char *prefix, const char *suffix, bool no_backup, bool keep_mtime, bool is_quiet);
@@ -172,7 +163,7 @@ static const char *make_output_filename(char *buf, size_t buf_size, const char *
 static bool file_content_matches(const string &filename1, const string &filename2);
 
 
-static bool bout_content_matches(const file_mem &fm, bool report_status, bool is_quiet);
+static bool bout_content_matches(const MemoryFile &fm, bool report_status, bool is_quiet);
 
 
 /**
@@ -183,7 +174,7 @@ static bool bout_content_matches(const file_mem &fm, bool report_status, bool is
  * @retval true   file was loaded successfully
  * @retval false  file could not be loaded
  */
-static bool load_mem_file(const char *filename, file_mem &fm);
+static bool load_mem_file(const char *filename, MemoryFile &fm);
 
 
 /**
@@ -194,7 +185,7 @@ static bool load_mem_file(const char *filename, file_mem &fm);
  * @retval true   file was loaded successfully
  * @retval false  file could not be loaded
  */
-static bool load_mem_file_config(const std::string &filename, file_mem &fm);
+static bool load_mem_file_config(const std::string &filename, MemoryFile &fm);
 
 
 //! print uncrustify version number and terminate
@@ -922,8 +913,6 @@ int main(int argc, char *argv[])
 
    if (detect)
    {
-      file_mem fm;
-
       if (  source_file == nullptr
          || source_list != nullptr)
       {
@@ -938,8 +927,9 @@ int main(int argc, char *argv[])
       {
          cpd.lang_flags = language_flags_from_filename(source_file);
       }
-
       // Try to read in the source file
+      MemoryFile fm;
+
       if (!load_mem_file(source_file, fm))
       {
          LOG_FMT(LERR, "Failed to load (%s)\n", source_file);
@@ -1045,7 +1035,7 @@ int main(int argc, char *argv[])
             return(error);
          }
       }
-      file_mem fm;
+      MemoryFile fm;
 
       if (!read_stdin(fm))
       {
@@ -1182,32 +1172,29 @@ static void process_source_list(const char *source_list,
 } // process_source_list
 
 
-static bool read_stdin(file_mem &fm)
+static bool read_stdin(MemoryFile &fm)
 {
-   deque<UINT8> dq;
-   char         buf[4096];
-
-   fm.raw.clear();
-   fm.data.clear();
-   fm.enc = E_CharEncoding::ASCII;
-
-   // Re-open stdin in binary mode to preserve newline characters
 #ifdef WIN32
+   // Re-open stdin in binary mode to preserve newline characters
    _setmode(_fileno(stdin), _O_BINARY);
 #endif
 
+   fm.raw.clear();
+   fm.data.clear();
+   fm.hasBom   = false;
+   fm.encoding = E_CharEncoding::ASCII;
+
    while (!feof(stdin))
    {
-      int len = fread(buf, 1, sizeof(buf), stdin);
-
-      for (int idx = 0; idx < len; idx++)
+      char   buf[4096];
+      size_t len = fread(buf, 1, sizeof(buf), stdin);
+      std::transform(buf, buf + len, std::back_inserter(fm.raw),
+                     [](char c)
       {
-         dq.push_back(buf[idx]);
-      }
+         return(static_cast<UINT8>(c));
+      });
    }
-   // Copy the raw data from the deque to the vector
-   fm.raw.insert(fm.raw.end(), dq.begin(), dq.end());
-   return(decode_unicode(fm.raw, fm.data, fm.enc, fm.bom));
+   return(decode_unicode(fm));
 }
 
 
@@ -1262,12 +1249,12 @@ static void make_folders(const string &filename)
 } // make_folders
 
 
-static bool load_mem_file(const char *filename, file_mem &fm)
+static bool load_mem_file(const char *filename, MemoryFile &fm)
 {
    fm.raw.clear();
    fm.data.clear();
-   fm.bom = false;
-   fm.enc = E_CharEncoding::ASCII;
+   fm.hasBom   = false;
+   fm.encoding = E_CharEncoding::ASCII;
 
    // Grab the stat info for the file, return if it cannot be read
    struct stat my_stat;
@@ -1303,7 +1290,7 @@ static bool load_mem_file(const char *filename, file_mem &fm)
       LOG_FMT(LERR, "%s: couldn't successfully read the file '%s'\n", __func__, filename);
       return(false);
    }
-   else if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
+   else if (!decode_unicode(fm))
    {
       LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
       return(false);
@@ -1311,13 +1298,13 @@ static bool load_mem_file(const char *filename, file_mem &fm)
    else
    {
       LOG_FMT(LNOTE, "%s: '%s' encoding looks like %s (%d)\n", __func__, filename,
-              get_char_encoding(fm.enc), (int)fm.enc);
+              get_char_encoding(fm.encoding), (int)fm.encoding);
    }
    return(true);
 } // load_mem_file
 
 
-static bool load_mem_file_config(const std::string &filename, file_mem &fm)
+static bool load_mem_file_config(const std::string &filename, MemoryFile &fm)
 {
    char buf[1024];
 
@@ -1473,7 +1460,7 @@ static bool file_content_matches(const string &filename1, const string &filename
 } // file_content_matches
 
 
-static bool bout_content_matches(const file_mem &fm, bool report_status, bool is_quiet)
+static bool bout_content_matches(const MemoryFile &fm, bool report_status, bool is_quiet)
 {
    bool is_same = true;
 
@@ -1528,11 +1515,10 @@ static void do_source_file(const char *filename_in,
                            bool       keep_mtime,
                            bool       is_quiet)
 {
-   FILE     *pfout      = nullptr;
-   bool     did_open    = false;
-   bool     need_backup = false;
-   file_mem fm;
-   string   filename_tmp;
+   FILE   *pfout      = nullptr;
+   bool   did_open    = false;
+   bool   need_backup = false;
+   string filename_tmp;
 
    // Do some simple language detection based on the filename extension
    if (  !cpd.lang_forced
@@ -1540,8 +1526,9 @@ static void do_source_file(const char *filename_in,
    {
       cpd.lang_flags = language_flags_from_filename(filename_in);
    }
-
    // Try to read in the source file
+   MemoryFile fm;
+
    if (!load_mem_file(filename_in, fm))
    {
       LOG_FMT(LERR, "Failed to load (%s)\n", filename_in);
@@ -1743,7 +1730,7 @@ static void add_file_footer()
 }
 
 
-static void add_func_header(E_Token type, const file_mem &fm)
+static void add_func_header(E_Token type, const MemoryFile &fm)
 {
    Chunk *pc;
    Chunk *ref;
@@ -1898,7 +1885,7 @@ static void add_func_header(E_Token type, const file_mem &fm)
 } // add_func_header
 
 
-static void add_msg_header(E_Token type, const file_mem &fm)
+static void add_msg_header(E_Token type, const MemoryFile &fm)
 {
    Chunk *pc;
    Chunk *ref;
@@ -2058,14 +2045,14 @@ static void uncrustify_start(const deque<int> &data)
 } // uncrustify_start
 
 
-void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
+void uncrustify_file(const MemoryFile &fm, FILE *pfout, const char *parsed_file,
                      const char *dump_file, bool is_quiet, bool defer_uncrustify_end)
 {
    const deque<int> &data = fm.data;
 
    // Save off the encoding and whether a BOM is required
-   cpd.bom = fm.bom;
-   cpd.enc = fm.enc;
+   cpd.bom = fm.hasBom;
+   cpd.enc = fm.encoding;
 
    if (  options::utf8_force()
       || (  (cpd.enc == E_CharEncoding::BYTE)
