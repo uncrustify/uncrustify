@@ -1132,6 +1132,58 @@ void tokenize_cleanup()
       {
          pc->SetType(CT_FUNC_CALL);
       }
+
+      // Mark tokens inside macro-no-format-args macros
+      // When we find CT_MACRO_NO_FMT_ARGS, mark all tokens inside its parentheses
+      // including the macro name, opening paren, all contents, and closing paren
+      if (pc->Is(CT_MACRO_NO_FMT_ARGS))
+      {
+         // Find the opening paren
+         Chunk *open_paren = next;
+
+         // Skip any whitespace/newlines/comments between macro name and paren
+         while (  open_paren->IsNotNullChunk()
+               && (  open_paren->Is(CT_NEWLINE)
+                  || open_paren->Is(CT_COMMENT)
+                  || open_paren->Is(CT_COMMENT_CPP)
+                  || open_paren->Is(CT_COMMENT_MULTI)))
+         {
+            open_paren = open_paren->GetNext();
+         }
+
+         if (  open_paren->IsNotNullChunk()
+            && (  open_paren->Is(CT_PAREN_OPEN)
+               || open_paren->Is(CT_FPAREN_OPEN)))
+         {
+            // Mark the macro name itself
+            pc->SetFlagBits(PCF_IN_MACRO_NO_FMT_ARGS);
+
+            // Mark the opening paren (to prevent space between macro name and paren)
+            open_paren->SetFlagBits(PCF_IN_MACRO_NO_FMT_ARGS);
+
+            // Find matching close paren and mark everything in between
+            size_t paren_level = 1;
+            Chunk  *tmp        = open_paren->GetNext();
+
+            while (tmp->IsNotNullChunk() && paren_level > 0)
+            {
+               if (  tmp->Is(CT_PAREN_OPEN)
+                  || tmp->Is(CT_FPAREN_OPEN))
+               {
+                  paren_level++;
+               }
+               else if (  tmp->Is(CT_PAREN_CLOSE)
+                       || tmp->Is(CT_FPAREN_CLOSE))
+               {
+                  paren_level--;
+               }
+               // Mark this chunk as being inside the macro args
+               // Also mark the closing paren (paren_level == 0 means we just hit it)
+               tmp->SetFlagBits(PCF_IN_MACRO_NO_FMT_ARGS);
+               tmp = tmp->GetNext();
+            }
+         }
+      }
       // TODO: determine other stuff here
 
       prev = pc;

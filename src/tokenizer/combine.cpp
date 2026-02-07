@@ -1343,7 +1343,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
    if (  pc->Is(CT_MACRO_OPEN)
       || pc->Is(CT_MACRO_ELSE)
-      || pc->Is(CT_MACRO_CLOSE))
+      || pc->Is(CT_MACRO_CLOSE)
+      || pc->Is(CT_MACRO_NO_INDENT)
+      || pc->Is(CT_MACRO_NO_FMT_ARGS))
    {
       if (next->Is(CT_PAREN_OPEN))
       {
@@ -2823,6 +2825,9 @@ static void handle_oc_class(Chunk *pc)
          LOG_FMT(LOCCLASS, "%s(%d):   bail on semicolon\n", __func__, __LINE__);
          return;
       }
+      // For @protocol declarations, we've already passed the name and any angle brackets
+      // are protocol conformance lists, not generic specs
+      passed_name = true;
    }
    tmp = pc;
 
@@ -2837,6 +2842,13 @@ static void handle_oc_class(Chunk *pc)
       }
 
       if (tmp->Is(CT_PAREN_OPEN))
+      {
+         passed_name = true;
+      }
+
+      // After seeing the class/protocol name, any angle brackets are protocol lists
+      if (  tmp->Is(CT_OC_CLASS)
+         && !passed_name)
       {
          passed_name = true;
       }
