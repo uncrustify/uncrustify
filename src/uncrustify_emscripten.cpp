@@ -501,23 +501,17 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    }
    // embind complains about char* so we use an intptr_t to get the pointer and
    // cast it, memory management is done in /emscripten/postfix_module.js
-   char     *file = reinterpret_cast<char *>(_file);
+   char       *file = reinterpret_cast<char *>(_file);
 
-   file_mem fm;
-
-   fm.raw.clear();
-   fm.data.clear();
-   fm.enc = E_CharEncoding::ASCII;
-   fm.raw = vector<UINT8>();
-
-   char c;
+   MemoryFile fm;
+   char       c;
 
    for (auto idx = 0; (c = file[idx]) != 0; ++idx)
    {
       fm.raw.push_back(c);
    }
 
-   if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
+   if (!decode_unicode(fm.raw, fm.data, fm.encoding, fm.hasBom))
    {
       LOG_FMT(LERR, "Failed to read code\n");
       return(0);
