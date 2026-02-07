@@ -73,7 +73,8 @@ void enum_cleanup()
                      comma.SetFlags(PCF_NONE);
                      comma.Str() = ",";
 
-                     if (prev->Is(CT_PP_ENDIF))                // Issue #3604
+                     if (  prev->Is(CT_PP_ENDIF)               // Issue #3604
+                        || prev->TestFlags(PCF_IN_PREPROC))    // Skip #define and other preprocessor directives
                      {
                         prev = prev->GetPrevNcNnlNpp();
                      }
