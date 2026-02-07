@@ -352,6 +352,16 @@ bool chunk_ends_type(Chunk *start)
          last_lval = pc->TestFlags(PCF_LVALUE);
          continue;
       }
+
+      /* Skip over attributes when scanning backwards for type detection.
+       * Attributes like [[nodiscard]] should not terminate type scanning.
+       */
+      if (pc->Is(CT_ATTRIBUTE))
+      {
+         LOG_FMT(LFTYPE, "%s(%d): SKIPPING attribute %s '%s'\n",
+                 __func__, __LINE__, get_token_name(pc->GetType()), pc->Text());
+         continue;
+      }
       /* If a comma is encountered within a template, it must be
        * considered within the context of its immediate parent
        * template (i.e. argument list nest level)

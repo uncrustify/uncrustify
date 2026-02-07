@@ -405,6 +405,14 @@ sp_before_byref_func;
 extern Option<iarf_e>
 sp_byref_paren;
 
+// Add or remove space before a ref-qualifier '&' or '&&' on a member function.
+extern Option<iarf_e>
+sp_before_ref_qualifier;
+
+// Add or remove space after a ref-qualifier '&' or '&&' on a member function.
+extern Option<iarf_e>
+sp_after_ref_qualifier;
+
 // Add or remove space between type and word. In cases where total removal of
 // whitespace would be a syntax error, a value of 'remove' is treated the same
 // as 'force'.
