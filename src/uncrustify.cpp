@@ -1544,7 +1544,7 @@ static void do_source_file(const char *filename_in,
  */
    if (  (cpd.lang_flags & e_LANG_C)
       && !cpd.lang_forced
-      && ends_with(filename_in, ".h", false /*case_sensitive*/)
+      && ends_with(filename_in, ".h", false /*case_sensitive*/ )
       && detect_oc_content(fm.raw))
    {
       cpd.lang_flags = (cpd.lang_flags | e_LANG_OC);
@@ -1859,8 +1859,7 @@ static void add_func_header(E_Token type, const MemoryFile &fm)
          }
       }
 
-      if (  ref->IsNullChunk()
-         && !Chunk::GetHead()->IsComment()
+      if (  !Chunk::GetHead()->IsComment()
          && Chunk::GetHead()->GetParentType() == type)
       {
          /**
