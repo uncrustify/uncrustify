@@ -125,6 +125,14 @@ class Container<int&&> {
     int&&value;
 };
 
+// global scope bool with template traits
+
+bool globalBool1 = std::is_class<T>&&y;
+bool globalBool2 = std::is_class<T>&&y();
+bool globalBool3 = x&&std::is_class<T>;
+bool globalBool4 = x()&&std::is_class<T>;
+auto globalBool5 = std::is_class_v<T>&&std::is_move_constructible_v<T>;
+
 // lambdas
 
 auto lambda1 = [](int&&x) { return x; };
