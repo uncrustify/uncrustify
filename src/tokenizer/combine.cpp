@@ -619,7 +619,7 @@ static bool handle_rvalue_angle_close(Chunk *prev, Chunk *pc)
          return(false);
       }
 
-      // If we're inside parentheses (level > 0) and next is a word/type that could be
+      // If we're inside parentheses and next is a word/type that could be
       // another expression term, this is likely a boolean expression like:
       // static_assert(std::is_integral_v<T> && std::is_signed_v<T>)
       // But inside class braces it's likely a function return type: std::vector<int>&& func()
