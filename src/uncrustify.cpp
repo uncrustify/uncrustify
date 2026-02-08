@@ -1544,7 +1544,7 @@ static void do_source_file(const char *filename_in,
  */
    if (  (cpd.lang_flags & e_LANG_C)
       && !cpd.lang_forced
-      && ends_with(filename_in, ".h", false /*case_sensitive*/ )
+      && ends_with(filename_in, ".h", false /*case_sensitive*/)
       && detect_oc_content(fm.raw))
    {
       cpd.lang_flags = (cpd.lang_flags | e_LANG_OC);
