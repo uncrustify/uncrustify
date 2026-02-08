@@ -619,11 +619,12 @@ static bool handle_rvalue_angle_close(Chunk *prev, Chunk *pc)
          return(false);
       }
 
-      // If we're inside parentheses (level > 0) and next is a word/type that could be
+      // If we're inside parentheses and next is a word/type that could be
       // another expression term, this is likely a boolean expression like:
       // static_assert(std::is_integral_v<T> && std::is_signed_v<T>)
-      // But at level 0 it's likely a function return type: std::vector<int>&& func()
-      if (  pc->GetLevel() > 0
+      // But inside class braces it's likely a function return type: std::vector<int>&& func()
+      // Check level > brace_level to ensure we're inside parens, not just inside class/namespace
+      if (  pc->GetLevel() > pc->GetBraceLevel()
          && (  next->Is(CT_WORD)
             || next->Is(CT_TYPE)
             || next->Is(CT_DC_MEMBER)))   // ::namespace
@@ -631,6 +632,35 @@ static bool handle_rvalue_angle_close(Chunk *prev, Chunk *pc)
          LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig col is %zu - && after > inside parens followed by expression term, keeping as BOOL\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
          return(true);  // Keep as BOOL
+      }
+      // Check if there's an assignment before this && to detect
+      // expression context like: bool val = std::is_class<T> && y; or
+      // bool val = std::is_class<T> && y();
+      // Scan backward to find CT_ASSIGN before statement boundary
+      // But skip:
+      // - USING_ALIAS assignments which define types, not expressions
+      // - Template default parameter assignments (T = int, T = U, etc.)
+      Chunk *tmp = pc->GetPrevNcNnlNi();
+
+      while (tmp->IsNotNullChunk())
+      {
+         if (  tmp->Is(CT_ASSIGN)
+            && tmp->GetParentType() != CT_USING_ALIAS
+            && !tmp->TestFlags(PCF_IN_TEMPLATE))
+         {
+            LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig col is %zu - && after > with preceding assignment, keeping as BOOL\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
+            return(true);  // This is an expression context, keep as BOOL
+         }
+
+         // Stop at statement boundaries
+         if (  tmp->Is(CT_SEMICOLON)
+            || tmp->Is(CT_BRACE_OPEN)
+            || tmp->Is(CT_BRACE_CLOSE))
+         {
+            break;
+         }
+         tmp = tmp->GetPrevNcNnlNi();
       }
       pc->SetType(CT_BYREF);
       return(true);

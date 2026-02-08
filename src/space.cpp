@@ -1419,9 +1419,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          && second->IsNot(CT_PTR_TYPE)
          && second->IsNot(CT_BRACE_OPEN)
          && second->IsNot(CT_PAREN_CLOSE)
-            // Let sp_bool handle boolean operators inside templates
-         && !(  second->Is(CT_BOOL)
-             && second->TestFlags(PCF_IN_TEMPLATE)))
+            // Let sp_bool handle boolean operators
+         && second->IsNot(CT_BOOL))
       {
          if (  second->Is(CT_CLASS_COLON)
             && options::sp_angle_colon() != IARF_IGNORE)
