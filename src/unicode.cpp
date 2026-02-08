@@ -25,7 +25,7 @@ static bool decode_bytes(MemoryFile &fm);
 
 /**
  * Decode UTF-8 sequences from the input data and put the chars in the output data.
- * If there are any decoding errors, return false.
+ * If there is any decoding error, return false.
  */
 static bool decode_utf8(MemoryFile &fm);
 
@@ -97,6 +97,14 @@ static bool decode_bytes(MemoryFile &fm)
 }
 
 
+// ------------------------------------------------------------------------------------
+// | UTF8                                | Code point            | Unicode range      |
+// ------------------------------------------------------------------------------------
+// | 0xxxxxxx                            | xxxxxxx               | U+0000  – U+007F   |
+// | 110xxxxx 10yyyyyy                   | xxxxxyyyyyy           | U+0080  – U+07FF   |
+// | 1110xxxx 10yyyyyy 10zzzzzz          | xxxxyyyyyyzzzzzz      | U+0800  – U+FFFF   |
+// | 11110xxx 10yyyyyy 10zzzzzz 10wwwwww | xxxyyyyyyzzzzzzwwwwww | U+10000 – U+10FFFF |
+// ------------------------------------------------------------------------------------
 void encode_utf8(int ch, vector<UINT8> &res)
 {
    if (ch < 0)
@@ -105,48 +113,33 @@ void encode_utf8(int ch, vector<UINT8> &res)
    }
    else if (ch < 0x80)
    {
-      // 0xxxxxxx
+      // 1-byte sequence
       res.push_back(ch);
    }
    else if (ch < 0x0800)
    {
-      // 110xxxxx 10xxxxxx
+      // 2-byte sequence
       res.push_back(0xC0 | (ch >> 6));
       res.push_back(0x80 | (ch & 0x3f));
    }
    else if (ch < 0x10000)
    {
-      // 1110xxxx 10xxxxxx 10xxxxxx
+      // 3-byte sequence
       res.push_back(0xE0 | (ch >> 12));
       res.push_back(0x80 | ((ch >> 6) & 0x3f));
       res.push_back(0x80 | (ch & 0x3f));
    }
-   else if (ch < 0x200000)
+   else if (ch < 0x110000)
    {
-      // 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+      // 4-byte sequence
       res.push_back(0xF0 | (ch >> 18));
       res.push_back(0x80 | ((ch >> 12) & 0x3f));
       res.push_back(0x80 | ((ch >> 6) & 0x3f));
       res.push_back(0x80 | (ch & 0x3f));
    }
-   else if (ch < 0x4000000)
+   else
    {
-      // 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
-      res.push_back(0xF8 | (ch >> 24));
-      res.push_back(0x80 | ((ch >> 18) & 0x3f));
-      res.push_back(0x80 | ((ch >> 12) & 0x3f));
-      res.push_back(0x80 | ((ch >> 6) & 0x3f));
-      res.push_back(0x80 | (ch & 0x3f));
-   }
-   else // (ch <= 0x7fffffff)
-   {
-      // 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
-      res.push_back(0xFC | (ch >> 30));
-      res.push_back(0x80 | ((ch >> 24) & 0x3f));
-      res.push_back(0x80 | ((ch >> 18) & 0x3f));
-      res.push_back(0x80 | ((ch >> 12) & 0x3f));
-      res.push_back(0x80 | ((ch >> 6) & 0x3f));
-      res.push_back(0x80 | (ch & 0x3f));
+      // illegal code - do not store
    }
 } // encode_utf8
 
@@ -154,54 +147,39 @@ void encode_utf8(int ch, vector<UINT8> &res)
 static bool decode_utf8(MemoryFile &fm)
 {
    size_t idx = 0;
-   int    cnt;
 
    fm.data.clear();
 
-   // check for UTF-8 BOM silliness and skip
-   if (fm.raw.size() >= 3)
+   // skip UTF-8 BOM if present
+   if (  (fm.hasBom && fm.encoding == E_CharEncoding::UTF8)
+      || (fm.raw[0] == 0xef && fm.raw[1] == 0xbb && fm.raw[2] == 0xbf))
    {
-      if (  (fm.raw[0] == 0xef)
-         && (fm.raw[1] == 0xbb)
-         && (fm.raw[2] == 0xbf))
-      {
-         idx = 3;  // skip it
-      }
+      idx = 3;
    }
+   int char_cnt;
 
    while (idx < fm.raw.size())
    {
       int ch = fm.raw[idx++];
 
-      if (ch < 0x80)                   // 1-byte sequence
+      if ((ch & 0x80) == 0x00)         // 1-byte sequence
       {
-         fm.data.push_back(ch);
-         continue;
+         char_cnt = 1;
       }
       else if ((ch & 0xE0) == 0xC0)    // 2-byte sequence
       {
-         ch &= 0x1F;
-         cnt = 1;
+         ch      &= 0x1F;
+         char_cnt = 2;
       }
       else if ((ch & 0xF0) == 0xE0)    // 3-byte sequence
       {
-         ch &= 0x0F;
-         cnt = 2;
+         ch      &= 0x0F;
+         char_cnt = 3;
       }
       else if ((ch & 0xF8) == 0xF0)    // 4-byte sequence
       {
-         ch &= 0x07;
-         cnt = 3;
-      }
-      else if ((ch & 0xFC) == 0xF8)    // 5-byte sequence
-      {
-         ch &= 0x03;
-         cnt = 4;
-      }
-      else if ((ch & 0xFE) == 0xFC)    // 6-byte sequence
-      {
-         ch &= 0x01;
-         cnt = 5;
+         ch      &= 0x07;
+         char_cnt = 4;
       }
       else
       {
@@ -209,7 +187,7 @@ static bool decode_utf8(MemoryFile &fm)
          return(false);
       }
 
-      while (  cnt-- > 0
+      while (  --char_cnt > 0
             && idx < fm.raw.size())
       {
          int tmp = fm.raw[idx++];
@@ -222,9 +200,9 @@ static bool decode_utf8(MemoryFile &fm)
          ch = (ch << 6) | (tmp & 0x3f);
       }
 
-      if (cnt >= 0)
+      if (char_cnt > 0)
       {
-         // short UTF-8 sequence
+         // invalid UTF-8 sequence
          return(false);
       }
       fm.data.push_back(ch);
@@ -451,7 +429,7 @@ static void write_utf8(int ch)
 
    encode_utf8(ch, vv);
 
-   for (unsigned char char_val : vv)
+   for (UINT8 char_val : vv)
    {
       write_byte(char_val);
    }
