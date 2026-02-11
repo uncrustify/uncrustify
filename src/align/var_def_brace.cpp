@@ -146,8 +146,8 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          && pc->GetLevel() != 0
          && !pc->IsPreproc())
       {
-         LOG_FMT(LAVDB, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s, PRE is %s\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()), pc->IsPreproc() ? "true" : "false");
+         LOG_FMT(LAVDB, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
          break;
       }
 
