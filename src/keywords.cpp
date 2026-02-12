@@ -210,7 +210,9 @@ E_Token find_keyword_type(const char *word, size_t len)
    }
    chunk_tag_t key;
 
-   key.tag = ss.c_str();
+   key.tag        = ss.c_str();
+   key.type       = CT_NONE;
+   key.lang_flags = 0;
 
    // check the static word list
    const chunk_tag_t *p_ret = static_cast<const chunk_tag_t *>(
