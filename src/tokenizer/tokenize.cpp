@@ -2503,9 +2503,10 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
       return(true);
    }
 
-   // Check for C++11/14/17/20 attribute specifier sequences
-   if (  language_is_set(lang_flag_e::LANG_CPP)
-      && ctx.peek() == '[')                   // 91
+   // Check for C++11/14/17/20 and C23 attribute specifier sequences
+   if (  ctx.peek() == '['
+      && (  language_is_set(lang_flag_e::LANG_C)
+         || language_is_set(lang_flag_e::LANG_CPP)))                   // 91
    {
       if (  !language_is_set(lang_flag_e::LANG_OC)
          || (  prev_pc->IsNotNullChunk()
