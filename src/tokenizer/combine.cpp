@@ -1185,8 +1185,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          && prev->IsNot(CT_DECLTYPE)
          && prev->IsNot(CT_SIZEOF)
          && prev->GetParentType() != CT_SIZEOF
-         && prev->GetParentType() != CT_OPERATOR
-         && !pc->TestFlags(PCF_IN_TYPEDEF))
+         && prev->GetParentType() != CT_OPERATOR)
       {
          fix_casts(pc);
          return;
