@@ -671,3 +671,6 @@
 10184  c/align_enum_equ_span_num_pp_lines-1.cfg          c/align_enum_equ_span_num_pp_lines.c
 10185  c/align_enum_equ_span_num_pp_lines-2.cfg          c/align_enum_equ_span_num_pp_lines.c
 10186  c/align_enum_equ_span_num_pp_lines-3.cfg          c/align_enum_equ_span_num_pp_lines.c
+
+# Issue #4545 - Consistent spacing after cast in typedef struct vs bare struct
+10187  common/empty.cfg                                  c/Issue_4545.c
