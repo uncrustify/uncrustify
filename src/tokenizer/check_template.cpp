@@ -253,9 +253,9 @@ void check_template(Chunk *start, bool in_type_cast)
        * Scan forward to the angle close
        * If we have a comparison in there, then it can't be a template.
        */
-      const int max_token_count = 1024;
-      E_Token   tokens[max_token_count];
-      size_t    num_tokens = 1;
+      const size_t max_token_count = 2 * 1024;
+      E_Token      tokens[max_token_count];
+      size_t       num_tokens = 1;
 
       tokens[0] = CT_ANGLE_OPEN;
 
@@ -295,7 +295,8 @@ void check_template(Chunk *start, bool in_type_cast)
 
          if (pc->IsString("<"))
          {
-            if (  num_tokens > 0 && (tokens[num_tokens - 1] == CT_PAREN_OPEN)
+            if (  num_tokens > 0
+               && (tokens[num_tokens - 1] == CT_PAREN_OPEN)
                && invalid_open_angle_template(pc->GetPrev()))
             {
                pc->SetType(CT_COMPARE); // Issue #3127
@@ -303,12 +304,21 @@ void check_template(Chunk *start, bool in_type_cast)
             else
             {
                tokens[num_tokens] = CT_ANGLE_OPEN;
+
+               if (num_tokens >= max_token_count)
+               {
+                  fprintf(stderr, "FATAL(2): The variable 'tokens' is not big enough:\n");
+                  fprintf(stderr, "   it should be bigger as %zu\n", max_token_count);
+                  fprintf(stderr, "Please make a report.\n");
+                  exit(EX_SOFTWARE);
+               }
                num_tokens++;
             }
          }
          else if (pc->IsString(">"))
          {
-            if (num_tokens > 0 && (tokens[num_tokens - 1] == CT_PAREN_OPEN))
+            if (  num_tokens > 0
+               && (tokens[num_tokens - 1] == CT_PAREN_OPEN))
             {
                handle_double_angle_close(pc);
             }
@@ -352,11 +362,15 @@ void check_template(Chunk *start, bool in_type_cast)
          }
          else if (pc->Is(CT_PAREN_OPEN))
          {
-            if (num_tokens >= max_token_count - 1)
-            {
-               break;
-            }
             tokens[num_tokens] = CT_PAREN_OPEN;
+
+            if (num_tokens >= max_token_count)
+            {
+               fprintf(stderr, "FATAL(2): The variable 'tokens' is not big enough:\n");
+               fprintf(stderr, "   it should be bigger as %zu\n", max_token_count);
+               fprintf(stderr, "Please make a report.\n");
+               exit(EX_SOFTWARE);
+            }
             num_tokens++;
          }
          else if (  pc->Is(CT_QUESTION)                    // Issue #2949
