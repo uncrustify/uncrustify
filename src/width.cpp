@@ -294,6 +294,7 @@ static void try_split_here(SplitEntry &ent, Chunk *pc)
    {
       if (prev->IsNotNullChunk())
       {
+         cpd.pass_count++;
          LOG_FMT(LSPLIT, "%s(%d): can't split after a newline, orig line is %zu, return\n",
                  __func__, __LINE__, prev->GetOrigLine());
       }
