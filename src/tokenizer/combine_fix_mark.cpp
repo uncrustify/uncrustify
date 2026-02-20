@@ -220,7 +220,7 @@ void fix_casts(Chunk *start)
       }
       else if (pc->Is(CT_MINUS))
       {
-         // (UINT8)-1 or (foo)-1 or (FOO)-'a'
+         // (uint8_t)-1 or (foo)-1 or (FOO)-'a'
          if (  after->Is(CT_STRING)
             || doubtful_cast)
          {
@@ -229,7 +229,7 @@ void fix_casts(Chunk *start)
       }
       else if (pc->Is(CT_PLUS))
       {
-         // (UINT8)+1 or (foo)+1
+         // (uint8_t)+1 or (foo)+1
          if (  (  after->IsNot(CT_NUMBER)
                && after->IsNot(CT_NUMBER_FP))
             || doubtful_cast)

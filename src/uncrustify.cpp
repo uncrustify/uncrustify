@@ -118,7 +118,7 @@ cp_data_t cpd;
  * @param raw   The raw file content
  * @return      true if OC patterns are detected
  */
-static bool detect_oc_content(const std::vector<UINT8> &raw);
+static bool detect_oc_content(const std::vector<uint8_t> &raw);
 
 
 static bool read_stdin(MemoryFile &fm);
@@ -998,7 +998,7 @@ int main(int argc, char *argv[])
    if (  cpd.do_check
       || cpd.if_changed)
    {
-      cpd.bout = new deque<UINT8>();
+      cpd.bout = new deque<uint8_t>();
    }
    idx = 1;
 
@@ -1191,7 +1191,7 @@ static bool read_stdin(MemoryFile &fm)
       std::transform(buf, buf + len, std::back_inserter(fm.raw),
                      [](char c)
       {
-         return(static_cast<UINT8>(c));
+         return(static_cast<uint8_t>(c));
       });
    }
    return(decode_unicode(fm));
@@ -1416,10 +1416,10 @@ static bool file_content_matches(const string &filename1, const string &filename
       close(fd1);
       return(false);
    }
-   int   len1 = 0;
-   int   len2 = 0;
-   UINT8 buf1[1024];
-   UINT8 buf2[1024];
+   int     len1 = 0;
+   int     len2 = 0;
+   uint8_t buf1[1024];
+   uint8_t buf2[1024];
 
    memset(buf1, 0, sizeof(buf1));
    memset(buf2, 0, sizeof(buf2));
@@ -1626,7 +1626,7 @@ static void do_source_file(const char *filename_in,
 
    if (cpd.if_changed)
    {
-      for (UINT8 i : *cpd.bout)
+      for (uint8_t i : *cpd.bout)
       {
          fputc(i, pfout);
       }
@@ -2565,7 +2565,7 @@ E_Token find_token_name(const char *text)
  * @property, @protocol, etc. to detect if a C-Header file should be upgraded
  * to Objective-C.
  */
-static bool detect_oc_content(const std::vector<UINT8> &raw)
+static bool detect_oc_content(const std::vector<uint8_t> &raw)
 {
    // OC keywords to search for
    static const char   *oc_keywords[] =

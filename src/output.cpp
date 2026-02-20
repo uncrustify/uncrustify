@@ -156,7 +156,7 @@ static void do_kw_subst(Chunk *pc);
 
 
 //! All output text is sent here, one char at a time.
-static void add_char(UINT32 ch, bool is_literal = false);
+static void add_char(uint32_t ch, bool is_literal = false);
 
 
 static void add_text(const char *ascii_text);
@@ -292,7 +292,7 @@ static void add_spaces()
 }
 
 
-static void add_char(UINT32 ch, bool is_literal)
+static void add_char(uint32_t ch, bool is_literal)
 {
    // If we did a '\r' and it isn't followed by a '\n', then output a newline
    if (  (cpd.last_char == '\r')

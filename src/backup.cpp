@@ -36,12 +36,12 @@
 using namespace std;
 
 
-int backup_copy_file(const char *filename, const vector<UINT8> &data)
+int backup_copy_file(const char *filename, const vector<uint8_t> &data)
 {
-   char  newpath[1024];
-   char  md5_str_in[33];
-   char  md5_str[34];
-   UINT8 dig[16];
+   char    newpath[1024];
+   char    md5_str_in[33];
+   char    md5_str[34];
+   uint8_t dig[16];
 
    md5_str_in[0] = 0;
 
@@ -121,12 +121,12 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
 
 void backup_create_md5_file(const char *filename)
 {
-   UINT8  dig[16];
-   MD5    md5;
-   FILE   *thefile;
-   UINT8  buf[4096];
-   size_t len;
-   char   newpath[1024];
+   uint8_t dig[16];
+   MD5     md5;
+   FILE    *thefile;
+   uint8_t buf[4096];
+   size_t  len;
+   char    newpath[1024];
 
    md5.Init();
 
