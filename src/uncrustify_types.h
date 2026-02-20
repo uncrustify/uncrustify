@@ -72,7 +72,7 @@ enum class E_CharEncoding : unsigned int
 {
    // see also: const char *get_char_encoding(E_CharEncoding encoding)
    ASCII,     //! 0-127
-   BYTE,      //! 0-255, not UTF-8
+   BYTES,     //! 0-255, not UTF-8
    UTF8,      //! utf 8 bit wide
    UTF16_LE,  //! utf 16 bit wide, little endian
    UTF16_BE   //! utf 16 bit wide, big endian
