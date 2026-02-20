@@ -104,7 +104,9 @@ void MD5::Update(const void *data, uint32_t len)
 
    uint32_t      t = m_bits[0]; // Update bitcount
 
-   if ((m_bits[0] = t + ((uint32_t)len << 3)) < t)
+   m_bits[0] = t + (len << 3);
+
+   if (m_bits[0] < t)
    {
       m_bits[1]++;   // Carry from low to high
    }
