@@ -57,7 +57,7 @@ static bool decode_utf16(MemoryFile &fm);
 static bool decode_bom(MemoryFile &fm);
 
 
-//! Writes a single character to a file using ASCII or BYTE encoding
+//! Writes a single character to a file using ASCII or BYTES encoding
 static void write_byte(int ch);
 
 
@@ -407,7 +407,7 @@ bool decode_unicode(MemoryFile &fm)
       return(true);
    }
    // it is an unrecognized byte sequence
-   fm.encoding = E_CharEncoding::BYTE;
+   fm.encoding = E_CharEncoding::BYTES;
    return(decode_bytes(fm));
 } // decode_unicode
 
@@ -520,7 +520,7 @@ void write_bom()
 
    default:
       // E_CharEncoding::ASCII
-      // E_CharEncoding::BYTE
+      // E_CharEncoding::BYTES
       // do nothing
       // Coveralls will complain
       break;
@@ -534,7 +534,7 @@ void write_char(int ch)
    {
       switch (cpd.encoding)
       {
-      case E_CharEncoding::BYTE:
+      case E_CharEncoding::BYTES:
       case E_CharEncoding::ASCII:
       default:
          write_byte(ch);

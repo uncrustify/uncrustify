@@ -115,8 +115,8 @@ const char *get_char_encoding(E_CharEncoding encoding)
    case E_CharEncoding::ASCII:
       return("ASCII");
 
-   case E_CharEncoding::BYTE:
-      return("BYTE");
+   case E_CharEncoding::BYTES:
+      return("BYTES");
 
    case E_CharEncoding::UTF8:
       return("UTF8");

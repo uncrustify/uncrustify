@@ -2054,7 +2054,7 @@ void uncrustify_file(const MemoryFile &fm, FILE *pfout, const char *parsed_file,
    cpd.encoding = fm.encoding;
 
    if (  options::utf8_force()
-      || (  (cpd.encoding == E_CharEncoding::BYTE)
+      || (  (cpd.encoding == E_CharEncoding::BYTES)
          && options::utf8_byte()))
    {
       log_rule_B("utf8_force");
