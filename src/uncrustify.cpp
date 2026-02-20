@@ -2050,20 +2050,20 @@ void uncrustify_file(const MemoryFile &fm, FILE *pfout, const char *parsed_file,
    const deque<int> &data = fm.data;
 
    // Save off the encoding and whether a BOM is required
-   cpd.bom = fm.hasBom;
-   cpd.enc = fm.encoding;
+   cpd.bom      = fm.hasBom;
+   cpd.encoding = fm.encoding;
 
    if (  options::utf8_force()
-      || (  (cpd.enc == E_CharEncoding::BYTE)
+      || (  (cpd.encoding == E_CharEncoding::BYTE)
          && options::utf8_byte()))
    {
       log_rule_B("utf8_force");
       log_rule_B("utf8_byte");
-      cpd.enc = E_CharEncoding::UTF8;
+      cpd.encoding = E_CharEncoding::UTF8;
    }
    iarf_e av;
 
-   switch (cpd.enc)
+   switch (cpd.encoding)
    {
    case E_CharEncoding::UTF8:
       log_rule_B("utf8_bom");

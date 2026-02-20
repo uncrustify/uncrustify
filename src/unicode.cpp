@@ -57,7 +57,7 @@ static bool decode_utf16(MemoryFile &fm);
 static bool decode_bom(MemoryFile &fm);
 
 
-//! Write for ASCII and BYTE encoding
+//! Writes a single character to a file using ASCII or BYTE encoding
 static void write_byte(int ch);
 
 
@@ -65,6 +65,7 @@ static void write_byte(int ch);
 static void write_utf8(int ch);
 
 
+//! Writes a single character to a file using UTF-16 encoding
 static void write_utf16(int ch, bool be);
 
 
@@ -434,13 +435,17 @@ static void write_byte(int ch)
 
 static void write_utf8(int ch)
 {
-   vector<UINT8> vv;
+   static std::vector<UINT8> utf8_buffer = []()
+   {
+      std::vector<UINT8> tmp;
+      tmp.reserve(4);
+      return(tmp);
+   }();
 
-   vv.reserve(6);
+   utf8_buffer.clear();
+   encode_utf8(ch, utf8_buffer);
 
-   encode_utf8(ch, vv);
-
-   for (UINT8 char_val : vv)
+   for (UINT8 char_val : utf8_buffer)
    {
       write_byte(char_val);
    }
@@ -497,7 +502,7 @@ static void write_utf16(int ch, bool be)
 
 void write_bom()
 {
-   switch (cpd.enc)
+   switch (cpd.encoding)
    {
    case E_CharEncoding::UTF8:
       write_byte(0xEF);
@@ -527,12 +532,9 @@ void write_char(int ch)
 {
    if (ch >= 0)
    {
-      switch (cpd.enc)
+      switch (cpd.encoding)
       {
       case E_CharEncoding::BYTE:
-         write_byte(ch & 0xFF);
-         break;
-
       case E_CharEncoding::ASCII:
       default:
          write_byte(ch);

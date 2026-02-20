@@ -278,7 +278,7 @@ struct cp_data_t
    bool              output_tab_as_space;
 
    bool              bom;
-   E_CharEncoding    enc;
+   E_CharEncoding    encoding;
 
    // bumped up when a line is split or indented
    int               changes;
