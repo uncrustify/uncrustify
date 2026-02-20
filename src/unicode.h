@@ -29,6 +29,6 @@ void write_string(const UncText &text);
 bool decode_unicode(MemoryFile &fm);
 
 
-void encode_utf8(int ch, std::vector<UINT8> &res);
+void encode_utf8(int ch, std::vector<uint8_t> &res);
 
 #endif /* UNICODE_H_INCLUDED */

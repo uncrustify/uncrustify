@@ -16,7 +16,7 @@ using namespace std;
 
 
 //! Check if all characters are ASCII (0-127)
-static bool is_ascii(const vector<UINT8> &data, size_t &zero_cnt);
+static bool is_ascii(const vector<uint8_t> &data, size_t &zero_cnt);
 
 
 //! Convert the array of bytes into an array of ints
@@ -37,7 +37,7 @@ static bool decode_utf8(MemoryFile &fm);
  * @param idx  index points to current position in the vector
  * @param be   whether the encoding is BE or LE
  */
-static int get_word(const vector<UINT8> &in_data, size_t idx, bool be);
+static int get_word(const vector<uint8_t> &in_data, size_t idx, bool be);
 
 
 /**
@@ -69,13 +69,13 @@ static void write_utf8(int ch);
 static void write_utf16(int ch, bool be);
 
 
-static bool is_ascii(const vector<UINT8> &data, size_t &zero_cnt)
+static bool is_ascii(const vector<uint8_t> &data, size_t &zero_cnt)
 {
    size_t non_ascii_cnt = 0;
 
    zero_cnt = 0;
 
-   for (UINT8 value : data)
+   for (uint8_t value : data)
    {
       if (value & 0x80)
       {
@@ -108,7 +108,7 @@ static bool decode_bytes(MemoryFile &fm)
 // | 1110xxxx 10yyyyyy 10zzzzzz          | xxxxyyyyyyzzzzzz      | U+0800  – U+FFFF   |
 // | 11110xxx 10yyyyyy 10zzzzzz 10wwwwww | xxxyyyyyyzzzzzzwwwwww | U+10000 – U+10FFFF |
 // ------------------------------------------------------------------------------------
-void encode_utf8(int ch, vector<UINT8> &res)
+void encode_utf8(int ch, vector<uint8_t> &res)
 {
    if (ch < 0)
    {
@@ -214,7 +214,7 @@ static bool decode_utf8(MemoryFile &fm)
 } // decode_utf8
 
 
-static int get_word(const vector<UINT8> &in_data, size_t idx, bool be)
+static int get_word(const vector<uint8_t> &in_data, size_t idx, bool be)
 {
    int ch;
 
@@ -423,7 +423,7 @@ static void write_byte(int ch)
 
       if (cpd.bout)
       {
-         cpd.bout->push_back(static_cast<UINT8>(ch));
+         cpd.bout->push_back(static_cast<uint8_t>(ch));
       }
    }
    else
@@ -435,9 +435,9 @@ static void write_byte(int ch)
 
 static void write_utf8(int ch)
 {
-   static std::vector<UINT8> utf8_buffer = []()
+   static std::vector<uint8_t> utf8_buffer = []()
    {
-      std::vector<UINT8> tmp;
+      std::vector<uint8_t> tmp;
       tmp.reserve(4);
       return(tmp);
    }();
@@ -445,7 +445,7 @@ static void write_utf8(int ch)
    utf8_buffer.clear();
    encode_utf8(ch, utf8_buffer);
 
-   for (UINT8 char_val : utf8_buffer)
+   for (uint8_t char_val : utf8_buffer)
    {
       write_byte(char_val);
    }

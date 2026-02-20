@@ -30,7 +30,7 @@ public:
     * Update context to reflect the concatenation of another buffer full
     * of bytes.
     */
-   void Update(const void *data, UINT32 len);
+   void Update(const void *data, uint32_t len);
 
 
    /**
@@ -39,7 +39,7 @@ public:
     *
     * @param[out] digest  calculated MD5 checksum
     */
-   void Final(UINT8 digest[16]);
+   void Final(uint8_t digest[16]);
 
 
    /**
@@ -47,7 +47,7 @@ public:
     * reflect the addition of 16 longwords of new data.  MD5::Update blocks
     * the data and converts bytes into longwords for this routine.
     */
-   static void Transform(UINT32 buf[4], UINT32 in_data[16]);
+   static void Transform(uint32_t buf[4], uint32_t in_data[16]);
 
 
    /**
@@ -57,17 +57,17 @@ public:
     * @param      length  number of bytes in data
     * @param[out] digest  calculated MD5 checksum
     */
-   static void Calc(const void *data, UINT32 length, UINT8 digest[16]);
+   static void Calc(const void *data, uint32_t length, uint8_t digest[16]);
 
 
 private:
-   UINT32 m_buf[4];
-   UINT32 m_bits[2];
-   UINT32 m_in32[16];
+   uint32_t m_buf[4];
+   uint32_t m_bits[2];
+   uint32_t m_in32[16];
    // Alternate view of m_in32
-   UINT8  *m_in8;
-   bool   m_need_byteswap;
-   bool   m_big_endian;
+   uint8_t  *m_in8;
+   bool     m_need_byteswap;
+   bool     m_big_endian;
 
 
    /**
@@ -75,9 +75,9 @@ private:
     * 'buf' might not be word-aligned.
     *
     * @param buf    The byte array to reverse
-    * @param n_u32  The number of UINT32's in the data
+    * @param n_u32  The number of uint32_t's in the data
     */
-   void reverse_u32(UINT8 *buf, int n_u32);
+   void reverse_u32(uint8_t *buf, int n_u32);
 };
 
 #endif /* MD5_H_INCLUDED */

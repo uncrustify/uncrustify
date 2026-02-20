@@ -21,7 +21,7 @@ Args::Args(int argc, char **argv)
    m_values = argv;
    size_t len = (argc >> 3) + 1;
 
-   m_used = new UINT8[len];
+   m_used = new uint8_t[len];
 
    if (m_used != nullptr)
    {

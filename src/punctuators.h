@@ -12,7 +12,7 @@ struct lookup_entry_t
 {
    char              ch;
    char              left_in_group;
-   UINT16            next_idx;
+   uint16_t          next_idx;
    const chunk_tag_t *tag;
 
    struct comperator

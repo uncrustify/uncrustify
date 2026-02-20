@@ -107,11 +107,6 @@ using namespace uncrustify;
  *     #define FOO_VAL        15
  *     #define MAX_TIMEOUT    60
  *     #define FOO(x)         ((x) * 65)
- *
- *   - typedefs
- *     typedef uint8_t     BYTE;
- *     typedef int32_t     INT32;
- *     typedef uint32_t    UINT32;
  */
 void align_all()
 {

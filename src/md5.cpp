@@ -22,9 +22,9 @@
 #include <string.h>
 
 
-void MD5::reverse_u32(UINT8 *buf, int n_u32)
+void MD5::reverse_u32(uint8_t *buf, int n_u32)
 {
-   UINT8 tmp;
+   uint8_t tmp;
 
    if (m_big_endian)
    {
@@ -73,9 +73,9 @@ MD5::MD5()
     * The MD5 stuff is written for little endian.
     */
 
-   m_in8           = reinterpret_cast<UINT8 *>(m_in32);
-   m_need_byteswap = *reinterpret_cast<UINT8 *>(m_buf) != 4;
-   m_big_endian    = *reinterpret_cast<UINT8 *>(m_buf) == 1;
+   m_in8           = reinterpret_cast<uint8_t *>(m_in32);
+   m_need_byteswap = *reinterpret_cast<uint8_t *>(m_buf) != 4;
+   m_big_endian    = *reinterpret_cast<uint8_t *>(m_buf) == 1;
 
    // Initialise all fields
    m_bits[0] = 0;
@@ -98,13 +98,15 @@ void MD5::Init()
 
 
 //! Update context to reflect the concatenation of another buffer full of bytes.
-void MD5::Update(const void *data, UINT32 len)
+void MD5::Update(const void *data, uint32_t len)
 {
-   const UINT8 *buf = reinterpret_cast<const UINT8 *>(data);
+   const uint8_t *buf = reinterpret_cast<const uint8_t *>(data);
 
-   UINT32      t = m_bits[0]; // Update bitcount
+   uint32_t      t = m_bits[0]; // Update bitcount
 
-   if ((m_bits[0] = t + ((UINT32)len << 3)) < t)
+   m_bits[0] = t + (len << 3);
+
+   if (m_bits[0] < t)
    {
       m_bits[1]++;   // Carry from low to high
    }
@@ -115,7 +117,7 @@ void MD5::Update(const void *data, UINT32 len)
    // Handle any leading odd-sized chunks
    if (t)
    {
-      UINT8 *p = m_in8 + t;
+      uint8_t *p = m_in8 + t;
 
       t = 64 - t;
 
@@ -153,16 +155,16 @@ void MD5::Update(const void *data, UINT32 len)
 } // MD5::Update
 
 
-void MD5::Final(UINT8 digest[16])
+void MD5::Final(uint8_t digest[16])
 {
    // Compute number of bytes modulo 64
-   UINT32 count = (m_bits[0] >> 3) & 0x3F;
+   uint32_t count = (m_bits[0] >> 3) & 0x3F;
 
    /*
     * Set the first char of padding to 0x80. This is safe since there is always
     * at least one byte free
     */
-   UINT8 *p = m_in8 + count;
+   uint8_t *p = m_in8 + count;
 
    *p++ = 0x80;
 
@@ -202,7 +204,7 @@ void MD5::Final(UINT8 digest[16])
 
    if (m_need_byteswap)
    {
-      reverse_u32(reinterpret_cast<UINT8 *>(m_buf), 4);
+      reverse_u32(reinterpret_cast<uint8_t *>(m_buf), 4);
    }
    memcpy(digest, m_buf, 16);
 } // MD5::Final
@@ -221,12 +223,12 @@ void MD5::Final(UINT8 digest[16])
    ((w) += f((x), (y), (z)) + (data), (w) = (w) << (s) | (w) >> (32 - (s)), (w) += (x))
 
 
-void MD5::Transform(UINT32 buf[4], UINT32 in_data[16])
+void MD5::Transform(uint32_t buf[4], uint32_t in_data[16])
 {
-   UINT32 a = buf[0];
-   UINT32 b = buf[1];
-   UINT32 c = buf[2];
-   UINT32 d = buf[3];
+   uint32_t a = buf[0];
+   uint32_t b = buf[1];
+   uint32_t c = buf[2];
+   uint32_t d = buf[3];
 
    MD5STEP(F1, a, b, c, d, in_data[0] + 0xd76aa478, 7);
    MD5STEP(F1, d, a, b, c, in_data[1] + 0xe8c7b756, 12);
@@ -303,7 +305,7 @@ void MD5::Transform(UINT32 buf[4], UINT32 in_data[16])
 } // MD5::Transform
 
 
-void MD5::Calc(const void *data, UINT32 length, UINT8 digest[16])
+void MD5::Calc(const void *data, uint32_t length, uint8_t digest[16])
 {
    MD5 md5;
 

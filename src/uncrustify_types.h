@@ -205,12 +205,12 @@ struct align_t
 //! holds information and data of a file
 struct MemoryFile
 {
-   std::vector<UINT8> raw;       //! raw content of file
-   std::deque<int>    data;      //! processed content of file
-   bool               hasBom;    //! true if the file has BOM
-   E_CharEncoding     encoding;  //! character encoding of file ASCII, utf, etc.
+   std::vector<uint8_t> raw;      //! raw content of file
+   std::deque<int>      data;     //! processed content of file
+   bool                 hasBom;   //! true if the file has BOM
+   E_CharEncoding       encoding; //! character encoding of file ASCII, utf, etc.
 #ifdef HAVE_UTIME_H
-   struct utimbuf     utb;       //! utime info (access, modified time)
+   struct utimbuf       utb;      //! utime info (access, modified time)
 #endif
 
    MemoryFile()
@@ -236,68 +236,68 @@ enum class unc_stage_e : unsigned int
 
 struct cp_data_t
 {
-   std::deque<UINT8> *bout;
-   FILE              *fout;
-   int               last_char;
-   bool              do_check;
-   unc_stage_e       unc_stage;
-   int               check_fail_cnt;       //! total failure count
-   bool              if_changed;
+   std::deque<uint8_t> *bout;
+   FILE                *fout;
+   int                 last_char;
+   bool                do_check;
+   unc_stage_e         unc_stage;
+   int                 check_fail_cnt;     //! total failure count
+   bool                if_changed;
 
-   std::string       filename;
+   std::string         filename;
 
-   MemoryFile        file_hdr;          // for cmt_insert_file_header
-   MemoryFile        file_ftr;          // for cmt_insert_file_footer
-   MemoryFile        func_hdr;          // for cmt_insert_func_header
-   MemoryFile        oc_msg_hdr;        // for cmt_insert_oc_msg_header
-   MemoryFile        class_hdr;         // for cmt_insert_class_header
-   MemoryFile        reflow_fold_regex; // for cmt_reflow_fold_regex_file
+   MemoryFile          file_hdr;          // for cmt_insert_file_header
+   MemoryFile          file_ftr;          // for cmt_insert_file_footer
+   MemoryFile          func_hdr;          // for cmt_insert_func_header
+   MemoryFile          oc_msg_hdr;        // for cmt_insert_oc_msg_header
+   MemoryFile          class_hdr;         // for cmt_insert_class_header
+   MemoryFile          reflow_fold_regex; // for cmt_reflow_fold_regex_file
 
-   size_t            lang_flags;        //! defines the language of the source input
-   bool              lang_forced;       //! overwrites automatic language detection
+   size_t              lang_flags;        //! defines the language of the source input
+   bool                lang_forced;       //! overwrites automatic language detection
 
-   bool              unc_off;
-   bool              unc_off_used;       //! true if the `disable_processing_cmt` option was actively used in the processed file
-   UINT32            line_number;
-   size_t            column;             //! column for parsing
-   UINT16            spaces;             //! space count on output
+   bool                unc_off;
+   bool                unc_off_used;     //! true if the `disable_processing_cmt` option was actively used in the processed file
+   uint32_t            line_number;
+   size_t              column;           //! column for parsing
+   uint16_t            spaces;           //! space count on output
 
-   int               ifdef_over_whole_file;
+   int                 ifdef_over_whole_file;
 
-   bool              frag;          //! activates code fragment option
-   UINT32            frag_cols;
+   bool                frag;        //! activates code fragment option
+   uint32_t            frag_cols;
 
    // stuff to auto-detect line endings
-   UINT32            le_counts[uncrustify::line_end_styles];
-   UncText           newline;
+   uint32_t            le_counts[uncrustify::line_end_styles];
+   UncText             newline;
 
-   bool              did_newline;       //! flag indicates if a newline was added or converted
-   E_Token           in_preproc;
-   int               preproc_ncnl_count;
-   bool              output_trailspace;
-   bool              output_tab_as_space;
+   bool                did_newline;     //! flag indicates if a newline was added or converted
+   E_Token             in_preproc;
+   int                 preproc_ncnl_count;
+   bool                output_trailspace;
+   bool                output_tab_as_space;
 
-   bool              bom;
-   E_CharEncoding    encoding;
+   bool                bom;
+   E_CharEncoding      encoding;
 
    // bumped up when a line is split or indented
-   int               changes;
-   int               pass_count;       //! indicates how often the chunk list shall be processed
+   int                 changes;
+   int                 pass_count;     //! indicates how often the chunk list shall be processed
 
-   align_t           al[uncrustify::limits::AL_SIZE];
-   size_t            al_cnt;
-   bool              al_c99_array;
+   align_t             al[uncrustify::limits::AL_SIZE];
+   size_t              al_cnt;
+   bool                al_c99_array;
 
-   bool              warned_unable_string_replace_tab_chars;
+   bool                warned_unable_string_replace_tab_chars;
 
-   int               pp_level;       // TODO: can this ever be -1?
+   int                 pp_level;     // TODO: can this ever be -1?
 
-   const char        *phase_name;
-   const char        *dumped_file;
+   const char          *phase_name;
+   const char          *dumped_file;
    // for debugging purpose only
-   tracking_type_e   html_type       = tracking_type_e::TT_NONE;
-   const char        *html_file      = nullptr;
-   bool              find_deprecated = false;
+   tracking_type_e     html_type       = tracking_type_e::TT_NONE;
+   const char          *html_file      = nullptr;
+   bool                find_deprecated = false;
 };
 
 extern cp_data_t cpd;  // TODO: can we avoid this external variable?
