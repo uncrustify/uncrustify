@@ -202,7 +202,7 @@ size_t language_flags_from_filename(const char *filename)
       }
    }
 
-   for (auto &language : language_exts)
+   for (const auto &language : language_exts)
    {
       if (ends_with(filename, language.ext))
       {
