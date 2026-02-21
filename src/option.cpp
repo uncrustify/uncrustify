@@ -569,7 +569,7 @@ bool read_enum(const char *in, Option<T> &out)
          out.warnIncompatibleReference(opt);
          return(false);
       }
-      auto &topt = *static_cast<const Option<T> *>(opt);
+      const auto &topt = *static_cast<const Option<T> *>(opt);
       out.m_val = topt();
       return(true);
    }
