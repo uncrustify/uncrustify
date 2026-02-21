@@ -79,6 +79,7 @@ repos:
           - --force
           - --language=c++
           - --cppcheck-build-dir=.cache/cppcheck/
+          - -DUNCRUSTIFY_VERSION="0.50.1-d"   # For static analysis
           - -Isrc
           - '--template={file}({line}): {severity} ({id}): {message}'
           - --inline-suppr
