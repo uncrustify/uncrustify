@@ -253,9 +253,9 @@ void check_template(Chunk *start, bool in_type_cast)
        * Scan forward to the angle close
        * If we have a comparison in there, then it can't be a template.
        */
-      const int max_token_count = 1024;
-      E_Token   tokens[max_token_count];
-      size_t    num_tokens = 1;
+      constexpr size_t MAX_TOKEN_COUNT{ 1024 };
+      E_Token          tokens[MAX_TOKEN_COUNT];
+      size_t           num_tokens = 1;
 
       tokens[0] = CT_ANGLE_OPEN;
 
@@ -277,7 +277,8 @@ void check_template(Chunk *start, bool in_type_cast)
             pc = A->GetNext();
          }
 
-         if (  (tokens[num_tokens - 1] == CT_ANGLE_OPEN)
+         if (  num_tokens > 0
+            && (tokens[num_tokens - 1] == CT_ANGLE_OPEN)
             && (pc->GetStr()[0] == '>')
             && (pc->Len() > 1)
             && (  options::tok_split_gte()
@@ -304,15 +305,26 @@ void check_template(Chunk *start, bool in_type_cast)
             {
                tokens[num_tokens] = CT_ANGLE_OPEN;
                num_tokens++;
+
+               if (num_tokens >= MAX_TOKEN_COUNT)
+               {
+                  fprintf(stderr, "FATAL(1): The variable 'tokens' is too small,\n");
+                  fprintf(stderr, "   it should be bigger than %zu.\n", num_tokens);
+                  fprintf(stderr, "Please report this to the uncrustify project.\n");
+                  fflush(stderr);
+                  exit(EX_SOFTWARE);
+               }
             }
          }
          else if (pc->IsString(">"))
          {
-            if (num_tokens > 0 && (tokens[num_tokens - 1] == CT_PAREN_OPEN))
+            if (  num_tokens > 0
+               && (tokens[num_tokens - 1] == CT_PAREN_OPEN))
             {
                handle_double_angle_close(pc);
             }
-            else if (--num_tokens == 0)
+            else if (  num_tokens > 0
+                    && --num_tokens == 0)
             {
                break;
             }
@@ -352,12 +364,17 @@ void check_template(Chunk *start, bool in_type_cast)
          }
          else if (pc->Is(CT_PAREN_OPEN))
          {
-            if (num_tokens >= max_token_count - 1)
-            {
-               break;
-            }
             tokens[num_tokens] = CT_PAREN_OPEN;
             num_tokens++;
+
+            if (num_tokens >= MAX_TOKEN_COUNT)
+            {
+               fprintf(stderr, "FATAL(2): The variable 'tokens' is too small,\n");
+               fprintf(stderr, "   it should be bigger than %zu.\n", num_tokens);
+               fprintf(stderr, "Please report this to the uncrustify project.\n");
+               fflush(stderr);
+               exit(EX_SOFTWARE);
+            }
          }
          else if (  pc->Is(CT_QUESTION)                    // Issue #2949
                  && language_is_set(lang_flag_e::LANG_CPP))
@@ -373,9 +390,8 @@ void check_template(Chunk *start, bool in_type_cast)
                log_flush(true);
                exit(EX_SOFTWARE);
             }
-            num_tokens--;
 
-            if (tokens[num_tokens] != CT_PAREN_OPEN)
+            if (tokens[--num_tokens] != CT_PAREN_OPEN)
             {
                break;  // unbalanced parentheses
             }

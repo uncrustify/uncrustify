@@ -204,10 +204,10 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
 
    if (length >= buffer_length)
    {
-      fprintf(stderr, "FATAL(1): The variable 'buf' is not big enough:\n");
-      fprintf(stderr, "   it should be bigger as %u\n", length);
-      fprintf(stderr, "Please make a report.\n");
-      fprintf(stderr, "For the buffer: %s\n", fmt);
+      fprintf(stderr, "FATAL(1): The variable 'buf' is too small,\n");
+      fprintf(stderr, "   it should be bigger than %u.\n", length);
+      fprintf(stderr, "Please report this to the uncrustify project.\n");
+      fflush(stderr);
       exit(EX_SOFTWARE);
    }
    memcpy(buf, fmt, length);
@@ -246,10 +246,10 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
 
             if (X >= buffer_length)
             {
-               fprintf(stderr, "FATAL(2): The variable 'buf' is not big enough:\n");
-               fprintf(stderr, "   it should be bigger as %zu\n", X);
-               fprintf(stderr, "Please make a report.\n");
-               fprintf(stderr, "For the buffer: %s\n", fmt);
+               fprintf(stderr, "FATAL(2): The variable 'buf' is too small,\n");
+               fprintf(stderr, "   it should be bigger than %zu.\n", X);
+               fprintf(stderr, "Please report this to the uncrustify project.\n");
+               fflush(stderr);
                exit(EX_SOFTWARE);
             }
             g_log.bufX.resize(X);
