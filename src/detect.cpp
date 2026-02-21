@@ -115,6 +115,8 @@ static void detect_space_options()
    SP_VOTE_VAR(sp_after_byref);
    SP_VOTE_VAR(sp_before_byref);
    SP_VOTE_VAR(sp_before_unnamed_byref);
+   SP_VOTE_VAR(sp_before_ref_qualifier);
+   SP_VOTE_VAR(sp_after_ref_qualifier);
    SP_VOTE_VAR(sp_after_type);
    SP_VOTE_VAR(sp_template_angle);
    SP_VOTE_VAR(sp_before_angle);
@@ -272,6 +274,12 @@ static void detect_space_options()
             vote_sp_before_byref.vote(prev, pc);
          }
          vote_sp_after_byref.vote(pc, next);
+      }
+
+      if (pc->Is(CT_REF_QUALIFIER))
+      {
+         vote_sp_before_ref_qualifier.vote(prev, pc);
+         vote_sp_after_ref_qualifier.vote(pc, next);
       }
 
       if (  pc->IsNot(CT_PTR_TYPE)

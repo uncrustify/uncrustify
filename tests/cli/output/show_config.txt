@@ -306,6 +306,12 @@ sp_before_byref_func            = ignore   # ignore/add/remove/force
 # parenthesis, as in 'char& (*)()'.
 sp_byref_paren                  = ignore   # ignore/add/remove/force
 
+# Add or remove space before a ref-qualifier '&' or '&&' on a member function.
+sp_before_ref_qualifier         = ignore   # ignore/add/remove/force
+
+# Add or remove space after a ref-qualifier '&' or '&&' on a member function.
+sp_after_ref_qualifier          = ignore   # ignore/add/remove/force
+
 # Add or remove space between type and word. In cases where total removal of
 # whitespace would be a syntax error, a value of 'remove' is treated the same
 # as 'force'.

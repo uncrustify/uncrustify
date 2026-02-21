@@ -441,6 +441,15 @@ void fix_type_cast(Chunk *start)
          return;
       }
       make_type(pc);
+
+      // Inside a C++ cast expression (static_cast, dynamic_cast, reinterpret_cast, const_cast),
+      // && always represents an rvalue reference type, not a boolean operator.
+      // Convert CT_BOOL (&&) to CT_BYREF.
+      if (  pc->Is(CT_BOOL)
+         && pc->IsString("&&"))
+      {
+         pc->SetType(CT_BYREF);
+      }
       pc = pc->GetNextNcNnl();
    }
 } // fix_type_cast
@@ -637,6 +646,7 @@ void fix_typedef(Chunk *start)
 Chunk *fix_variable_definition(Chunk *start)
 {
    LOG_FUNC_ENTRY();
+
    Chunk      *pc = start;
    Chunk      *end;
    Chunk      *tmp_pc;
@@ -2599,7 +2609,33 @@ Chunk *mark_variable_definition(Chunk *start)
       }
       else if (pc->IsAddress())
       {
-         pc->SetType(CT_BYREF);
+         // Check if this is a ref-qualifier (& or && after function close paren)
+         // Ref-qualifiers should not be converted to CT_BYREF here
+         Chunk *prev_tok        = pc->GetPrevNcNnlNi();
+         bool  is_ref_qualifier = false;
+
+         if (  prev_tok->Is(CT_FPAREN_CLOSE)
+            || prev_tok->Is(CT_PAREN_CLOSE))
+         {
+            is_ref_qualifier = true;
+         }
+         else if (prev_tok->Is(CT_QUALIFIER))
+         {
+            // Check if qualifier follows a close paren (e.g., "const &")
+            Chunk *before_qual = prev_tok->GetPrevNcNnlNi();
+
+            if (  before_qual->Is(CT_FPAREN_CLOSE)
+               || before_qual->Is(CT_PAREN_CLOSE))
+            {
+               is_ref_qualifier = true;
+            }
+         }
+
+         if (!is_ref_qualifier)
+         {
+            pc->SetType(CT_BYREF);
+         }
+         // If it's a ref-qualifier, leave it as CT_AMP to be handled later
       }
       else if (  pc->Is(CT_SQUARE_OPEN)
               || pc->Is(CT_ASSIGN))

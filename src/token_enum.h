@@ -123,6 +123,7 @@ enum E_Token
    CT_MINUS,               // - : raw char to be changed
    CT_AMP,                 // & : raw char to be changed
    CT_BYREF,               // & in function def/proto params
+   CT_REF_QUALIFIER,       // & or && as ref-qualifier on member functions
 
    // CT_BITWISE_AND,         // &   // is a CT_ARITH
    // CT_BITWISE_OR,          // |   // is a CT_ARITH
