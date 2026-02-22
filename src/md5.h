@@ -47,7 +47,7 @@ public:
     * reflect the addition of 16 longwords of new data.  MD5::Update blocks
     * the data and converts bytes into longwords for this routine.
     */
-   static void Transform(uint32_t buf[4], uint32_t in_data[16]);
+   static void Transform(uint32_t buf[4], const uint32_t in_data[16]);
 
 
    /**
