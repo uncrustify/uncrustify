@@ -223,7 +223,7 @@ void MD5::Final(uint8_t digest[16])
    ((w) += f((x), (y), (z)) + (data), (w) = (w) << (s) | (w) >> (32 - (s)), (w) += (x))
 
 
-void MD5::Transform(uint32_t buf[4], const uint32_t in_data[16])
+void MD5::Transform(uint32_t (&buf)[4], const uint32_t (&in_data)[16])
 {
    uint32_t a = buf[0];
    uint32_t b = buf[1];
