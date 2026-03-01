@@ -782,3 +782,19 @@ ns2::Inner2&& ns2::Inner2::move() && { return std::move(*this); }
 MyClass4&& MyClass4::moveNoexcept() && noexcept { return std::move(*this); }
 MyClass4&& MyClass4::create(MyClass4&& src) { return std::move(src); }
 MyClass4&& operator+(MyClass4&& lhs, MyClass4&& rhs) { return std::move(lhs); }
+
+///>>
+// Make sure detecting && as CT_BOOL works in nested parens and braces
+// and does not leak across expression boundaries
+int DOMString::find()
+{
+    {
+	if( (a&&b) ) return l;
+    }
+}
+
+bool strcasecmp()
+{
+    if ( !( a&&b ) ) return true;
+}
+//<<
