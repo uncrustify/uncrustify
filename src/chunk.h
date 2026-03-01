@@ -1259,15 +1259,6 @@ inline size_t Chunk::GetOrigLine() const
 
 inline void Chunk::SetOrigLine(size_t line)
 {
-#ifdef DEBUG
-   if (line > uncrustify::limits::TOO_BIG_VALUE)
-   {
-      fprintf(stderr, "%s(%d): the input parameter is too big %zu\n",
-              __func__, __LINE__, line);
-      log_flush(true);
-      exit(EX_SOFTWARE);
-   }
-#endif
    m_origLine = line;
 }
 
