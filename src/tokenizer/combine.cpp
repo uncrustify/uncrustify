@@ -1281,12 +1281,26 @@ static bool handle_rvalue_forwarding_ref(Chunk *prev, Chunk *pc, Chunk *next)
       || (  !open_paren->Is(E_Token::CT_FPAREN_OPEN)
          && !open_paren->Is(E_Token::CT_PAREN_OPEN)))
    {
-      // Walk back to find the opening paren
-      open_paren = pc->GetPrevType(E_Token::CT_FPAREN_OPEN, pc->GetLevel());
+      // Walk back to find the opening paren, stopping at statement boundaries
+      open_paren = Chunk::NullChunkPtr;
 
-      if (open_paren->IsNullChunk())
+      for (Chunk *tmp = pc->GetPrevNcNnlNi(); tmp->IsNotNullChunk(); tmp = tmp->GetPrevNcNnlNi())
       {
-         open_paren = pc->GetPrevType(E_Token::CT_PAREN_OPEN, pc->GetLevel());
+         if (  (  tmp->Is(E_Token::CT_FPAREN_OPEN)
+               || tmp->Is(E_Token::CT_PAREN_OPEN))
+            && tmp->GetLevel() == pc->GetLevel() - 1)
+         {
+            open_paren = tmp;
+            break;
+         }
+
+         // Stop at statement boundaries
+         if (  tmp->Is(E_Token::CT_SEMICOLON)
+            || tmp->Is(E_Token::CT_BRACE_OPEN)
+            || tmp->Is(E_Token::CT_BRACE_CLOSE))
+         {
+            break;
+         }
       }
    }
 
@@ -1295,6 +1309,57 @@ static bool handle_rvalue_forwarding_ref(Chunk *prev, Chunk *pc, Chunk *next)
          && !open_paren->Is(E_Token::CT_PAREN_OPEN)))
    {
       return(false);
+   }
+
+   // If we found a plain E_Token::CT_PAREN_OPEN instead of FPAREN_OPEN, validate that it is
+   // actually a function/lambda parameter list and not a grouping paren in an expression
+   // like if ( !( a && b ) )
+   if (open_paren->Is(E_Token::CT_PAREN_OPEN))
+   {
+      Chunk *before_open = open_paren->GetPrevNcNnlNi();
+
+      bool  is_func_paren = (  before_open->Is(E_Token::CT_FUNC_CALL)
+                            || before_open->Is(E_Token::CT_FUNC_DEF)
+                            || before_open->Is(E_Token::CT_FUNC_PROTO)
+                            || before_open->Is(E_Token::CT_TSQUARE)       // [](int&& x)
+                            || before_open->Is(E_Token::CT_SQUARE_CLOSE)  // [captures](int&& x)
+                            || before_open->Is(E_Token::CT_TYPE));        // type(T&& t)
+
+      if (!is_func_paren)
+      {
+         return(false);
+      }
+   }
+
+   // If we found an FPAREN_OPEN, check its parent type to distinguish
+   // function definitions/prototypes from function calls
+   if (open_paren->Is(E_Token::CT_FPAREN_OPEN))
+   {
+      E_Token paren_parent = open_paren->GetParentType();
+
+      // A FUNC_CTOR_VAR inside a function body is a variable construction
+      // like:  Object obj(a && b)
+      if (paren_parent == E_Token::CT_FUNC_CTOR_VAR && prev->Is(E_Token::CT_WORD))
+      {
+         Chunk *func_name = open_paren->GetPrevNcNnlNi();
+
+         if (  func_name->IsNotNullChunk()
+            && func_name->Is(E_Token::CT_FUNC_CTOR_VAR)
+            && func_name->GetBraceLevel() >= 1)
+         {
+            // Check if we're inside a function body and not just inside a namespace/class/struct brace.
+            Chunk *br_open = func_name->GetPrevType(E_Token::CT_BRACE_OPEN, func_name->GetBraceLevel() - 1);
+
+            if (  br_open->IsNotNullChunk()
+               && br_open->GetParentType() != E_Token::CT_NAMESPACE
+               && br_open->GetParentType() != E_Token::CT_CLASS
+               && br_open->GetParentType() != E_Token::CT_STRUCT
+               && br_open->GetParentType() != E_Token::CT_EXTERN)
+            {
+               return(false); // Inside a function body - this is a constructor call
+            }
+         }
+      }
    }
    // In a parameter declaration like `func(T&& varname)`, the variable name
    // is followed by declaration-ending tokens: ), comma, =, or ...
