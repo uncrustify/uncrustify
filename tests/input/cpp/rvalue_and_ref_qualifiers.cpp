@@ -50,6 +50,12 @@ if(auto foo = 42; a&&b)
 if(int&&x = getValue(); x && 0)
 {}
 
+if(a&&b = c)
+{}
+
+if(a&&b = []() { return(true); }())
+{}
+
 // chained method calls
 
 void chainedMethodTest()

@@ -1685,16 +1685,44 @@ static bool handle_rvalue_in_sparen(Chunk *prev, Chunk *pc, Chunk *next)
             || prev->Is(E_Token::CT_ANGLE_CLOSE))  // Template types like vector<int>
          && next->Is(E_Token::CT_WORD))
       {
-         // Look ahead: if there's an = after next, this is a variable declaration
+         // Look ahead: if there's an = after next followed by a semicolon, this is a variable declaration
          // Pattern: type && var = value; ...
          Chunk *after_next = next->GetNextNcNnl();
 
          if (after_next->Is(E_Token::CT_ASSIGN))
          {
-            LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig col is %zu - && is rvalue ref in init part of init-if\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
-            pc->SetType(E_Token::CT_BYREF);
-            return(true);
+            for (Chunk *tmp = after_next->GetNext(); tmp->IsNotNullChunk(); tmp = tmp->GetNext())
+            {
+               // Skip over brace and paren pairs to avoid matching semicolons inside nested blocks
+               if (  tmp->Is(E_Token::CT_BRACE_OPEN)
+                  || tmp->Is(E_Token::CT_PAREN_OPEN)
+                  || tmp->Is(E_Token::CT_FPAREN_OPEN))
+               {
+                  tmp = tmp->GetClosingParen();
+
+                  if (tmp->IsNullChunk())
+                  {
+                     break;
+                  }
+                  continue;
+               }
+
+               if (tmp->Is(E_Token::CT_SEMICOLON))
+               {
+                  LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig col is %zu - && is rvalue ref in init part of init-if\n",
+                          __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
+                  pc->SetType(E_Token::CT_BYREF);
+                  return(true);
+               }
+
+               if (  tmp->Is(E_Token::CT_SPAREN_CLOSE)
+                  || tmp->GetLevel() < sparen_open->GetLevel())
+               {
+                  LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig col is %zu - no semicolon in sparen, && is BOOL in plain condition\n",
+                          __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
+                  return(false);
+               }
+            }
          }
       }
    }
