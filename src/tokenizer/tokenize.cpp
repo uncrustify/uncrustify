@@ -1906,7 +1906,6 @@ static bool parse_bs_newline(TokenContext &ctx, Chunk &pc)
             ctx.expect('\n');
          }
          pc.SetType(CT_NL_CONT);
-         pc.Text() = "\\";
          pc.SetNlCount(1);
          return(true);
       }
@@ -2735,13 +2734,11 @@ void tokenize(const deque<int> &data, Chunk *ref)
       {
          last_was_tab = chunk.GetAfterTab();
          chunk.SetAfterTab(false);
-         chunk.Text().clear();
       }
       else if (chunk.GetType() == CT_NL_CONT)
       {
          last_was_tab = chunk.GetAfterTab();
          chunk.SetAfterTab(false);
-         chunk.Text() = "\\\n";
       }
       else
       {
@@ -2889,8 +2886,8 @@ void tokenize(const deque<int> &data, Chunk *ref)
 
       if (pc->Is(CT_NEWLINE))
       {
-         LOG_FMT(LBCTRL, "%s(%d): orig line is %zu, orig col is %zu, <Newline>, nl is %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetNlCount());
+         LOG_FMT(LBCTRL, "%s(%d): orig line is %zu, orig col is %zu, text is '<Newline>', len is %ld, nl count is %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Len(), pc->GetNlCount());
       }
       else if (pc->Is(CT_VBRACE_OPEN))
       {

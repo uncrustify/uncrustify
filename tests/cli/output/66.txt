@@ -13,7 +13,7 @@ space_text : orig line is 1, orig col is 8, 'TelegramIndex' type is TYPE
 log_rule(space_text : rule is 'sp_skip_vbrace_tokens'
 space_text : orig line is 1, orig col is 8, text 'TelegramIndex', type is TYPE
 do_space : first:  orig line 1, orig col 8, text 'TelegramIndex', type TYPE
-do_space : second: orig line 1, orig col 21, text '', type NEWLINE
+do_space : second: orig line 1, orig col 21, text '␤', type NEWLINE
 space_text : orig line is 1, orig col is 8, text 'TelegramIndex', type is TYPE
 space_text :    rule = REMOVE @ 0 => 21
 space_text : orig line is 1, orig col is 21, <Newline>, nl is 1
@@ -22,7 +22,7 @@ space_text : orig line is 2, orig col is 1, '{' type is BRACE_OPEN
 log_rule(space_text : rule is 'sp_skip_vbrace_tokens'
 space_text : orig line is 2, orig col is 1, text '{', type is BRACE_OPEN
 do_space : first:  orig line 2, orig col 1, text '{', type BRACE_OPEN
-do_space : second: orig line 2, orig col 2, text '', type NEWLINE
+do_space : second: orig line 2, orig col 2, text '␤', type NEWLINE
 space_text : orig line is 2, orig col is 1, text '{', type is BRACE_OPEN
 space_text :    rule = REMOVE @ 0 => 2
 space_text : orig line is 2, orig col is 2, <Newline>, nl is 1
@@ -136,7 +136,7 @@ space_text : orig line is 3, orig col is 49, ':' type is CONSTR_COLON
 log_rule(space_text : rule is 'sp_skip_vbrace_tokens'
 space_text : orig line is 3, orig col is 49, text ':', type is CONSTR_COLON
 do_space : first:  orig line 3, orig col 49, text ':', type CONSTR_COLON
-do_space : second: orig line 3, orig col 50, text '', type NEWLINE
+do_space : second: orig line 3, orig col 50, text '␤', type NEWLINE
 space_text : orig line is 3, orig col is 49, text ':', type is CONSTR_COLON
 space_text :    rule = REMOVE @ 0 => 50
 space_text : orig line is 3, orig col is 50, <Newline>, nl is 1
@@ -181,7 +181,7 @@ space_text : orig line is 4, orig col is 13, ',' type is COMMA
 log_rule(space_text : rule is 'sp_skip_vbrace_tokens'
 space_text : orig line is 4, orig col is 13, text ',', type is COMMA
 do_space : first:  orig line 4, orig col 13, text ',', type COMMA
-do_space : second: orig line 4, orig col 14, text '', type NEWLINE
+do_space : second: orig line 4, orig col 14, text '␤', type NEWLINE
 space_text : orig line is 4, orig col is 13, text ',', type is COMMA
 space_text :    rule = REMOVE @ 0 => 14
 space_text : orig line is 4, orig col is 14, <Newline>, nl is 1
@@ -217,7 +217,7 @@ space_text : orig line is 5, orig col is 12, ')' type is FPAREN_CLOSE
 log_rule(space_text : rule is 'sp_skip_vbrace_tokens'
 space_text : orig line is 5, orig col is 12, text ')', type is FPAREN_CLOSE
 do_space : first:  orig line 5, orig col 12, text ')', type FPAREN_CLOSE
-do_space : second: orig line 5, orig col 13, text '', type NEWLINE
+do_space : second: orig line 5, orig col 13, text '␤', type NEWLINE
 space_text : orig line is 5, orig col is 12, text ')', type is FPAREN_CLOSE
 space_text :    rule = REMOVE @ 0 => 13
 space_text : orig line is 5, orig col is 13, <Newline>, nl is 1
@@ -226,7 +226,7 @@ space_text : orig line is 6, orig col is 1, '{' type is BRACE_OPEN
 log_rule(space_text : rule is 'sp_skip_vbrace_tokens'
 space_text : orig line is 6, orig col is 1, text '{', type is BRACE_OPEN
 do_space : first:  orig line 6, orig col 1, text '{', type BRACE_OPEN
-do_space : second: orig line 6, orig col 2, text '', type NEWLINE
+do_space : second: orig line 6, orig col 2, text '␤', type NEWLINE
 space_text : orig line is 6, orig col is 1, text '{', type is BRACE_OPEN
 space_text :    rule = REMOVE @ 0 => 2
 space_text : orig line is 6, orig col is 2, <Newline>, nl is 1
@@ -235,7 +235,7 @@ space_text : orig line is 7, orig col is 1, '}' type is BRACE_CLOSE
 log_rule(space_text : rule is 'sp_skip_vbrace_tokens'
 space_text : orig line is 7, orig col is 1, text '}', type is BRACE_CLOSE
 do_space : first:  orig line 7, orig col 1, text '}', type BRACE_CLOSE
-do_space : second: orig line 7, orig col 2, text '', type NEWLINE
+do_space : second: orig line 7, orig col 2, text '␤', type NEWLINE
 space_text : orig line is 7, orig col is 1, text '}', type is BRACE_CLOSE
 space_text :    rule = REMOVE @ 0 => 2
 space_text : orig line is 7, orig col is 2, <Newline>, nl is 2
@@ -271,7 +271,7 @@ space_text : orig line is 9, orig col is 16, ')' type is FPAREN_CLOSE
 log_rule(space_text : rule is 'sp_skip_vbrace_tokens'
 space_text : orig line is 9, orig col is 16, text ')', type is FPAREN_CLOSE
 do_space : first:  orig line 9, orig col 16, text ')', type FPAREN_CLOSE
-do_space : second: orig line 9, orig col 17, text '', type NEWLINE
+do_space : second: orig line 9, orig col 17, text '␤', type NEWLINE
 space_text : orig line is 9, orig col is 16, text ')', type is FPAREN_CLOSE
 space_text :    rule = REMOVE @ 0 => 17
 space_text : orig line is 9, orig col is 17, <Newline>, nl is 1
@@ -280,7 +280,7 @@ space_text : orig line is 10, orig col is 1, '{' type is BRACE_OPEN
 log_rule(space_text : rule is 'sp_skip_vbrace_tokens'
 space_text : orig line is 10, orig col is 1, text '{', type is BRACE_OPEN
 do_space : first:  orig line 10, orig col 1, text '{', type BRACE_OPEN
-do_space : second: orig line 10, orig col 2, text '', type NEWLINE
+do_space : second: orig line 10, orig col 2, text '␤', type NEWLINE
 space_text : orig line is 10, orig col is 1, text '{', type is BRACE_OPEN
 space_text :    rule = REMOVE @ 0 => 2
 space_text : orig line is 10, orig col is 2, <Newline>, nl is 1
@@ -289,7 +289,7 @@ space_text : orig line is 11, orig col is 1, '}' type is BRACE_CLOSE
 log_rule(space_text : rule is 'sp_skip_vbrace_tokens'
 space_text : orig line is 11, orig col is 1, text '}', type is BRACE_CLOSE
 do_space : first:  orig line 11, orig col 1, text '}', type BRACE_CLOSE
-do_space : second: orig line 11, orig col 2, text '', type NEWLINE
+do_space : second: orig line 11, orig col 2, text '␤', type NEWLINE
 space_text : orig line is 11, orig col is 1, text '}', type is BRACE_CLOSE
 space_text :    rule = REMOVE @ 0 => 2
 space_text : orig line is 11, orig col is 2, <Newline>, nl is 2
@@ -347,7 +347,7 @@ space_text : orig line is 13, orig col is 27, ';' type is SEMICOLON
 log_rule(space_text : rule is 'sp_skip_vbrace_tokens'
 space_text : orig line is 13, orig col is 27, text ';', type is SEMICOLON
 do_space : first:  orig line 13, orig col 27, text ';', type SEMICOLON
-do_space : second: orig line 13, orig col 28, text '', type NEWLINE
+do_space : second: orig line 13, orig col 28, text '␤', type NEWLINE
 space_text : orig line is 13, orig col is 27, text ';', type is SEMICOLON
 space_text :    rule = REMOVE @ 0 => 28
 space_text : orig line is 13, orig col is 28, <Newline>, nl is 1
@@ -387,7 +387,7 @@ space_text : orig line is 14, orig col is 24, ';' type is SEMICOLON
 log_rule(space_text : rule is 'sp_skip_vbrace_tokens'
 space_text : orig line is 14, orig col is 24, text ';', type is SEMICOLON
 do_space : first:  orig line 14, orig col 24, text ';', type SEMICOLON
-do_space : second: orig line 14, orig col 25, text '', type NEWLINE
+do_space : second: orig line 14, orig col 25, text '␤', type NEWLINE
 space_text : orig line is 14, orig col is 24, text ';', type is SEMICOLON
 space_text :    rule = REMOVE @ 0 => 25
 space_text : orig line is 14, orig col is 25, <Newline>, nl is 1
@@ -405,7 +405,7 @@ space_text : orig line is 15, orig col is 2, ';' type is SEMICOLON
 log_rule(space_text : rule is 'sp_skip_vbrace_tokens'
 space_text : orig line is 15, orig col is 2, text ';', type is SEMICOLON
 do_space : first:  orig line 15, orig col 2, text ';', type SEMICOLON
-do_space : second: orig line 15, orig col 3, text '', type NEWLINE
+do_space : second: orig line 15, orig col 3, text '␤', type NEWLINE
 space_text : orig line is 15, orig col is 2, text ';', type is SEMICOLON
 space_text :    rule = REMOVE @ 0 => 3
 space_text : orig line is 15, orig col is 3, <Newline>, nl is 2
@@ -588,10 +588,10 @@ space_col_align :    => coldiff is 1
 space_col_align :    => av is ADD
 space_col_align :    => coldiff is 2
 space_col_align : 1st orig line 3, orig col 49, [CONSTR_COLON/NONE], text ':' <==>
-space_col_align : 2nd orig line 3, orig col 50, [NEWLINE/NONE], text ''
+space_col_align : 2nd orig line 3, orig col 50, [NEWLINE/NONE], text '␤'
  [CallStack]
 do_space : first:  orig line 3, orig col 49, text ':', type CONSTR_COLON
-do_space : second: orig line 3, orig col 50, text '', type NEWLINE
+do_space : second: orig line 3, orig col 50, text '␤', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
@@ -667,10 +667,10 @@ space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 4, orig col 13, [COMMA/NONE], text ',' <==>
-space_col_align : 2nd orig line 4, orig col 14, [NEWLINE/NONE], text ''
+space_col_align : 2nd orig line 4, orig col 14, [NEWLINE/NONE], text '␤'
  [CallStack]
 do_space : first:  orig line 4, orig col 13, text ',', type COMMA
-do_space : second: orig line 4, orig col 14, text '', type NEWLINE
+do_space : second: orig line 4, orig col 14, text '␤', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
@@ -734,30 +734,30 @@ space_col_align :    => second orig col  is 12
 space_col_align :    => first len        is 1
 space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 5, orig col 12, [FPAREN_CLOSE/FUNC_CTOR_VAR], text ')' <==>
-space_col_align : 2nd orig line 5, orig col 13, [NEWLINE/NONE], text ''
+space_col_align : 2nd orig line 5, orig col 13, [NEWLINE/NONE], text '␤'
  [CallStack]
 do_space : first:  orig line 5, orig col 12, text ')', type FPAREN_CLOSE
-do_space : second: orig line 5, orig col 13, text '', type NEWLINE
+do_space : second: orig line 5, orig col 13, text '␤', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 6, orig col 1, [BRACE_OPEN/FUNC_CLASS_DEF], text '{' <==>
-space_col_align : 2nd orig line 6, orig col 2, [NEWLINE/NONE], text ''
+space_col_align : 2nd orig line 6, orig col 2, [NEWLINE/NONE], text '␤'
  [CallStack]
 do_space : first:  orig line 6, orig col 1, text '{', type BRACE_OPEN
-do_space : second: orig line 6, orig col 2, text '', type NEWLINE
+do_space : second: orig line 6, orig col 2, text '␤', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 7, orig col 1, [BRACE_CLOSE/FUNC_CLASS_DEF], text '}' <==>
-space_col_align : 2nd orig line 7, orig col 2, [NEWLINE/NONE], text ''
+space_col_align : 2nd orig line 7, orig col 2, [NEWLINE/NONE], text '␤'
  [CallStack]
 do_space : first:  orig line 7, orig col 1, text '}', type BRACE_CLOSE
-do_space : second: orig line 7, orig col 2, text '', type NEWLINE
+do_space : second: orig line 7, orig col 2, text '␤', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
@@ -814,30 +814,30 @@ space_col_align :    => second orig col  is 16
 space_col_align :    => first len        is 1
 space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 9, orig col 16, [FPAREN_CLOSE/FUNC_CLASS_DEF], text ')' <==>
-space_col_align : 2nd orig line 9, orig col 17, [NEWLINE/NONE], text ''
+space_col_align : 2nd orig line 9, orig col 17, [NEWLINE/NONE], text '␤'
  [CallStack]
 do_space : first:  orig line 9, orig col 16, text ')', type FPAREN_CLOSE
-do_space : second: orig line 9, orig col 17, text '', type NEWLINE
+do_space : second: orig line 9, orig col 17, text '␤', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 10, orig col 1, [BRACE_OPEN/FUNC_CLASS_DEF], text '{' <==>
-space_col_align : 2nd orig line 10, orig col 2, [NEWLINE/NONE], text ''
+space_col_align : 2nd orig line 10, orig col 2, [NEWLINE/NONE], text '␤'
  [CallStack]
 do_space : first:  orig line 10, orig col 1, text '{', type BRACE_OPEN
-do_space : second: orig line 10, orig col 2, text '', type NEWLINE
+do_space : second: orig line 10, orig col 2, text '␤', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 space_col_align : 1st orig line 11, orig col 1, [BRACE_CLOSE/FUNC_CLASS_DEF], text '}' <==>
-space_col_align : 2nd orig line 11, orig col 2, [NEWLINE/NONE], text ''
+space_col_align : 2nd orig line 11, orig col 2, [NEWLINE/NONE], text '␤'
  [CallStack]
 do_space : first:  orig line 11, orig col 1, text '}', type BRACE_CLOSE
-do_space : second: orig line 11, orig col 2, text '', type NEWLINE
+do_space : second: orig line 11, orig col 2, text '␤', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
@@ -920,10 +920,10 @@ space_col_align :    => coldiff is 8
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 8
 space_col_align : 1st orig line 13, orig col 27, [SEMICOLON/NONE], text ';' <==>
-space_col_align : 2nd orig line 13, orig col 28, [NEWLINE/NONE], text ''
+space_col_align : 2nd orig line 13, orig col 28, [NEWLINE/NONE], text '␤'
  [CallStack]
 do_space : first:  orig line 13, orig col 27, text ';', type SEMICOLON
-do_space : second: orig line 13, orig col 28, text '', type NEWLINE
+do_space : second: orig line 13, orig col 28, text '␤', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1
@@ -968,10 +968,10 @@ space_col_align :    => coldiff is 9
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 9
 space_col_align : 1st orig line 14, orig col 24, [SEMICOLON/NONE], text ';' <==>
-space_col_align : 2nd orig line 14, orig col 25, [NEWLINE/NONE], text ''
+space_col_align : 2nd orig line 14, orig col 25, [NEWLINE/NONE], text '␤'
  [CallStack]
 do_space : first:  orig line 14, orig col 24, text ';', type SEMICOLON
-do_space : second: orig line 14, orig col 25, text '', type NEWLINE
+do_space : second: orig line 14, orig col 25, text '␤', type NEWLINE
 space_col_align : av is remove
 space_col_align :    '1st' len is 1
 space_col_align :    => coldiff is 1

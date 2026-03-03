@@ -38,12 +38,10 @@ void newline_end_newline(Chunk *br_close)
       if (nl.TestFlags(PCF_IN_PREPROC))
       {
          nl.SetType(CT_NL_CONT);
-         nl.Text() = "\\\n";
       }
       else
       {
          nl.SetType(CT_NEWLINE);
-         nl.Text() = "\n";
       }
       MARK_CHANGE();
       LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline after '%s'\n",
