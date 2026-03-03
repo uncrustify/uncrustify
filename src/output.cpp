@@ -550,23 +550,12 @@ void output_parsed(FILE *pfile, bool withOptions)
               pc->GetNlCount(), pc->GetAfterTab());
 #endif // ifdef WIN32
 
-      if (  pc->IsNot(CT_NEWLINE)
-         && (pc->Len() != 0))
+      for (size_t cnt = 0; cnt < pc->GetColumn(); cnt++)
       {
-         for (size_t cnt = 0; cnt < pc->GetColumn(); cnt++)
-         {
-            fprintf(pfile, " ");
-         }
-
-         if (pc->IsNot(CT_NL_CONT))
-         {
-            fprintf(pfile, "%s", pc->GetLogText());
-         }
-         else
-         {
-            fprintf(pfile, "\\");
-         }
+         fprintf(pfile, " ");
       }
+
+      fprintf(pfile, "%s", pc->GetLogText());
 
       if (options::debug_decode_the_flags())
       {

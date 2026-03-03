@@ -53,11 +53,9 @@ void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
    if (nl->TestFlags(PCF_IN_PREPROC))
    {
       nl->SetType(CT_NL_CONT);
-      nl->Text() = "\\\n";
    }
    else
    {
       nl->SetType(CT_NEWLINE);
-      nl->Text() = "\n";
    }
 } // setup_newline_add

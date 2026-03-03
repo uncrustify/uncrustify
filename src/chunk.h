@@ -80,6 +80,7 @@ public:
    /**
     * @brief Sets the chunk type
     * @param token the type to set
+    * @note: for CT_NEWLINE and CT_NL_CONT tokens, it also sets the chunk text
     */
    void SetType(const E_Token token);
 

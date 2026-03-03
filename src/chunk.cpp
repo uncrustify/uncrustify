@@ -586,16 +586,23 @@ void Chunk::SetType(const E_Token token)
 
    if (token == CT_NEWLINE)
    {
-      LOG_FMT(LSETTYP, "<Newline>\n");
+      LOG_FMT(LSETTYP, "<newline (NL)>");
+      Text() = "\n";
+   }
+   else if (token == CT_NL_CONT)
+   {
+      LOG_FMT(LSETTYP, "<newline (NL CONT)>");
+      Text() = "\\\n";
    }
    else if (token == CT_WHITESPACE)
    {
-      LOG_FMT(LSETTYP, "<white_space>\n");
+      LOG_FMT(LSETTYP, "<whitespace>");
    }
    else
    {
-      LOG_FMT(LSETTYP, "'%s'\n", GetLogText());
+      LOG_FMT(LSETTYP, "'%s'", GetLogText());
    }
+   LOG_FMT(LSETTYP, ", len is %ld\n", Len());
    LOG_FMT(LSETTYP, "   m_type is %s, m_parentType is %s => token is %s\n",
            get_token_name(m_type), get_token_name(m_parentType), get_token_name(token));
    m_type = token;

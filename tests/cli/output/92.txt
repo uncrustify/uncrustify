@@ -1,196 +1,196 @@
-SetType : m_origLine is 1, m_origCol is 1, text is 'struct'
+SetType : m_origLine is 1, m_origCol is 1, text is 'struct', len is 6
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 1, m_origCol is 1, text is 'struct'
+SetType : m_origLine is 1, m_origCol is 1, text is 'struct', len is 6
    m_type is WORD, m_parentType is NONE => token is STRUCT
-SetType : m_origLine is 1, m_origCol is 7, text is <white_space>
+SetType : m_origLine is 1, m_origCol is 7, text is <whitespace>, len is 0
    m_type is NONE, m_parentType is NONE => token is WHITESPACE
-SetType : m_origLine is 1, m_origCol is 8, text is 'TelegramIndex'
+SetType : m_origLine is 1, m_origCol is 8, text is 'TelegramIndex', len is 13
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 1, m_origCol is 21, text is <Newline>
+SetType : m_origLine is 1, m_origCol is 21, text is <newline (NL)>, len is 1
    m_type is NONE, m_parentType is NONE => token is NEWLINE
-SetType : m_origLine is 2, m_origCol is 1, text is '{'
+SetType : m_origLine is 2, m_origCol is 1, text is '{', len is 1
    m_type is NONE, m_parentType is NONE => token is BRACE_OPEN
-SetType : m_origLine is 2, m_origCol is 2, text is <Newline>
+SetType : m_origLine is 2, m_origCol is 2, text is <newline (NL)>, len is 1
    m_type is NONE, m_parentType is NONE => token is NEWLINE
-SetType : m_origLine is 3, m_origCol is 1, text is 'TelegramIndex'
+SetType : m_origLine is 3, m_origCol is 1, text is 'TelegramIndex', len is 13
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 3, m_origCol is 14, text is '('
+SetType : m_origLine is 3, m_origCol is 14, text is '(', len is 1
    m_type is NONE, m_parentType is NONE => token is PAREN_OPEN
-SetType : m_origLine is 3, m_origCol is 15, text is 'const'
+SetType : m_origLine is 3, m_origCol is 15, text is 'const', len is 5
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 3, m_origCol is 15, text is 'const'
+SetType : m_origLine is 3, m_origCol is 15, text is 'const', len is 5
    m_type is WORD, m_parentType is NONE => token is QUALIFIER
-SetType : m_origLine is 3, m_origCol is 20, text is <white_space>
+SetType : m_origLine is 3, m_origCol is 20, text is <whitespace>, len is 0
    m_type is NONE, m_parentType is NONE => token is WHITESPACE
-SetType : m_origLine is 3, m_origCol is 21, text is 'char'
+SetType : m_origLine is 3, m_origCol is 21, text is 'char', len is 4
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 3, m_origCol is 21, text is 'char'
+SetType : m_origLine is 3, m_origCol is 21, text is 'char', len is 4
    m_type is WORD, m_parentType is NONE => token is TYPE
-SetType : m_origLine is 3, m_origCol is 25, text is '*'
+SetType : m_origLine is 3, m_origCol is 25, text is '*', len is 1
    m_type is NONE, m_parentType is NONE => token is STAR
-SetType : m_origLine is 3, m_origCol is 26, text is <white_space>
+SetType : m_origLine is 3, m_origCol is 26, text is <whitespace>, len is 0
    m_type is NONE, m_parentType is NONE => token is WHITESPACE
-SetType : m_origLine is 3, m_origCol is 27, text is 'pN'
+SetType : m_origLine is 3, m_origCol is 27, text is 'pN', len is 2
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 3, m_origCol is 29, text is ','
+SetType : m_origLine is 3, m_origCol is 29, text is ',', len is 1
    m_type is NONE, m_parentType is NONE => token is COMMA
-SetType : m_origLine is 3, m_origCol is 30, text is <white_space>
+SetType : m_origLine is 3, m_origCol is 30, text is <whitespace>, len is 0
    m_type is NONE, m_parentType is NONE => token is WHITESPACE
-SetType : m_origLine is 3, m_origCol is 31, text is 'unsigned'
+SetType : m_origLine is 3, m_origCol is 31, text is 'unsigned', len is 8
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 3, m_origCol is 31, text is 'unsigned'
+SetType : m_origLine is 3, m_origCol is 31, text is 'unsigned', len is 8
    m_type is WORD, m_parentType is NONE => token is TYPE
-SetType : m_origLine is 3, m_origCol is 39, text is <white_space>
+SetType : m_origLine is 3, m_origCol is 39, text is <whitespace>, len is 0
    m_type is NONE, m_parentType is NONE => token is WHITESPACE
-SetType : m_origLine is 3, m_origCol is 40, text is 'long'
+SetType : m_origLine is 3, m_origCol is 40, text is 'long', len is 4
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 3, m_origCol is 40, text is 'long'
+SetType : m_origLine is 3, m_origCol is 40, text is 'long', len is 4
    m_type is WORD, m_parentType is NONE => token is TYPE
-SetType : m_origLine is 3, m_origCol is 44, text is <white_space>
+SetType : m_origLine is 3, m_origCol is 44, text is <whitespace>, len is 0
    m_type is NONE, m_parentType is NONE => token is WHITESPACE
-SetType : m_origLine is 3, m_origCol is 45, text is 'nI'
+SetType : m_origLine is 3, m_origCol is 45, text is 'nI', len is 2
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 3, m_origCol is 47, text is ')'
+SetType : m_origLine is 3, m_origCol is 47, text is ')', len is 1
    m_type is NONE, m_parentType is NONE => token is PAREN_CLOSE
-SetType : m_origLine is 3, m_origCol is 48, text is <white_space>
+SetType : m_origLine is 3, m_origCol is 48, text is <whitespace>, len is 0
    m_type is NONE, m_parentType is NONE => token is WHITESPACE
-SetType : m_origLine is 3, m_origCol is 49, text is ':'
+SetType : m_origLine is 3, m_origCol is 49, text is ':', len is 1
    m_type is NONE, m_parentType is NONE => token is COLON
-SetType : m_origLine is 3, m_origCol is 50, text is <Newline>
+SetType : m_origLine is 3, m_origCol is 50, text is <newline (NL)>, len is 1
    m_type is NONE, m_parentType is NONE => token is NEWLINE
-SetType : m_origLine is 4, m_origCol is 1, text is 'pTelName'
+SetType : m_origLine is 4, m_origCol is 1, text is 'pTelName', len is 8
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 4, m_origCol is 9, text is '('
+SetType : m_origLine is 4, m_origCol is 9, text is '(', len is 1
    m_type is NONE, m_parentType is NONE => token is PAREN_OPEN
-SetType : m_origLine is 4, m_origCol is 10, text is 'pN'
+SetType : m_origLine is 4, m_origCol is 10, text is 'pN', len is 2
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 4, m_origCol is 12, text is ')'
+SetType : m_origLine is 4, m_origCol is 12, text is ')', len is 1
    m_type is NONE, m_parentType is NONE => token is PAREN_CLOSE
-SetType : m_origLine is 4, m_origCol is 13, text is ','
+SetType : m_origLine is 4, m_origCol is 13, text is ',', len is 1
    m_type is NONE, m_parentType is NONE => token is COMMA
-SetType : m_origLine is 4, m_origCol is 14, text is <Newline>
+SetType : m_origLine is 4, m_origCol is 14, text is <newline (NL)>, len is 1
    m_type is NONE, m_parentType is NONE => token is NEWLINE
-SetType : m_origLine is 5, m_origCol is 1, text is 'nTelIndex'
+SetType : m_origLine is 5, m_origCol is 1, text is 'nTelIndex', len is 9
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 5, m_origCol is 10, text is '('
+SetType : m_origLine is 5, m_origCol is 10, text is '(', len is 1
    m_type is NONE, m_parentType is NONE => token is PAREN_OPEN
-SetType : m_origLine is 5, m_origCol is 11, text is 'n'
+SetType : m_origLine is 5, m_origCol is 11, text is 'n', len is 1
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 5, m_origCol is 12, text is ')'
+SetType : m_origLine is 5, m_origCol is 12, text is ')', len is 1
    m_type is NONE, m_parentType is NONE => token is PAREN_CLOSE
-SetType : m_origLine is 5, m_origCol is 13, text is <Newline>
+SetType : m_origLine is 5, m_origCol is 13, text is <newline (NL)>, len is 1
    m_type is NONE, m_parentType is NONE => token is NEWLINE
-SetType : m_origLine is 6, m_origCol is 1, text is '{'
+SetType : m_origLine is 6, m_origCol is 1, text is '{', len is 1
    m_type is NONE, m_parentType is NONE => token is BRACE_OPEN
-SetType : m_origLine is 6, m_origCol is 2, text is <Newline>
+SetType : m_origLine is 6, m_origCol is 2, text is <newline (NL)>, len is 1
    m_type is NONE, m_parentType is NONE => token is NEWLINE
-SetType : m_origLine is 7, m_origCol is 1, text is '}'
+SetType : m_origLine is 7, m_origCol is 1, text is '}', len is 1
    m_type is NONE, m_parentType is NONE => token is BRACE_CLOSE
-SetType : m_origLine is 7, m_origCol is 2, text is <Newline>
+SetType : m_origLine is 7, m_origCol is 2, text is <newline (NL)>, len is 1
    m_type is NONE, m_parentType is NONE => token is NEWLINE
-SetType : m_origLine is 9, m_origCol is 1, text is '~'
+SetType : m_origLine is 9, m_origCol is 1, text is '~', len is 1
    m_type is NONE, m_parentType is NONE => token is INV
-SetType : m_origLine is 9, m_origCol is 2, text is 'TelegramIndex'
+SetType : m_origLine is 9, m_origCol is 2, text is 'TelegramIndex', len is 13
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 9, m_origCol is 15, text is '('
+SetType : m_origLine is 9, m_origCol is 15, text is '(', len is 1
    m_type is NONE, m_parentType is NONE => token is PAREN_OPEN
-SetType : m_origLine is 9, m_origCol is 16, text is ')'
+SetType : m_origLine is 9, m_origCol is 16, text is ')', len is 1
    m_type is NONE, m_parentType is NONE => token is PAREN_CLOSE
-SetType : m_origLine is 9, m_origCol is 17, text is <Newline>
+SetType : m_origLine is 9, m_origCol is 17, text is <newline (NL)>, len is 1
    m_type is NONE, m_parentType is NONE => token is NEWLINE
-SetType : m_origLine is 10, m_origCol is 1, text is '{'
+SetType : m_origLine is 10, m_origCol is 1, text is '{', len is 1
    m_type is NONE, m_parentType is NONE => token is BRACE_OPEN
-SetType : m_origLine is 10, m_origCol is 2, text is <Newline>
+SetType : m_origLine is 10, m_origCol is 2, text is <newline (NL)>, len is 1
    m_type is NONE, m_parentType is NONE => token is NEWLINE
-SetType : m_origLine is 11, m_origCol is 1, text is '}'
+SetType : m_origLine is 11, m_origCol is 1, text is '}', len is 1
    m_type is NONE, m_parentType is NONE => token is BRACE_CLOSE
-SetType : m_origLine is 11, m_origCol is 2, text is <Newline>
+SetType : m_origLine is 11, m_origCol is 2, text is <newline (NL)>, len is 1
    m_type is NONE, m_parentType is NONE => token is NEWLINE
-SetType : m_origLine is 13, m_origCol is 1, text is 'const'
+SetType : m_origLine is 13, m_origCol is 1, text is 'const', len is 5
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 13, m_origCol is 1, text is 'const'
+SetType : m_origLine is 13, m_origCol is 1, text is 'const', len is 5
    m_type is WORD, m_parentType is NONE => token is QUALIFIER
-SetType : m_origLine is 13, m_origCol is 6, text is <white_space>
+SetType : m_origLine is 13, m_origCol is 6, text is <whitespace>, len is 0
    m_type is NONE, m_parentType is NONE => token is WHITESPACE
-SetType : m_origLine is 13, m_origCol is 7, text is 'char'
+SetType : m_origLine is 13, m_origCol is 7, text is 'char', len is 4
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 13, m_origCol is 7, text is 'char'
+SetType : m_origLine is 13, m_origCol is 7, text is 'char', len is 4
    m_type is WORD, m_parentType is NONE => token is TYPE
-SetType : m_origLine is 13, m_origCol is 11, text is '*'
+SetType : m_origLine is 13, m_origCol is 11, text is '*', len is 1
    m_type is NONE, m_parentType is NONE => token is STAR
-SetType : m_origLine is 13, m_origCol is 12, text is <white_space>
+SetType : m_origLine is 13, m_origCol is 12, text is <whitespace>, len is 0
    m_type is NONE, m_parentType is NONE => token is WHITESPACE
-SetType : m_origLine is 13, m_origCol is 13, text is 'const'
+SetType : m_origLine is 13, m_origCol is 13, text is 'const', len is 5
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 13, m_origCol is 13, text is 'const'
+SetType : m_origLine is 13, m_origCol is 13, text is 'const', len is 5
    m_type is WORD, m_parentType is NONE => token is QUALIFIER
-SetType : m_origLine is 13, m_origCol is 18, text is <white_space>
+SetType : m_origLine is 13, m_origCol is 18, text is <whitespace>, len is 0
    m_type is NONE, m_parentType is NONE => token is WHITESPACE
-SetType : m_origLine is 13, m_origCol is 19, text is 'pTelName'
+SetType : m_origLine is 13, m_origCol is 19, text is 'pTelName', len is 8
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 13, m_origCol is 27, text is ';'
+SetType : m_origLine is 13, m_origCol is 27, text is ';', len is 1
    m_type is NONE, m_parentType is NONE => token is SEMICOLON
-SetType : m_origLine is 13, m_origCol is 28, text is <Newline>
+SetType : m_origLine is 13, m_origCol is 28, text is <newline (NL)>, len is 1
    m_type is NONE, m_parentType is NONE => token is NEWLINE
-SetType : m_origLine is 14, m_origCol is 1, text is 'unsigned'
+SetType : m_origLine is 14, m_origCol is 1, text is 'unsigned', len is 8
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 14, m_origCol is 1, text is 'unsigned'
+SetType : m_origLine is 14, m_origCol is 1, text is 'unsigned', len is 8
    m_type is WORD, m_parentType is NONE => token is TYPE
-SetType : m_origLine is 14, m_origCol is 9, text is <white_space>
+SetType : m_origLine is 14, m_origCol is 9, text is <whitespace>, len is 0
    m_type is NONE, m_parentType is NONE => token is WHITESPACE
-SetType : m_origLine is 14, m_origCol is 10, text is 'long'
+SetType : m_origLine is 14, m_origCol is 10, text is 'long', len is 4
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 14, m_origCol is 10, text is 'long'
+SetType : m_origLine is 14, m_origCol is 10, text is 'long', len is 4
    m_type is WORD, m_parentType is NONE => token is TYPE
-SetType : m_origLine is 14, m_origCol is 14, text is <white_space>
+SetType : m_origLine is 14, m_origCol is 14, text is <whitespace>, len is 0
    m_type is NONE, m_parentType is NONE => token is WHITESPACE
-SetType : m_origLine is 14, m_origCol is 15, text is 'nTelIndex'
+SetType : m_origLine is 14, m_origCol is 15, text is 'nTelIndex', len is 9
    m_type is NONE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 14, m_origCol is 24, text is ';'
+SetType : m_origLine is 14, m_origCol is 24, text is ';', len is 1
    m_type is NONE, m_parentType is NONE => token is SEMICOLON
-SetType : m_origLine is 14, m_origCol is 25, text is <Newline>
+SetType : m_origLine is 14, m_origCol is 25, text is <newline (NL)>, len is 1
    m_type is NONE, m_parentType is NONE => token is NEWLINE
-SetType : m_origLine is 15, m_origCol is 1, text is '}'
+SetType : m_origLine is 15, m_origCol is 1, text is '}', len is 1
    m_type is NONE, m_parentType is NONE => token is BRACE_CLOSE
-SetType : m_origLine is 15, m_origCol is 2, text is ';'
+SetType : m_origLine is 15, m_origCol is 2, text is ';', len is 1
    m_type is NONE, m_parentType is NONE => token is SEMICOLON
-SetType : m_origLine is 15, m_origCol is 3, text is <Newline>
+SetType : m_origLine is 15, m_origCol is 3, text is <newline (NL)>, len is 1
    m_type is NONE, m_parentType is NONE => token is NEWLINE
-SetType : m_origLine is 1, m_origCol is 8, text is 'TelegramIndex'
+SetType : m_origLine is 1, m_origCol is 8, text is 'TelegramIndex', len is 13
    m_type is WORD, m_parentType is NONE => token is TYPE
-SetType : m_origLine is 3, m_origCol is 25, text is '*'
+SetType : m_origLine is 3, m_origCol is 25, text is '*', len is 1
    m_type is STAR, m_parentType is NONE => token is PTR_TYPE
-SetType : m_origLine is 13, m_origCol is 11, text is '*'
+SetType : m_origLine is 13, m_origCol is 11, text is '*', len is 1
    m_type is STAR, m_parentType is NONE => token is PTR_TYPE
-SetType : m_origLine is 1, m_origCol is 8, text is 'TelegramIndex'
+SetType : m_origLine is 1, m_origCol is 8, text is 'TelegramIndex', len is 13
    m_type is TYPE, m_parentType is NONE => token is WORD
-SetType : m_origLine is 1, m_origCol is 8, text is 'TelegramIndex'
+SetType : m_origLine is 1, m_origCol is 8, text is 'TelegramIndex', len is 13
    m_type is WORD, m_parentType is NONE => token is TYPE
-SetType : m_origLine is 3, m_origCol is 1, text is 'TelegramIndex'
+SetType : m_origLine is 3, m_origCol is 1, text is 'TelegramIndex', len is 13
    m_type is WORD, m_parentType is NONE => token is FUNC_CLASS_DEF
-SetType : m_origLine is 3, m_origCol is 14, text is '('
+SetType : m_origLine is 3, m_origCol is 14, text is '(', len is 1
    m_type is PAREN_OPEN, m_parentType is NONE => token is FPAREN_OPEN
-SetType : m_origLine is 3, m_origCol is 47, text is ')'
+SetType : m_origLine is 3, m_origCol is 47, text is ')', len is 1
    m_type is PAREN_CLOSE, m_parentType is NONE => token is FPAREN_CLOSE
-SetType : m_origLine is 3, m_origCol is 49, text is ':'
+SetType : m_origLine is 3, m_origCol is 49, text is ':', len is 1
    m_type is COLON, m_parentType is NONE => token is CONSTR_COLON
-SetType : m_origLine is 4, m_origCol is 1, text is 'pTelName'
+SetType : m_origLine is 4, m_origCol is 1, text is 'pTelName', len is 8
    m_type is WORD, m_parentType is NONE => token is FUNC_CTOR_VAR
-SetType : m_origLine is 4, m_origCol is 9, text is '('
+SetType : m_origLine is 4, m_origCol is 9, text is '(', len is 1
    m_type is PAREN_OPEN, m_parentType is NONE => token is FPAREN_OPEN
-SetType : m_origLine is 4, m_origCol is 12, text is ')'
+SetType : m_origLine is 4, m_origCol is 12, text is ')', len is 1
    m_type is PAREN_CLOSE, m_parentType is NONE => token is FPAREN_CLOSE
-SetType : m_origLine is 5, m_origCol is 1, text is 'nTelIndex'
+SetType : m_origLine is 5, m_origCol is 1, text is 'nTelIndex', len is 9
    m_type is WORD, m_parentType is NONE => token is FUNC_CTOR_VAR
-SetType : m_origLine is 5, m_origCol is 10, text is '('
+SetType : m_origLine is 5, m_origCol is 10, text is '(', len is 1
    m_type is PAREN_OPEN, m_parentType is NONE => token is FPAREN_OPEN
-SetType : m_origLine is 5, m_origCol is 12, text is ')'
+SetType : m_origLine is 5, m_origCol is 12, text is ')', len is 1
    m_type is PAREN_CLOSE, m_parentType is NONE => token is FPAREN_CLOSE
-SetType : m_origLine is 9, m_origCol is 2, text is 'TelegramIndex'
+SetType : m_origLine is 9, m_origCol is 2, text is 'TelegramIndex', len is 13
    m_type is WORD, m_parentType is NONE => token is FUNC_CLASS_DEF
-SetType : m_origLine is 9, m_origCol is 1, text is '~'
+SetType : m_origLine is 9, m_origCol is 1, text is '~', len is 1
    m_type is INV, m_parentType is NONE => token is DESTRUCTOR
-SetType : m_origLine is 9, m_origCol is 15, text is '('
+SetType : m_origLine is 9, m_origCol is 15, text is '(', len is 1
    m_type is PAREN_OPEN, m_parentType is NONE => token is FPAREN_OPEN
-SetType : m_origLine is 9, m_origCol is 16, text is ')'
+SetType : m_origLine is 9, m_origCol is 16, text is ')', len is 1
    m_type is PAREN_CLOSE, m_parentType is NONE => token is FPAREN_CLOSE
