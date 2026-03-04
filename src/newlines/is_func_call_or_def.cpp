@@ -16,14 +16,14 @@
  */
 bool is_func_call_or_def(Chunk *pc)
 {
-   if (  pc->GetParentType() == CT_FUNC_DEF
-      || pc->GetParentType() == CT_FUNC_CALL
-      || pc->GetParentType() == CT_FUNC_CALL_USER
-      || pc->GetParentType() == CT_FUNC_CLASS_DEF
-      || pc->GetParentType() == CT_OC_CLASS
-      || pc->GetParentType() == CT_OC_MSG_DECL
-      || pc->GetParentType() == CT_CS_PROPERTY
-      || pc->GetParentType() == CT_CPP_LAMBDA)
+   if (  pc->GetParentType() == E_Token::CT_FUNC_DEF
+      || pc->GetParentType() == E_Token::CT_FUNC_CALL
+      || pc->GetParentType() == E_Token::CT_FUNC_CALL_USER
+      || pc->GetParentType() == E_Token::CT_FUNC_CLASS_DEF
+      || pc->GetParentType() == E_Token::CT_OC_CLASS
+      || pc->GetParentType() == E_Token::CT_OC_MSG_DECL
+      || pc->GetParentType() == E_Token::CT_CS_PROPERTY
+      || pc->GetParentType() == E_Token::CT_CPP_LAMBDA)
    {
       return(true);
    }

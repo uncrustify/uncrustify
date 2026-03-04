@@ -14,13 +14,13 @@
 
 /*
  * Issue #3558
- * will be called if a ? (CT_QUESTION) chunk is encountered
+ * will be called if a ? (E_Token::CT_QUESTION) chunk is encountered
  * return the chunk colon if found or Chunk::NullChunkPtr
- * if a ; (CT_SEMI_COLON) chunk is found
+ * if a ; (E_Token::CT_SEMI_COLON) chunk is found
  *
  * Test #51008: Added is_sibling_ternary parameter to indicate when we're
  * processing a sibling ternary in an OC message (not a nested ternary).
- * Sibling ternaries should not mark subsequent OC selector colons as CT_COND_COLON.
+ * Sibling ternaries should not mark subsequent OC selector colons as E_Token::CT_COND_COLON.
  */
 Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary = false)
 {
@@ -34,12 +34,12 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
            __func__, __LINE__, pc_question->GetOrigLine(), pc_question->GetOrigCol(), pc_question->GetLevel(),
            pc_question->GetLogText());
 
-   if (pc2->Is(CT_COLON))
+   if (pc2->Is(E_Token::CT_COLON))
    {
       return(pc2);
    }
 
-   // examine the next tokens, look for E2, E3, COLON, might be for a next CT_QUESTION
+   // examine the next tokens, look for E2, E3, COLON, might be for a next E_Token::CT_QUESTION
    while (pc2->IsNotNullChunk())
    {
       LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
@@ -47,10 +47,10 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
 
       // Issue: Don't treat comma inside OC message as terminator
       // Use <= 0 to handle ternary starting inside OC message brackets
-      if (  (  pc2->Is(CT_SEMICOLON)
-            || (  pc2->Is(CT_PAREN_CLOSE)
+      if (  (  pc2->Is(E_Token::CT_SEMICOLON)
+            || (  pc2->Is(E_Token::CT_PAREN_CLOSE)
                && (pc_question->GetLevel() == pc2->GetLevel() + 1))
-            || pc2->Is(CT_COMMA))
+            || pc2->Is(E_Token::CT_COMMA))
          && square_bracket_depth <= 0)
       {
          LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
@@ -74,11 +74,11 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
             pc_question->SetParent(pc2);   // back again
          }
       }
-      else if (pc2->Is(CT_COMMA))
+      else if (pc2->Is(E_Token::CT_COMMA))
       {
          // TODO: is it necessary?
       }
-      else if (pc2->Is(CT_QUESTION))
+      else if (pc2->Is(E_Token::CT_QUESTION))
       {
          // Test #51007: After finding our ternary's colon, we should only recurse
          // into a nested ternary if there was no OC selector colon in between.
@@ -91,7 +91,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
             // Test #51008: This ? is a sibling ternary in an OC message, not nested.
             // We still need to process it recursively so it gets properly marked,
             // but we pass is_sibling_ternary = true so it doesn't mark subsequent
-            // OC selector colons as CT_COND_COLON.
+            // OC selector colons as E_Token::CT_COND_COLON.
             LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s' (sibling ternary)\n",
                     __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
             pc2 = search_for_colon(pc2, depth + 1, true);  // is_sibling_ternary = true
@@ -109,14 +109,14 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
             Chunk *inner_question = pc2;
             Chunk *next_after_q   = pc2->GetNextNcNnl();
 
-            if (next_after_q->Is(CT_COLON))
+            if (next_after_q->Is(E_Token::CT_COLON))
             {
-               // This is an elvis operator (?:). Mark the colon as CT_COND_COLON
+               // This is an elvis operator (?:). Mark the colon as E_Token::CT_COND_COLON
                // but do NOT set colon_found for the outer ternary - the outer ternary
                // still needs its own colon.
                LOG_FMT(LCOMBINE, "%s(%d): Test #51011: Elvis operator found at line %zu col %zu, marking colon and continuing search\n",
                        __func__, __LINE__, inner_question->GetOrigLine(), inner_question->GetOrigCol());
-               next_after_q->SetType(CT_COND_COLON);
+               next_after_q->SetType(E_Token::CT_COND_COLON);
                next_after_q->SetParent(inner_question);
                inner_question->SetParent(next_after_q);
                pc2 = next_after_q;
@@ -132,7 +132,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
             }
          }
       }
-      else if (pc2->Is(CT_COND_COLON))
+      else if (pc2->Is(E_Token::CT_COND_COLON))
       {
          LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
                  __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
@@ -151,7 +151,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
             colon_found = true;
          }
 
-         if (pc2->Is(CT_COLON))
+         if (pc2->Is(E_Token::CT_COLON))
          {
             if (colon_found)
             {
@@ -162,7 +162,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
             }
          }
       }
-      else if (  pc2->Is(CT_COLON)
+      else if (  pc2->Is(E_Token::CT_COLON)
               && square_bracket_depth <= 0
               && brace_depth <= 0)  // Test #51012: Don't mark dictionary colons as ternary colons
       {
@@ -187,7 +187,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
          {
             Chunk *prev = pc2->GetPrevNcNnl();
 
-            if (prev->Is(CT_WORD) || prev->Is(CT_TYPE) || prev->Is(CT_OC_MSG_NAME))
+            if (prev->Is(E_Token::CT_WORD) || prev->Is(E_Token::CT_TYPE) || prev->Is(E_Token::CT_OC_MSG_NAME))
             {
                // This looks like an OC selector: "selectorName:" pattern
                // We should NOT mark this as a ternary colon; terminate the search.
@@ -201,16 +201,16 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
 
          if (colon_found && depth > 0 && !is_sibling_ternary)
          {
-            // There can only be another CT_COND_COLON if there is more than 1 CT_QUESTION (ie. depth > 0)
+            // There can only be another E_Token::CT_COND_COLON if there is more than 1 E_Token::CT_QUESTION (ie. depth > 0)
             // BUT: If this is a sibling ternary (Test #51008), we should NOT mark subsequent colons
-            // as CT_COND_COLON because they are OC selector colons, not nested ternary colons.
-            pc2->SetType(CT_COND_COLON);
+            // as E_Token::CT_COND_COLON because they are OC selector colons, not nested ternary colons.
+            pc2->SetType(E_Token::CT_COND_COLON);
             return(pc2);
          }
          else if (!colon_found)
          {
             // E2 found   orig line is 23, orig col is 3
-            pc2->SetType(CT_COND_COLON);
+            pc2->SetType(E_Token::CT_COND_COLON);
             LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
                     __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
             pc2->SetParent(pc_question);              // save the question token
@@ -226,27 +226,27 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
             colon_after_colon_found = true;
          }
       }
-      else if (pc2->Is(CT_SQUARE_OPEN))
+      else if (pc2->Is(E_Token::CT_SQUARE_OPEN))
       {
          square_bracket_depth++;
       }
-      else if (pc2->Is(CT_SQUARE_CLOSE))
+      else if (pc2->Is(E_Token::CT_SQUARE_CLOSE))
       {
          square_bracket_depth--;
       }
       // Test #51012: Track OC dictionary @{...} brace depth
-      // Check for CT_OC_AT preceding the brace to detect OC dictionary literals
+      // Check for E_Token::CT_OC_AT preceding the brace to detect OC dictionary literals
       // Note: Parent type may not be set yet during search_for_colon, so check previous token
-      else if (pc2->Is(CT_BRACE_OPEN))
+      else if (pc2->Is(E_Token::CT_BRACE_OPEN))
       {
          Chunk *prev = pc2->GetPrevNcNnl();
 
-         if (prev->Is(CT_OC_AT))
+         if (prev->Is(E_Token::CT_OC_AT))
          {
             brace_depth++;
          }
       }
-      else if (pc2->Is(CT_BRACE_CLOSE))
+      else if (pc2->Is(E_Token::CT_BRACE_CLOSE))
       {
          // If we're inside an OC dictionary, decrement brace depth
          if (brace_depth > 0)
@@ -275,7 +275,7 @@ void mark_question_colon()
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->GetLogText());
       log_pcf_flags(LCOMBINE, pc->GetFlags());
 
-      if (  pc->Is(CT_QUESTION)
+      if (  pc->Is(E_Token::CT_QUESTION)
          && !language_is_set(lang_flag_e::LANG_JAVA))
       {
          pc_question = pc;
@@ -285,10 +285,10 @@ void mark_question_colon()
          LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->GetLogText());
 
-         if (  pc->Is(CT_SEMICOLON)
-            || (  pc->Is(CT_PAREN_CLOSE)
+         if (  pc->Is(E_Token::CT_SEMICOLON)
+            || (  pc->Is(E_Token::CT_PAREN_CLOSE)
                && (pc_question->GetLevel() == pc->GetLevel() + 1))
-            || pc->Is(CT_COMMA))
+            || pc->Is(E_Token::CT_COMMA))
          {
             // set at the end of the question statement ...
             LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
@@ -304,7 +304,7 @@ void mark_question_colon()
       LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->GetLogText());
 
-      if (pc->Is(CT_QUESTION))
+      if (pc->Is(E_Token::CT_QUESTION))
       {
          Chunk *from = pc;
          Chunk *to   = pc->GetParent();

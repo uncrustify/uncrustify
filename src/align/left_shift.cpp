@@ -66,7 +66,7 @@ void align_left_shift()
       {
          // Ignore any deeper levels when aligning
       }
-      else if (pc->Is(CT_SEMICOLON))
+      else if (pc->Is(E_Token::CT_SEMICOLON))
       {
          // A semicolon at the same level flushes
          as.Flush();
@@ -76,7 +76,7 @@ void align_left_shift()
               && !pc->TestFlags(PCF_IN_TYPEDEF)
               && pc->IsString("<<"))
       {
-         if (pc->GetParentType() == CT_OPERATOR)
+         if (pc->GetParentType() == E_Token::CT_OPERATOR)
          {
             // Ignore operator<<
          }

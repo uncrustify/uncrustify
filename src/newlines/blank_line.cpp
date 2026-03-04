@@ -73,7 +73,7 @@ void do_blank_lines()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (pc->Is(CT_NEWLINE))
+      if (pc->Is(E_Token::CT_NEWLINE))
       {
          LOG_FMT(LBLANKD, "%s(%d): orig line is %zu, orig col is %zu, <Newline>, nl is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetNlCount());
@@ -87,7 +87,7 @@ void do_blank_lines()
       LOG_FMT(LBLANK, "%s(%d): new line count is %zu\n",
               __func__, __LINE__, pc->GetNlCount());
 
-      if (pc->IsNot(CT_NEWLINE))
+      if (pc->IsNot(E_Token::CT_NEWLINE))
       {
          continue;
       }
@@ -99,7 +99,7 @@ void do_blank_lines()
                  __func__, __LINE__, pc->GetOrigLine(),
                  prev->GetLogText(), get_token_name(prev->GetType()));
 
-         if (prev->Is(CT_IGNORED))
+         if (prev->Is(E_Token::CT_IGNORED))
          {
             continue;
          }
@@ -145,16 +145,16 @@ void do_blank_lines()
 
       // Control blanks before multi-line comments
       if (  (options::nl_before_block_comment() > pc->GetNlCount())
-         && next->Is(CT_COMMENT_MULTI))
+         && next->Is(E_Token::CT_COMMENT_MULTI))
       {
          log_rule_B("nl_before_block_comment");
 
          // Don't add blanks after an open brace or a case statement
          if (  (  prev->IsNullChunk()
-               || (  prev->IsNot(CT_BRACE_OPEN)
-                  && prev->IsNot(CT_VBRACE_OPEN)
-                  && prev->IsNot(CT_CASE_COLON)))
-            && pcmt->IsNot(CT_COMMENT_MULTI))    // Issue #2383
+               || (  prev->IsNot(E_Token::CT_BRACE_OPEN)
+                  && prev->IsNot(E_Token::CT_VBRACE_OPEN)
+                  && prev->IsNot(E_Token::CT_CASE_COLON)))
+            && pcmt->IsNot(E_Token::CT_COMMENT_MULTI))    // Issue #2383
          {
             blank_line_set(pc, options::nl_before_block_comment);
             log_rule_B("nl_before_block_comment");
@@ -163,16 +163,16 @@ void do_blank_lines()
 
       // Control blanks before single line C comments
       if (  (options::nl_before_c_comment() > pc->GetNlCount())
-         && next->Is(CT_COMMENT))
+         && next->Is(E_Token::CT_COMMENT))
       {
          log_rule_B("nl_before_c_comment");
 
          // Don't add blanks after an open brace, a case stamement, or a comment
          if (  (  prev->IsNullChunk()
-               || (  prev->IsNot(CT_BRACE_OPEN)
-                  && prev->IsNot(CT_VBRACE_OPEN)
-                  && prev->IsNot(CT_CASE_COLON)))
-            && pcmt->IsNot(CT_COMMENT))    // Issue #2383
+               || (  prev->IsNot(E_Token::CT_BRACE_OPEN)
+                  && prev->IsNot(E_Token::CT_VBRACE_OPEN)
+                  && prev->IsNot(E_Token::CT_CASE_COLON)))
+            && pcmt->IsNot(E_Token::CT_COMMENT))    // Issue #2383
          {
             blank_line_set(pc, options::nl_before_c_comment);
             log_rule_B("nl_before_c_comment");
@@ -181,16 +181,16 @@ void do_blank_lines()
 
       // Control blanks before CPP comments
       if (  (options::nl_before_cpp_comment() > pc->GetNlCount())
-         && next->Is(CT_COMMENT_CPP))
+         && next->Is(E_Token::CT_COMMENT_CPP))
       {
          log_rule_B("nl_before_cpp_comment");
 
          // Don't add blanks after an open brace or a case statement
          if (  (  prev->IsNullChunk()
-               || (  prev->IsNot(CT_BRACE_OPEN)
-                  && prev->IsNot(CT_VBRACE_OPEN)
-                  && prev->IsNot(CT_CASE_COLON)))
-            && pcmt->IsNot(CT_COMMENT_CPP))    // Issue #2383
+               || (  prev->IsNot(E_Token::CT_BRACE_OPEN)
+                  && prev->IsNot(E_Token::CT_VBRACE_OPEN)
+                  && prev->IsNot(E_Token::CT_CASE_COLON)))
+            && pcmt->IsNot(E_Token::CT_COMMENT_CPP))    // Issue #2383
          {
             blank_line_set(pc, options::nl_before_cpp_comment);
             log_rule_B("nl_before_cpp_comment");
@@ -198,39 +198,39 @@ void do_blank_lines()
       }
 
       // Control blanks before a class/struct
-      if (  (  prev->Is(CT_SEMICOLON)
-            || prev->Is(CT_BRACE_CLOSE))
-         && (  prev->GetParentType() == CT_CLASS
-            || prev->GetParentType() == CT_STRUCT))
+      if (  (  prev->Is(E_Token::CT_SEMICOLON)
+            || prev->Is(E_Token::CT_BRACE_CLOSE))
+         && (  prev->GetParentType() == E_Token::CT_CLASS
+            || prev->GetParentType() == E_Token::CT_STRUCT))
       {
          E_Token parent_type = prev->GetParentType();
          Chunk   *start      = prev->GetPrevType(parent_type, prev->GetLevel());
          Chunk   *tmp        = start;
 
          // Is this a class/struct template?
-         if (tmp->GetParentType() == CT_TEMPLATE)
+         if (tmp->GetParentType() == E_Token::CT_TEMPLATE)
          {
-            tmp = tmp->GetPrevType(CT_TEMPLATE, prev->GetLevel());
+            tmp = tmp->GetPrevType(E_Token::CT_TEMPLATE, prev->GetLevel());
             tmp = tmp->GetPrevNc();
          }
          else
          {
             tmp = tmp->GetPrevNc();
 
-            while (  tmp->Is(CT_NEWLINE)
+            while (  tmp->Is(E_Token::CT_NEWLINE)
                   && tmp->GetPrev()->IsComment())
             {
                tmp = tmp->GetPrev()->GetPrevNc();
             }
 
-            if (tmp->Is(CT_FRIEND))
+            if (tmp->Is(E_Token::CT_FRIEND))
             {
                // Account for a friend declaration
                tmp = tmp->GetPrevNc();
             }
          }
 
-         while (  tmp->Is(CT_NEWLINE)
+         while (  tmp->Is(E_Token::CT_NEWLINE)
                && tmp->GetPrev()->IsComment())
          {
             tmp = tmp->GetPrev()->GetPrevNc();
@@ -239,12 +239,12 @@ void do_blank_lines()
          if (  tmp->IsNotNullChunk()
             && !start->TestFlags(PCF_INCOMPLETE))
          {
-            if (parent_type == CT_CLASS && options::nl_before_class() > tmp->GetNlCount())
+            if (parent_type == E_Token::CT_CLASS && options::nl_before_class() > tmp->GetNlCount())
             {
                log_rule_B("nl_before_class");
                blank_line_set(tmp, options::nl_before_class);
             }
-            else if (parent_type == CT_STRUCT && options::nl_before_struct() > tmp->GetNlCount())
+            else if (parent_type == E_Token::CT_STRUCT && options::nl_before_struct() > tmp->GetNlCount())
             {
                log_rule_B("nl_before_struct");
                blank_line_set(tmp, options::nl_before_struct);
@@ -252,14 +252,14 @@ void do_blank_lines()
          }
       }
 
-      if (  prev->Is(CT_BRACE_CLOSE)
-         && prev->GetParentType() == CT_NAMESPACE)
+      if (  prev->Is(E_Token::CT_BRACE_CLOSE)
+         && prev->GetParentType() == E_Token::CT_NAMESPACE)
       {
          // Control blanks before a namespace
-         Chunk *tmp = prev->GetPrevType(CT_NAMESPACE, prev->GetLevel());
+         Chunk *tmp = prev->GetPrevType(E_Token::CT_NAMESPACE, prev->GetLevel());
          tmp = tmp->GetPrevNc();
 
-         while (  tmp->Is(CT_NEWLINE)
+         while (  tmp->Is(E_Token::CT_NEWLINE)
                && tmp->GetPrev()->IsComment())
          {
             tmp = tmp->GetPrev()->GetPrevNc();
@@ -281,10 +281,10 @@ void do_blank_lines()
       }
 
       // Control blanks inside empty function body
-      if (  prev->Is(CT_BRACE_OPEN)
-         && next->Is(CT_BRACE_CLOSE)
-         && (  prev->GetParentType() == CT_FUNC_DEF
-            || prev->GetParentType() == CT_FUNC_CLASS_DEF)
+      if (  prev->Is(E_Token::CT_BRACE_OPEN)
+         && next->Is(E_Token::CT_BRACE_CLOSE)
+         && (  prev->GetParentType() == E_Token::CT_FUNC_DEF
+            || prev->GetParentType() == E_Token::CT_FUNC_CLASS_DEF)
          && options::nl_inside_empty_func() > pc->GetNlCount()
          && prev->TestFlags(PCF_EMPTY_BODY))
       {
@@ -295,7 +295,7 @@ void do_blank_lines()
       // Control blanks after an access spec
       if (  (options::nl_after_access_spec() > 0)
          && (options::nl_after_access_spec() != pc->GetNlCount())
-         && prev->Is(CT_ACCESS_COLON))
+         && prev->Is(E_Token::CT_ACCESS_COLON))
       {
          log_rule_B("nl_after_access_spec");
 
@@ -309,11 +309,11 @@ void do_blank_lines()
       }
 
       // Add blanks after function bodies
-      if (  prev->Is(CT_BRACE_CLOSE)
-         && (  prev->GetParentType() == CT_FUNC_DEF
-            || prev->GetParentType() == CT_FUNC_CLASS_DEF
-            || prev->GetParentType() == CT_OC_MSG_DECL
-            || prev->GetParentType() == CT_ASSIGN))
+      if (  prev->Is(E_Token::CT_BRACE_CLOSE)
+         && (  prev->GetParentType() == E_Token::CT_FUNC_DEF
+            || prev->GetParentType() == E_Token::CT_FUNC_CLASS_DEF
+            || prev->GetParentType() == E_Token::CT_OC_MSG_DECL
+            || prev->GetParentType() == E_Token::CT_ASSIGN))
       {
          if (prev->TestFlags(PCF_ONE_LINER))
          {
@@ -380,9 +380,9 @@ void do_blank_lines()
       }
 
       // Add blanks after function prototypes
-      if (  (  prev->Is(CT_SEMICOLON)
-            && prev->GetParentType() == CT_FUNC_PROTO)
-         || is_func_proto_group(prev, CT_FUNC_DEF))
+      if (  (  prev->Is(E_Token::CT_SEMICOLON)
+            && prev->GetParentType() == E_Token::CT_FUNC_PROTO)
+         || is_func_proto_group(prev, E_Token::CT_FUNC_DEF))
       {
          if (options::nl_after_func_proto() > pc->GetNlCount())
          {
@@ -393,8 +393,8 @@ void do_blank_lines()
 
          if (  (options::nl_after_func_proto_group() > pc->GetNlCount())
             && next->IsNotNullChunk()
-            && next->GetParentType() != CT_FUNC_PROTO
-            && !is_func_proto_group(next, CT_FUNC_DEF))
+            && next->GetParentType() != E_Token::CT_FUNC_PROTO
+            && !is_func_proto_group(next, E_Token::CT_FUNC_DEF))
          {
             log_rule_B("nl_after_func_proto_group");
             blank_line_set(pc, options::nl_after_func_proto_group);
@@ -402,9 +402,9 @@ void do_blank_lines()
       }
 
       // Issue #411: Add blanks after function class prototypes
-      if (  (  prev->Is(CT_SEMICOLON)
-            && prev->GetParentType() == CT_FUNC_CLASS_PROTO)
-         || is_func_proto_group(prev, CT_FUNC_CLASS_DEF))
+      if (  (  prev->Is(E_Token::CT_SEMICOLON)
+            && prev->GetParentType() == E_Token::CT_FUNC_CLASS_PROTO)
+         || is_func_proto_group(prev, E_Token::CT_FUNC_CLASS_DEF))
       {
          if (options::nl_after_func_class_proto() > pc->GetNlCount())
          {
@@ -414,9 +414,9 @@ void do_blank_lines()
          }
 
          if (  (options::nl_after_func_class_proto_group() > pc->GetNlCount())
-            && next->IsNot(CT_FUNC_CLASS_PROTO)
-            && next->GetParentType() != CT_FUNC_CLASS_PROTO
-            && !is_func_proto_group(next, CT_FUNC_CLASS_DEF))
+            && next->IsNot(E_Token::CT_FUNC_CLASS_PROTO)
+            && next->GetParentType() != E_Token::CT_FUNC_CLASS_PROTO
+            && !is_func_proto_group(next, E_Token::CT_FUNC_CLASS_DEF))
          {
             log_rule_B("nl_after_func_class_proto_group");
             blank_line_set(pc, options::nl_after_func_class_proto_group);
@@ -424,14 +424,14 @@ void do_blank_lines()
       }
 
       // Add blanks after struct/enum/union/class
-      if (  (  prev->Is(CT_SEMICOLON)
-            || prev->Is(CT_BRACE_CLOSE))
-         && (  prev->GetParentType() == CT_STRUCT
-            || prev->GetParentType() == CT_ENUM
-            || prev->GetParentType() == CT_UNION
-            || prev->GetParentType() == CT_CLASS))
+      if (  (  prev->Is(E_Token::CT_SEMICOLON)
+            || prev->Is(E_Token::CT_BRACE_CLOSE))
+         && (  prev->GetParentType() == E_Token::CT_STRUCT
+            || prev->GetParentType() == E_Token::CT_ENUM
+            || prev->GetParentType() == E_Token::CT_UNION
+            || prev->GetParentType() == E_Token::CT_CLASS))
       {
-         const auto &opt = (prev->GetParentType() == CT_CLASS
+         const auto &opt = (prev->GetParentType() == E_Token::CT_CLASS
          ? options::nl_after_class
          : options::nl_after_struct);
          log_rule_B("nl_after_class");
@@ -481,11 +481,11 @@ void do_blank_lines()
 
       // Change blanks between a function comment and body
       if (  (options::nl_comment_func_def() != 0)
-         && pcmt->Is(CT_COMMENT_MULTI)
-         && pcmt->GetParentType() == CT_COMMENT_WHOLE
+         && pcmt->Is(E_Token::CT_COMMENT_MULTI)
+         && pcmt->GetParentType() == E_Token::CT_COMMENT_WHOLE
          && next->IsNotNullChunk()
-         && (  next->GetParentType() == CT_FUNC_DEF
-            || next->GetParentType() == CT_FUNC_CLASS_DEF))
+         && (  next->GetParentType() == E_Token::CT_FUNC_DEF
+            || next->GetParentType() == E_Token::CT_FUNC_CLASS_DEF))
       {
          log_rule_B("nl_comment_func_def");
 
@@ -504,13 +504,13 @@ void do_blank_lines()
       {
          log_rule_B("nl_after_try_catch_finally");
 
-         if (  prev->Is(CT_BRACE_CLOSE)
-            && (  prev->GetParentType() == CT_CATCH
-               || prev->GetParentType() == CT_FINALLY))
+         if (  prev->Is(E_Token::CT_BRACE_CLOSE)
+            && (  prev->GetParentType() == E_Token::CT_CATCH
+               || prev->GetParentType() == E_Token::CT_FINALLY))
          {
-            if (  next->IsNot(CT_BRACE_CLOSE)
-               && next->IsNot(CT_CATCH)
-               && next->IsNot(CT_FINALLY))
+            if (  next->IsNot(E_Token::CT_BRACE_CLOSE)
+               && next->IsNot(E_Token::CT_CATCH)
+               && next->IsNot(E_Token::CT_FINALLY))
             {
                blank_line_set(pc, options::nl_after_try_catch_finally);
                log_rule_B("nl_after_try_catch_finally");
@@ -526,10 +526,10 @@ void do_blank_lines()
       {
          log_rule_B("nl_between_get_set");
 
-         if (  prev->GetParentType() == CT_GETSET
-            && next->IsNot(CT_BRACE_CLOSE)
-            && (  prev->Is(CT_BRACE_CLOSE)
-               || prev->Is(CT_SEMICOLON)))
+         if (  prev->GetParentType() == E_Token::CT_GETSET
+            && next->IsNot(E_Token::CT_BRACE_CLOSE)
+            && (  prev->Is(E_Token::CT_BRACE_CLOSE)
+               || prev->Is(E_Token::CT_SEMICOLON)))
          {
             blank_line_set(pc, options::nl_between_get_set);
             log_rule_B("nl_between_get_set");
@@ -544,14 +544,14 @@ void do_blank_lines()
       {
          log_rule_B("nl_around_cs_property");
 
-         if (  prev->Is(CT_BRACE_CLOSE)
-            && prev->GetParentType() == CT_CS_PROPERTY
-            && next->IsNot(CT_BRACE_CLOSE))
+         if (  prev->Is(E_Token::CT_BRACE_CLOSE)
+            && prev->GetParentType() == E_Token::CT_CS_PROPERTY
+            && next->IsNot(E_Token::CT_BRACE_CLOSE))
          {
             blank_line_set(pc, options::nl_around_cs_property);
             log_rule_B("nl_around_cs_property");
          }
-         else if (  next->GetParentType() == CT_CS_PROPERTY
+         else if (  next->GetParentType() == E_Token::CT_CS_PROPERTY
                  && next->TestFlags(PCF_STMT_START))
          {
             blank_line_set(pc, options::nl_around_cs_property);
@@ -562,14 +562,14 @@ void do_blank_lines()
       // Control blanks before an access spec
       if (  (options::nl_before_access_spec() > 0)
          && (options::nl_before_access_spec() != pc->GetNlCount())
-         && next->Is(CT_ACCESS))
+         && next->Is(E_Token::CT_ACCESS))
       {
          log_rule_B("nl_before_access_spec");
 
          // Don't add blanks after an open brace
          if (  prev->IsNullChunk()
-            || (  prev->IsNot(CT_BRACE_OPEN)
-               && prev->IsNot(CT_VBRACE_OPEN)))
+            || (  prev->IsNot(E_Token::CT_BRACE_OPEN)
+               && prev->IsNot(E_Token::CT_VBRACE_OPEN)))
          {
             log_rule_B("nl_before_access_spec");
             blank_line_set(pc, options::nl_before_access_spec);
@@ -579,10 +579,10 @@ void do_blank_lines()
       // Change blanks inside namespace braces
       if (  (options::nl_inside_namespace() != 0)
          && (options::nl_inside_namespace() != pc->GetNlCount())
-         && (  (  prev->Is(CT_BRACE_OPEN)
-               && prev->GetParentType() == CT_NAMESPACE)
-            || (  next->Is(CT_BRACE_CLOSE)
-               && next->GetParentType() == CT_NAMESPACE)))
+         && (  (  prev->Is(E_Token::CT_BRACE_OPEN)
+               && prev->GetParentType() == E_Token::CT_NAMESPACE)
+            || (  next->Is(E_Token::CT_BRACE_CLOSE)
+               && next->GetParentType() == E_Token::CT_NAMESPACE)))
       {
          log_rule_B("nl_inside_namespace");
          blank_line_set(pc, options::nl_inside_namespace);
@@ -591,8 +591,8 @@ void do_blank_lines()
       // Control blanks before a whole-file #ifdef
       if (  options::nl_before_whole_file_ifdef() != 0
          && options::nl_before_whole_file_ifdef() != pc->GetNlCount()
-         && next->Is(CT_PREPROC)
-         && next->GetParentType() == CT_PP_IF
+         && next->Is(E_Token::CT_PREPROC)
+         && next->GetParentType() == E_Token::CT_PP_IF
          && ifdef_over_whole_file()
          && next->TestFlags(PCF_WF_IF))
       {
@@ -607,7 +607,7 @@ void do_blank_lines()
          Chunk *pp_start = prev->GetPpStart();
 
          if (  pp_start->IsNotNullChunk()
-            && pp_start->GetParentType() == CT_PP_IF
+            && pp_start->GetParentType() == E_Token::CT_PP_IF
             && ifdef_over_whole_file()
             && pp_start->TestFlags(PCF_WF_IF))
          {
@@ -619,8 +619,8 @@ void do_blank_lines()
       // Control blanks before a whole-file #endif
       if (  options::nl_before_whole_file_endif() != 0
          && options::nl_before_whole_file_endif() != pc->GetNlCount()
-         && next->Is(CT_PREPROC)
-         && next->GetParentType() == CT_PP_ENDIF
+         && next->Is(E_Token::CT_PREPROC)
+         && next->GetParentType() == E_Token::CT_PP_ENDIF
          && ifdef_over_whole_file()
          && next->TestFlags(PCF_WF_ENDIF))
       {
@@ -635,7 +635,7 @@ void do_blank_lines()
          Chunk *pp_start = prev->GetPpStart();
 
          if (  pp_start->IsNotNullChunk()
-            && pp_start->GetParentType() == CT_PP_ENDIF
+            && pp_start->GetParentType() == E_Token::CT_PP_ENDIF
             && ifdef_over_whole_file()
             && pp_start->TestFlags(PCF_WF_ENDIF))
          {
@@ -665,73 +665,73 @@ void newlines_insert_blank_lines()
    {
       //LOG_FMT(LNEWLINE, "%s(%d): orig line is %zu, orig col is %zu, text '%s', type is %s\n",
       //        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
-      if (pc->Is(CT_IF))
+      if (pc->Is(E_Token::CT_IF))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_if());
          log_rule_B("nl_before_if");
          newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_if());
          log_rule_B("nl_after_if");
       }
-      else if (pc->Is(CT_FOR))
+      else if (pc->Is(E_Token::CT_FOR))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_for());
          log_rule_B("nl_before_for");
          newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_for());
          log_rule_B("nl_after_for");
       }
-      else if (pc->Is(CT_WHILE))
+      else if (pc->Is(E_Token::CT_WHILE))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_while());
          log_rule_B("nl_before_while");
          newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_while());
          log_rule_B("nl_after_while");
       }
-      else if (pc->Is(CT_SWITCH))
+      else if (pc->Is(E_Token::CT_SWITCH))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_switch());
          log_rule_B("nl_before_switch");
          newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_switch());
          log_rule_B("nl_after_switch");
       }
-      else if (pc->Is(CT_SYNCHRONIZED))
+      else if (pc->Is(E_Token::CT_SYNCHRONIZED))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_synchronized());
          log_rule_B("nl_before_synchronized");
          newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_synchronized());
          log_rule_B("nl_after_synchronized");
       }
-      else if (pc->Is(CT_DO))
+      else if (pc->Is(E_Token::CT_DO))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_do());
          log_rule_B("nl_before_do");
          newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_do());
          log_rule_B("nl_after_do");
       }
-      else if (pc->Is(CT_OC_INTF))
+      else if (pc->Is(E_Token::CT_OC_INTF))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_interface());
          log_rule_B("nl_oc_before_interface");
       }
-      else if (pc->Is(CT_OC_END))
+      else if (pc->Is(E_Token::CT_OC_END))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_end());
          log_rule_B("nl_oc_before_end");
       }
-      else if (pc->Is(CT_OC_IMPL))
+      else if (pc->Is(E_Token::CT_OC_IMPL))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_implementation());
          log_rule_B("nl_oc_before_implementation");
       }
-      else if (  pc->Is(CT_FUNC_CLASS_DEF)
-              || pc->Is(CT_FUNC_DEF)
-              || pc->Is(CT_FUNC_CLASS_PROTO)
-              || pc->Is(CT_FUNC_PROTO))
+      else if (  pc->Is(E_Token::CT_FUNC_CLASS_DEF)
+              || pc->Is(E_Token::CT_FUNC_DEF)
+              || pc->Is(E_Token::CT_FUNC_CLASS_PROTO)
+              || pc->Is(E_Token::CT_FUNC_PROTO))
       {
          if (  options::nl_class_leave_one_liner_groups()
             && is_class_one_liner(pc))
          {
             log_rule_B("nl_class_leave_one_liner_groups");
-            newlines_func_pre_blank_lines(pc, CT_FUNC_PROTO);
+            newlines_func_pre_blank_lines(pc, E_Token::CT_FUNC_PROTO);
          }
          else
          {

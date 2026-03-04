@@ -20,7 +20,7 @@ class ChunkStack;
  * Checks to see if a series of chunks could be a C++ parameter
  * FOO foo(5, &val);
  *
- * WORD means CT_WORD or CT_TYPE
+ * WORD means E_Token::CT_WORD or E_Token::CT_TYPE
  *
  * "WORD WORD"          ==> true
  * "QUALIFIER ??"       ==> true

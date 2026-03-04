@@ -25,7 +25,7 @@ void align_asm_colon()
 
    while (pc->IsNotNullChunk())
    {
-      if (pc->IsNot(CT_ASM_COLON))
+      if (pc->IsNot(E_Token::CT_ASM_COLON))
       {
          pc = pc->GetNext();
          continue;
@@ -44,7 +44,7 @@ void align_asm_colon()
             cas.NewLines(pc->GetNlCount());
             did_nl = true;
          }
-         else if (pc->Is(CT_ASM_COLON))
+         else if (pc->Is(E_Token::CT_ASM_COLON))
          {
             cas.Flush();
             did_nl = true;

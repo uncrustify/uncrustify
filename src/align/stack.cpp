@@ -171,7 +171,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
    Chunk *prev = start->GetPrev();
 
    while (  prev->IsPointerOperator()
-         || prev->Is(CT_TPAREN_OPEN))
+         || prev->Is(E_Token::CT_TPAREN_OPEN))
    {
       prev = prev->GetPrev();
    }
@@ -203,7 +203,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
          tmp_prev = ali->GetPrev();
       }
 
-      if (tmp_prev->Is(CT_TPAREN_OPEN))
+      if (tmp_prev->Is(E_Token::CT_TPAREN_OPEN))
       {
          ali      = tmp_prev;
          tmp_prev = ali->GetPrev();
@@ -285,7 +285,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       }
       Chunk *tmp = ali;
 
-      if (tmp->Is(CT_TPAREN_OPEN))
+      if (tmp->Is(E_Token::CT_TPAREN_OPEN))
       {
          tmp = tmp->GetNext();
       }
@@ -313,7 +313,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       m_last_added = 1;
 
       // Issue #2278
-      if (ali->Is(CT_PTR_TYPE))
+      if (ali->Is(E_Token::CT_PTR_TYPE))
       {
          LOG_FMT(LAS, "AlignStack::%s(%d): add [%s][%s]: 'ali' orig line %zu, column %zu, type %s, level %zu\n",
                  __func__, __LINE__, ali->GetLogText(), start->GetLogText(), ali->GetOrigLine(), ali->GetColumn(), get_token_name(ali->GetType()), ali->GetLevel());
@@ -412,7 +412,7 @@ void AlignStack::Flush()
    {
       // check if we have *one* typedef in the line
       Chunk *pc   = m_aligned.Get(0)->m_pc;
-      Chunk *temp = pc->GetPrevType(CT_TYPEDEF, pc->GetLevel());
+      Chunk *temp = pc->GetPrevType(E_Token::CT_TYPEDEF, pc->GetLevel());
 
       if (temp->IsNotNullChunk())
       {
@@ -453,7 +453,7 @@ void AlignStack::Flush()
 
       if (m_star_style == SS_DANGLE)
       {
-         Chunk *tmp = (pc->Is(CT_TPAREN_OPEN)) ? pc->GetNext() : pc;
+         Chunk *tmp = (pc->Is(E_Token::CT_TPAREN_OPEN)) ? pc->GetNext() : pc;
 
          if (tmp->IsPointerOperator())
          {
@@ -469,11 +469,11 @@ void AlignStack::Flush()
          {
             size_t start_len = pc->GetAlignData().start->Len();
 
-            if (pc->GetAlignData().start->GetType() == CT_NEG)
+            if (pc->GetAlignData().start->GetType() == E_Token::CT_NEG)
             {
                Chunk *next = pc->GetAlignData().start->GetNext();
 
-               if (next->Is(CT_NUMBER))
+               if (next->Is(E_Token::CT_NUMBER))
                {
                   start_len += next->Len();
                }
@@ -629,7 +629,7 @@ void AlignStack::Debug()
       {
          Chunk *pc = m_aligned.Get(idx)->m_pc;
 
-         if (pc->Is(CT_PTR_TYPE))
+         if (pc->Is(E_Token::CT_PTR_TYPE))
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s][%s]: orig line is %zu, orig col is %zu, type is %s, level is %zu, brace level is %zu\n",
                     __func__, __LINE__, idx, pc->GetLogText(), pc->GetNext()->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->GetLevel(), pc->GetBraceLevel());

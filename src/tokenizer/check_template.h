@@ -29,7 +29,7 @@ void check_template_args(Chunk *start, Chunk *end);
 
 
 /**
- * If there is nothing but CT_WORD and CT_MEMBER, then it's probably a
+ * If there is nothing but E_Token::CT_WORD and E_Token::CT_MEMBER, then it's probably a
  * template thingy.  Otherwise, it's likely a comparison.
  *
  * @param start  chunk to start check at
@@ -39,7 +39,7 @@ void check_template(Chunk *start, bool in_type_cast);
 
 /**
  * Convert '>' + '>' into '>>'
- * If we only have a single '>', then change it to CT_COMPARE.
+ * If we only have a single '>', then change it to E_Token::CT_COMPARE.
  *
  * @param pc  chunk to start at
  */

@@ -473,7 +473,7 @@ static bool d_parse_string(TokenContext &ctx, Chunk &pc)
       ctx.restore();
       return(false);
    }
-   pc.SetType(CT_STRING);
+   pc.SetType(E_Token::CT_STRING);
    return(true);
 } // d_parse_string
 
@@ -524,7 +524,7 @@ static bool parse_comment(TokenContext &ctx, Chunk &pc)
 
    if (ch == '/')          // 47
    {
-      pc.SetType(CT_COMMENT_CPP);
+      pc.SetType(E_Token::CT_COMMENT_CPP);
 
       while (true)
       {
@@ -583,7 +583,7 @@ static bool parse_comment(TokenContext &ctx, Chunk &pc)
    }
    else if (ch == '+')                         // 43
    {
-      pc.SetType(CT_COMMENT);
+      pc.SetType(E_Token::CT_COMMENT);
       d_level++;
 
       while (  d_level > 0
@@ -612,7 +612,7 @@ static bool parse_comment(TokenContext &ctx, Chunk &pc)
          if (  (ch == '\n')
             || (ch == '\r'))
          {
-            pc.SetType(CT_COMMENT_MULTI);
+            pc.SetType(E_Token::CT_COMMENT_MULTI);
             pc.SetNlCount(pc.GetNlCount() + 1);
 
             if (ch == '\r')
@@ -636,7 +636,7 @@ static bool parse_comment(TokenContext &ctx, Chunk &pc)
    }
    else  // must be '/ *'
    {
-      pc.SetType(CT_COMMENT);
+      pc.SetType(E_Token::CT_COMMENT);
 
       while (ctx.more())
       {
@@ -672,7 +672,7 @@ static bool parse_comment(TokenContext &ctx, Chunk &pc)
          if (  (ch == '\n')
             || (ch == '\r'))
          {
-            pc.SetType(CT_COMMENT_MULTI);
+            pc.SetType(E_Token::CT_COMMENT_MULTI);
             pc.SetNlCount(pc.GetNlCount() + 1);
 
             if (ch == '\r')
@@ -763,7 +763,7 @@ static bool parse_code_placeholder(TokenContext &ctx, Chunk &pc)
       if (  (last2 == '#')            // 35
          && (last1 == '>'))           // 62
       {
-         pc.SetType(CT_WORD);
+         pc.SetType(E_Token::CT_WORD);
          return(true);
       }
    }
@@ -1102,7 +1102,7 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
                   break;
                }
             }
-            pc.SetType(CT_WORD);
+            pc.SetType(E_Token::CT_WORD);
             return(true);
          }
       }
@@ -1141,7 +1141,7 @@ static bool parse_number(TokenContext &ctx, Chunk &pc)
       pc.Text().append(ctx.get());
       pc.Text().append(ctx.get());
    }
-   pc.SetType(is_float ? CT_NUMBER_FP : CT_NUMBER);
+   pc.SetType(is_float ? E_Token::CT_NUMBER_FP : E_Token::CT_NUMBER);
 
    /*
     * If there is anything left, then we are probably dealing with garbage or
@@ -1172,7 +1172,7 @@ static bool parse_string(TokenContext &ctx, Chunk &pc, size_t quote_idx, bool al
    {
       pc.Text().append(ctx.get());
    }
-   pc.SetType(CT_STRING);
+   pc.SetType(E_Token::CT_STRING);
    const size_t termination_character = CharTable::Get(ctx.peek()) & 0xff;
 
    pc.Text().append(ctx.get());                          // store the "
@@ -1198,14 +1198,14 @@ static bool parse_string(TokenContext &ctx, Chunk &pc, size_t quote_idx, bool al
       if (ch == '\n')
       {
          pc.SetNlCount(pc.GetNlCount() + 1);
-         pc.SetType(CT_STRING_MULTI);
+         pc.SetType(E_Token::CT_STRING_MULTI);
       }
       else if (  ch == '\r'
               && ctx.peek() != '\n')
       {
          pc.Text().append(ctx.get());
          pc.SetNlCount(pc.GetNlCount() + 1);
-         pc.SetType(CT_STRING_MULTI);
+         pc.SetType(E_Token::CT_STRING_MULTI);
       }
 
       // if last char in prev loop was escaped the one in the current loop isn't
@@ -1276,7 +1276,7 @@ static cs_string_t parse_cs_string_start(TokenContext &ctx, Chunk &pc)
    {
       stringType |= CS_STRING_STRING;
 
-      pc.SetType(CT_STRING);
+      pc.SetType(E_Token::CT_STRING);
 
       for (int i = 0; i <= offset; ++i)
       {
@@ -1364,12 +1364,12 @@ static bool parse_cs_string(TokenContext &ctx, Chunk &pc)
 
       if (ch == '\n')
       {
-         pc.SetType(CT_STRING_MULTI);
+         pc.SetType(E_Token::CT_STRING_MULTI);
          pc.SetNlCount(pc.GetNlCount() + 1);
       }
       else if (ch == '\r')
       {
-         pc.SetType(CT_STRING_MULTI);
+         pc.SetType(E_Token::CT_STRING_MULTI);
       }
       else if (parseState.top().braceDepth > 0)
       {
@@ -1461,7 +1461,7 @@ static bool parse_cs_string(TokenContext &ctx, Chunk &pc)
 
 static void parse_verbatim_string(TokenContext &ctx, Chunk &pc)
 {
-   pc.SetType(CT_STRING);
+   pc.SetType(E_Token::CT_STRING);
 
    // consume the initial """
    pc.Text() = ctx.get();
@@ -1486,7 +1486,7 @@ static void parse_verbatim_string(TokenContext &ctx, Chunk &pc)
       if (  (ch == '\n')
          || (ch == '\r'))
       {
-         pc.SetType(CT_STRING_MULTI);
+         pc.SetType(E_Token::CT_STRING_MULTI);
          pc.SetNlCount(pc.GetNlCount() + 1);
       }
    }
@@ -1538,7 +1538,7 @@ static bool parse_cr_string(TokenContext &ctx, Chunk &pc, size_t q_idx)
       ctx.restore();
       return(false);
    }
-   pc.SetType(CT_STRING);
+   pc.SetType(E_Token::CT_STRING);
 
    while (ctx.more())
    {
@@ -1560,7 +1560,7 @@ static bool parse_cr_string(TokenContext &ctx, Chunk &pc, size_t q_idx)
       {
          pc.Text().append(ctx.get());
          pc.SetNlCount(pc.GetNlCount() + 1);
-         pc.SetType(CT_STRING_MULTI);
+         pc.SetType(E_Token::CT_STRING_MULTI);
       }
       else
       {
@@ -1613,7 +1613,7 @@ static bool parse_word(TokenContext &ctx, Chunk &pc, bool skipcheck)
          skipcheck = true;
       }
    }
-   pc.SetType(CT_WORD);
+   pc.SetType(E_Token::CT_WORD);
 
    if (skipcheck)
    {
@@ -1621,16 +1621,16 @@ static bool parse_word(TokenContext &ctx, Chunk &pc, bool skipcheck)
    }
 
    // Detect pre-processor functions now
-   if (  cpd.in_preproc == CT_PP_DEFINE
+   if (  cpd.in_preproc == E_Token::CT_PP_DEFINE
       && cpd.preproc_ncnl_count == 1)
    {
       if (ctx.peek() == '(')               // 40
       {
-         pc.SetType(CT_MACRO_FUNC);
+         pc.SetType(E_Token::CT_MACRO_FUNC);
       }
       else
       {
-         pc.SetType(CT_MACRO);
+         pc.SetType(E_Token::CT_MACRO);
 
          log_rule_B("pp_ignore_define_body");
 
@@ -1640,7 +1640,7 @@ static bool parse_word(TokenContext &ctx, Chunk &pc, bool skipcheck)
              * We are setting the PP_IGNORE preproc state because the following
              * chunks are part of the macro body and will have to be ignored.
              */
-            cpd.in_preproc = CT_PP_IGNORE;
+            cpd.in_preproc = E_Token::CT_PP_IGNORE;
          }
       }
    }
@@ -1651,7 +1651,7 @@ static bool parse_word(TokenContext &ctx, Chunk &pc, bool skipcheck)
          && pc.GetText().startswith("@")
          && !pc.GetText().equals(intr_txt))
       {
-         pc.SetType(CT_ANNOTATION);
+         pc.SetType(E_Token::CT_ANNOTATION);
       }
       else
       {
@@ -1664,12 +1664,12 @@ static bool parse_word(TokenContext &ctx, Chunk &pc, bool skipcheck)
           * end up with a function named 'define' as PP_IGNORE. This is necessary because with
           * the config 'set' feature, there's no way to do a pair of tokens as a word
           * substitution. */
-         if (  pc.GetType() == CT_PP_IGNORE
+         if (  pc.GetType() == E_Token::CT_PP_IGNORE
             && !cpd.in_preproc)
          {
             pc.SetType(find_keyword_type(pc.GetLogText(), pc.GetText().size()));
          }
-         else if (pc.GetType() == CT_COMMENT_CPP)   // Issue #1460
+         else if (pc.GetType() == E_Token::CT_COMMENT_CPP)   // Issue #1460
          {
             size_t ch;
             bool   is_cs = language_is_set(lang_flag_e::LANG_CS);
@@ -1819,7 +1819,7 @@ static bool extract_attribute_specifier_sequence(TokenContext &ctx, Chunk &pc, s
    {
       pc.Text().append(ctx.get());
    }
-   pc.SetType(CT_ATTRIBUTE);
+   pc.SetType(E_Token::CT_ATTRIBUTE);
    return(true);
 } // extract_attribute_specifier_sequence
 
@@ -1877,7 +1877,7 @@ static bool parse_whitespace(TokenContext &ctx, Chunk &pc)
    if (ch != 0)
    {
       pc.Text().clear();
-      pc.SetType(nl_count ? CT_NEWLINE : CT_WHITESPACE);
+      pc.SetType(nl_count ? E_Token::CT_NEWLINE : E_Token::CT_WHITESPACE);
       pc.SetNlCount(nl_count);
       pc.SetAfterTab((ctx.c.last_ch == '\t'));
       return(true);
@@ -1905,7 +1905,7 @@ static bool parse_bs_newline(TokenContext &ctx, Chunk &pc)
          {
             ctx.expect('\n');
          }
-         pc.SetType(CT_NL_CONT);
+         pc.SetType(E_Token::CT_NL_CONT);
          pc.SetNlCount(1);
          return(true);
       }
@@ -1977,7 +1977,7 @@ static bool parse_off_newlines(TokenContext &ctx, Chunk &pc)
    if (nl_count > 0)
    {
       pc.SetNlCount(nl_count);
-      pc.SetType(CT_NEWLINE);
+      pc.SetType(E_Token::CT_NEWLINE);
       return(true);
    }
    return(false);
@@ -1991,7 +1991,7 @@ static bool parse_macro(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
       return(true);
    }
 
-   if (parse_comment(ctx, pc))  // allow CT_COMMENT_MULTI within macros
+   if (parse_comment(ctx, pc))  // allow E_Token::CT_COMMENT_MULTI within macros
    {
       return(true);
    }
@@ -2002,8 +2002,8 @@ static bool parse_macro(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    {
       return(false);
    }
-   bool continued = (  prev_pc->Is(CT_NL_CONT)
-                    || prev_pc->Is(CT_COMMENT_MULTI));
+   bool continued = (  prev_pc->Is(E_Token::CT_NL_CONT)
+                    || prev_pc->Is(E_Token::CT_COMMENT_MULTI));
 
    while (ctx.more())
    {
@@ -2019,7 +2019,7 @@ static bool parse_macro(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
                && nl))
          && pc.GetText().size() > 0)
       {
-         pc.SetType(CT_PP_IGNORE);
+         pc.SetType(E_Token::CT_PP_IGNORE);
          return(true);
       }
       else if (nl)
@@ -2096,7 +2096,7 @@ static bool parse_ignored(TokenContext &ctx, Chunk &pc)
 
       if (!found_enable_pattern)
       {
-         pc.SetType(CT_IGNORED);
+         pc.SetType(E_Token::CT_IGNORED);
          return(true);
       }
    }
@@ -2105,7 +2105,7 @@ static bool parse_ignored(TokenContext &ctx, Chunk &pc)
    // parse off whitespace leading to the comment
    if (parse_whitespace(ctx, pc))
    {
-      pc.SetType(CT_IGNORED);
+      pc.SetType(E_Token::CT_IGNORED);
       return(true);
    }
 
@@ -2127,7 +2127,7 @@ static bool parse_ignored(TokenContext &ctx, Chunk &pc)
 
    if (pc.GetText().size() > 0)
    {
-      pc.SetType(CT_IGNORED);
+      pc.SetType(E_Token::CT_IGNORED);
       return(true);
    }
    return(false);
@@ -2141,14 +2141,14 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
       return(false);
    }
    // Save off the current column
-   pc.SetType(CT_NONE);
+   pc.SetType(E_Token::CT_NONE);
    pc.SetOrigLine(ctx.c.row);
    pc.SetColumn(ctx.c.col);
    pc.SetOrigCol(ctx.c.col);
    pc.SetNlCount(0);
    pc.SetFlags(PCF_NONE);
 
-   // If it is turned off, we put everything except newlines into CT_UNKNOWN
+   // If it is turned off, we put everything except newlines into E_Token::CT_UNKNOWN
    if (cpd.unc_off)
    {
       if (parse_ignored(ctx, pc))
@@ -2174,14 +2174,14 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    }
 
    // Handle unknown/unhandled preprocessors
-   if (  cpd.in_preproc > CT_PP_BODYCHUNK
-      && cpd.in_preproc <= CT_PP_OTHER)
+   if (  cpd.in_preproc > E_Token::CT_PP_BODYCHUNK
+      && cpd.in_preproc <= E_Token::CT_PP_OTHER)
    {
       pc.Text().clear();
       TokenInfo ss;
       ctx.save(ss);
       // Chunk to a newline or comment
-      pc.SetType(CT_PREPROC_BODY);
+      pc.SetType(E_Token::CT_PREPROC_BODY);
       size_t last = 0;
 
       while (ctx.more())
@@ -2335,10 +2335,10 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    if (language_is_set(lang_flag_e::LANG_PAWN))
    {
       if (  cpd.preproc_ncnl_count == 1
-         && (  cpd.in_preproc == CT_PP_DEFINE
-            || cpd.in_preproc == CT_PP_EMIT))
+         && (  cpd.in_preproc == E_Token::CT_PP_DEFINE
+            || cpd.in_preproc == E_Token::CT_PP_EMIT))
       {
-         parse_pawn_pattern(ctx, pc, CT_MACRO);
+         parse_pawn_pattern(ctx, pc, E_Token::CT_MACRO);
          return(true);
       }
 
@@ -2362,14 +2362,14 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
       }
 
       // handle PAWN preprocessor args %0 .. %9
-      if (  cpd.in_preproc == CT_PP_DEFINE
+      if (  cpd.in_preproc == E_Token::CT_PP_DEFINE
          && (ctx.peek() == '%')               // 37
          && unc_isdigit(ctx.peek(1)))
       {
          pc.Text().clear();
          pc.Text().append(ctx.get());
          pc.Text().append(ctx.get());
-         pc.SetType(CT_WORD);
+         pc.SetType(E_Token::CT_WORD);
          return(true);
       }
    }
@@ -2405,21 +2405,21 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
          || (ch == '"')                  // 34
          || (ch == '\'')                 // 39
          || (  (ch == '<')               // 60
-            && cpd.in_preproc == CT_PP_INCLUDE))
+            && cpd.in_preproc == E_Token::CT_PP_INCLUDE))
       {
          parse_string(ctx, pc, unc_isalpha(ch) ? 1 : 0, true);
 
-         if (cpd.in_preproc == CT_PP_INCLUDE)
+         if (cpd.in_preproc == E_Token::CT_PP_INCLUDE)
          {
-            pc.SetParentType(CT_PP_INCLUDE);
+            pc.SetParentType(E_Token::CT_PP_INCLUDE);
          }
          return(true);
       }
 
       if (  (ch == '<')                    // 60
-         && cpd.in_preproc == CT_PP_DEFINE)
+         && cpd.in_preproc == E_Token::CT_PP_DEFINE)
       {
-         if (Chunk::GetTail()->Is(CT_MACRO))
+         if (Chunk::GetTail()->Is(E_Token::CT_MACRO))
          {
             // We have "#define XXX <", assume '<' starts an include string
             parse_string(ctx, pc, 0, false);
@@ -2431,8 +2431,8 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
 
       if (  (ch == '(')                 // 40
          && (tail->IsNotNullChunk())
-         && (  tail->Is(CT_CNG_HASINC)
-            || tail->Is(CT_CNG_HASINCN)))
+         && (  tail->Is(E_Token::CT_CNG_HASINC)
+            || tail->Is(E_Token::CT_CNG_HASINCN)))
       {
          parse_string(ctx, pc, 0, false);
          return(true);
@@ -2509,7 +2509,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    {
       if (  !language_is_set(lang_flag_e::LANG_OC)
          || (  prev_pc->IsNotNullChunk()
-            && !prev_pc->Is(CT_OC_AT)))
+            && !prev_pc->Is(E_Token::CT_OC_AT)))
       {
          if (auto length = parse_attribute_specifier_sequence(ctx))
          {
@@ -2571,7 +2571,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
       }
    }
    // throw away this character
-   pc.SetType(CT_UNKNOWN);
+   pc.SetType(E_Token::CT_UNKNOWN);
    pc.Text().append(ctx.get());
 
    LOG_FMT(LWARN, "%s:%zu Garbage in col %zu: %x\n",
@@ -2714,14 +2714,14 @@ void tokenize(const deque<int> &data, Chunk *ref)
       }
 
       if (  language_is_set(lang_flag_e::LANG_JAVA)
-         && chunk.GetType() == CT_MEMBER
+         && chunk.GetType() == E_Token::CT_MEMBER
          && !memcmp(chunk.GetLogText(), "->", 2))
       {
-         chunk.SetType(CT_LAMBDA);
+         chunk.SetType(E_Token::CT_LAMBDA);
       }
 
       // Don't create an entry for whitespace
-      if (chunk.GetType() == CT_WHITESPACE)
+      if (chunk.GetType() == E_Token::CT_WHITESPACE)
       {
          last_was_tab = chunk.GetAfterTab();
          prev_sp      = chunk.GetOrigPrevSp();
@@ -2730,12 +2730,12 @@ void tokenize(const deque<int> &data, Chunk *ref)
       chunk.SetOrigPrevSp(prev_sp);
       prev_sp = 0;
 
-      if (chunk.GetType() == CT_NEWLINE)
+      if (chunk.GetType() == E_Token::CT_NEWLINE)
       {
          last_was_tab = chunk.GetAfterTab();
          chunk.SetAfterTab(false);
       }
-      else if (chunk.GetType() == CT_NL_CONT)
+      else if (chunk.GetType() == E_Token::CT_NL_CONT)
       {
          last_was_tab = chunk.GetAfterTab();
          chunk.SetAfterTab(false);
@@ -2747,7 +2747,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
       }
       num_stripped = 0; // Issue #1966 and #3565
 
-      if (chunk.GetType() != CT_IGNORED)
+      if (chunk.GetType() != E_Token::CT_IGNORED)
       {
          // Issue #1338
          // Strip trailing whitespace (for CPP comments and PP blocks)
@@ -2780,7 +2780,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
          pc->SetFlagBits(rprev->GetFlags() & PCF_COPY_FLAGS);
 
          // a newline can't be in a preprocessor
-         if (pc->Is(CT_NEWLINE))
+         if (pc->Is(E_Token::CT_NEWLINE))
          {
             pc->ResetFlagBits(PCF_IN_PREPROC);
          }
@@ -2797,21 +2797,21 @@ void tokenize(const deque<int> &data, Chunk *ref)
       pc = chunk.CopyAndAddBefore(ref);
 
       // A newline marks the end of a preprocessor
-      if (pc->Is(CT_NEWLINE)) // || pc->Is(CT_COMMENT_MULTI))
+      if (pc->Is(E_Token::CT_NEWLINE)) // || pc->Is(E_Token::CT_COMMENT_MULTI))
       {
-         cpd.in_preproc         = CT_NONE;
+         cpd.in_preproc         = E_Token::CT_NONE;
          cpd.preproc_ncnl_count = 0;
       }
 
       // Disable indentation when #asm directive found
-      if (pc->Is(CT_PP_ASM))
+      if (pc->Is(E_Token::CT_PP_ASM))
       {
          LOG_FMT(LBCTRL, "Found a directive %s on line %zu\n", "#asm", pc->GetOrigLine());
          cpd.unc_off = true;
       }
 
       // Special handling for preprocessor stuff
-      if (cpd.in_preproc != CT_NONE)
+      if (cpd.in_preproc != E_Token::CT_NONE)
       {
          pc->SetFlagBits(PCF_IN_PREPROC);
          // Issue #2225
@@ -2819,8 +2819,8 @@ void tokenize(const deque<int> &data, Chunk *ref)
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(),
                  get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
-         if (  pc->Is(CT_STRING_MULTI)
-            && pc->GetParentType() == CT_PP_INCLUDE)
+         if (  pc->Is(E_Token::CT_STRING_MULTI)
+            && pc->GetParentType() == E_Token::CT_PP_INCLUDE)
          {
             LOG_FMT(LWARN, "%s:%zu: File name is not possible %s\n",
                     cpd.filename.c_str(), pc->GetOrigLine(), pc->GetLogText());
@@ -2834,7 +2834,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
          }
 
          // Disable indentation if a #pragma asm directive is found
-         if (cpd.in_preproc == CT_PP_PRAGMA)
+         if (cpd.in_preproc == E_Token::CT_PP_PRAGMA)
          {
             if (strncmp(pc->GetLogText(), "asm", 3) == 0)
             {
@@ -2844,52 +2844,52 @@ void tokenize(const deque<int> &data, Chunk *ref)
          }
 
          // Figure out the type of preprocessor for #include parsing
-         if (cpd.in_preproc == CT_PREPROC)
+         if (cpd.in_preproc == E_Token::CT_PREPROC)
          {
-            if (  pc->GetType() < CT_PP_DEFINE
-               || pc->GetType() > CT_PP_OTHER)
+            if (  pc->GetType() < E_Token::CT_PP_DEFINE
+               || pc->GetType() > E_Token::CT_PP_OTHER)
             {
-               pc->SetType(CT_PP_OTHER);
+               pc->SetType(E_Token::CT_PP_OTHER);
             }
             cpd.in_preproc = pc->GetType();
          }
-         else if (cpd.in_preproc == CT_PP_IGNORE)
+         else if (cpd.in_preproc == E_Token::CT_PP_IGNORE)
          {
-            if (  !pc->Is(CT_NL_CONT)
+            if (  !pc->Is(E_Token::CT_NL_CONT)
                && !pc->IsComment())        // Issue #1966
             {
-               pc->SetType(CT_PP_IGNORE);
+               pc->SetType(E_Token::CT_PP_IGNORE);
             }
          }
-         else if (  cpd.in_preproc == CT_PP_DEFINE
-                 && pc->Is(CT_PAREN_CLOSE)
+         else if (  cpd.in_preproc == E_Token::CT_PP_DEFINE
+                 && pc->Is(E_Token::CT_PAREN_CLOSE)
                  && options::pp_ignore_define_body())
          {
             log_rule_B("pp_ignore_define_body");
             // When we have a PAREN_CLOSE in a PP_DEFINE we should be terminating a MACRO_FUNC
             // arguments list. Therefore we can enter the PP_IGNORE state and ignore next chunks.
-            cpd.in_preproc = CT_PP_IGNORE;
+            cpd.in_preproc = E_Token::CT_PP_IGNORE;
          }
       }
       else
       {
          // Check for a preprocessor start
-         if (  pc->Is(CT_POUND)
+         if (  pc->Is(E_Token::CT_POUND)
             && (  rprev->IsNullChunk()
-               || rprev->Is(CT_NEWLINE)))
+               || rprev->Is(E_Token::CT_NEWLINE)))
          {
-            pc->SetType(CT_PREPROC);
+            pc->SetType(E_Token::CT_PREPROC);
             pc->SetFlagBits(PCF_IN_PREPROC);
-            cpd.in_preproc = CT_PREPROC;
+            cpd.in_preproc = E_Token::CT_PREPROC;
          }
       }
 
-      if (pc->Is(CT_NEWLINE))
+      if (pc->Is(E_Token::CT_NEWLINE))
       {
          LOG_FMT(LBCTRL, "%s(%d): orig line is %zu, orig col is %zu, text is '<Newline>', len is %ld, nl count is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Len(), pc->GetNlCount());
       }
-      else if (pc->Is(CT_VBRACE_OPEN))
+      else if (pc->Is(E_Token::CT_VBRACE_OPEN))
       {
          LOG_FMT(LBCTRL, "%s(%d): orig line is %zu, orig col is %zu, type is %s, orig col end is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->GetOrigColEnd());

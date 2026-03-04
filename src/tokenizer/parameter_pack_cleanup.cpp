@@ -23,16 +23,16 @@ void parameter_pack_cleanup()
       LOG_CHUNK(LTOK, pc);
 
       // look for template
-      if (pc->Is(CT_TEMPLATE))                 // Issue #3309
+      if (pc->Is(E_Token::CT_TEMPLATE))                 // Issue #3309
       {
-         Chunk *template_end = pc->GetNextType(CT_SEMICOLON, pc->GetLevel());
+         Chunk *template_end = pc->GetNextType(E_Token::CT_SEMICOLON, pc->GetLevel());
 
          // look for a parameter pack
          while (pc->IsNotNullChunk())
          {
             LOG_CHUNK(LTOK, pc);
 
-            if (pc->Is(CT_PARAMETER_PACK))
+            if (pc->Is(E_Token::CT_PARAMETER_PACK))
             {
                Chunk *parameter_pack = pc;
 
@@ -48,7 +48,7 @@ void parameter_pack_cleanup()
 
                   if (strcmp(pc->GetLogText(), parameter_pack->GetLogText()) == 0)
                   {
-                     pc->SetType(CT_PARAMETER_PACK);
+                     pc->SetType(E_Token::CT_PARAMETER_PACK);
                   }
                   pc = pc->GetNext();
                }

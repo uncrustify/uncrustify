@@ -80,7 +80,7 @@ public:
    /**
     * @brief Sets the chunk type
     * @param token the type to set
-    * @note: for CT_NEWLINE and CT_NL_CONT tokens, it also sets the chunk text
+    * @note: for E_Token::CT_NEWLINE and E_Token::CT_NL_CONT tokens, it also sets the chunk text
     */
    void SetType(const E_Token token);
 
@@ -270,7 +270,7 @@ public:
    void SetColumnIndent(size_t col);
 
    /**
-    * @brief Returns the number of newlines in a CT_NEWLINE chunk
+    * @brief Returns the number of newlines in a E_Token::CT_NEWLINE chunk
     */
    size_t GetNlCount() const;
 
@@ -284,7 +284,7 @@ public:
    size_t GetNlCountFiltered(LineSkipConfig &skip) const;
 
    /**
-    * @brief Sets the number of newlines in a CT_NEWLINE chunk
+    * @brief Sets the number of newlines in a E_Token::CT_NEWLINE chunk
     * @param cnt the number of newlines
     */
    void SetNlCount(size_t cnt);
@@ -1058,7 +1058,7 @@ protected:
 
    // --------- Data members
    E_Token         m_type;                  //! type of the chunk itself
-   E_Token         m_parentType;            //! type of the parent chunk usually CT_NONE
+   E_Token         m_parentType;            //! type of the parent chunk usually E_Token::CT_NONE
    size_t          m_origLine;              //! line number of chunk in input file
    size_t          m_origCol;               //! column where chunk started in the input file, is always > 0
    size_t          m_origColEnd;            //! column where chunk ended in the input file, is always > 1
@@ -1066,7 +1066,7 @@ protected:
    size_t          m_column;                //! column of the chunk
    size_t          m_columnIndent;          //! if 1st chunk on a line, set to the 'indent' column, which may
                                             //! be less than the real column used to indent with tabs
-   size_t          m_nlCount;               //! number of newlines in CT_NEWLINE
+   size_t          m_nlCount;               //! number of newlines in E_Token::CT_NEWLINE
    size_t          m_nlColumn;              //! column of the subsequent newline entries(all of them should have the same column)
    size_t          m_level;                 //! nest level in {, (, or [. Only to help vim command }
    size_t          m_braceLevel;            //! nest level in braces only
@@ -1210,7 +1210,7 @@ inline E_Token Chunk::GetTypeOfParent() const
 {
    if (GetParent()->IsNullChunk())
    {
-      return(CT_PARENT_NOT_SET);
+      return(E_Token::CT_PARENT_NOT_SET);
    }
    return(GetParent()->GetType());
 }
@@ -1662,16 +1662,16 @@ inline bool Chunk::IsNot(E_Token token) const
 
 inline bool Chunk::IsNewline() const
 {
-   return(  Is(CT_NEWLINE)
-         || Is(CT_NL_CONT));
+   return(  Is(E_Token::CT_NEWLINE)
+         || Is(E_Token::CT_NL_CONT));
 }
 
 
 inline bool Chunk::IsComment() const
 {
-   return(  Is(CT_COMMENT)
-         || Is(CT_COMMENT_MULTI)
-         || Is(CT_COMMENT_CPP));
+   return(  Is(E_Token::CT_COMMENT)
+         || Is(E_Token::CT_COMMENT_MULTI)
+         || Is(E_Token::CT_COMMENT_CPP));
 }
 
 
@@ -1724,29 +1724,29 @@ inline bool Chunk::IsCommentNewlineOrIgnored() const
 {
    return(  IsComment()
          || IsNewline()
-         || Is(CT_IGNORED));
+         || Is(E_Token::CT_IGNORED));
 }
 
 
 inline bool Chunk::IsSingleLineComment() const
 {
-   return(  Is(CT_COMMENT)
-         || Is(CT_COMMENT_CPP));
+   return(  Is(E_Token::CT_COMMENT)
+         || Is(E_Token::CT_COMMENT_CPP));
 }
 
 
 inline bool Chunk::IsSquareBracket() const
 {
-   return(  Is(CT_SQUARE_OPEN)
-         || Is(CT_TSQUARE)
-         || Is(CT_SQUARE_CLOSE));
+   return(  Is(E_Token::CT_SQUARE_OPEN)
+         || Is(E_Token::CT_TSQUARE)
+         || Is(E_Token::CT_SQUARE_CLOSE));
 }
 
 
 inline bool Chunk::IsVBrace() const
 {
-   return(  Is(CT_VBRACE_OPEN)
-         || Is(CT_VBRACE_CLOSE));
+   return(  Is(E_Token::CT_VBRACE_OPEN)
+         || Is(E_Token::CT_VBRACE_CLOSE));
 }
 
 
@@ -1754,14 +1754,14 @@ inline bool Chunk::IsStar() const
 {
    return(  Len() == 1
          && m_text[0] == '*'
-         && IsNot(CT_OPERATOR_VAL));
+         && IsNot(E_Token::CT_OPERATOR_VAL));
 }
 
 
 inline bool Chunk::IsSemicolon() const
 {
-   return(  Is(CT_SEMICOLON)
-         || Is(CT_VSEMICOLON));
+   return(  Is(E_Token::CT_SEMICOLON)
+         || Is(E_Token::CT_VSEMICOLON));
 }
 
 
@@ -1786,7 +1786,7 @@ inline bool Chunk::IsMsRef() const
    return(  language_is_set(lang_flag_e::LANG_CPP)
          && Len() == 1
          && m_text[0] == '^'
-         && IsNot(CT_OPERATOR_VAL));
+         && IsNot(E_Token::CT_OPERATOR_VAL));
 }
 
 
@@ -1802,45 +1802,45 @@ inline bool Chunk::IsPointerOperator() const
 inline bool Chunk::IsPointerOrReference() const
 {
    return(  IsPointerOperator()
-         || Is(CT_BYREF));
+         || Is(E_Token::CT_BYREF));
 }
 
 
 inline bool Chunk::IsBraceOpen() const
 {
-   return(  Is(CT_BRACE_OPEN)
-         || Is(CT_VBRACE_OPEN));
+   return(  Is(E_Token::CT_BRACE_OPEN)
+         || Is(E_Token::CT_VBRACE_OPEN));
 }
 
 
 inline bool Chunk::IsBraceClose() const
 {
-   return(  Is(CT_BRACE_CLOSE)
-         || Is(CT_VBRACE_CLOSE));
+   return(  Is(E_Token::CT_BRACE_CLOSE)
+         || Is(E_Token::CT_VBRACE_CLOSE));
 }
 
 
 inline bool Chunk::IsParenOpen() const
 {
-   return(  Is(CT_PAREN_OPEN)
-         || Is(CT_FPAREN_OPEN)
-         || Is(CT_LPAREN_OPEN)
-         || Is(CT_PPAREN_OPEN)
-         || Is(CT_RPAREN_OPEN)
-         || Is(CT_SPAREN_OPEN)
-         || Is(CT_TPAREN_OPEN));
+   return(  Is(E_Token::CT_PAREN_OPEN)
+         || Is(E_Token::CT_FPAREN_OPEN)
+         || Is(E_Token::CT_LPAREN_OPEN)
+         || Is(E_Token::CT_PPAREN_OPEN)
+         || Is(E_Token::CT_RPAREN_OPEN)
+         || Is(E_Token::CT_SPAREN_OPEN)
+         || Is(E_Token::CT_TPAREN_OPEN));
 }
 
 
 inline bool Chunk::IsParenClose() const
 {
-   return(  Is(CT_PAREN_CLOSE)
-         || Is(CT_FPAREN_CLOSE)
-         || Is(CT_LPAREN_CLOSE)
-         || Is(CT_PPAREN_CLOSE)
-         || Is(CT_RPAREN_CLOSE)
-         || Is(CT_SPAREN_CLOSE)
-         || Is(CT_TPAREN_CLOSE));
+   return(  Is(E_Token::CT_PAREN_CLOSE)
+         || Is(E_Token::CT_FPAREN_CLOSE)
+         || Is(E_Token::CT_LPAREN_CLOSE)
+         || Is(E_Token::CT_PPAREN_CLOSE)
+         || Is(E_Token::CT_RPAREN_CLOSE)
+         || Is(E_Token::CT_SPAREN_CLOSE)
+         || Is(E_Token::CT_TPAREN_CLOSE));
 }
 
 
@@ -1856,7 +1856,7 @@ inline bool Chunk::SafeToDeleteNl() const
 {
    const Chunk *tmp = GetPrev();
 
-   if (tmp->Is(CT_COMMENT_CPP))
+   if (tmp->Is(E_Token::CT_COMMENT_CPP))
    {
       return(false);
    }
@@ -1866,22 +1866,22 @@ inline bool Chunk::SafeToDeleteNl() const
 
 inline bool Chunk::IsEnum() const
 {
-   return(  Is(CT_ENUM)
-         || Is(CT_ENUM_CLASS));
+   return(  Is(E_Token::CT_ENUM)
+         || Is(E_Token::CT_ENUM_CLASS));
 }
 
 
 inline bool Chunk::IsClassOrStruct() const
 {
-   return(  Is(CT_CLASS)
-         || Is(CT_STRUCT));
+   return(  Is(E_Token::CT_CLASS)
+         || Is(E_Token::CT_STRUCT));
 }
 
 
 inline bool Chunk::IsClassStructOrUnion() const
 {
    return(  IsClassOrStruct()
-         || Is(CT_UNION));
+         || Is(E_Token::CT_UNION));
 }
 
 

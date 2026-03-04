@@ -35,11 +35,11 @@ Chunk *newline_var_def_blk(Chunk *start)
    LOG_FMT(LVARDFBLK, "%s(%d): start orig line is %zu, orig col is %zu, text is '%s'\n",
            __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol(), start->GetLogText());
 
-   if (start->Is(CT_BRACE_OPEN))
+   if (start->Is(E_Token::CT_BRACE_OPEN))
    {
       // can't be any variable definitions in a "= {" block
       if (  prev->IsNotNullChunk()
-         && prev->Is(CT_ASSIGN))
+         && prev->Is(E_Token::CT_ASSIGN))
       {
          Chunk *tmp = start->GetClosingParen();
          return(tmp->GetNextNcNnl());
@@ -61,14 +61,14 @@ Chunk *newline_var_def_blk(Chunk *start)
       LOG_FMT(LVARDFBLK, "%s(%d): next_pc orig line is %zu, orig col is %zu, type is %s, text is '%s'\n",
               __func__, __LINE__, next_pc->GetOrigLine(), next_pc->GetOrigCol(), get_token_name(next_pc->GetType()), next_pc->GetLogText());
 
-      // If next_pc token is CT_DC_MEMBER, skip it
-      if (next_pc->Is(CT_DC_MEMBER))
+      // If next_pc token is E_Token::CT_DC_MEMBER, skip it
+      if (next_pc->Is(E_Token::CT_DC_MEMBER))
       {
          pc = pc->SkipDcMember();
       }
 
       // skip qualifiers
-      if (pc->Is(CT_QUALIFIER))
+      if (pc->Is(E_Token::CT_QUALIFIER))
       {
          pc = pc->GetNext();
          continue;
@@ -81,23 +81,23 @@ Chunk *newline_var_def_blk(Chunk *start)
       }
 
       // process nested braces
-      if (pc->Is(CT_BRACE_OPEN))
+      if (pc->Is(E_Token::CT_BRACE_OPEN))
       {
          pc = newline_var_def_blk(pc);
          continue;
       }
 
       // Done with this brace set?
-      if (pc->Is(CT_BRACE_CLOSE))
+      if (pc->Is(E_Token::CT_BRACE_CLOSE))
       {
          pc = pc->GetNext();
          break;
       }
 
       // skip vbraces
-      if (pc->Is(CT_VBRACE_OPEN))
+      if (pc->Is(E_Token::CT_VBRACE_OPEN))
       {
-         pc = pc->GetNextType(CT_VBRACE_CLOSE, pc->GetLevel());
+         pc = pc->GetNextType(E_Token::CT_VBRACE_CLOSE, pc->GetLevel());
          pc = pc->GetNext();
          continue;
       }
@@ -118,7 +118,7 @@ Chunk *newline_var_def_blk(Chunk *start)
 
       // Determine if this is a variable definition or code
       if (  !did_this_line
-         && pc->IsNot(CT_FUNC_CLASS_PROTO)
+         && pc->IsNot(E_Token::CT_FUNC_CLASS_PROTO)
          && (  (pc->GetLevel() == (start->GetLevel() + 1))
             || pc->GetLevel() == 0))
       {
@@ -129,10 +129,10 @@ Chunk *newline_var_def_blk(Chunk *start)
                  __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()), next->GetLogText());
 
          // skip over all other type-like things
-         while (  next->Is(CT_PTR_TYPE)  // Issue #2692
-               || next->Is(CT_BYREF)     // Issue #3018
-               || next->Is(CT_QUALIFIER)
-               || next->Is(CT_TSQUARE))
+         while (  next->Is(E_Token::CT_PTR_TYPE)  // Issue #2692
+               || next->Is(E_Token::CT_BYREF)     // Issue #3018
+               || next->Is(E_Token::CT_QUALIFIER)
+               || next->Is(E_Token::CT_TSQUARE))
          {
             next = next->GetNextNcNnl();
             LOG_FMT(LVARDFBLK, "%s(%d): next orig line is %zu, orig col is %zu, text is '%s'\n",
@@ -155,9 +155,9 @@ Chunk *newline_var_def_blk(Chunk *start)
          LOG_FMT(LVARDFBLK, "%s(%d): prev orig line is %zu, orig col is %zu, type is %s, text is '%s'\n",
                  __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), get_token_name(prev->GetType()), prev->GetLogText());
 
-         while (  prev->Is(CT_DC_MEMBER)
-               || prev->Is(CT_QUALIFIER)
-               || prev->Is(CT_TYPE))
+         while (  prev->Is(E_Token::CT_DC_MEMBER)
+               || prev->Is(E_Token::CT_QUALIFIER)
+               || prev->Is(E_Token::CT_TYPE))
          {
             prev = prev->GetPrevNcNnl();
          }
@@ -165,24 +165,24 @@ Chunk *newline_var_def_blk(Chunk *start)
          if (!(  prev->IsBraceOpen()
               || prev->IsBraceClose()))
          {
-            prev = pc->GetPrevType(CT_SEMICOLON, pc->GetLevel());
+            prev = pc->GetPrevType(E_Token::CT_SEMICOLON, pc->GetLevel());
          }
 
          if (prev->IsNullChunk())
          {
-            prev = pc->GetPrevType(CT_BRACE_OPEN, pc->GetLevel() - 1);      // Issue #2692
+            prev = pc->GetPrevType(E_Token::CT_BRACE_OPEN, pc->GetLevel() - 1);      // Issue #2692
          }
 
-         if (  prev->Is(CT_STRING)
-            && prev->GetParentType() == CT_EXTERN
-            && prev->GetPrev()->Is(CT_EXTERN))
+         if (  prev->Is(E_Token::CT_STRING)
+            && prev->GetParentType() == E_Token::CT_EXTERN
+            && prev->GetPrev()->Is(E_Token::CT_EXTERN))
          {
             prev = prev->GetPrev()->GetPrevNcNnlNi();   // Issue #2279
          }
          LOG_FMT(LVARDFBLK, "%s(%d): prev orig line is %zu, orig col is %zu, type is %s, text is '%s'\n",
                  __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), get_token_name(prev->GetType()), prev->GetLogText());
 
-         if (pc->Is(CT_FUNC_CLASS_DEF))
+         if (pc->Is(E_Token::CT_FUNC_CLASS_DEF))
          {
             log_rule_B("nl_var_def_blk_end");
 
@@ -247,7 +247,7 @@ Chunk *newline_var_def_blk(Chunk *start)
                   }
                }
             }
-            pc      = pc->GetNextType(CT_SEMICOLON, pc->GetLevel());
+            pc      = pc->GetNextType(E_Token::CT_SEMICOLON, pc->GetLevel());
             var_blk = true;
          }
          else if (var_blk)

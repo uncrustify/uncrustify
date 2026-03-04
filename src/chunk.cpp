@@ -59,8 +59,8 @@ void Chunk::CopyFrom(const Chunk &o)
 
 void Chunk::Reset()
 {
-   m_type         = CT_NONE;
-   m_parentType   = CT_NONE;
+   m_type         = E_Token::CT_NONE;
+   m_parentType   = E_Token::CT_NONE;
    m_origLine     = 0;
    m_origCol      = 0;
    m_origColEnd   = 0;
@@ -241,7 +241,7 @@ bool Chunk::IsOnSameLine(const Chunk *end) const
    while (  tmp->IsNotNullChunk()
          && tmp != end)
    {
-      if (tmp->Is(CT_NEWLINE))
+      if (tmp->Is(E_Token::CT_NEWLINE))
       {
          return(false);
       }
@@ -298,11 +298,11 @@ Chunk *Chunk::SearchPpa(const T_CheckFnPtr checkFn, const bool cond) const
       {
          // Bail if we run off the end of the preprocessor directive, but return
          // the token because the caller may need to know where the search ended
-         assert(pc->Is(CT_NEWLINE));
+         assert(pc->Is(E_Token::CT_NEWLINE));
          return(pc);
       }
 
-      if (pc->Is(CT_NL_CONT))
+      if (pc->Is(E_Token::CT_NL_CONT))
       {
          // Skip line continuation
          pc = pc->GetNext();
@@ -326,15 +326,15 @@ static void chunk_log_msg(const Chunk *chunk, const log_sev_t log, const char *s
    LOG_FMT(log, "%s orig line is %zu, orig col is %zu, ",
            str, chunk->GetOrigLine(), chunk->GetOrigCol());
 
-   if (chunk->Is(CT_NEWLINE))
+   if (chunk->Is(E_Token::CT_NEWLINE))
    {
       LOG_FMT(log, "<Newline>,\n");
    }
-   else if (chunk->Is(CT_VBRACE_OPEN))
+   else if (chunk->Is(E_Token::CT_VBRACE_OPEN))
    {
       LOG_FMT(log, "<VBRACE_OPEN>,\n");
    }
-   else if (chunk->Is(CT_VBRACE_CLOSE))
+   else if (chunk->Is(E_Token::CT_VBRACE_CLOSE))
    {
       LOG_FMT(log, "<VBRACE_CLOSE>,\n");
    }
@@ -414,16 +414,16 @@ void Chunk::Swap(Chunk *other)
 bool Chunk::IsAddress() const
 {
    if (  IsNotNullChunk()
-      && (  Is(CT_BYREF)
+      && (  Is(E_Token::CT_BYREF)
          || (  Len() == 1
             && m_text[0] == '&'
-            && IsNot(CT_OPERATOR_VAL))))
+            && IsNot(E_Token::CT_OPERATOR_VAL))))
    {
       const Chunk *prevc = GetPrev();
 
       if (  TestFlags(PCF_IN_TEMPLATE)
-         && (  prevc->Is(CT_COMMA)
-            || prevc->Is(CT_ANGLE_OPEN)))
+         && (  prevc->Is(E_Token::CT_COMMA)
+            || prevc->Is(E_Token::CT_ANGLE_OPEN)))
       {
          return(false);
       }
@@ -458,7 +458,7 @@ bool Chunk::IsLastChunkOnLine() const
    }
 
    // if the next chunk is a newline then pc is the last chunk on its line
-   if (GetNext()->Is(CT_NEWLINE))
+   if (GetNext()->Is(E_Token::CT_NEWLINE))
    {
       return(true);
    }
@@ -584,17 +584,17 @@ void Chunk::SetType(const E_Token token)
    LOG_FMT(LSETTYP, "%s(%d): m_origLine is %zu, m_origCol is %zu, text is ",
            __func__, __LINE__, m_origLine, m_origCol);
 
-   if (token == CT_NEWLINE)
+   if (token == E_Token::CT_NEWLINE)
    {
       LOG_FMT(LSETTYP, "<newline (NL)>");
       Text() = "\n";
    }
-   else if (token == CT_NL_CONT)
+   else if (token == E_Token::CT_NL_CONT)
    {
       LOG_FMT(LSETTYP, "<newline (NL CONT)>");
       Text() = "\\\n";
    }
-   else if (token == CT_WHITESPACE)
+   else if (token == E_Token::CT_WHITESPACE)
    {
       LOG_FMT(LSETTYP, "<whitespace>");
    }
@@ -621,7 +621,7 @@ void Chunk::SetParentType(const E_Token token)
    LOG_FMT(LSETPAR, "%s(%d): orig line is %zu, orig col is %zu, text is ",
            __func__, __LINE__, m_origLine, m_origCol);
 
-   if (token == CT_NEWLINE)
+   if (token == E_Token::CT_NEWLINE)
    {
       LOG_FMT(LSETPAR, "<Newline>\n");
    }
@@ -683,10 +683,10 @@ Chunk *Chunk::GetNextNbsb() const
 {
    Chunk *pc = const_cast<Chunk *>(this);
 
-   while (  pc->Is(CT_TSQUARE)
-         || pc->Is(CT_SQUARE_OPEN))
+   while (  pc->Is(E_Token::CT_TSQUARE)
+         || pc->Is(E_Token::CT_SQUARE_OPEN))
    {
-      if (pc->Is(CT_SQUARE_OPEN))
+      if (pc->Is(E_Token::CT_SQUARE_OPEN))
       {
          pc = pc->GetClosingParen();
       }
@@ -700,10 +700,10 @@ Chunk *Chunk::GetPrevNbsb() const
 {
    Chunk *pc = const_cast<Chunk *>(this);
 
-   while (  pc->Is(CT_TSQUARE)
-         || pc->Is(CT_SQUARE_CLOSE))
+   while (  pc->Is(E_Token::CT_TSQUARE)
+         || pc->Is(E_Token::CT_SQUARE_CLOSE))
    {
-      if (pc->Is(CT_SQUARE_CLOSE))
+      if (pc->Is(E_Token::CT_SQUARE_CLOSE))
       {
          pc = pc->GetOpeningParen();
       }
@@ -737,9 +737,9 @@ Chunk *Chunk::SkipDcMember() const
    LOG_FUNC_ENTRY();
 
    Chunk       *pc  = const_cast<Chunk *>(this);
-   const Chunk *nxt = pc->Is(CT_DC_MEMBER) ? pc : pc->GetNextNcNnl(E_Scope::ALL);
+   const Chunk *nxt = pc->Is(E_Token::CT_DC_MEMBER) ? pc : pc->GetNextNcNnl(E_Scope::ALL);
 
-   while (nxt->Is(CT_DC_MEMBER))
+   while (nxt->Is(E_Token::CT_DC_MEMBER))
    {
       pc = nxt->GetNextNcNnl(E_Scope::ALL);
 
@@ -777,19 +777,19 @@ int Chunk::ComparePosition(const Chunk *other) const
 bool Chunk::IsOCForinOpenParen() const
 {
    if (  language_is_set(lang_flag_e::LANG_OC)
-      && Is(CT_SPAREN_OPEN)
-      && GetPrevNcNnl()->Is(CT_FOR))
+      && Is(E_Token::CT_SPAREN_OPEN)
+      && GetPrevNcNnl()->Is(E_Token::CT_FOR))
    {
       const Chunk *nxt = const_cast<Chunk *>(this);
 
       while (  nxt->IsNotNullChunk()
-            && nxt->IsNot(CT_SPAREN_CLOSE)
-            && nxt->IsNot(CT_IN))
+            && nxt->IsNot(E_Token::CT_SPAREN_CLOSE)
+            && nxt->IsNot(E_Token::CT_IN))
       {
          nxt = nxt->GetNextNcNnl();
       }
 
-      if (nxt->Is(CT_IN))
+      if (nxt->Is(E_Token::CT_IN))
       {
          return(true);
       }
@@ -813,14 +813,14 @@ bool Chunk::IsStringAndLevel(const char *str, const size_t len,
 
 Chunk *Chunk::GetClosingParen(E_Scope scope) const
 {
-   if (  Is(CT_PAREN_OPEN)
-      || Is(CT_SPAREN_OPEN)
-      || Is(CT_FPAREN_OPEN)
-      || Is(CT_TPAREN_OPEN)
-      || Is(CT_BRACE_OPEN)
-      || Is(CT_VBRACE_OPEN)
-      || Is(CT_ANGLE_OPEN)
-      || Is(CT_SQUARE_OPEN))
+   if (  Is(E_Token::CT_PAREN_OPEN)
+      || Is(E_Token::CT_SPAREN_OPEN)
+      || Is(E_Token::CT_FPAREN_OPEN)
+      || Is(E_Token::CT_TPAREN_OPEN)
+      || Is(E_Token::CT_BRACE_OPEN)
+      || Is(E_Token::CT_VBRACE_OPEN)
+      || Is(E_Token::CT_ANGLE_OPEN)
+      || Is(E_Token::CT_SQUARE_OPEN))
    {
       return(GetNextType((E_Token)(m_type + 1), m_level, scope));
    }
@@ -830,14 +830,14 @@ Chunk *Chunk::GetClosingParen(E_Scope scope) const
 
 Chunk *Chunk::GetOpeningParen(E_Scope scope) const
 {
-   if (  Is(CT_PAREN_CLOSE)
-      || Is(CT_SPAREN_CLOSE)
-      || Is(CT_FPAREN_CLOSE)
-      || Is(CT_TPAREN_CLOSE)
-      || Is(CT_BRACE_CLOSE)
-      || Is(CT_VBRACE_CLOSE)
-      || Is(CT_ANGLE_CLOSE)
-      || Is(CT_SQUARE_CLOSE))
+   if (  Is(E_Token::CT_PAREN_CLOSE)
+      || Is(E_Token::CT_SPAREN_CLOSE)
+      || Is(E_Token::CT_FPAREN_CLOSE)
+      || Is(E_Token::CT_TPAREN_CLOSE)
+      || Is(E_Token::CT_BRACE_CLOSE)
+      || Is(E_Token::CT_VBRACE_CLOSE)
+      || Is(E_Token::CT_ANGLE_CLOSE)
+      || Is(E_Token::CT_SQUARE_CLOSE))
    {
       return(GetPrevType((E_Token)(m_type - 1), m_level, scope));
    }
@@ -848,8 +848,8 @@ Chunk *Chunk::GetOpeningParen(E_Scope scope) const
 bool Chunk::IsCppInheritanceAccessSpecifier() const
 {
    return(  language_is_set(lang_flag_e::LANG_CPP)
-         && (  Is(CT_ACCESS)
-            || Is(CT_QUALIFIER))
+         && (  Is(E_Token::CT_ACCESS)
+            || Is(E_Token::CT_QUALIFIER))
          && (  IsString("private")
             || IsString("protected")
             || IsString("public")));
@@ -858,23 +858,23 @@ bool Chunk::IsCppInheritanceAccessSpecifier() const
 
 bool Chunk::IsColon() const
 {
-   return(  Is(CT_ACCESS_COLON)
-         || Is(CT_ASM_COLON)
-         || Is(CT_BIT_COLON)
-         || Is(CT_CASE_COLON)
-         || Is(CT_CLASS_COLON)
-         || Is(CT_COLON)
-         || Is(CT_COND_COLON)
-         || Is(CT_CONSTR_COLON)
-         || Is(CT_CS_SQ_COLON)
-         || Is(CT_D_ARRAY_COLON)
-         || Is(CT_ENUM_COLON)
-         || Is(CT_FOR_COLON)
-         || Is(CT_LABEL_COLON)
-         || Is(CT_OC_COLON)
-         || Is(CT_OC_DICT_COLON)
-         || Is(CT_TAG_COLON)
-         || Is(CT_WHERE_COLON));
+   return(  Is(E_Token::CT_ACCESS_COLON)
+         || Is(E_Token::CT_ASM_COLON)
+         || Is(E_Token::CT_BIT_COLON)
+         || Is(E_Token::CT_CASE_COLON)
+         || Is(E_Token::CT_CLASS_COLON)
+         || Is(E_Token::CT_COLON)
+         || Is(E_Token::CT_COND_COLON)
+         || Is(E_Token::CT_CONSTR_COLON)
+         || Is(E_Token::CT_CS_SQ_COLON)
+         || Is(E_Token::CT_D_ARRAY_COLON)
+         || Is(E_Token::CT_ENUM_COLON)
+         || Is(E_Token::CT_FOR_COLON)
+         || Is(E_Token::CT_LABEL_COLON)
+         || Is(E_Token::CT_OC_COLON)
+         || Is(E_Token::CT_OC_DICT_COLON)
+         || Is(E_Token::CT_TAG_COLON)
+         || Is(E_Token::CT_WHERE_COLON));
 } // Chunk::IsColon
 
 
@@ -899,14 +899,14 @@ bool Chunk::IsDoxygenComment() const
 
 bool Chunk::IsTypeDefinition() const
 {
-   return(  Is(CT_TYPE)
-         || Is(CT_PTR_TYPE)
-         || Is(CT_BYREF)
-         || Is(CT_DC_MEMBER)
-         || Is(CT_QUALIFIER)
-         || Is(CT_STRUCT)
-         || Is(CT_ENUM)
-         || Is(CT_UNION));
+   return(  Is(E_Token::CT_TYPE)
+         || Is(E_Token::CT_PTR_TYPE)
+         || Is(E_Token::CT_BYREF)
+         || Is(E_Token::CT_DC_MEMBER)
+         || Is(E_Token::CT_QUALIFIER)
+         || Is(E_Token::CT_STRUCT)
+         || Is(E_Token::CT_ENUM)
+         || Is(E_Token::CT_UNION));
 } // Chunk::IsTypeDefinition
 
 
@@ -999,7 +999,7 @@ void shift_the_rest_of_the_line(Chunk *first)
       temp->SetOrigCol(temp->GetOrigCol() + 1);                       // Issue #3236
       temp->SetOrigColEnd(temp->GetOrigColEnd() + 1);                 // Issue #3236
 
-      if (temp->Is(CT_NEWLINE))
+      if (temp->Is(E_Token::CT_NEWLINE))
       {
          break;
       }

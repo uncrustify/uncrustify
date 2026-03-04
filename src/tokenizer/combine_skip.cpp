@@ -14,20 +14,20 @@ Chunk *skip_align(Chunk *start)
 {
    Chunk *pc = start;
 
-   if (pc->Is(CT_ALIGN))
+   if (pc->Is(E_Token::CT_ALIGN))
    {
       pc = pc->GetNextNcNnl();
 
-      if (pc->Is(CT_PAREN_OPEN))
+      if (pc->Is(E_Token::CT_PAREN_OPEN))
       {
-         pc = pc->GetNextType(CT_PAREN_CLOSE, pc->GetLevel());
+         pc = pc->GetNextType(E_Token::CT_PAREN_CLOSE, pc->GetLevel());
 
          if (pc->IsNotNullChunk())
          {
             pc = pc->GetNextNcNnl();
          }
 
-         if (pc->Is(CT_COLON))
+         if (pc->Is(E_Token::CT_COLON))
          {
             pc = pc->GetNextNcNnl();
          }
@@ -67,7 +67,7 @@ static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(Chunk::*GetNextFn)(E_Sc
           * return the current chunk
           */
          if (  next->GetLevel() == level
-            && (  next->Is(CT_COMMA)
+            && (  next->Is(E_Token::CT_COMMA)
                || next->IsSemicolon()))
          {
             break;
@@ -106,8 +106,8 @@ Chunk *skip_to_next_statement(Chunk *pc)
 {
    while (  pc->IsNotNullChunk()
          && !pc->IsSemicolon()
-         && pc->IsNot(CT_BRACE_OPEN)
-         && pc->IsNot(CT_BRACE_CLOSE))
+         && pc->IsNot(E_Token::CT_BRACE_OPEN)
+         && pc->IsNot(E_Token::CT_BRACE_CLOSE))
    {
       pc = pc->GetNextNcNnl();
    }
@@ -117,9 +117,9 @@ Chunk *skip_to_next_statement(Chunk *pc)
 
 Chunk *skip_template_prev(Chunk *ang_close)
 {
-   if (ang_close->Is(CT_ANGLE_CLOSE))
+   if (ang_close->Is(E_Token::CT_ANGLE_CLOSE))
    {
-      Chunk *pc = ang_close->GetPrevType(CT_ANGLE_OPEN, ang_close->GetLevel());
+      Chunk *pc = ang_close->GetPrevType(E_Token::CT_ANGLE_OPEN, ang_close->GetLevel());
       return(pc->GetPrevNcNnlNi());   // Issue #2279
    }
    return(ang_close);
@@ -128,8 +128,8 @@ Chunk *skip_template_prev(Chunk *ang_close)
 
 Chunk *skip_tsquare_next(Chunk *ary_def)
 {
-   if (  ary_def->Is(CT_SQUARE_OPEN)
-      || ary_def->Is(CT_TSQUARE))
+   if (  ary_def->Is(E_Token::CT_SQUARE_OPEN)
+      || ary_def->Is(E_Token::CT_TSQUARE))
    {
       return(ary_def->GetNextNisq());
    }
@@ -141,13 +141,13 @@ Chunk *skip_attribute(Chunk *attr)
 {
    Chunk *pc = attr;
 
-   while (pc->Is(CT_ATTRIBUTE))
+   while (pc->Is(E_Token::CT_ATTRIBUTE))
    {
       pc = pc->GetNextNcNnl();
 
-      if (pc->Is(CT_FPAREN_OPEN))
+      if (pc->Is(E_Token::CT_FPAREN_OPEN))
       {
-         pc = pc->GetNextType(CT_FPAREN_CLOSE, pc->GetLevel());
+         pc = pc->GetNextType(E_Token::CT_FPAREN_CLOSE, pc->GetLevel());
       }
    }
    return(pc);
@@ -159,7 +159,7 @@ Chunk *skip_attribute_next(Chunk *attr)
    Chunk *next = skip_attribute(attr);
 
    if (  next != attr
-      && next->Is(CT_FPAREN_CLOSE))
+      && next->Is(E_Token::CT_FPAREN_CLOSE))
    {
       attr = next->GetNextNcNnl();
    }
@@ -173,12 +173,12 @@ Chunk *skip_attribute_prev(Chunk *fp_close)
 
    while (true)
    {
-      if (  pc->Is(CT_FPAREN_CLOSE)
-         && pc->GetParentType() == CT_ATTRIBUTE)
+      if (  pc->Is(E_Token::CT_FPAREN_CLOSE)
+         && pc->GetParentType() == E_Token::CT_ATTRIBUTE)
       {
-         pc = pc->GetPrevType(CT_ATTRIBUTE, pc->GetLevel());
+         pc = pc->GetPrevType(E_Token::CT_ATTRIBUTE, pc->GetLevel());
       }
-      else if (pc->IsNot(CT_ATTRIBUTE))
+      else if (pc->IsNot(E_Token::CT_ATTRIBUTE))
       {
          break;
       }
@@ -195,11 +195,11 @@ Chunk *skip_attribute_prev(Chunk *fp_close)
 
 Chunk *skip_declspec(Chunk *pc)
 {
-   if (pc->Is(CT_DECLSPEC))
+   if (pc->Is(E_Token::CT_DECLSPEC))
    {
       pc = pc->GetNextNcNnl();
 
-      if (pc->Is(CT_PAREN_OPEN))
+      if (pc->Is(E_Token::CT_PAREN_OPEN))
       {
          pc = pc->GetClosingParen();
       }
@@ -213,7 +213,7 @@ Chunk *skip_declspec_next(Chunk *pc)
    Chunk *next = skip_declspec(pc);
 
    if (  next != pc
-      && next->Is(CT_PAREN_CLOSE))
+      && next->Is(E_Token::CT_PAREN_CLOSE))
    {
       pc = next->GetNextNcNnl();
    }

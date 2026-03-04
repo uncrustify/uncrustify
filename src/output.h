@@ -35,9 +35,9 @@ void output_text(FILE *pfile);
  * it turns out that just looking at pc->GetPpLevel() is NOT the right thing to do.
  * See a --parsed dump if you don't believe this: an '#endif' will be one level
  * UP from the corresponding #ifdef when you look at the tokens 'ifdef' versus 'endif',
- * but it's a whole another story when you look at their CT_PREPROC ('#') tokens!
+ * but it's a whole another story when you look at their E_Token::CT_PREPROC ('#') tokens!
  *
- * Hence we need to track and seek matching CT_PREPROC pp_levels here, which complicates
+ * Hence we need to track and seek matching E_Token::CT_PREPROC pp_levels here, which complicates
  * things a little bit, but not much.
  */
 void add_long_preprocessor_conditional_block_comment();

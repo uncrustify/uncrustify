@@ -789,7 +789,7 @@ EMSCRIPTEN_BINDINGS(MainModule)
 
    enum_<E_Token>("TokenType")
       .value("NONE", E_Token::CT_NONE)
-      .value("EOF", E_Token::CT_EOF)
+      .value("EOFILE", E_Token::CT_EOF)
       .value("UNKNOWN", E_Token::CT_UNKNOWN)
       .value("JUNK", E_Token::CT_JUNK)
       .value("WHITESPACE", E_Token::CT_WHITESPACE)

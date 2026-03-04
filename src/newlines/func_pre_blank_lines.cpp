@@ -35,13 +35,13 @@ void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
    log_rule_B("nl_before_func_body_proto");
 
    if (  start->IsNullChunk()
-      || (  (  start_type != CT_FUNC_CLASS_DEF
+      || (  (  start_type != E_Token::CT_FUNC_CLASS_DEF
             || options::nl_before_func_class_def() == 0)
-         && (  start_type != CT_FUNC_CLASS_PROTO
+         && (  start_type != E_Token::CT_FUNC_CLASS_PROTO
             || options::nl_before_func_class_proto() == 0)
-         && (  start_type != CT_FUNC_DEF
+         && (  start_type != E_Token::CT_FUNC_DEF
             || options::nl_before_func_body_def() == 0)
-         && (  start_type != CT_FUNC_PROTO
+         && (  start_type != E_Token::CT_FUNC_PROTO
             || options::nl_before_func_body_proto() == 0)))
    {
       return;
@@ -99,9 +99,9 @@ void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
 
          if (  (  pc->GetOrigLine() < first_line
                && ((first_line - pc->GetOrigLine()
-                    - (pc->Is(CT_COMMENT_MULTI) ? pc->GetNlCount() : 0))) < 2)
+                    - (pc->Is(E_Token::CT_COMMENT_MULTI) ? pc->GetNlCount() : 0))) < 2)
             || (  last_comment->IsNotNullChunk()
-               && pc->Is(CT_COMMENT_CPP)          // combine only cpp comments
+               && pc->Is(E_Token::CT_COMMENT_CPP) // combine only cpp comments
                && last_comment->Is(pc->GetType()) // don't mix comment types
                && last_comment->GetOrigLine() > pc->GetOrigLine()
                && (last_comment->GetOrigLine() - pc->GetOrigLine()) < 2))
@@ -114,24 +114,24 @@ void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
                  __func__, __LINE__, break_now ? "TRUE" : "FALSE");
          continue;
       }
-      else if (  pc->Is(CT_DESTRUCTOR)
-              || pc->Is(CT_TYPE)
-              || pc->Is(CT_TEMPLATE)
-              || pc->Is(CT_QUALIFIER)
-              || pc->Is(CT_PTR_TYPE)
-              || pc->Is(CT_BYREF)                  // Issue #2163
-              || pc->Is(CT_DC_MEMBER)
-              || pc->Is(CT_EXTERN)
-              || (  pc->Is(CT_STRING)
-                 && pc->GetParentType() == CT_EXTERN))
+      else if (  pc->Is(E_Token::CT_DESTRUCTOR)
+              || pc->Is(E_Token::CT_TYPE)
+              || pc->Is(E_Token::CT_TEMPLATE)
+              || pc->Is(E_Token::CT_QUALIFIER)
+              || pc->Is(E_Token::CT_PTR_TYPE)
+              || pc->Is(E_Token::CT_BYREF)                  // Issue #2163
+              || pc->Is(E_Token::CT_DC_MEMBER)
+              || pc->Is(E_Token::CT_EXTERN)
+              || (  pc->Is(E_Token::CT_STRING)
+                 && pc->GetParentType() == E_Token::CT_EXTERN))
       {
          LOG_FMT(LNLFUNCT, "%s(%d): first_line set to %zu\n",
                  __func__, __LINE__, pc->GetOrigLine());
          first_line = pc->GetOrigLine();
          continue;
       }
-      else if (  pc->Is(CT_ANGLE_CLOSE)
-              && pc->GetParentType() == CT_TEMPLATE)
+      else if (  pc->Is(E_Token::CT_ANGLE_CLOSE)
+              && pc->GetParentType() == E_Token::CT_TEMPLATE)
       {
          LOG_FMT(LNLFUNCT, "%s(%d):\n", __func__, __LINE__);
          // skip template stuff to add newlines before it

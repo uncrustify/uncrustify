@@ -125,10 +125,10 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
       }
 
       // Don't check inside SPAREN, PAREN or SQUARE groups
-      if (  pc->Is(CT_SPAREN_OPEN)
-            // || pc->Is(CT_FPAREN_OPEN) Issue #1340
-         || pc->Is(CT_SQUARE_OPEN)
-         || pc->Is(CT_PAREN_OPEN))
+      if (  pc->Is(E_Token::CT_SPAREN_OPEN)
+            // || pc->Is(E_Token::CT_FPAREN_OPEN) Issue #1340
+         || pc->Is(E_Token::CT_SQUARE_OPEN)
+         || pc->Is(E_Token::CT_PAREN_OPEN))
       {
          LOG_FMT(LALASS, "%s(%d): Don't check inside SPAREN, PAREN or SQUARE groups, type is %s\n",
                  __func__, __LINE__, get_token_name(pc->GetType()));
@@ -143,13 +143,13 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
       }
 
       // Recurse if a brace set is found
-      if (  (  pc->Is(CT_BRACE_OPEN)
-            || pc->Is(CT_VBRACE_OPEN))
-         && !(pc->GetParentType() == CT_BRACED_INIT_LIST))
+      if (  (  pc->Is(E_Token::CT_BRACE_OPEN)
+            || pc->Is(E_Token::CT_VBRACE_OPEN))
+         && !(pc->GetParentType() == E_Token::CT_BRACED_INIT_LIST))
       {
          size_t     myspan;
          size_t     mythresh;
-         const bool myparent_is_enum = pc->GetParentType() == CT_ENUM;
+         const bool myparent_is_enum = pc->GetParentType() == E_Token::CT_ENUM;
 
          if (myparent_is_enum)
          {
@@ -170,9 +170,9 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
       }
 
       // Done with this brace set?
-      if (  (  pc->Is(CT_BRACE_CLOSE)
-            || pc->Is(CT_VBRACE_CLOSE))
-         && !(pc->GetParentType() == CT_BRACED_INIT_LIST))
+      if (  (  pc->Is(E_Token::CT_BRACE_CLOSE)
+            || pc->Is(E_Token::CT_VBRACE_CLOSE))
+         && !(pc->GetParentType() == E_Token::CT_BRACED_INIT_LIST))
       {
          pc = pc->GetNext();
          break;
@@ -222,11 +222,11 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
       }
       else if (  equ_count == 0                  // indent only if first '=' in line
               && !pc->TestFlags(PCF_IN_TEMPLATE) // and it is not inside a template #999
-              && (  pc->Is(CT_ASSIGN)
-                 || pc->Is(CT_ASSIGN_DEFAULT_ARG)
-                 || pc->Is(CT_ASSIGN_FUNC_PROTO)))
+              && (  pc->Is(E_Token::CT_ASSIGN)
+                 || pc->Is(E_Token::CT_ASSIGN_DEFAULT_ARG)
+                 || pc->Is(E_Token::CT_ASSIGN_FUNC_PROTO)))
       {
-         if (pc->Is(CT_ASSIGN))               // Issue #2236
+         if (pc->Is(E_Token::CT_ASSIGN))               // Issue #2236
          {
             equ_count++;
          }
@@ -238,9 +238,9 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
 
          log_rule_B("align_assign_decl_func");
 
-         if (  options::align_assign_decl_func() == 0 // Align with other assignments (default)
-            && (  pc->Is(CT_ASSIGN_DEFAULT_ARG)       // Foo( int bar = 777 );
-               || pc->Is(CT_ASSIGN_FUNC_PROTO)))      // Foo( const Foo & ) = delete;
+         if (  options::align_assign_decl_func() == 0     // Align with other assignments (default)
+            && (  pc->Is(E_Token::CT_ASSIGN_DEFAULT_ARG)  // Foo( int bar = 777 );
+               || pc->Is(E_Token::CT_ASSIGN_FUNC_PROTO))) // Foo( const Foo & ) = delete;
          {
             LOG_FMT(LALASS, "%s(%d): fcnDefault[%zu].Add on '%s' on orig line %zu, orig col is %zu\n",
                     __func__, __LINE__, fcn_idx, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
@@ -258,7 +258,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
          {
             log_rule_B("align_assign_decl_func");
 
-            if (pc->Is(CT_ASSIGN_DEFAULT_ARG))  // Foo( int bar = 777 );
+            if (pc->Is(E_Token::CT_ASSIGN_DEFAULT_ARG))  // Foo( int bar = 777 );
             {
                LOG_FMT(LALASS, "%s(%d): default: fcnDefault[%zu].Add on '%s' on orig line %zu, orig col is %zu\n",
                        __func__, __LINE__, fcn_idx, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
@@ -272,22 +272,22 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
                fcnDefault[fcn_idx].Add(pc);
                skip_budget = myskip_cfg;  // Reset budget after adding
             }
-            else if (pc->Is(CT_ASSIGN_FUNC_PROTO))  // Foo( const Foo & ) = delete;
+            else if (pc->Is(E_Token::CT_ASSIGN_FUNC_PROTO))  // Foo( const Foo & ) = delete;
             {
                LOG_FMT(LALASS, "%s(%d): proto: fcnProto.Add on '%s' on orig line %zu, orig col is %zu\n",
                        __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
                fcnProto.Add(pc);
                skip_budget = myskip_cfg;  // Reset budget after adding
             }
-            else if (pc->Is(CT_ASSIGN)) // Issue #2197
+            else if (pc->Is(E_Token::CT_ASSIGN)) // Issue #2197
             {
                vdas_pc     = pc;
                skip_budget = myskip_cfg;  // Reset budget when capturing new assign
             }
          }
-         else if (  options::align_assign_decl_func() == 2 // Don't align
-                 && (  pc->Is(CT_ASSIGN_DEFAULT_ARG)       // Foo( int bar = 777 );
-                    || pc->Is(CT_ASSIGN_FUNC_PROTO)))      // Foo( const Foo & ) = delete;
+         else if (  options::align_assign_decl_func() == 2     // Don't align
+                 && (  pc->Is(E_Token::CT_ASSIGN_DEFAULT_ARG)  // Foo( int bar = 777 );
+                    || pc->Is(E_Token::CT_ASSIGN_FUNC_PROTO))) // Foo( const Foo & ) = delete;
          {
             log_rule_B("align_assign_decl_func");
             LOG_FMT(LALASS, "%s(%d): Don't align\n",               // Issue #2236
@@ -300,7 +300,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
          }
          else
          {
-            if (pc->Is(CT_ASSIGN))
+            if (pc->Is(E_Token::CT_ASSIGN))
             {
                LOG_FMT(LALASS, "%s(%d): as.Add on '%s' on orig line %zu, orig col is %zu\n",
                        __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());

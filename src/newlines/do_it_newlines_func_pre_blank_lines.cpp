@@ -34,7 +34,7 @@ bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, E_Token start_type)
 
    switch (start_type)
    {
-   case CT_FUNC_CLASS_DEF:
+   case E_Token::CT_FUNC_CLASS_DEF:
    {
       log_rule_B("nl_before_func_class_def");
       bool diff = options::nl_before_func_class_def() <= last_nl->GetNlCount();
@@ -52,7 +52,7 @@ bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, E_Token start_type)
       return(diff);
    }
 
-   case CT_FUNC_CLASS_PROTO:
+   case E_Token::CT_FUNC_CLASS_PROTO:
    {
       log_rule_B("nl_before_func_class_proto");
       bool diff = options::nl_before_func_class_proto() <= last_nl->GetNlCount();
@@ -70,7 +70,7 @@ bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, E_Token start_type)
       return(diff);
    }
 
-   case CT_FUNC_DEF:
+   case E_Token::CT_FUNC_DEF:
    {
       LOG_FMT(LNLFUNCT, "%s(%d): nl_before_func_body_def() is %u, last_nl new line count is %zu\n",
               __func__, __LINE__, options::nl_before_func_body_def(), last_nl->GetNlCount());
@@ -93,7 +93,7 @@ bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, E_Token start_type)
       return(diff);
    }
 
-   case CT_FUNC_PROTO:
+   case E_Token::CT_FUNC_PROTO:
    {
       log_rule_B("nl_before_func_body_proto");
       bool diff = options::nl_before_func_body_proto() <= last_nl->GetNlCount();

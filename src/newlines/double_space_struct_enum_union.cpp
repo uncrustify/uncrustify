@@ -24,7 +24,7 @@ void newlines_double_space_struct_enum_union(Chunk *open_brace)
          && pc->GetLevel() > open_brace->GetLevel())
    {
       if (  pc->GetLevel() != (open_brace->GetLevel() + 1)
-         || pc->IsNot(CT_NEWLINE))
+         || pc->IsNot(E_Token::CT_NEWLINE))
       {
          continue;
       }
@@ -36,7 +36,7 @@ void newlines_double_space_struct_enum_union(Chunk *open_brace)
       const Chunk *prev = pc->GetPrev();
 
       if (  !prev->IsComment()
-         && prev->IsNot(CT_BRACE_OPEN)
+         && prev->IsNot(E_Token::CT_BRACE_OPEN)
          && pc->GetNext()->IsComment())
       {
          if (pc->GetNlCount() < 2)

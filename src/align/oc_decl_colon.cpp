@@ -31,7 +31,7 @@ void align_oc_decl_colon()
 
    while (pc->IsNotNullChunk())
    {
-      if (pc->IsNot(CT_OC_SCOPE))
+      if (pc->IsNot(E_Token::CT_OC_SCOPE))
       {
          pc = pc->GetNext();
          continue;
@@ -48,7 +48,7 @@ void align_oc_decl_colon()
             && pc->GetLevel() >= level)
       {
          // The declaration ends with an open brace or semicolon
-         if (  pc->Is(CT_BRACE_OPEN)
+         if (  pc->Is(E_Token::CT_BRACE_OPEN)
             || pc->IsSemicolon())
          {
             break;
@@ -61,7 +61,7 @@ void align_oc_decl_colon()
             did_line = false;
          }
          else if (  !did_line
-                 && pc->Is(CT_OC_COLON))
+                 && pc->Is(E_Token::CT_OC_COLON))
          {
             cas.Add(pc);
 
@@ -69,13 +69,13 @@ void align_oc_decl_colon()
             Chunk *tmp2 = tmp->GetPrevNcNnl(E_Scope::PREPROC);
 
             // Check for an un-labeled parameter
-            if (  (  tmp->Is(CT_WORD)
-                  || tmp->Is(CT_TYPE)
-                  || tmp->Is(CT_OC_MSG_DECL)
-                  || tmp->Is(CT_OC_MSG_SPEC))
-               && (  tmp2->Is(CT_WORD)
-                  || tmp2->Is(CT_TYPE)
-                  || tmp2->Is(CT_PAREN_CLOSE)))
+            if (  (  tmp->Is(E_Token::CT_WORD)
+                  || tmp->Is(E_Token::CT_TYPE)
+                  || tmp->Is(E_Token::CT_OC_MSG_DECL)
+                  || tmp->Is(E_Token::CT_OC_MSG_SPEC))
+               && (  tmp2->Is(E_Token::CT_WORD)
+                  || tmp2->Is(E_Token::CT_TYPE)
+                  || tmp2->Is(E_Token::CT_PAREN_CLOSE)))
             {
                nas.Add(tmp);
             }

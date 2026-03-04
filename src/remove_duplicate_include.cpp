@@ -30,11 +30,11 @@ void remove_duplicate_include()
       //        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(),
       //        get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
-      if (pc->Is(CT_PREPROC))
+      if (pc->Is(E_Token::CT_PREPROC))
       {
          preproc = pc;
       }
-      else if (pc->Is(CT_PP_INCLUDE))
+      else if (pc->Is(E_Token::CT_PP_INCLUDE))
       {
          Chunk *next = pc->GetNext();
 
@@ -88,7 +88,7 @@ void remove_duplicate_include()
                }
             } // for (auto itc = includes.begin();
          } // if (includes.empty())
-      } // else if (pc->Is(CT_PP_INCLUDE))
+      } // else if (pc->Is(E_Token::CT_PP_INCLUDE))
       // get the next token
       pc = pc->GetNext();
    }

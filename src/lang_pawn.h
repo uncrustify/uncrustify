@@ -28,7 +28,7 @@ void pawn_add_virtual_semicolons();
  * We are in a virtual brace and hit a newline.
  * If this should end the vbrace, then insert a VSEMICOLON and return that.
  *
- * @param pc  The newline (CT_NEWLINE)
+ * @param pc  The newline (E_Token::CT_NEWLINE)
  *
  * @return Either the newline or the newly inserted virtual semicolon
  */

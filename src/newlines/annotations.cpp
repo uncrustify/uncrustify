@@ -29,7 +29,7 @@ void annotations_newlines()
    Chunk *ae;   // last token of the annotation
    Chunk *pc = Chunk::GetHead();
 
-   while (  (pc = pc->GetNextType(CT_ANNOTATION))->IsNotNullChunk()
+   while (  (pc = pc->GetNextType(E_Token::CT_ANNOTATION))->IsNotNullChunk()
          && (next = pc->GetNextNnl())->IsNotNullChunk())
    {
       // find the end of this annotation
@@ -56,7 +56,7 @@ void annotations_newlines()
               __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->GetLogText());
       next = ae->GetNextNnl();
 
-      if (next->Is(CT_ANNOTATION))
+      if (next->Is(E_Token::CT_ANNOTATION))
       {
          LOG_FMT(LANNOT, "%s(%d):  -- nl_between_annotation\n",
                  __func__, __LINE__);
@@ -64,9 +64,9 @@ void annotations_newlines()
          log_rule_B("nl_between_annotation");
       }
 
-      if (next->Is(CT_NEWLINE))
+      if (next->Is(E_Token::CT_NEWLINE))
       {
-         if (next->Is(CT_ANNOTATION))
+         if (next->Is(E_Token::CT_ANNOTATION))
          {
             LOG_FMT(LANNOT, "%s(%d):  -- nl_after_annotation\n",
                     __func__, __LINE__);

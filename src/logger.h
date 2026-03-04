@@ -121,12 +121,12 @@ void log_flush(bool force_nl);
 
 
 #define LOG_CHUNK(sev, pc_current)                                                                                                                                                                   \
-   if (pc_current->Is(CT_NEWLINE))                                                                                                                                                                   \
+   if (pc_current->Is(E_Token::CT_NEWLINE))                                                                                                                                                          \
    {                                                                                                                                                                                                 \
       LOG_FMT(sev, "%s(%d): orig line is %zu, orig col is %zu, <Newline>, PRE is %s\n",                                                                                                              \
               __func__, __LINE__, pc_current->GetOrigLine(), pc_current->GetOrigCol(), pc_current->IsPreproc() ? "true" : "false");                                                                  \
    }                                                                                                                                                                                                 \
-   else if (pc_current->Is(CT_NL_CONT))                                                                                                                                                              \
+   else if (pc_current->Is(E_Token::CT_NL_CONT))                                                                                                                                                     \
    {                                                                                                                                                                                                 \
       LOG_FMT(sev, "%s(%d): orig line is %zu, orig col is %zu, text '%s', type is %s, PRE is %s\n",                                                                                                  \
               __func__, __LINE__, pc_current->GetOrigLine(), pc_current->GetOrigCol(), pc_current->GetLogText(), get_token_name(pc_current->GetType()), pc_current->IsPreproc() ? "true" : "false"); \

@@ -43,35 +43,35 @@ void newlines_enum(Chunk *start)
    // look for 'enum class'
    Chunk *pcClass = start->GetNextNcNnl();
 
-   if (pcClass->Is(CT_ENUM_CLASS))
+   if (pcClass->Is(E_Token::CT_ENUM_CLASS))
    {
       log_rule_B("nl_enum_class");
       newline_iarf_pair(start, pcClass, options::nl_enum_class());
       // look for 'identifier'/ 'type'
       Chunk *pcType = pcClass->GetNextNcNnl();
 
-      if (pcType->Is(CT_TYPE))
+      if (pcType->Is(E_Token::CT_TYPE))
       {
          log_rule_B("nl_enum_class_identifier");
          newline_iarf_pair(pcClass, pcType, options::nl_enum_class_identifier());
          // look for ':'
          Chunk *pcColon = pcType->GetNextNcNnl();
 
-         if (pcColon->Is(CT_ENUM_COLON))                       // Issue #4040
+         if (pcColon->Is(E_Token::CT_ENUM_COLON))                       // Issue #4040
          {
             log_rule_B("nl_enum_identifier_colon");
             newline_iarf_pair(pcType, pcColon, options::nl_enum_identifier_colon());
             // look for 'type' i.e. unsigned
             Chunk *pcType1 = pcColon->GetNextNcNnl();
 
-            if (pcType1->Is(CT_TYPE))
+            if (pcType1->Is(E_Token::CT_TYPE))
             {
                log_rule_B("nl_enum_colon_type");
                newline_iarf_pair(pcColon, pcType1, options::nl_enum_colon_type());
                // look for 'type' i.e. int
                Chunk *pcType2 = pcType1->GetNextNcNnl();
 
-               if (pcType2->Is(CT_TYPE))
+               if (pcType2->Is(E_Token::CT_TYPE))
                {
                   log_rule_B("nl_enum_colon_type");
                   newline_iarf_pair(pcType1, pcType2, options::nl_enum_colon_type());
@@ -91,9 +91,9 @@ void newlines_enum(Chunk *start)
          && pc->GetLevel() >= level)
    {
       if (  pc->GetLevel() == level
-         && (  pc->Is(CT_BRACE_OPEN)
+         && (  pc->Is(E_Token::CT_BRACE_OPEN)
             || pc->IsSemicolon()
-            || pc->Is(CT_ASSIGN)))
+            || pc->Is(E_Token::CT_ASSIGN)))
       {
          break;
       }
@@ -102,12 +102,12 @@ void newlines_enum(Chunk *start)
    }
 
    // If we hit a brace open, then we need to toy with the newlines
-   if (pc->Is(CT_BRACE_OPEN))
+   if (pc->Is(E_Token::CT_BRACE_OPEN))
    {
       // Skip over embedded C comments
       Chunk *next = pc->GetNext();
 
-      while (next->Is(CT_COMMENT))
+      while (next->Is(E_Token::CT_COMMENT))
       {
          next = next->GetNext();
       }
@@ -137,11 +137,11 @@ void newlines_enum_entries(Chunk *open_brace, iarf_e av)
         pc = pc->GetNextNc())
    {
       if (  (pc->GetLevel() != (open_brace->GetLevel() + 1))
-         || pc->IsNot(CT_COMMA)
-         || (  pc->Is(CT_COMMA)
-            && (  pc->GetNext()->GetType() == CT_COMMENT_CPP
-               || pc->GetNext()->GetType() == CT_COMMENT
-               || pc->GetNext()->GetType() == CT_COMMENT_MULTI)))
+         || pc->IsNot(E_Token::CT_COMMA)
+         || (  pc->Is(E_Token::CT_COMMA)
+            && (  pc->GetNext()->GetType() == E_Token::CT_COMMENT_CPP
+               || pc->GetNext()->GetType() == E_Token::CT_COMMENT
+               || pc->GetNext()->GetType() == E_Token::CT_COMMENT_MULTI)))
       {
          continue;
       }
