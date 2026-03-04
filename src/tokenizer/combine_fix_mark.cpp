@@ -346,6 +346,21 @@ void fix_fcn_def_params(Chunk *start)
 
    while (pc->IsNotNullChunk())
    {
+      // Skip PP directives that appear at a lower level inside function params
+      // (e.g. #define inside a struct method's parameter list)
+      if (  pc->Is(E_Token::CT_PREPROC)
+         && pc->GetLevel() < level)
+      {
+         do
+         {
+            pc = pc->GetNextNcNnl();
+         } while (  pc->IsNotNullChunk()
+                 && pc->TestFlags(PCF_IN_PREPROC)
+                 && pc->GetLevel() < level);
+
+         continue;
+      }
+
       if (  (  (start->Len() == 1)
             && (start->GetText()[0] == ')'))
          || pc->GetLevel() < level)
