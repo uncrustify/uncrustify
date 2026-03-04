@@ -59,8 +59,8 @@ void newlines_brace_pair(Chunk *br_open)
    }
 
    //fixes 1235 Add single line namespace support
-   if (  br_open->Is(CT_BRACE_OPEN)
-      && (br_open->GetParentType() == CT_NAMESPACE)
+   if (  br_open->Is(E_Token::CT_BRACE_OPEN)
+      && (br_open->GetParentType() == E_Token::CT_NAMESPACE)
       && br_open->GetPrev()->IsNewline())
    {
       Chunk *chunk_brace_close = br_open->GetClosingParen();
@@ -88,7 +88,7 @@ void newlines_brace_pair(Chunk *br_open)
    // fix 1247 oneliner function support - converts 4,3,2  liners to oneliner
    log_rule_B("nl_create_func_def_one_liner");
 
-   if (  br_open->GetParentType() == CT_FUNC_DEF
+   if (  br_open->GetParentType() == E_Token::CT_FUNC_DEF
       && options::nl_create_func_def_one_liner()
       && !br_open->TestFlags(PCF_NOT_POSSIBLE))          // Issue #2795
    {
@@ -187,7 +187,7 @@ void newlines_brace_pair(Chunk *br_open)
                   {
                      // restore the newline
                      Chunk chunk;
-                     chunk.SetType(CT_NEWLINE);
+                     chunk.SetType(E_Token::CT_NEWLINE);
                      chunk.SetOrigLine(current->GetOrigLine());
                      chunk.SetOrigCol(current->GetOrigCol());
                      chunk.SetPpLevel(current->GetPpLevel());
@@ -208,9 +208,9 @@ void newlines_brace_pair(Chunk *br_open)
    // Collapse braced single-statement control blocks to one-liner
    E_Token parent = br_open->GetParentType();
 
-   if (  parent == CT_IF
-      || parent == CT_ELSEIF
-      || parent == CT_ELSE)
+   if (  parent == E_Token::CT_IF
+      || parent == E_Token::CT_ELSEIF
+      || parent == E_Token::CT_ELSE)
    {
       log_rule_B("nl_collapse_if_one_liner");
 
@@ -222,7 +222,7 @@ void newlines_brace_pair(Chunk *br_open)
          }
       }
    }
-   else if (parent == CT_FOR)
+   else if (parent == E_Token::CT_FOR)
    {
       log_rule_B("nl_collapse_for_one_liner");
 
@@ -234,7 +234,7 @@ void newlines_brace_pair(Chunk *br_open)
          }
       }
    }
-   else if (parent == CT_WHILE)
+   else if (parent == E_Token::CT_WHILE)
    {
       log_rule_B("nl_collapse_while_one_liner");
 
@@ -246,7 +246,7 @@ void newlines_brace_pair(Chunk *br_open)
          }
       }
    }
-   else if (parent == CT_DO)
+   else if (parent == E_Token::CT_DO)
    {
       log_rule_B("nl_collapse_do_one_liner");
 
@@ -258,7 +258,7 @@ void newlines_brace_pair(Chunk *br_open)
          }
       }
    }
-   else if (parent == CT_CASE)
+   else if (parent == E_Token::CT_CASE)
    {
       log_rule_B("nl_collapse_switch_one_liner");
 
@@ -287,7 +287,7 @@ void newlines_brace_pair(Chunk *br_open)
            __func__, __LINE__, br_open->GetLogText(), get_token_name(br_open->GetType()),
            get_token_name(br_open->GetParentType()));
 
-   if (br_open->GetParentType() == CT_ASSIGN)
+   if (br_open->GetParentType() == E_Token::CT_ASSIGN)
    {
       // Only mess with it if the open brace is followed by a newline
       if (next->IsNewline())
@@ -298,28 +298,28 @@ void newlines_brace_pair(Chunk *br_open)
       }
    }
 
-   if (  br_open->GetParentType() == CT_OC_MSG_DECL
-      || br_open->GetParentType() == CT_FUNC_DEF
-      || br_open->GetParentType() == CT_FUNC_CLASS_DEF
-      || br_open->GetParentType() == CT_OC_CLASS
-      || br_open->GetParentType() == CT_CS_PROPERTY
-      || br_open->GetParentType() == CT_CPP_LAMBDA
-      || br_open->GetParentType() == CT_FUNC_CALL
-      || br_open->GetParentType() == CT_FUNC_CALL_USER)
+   if (  br_open->GetParentType() == E_Token::CT_OC_MSG_DECL
+      || br_open->GetParentType() == E_Token::CT_FUNC_DEF
+      || br_open->GetParentType() == E_Token::CT_FUNC_CLASS_DEF
+      || br_open->GetParentType() == E_Token::CT_OC_CLASS
+      || br_open->GetParentType() == E_Token::CT_CS_PROPERTY
+      || br_open->GetParentType() == E_Token::CT_CPP_LAMBDA
+      || br_open->GetParentType() == E_Token::CT_FUNC_CALL
+      || br_open->GetParentType() == E_Token::CT_FUNC_CALL_USER)
    {
       Chunk  *prev = Chunk::NullChunkPtr;
       iarf_e val;
 
-      if (br_open->GetParentType() == CT_OC_MSG_DECL)
+      if (br_open->GetParentType() == E_Token::CT_OC_MSG_DECL)
       {
          log_rule_B("nl_oc_mdef_brace");
          val = options::nl_oc_mdef_brace();
       }
       else
       {
-         if (  br_open->GetParentType() == CT_FUNC_DEF
-            || br_open->GetParentType() == CT_FUNC_CLASS_DEF
-            || br_open->GetParentType() == CT_OC_CLASS)
+         if (  br_open->GetParentType() == E_Token::CT_FUNC_DEF
+            || br_open->GetParentType() == E_Token::CT_FUNC_CLASS_DEF
+            || br_open->GetParentType() == E_Token::CT_OC_CLASS)
          {
             const iarf_e nl_fdef_brace_v      = options::nl_fdef_brace();
             const iarf_e nl_fdef_brace_cond_v = options::nl_fdef_brace_cond();
@@ -332,7 +332,7 @@ void newlines_brace_pair(Chunk *br_open)
             {
                prev = br_open->GetPrevNcNnlNi();   // Issue #2279
 
-               if (prev->Is(CT_FPAREN_CLOSE))
+               if (prev->Is(E_Token::CT_FPAREN_CLOSE))
                {
                   // Add or remove newline between function signature and '{',
                   // if signature ends with ')'. Overrides nl_fdef_brace.
@@ -352,9 +352,9 @@ void newlines_brace_pair(Chunk *br_open)
             log_rule_B("nl_property_brace");
             log_rule_B("nl_cpp_ldef_brace");
             log_rule_B("nl_fcall_brace");
-            val = ((br_open->GetParentType() == CT_CS_PROPERTY) ?
+            val = ((br_open->GetParentType() == E_Token::CT_CS_PROPERTY) ?
                    options::nl_property_brace() :
-                   ((br_open->GetParentType() == CT_CPP_LAMBDA) ?
+                   ((br_open->GetParentType() == E_Token::CT_CPP_LAMBDA) ?
                     options::nl_cpp_ldef_brace() :
                     options::nl_fcall_brace()));
          }
@@ -371,11 +371,11 @@ void newlines_brace_pair(Chunk *br_open)
       }
    }
 
-   if (br_open->GetNextNnl()->Is(CT_BRACE_CLOSE))
+   if (br_open->GetNextNnl()->Is(E_Token::CT_BRACE_CLOSE))
    {
       // Chunk is "{" and "}" with only whitespace/newlines in between
 
-      if (br_open->GetParentType() == CT_FUNC_DEF)
+      if (br_open->GetParentType() == E_Token::CT_FUNC_DEF)
       {
          // Braces belong to a function definition
          log_rule_B("nl_collapse_empty_body_functions");
@@ -401,7 +401,7 @@ void newlines_brace_pair(Chunk *br_open)
    }
    //fixes #1245 will add new line between tsquare and brace open based on nl_tsquare_brace
 
-   if (br_open->Is(CT_BRACE_OPEN))
+   if (br_open->Is(E_Token::CT_BRACE_OPEN))
    {
       Chunk *chunk_closing_brace = br_open->GetClosingParen();
 
@@ -411,7 +411,7 @@ void newlines_brace_pair(Chunk *br_open)
          {
             Chunk *prev = br_open->GetPrevNc();
 
-            if (  prev->Is(CT_TSQUARE)
+            if (  prev->Is(E_Token::CT_TSQUARE)
                && next->IsNewline())
             {
                log_rule_B("nl_tsquare_brace");
@@ -431,14 +431,14 @@ void newlines_brace_pair(Chunk *br_open)
          log_rule_B("nl_inside_namespace");
 
          if (  options::nl_inside_empty_func() > 0
-            && br_open->GetNextNnl()->Is(CT_BRACE_CLOSE)
-            && (  br_open->GetParentType() == CT_FUNC_CLASS_DEF
-               || br_open->GetParentType() == CT_FUNC_DEF))
+            && br_open->GetNextNnl()->Is(E_Token::CT_BRACE_CLOSE)
+            && (  br_open->GetParentType() == E_Token::CT_FUNC_CLASS_DEF
+               || br_open->GetParentType() == E_Token::CT_FUNC_DEF))
          {
             blank_line_set(next, options::nl_inside_empty_func);
          }
          else if (  options::nl_inside_namespace() > 0
-                 && br_open->GetParentType() == CT_NAMESPACE)
+                 && br_open->GetParentType() == E_Token::CT_NAMESPACE)
          {
             blank_line_set(next, options::nl_inside_namespace);
          }
@@ -466,7 +466,7 @@ void newlines_brace_pair(Chunk *br_open)
       newline_add_between(br_open, pc);
    }
    // Grab the matching brace close
-   Chunk *br_close = br_open->GetNextType(CT_BRACE_CLOSE, br_open->GetLevel());
+   Chunk *br_close = br_open->GetNextType(E_Token::CT_BRACE_CLOSE, br_open->GetLevel());
 
    if (br_close->IsNullChunk())
    {
@@ -476,13 +476,13 @@ void newlines_brace_pair(Chunk *br_open)
    if (!nl_close_brace)
    {
       /*
-       * If the open brace hits a CT_NEWLINE, CT_NL_CONT, CT_COMMENT_MULTI, or
-       * CT_COMMENT_CPP without hitting anything other than CT_COMMENT, then
+       * If the open brace hits a E_Token::CT_NEWLINE, E_Token::CT_NL_CONT, E_Token::CT_COMMENT_MULTI, or
+       * E_Token::CT_COMMENT_CPP without hitting anything other than E_Token::CT_COMMENT, then
        * there should be a newline before the close brace.
        */
       Chunk *pc = br_open->GetNext();
 
-      while (pc->Is(CT_COMMENT))
+      while (pc->Is(E_Token::CT_COMMENT))
       {
          pc = pc->GetNext();
       }

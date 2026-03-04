@@ -24,7 +24,7 @@ void double_newline(Chunk *nl)
    }
    LOG_FMT(LNEWLINE, "%s(%d): add newline after ", __func__, __LINE__);
 
-   if (prev->Is(CT_VBRACE_CLOSE))
+   if (prev->Is(E_Token::CT_VBRACE_CLOSE))
    {
       LOG_FMT(LNEWLINE, "VBRACE_CLOSE \n");
    }

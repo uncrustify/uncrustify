@@ -18,7 +18,7 @@ class Chunk;
  * "} while" vs "} \n while"
  * "} else" vs "} \n else"
  *
- * @param start  The chunk - should be CT_ELSE or CT_WHILE_OF_DO
+ * @param start  The chunk - should be E_Token::CT_ELSE or E_Token::CT_WHILE_OF_DO
  */
 void newlines_cuddle_uncuddle(Chunk *start, uncrustify::iarf_e nl_opt);
 

@@ -39,7 +39,7 @@ Chunk *flag_parens(Chunk *po, PcfFlags flags, E_Token opentype, E_Token parent_t
    {
       if (  flags != PCF_NONE
          || (  parent_all
-            && parent_type != CT_NONE))
+            && parent_type != E_Token::CT_NONE))
       {
          Chunk *pc;
 
@@ -57,13 +57,13 @@ Chunk *flag_parens(Chunk *po, PcfFlags flags, E_Token opentype, E_Token parent_t
          }
       }
 
-      if (opentype != CT_NONE)
+      if (opentype != E_Token::CT_NONE)
       {
          po->SetType(opentype);
          paren_close->SetType((E_Token)(opentype + 1));
       }
 
-      if (parent_type != CT_NONE)
+      if (parent_type != E_Token::CT_NONE)
       {
          po->SetParentType(parent_type);
          paren_close->SetParentType(parent_type);

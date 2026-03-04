@@ -34,8 +34,8 @@ bool can_increase_nl(Chunk *nl)
       Chunk *pp_start = prev->GetPpStart();
 
       if (  pp_start->IsNotNullChunk()
-         && (  pp_start->GetParentType() == CT_PP_IF
-            || pp_start->GetParentType() == CT_PP_ELSE)
+         && (  pp_start->GetParentType() == E_Token::CT_PP_IF
+            || pp_start->GetParentType() == E_Token::CT_PP_ELSE)
          && (  pp_start->GetLevel() > 0
             || options::nl_squeeze_ifdef_top_level()))
       {
@@ -46,9 +46,9 @@ bool can_increase_nl(Chunk *nl)
          return(rv);
       }
 
-      if (  next->Is(CT_PREPROC)
-         && (  next->GetParentType() == CT_PP_ELSE
-            || next->GetParentType() == CT_PP_ENDIF)
+      if (  next->Is(E_Token::CT_PREPROC)
+         && (  next->GetParentType() == E_Token::CT_PP_ELSE
+            || next->GetParentType() == E_Token::CT_PP_ENDIF)
          && (  next->GetLevel() > 0
             || options::nl_squeeze_ifdef_top_level()))
       {
@@ -60,10 +60,10 @@ bool can_increase_nl(Chunk *nl)
       }
    }
 
-   if (next->Is(CT_BRACE_CLOSE))
+   if (next->Is(E_Token::CT_BRACE_CLOSE))
    {
       if (  options::nl_inside_namespace() > 0
-         && next->GetParentType() == CT_NAMESPACE)
+         && next->GetParentType() == E_Token::CT_NAMESPACE)
       {
          log_rule_B("nl_inside_namespace");
          LOG_FMT(LBLANKD, "%s(%d): nl_inside_namespace %zu\n",
@@ -72,9 +72,9 @@ bool can_increase_nl(Chunk *nl)
       }
 
       if (  options::nl_inside_empty_func() > 0
-         && prev->Is(CT_BRACE_OPEN)
-         && (  next->GetParentType() == CT_FUNC_DEF
-            || next->GetParentType() == CT_FUNC_CLASS_DEF))
+         && prev->Is(E_Token::CT_BRACE_OPEN)
+         && (  next->GetParentType() == E_Token::CT_FUNC_DEF
+            || next->GetParentType() == E_Token::CT_FUNC_CLASS_DEF))
       {
          log_rule_B("nl_inside_empty_func");
          LOG_FMT(LBLANKD, "%s(%d): nl_inside_empty_func %zu\n",
@@ -91,10 +91,10 @@ bool can_increase_nl(Chunk *nl)
       }
    }
 
-   if (prev->Is(CT_BRACE_CLOSE))
+   if (prev->Is(E_Token::CT_BRACE_CLOSE))
    {
       if (  options::nl_before_namespace()
-         && prev->GetParentType() == CT_NAMESPACE)
+         && prev->GetParentType() == E_Token::CT_NAMESPACE)
       {
          log_rule_B("nl_before_namespace");
          LOG_FMT(LBLANKD, "%s(%d): nl_before_namespace %zu\n",
@@ -103,10 +103,10 @@ bool can_increase_nl(Chunk *nl)
       }
    }
 
-   if (prev->Is(CT_BRACE_OPEN))
+   if (prev->Is(E_Token::CT_BRACE_OPEN))
    {
       if (  options::nl_inside_namespace() > 0
-         && prev->GetParentType() == CT_NAMESPACE)
+         && prev->GetParentType() == E_Token::CT_NAMESPACE)
       {
          log_rule_B("nl_inside_namespace");
          LOG_FMT(LBLANKD, "%s(%d): nl_inside_namespace %zu\n",
@@ -115,9 +115,9 @@ bool can_increase_nl(Chunk *nl)
       }
 
       if (  options::nl_inside_empty_func() > 0
-         && next->Is(CT_BRACE_CLOSE)
-         && (  prev->GetParentType() == CT_FUNC_DEF
-            || prev->GetParentType() == CT_FUNC_CLASS_DEF))
+         && next->Is(E_Token::CT_BRACE_CLOSE)
+         && (  prev->GetParentType() == E_Token::CT_FUNC_DEF
+            || prev->GetParentType() == E_Token::CT_FUNC_CLASS_DEF))
       {
          log_rule_B("nl_inside_empty_func");
          LOG_FMT(LBLANKD, "%s(%d): nl_inside_empty_func %zu\n",

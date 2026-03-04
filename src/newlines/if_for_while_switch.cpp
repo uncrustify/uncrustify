@@ -40,13 +40,13 @@ bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt)
    bool  retval = false;
    Chunk *pc    = start->GetNextNcNnl();
 
-   if (pc->Is(CT_SPAREN_OPEN))
+   if (pc->Is(E_Token::CT_SPAREN_OPEN))
    {
-      Chunk *close_paren = pc->GetNextType(CT_SPAREN_CLOSE, pc->GetLevel());
+      Chunk *close_paren = pc->GetNextType(E_Token::CT_SPAREN_CLOSE, pc->GetLevel());
       Chunk *brace_open  = close_paren->GetNextNcNnl();
 
-      if (  (  brace_open->Is(CT_BRACE_OPEN)
-            || brace_open->Is(CT_VBRACE_OPEN))
+      if (  (  brace_open->Is(E_Token::CT_BRACE_OPEN)
+            || brace_open->Is(E_Token::CT_VBRACE_OPEN))
          && one_liner_nl_ok(brace_open))
       {
          log_rule_B("nl_multi_line_cond");
@@ -63,17 +63,17 @@ bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt)
             }
          }
 
-         if (brace_open->Is(CT_VBRACE_OPEN))
+         if (brace_open->Is(E_Token::CT_VBRACE_OPEN))
          {
             // Can only add - we don't want to create a one-line here
             if (nl_opt & IARF_ADD)
             {
                newline_iarf_pair(close_paren, brace_open->GetNextNcNnl(), nl_opt);
-               pc = brace_open->GetNextType(CT_VBRACE_CLOSE, brace_open->GetLevel());
+               pc = brace_open->GetNextType(E_Token::CT_VBRACE_CLOSE, brace_open->GetLevel());
 
                if (  !pc->GetPrevNc()->IsNewline()
                   && !pc->GetNextNc()->IsNewline()
-                  && pc->GetNextNc()->IsNot(CT_VBRACE_CLOSE))
+                  && pc->GetNextNc()->IsNot(E_Token::CT_VBRACE_CLOSE))
                {
                   newline_add_after(pc);
                   retval = true;
@@ -90,7 +90,7 @@ bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt)
                newline_add_between(brace_open, brace_open->GetNextNcNnl());
             }
             // Make sure nothing is cuddled with the closing brace
-            pc = brace_open->GetNextType(CT_BRACE_CLOSE, brace_open->GetLevel());
+            pc = brace_open->GetNextType(E_Token::CT_BRACE_CLOSE, brace_open->GetLevel());
             newline_add_between(pc, pc->GetNextNcNnlNet());
             retval = true;
          }
@@ -138,7 +138,7 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
     * if we're dealing with an if, we actually want to add or remove
     * blank lines after any else
     */
-   if (start->Is(CT_IF))
+   if (start->Is(E_Token::CT_IF))
    {
       Chunk *next;
 
@@ -147,8 +147,8 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
          next = pc->GetNextNcNnl();
 
          if (  next->IsNotNullChunk()
-            && (  next->Is(CT_ELSE)
-               || next->Is(CT_ELSEIF)))
+            && (  next->Is(E_Token::CT_ELSE)
+               || next->Is(E_Token::CT_ELSEIF)))
          {
             // point to the closing brace of the else
             if ((pc = get_closing_brace(next))->IsNullChunk())
@@ -169,17 +169,17 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
     * if we're dealing with a do/while, we actually want to add or
     * remove blank lines after while and its condition
     */
-   if (start->Is(CT_DO))
+   if (start->Is(E_Token::CT_DO))
    {
       // point to the next semicolon
-      if ((pc = pc->GetNextType(CT_SEMICOLON, start->GetLevel()))->IsNullChunk())
+      if ((pc = pc->GetNextType(E_Token::CT_SEMICOLON, start->GetLevel()))->IsNullChunk())
       {
          return;
       }
       LOG_FMT(LNEWLINE, "%s(%d): text is '%s', type %s, orig line %zu, orig col %zu\n",
               __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetOrigCol());
    }
-   bool isVBrace = (pc->Is(CT_VBRACE_CLOSE));
+   bool isVBrace = (pc->Is(E_Token::CT_VBRACE_CLOSE));
 
    if (isVBrace)
    {
@@ -245,7 +245,7 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
             return;
          }
 
-         if (next->IsNot(CT_VBRACE_CLOSE))
+         if (next->IsNot(E_Token::CT_VBRACE_CLOSE))
          {
             break;
          }
@@ -255,7 +255,7 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
       LOG_FMT(LNEWLINE, "%s(%d): next->text is '%s', type %s, orig line %zu, orig col %zu\n",
               __func__, __LINE__, next->GetLogText(), get_token_name(next->GetType()), next->GetOrigLine(), next->GetOrigCol());
 
-      if (next->IsNot(CT_BRACE_CLOSE))
+      if (next->IsNot(E_Token::CT_BRACE_CLOSE))
       {
          // if vbrace, have to check before and after
          // if chunk before vbrace, check its count
@@ -328,8 +328,8 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
                }
                log_rule_B("nl_squeeze_ifdef");
 
-               if (  pc->Is(CT_PREPROC)
-                  && pc->GetParentType() == CT_PP_ENDIF
+               if (  pc->Is(E_Token::CT_PREPROC)
+                  && pc->GetParentType() == E_Token::CT_PP_ENDIF
                   && options::nl_squeeze_ifdef())
                {
                   LOG_FMT(LNEWLINE, "%s(%d): cannot add newline after orig line %zu due to nl_squeeze_ifdef\n",
@@ -432,7 +432,7 @@ void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, uncrustify::iarf
       }
       else
       {
-         if (  pc->Is(CT_CASE_COLON)
+         if (  pc->Is(E_Token::CT_CASE_COLON)
             && options::nl_before_ignore_after_case())
          {
             return;

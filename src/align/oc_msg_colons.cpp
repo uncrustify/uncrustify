@@ -71,15 +71,15 @@ void align_oc_msg_colon(Chunk *so)
       }
       else if (  !did_line
               && (lcnt < span + 1)
-              && pc->Is(CT_OC_COLON))
+              && pc->Is(E_Token::CT_OC_COLON))
       {
          has_colon = true;
          cas.Add(pc);
          Chunk *tmp = pc->GetPrev();
 
          if (  tmp->IsNotNullChunk()
-            && (  tmp->Is(CT_OC_MSG_FUNC)
-               || tmp->Is(CT_OC_MSG_NAME)))
+            && (  tmp->Is(E_Token::CT_OC_MSG_FUNC)
+               || tmp->Is(E_Token::CT_OC_MSG_NAME)))
          {
             nas.Add(tmp);
             tmp->SetFlagBits(PCF_DONT_INDENT);
@@ -148,8 +148,8 @@ void align_oc_msg_colon(Chunk *so)
    {
       Chunk chunk;
 
-      chunk.SetType(CT_SPACE);
-      chunk.SetParentType(CT_NONE);
+      chunk.SetType(E_Token::CT_SPACE);
+      chunk.SetParentType(E_Token::CT_NONE);
       chunk.SetOrigLine(longest->GetOrigLine());
       chunk.SetOrigCol(longest->GetOrigCol());
       chunk.SetLevel(longest->GetLevel());
@@ -175,8 +175,8 @@ void align_oc_msg_colons()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (  pc->Is(CT_SQUARE_OPEN)
-         && pc->GetParentType() == CT_OC_MSG)
+      if (  pc->Is(E_Token::CT_SQUARE_OPEN)
+         && pc->GetParentType() == E_Token::CT_OC_MSG)
       {
          align_oc_msg_colon(pc);
       }

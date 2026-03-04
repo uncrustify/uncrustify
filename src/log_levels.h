@@ -109,7 +109,7 @@ enum log_sev_t
    LOCCLASS  = 78,  //! OC Class stuff
    LOCMSG    = 79,  //! OC Message stuff
    LBLANK    = 80,  //! Blank Lines
-   LOBJCWORD = 81,  //! Convert keyword to CT_WORD in certain circumstances
+   LOBJCWORD = 81,  //! Convert keyword to E_Token::CT_WORD in certain circumstances
    LCHANGE   = 82,  //! something changed
    LCONTTEXT = 83,  //! comment cont_text set
    LANNOT    = 84,  //! Java annotation

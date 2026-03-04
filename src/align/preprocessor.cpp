@@ -42,14 +42,14 @@ void align_preprocessor()
    while (pc->IsNotNullChunk())
    {
       // Note: not counting back-slash newline combos
-      if (pc->Is(CT_NEWLINE))   // mind the gap: pc->IsNewline() is NOT the same!
+      if (pc->Is(E_Token::CT_NEWLINE))   // mind the gap: pc->IsNewline() is NOT the same!
       {
          as.NewLines(pc->GetNlCount());
          asf.NewLines(pc->GetNlCount());
       }
 
       // If we aren't on a 'define', then skip to the next non-comment
-      if (pc->IsNot(CT_PP_DEFINE))
+      if (pc->IsNot(E_Token::CT_PP_DEFINE))
       {
          pc = pc->GetNextNc();
          continue;
@@ -68,7 +68,7 @@ void align_preprocessor()
 
       cur_as = &as;
 
-      if (pc->Is(CT_MACRO_FUNC))
+      if (pc->Is(E_Token::CT_MACRO_FUNC))
       {
          log_rule_B("align_pp_define_together");
 
@@ -78,7 +78,7 @@ void align_preprocessor()
          }
          // Skip to the close parenthesis
          pc = pc->GetNextNc(); // point to open (
-         pc = pc->GetNextType(CT_FPAREN_CLOSE, pc->GetLevel());
+         pc = pc->GetNextType(E_Token::CT_FPAREN_CLOSE, pc->GetLevel());
 
          LOG_FMT(LALPP, "%s(%d): jumped to (%s) on line %zu col %zu\n",
                  __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());

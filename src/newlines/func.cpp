@@ -33,10 +33,10 @@ void newline_func_def_or_call(Chunk *start)
            __func__, __LINE__, start->GetLogText(), start->GetOrigLine(), start->GetOrigCol(),
            get_token_name(start->GetType()), get_token_name(start->GetParentType()));
 
-   bool is_def = (start->GetParentType() == CT_FUNC_DEF)
-                 || start->GetParentType() == CT_FUNC_CLASS_DEF;
-   bool is_call = (start->GetParentType() == CT_FUNC_CALL)
-                  || start->GetParentType() == CT_FUNC_CALL_USER;
+   bool is_def = (start->GetParentType() == E_Token::CT_FUNC_DEF)
+                 || start->GetParentType() == E_Token::CT_FUNC_CLASS_DEF;
+   bool is_call = (start->GetParentType() == E_Token::CT_FUNC_CALL)
+                  || start->GetParentType() == E_Token::CT_FUNC_CALL_USER;
 
    LOG_FMT(LNFD, "%s(%d): is_def is %s, is_call is %s\n",
            __func__, __LINE__, is_def ? "TRUE" : "FALSE", is_call ? "TRUE" : "FALSE");
@@ -110,17 +110,17 @@ void newline_func_def_or_call(Chunk *start)
 
       log_rule_B("nl_func_class_scope");
 
-      if (  prev->Is(CT_DC_MEMBER)
+      if (  prev->Is(E_Token::CT_DC_MEMBER)
          && (options::nl_func_class_scope() != IARF_IGNORE))
       {
          newline_iarf(prev->GetPrevNcNnlNi(), options::nl_func_class_scope());   // Issue #2279
       }
 
-      if (prev->IsNot(CT_ACCESS_COLON))
+      if (prev->IsNot(E_Token::CT_ACCESS_COLON))
       {
          Chunk *tmp;
 
-         if (prev->Is(CT_OPERATOR))
+         if (prev->Is(E_Token::CT_OPERATOR))
          {
             tmp  = prev;
             prev = prev->GetPrevNcNnlNi();   // Issue #2279
@@ -130,7 +130,7 @@ void newline_func_def_or_call(Chunk *start)
             tmp = start;
          }
 
-         if (prev->Is(CT_DC_MEMBER))
+         if (prev->Is(E_Token::CT_DC_MEMBER))
          {
             log_rule_B("nl_func_scope_name");
 
@@ -142,14 +142,14 @@ void newline_func_def_or_call(Chunk *start)
          }
          const Chunk *tmp_next = prev->GetNextNcNnl();
 
-         if (tmp_next->IsNot(CT_FUNC_CLASS_DEF))
+         if (tmp_next->IsNot(E_Token::CT_FUNC_CLASS_DEF))
          {
             Chunk  *closing = tmp->GetClosingParen();
             Chunk  *brace   = closing->GetNextNcNnl();
             iarf_e a;                                            // Issue #2561
 
-            if (  tmp->GetParentType() == CT_FUNC_PROTO
-               || tmp->GetParentType() == CT_FUNC_CLASS_PROTO)
+            if (  tmp->GetParentType() == E_Token::CT_FUNC_PROTO
+               || tmp->GetParentType() == E_Token::CT_FUNC_CLASS_PROTO)
             {
                // proto
                log_rule_B("nl_func_proto_type_name");
@@ -189,7 +189,7 @@ void newline_func_def_or_call(Chunk *start)
                        get_token_name(prev->GetType()),
                        get_token_name(prev->GetParentType()));
 
-               if (prev->Is(CT_DESTRUCTOR))
+               if (prev->Is(E_Token::CT_DESTRUCTOR))
                {
                   prev = prev->GetPrevNcNnlNi();   // Issue #2279
                }
@@ -198,7 +198,7 @@ void newline_func_def_or_call(Chunk *start)
                 * If we are on a '::', step back two tokens
                 * TODO: do we also need to check for '.' ?
                 */
-               while (prev->Is(CT_DC_MEMBER))
+               while (prev->Is(E_Token::CT_DC_MEMBER))
                {
                   prev = prev->GetPrevNcNnlNi();   // Issue #2279
                   prev = skip_template_prev(prev);
@@ -206,14 +206,14 @@ void newline_func_def_or_call(Chunk *start)
                }
 
                if (  !prev->IsBraceClose()
-                  && prev->IsNot(CT_BRACE_OPEN)
-                  && prev->IsNot(CT_SEMICOLON)
-                  && prev->IsNot(CT_ACCESS_COLON)
+                  && prev->IsNot(E_Token::CT_BRACE_OPEN)
+                  && prev->IsNot(E_Token::CT_SEMICOLON)
+                  && prev->IsNot(E_Token::CT_ACCESS_COLON)
                      // #1008: if we landed on an operator check that it is having
                      // a type before it, in order to not apply nl_func_type_name
                      // on conversion operators as they don't have a normal
                      // return type syntax
-                  && (tmp_next->IsNot(CT_OPERATOR) ? true : prev->IsTypeDefinition()))
+                  && (tmp_next->IsNot(E_Token::CT_OPERATOR) ? true : prev->IsTypeDefinition()))
                {
                   newline_iarf(prev, a);
                }
@@ -259,7 +259,7 @@ void newline_func_def_or_call(Chunk *start)
         pc->IsNotNullChunk() && pc->GetLevel() > start->GetLevel();
         pc = pc->GetNextNcNnl())
    {
-      if (  pc->Is(CT_COMMA)
+      if (  pc->Is(E_Token::CT_COMMA)
          && (pc->GetLevel() == (start->GetLevel() + 1)))
       {
          comma_count++;
@@ -281,7 +281,7 @@ void newline_func_def_or_call(Chunk *start)
             log_rule_B("nl_func_call_args");
             newline_iarf(pc, options::nl_func_call_args());
          }
-         else // start->GetParentType() == CT_FUNC_DECL
+         else // start->GetParentType() == E_Token::CT_FUNC_DECL
          {
             log_rule_B("nl_func_decl_args");
             newline_iarf(pc, options::nl_func_decl_args());
@@ -326,11 +326,11 @@ void newline_func_def_or_call(Chunk *start)
    }
 
    // and fix up the close parenthesis
-   if (pc->Is(CT_FPAREN_CLOSE))
+   if (pc->Is(E_Token::CT_FPAREN_CLOSE))
    {
       Chunk *prev = pc->GetPrevNnl();
 
-      if (  prev->IsNot(CT_FPAREN_OPEN)
+      if (  prev->IsNot(E_Token::CT_FPAREN_OPEN)
          && !is_call)
       {
          newline_iarf(prev, ae);
@@ -356,8 +356,8 @@ void newline_func_multi_line(Chunk *start)
    bool add_args;
    bool add_end;
 
-   if (  start->GetParentType() == CT_FUNC_DEF
-      || start->GetParentType() == CT_FUNC_CLASS_DEF)
+   if (  start->GetParentType() == E_Token::CT_FUNC_DEF
+      || start->GetParentType() == E_Token::CT_FUNC_CLASS_DEF)
    {
       log_rule_B("nl_func_def_start_multi_line");
       add_start = options::nl_func_def_start_multi_line();
@@ -366,8 +366,8 @@ void newline_func_multi_line(Chunk *start)
       log_rule_B("nl_func_def_end_multi_line");
       add_end = options::nl_func_def_end_multi_line();
    }
-   else if (  start->GetParentType() == CT_FUNC_CALL
-           || start->GetParentType() == CT_FUNC_CALL_USER)
+   else if (  start->GetParentType() == E_Token::CT_FUNC_CALL
+           || start->GetParentType() == E_Token::CT_FUNC_CALL_USER)
    {
       log_rule_B("nl_func_call_start_multi_line");
       add_start = options::nl_func_call_start_multi_line();
@@ -400,18 +400,18 @@ void newline_func_multi_line(Chunk *start)
       pc = pc->GetNextNcNnl();
    }
 
-   if (  pc->Is(CT_FPAREN_CLOSE)
+   if (  pc->Is(E_Token::CT_FPAREN_CLOSE)
       && start->IsNewlineBetween(pc))
    {
       Chunk *start_next         = start->GetNextNcNnl();
-      bool  has_leading_closure = (  start_next->GetParentType() == CT_OC_BLOCK_EXPR
-                                  || start_next->GetParentType() == CT_CPP_LAMBDA
-                                  || start_next->Is(CT_BRACE_OPEN));
+      bool  has_leading_closure = (  start_next->GetParentType() == E_Token::CT_OC_BLOCK_EXPR
+                                  || start_next->GetParentType() == E_Token::CT_CPP_LAMBDA
+                                  || start_next->Is(E_Token::CT_BRACE_OPEN));
 
       Chunk *prev_end            = pc->GetPrevNcNnl();
-      bool  has_trailing_closure = (  prev_end->GetParentType() == CT_OC_BLOCK_EXPR
-                                   || prev_end->GetParentType() == CT_CPP_LAMBDA
-                                   || prev_end->Is(CT_BRACE_OPEN));
+      bool  has_trailing_closure = (  prev_end->GetParentType() == E_Token::CT_OC_BLOCK_EXPR
+                                   || prev_end->GetParentType() == E_Token::CT_CPP_LAMBDA
+                                   || prev_end->Is(E_Token::CT_BRACE_OPEN));
 
       if (  add_start
          && !start->GetNext()->IsNewline())
@@ -459,7 +459,7 @@ void newline_func_multi_line(Chunk *start)
               pc->IsNotNullChunk() && pc->GetLevel() > start->GetLevel();
               pc = pc->GetNextNcNnl())
          {
-            if (  pc->Is(CT_COMMA)
+            if (  pc->Is(E_Token::CT_COMMA)
                && (pc->GetLevel() == (start->GetLevel() + 1)))
             {
                Chunk *tmp = pc->GetNext();
@@ -478,12 +478,12 @@ void newline_func_multi_line(Chunk *start)
                      Chunk *prev_comma  = pc->GetPrevNcNnl();
                      Chunk *after_comma = pc->GetNextNcNnl();
 
-                     if (!(  (  prev_comma->GetParentType() == CT_OC_BLOCK_EXPR
-                             || prev_comma->GetParentType() == CT_CPP_LAMBDA
-                             || prev_comma->Is(CT_BRACE_OPEN))
-                          || (  after_comma->GetParentType() == CT_OC_BLOCK_EXPR
-                             || after_comma->GetParentType() == CT_CPP_LAMBDA
-                             || after_comma->Is(CT_BRACE_OPEN))))
+                     if (!(  (  prev_comma->GetParentType() == E_Token::CT_OC_BLOCK_EXPR
+                             || prev_comma->GetParentType() == E_Token::CT_CPP_LAMBDA
+                             || prev_comma->Is(E_Token::CT_BRACE_OPEN))
+                          || (  after_comma->GetParentType() == E_Token::CT_OC_BLOCK_EXPR
+                             || after_comma->GetParentType() == E_Token::CT_CPP_LAMBDA
+                             || after_comma->Is(E_Token::CT_BRACE_OPEN))))
                      {
                         newline_iarf(pc, IARF_ADD);
                      }

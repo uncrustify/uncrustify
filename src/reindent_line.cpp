@@ -93,7 +93,7 @@ void reindent_line(Chunk *pc, size_t column)
                         && options::indent_relative_single_line_comments());
 
       if (  is_comment
-         && pc->GetParentType() != CT_COMMENT_EMBED
+         && pc->GetParentType() != E_Token::CT_COMMENT_EMBED
          && !keep)
       {
          pc->SetColumn(max(pc->GetOrigCol(), min_col));
@@ -109,7 +109,7 @@ void reindent_line(Chunk *pc, size_t column)
 
          LOG_FMT(LINDLINED, "%s(%d): set column of ", __func__, __LINE__);
 
-         if (pc->Is(CT_NEWLINE))
+         if (pc->Is(E_Token::CT_NEWLINE))
          {
             LOG_FMT(LINDLINED, "<Newline>");
          }

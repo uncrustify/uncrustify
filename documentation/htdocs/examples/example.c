@@ -1,10 +1,10 @@
 
 const char *token_names[] =
 {
-   [CT_POUND]        = "POUND",
-   [CT_PREPROC]      = "PREPROC",
-   [CT_PREPROC_BODY] = "PREPROC_BODY",
-   [CT_PP]           = "PP",
+   [E_Token::POUND]        = "POUND",
+   [E_Token::PREPROC]      = "PREPROC",
+   [E_Token::PREPROC_BODY] = "PREPROC_BODY",
+   [E_Token::PP]           = "PP",
 };
 
 

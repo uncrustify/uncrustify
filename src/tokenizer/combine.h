@@ -14,12 +14,12 @@ class Chunk;
 
 
 /**
- * Change CT_INCDEC_AFTER + WORD to CT_INCDEC_BEFORE
- * Change number/word + CT_ADDR to CT_ARITH
- * Change number/word + CT_STAR to CT_ARITH
- * Change number/word + CT_NEG to CT_ARITH
- * Change word + ( to a CT_FUNCTION
- * Change struct/union/enum + CT_WORD => CT_TYPE
+ * Change E_Token::CT_INCDEC_AFTER + WORD to E_Token::CT_INCDEC_BEFORE
+ * Change number/word + E_Token::CT_ADDR to E_Token::CT_ARITH
+ * Change number/word + E_Token::CT_STAR to E_Token::CT_ARITH
+ * Change number/word + E_Token::CT_NEG to E_Token::CT_ARITH
+ * Change word + ( to a E_Token::CT_FUNCTION
+ * Change struct/union/enum + E_Token::CT_WORD => E_Token::CT_TYPE
  * Force parens on return.
  *
  * TODO: This could be done earlier.
@@ -32,9 +32,9 @@ void fix_symbols();
 
 
 /**
- * Examines the whole file and changes CT_COLON to
- * CT_Q_COLON, CT_LABEL_COLON, or CT_CASE_COLON.
- * It also changes the CT_WORD before CT_LABEL_COLON into CT_LABEL.
+ * Examines the whole file and changes E_Token::CT_COLON to
+ * E_Token::CT_Q_COLON, E_Token::CT_LABEL_COLON, or E_Token::CT_CASE_COLON.
+ * It also changes the E_Token::CT_WORD before E_Token::CT_LABEL_COLON into E_Token::CT_LABEL.
  */
 void combine_labels();
 

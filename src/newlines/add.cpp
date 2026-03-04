@@ -81,7 +81,7 @@ Chunk *newline_add_between(Chunk *start, Chunk *end)
 
    if (  start->IsNullChunk()
       || end->IsNullChunk()
-      || end->Is(CT_IGNORED))
+      || end->Is(E_Token::CT_IGNORED))
    {
       return(Chunk::NullChunkPtr);
    }
@@ -114,7 +114,7 @@ Chunk *newline_add_between(Chunk *start, Chunk *end)
     * If the second one is a brace open, then check to see
     * if a comment + newline follows
     */
-   if (end->Is(CT_BRACE_OPEN))
+   if (end->Is(E_Token::CT_BRACE_OPEN))
    {
       Chunk *pc = end->GetNext();
 

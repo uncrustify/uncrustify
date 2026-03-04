@@ -17,7 +17,7 @@ void log_rule2(const char *func, size_t line, const char *rule, Chunk *first, Ch
 {
    LOG_FUNC_ENTRY();
 
-   if (second->IsNot(CT_NEWLINE))
+   if (second->IsNot(E_Token::CT_NEWLINE))
    {
       LOG_FMT(LSPACE, "%s(%zu): first orig line is %zu, orig col is %zu, text is '%s', [%s/%s] <===>\n",
               func, line, first->GetOrigLine(), first->GetOrigCol(), first->GetLogText(),

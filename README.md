@@ -281,7 +281,7 @@ sp_trailing_ret_t;
 ```
 - Insert the code below to the file src/space.cpp
 ```.cpp
-   if (first->Is(CT_TRAILING_RET_T))
+   if (first->Is(E_Token::CT_TRAILING_RET_T))
    {
       // Add or remove space around trailing return operator '->'.
       log_rule("sp_trailing_ret_t");

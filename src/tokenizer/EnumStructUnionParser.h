@@ -44,8 +44,8 @@ public:
 
 private:
    /**
-    * Analyzes all identifiers (marked as CT_WORD) between the starting and
-    * ending chunks and changes CT_WORD to one of CT_TYPE, CT_MACRO_FUNC_CALL,
+    * Analyzes all identifiers (marked as E_Token::CT_WORD) between the starting and
+    * ending chunks and changes E_Token::CT_WORD to one of E_Token::CT_TYPE, E_Token::CT_MACRO_FUNC_CALL,
     * etc. and sets flags (PCF_VAR_1ST, PCF_VAR_1ST_DEF, PCF_VAR_INLINE, etc.)
     * for variable identifiers accordingly. Flags C++ forward declarations as
     * PCF_INCOMPLETE

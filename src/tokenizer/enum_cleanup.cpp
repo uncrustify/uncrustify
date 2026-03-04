@@ -32,8 +32,8 @@ void enum_cleanup()
 
    while (pc->IsNotNullChunk())
    {
-      if (  pc->GetParentType() == CT_ENUM
-         && pc->Is(CT_BRACE_CLOSE))
+      if (  pc->GetParentType() == E_Token::CT_ENUM
+         && pc->Is(E_Token::CT_BRACE_CLOSE))
       {
          LOG_FMT(LTOK, "%s(%d): orig line is %zu, type is %s\n",
                  __func__, __LINE__, pc->GetOrigLine(), get_token_name(pc->GetType()));
@@ -41,7 +41,7 @@ void enum_cleanup()
 
          if (prev->IsNotNullChunk())
          {
-            if (prev->Is(CT_COMMA))
+            if (prev->Is(E_Token::CT_COMMA))
             {
                log_rule_B("mod_enum_last_comma");
 
@@ -52,9 +52,9 @@ void enum_cleanup()
             }
             else
             {
-               if (prev->Is(CT_BRACE_OPEN))                // Issue #2902
+               if (prev->Is(E_Token::CT_BRACE_OPEN))                // Issue #2902
                {
-                  // nothing between CT_BRACE_OPEN and CT_BRACE_CLOSE
+                  // nothing between E_Token::CT_BRACE_OPEN and E_Token::CT_BRACE_CLOSE
                }
                else
                {
@@ -65,7 +65,7 @@ void enum_cleanup()
                   {
                      // create a comma
                      Chunk comma;
-                     comma.SetType(CT_COMMA);
+                     comma.SetType(E_Token::CT_COMMA);
                      comma.SetOrigLine(prev->GetOrigLine());
                      comma.SetOrigCol(prev->GetOrigCol() + 1);
                      comma.SetNlCount(0);
@@ -73,13 +73,13 @@ void enum_cleanup()
                      comma.SetFlags(PCF_NONE);
                      comma.Text() = ",";
 
-                     if (  prev->Is(CT_PP_ENDIF)               // Issue #3604
+                     if (  prev->Is(E_Token::CT_PP_ENDIF)      // Issue #3604
                         || prev->TestFlags(PCF_IN_PREPROC))    // Skip #define and other preprocessor directives
                      {
                         prev = prev->GetPrevNcNnlNpp();
                      }
 
-                     if (prev->Is(CT_COMMA))                   // Issue #3604
+                     if (prev->Is(E_Token::CT_COMMA))                   // Issue #3604
                      {
                         // nothing to do
                      }

@@ -35,7 +35,7 @@ using namespace uncrustify;
 struct BraceState
 {
    ParsingFrameStack frames;
-   E_Token           in_preproc = CT_NONE;
+   E_Token           in_preproc = E_Token::CT_NONE;
    int               pp_level   = 0;
    bool              consumed   = false;
 };
@@ -44,7 +44,7 @@ struct BraceState
  * Called when a statement was just closed and the pse_tos was just
  * decremented.
  *
- * - if the TOS is now VBRACE, insert a CT_VBRACE_CLOSE and recurse.
+ * - if the TOS is now VBRACE, insert a E_Token::CT_VBRACE_CLOSE and recurse.
  * - if the TOS is a complex statement, call handle_complex_close()
  *
  * @retval true   done with this chunk
@@ -60,8 +60,8 @@ static void print_stack(log_sev_t logsev, const char *str, const ParsingFrame &f
 
 
 /**
- * pc is a CT_WHILE.
- * Scan backwards to see if we find a brace/vbrace with the parent set to CT_DO
+ * pc is a E_Token::CT_WHILE.
+ * Scan backwards to see if we find a brace/vbrace with the parent set to E_Token::CT_DO
  */
 static bool maybe_while_of_do(Chunk *pc);
 
@@ -125,7 +125,7 @@ static size_t preproc_start(BraceState &braceState, ParsingFrame &frm, Chunk *pc
    braceState.in_preproc = next->GetType();
 
    // If we are not in a define, check for #if, #else, #endif, etc
-   if (braceState.in_preproc != CT_PP_DEFINE)
+   if (braceState.in_preproc != E_Token::CT_PP_DEFINE)
    {
       int pp_indent = braceState.frames.check(frm, braceState.pp_level, pc);
       return(pp_indent);
@@ -140,7 +140,7 @@ static size_t preproc_start(BraceState &braceState, ParsingFrame &frm, Chunk *pc
 
    // TODO: not sure about the next 3 lines
    frm.push(Chunk::NullChunkPtr, __func__, __LINE__);
-   frm.top().SetOpenToken(CT_PP_DEFINE);
+   frm.top().SetOpenToken(E_Token::CT_PP_DEFINE);
 
    return(pp_level);
 }
@@ -188,10 +188,10 @@ void brace_cleanup()
       LOG_CHUNK(LTOK, pc);
 
       // Check for leaving a #define body
-      if (  braceState.in_preproc != CT_NONE
+      if (  braceState.in_preproc != E_Token::CT_NONE
          && !pc->TestFlags(PCF_IN_PREPROC))
       {
-         if (braceState.in_preproc == CT_PP_DEFINE)
+         if (braceState.in_preproc == E_Token::CT_PP_DEFINE)
          {
             // out of the #define body, restore the frame
             size_t brace_level = frm.GetBraceLevel();
@@ -211,12 +211,12 @@ void brace_cleanup()
             }
             braceState.frames.pop(frm);
          }
-         braceState.in_preproc = CT_NONE;
+         braceState.in_preproc = E_Token::CT_NONE;
       }
       // Check for a preprocessor start
       size_t pp_level;
 
-      if (pc->Is(CT_PREPROC))
+      if (pc->Is(E_Token::CT_PREPROC))
       {
          pp_level = preproc_start(braceState, frm, pc);
       }
@@ -229,8 +229,8 @@ void brace_cleanup()
 
       // Do before assigning stuff from the frame
       if (  language_is_set(lang_flag_e::LANG_PAWN)
-         && frm.top().GetOpenToken() == CT_VBRACE_OPEN
-         && pc->Is(CT_NEWLINE))
+         && frm.top().GetOpenToken() == E_Token::CT_VBRACE_OPEN
+         && pc->Is(E_Token::CT_NEWLINE))
       {
          pc = pawn_check_vsemicolon(pc);
 
@@ -241,7 +241,7 @@ void brace_cleanup()
       }
 
       // Issue #1813
-      if (pc->Is(CT_NAMESPACE))
+      if (pc->Is(E_Token::CT_NAMESPACE))
       {
          mark_namespace(pc);
       }
@@ -255,14 +255,14 @@ void brace_cleanup()
        * Also need to pass in the initial '#' to close out any virtual braces.
        */
       if (  !pc->IsCommentOrNewline()
-         && !pc->Is(CT_ATTRIBUTE)
-         && !pc->Is(CT_IGNORED)            // Issue #2279
-         && (  braceState.in_preproc == CT_PP_DEFINE
-            || braceState.in_preproc == CT_NONE))
+         && !pc->Is(E_Token::CT_ATTRIBUTE)
+         && !pc->Is(E_Token::CT_IGNORED)            // Issue #2279
+         && (  braceState.in_preproc == E_Token::CT_PP_DEFINE
+            || braceState.in_preproc == E_Token::CT_NONE))
       {
          braceState.consumed = false;
          parse_cleanup(braceState, frm, pc);
-         print_stack(LBCSAFTER, (pc->Is(CT_VBRACE_CLOSE)) ? "Virt-}\n" : pc->GetText().GetLogText(), frm);
+         print_stack(LBCSAFTER, (pc->Is(E_Token::CT_VBRACE_CLOSE)) ? "Virt-}\n" : pc->GetText().GetLogText(), frm);
       }
       pc = pc->GetNext();
    }
@@ -288,9 +288,9 @@ static bool maybe_while_of_do(Chunk *pc)
       prev = prev->GetPrevNcNnl();
    }
 
-   if (  (  prev->Is(CT_VBRACE_CLOSE)
-         || prev->Is(CT_BRACE_CLOSE))
-      && prev->GetParentType() == CT_DO)
+   if (  (  prev->Is(E_Token::CT_VBRACE_CLOSE)
+         || prev->Is(E_Token::CT_BRACE_CLOSE))
+      && prev->GetParentType() == E_Token::CT_DO)
    {
       return(true);
    }
@@ -371,8 +371,8 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
    if (  (  frm.GetStmtCount() == 0
          || frm.GetExprCount() == 0)
       && !pc->IsSemicolon()
-      && pc->IsNot(CT_BRACE_CLOSE)
-      && pc->IsNot(CT_VBRACE_CLOSE)
+      && pc->IsNot(E_Token::CT_BRACE_CLOSE)
+      && pc->IsNot(E_Token::CT_VBRACE_CLOSE)
       && !pc->IsString(")")
       && !pc->IsString("]"))
    {
@@ -395,7 +395,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
       // Mark everything in the for statement
       for (int tmp = static_cast<int>(frm.size()) - 2; tmp >= 0; tmp--)
       {
-         if (frm.at(tmp).GetOpenToken() == CT_FOR)
+         if (frm.at(tmp).GetOpenToken() == E_Token::CT_FOR)
          {
             pc->SetFlagBits(PCF_IN_FOR);
             break;
@@ -403,17 +403,17 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
       }
 
       // Mark the parent on semicolons in for() statements
-      if (  pc->Is(CT_SEMICOLON)
+      if (  pc->Is(E_Token::CT_SEMICOLON)
          && frm.size() > 2
-         && frm.prev().GetOpenToken() == CT_FOR)
+         && frm.prev().GetOpenToken() == E_Token::CT_FOR)
       {
-         pc->SetParentType(CT_FOR);
+         pc->SetParentType(E_Token::CT_FOR);
       }
    }
 
    // Check the progression of complex statements
    if (  frm.top().GetStage() != E_BraceStage::NONE
-      && !pc->Is(CT_AUTORELEASEPOOL)
+      && !pc->Is(E_Token::CT_AUTORELEASEPOOL)
       && check_complex_statements(frm, pc, braceState))
    {
       return;
@@ -425,7 +425,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
     * The semicolon isn't handled at all.
     * TODO: may need to float VBRACE past comments until newline?
     */
-   if (frm.top().GetOpenToken() == CT_VBRACE_OPEN)
+   if (frm.top().GetOpenToken() == E_Token::CT_VBRACE_OPEN)
    {
       if (pc->IsSemicolon())
       {
@@ -433,34 +433,34 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
          close_statement(frm, pc, braceState);
       }
       else if (  language_is_set(lang_flag_e::LANG_PAWN)
-              && pc->Is(CT_BRACE_CLOSE))
+              && pc->Is(E_Token::CT_BRACE_CLOSE))
       {
          close_statement(frm, pc, braceState);
       }
       else if (  language_is_set(lang_flag_e::LANG_D)
-              && pc->Is(CT_BRACE_CLOSE))
+              && pc->Is(E_Token::CT_BRACE_CLOSE))
       {
          close_statement(frm, pc, braceState);
       }
    }
 
    // Handle close parenthesis, vbrace, brace, and square
-   if (  pc->Is(CT_PAREN_CLOSE)
-      || pc->Is(CT_BRACE_CLOSE)
-      || pc->Is(CT_VBRACE_CLOSE)
-      || pc->Is(CT_ANGLE_CLOSE)
-      || pc->Is(CT_MACRO_CLOSE)
-      || pc->Is(CT_SQUARE_CLOSE))
+   if (  pc->Is(E_Token::CT_PAREN_CLOSE)
+      || pc->Is(E_Token::CT_BRACE_CLOSE)
+      || pc->Is(E_Token::CT_VBRACE_CLOSE)
+      || pc->Is(E_Token::CT_ANGLE_CLOSE)
+      || pc->Is(E_Token::CT_MACRO_CLOSE)
+      || pc->Is(E_Token::CT_SQUARE_CLOSE))
    {
-      // Change CT_PAREN_CLOSE into CT_SPAREN_CLOSE or CT_FPAREN_CLOSE
-      if (  pc->Is(CT_PAREN_CLOSE)
-         && (  (frm.top().GetOpenToken() == CT_FPAREN_OPEN)
-            || (frm.top().GetOpenToken() == CT_SPAREN_OPEN)))
+      // Change E_Token::CT_PAREN_CLOSE into E_Token::CT_SPAREN_CLOSE or E_Token::CT_FPAREN_CLOSE
+      if (  pc->Is(E_Token::CT_PAREN_CLOSE)
+         && (  (frm.top().GetOpenToken() == E_Token::CT_FPAREN_OPEN)
+            || (frm.top().GetOpenToken() == E_Token::CT_SPAREN_OPEN)))
       {
          // TODO: fix enum hack
          pc->SetType(static_cast<E_Token>(frm.top().GetOpenToken() + 1));
 
-         if (pc->Is(CT_SPAREN_CLOSE))
+         if (pc->Is(E_Token::CT_SPAREN_CLOSE))
          {
             frm.SetSParenCount(frm.GetSParenCount() - 1);
             pc->ResetFlagBits(PCF_IN_SPAREN);
@@ -480,14 +480,14 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
             const ParenStackEntry &AA = frm.top();                // Issue #3055
 
-            if (AA.GetOpenToken() != CT_EOF)
+            if (AA.GetOpenToken() != E_Token::CT_EOF)
             {
                LOG_FMT(LWARN, "%s(%d): (frm.top().type + 1) is %s\n",
                        __func__, __LINE__, get_token_name((E_Token)(frm.top().GetOpenToken() + 1)));
             }
 
-            if (  frm.top().GetOpenToken() != CT_EOF
-               && frm.top().GetOpenToken() != CT_PP_DEFINE)
+            if (  frm.top().GetOpenToken() != E_Token::CT_EOF
+               && frm.top().GetOpenToken() != E_Token::CT_PP_DEFINE)
             {
                LOG_FMT(LWARN, "%s(%d): File: %s, orig line is %zu, orig col is %zu, Error: Unexpected '%s' for '%s', which was on line %zu\n",
                        __func__, __LINE__, cpd.filename.c_str(), pc->GetOrigLine(), pc->GetOrigCol(),
@@ -506,9 +506,9 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
          pc->SetParentType(frm.top().GetParent());
          frm.SetParenLevel(frm.GetParenLevel() - 1);
 
-         if (  pc->Is(CT_BRACE_CLOSE)
-            || pc->Is(CT_VBRACE_CLOSE)
-            || pc->Is(CT_MACRO_CLOSE))
+         if (  pc->Is(E_Token::CT_BRACE_CLOSE)
+            || pc->Is(E_Token::CT_VBRACE_CLOSE)
+            || pc->Is(E_Token::CT_MACRO_CLOSE))
          {
             size_t tmp = frm.GetBraceLevel();
 
@@ -535,10 +535,10 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
 
          if (  language_is_set(lang_flag_e::LANG_D)
             && frm.top().GetStage() == E_BraceStage::NONE
-            && (  pc->Is(CT_VBRACE_CLOSE)
-               || pc->Is(CT_BRACE_CLOSE)
-               || pc->Is(CT_SEMICOLON))
-            && frm.top().GetOpenChunk()->Is(CT_VBRACE_OPEN))
+            && (  pc->Is(E_Token::CT_VBRACE_CLOSE)
+               || pc->Is(E_Token::CT_BRACE_CLOSE)
+               || pc->Is(E_Token::CT_SEMICOLON))
+            && frm.top().GetOpenChunk()->Is(E_Token::CT_VBRACE_OPEN))
          {
             // frames for functions are not created as they are for an if
             // this here is a hackish solution to close a vbrace of a block that
@@ -585,7 +585,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
          if (pc->IsSemicolon())
          {
             braceState.consumed = true;
-            pc->SetParentType(CT_WHILE_OF_DO);
+            pc->SetParentType(E_Token::CT_WHILE_OF_DO);
          }
          else
          {
@@ -600,86 +600,86 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
    // Get the parent type for brace and parenthesis open
    E_Token parentType = pc->GetParentType();
 
-   if (  pc->Is(CT_PAREN_OPEN)
-      || pc->Is(CT_FPAREN_OPEN)
-      || pc->Is(CT_SPAREN_OPEN)
-      || pc->Is(CT_BRACE_OPEN))
+   if (  pc->Is(E_Token::CT_PAREN_OPEN)
+      || pc->Is(E_Token::CT_FPAREN_OPEN)
+      || pc->Is(E_Token::CT_SPAREN_OPEN)
+      || pc->Is(E_Token::CT_BRACE_OPEN))
    {
       Chunk *prev = pc->GetPrevNcNnl();
 
       if (prev->IsNotNullChunk())
       {
-         if (  pc->Is(CT_PAREN_OPEN)
-            || pc->Is(CT_FPAREN_OPEN)
-            || pc->Is(CT_SPAREN_OPEN))
+         if (  pc->Is(E_Token::CT_PAREN_OPEN)
+            || pc->Is(E_Token::CT_FPAREN_OPEN)
+            || pc->Is(E_Token::CT_SPAREN_OPEN))
          {
             // Set the parent for parenthesis and change parenthesis type
-            if (  prev->Is(CT_IF)
-               || prev->Is(CT_CONSTEXPR)
-               || prev->Is(CT_ELSEIF)
-               || prev->Is(CT_WHILE)
-               || prev->Is(CT_WHILE_OF_DO)
-               || prev->Is(CT_DO)
-               || prev->Is(CT_FOR)
-               || prev->Is(CT_SWITCH)
-               || prev->Is(CT_CATCH)
-               || prev->Is(CT_SYNCHRONIZED)
-               || prev->Is(CT_D_VERSION)
-               || prev->Is(CT_D_VERSION_IF)
-               || prev->Is(CT_D_SCOPE)
-               || prev->Is(CT_D_SCOPE_IF))
+            if (  prev->Is(E_Token::CT_IF)
+               || prev->Is(E_Token::CT_CONSTEXPR)
+               || prev->Is(E_Token::CT_ELSEIF)
+               || prev->Is(E_Token::CT_WHILE)
+               || prev->Is(E_Token::CT_WHILE_OF_DO)
+               || prev->Is(E_Token::CT_DO)
+               || prev->Is(E_Token::CT_FOR)
+               || prev->Is(E_Token::CT_SWITCH)
+               || prev->Is(E_Token::CT_CATCH)
+               || prev->Is(E_Token::CT_SYNCHRONIZED)
+               || prev->Is(E_Token::CT_D_VERSION)
+               || prev->Is(E_Token::CT_D_VERSION_IF)
+               || prev->Is(E_Token::CT_D_SCOPE)
+               || prev->Is(E_Token::CT_D_SCOPE_IF))
             {
-               pc->SetType(CT_SPAREN_OPEN);
+               pc->SetType(E_Token::CT_SPAREN_OPEN);
                parentType = frm.top().GetOpenToken();
                frm.SetSParenCount(frm.GetSParenCount() + 1);
             }
-            else if (prev->Is(CT_FUNCTION))
+            else if (prev->Is(E_Token::CT_FUNCTION))
             {
-               pc->SetType(CT_FPAREN_OPEN);
-               parentType = CT_FUNCTION;
+               pc->SetType(E_Token::CT_FPAREN_OPEN);
+               parentType = E_Token::CT_FUNCTION;
             }
             // NS_ENUM and NS_OPTIONS are followed by a (type, name) pair
-            else if (  prev->Is(CT_ENUM)
+            else if (  prev->Is(E_Token::CT_ENUM)
                     && language_is_set(lang_flag_e::LANG_OC))
             {
-               // Treat both as CT_ENUM since the syntax is identical
-               pc->SetType(CT_FPAREN_OPEN);
-               parentType = CT_ENUM;
+               // Treat both as E_Token::CT_ENUM since the syntax is identical
+               pc->SetType(E_Token::CT_FPAREN_OPEN);
+               parentType = E_Token::CT_ENUM;
             }
-            else if (prev->Is(CT_DECLSPEC))  // Issue 1289
+            else if (prev->Is(E_Token::CT_DECLSPEC))  // Issue 1289
             {
-               parentType = CT_DECLSPEC;
+               parentType = E_Token::CT_DECLSPEC;
             }
             // else: no need to set parent
          }
-         else  // must be CT_BRACE_OPEN
+         else  // must be E_Token::CT_BRACE_OPEN
          {
             // Set the parent for open braces
             if (frm.top().GetStage() != E_BraceStage::NONE)
             {
                parentType = frm.top().GetOpenToken();
             }
-            else if (  prev->Is(CT_ASSIGN)
+            else if (  prev->Is(E_Token::CT_ASSIGN)
                     && (prev->GetText()[0] == '='))
             {
-               parentType = CT_ASSIGN;
+               parentType = E_Token::CT_ASSIGN;
             }
-            else if (  prev->Is(CT_RETURN)
+            else if (  prev->Is(E_Token::CT_RETURN)
                     && language_is_set(lang_flag_e::LANG_CPP))
             {
-               parentType = CT_RETURN;
+               parentType = E_Token::CT_RETURN;
             }
-            // Carry through CT_ENUM parent in NS_ENUM (type, name) {
+            // Carry through E_Token::CT_ENUM parent in NS_ENUM (type, name) {
             // only to help the vim command }
-            else if (  prev->Is(CT_FPAREN_CLOSE)
+            else if (  prev->Is(E_Token::CT_FPAREN_CLOSE)
                     && language_is_set(lang_flag_e::LANG_OC)
-                    && prev->GetParentType() == CT_ENUM)
+                    && prev->GetParentType() == E_Token::CT_ENUM)
             {
-               parentType = CT_ENUM;
+               parentType = E_Token::CT_ENUM;
             }
-            else if (prev->Is(CT_FPAREN_CLOSE))
+            else if (prev->Is(E_Token::CT_FPAREN_CLOSE))
             {
-               parentType = CT_FUNCTION;
+               parentType = E_Token::CT_FUNCTION;
             }
             // else: no need to set parent
          }
@@ -688,31 +688,31 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
 
    /*
     * Adjust the level for opens & create a stack entry
-    * Note that CT_VBRACE_OPEN has already been handled.
+    * Note that E_Token::CT_VBRACE_OPEN has already been handled.
     */
-   if (  pc->Is(CT_BRACE_OPEN)
-      || pc->Is(CT_PAREN_OPEN)
-      || pc->Is(CT_FPAREN_OPEN)
-      || pc->Is(CT_SPAREN_OPEN)
-      || pc->Is(CT_ANGLE_OPEN)
-      || pc->Is(CT_MACRO_OPEN)
-      || pc->Is(CT_SQUARE_OPEN))
+   if (  pc->Is(E_Token::CT_BRACE_OPEN)
+      || pc->Is(E_Token::CT_PAREN_OPEN)
+      || pc->Is(E_Token::CT_FPAREN_OPEN)
+      || pc->Is(E_Token::CT_SPAREN_OPEN)
+      || pc->Is(E_Token::CT_ANGLE_OPEN)
+      || pc->Is(E_Token::CT_MACRO_OPEN)
+      || pc->Is(E_Token::CT_SQUARE_OPEN))
    {
       frm.SetParenLevel(frm.GetParenLevel() + 1);
 
-      if (  pc->Is(CT_BRACE_OPEN)
-         || pc->Is(CT_MACRO_OPEN))
+      if (  pc->Is(E_Token::CT_BRACE_OPEN)
+         || pc->Is(E_Token::CT_MACRO_OPEN))
       {
          // Issue #1813
          bool single = false;
 
-         if (pc->GetParentType() == CT_NAMESPACE)
+         if (pc->GetParentType() == E_Token::CT_NAMESPACE)
          {
             LOG_FMT(LBCSPOP, "%s(%d): parent type is NAMESPACE\n",
                     __func__, __LINE__);
             Chunk *tmp = frm.top().GetOpenChunk();
 
-            if (tmp->GetParentType() == CT_NAMESPACE)
+            if (tmp->GetParentType() == E_Token::CT_NAMESPACE)
             {
                LOG_FMT(LBCSPOP, "%s(%d): tmp->GetParentType() is NAMESPACE\n",
                        __func__, __LINE__);
@@ -745,8 +745,8 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
    }
    // Issue #2281
 
-   if (  pc->Is(CT_BRACE_OPEN)
-      && pc->GetParentType() == CT_SWITCH)
+   if (  pc->Is(E_Token::CT_BRACE_OPEN)
+      && pc->GetParentType() == E_Token::CT_SWITCH)
    {
       size_t idx = frm.size();
       LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
@@ -768,20 +768,20 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
       }
    }
 
-   if (  pc->Is(CT_CASE)
-      || pc->Is(CT_DEFAULT))
+   if (  pc->Is(E_Token::CT_CASE)
+      || pc->Is(E_Token::CT_DEFAULT))
    {
       Chunk *prev = pc->GetPrevNcNnl();         // Issue #3176
 
-      if (  pc->Is(CT_CASE)
-         || (  pc->Is(CT_DEFAULT)
-            && prev->IsNot(CT_ASSIGN)))
+      if (  pc->Is(E_Token::CT_CASE)
+         || (  pc->Is(E_Token::CT_DEFAULT)
+            && prev->IsNot(E_Token::CT_ASSIGN)))
       {
-         // it is a CT_DEFAULT from a switch
+         // it is a E_Token::CT_DEFAULT from a switch
          size_t idx = frm.size();
          LOG_FMT(LBCSPOP, "%s(%d): pc orig line %zu, orig col %zu, frame idx %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), idx);
-         pc->SetParentType(CT_SWITCH);
+         pc->SetParentType(E_Token::CT_SWITCH);
 
          if (idx >= 2)
          {
@@ -800,7 +800,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
       }
    }
 
-   if (pc->Is(CT_BREAK))
+   if (pc->Is(E_Token::CT_BREAK))
    {
       size_t idx = frm.size();
       LOG_FMT(LBCSPOP, "%s(%d): pc orig line %zu, orig col %zu, frame idx %zu\n",
@@ -826,11 +826,11 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
    /*
     * Create a stack entry for complex statements:
     * if, elseif, switch, for, while, synchronized, using, lock, with,
-    * version, CT_D_SCOPE_IF
+    * version, E_Token::CT_D_SCOPE_IF
     */
    if (patcls == pattern_class_e::BRACED)
    {
-      frm.push(pc, __func__, __LINE__, (pc->Is(CT_DO) ? E_BraceStage::BRACE_DO
+      frm.push(pc, __func__, __LINE__, (pc->Is(E_Token::CT_DO) ? E_BraceStage::BRACE_DO
                     : E_BraceStage::BRACE2));
       // "+ComplexBraced"
    }
@@ -838,10 +838,10 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
    {
       E_BraceStage bs = E_BraceStage::PAREN1;
 
-      if (  pc->Is(CT_WHILE)
+      if (  pc->Is(E_Token::CT_WHILE)
          && maybe_while_of_do(pc))
       {
-         pc->SetType(CT_WHILE_OF_DO);
+         pc->SetType(E_Token::CT_WHILE_OF_DO);
          bs = E_BraceStage::WOD_PAREN;
       }
       frm.push(pc, __func__, __LINE__, bs);
@@ -862,22 +862,22 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
     * Mark simple statement/expression starts
     *  - after { or }
     *  - after ';', but not if the paren stack top is a paren
-    *  - after '(' that has a parent type of CT_FOR
+    *  - after '(' that has a parent type of E_Token::CT_FOR
     */
-   if (  pc->Is(CT_SQUARE_OPEN)
-      || (  pc->Is(CT_BRACE_OPEN)
-         && pc->GetParentType() != CT_ASSIGN)
-      || pc->Is(CT_BRACE_CLOSE)
-      || pc->Is(CT_VBRACE_CLOSE)
-      || (  pc->Is(CT_SPAREN_OPEN)
-         && pc->GetParentType() == CT_FOR)
-      || pc->Is(CT_COLON)
-      || pc->Is(CT_OC_END)
+   if (  pc->Is(E_Token::CT_SQUARE_OPEN)
+      || (  pc->Is(E_Token::CT_BRACE_OPEN)
+         && pc->GetParentType() != E_Token::CT_ASSIGN)
+      || pc->Is(E_Token::CT_BRACE_CLOSE)
+      || pc->Is(E_Token::CT_VBRACE_CLOSE)
+      || (  pc->Is(E_Token::CT_SPAREN_OPEN)
+         && pc->GetParentType() == E_Token::CT_FOR)
+      || pc->Is(E_Token::CT_COLON)
+      || pc->Is(E_Token::CT_OC_END)
       || (  pc->IsSemicolon()
-         && frm.top().GetOpenToken() != CT_PAREN_OPEN
-         && frm.top().GetOpenToken() != CT_FPAREN_OPEN
-         && frm.top().GetOpenToken() != CT_SPAREN_OPEN)
-      || pc->Is(CT_MACRO))                         // Issue #2742
+         && frm.top().GetOpenToken() != E_Token::CT_PAREN_OPEN
+         && frm.top().GetOpenToken() != E_Token::CT_FPAREN_OPEN
+         && frm.top().GetOpenToken() != E_Token::CT_SPAREN_OPEN)
+      || pc->Is(E_Token::CT_MACRO))                         // Issue #2742
    {
       LOG_FMT(LSTMT, "%s(%d): orig line is %zu, reset1 stmt on '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetLogText());
@@ -891,33 +891,33 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText());
    Chunk *tmp = pc->GetNextNcNnl();
 
-   if (  pc->Is(CT_ARITH)
-      || pc->Is(CT_SHIFT)
-      || pc->Is(CT_ASSIGN)
-      || pc->Is(CT_CASE)
-      || pc->Is(CT_COMPARE)
-      || (  pc->Is(CT_STAR)
-         && tmp->IsNot(CT_STAR))
-      || pc->Is(CT_BOOL)
-      || pc->Is(CT_MINUS)
-      || pc->Is(CT_PLUS)
-      || pc->Is(CT_CARET)
-      || pc->Is(CT_ANGLE_OPEN)
-      || pc->Is(CT_ANGLE_CLOSE)
-      || pc->Is(CT_RETURN)
-      || pc->Is(CT_THROW)
-      || pc->Is(CT_GOTO)
-      || pc->Is(CT_CONTINUE)
-      || pc->Is(CT_PAREN_OPEN)
-      || pc->Is(CT_FPAREN_OPEN)
-      || pc->Is(CT_SPAREN_OPEN)
-      || pc->Is(CT_BRACE_OPEN)
+   if (  pc->Is(E_Token::CT_ARITH)
+      || pc->Is(E_Token::CT_SHIFT)
+      || pc->Is(E_Token::CT_ASSIGN)
+      || pc->Is(E_Token::CT_CASE)
+      || pc->Is(E_Token::CT_COMPARE)
+      || (  pc->Is(E_Token::CT_STAR)
+         && tmp->IsNot(E_Token::CT_STAR))
+      || pc->Is(E_Token::CT_BOOL)
+      || pc->Is(E_Token::CT_MINUS)
+      || pc->Is(E_Token::CT_PLUS)
+      || pc->Is(E_Token::CT_CARET)
+      || pc->Is(E_Token::CT_ANGLE_OPEN)
+      || pc->Is(E_Token::CT_ANGLE_CLOSE)
+      || pc->Is(E_Token::CT_RETURN)
+      || pc->Is(E_Token::CT_THROW)
+      || pc->Is(E_Token::CT_GOTO)
+      || pc->Is(E_Token::CT_CONTINUE)
+      || pc->Is(E_Token::CT_PAREN_OPEN)
+      || pc->Is(E_Token::CT_FPAREN_OPEN)
+      || pc->Is(E_Token::CT_SPAREN_OPEN)
+      || pc->Is(E_Token::CT_BRACE_OPEN)
       || pc->IsSemicolon()
-      || pc->Is(CT_COMMA)
-      || pc->Is(CT_NOT)
-      || pc->Is(CT_INV)
-      || pc->Is(CT_COLON)
-      || pc->Is(CT_QUESTION))
+      || pc->Is(E_Token::CT_COMMA)
+      || pc->Is(E_Token::CT_NOT)
+      || pc->Is(E_Token::CT_INV)
+      || pc->Is(E_Token::CT_COLON)
+      || pc->Is(E_Token::CT_QUESTION))
    {
       frm.SetExprCount(0);
       LOG_FMT(LSTMT, "%s(%d): orig line is %zu, orig col is %zu, reset expr on '%s'\n",
@@ -938,26 +938,26 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
    // Turn an optional parenthesis into either a real parenthesis or a brace
    if (frm.top().GetStage() == E_BraceStage::OP_PAREN1)
    {
-      frm.top().SetStage(pc->IsNot(CT_PAREN_OPEN)
+      frm.top().SetStage(pc->IsNot(E_Token::CT_PAREN_OPEN)
                         ? E_BraceStage::BRACE2
                         : E_BraceStage::PAREN1);
       LOG_FMT(LBCSPOP, "%s(%d): frm.top().stage is now %s\n",
               __func__, __LINE__, get_brace_stage_name(frm.top().GetStage()));
    }
 
-   // Check for CT_ELSE after CT_IF
+   // Check for E_Token::CT_ELSE after E_Token::CT_IF
    while (frm.top().GetStage() == E_BraceStage::ELSE)
    {
-      if (pc->Is(CT_ELSE))
+      if (pc->Is(E_Token::CT_ELSE))
       {
-         // Replace CT_IF with CT_ELSE on the stack & we are done
-         frm.top().SetOpenToken(CT_ELSE);
+         // Replace E_Token::CT_IF with E_Token::CT_ELSE on the stack & we are done
+         frm.top().SetOpenToken(E_Token::CT_ELSE);
          frm.top().SetStage(E_BraceStage::ELSEIF);
          print_stack(LBCSSWAP, "=Swap   ", frm);
 
          return(true);
       }
-      // Remove the CT_IF and close the statement
+      // Remove the E_Token::CT_IF and close the statement
       LOG_FMT(LBCSPOP, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
       frm.pop(__func__, __LINE__, pc);
@@ -969,18 +969,18 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
       }
    }
 
-   // Check for CT_IF after CT_ELSE
+   // Check for E_Token::CT_IF after E_Token::CT_ELSE
    if (frm.top().GetStage() == E_BraceStage::ELSEIF)
    {
       log_rule_B("indent_else_if");
 
-      if (  pc->Is(CT_IF)
+      if (  pc->Is(E_Token::CT_IF)
          && (  !options::indent_else_if()
             || !pc->GetPrevNc()->IsNewline()))
       {
-         // Replace CT_ELSE with CT_IF
-         pc->SetType(CT_ELSEIF);
-         frm.top().SetOpenToken(CT_ELSEIF);
+         // Replace E_Token::CT_ELSE with E_Token::CT_IF
+         pc->SetType(E_Token::CT_ELSEIF);
+         frm.top().SetOpenToken(E_Token::CT_ELSEIF);
          frm.top().SetStage(E_BraceStage::PAREN1);
          return(true);
       }
@@ -988,32 +988,32 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
       frm.top().SetStage(E_BraceStage::BRACE2);
    }
 
-   // Check for CT_CATCH or CT_FINALLY after CT_TRY or CT_CATCH
+   // Check for E_Token::CT_CATCH or E_Token::CT_FINALLY after E_Token::CT_TRY or E_Token::CT_CATCH
    while (frm.top().GetStage() == E_BraceStage::CATCH)
    {
-      if (  pc->Is(CT_CATCH)
-         || pc->Is(CT_FINALLY))
+      if (  pc->Is(E_Token::CT_CATCH)
+         || pc->Is(E_Token::CT_FINALLY))
       {
-         // Replace CT_TRY with CT_CATCH or CT_FINALLY on the stack & we are done
+         // Replace E_Token::CT_TRY with E_Token::CT_CATCH or E_Token::CT_FINALLY on the stack & we are done
          frm.top().SetOpenToken(pc->GetType());
 
          if (  language_is_set(lang_flag_e::LANG_CS)
             || language_is_set(lang_flag_e::LANG_VALA))
          {
-            frm.top().SetStage((pc->Is(CT_CATCH)) ? E_BraceStage::CATCH_WHEN : E_BraceStage::BRACE2);
+            frm.top().SetStage((pc->Is(E_Token::CT_CATCH)) ? E_BraceStage::CATCH_WHEN : E_BraceStage::BRACE2);
          }
          else
          {
             // historically this used OP_PAREN1; however, to my knowledge the expression after a catch clause
             // is only optional for C# and Vala which has been handled above; therefore, this should now always
             // expect a parenthetical expression after the catch keyword and brace after the finally keyword
-            frm.top().SetStage((pc->Is(CT_CATCH)) ? E_BraceStage::PAREN1 : E_BraceStage::BRACE2);
+            frm.top().SetStage((pc->Is(E_Token::CT_CATCH)) ? E_BraceStage::PAREN1 : E_BraceStage::BRACE2);
          }
          print_stack(LBCSSWAP, "=Swap   ", frm);
 
          return(true);
       }
-      // Remove the CT_TRY and close the statement
+      // Remove the E_Token::CT_TRY and close the statement
       LOG_FMT(LBCSPOP, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
       frm.pop(__func__, __LINE__, pc);
@@ -1025,20 +1025,20 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
       }
    }
 
-   // Check for optional parenthesis and optional CT_WHEN after CT_CATCH
+   // Check for optional parenthesis and optional E_Token::CT_WHEN after E_Token::CT_CATCH
    if (frm.top().GetStage() == E_BraceStage::CATCH_WHEN)
    {
-      if (pc->Is(CT_PAREN_OPEN)) // this is for the paren after "catch"
+      if (pc->Is(E_Token::CT_PAREN_OPEN)) // this is for the paren after "catch"
       {
-         // Replace CT_PAREN_OPEN with CT_SPAREN_OPEN
-         pc->SetType(CT_SPAREN_OPEN);
+         // Replace E_Token::CT_PAREN_OPEN with E_Token::CT_SPAREN_OPEN
+         pc->SetType(E_Token::CT_SPAREN_OPEN);
          frm.top().SetOpenToken(pc->GetType());
          frm.top().SetStage(E_BraceStage::PAREN1);
 
          return(false);
       }
 
-      if (pc->Is(CT_WHEN))
+      if (pc->Is(E_Token::CT_WHEN))
       {
          frm.top().SetOpenToken(pc->GetType());
          frm.top().SetStage(E_BraceStage::OP_PAREN1);
@@ -1046,7 +1046,7 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
          return(true);
       }
 
-      if (pc->Is(CT_BRACE_OPEN))
+      if (pc->Is(E_Token::CT_BRACE_OPEN))
       {
          frm.top().SetStage(E_BraceStage::BRACE2);
 
@@ -1054,13 +1054,13 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
       }
    }
 
-   // Check for CT_WHILE after the CT_DO
+   // Check for E_Token::CT_WHILE after the E_Token::CT_DO
    if (frm.top().GetStage() == E_BraceStage::WHILE)
    {
-      if (pc->Is(CT_WHILE))
+      if (pc->Is(E_Token::CT_WHILE))
       {
-         pc->SetType(CT_WHILE_OF_DO);
-         frm.top().SetOpenToken(CT_WHILE_OF_DO);
+         pc->SetType(E_Token::CT_WHILE_OF_DO);
+         frm.top().SetOpenToken(E_Token::CT_WHILE_OF_DO);
          frm.top().SetStage(E_BraceStage::WOD_PAREN);
 
          return(true);
@@ -1074,11 +1074,11 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
       print_stack(LBCSPOP, "-Error  ", frm);
       exit(EX_SOFTWARE);
    }
-   // Insert a CT_VBRACE_OPEN, if needed
+   // Insert a E_Token::CT_VBRACE_OPEN, if needed
    // but not in a preprocessor
    atest = frm.top().GetStage();
 
-   if (  pc->IsNot(CT_BRACE_OPEN)
+   if (  pc->IsNot(E_Token::CT_BRACE_OPEN)
       && !pc->TestFlags(PCF_IN_PREPROC)
       && (  (frm.top().GetStage() == E_BraceStage::BRACE2)
          || (frm.top().GetStage() == E_BraceStage::BRACE_DO)))
@@ -1086,7 +1086,7 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
       log_rule_B("indent_using_block");
 
       if (  language_is_set(lang_flag_e::LANG_CS)
-         && pc->Is(CT_USING_STMT)
+         && pc->Is(E_Token::CT_USING_STMT)
          && (!options::indent_using_block()))
       {
          // don't indent the using block
@@ -1126,17 +1126,17 @@ static bool check_complex_statements(ParsingFrame &frm, Chunk *pc, const BraceSt
       }
    }
 
-   // Check for "constexpr" after CT_IF or CT_ELSEIF
+   // Check for "constexpr" after E_Token::CT_IF or E_Token::CT_ELSEIF
    if (  frm.top().GetStage() == E_BraceStage::PAREN1
-      && (  frm.top().GetOpenToken() == CT_IF
-         || frm.top().GetOpenToken() == CT_ELSEIF)
-      && pc->Is(CT_CONSTEXPR))
+      && (  frm.top().GetOpenToken() == E_Token::CT_IF
+         || frm.top().GetOpenToken() == E_Token::CT_ELSEIF)
+      && pc->Is(E_Token::CT_CONSTEXPR))
    {
       return(false);
    }
 
    // Verify open parenthesis in complex statement
-   if (  pc->IsNot(CT_PAREN_OPEN)
+   if (  pc->IsNot(E_Token::CT_PAREN_OPEN)
       && (  (frm.top().GetStage() == E_BraceStage::PAREN1)
          || (frm.top().GetStage() == E_BraceStage::WOD_PAREN)))
    {
@@ -1161,7 +1161,7 @@ static bool handle_complex_close(ParsingFrame &frm, Chunk *pc, const BraceState 
 
    if (frm.top().GetStage() == E_BraceStage::PAREN1)
    {
-      if (pc->GetNext()->GetType() == CT_WHEN)
+      if (pc->GetNext()->GetType() == E_Token::CT_WHEN)
       {
          frm.top().SetOpenToken(pc->GetType());
          frm.top().SetStage(E_BraceStage::CATCH_WHEN);
@@ -1174,18 +1174,18 @@ static bool handle_complex_close(ParsingFrame &frm, Chunk *pc, const BraceState 
    else if (frm.top().GetStage() == E_BraceStage::BRACE2)
    {
       // BRACE2: IF => ELSE, anything else => close
-      if (  (frm.top().GetOpenToken() == CT_IF)
-         || (frm.top().GetOpenToken() == CT_ELSEIF))
+      if (  (frm.top().GetOpenToken() == E_Token::CT_IF)
+         || (frm.top().GetOpenToken() == E_Token::CT_ELSEIF))
       {
          frm.top().SetStage(E_BraceStage::ELSE);
 
-         // If the next chunk isn't CT_ELSE, close the statement
+         // If the next chunk isn't E_Token::CT_ELSE, close the statement
          Chunk *next = pc->GetNextNcNnl();
 
          if (  next->IsNullChunk()
-            || next->IsNot(CT_ELSE))
+            || next->IsNot(E_Token::CT_ELSE))
          {
-            LOG_FMT(LBCSPOP, "%s(%d): no CT_ELSE, pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
+            LOG_FMT(LBCSPOP, "%s(%d): no E_Token::CT_ELSE, pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
             frm.pop(__func__, __LINE__, pc);
             print_stack(LBCSPOP, "-IF-HCS ", frm);
@@ -1193,16 +1193,16 @@ static bool handle_complex_close(ParsingFrame &frm, Chunk *pc, const BraceState 
             return(close_statement(frm, pc, braceState));
          }
       }
-      else if (  (frm.top().GetOpenToken() == CT_TRY)
-              || (frm.top().GetOpenToken() == CT_CATCH))
+      else if (  (frm.top().GetOpenToken() == E_Token::CT_TRY)
+              || (frm.top().GetOpenToken() == E_Token::CT_CATCH))
       {
          frm.top().SetStage(E_BraceStage::CATCH);
 
-         // If the next chunk isn't CT_CATCH or CT_FINALLY, close the statement
+         // If the next chunk isn't E_Token::CT_CATCH or E_Token::CT_FINALLY, close the statement
          Chunk *next = pc->GetNextNcNnl();
 
-         if (  next->IsNot(CT_CATCH)
-            && next->IsNot(CT_FINALLY))
+         if (  next->IsNot(E_Token::CT_CATCH)
+            && next->IsNot(E_Token::CT_FINALLY))
          {
             LOG_FMT(LBCSPOP, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -1268,24 +1268,24 @@ static void mark_namespace(Chunk *pns)
 
    Chunk *pc = pns->GetPrevNcNnl();
 
-   if (pc->Is(CT_USING))
+   if (pc->Is(E_Token::CT_USING))
    {
       is_using = true;
-      pns->SetParentType(CT_USING);
+      pns->SetParentType(E_Token::CT_USING);
    }
    pc = pns->GetNextNcNnl();
 
    while (pc->IsNotNullChunk())
    {
-      pc->SetParentType(CT_NAMESPACE);
+      pc->SetParentType(E_Token::CT_NAMESPACE);
 
-      if (pc->IsNot(CT_BRACE_OPEN))
+      if (pc->IsNot(E_Token::CT_BRACE_OPEN))
       {
-         if (pc->Is(CT_SEMICOLON))
+         if (pc->Is(E_Token::CT_SEMICOLON))
          {
             if (is_using)
             {
-               pc->SetParentType(CT_USING);
+               pc->SetParentType(E_Token::CT_USING);
             }
             return;
          }
@@ -1313,7 +1313,7 @@ static void mark_namespace(Chunk *pns)
             br_close->SetFlagBits(PCF_LONG_BLOCK);
          }
       }
-      flag_parens(pc, PCF_IN_NAMESPACE, CT_NONE, CT_NAMESPACE, false);
+      flag_parens(pc, PCF_IN_NAMESPACE, E_Token::CT_NONE, E_Token::CT_NAMESPACE, false);
       return;
    }
 } // mark_namespace
@@ -1336,7 +1336,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParsingFrame &frm)
    if (after)
    {
       chunk.SetOrigCol(pc->GetOrigCol());
-      chunk.SetType(CT_VBRACE_CLOSE);
+      chunk.SetType(E_Token::CT_VBRACE_CLOSE);
       return(chunk.CopyAndAddAfter(pc));
    }
    Chunk *ref = pc->GetPrev();
@@ -1368,7 +1368,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParsingFrame &frm)
    if (  !pc->TestFlags(PCF_IN_PREPROC)
       && ref->TestFlags(PCF_IN_PREPROC))
    {
-      if (ref->Is(CT_PREPROC_BODY))
+      if (ref->Is(E_Token::CT_PREPROC_BODY))
       {
          while (  ref->IsNotNullChunk()
                && ref->TestFlags(PCF_IN_PREPROC))
@@ -1380,7 +1380,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParsingFrame &frm)
       {
          ref = ref->GetNext();
 
-         if (ref->Is(CT_COMMENT)) // Issue #3034
+         if (ref->Is(E_Token::CT_COMMENT)) // Issue #3034
          {
             ref = ref->GetNextNc();
          }
@@ -1400,7 +1400,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParsingFrame &frm)
    chunk.SetOrigCol(ref->GetOrigCol());
    chunk.SetColumn(ref->GetColumn() + ref->Len());              // Issue # 4537
    chunk.SetPpLevel(ref->GetPpLevel());                         // Issue #3055
-   chunk.SetType(CT_VBRACE_OPEN);
+   chunk.SetType(E_Token::CT_VBRACE_OPEN);
 
    return(chunk.CopyAndAddAfter(ref));
 } // insert_vbrace
@@ -1429,12 +1429,12 @@ bool close_statement(ParsingFrame &frm, Chunk *pc, const BraceState &braceState)
               __func__, __LINE__, pc->GetOrigLine(), pc->GetLogText());
    }
    /*
-    * Insert a CT_VBRACE_CLOSE, if needed:
-    * If we are in a virtual brace and we are not ON a CT_VBRACE_CLOSE add one
+    * Insert a E_Token::CT_VBRACE_CLOSE, if needed:
+    * If we are in a virtual brace and we are not ON a E_Token::CT_VBRACE_CLOSE add one
     */
    Chunk *vbc = pc;
 
-   if (frm.top().GetOpenToken() == CT_VBRACE_OPEN)
+   if (frm.top().GetOpenToken() == E_Token::CT_VBRACE_OPEN)
    {
       // If the current token has already been consumed, then add after it
       if (braceState.consumed)

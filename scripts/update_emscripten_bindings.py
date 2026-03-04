@@ -69,7 +69,7 @@ ENUMS_INFO = [
         'substitute_name': 'TokenType',
         'filepath': '%s/src/token_enum.h' % ROOT_DIR,
         'extra_arg': [],
-        'filter_values': ['CT_TOKEN_COUNT_'],
+        'filter_values': ['E_Token::CT_TOKEN_COUNT_'],
         'suffix_chars': 3,
     },
     {

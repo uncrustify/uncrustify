@@ -25,7 +25,7 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
 {
    LOG_FUNC_ENTRY();
 
-   if (  chunk_type == CT_BOOL
+   if (  chunk_type == E_Token::CT_BOOL
       && options::code_width() > 0
       && options::nl_bool_expr_hierarchical()
       && (  options::pos_bool() == TP_LEAD
@@ -38,7 +38,7 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
            __func__, __LINE__, to_string(mode));
 
    if (  !(mode & (TP_JOIN | TP_LEAD | TP_TRAIL))
-      && chunk_type != CT_COMMA)
+      && chunk_type != E_Token::CT_COMMA)
    {
       return;
    }
@@ -55,7 +55,7 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
       {
          token_pos_e mode_local;
 
-         if (chunk_type == CT_COMMA)
+         if (chunk_type == E_Token::CT_COMMA)
          {
             LOG_FMT(LNEWLINE, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -68,7 +68,7 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
             }
 
             /*
-             * for chunk_type == CT_COMMA
+             * for chunk_type == E_Token::CT_COMMA
              * we get 'mode' from options::pos_comma()
              * BUT we must take care of options::pos_class_comma()
              * TODO and options::pos_constr_comma()
@@ -131,7 +131,7 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
 
                if (  next2->IsNotNullChunk()
                   && !next2->IsComment()
-                  && !next2->Is(CT_BRACE_OPEN))
+                  && !next2->Is(E_Token::CT_BRACE_OPEN))
                {
                   remove_next_newlines(pc);
                }
@@ -190,9 +190,9 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
          {
             Chunk *next2 = next->GetNext();
 
-            if (  next2->Is(CT_PREPROC)
-               || (  chunk_type == CT_ASSIGN
-                  && next2->Is(CT_BRACE_OPEN)))
+            if (  next2->Is(E_Token::CT_PREPROC)
+               || (  chunk_type == E_Token::CT_ASSIGN
+                  && next2->Is(E_Token::CT_BRACE_OPEN)))
             {
                continue;
             }
@@ -202,7 +202,7 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
                if (  prev->IsNotNullChunk()
                   && !prev->TestFlags(PCF_IN_PREPROC))
                {
-                  // move the CT_BOOL to after the newline
+                  // move the E_Token::CT_BOOL to after the newline
                   pc->MoveAfter(next);
                }
             }

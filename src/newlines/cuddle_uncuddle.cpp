@@ -32,7 +32,7 @@ void newlines_cuddle_uncuddle(Chunk *start, iarf_e nl_opt)
    }
    Chunk *br_close = start->GetPrevNcNnlNi();   // Issue #2279
 
-   if (br_close->Is(CT_BRACE_CLOSE))
+   if (br_close->Is(E_Token::CT_BRACE_CLOSE))
    {
       newline_iarf_pair(br_close, start, nl_opt);
    }

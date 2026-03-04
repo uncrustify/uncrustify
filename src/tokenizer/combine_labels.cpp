@@ -21,7 +21,7 @@ Chunk *chunk_get_next_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
       tmp = tmp->GetNext(scope);
    } while (  tmp->IsNotNullChunk()
            && (  tmp->IsComment()
-              || tmp->Is(CT_NOEXCEPT)));
+              || tmp->Is(E_Token::CT_NOEXCEPT)));
 
    return(tmp);
 }
@@ -36,7 +36,7 @@ Chunk *chunk_get_prev_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
       tmp = tmp->GetPrev(scope);
    } while (  tmp->IsNotNullChunk()
            && (  tmp->IsCommentOrNewline()
-              || tmp->Is(CT_NOEXCEPT)));
+              || tmp->Is(E_Token::CT_NOEXCEPT)));
 
    return(tmp);
 }
@@ -71,17 +71,17 @@ void combine_labels()
    // prev cur next
    while (next->IsNotNullChunk())
    {
-      if (next->Is(CT_NEWLINE))
+      if (next->Is(E_Token::CT_NEWLINE))
       {
          LOG_FMT(LFCN, "%s(%d): next orig line is %zu, orig col is %zu, <Newline>, nl is %zu\n",
                  __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->GetNlCount());
       }
-      else if (next->Is(CT_VBRACE_OPEN))
+      else if (next->Is(E_Token::CT_VBRACE_OPEN))
       {
          LOG_FMT(LFCN, "%s(%d): next orig line is %zu, orig col is %zu, VBRACE_OPEN\n",
                  __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol());
       }
-      else if (next->Is(CT_VBRACE_CLOSE))
+      else if (next->Is(E_Token::CT_VBRACE_CLOSE))
       {
          LOG_FMT(LFCN, "%s(%d): next orig line is %zu, orig col is %zu, VBRACE_CLOSE\n",
                  __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol());
@@ -95,8 +95,8 @@ void combine_labels()
       // see also Issue #4081
       //E_Token pt = next->GetParentType();                         // Issue #4042
 
-      //if (  pt == CT_UNION
-      //   && next->Is(CT_BRACE_OPEN))
+      //if (  pt == E_Token::CT_UNION
+      //   && next->Is(E_Token::CT_BRACE_OPEN))
       //{
       //   Chunk *close_brace = next->GetClosingParen();
       //   next = close_brace->GetNextNc();
@@ -104,26 +104,26 @@ void combine_labels()
       //}
 
       if (  !next->TestFlags(PCF_IN_OC_MSG) // filter OC case of [self class] msg send
-         && (  next->Is(CT_CLASS)
-            || next->Is(CT_OC_CLASS)
-            || next->Is(CT_TEMPLATE)))
+         && (  next->Is(E_Token::CT_CLASS)
+            || next->Is(E_Token::CT_OC_CLASS)
+            || next->Is(E_Token::CT_TEMPLATE)))
       {
          hit_class = true;
       }
 
       if (  next->IsSemicolon()
-         || next->Is(CT_BRACE_OPEN))
+         || next->Is(E_Token::CT_BRACE_OPEN))
       {
          hit_class = false;
       }
 
-      if (  prev->Is(CT_SQUARE_OPEN)
-         && prev->GetParentType() == CT_OC_MSG)
+      if (  prev->Is(E_Token::CT_SQUARE_OPEN)
+         && prev->GetParentType() == E_Token::CT_OC_MSG)
       {
          cs.Push_Back(prev);
       }
-      else if (  next->Is(CT_SQUARE_CLOSE)
-              && next->GetParentType() == CT_OC_MSG)
+      else if (  next->Is(E_Token::CT_SQUARE_CLOSE)
+              && next->GetParentType() == E_Token::CT_OC_MSG)
       {
          // pop until we hit '['
          while (!cs.Empty())
@@ -131,80 +131,80 @@ void combine_labels()
             Chunk *t2 = cs.Top()->m_pc;
             cs.Pop_Back();
 
-            if (t2->Is(CT_SQUARE_OPEN))
+            if (t2->Is(E_Token::CT_SQUARE_OPEN))
             {
                break;
             }
          }
       }
 
-      if (  next->Is(CT_QUESTION)
+      if (  next->Is(E_Token::CT_QUESTION)
          && !next->TestFlags(PCF_IN_TEMPLATE))
       {
          cs.Push_Back(next);
       }
-      else if (next->Is(CT_CASE))
+      else if (next->Is(E_Token::CT_CASE))
       {
-         if (cur->Is(CT_GOTO))
+         if (cur->Is(E_Token::CT_GOTO))
          {
             // handle "goto case x;"
-            next->SetType(CT_QUALIFIER);
+            next->SetType(E_Token::CT_QUALIFIER);
          }
          else
          {
             hit_case = true;
          }
       }
-      else if (  next->Is(CT_COND_COLON)
+      else if (  next->Is(E_Token::CT_COND_COLON)
               && cs_top_is_question(cs, next->GetLevel()))
       {
-         // Pop the question from the stack when we encounter a CT_COND_COLON
+         // Pop the question from the stack when we encounter a E_Token::CT_COND_COLON
          // that was already marked by mark_question_colon (e.g., elvis operator ?:)
          cs.Pop_Back();
       }
-      else if (  next->Is(CT_COLON)
-              || (  next->Is(CT_OC_COLON)
+      else if (  next->Is(E_Token::CT_COLON)
+              || (  next->Is(E_Token::CT_OC_COLON)
                  && cs_top_is_question(cs, next->GetLevel())))
       {
-         if (cur->Is(CT_DEFAULT))
+         if (cur->Is(E_Token::CT_DEFAULT))
          {
-            cur->SetType(CT_CASE);
+            cur->SetType(E_Token::CT_CASE);
             hit_case = true;
          }
 
          if (  cs_top_is_question(cs, next->GetLevel())
-            && !cur->Is(CT_OC_MSG_NAME)
+            && !cur->Is(E_Token::CT_OC_MSG_NAME)
             && next->TestFlags(PCF_IN_CONDITIONAL))             // Issue #3558
          {
             //log_pcf_flags(LFCN, next->GetFlags());
-            next->SetType(CT_COND_COLON);
+            next->SetType(E_Token::CT_COND_COLON);
             cs.Pop_Back();
          }
          else if (hit_case)
          {
             hit_case = false;
-            next->SetType(CT_CASE_COLON);
+            next->SetType(E_Token::CT_CASE_COLON);
             Chunk *tmp = next->GetNextNcNnlNpp();                // Issue #2150
 
-            if (tmp->Is(CT_BRACE_OPEN))
+            if (tmp->Is(E_Token::CT_BRACE_OPEN))
             {
-               tmp->SetParentType(CT_CASE);
-               tmp = tmp->GetNextType(CT_BRACE_CLOSE, tmp->GetLevel());
+               tmp->SetParentType(E_Token::CT_CASE);
+               tmp = tmp->GetNextType(E_Token::CT_BRACE_CLOSE, tmp->GetLevel());
 
                if (tmp->IsNotNullChunk())
                {
-                  tmp->SetParentType(CT_CASE);
+                  tmp->SetParentType(E_Token::CT_CASE);
                }
             }
 
-            if (  cur->Is(CT_NUMBER)
-               && prev->Is(CT_ELLIPSIS))
+            if (  cur->Is(E_Token::CT_NUMBER)
+               && prev->Is(E_Token::CT_ELLIPSIS))
             {
                Chunk *pre_ellipsis = prev->GetPrevNcNnlNpp();
 
-               if (pre_ellipsis->Is(CT_NUMBER))
+               if (pre_ellipsis->Is(E_Token::CT_NUMBER))
                {
-                  prev->SetType(CT_CASE_ELLIPSIS);
+                  prev->SetType(E_Token::CT_CASE_ELLIPSIS);
                }
             }
          }
@@ -229,10 +229,10 @@ void combine_labels()
 
             if (language_is_set(lang_flag_e::LANG_PAWN))
             {
-               if (  cur->Is(CT_WORD)
-                  || cur->Is(CT_BRACE_CLOSE))
+               if (  cur->Is(E_Token::CT_WORD)
+                  || cur->Is(E_Token::CT_BRACE_CLOSE))
                {
-                  E_Token new_type = CT_TAG;
+                  E_Token new_type = E_Token::CT_TAG;
 
                   Chunk   *tmp = next->GetNextNc();
 
@@ -244,15 +244,15 @@ void combine_labels()
                   if (  prev->IsNewline()
                      && tmp->IsNewline())
                   {
-                     new_type = CT_LABEL;
-                     next->SetType(CT_LABEL_COLON);
+                     new_type = E_Token::CT_LABEL;
+                     next->SetType(E_Token::CT_LABEL_COLON);
                   }
                   else
                   {
-                     next->SetType(CT_TAG_COLON);
+                     next->SetType(E_Token::CT_TAG_COLON);
                   }
 
-                  if (cur->Is(CT_WORD))
+                  if (cur->Is(E_Token::CT_WORD))
                   {
                      cur->SetType(new_type);
                   }
@@ -260,17 +260,17 @@ void combine_labels()
             }
             else if (next->TestFlags(PCF_IN_ARRAY_ASSIGN))
             {
-               next->SetType(CT_D_ARRAY_COLON);
+               next->SetType(E_Token::CT_D_ARRAY_COLON);
             }
             else if (next->TestFlags(PCF_IN_FOR))
             {
-               next->SetType(CT_FOR_COLON);
+               next->SetType(E_Token::CT_FOR_COLON);
             }
             else if (next->TestFlags(PCF_OC_BOXED))
             {
-               next->SetType(CT_OC_DICT_COLON);
+               next->SetType(E_Token::CT_OC_DICT_COLON);
             }
-            else if (cur->Is(CT_WORD))
+            else if (cur->Is(E_Token::CT_WORD))
             {
                Chunk *tmp = next->GetNextNc(E_Scope::PREPROC);
 
@@ -281,23 +281,23 @@ void combine_labels()
                }
                LOG_FMT(LFCN, "%s(%d): orig line is %zu, orig col is %zu, tmp '%s': ",
                        __func__, __LINE__, tmp->GetOrigLine(), tmp->GetOrigCol(),
-                       (tmp->Is(CT_NEWLINE)) ? "<Newline>" : tmp->GetLogText());
+                       (tmp->Is(E_Token::CT_NEWLINE)) ? "<Newline>" : tmp->GetLogText());
                log_pcf_flags(LFCN, tmp->GetFlags());
 
                if (next->TestFlags(PCF_IN_FCN_CALL))
                {
                   // Must be a macro thingy, assume some sort of label
-                  next->SetType(CT_LABEL_COLON);
+                  next->SetType(E_Token::CT_LABEL_COLON);
                }
-               else if (  (  tmp->IsNot(CT_NUMBER)
-                          && tmp->IsNot(CT_DECLTYPE)
-                          && tmp->IsNot(CT_SIZEOF)
-                          && tmp->GetParentType() != CT_SIZEOF
+               else if (  (  tmp->IsNot(E_Token::CT_NUMBER)
+                          && tmp->IsNot(E_Token::CT_DECLTYPE)
+                          && tmp->IsNot(E_Token::CT_SIZEOF)
+                          && tmp->GetParentType() != E_Token::CT_SIZEOF
                           && !tmp->GetFlags().test_any(PCF_IN_STRUCT | PCF_IN_CLASS))
-                       || tmp->Is(CT_NEWLINE))
+                       || tmp->Is(E_Token::CT_NEWLINE))
                {
                   /*
-                   * the CT_SIZEOF isn't great - test 31720 happens to use a sizeof expr,
+                   * the E_Token::CT_SIZEOF isn't great - test 31720 happens to use a sizeof expr,
                    * but this really should be able to handle any constant expr
                    */
                   // Fix for #1242
@@ -310,27 +310,27 @@ void combine_labels()
                   {
                      Chunk *labelPrev = prev;
 
-                     if (labelPrev->Is(CT_NEWLINE))
+                     if (labelPrev->Is(E_Token::CT_NEWLINE))
                      {
                         labelPrev = prev->GetPrevNcNnlNi();   // Issue #2279
                      }
 
                      if (  labelPrev->IsNotNullChunk()
-                        && labelPrev->IsNot(CT_FPAREN_CLOSE))
+                        && labelPrev->IsNot(E_Token::CT_FPAREN_CLOSE))
                      {
-                        cur->SetType(CT_LABEL);
-                        next->SetType(CT_LABEL_COLON);
+                        cur->SetType(E_Token::CT_LABEL);
+                        next->SetType(E_Token::CT_LABEL_COLON);
                      }
                   }
                   else
                   {
-                     cur->SetType(CT_LABEL);
-                     next->SetType(CT_LABEL_COLON);
+                     cur->SetType(E_Token::CT_LABEL);
+                     next->SetType(E_Token::CT_LABEL_COLON);
                   }
                }
                else if (next->GetFlags().test_any(PCF_IN_STRUCT | PCF_IN_CLASS | PCF_IN_TYPEDEF))
                {
-                  next->SetType(CT_BIT_COLON);
+                  next->SetType(E_Token::CT_BIT_COLON);
 
                   Chunk *nnext = next->GetNext();
 
@@ -341,19 +341,19 @@ void combine_labels()
 
                   while ((nnext = nnext->GetNext())->IsNotNullChunk())
                   {
-                     if (nnext->Is(CT_SEMICOLON))
+                     if (nnext->Is(E_Token::CT_SEMICOLON))
                      {
                         break;
                      }
 
-                     if (nnext->Is(CT_COLON))
+                     if (nnext->Is(E_Token::CT_COLON))
                      {
-                        nnext->SetType(CT_BIT_COLON);
+                        nnext->SetType(E_Token::CT_BIT_COLON);
                      }
                   }
                }
             }
-            else if (nextprev->Is(CT_FPAREN_CLOSE))
+            else if (nextprev->Is(E_Token::CT_FPAREN_CLOSE))
             {
                LOG_FMT(LFCN, "%s(%d): nextprev->text is '%s', orig line is %zu, orig col is %zu, type is %s\n",
                        __func__, __LINE__, nextprev->GetLogText(), nextprev->GetOrigLine(), nextprev->GetOrigCol(),
@@ -363,51 +363,51 @@ void combine_labels()
                        get_token_name(next->GetType()));
 
                // Issue #2172
-               if (next->GetParentType() == CT_FUNC_DEF)
+               if (next->GetParentType() == E_Token::CT_FUNC_DEF)
                {
                   LOG_FMT(LFCN, "%s(%d): it's a construct colon\n", __func__, __LINE__);
                   // it's a construct colon
-                  next->SetType(CT_CONSTR_COLON);
+                  next->SetType(E_Token::CT_CONSTR_COLON);
                }
                else
                {
                   LOG_FMT(LFCN, "%s(%d): it's a class colon\n", __func__, __LINE__);
                   // it's a class colon
-                  next->SetType(CT_CLASS_COLON);
+                  next->SetType(E_Token::CT_CLASS_COLON);
                }
             }
             else if (next->GetLevel() > next->GetBraceLevel())
             {
                // ignore it, as it is inside a paren
             }
-            else if (  cur->Is(CT_TYPE)
-                    || cur->Is(CT_ENUM)       // Issue #2584
-                    || nextprev->Is(CT_TYPE)
-                    || nextprev->Is(CT_ENUM)) // Issue #2584
+            else if (  cur->Is(E_Token::CT_TYPE)
+                    || cur->Is(E_Token::CT_ENUM)       // Issue #2584
+                    || nextprev->Is(E_Token::CT_TYPE)
+                    || nextprev->Is(E_Token::CT_ENUM)) // Issue #2584
             {
-               next->SetType(CT_BIT_COLON);
+               next->SetType(E_Token::CT_BIT_COLON);
             }
-            else if (  cur->Is(CT_ENUM)
-                    || cur->Is(CT_ACCESS)
-                    || cur->Is(CT_QUALIFIER)
-                    || cur->GetParentType() == CT_ALIGN)
+            else if (  cur->Is(E_Token::CT_ENUM)
+                    || cur->Is(E_Token::CT_ACCESS)
+                    || cur->Is(E_Token::CT_QUALIFIER)
+                    || cur->GetParentType() == E_Token::CT_ALIGN)
             {
                // ignore it - bit field, align or public/private, etc
             }
-            else if (  cur->Is(CT_ANGLE_CLOSE)
+            else if (  cur->Is(E_Token::CT_ANGLE_CLOSE)
                     || hit_class)
             {
                // ignore it - template thingy
             }
-            else if (cur->GetParentType() == CT_SQL_EXEC)
+            else if (cur->GetParentType() == E_Token::CT_SQL_EXEC)
             {
                // ignore it - SQL variable name
             }
-            else if (next->GetParentType() == CT_ASSERT)
+            else if (next->GetParentType() == E_Token::CT_ASSERT)
             {
                // ignore it - Java assert thing
             }
-            else if (next->GetParentType() == CT_STRUCT)
+            else if (next->GetParentType() == E_Token::CT_STRUCT)
             {
                // ignore it
             }
@@ -422,8 +422,8 @@ void combine_labels()
                           __func__, __LINE__, tmp->GetLogText(), tmp->GetOrigLine(), tmp->GetOrigCol(),
                           get_token_name(tmp->GetType()));
 
-                  if (  tmp->Is(CT_BASE)
-                     || tmp->Is(CT_THIS))
+                  if (  tmp->Is(E_Token::CT_BASE)
+                     || tmp->Is(E_Token::CT_THIS))
                   {
                      // ignore it, as it is a C# base thingy
                   }

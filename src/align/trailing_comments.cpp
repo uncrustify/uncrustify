@@ -160,15 +160,15 @@ comment_align_e get_comment_align_type(Chunk *cmt)
       && cmt->IsNotNullChunk()
       && ((prev = cmt->GetPrev())->IsNotNullChunk()))
    {
-      if (  prev->Is(CT_PP_ENDIF)
-         || prev->Is(CT_PP_ELSE)
-         || prev->Is(CT_ELSE)
-         || prev->Is(CT_BRACE_CLOSE))
+      if (  prev->Is(E_Token::CT_PP_ENDIF)
+         || prev->Is(E_Token::CT_PP_ELSE)
+         || prev->Is(E_Token::CT_ELSE)
+         || prev->Is(E_Token::CT_BRACE_CLOSE))
       {
          // TODO: make the magic 3 configurable
          if ((cmt->GetColumn() - (prev->GetColumn() + prev->Len())) < 3)
          {
-            cmt_type = (prev->Is(CT_PP_ENDIF)) ? comment_align_e::ENDIF : comment_align_e::BRACE;
+            cmt_type = (prev->Is(E_Token::CT_PP_ENDIF)) ? comment_align_e::ENDIF : comment_align_e::BRACE;
          }
       }
    }
@@ -182,11 +182,11 @@ void align_right_comments()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (  pc->Is(CT_COMMENT)
-         || pc->Is(CT_COMMENT_CPP)
-         || pc->Is(CT_COMMENT_MULTI))
+      if (  pc->Is(E_Token::CT_COMMENT)
+         || pc->Is(E_Token::CT_COMMENT_CPP)
+         || pc->Is(E_Token::CT_COMMENT_MULTI))
       {
-         if (pc->GetParentType() == CT_COMMENT_END)
+         if (pc->GetParentType() == E_Token::CT_COMMENT_END)
          {
             log_rule_B("align_right_cmt_gap");
 
@@ -205,7 +205,7 @@ void align_right_comments()
          }
 
          // Change certain WHOLE comments into RIGHT-alignable comments
-         if (pc->GetParentType() == CT_COMMENT_WHOLE)
+         if (pc->GetParentType() == E_Token::CT_COMMENT_WHOLE)
          {
             log_rule_B("input_tab_size");
             size_t max_col = pc->GetColumnIndent() + options::input_tab_size();

@@ -50,24 +50,24 @@ bool ifdef_over_whole_file()
       if (IFstage == 0)                   // 0 is BEGIN
       {
          // Check the first preprocessor, make sure it is an #if type
-         if (pc->IsNot(CT_PREPROC))
+         if (pc->IsNot(E_Token::CT_PREPROC))
          {
             break;
          }
          Chunk *next = pc->GetNext();
 
          if (  next->IsNullChunk()
-            || next->IsNot(CT_PP_IF))
+            || next->IsNot(E_Token::CT_PP_IF))
          {
             break;
          }
-         IFstage  = 1;                      // 1 is CT_PP_IF found
+         IFstage  = 1;                      // 1 is E_Token::CT_PP_IF found
          start_pp = pc;
       }
-      else if (IFstage == 1)                // 1 is CT_PP_IF found
+      else if (IFstage == 1)                // 1 is E_Token::CT_PP_IF found
       {
          // Scan until a preprocessor at level 0 is found - the close to the #if
-         if (pc->Is(CT_PREPROC))
+         if (pc->Is(E_Token::CT_PREPROC))
          {
             if (pc->GetPpLevel() == 0)
             {
@@ -80,7 +80,7 @@ bool ifdef_over_whole_file()
       else if (IFstage == 2)
       {
          // We should only see the rest of the preprocessor
-         if (  pc->Is(CT_PREPROC)
+         if (  pc->Is(E_Token::CT_PREPROC)
             || !pc->TestFlags(PCF_IN_PREPROC))
          {
             IFstage = 0;

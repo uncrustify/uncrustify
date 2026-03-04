@@ -36,10 +36,10 @@ Chunk *align_nl_cont(Chunk *start)
    Chunk      *pc       = start;
 
    while (  pc->IsNotNullChunk()
-         && pc->IsNot(CT_NEWLINE)
-         && pc->IsNot(CT_COMMENT_MULTI))
+         && pc->IsNot(E_Token::CT_NEWLINE)
+         && pc->IsNot(E_Token::CT_COMMENT_MULTI))
    {
-      if (pc->Is(CT_NL_CONT))
+      if (pc->Is(E_Token::CT_NL_CONT))
       {
          align_add(cs, pc, align_col);
          min_col = min(min_col, pc->GetColumn());
@@ -76,9 +76,9 @@ void align_backslash_newline()
 
    while (pc->IsNotNullChunk())
    {
-      if (pc->IsNot(CT_NL_CONT))
+      if (pc->IsNot(E_Token::CT_NL_CONT))
       {
-         pc = pc->GetNextType(CT_NL_CONT);
+         pc = pc->GetNextType(E_Token::CT_NL_CONT);
          continue;
       }
       pc = align_nl_cont(pc);

@@ -293,7 +293,7 @@ void align_to_column(Chunk *pc, size_t column)
       auto almod = align_mode_e::SHIFT;
 
       if (  pc->IsComment()
-         && pc->GetParentType() != CT_COMMENT_EMBED)
+         && pc->GetParentType() != E_Token::CT_COMMENT_EMBED)
       {
          log_rule_B("indent_relative_single_line_comments");
          almod = (  pc->IsSingleLineComment()
@@ -336,25 +336,25 @@ static size_t token_indent(E_Token type)
 {
    switch (type)
    {
-   case CT_IF:
-   case CT_DO:
+   case E_Token::CT_IF:
+   case E_Token::CT_DO:
       return(3);
 
-   case CT_FOR:
-   case CT_ELSE:  // wacky, but that's what is wanted
+   case E_Token::CT_FOR:
+   case E_Token::CT_ELSE:  // wacky, but that's what is wanted
       return(4);
 
-   case CT_WHILE:
-   case CT_USING_STMT:
+   case E_Token::CT_WHILE:
+   case E_Token::CT_USING_STMT:
       return(6);
 
-   case CT_SWITCH:
+   case E_Token::CT_SWITCH:
       return(7);
 
-   case CT_ELSEIF:
+   case E_Token::CT_ELSEIF:
       return(8);
 
-   case CT_SYNCHRONIZED:
+   case E_Token::CT_SYNCHRONIZED:
       return(13);
 
    default:
@@ -374,7 +374,7 @@ static size_t token_indent(E_Token type)
 static size_t get_indent_first_continue(Chunk *pc)
 {
    log_rule_B("indent_ignore_first_continue");
-   Chunk *continuation = pc->GetNextType(CT_NEWLINE, pc->GetLevel());
+   Chunk *continuation = pc->GetNextType(E_Token::CT_NEWLINE, pc->GetLevel());
 
    if (continuation->IsNotNullChunk())
    {
@@ -416,8 +416,8 @@ static Chunk *candidate_chunk_first_on_line(Chunk *pc)
    log_rule_B("indent_inside_ternary_operator");
 
    if (  options::indent_inside_ternary_operator()
-      && (  first->Is(CT_QUESTION)
-         || first->Is(CT_COND_COLON)))
+      && (  first->Is(E_Token::CT_QUESTION)
+         || first->Is(E_Token::CT_COND_COLON)))
    {
       return(first->GetNextNcNnl());
    }
@@ -447,13 +447,13 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    }
 
    // // Check for star in ':^TYPE *(ARGS) {'. Issue 2477
-   if (tmp->Is(CT_PTR_TYPE))
+   if (tmp->Is(E_Token::CT_PTR_TYPE))
    {
       tmp = tmp->GetPrevNc();
    }
 
    // Check for type in ':^TYPE *(ARGS) {'. Issue 2482
-   if (tmp->Is(CT_TYPE))
+   if (tmp->Is(E_Token::CT_TYPE))
    {
       tmp = tmp->GetPrevNc();
    }
@@ -462,19 +462,19 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    Chunk *caret_tmp = Chunk::NullChunkPtr;
 
    if (  tmp->IsNotNullChunk()
-      && tmp->GetType() == CT_OC_BLOCK_CARET)
+      && tmp->GetType() == E_Token::CT_OC_BLOCK_CARET)
    {
       caret_tmp = tmp;
    }
    else
    {
-      caret_tmp = tmp->GetPrevType(CT_OC_BLOCK_CARET);
+      caret_tmp = tmp->GetPrevType(E_Token::CT_OC_BLOCK_CARET);
       tmp       = caret_tmp;
    }
 
    // If we still cannot find caret then return first chunk on the line
    if (  tmp->IsNullChunk()
-      || tmp->IsNot(CT_OC_BLOCK_CARET))
+      || tmp->IsNot(E_Token::CT_OC_BLOCK_CARET))
    {
       return(candidate_chunk_first_on_line(pc));
    }
@@ -489,7 +489,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    if (from_colon)
    {
       if (  tmp->IsNullChunk()
-         || tmp->IsNot(CT_OC_COLON))
+         || tmp->IsNot(E_Token::CT_OC_COLON))
       {
          return(candidate_chunk_first_on_line(pc));
       }
@@ -503,8 +503,8 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    if (from_keyword)
    {
       if (  tmp->IsNullChunk()
-         || (  tmp->IsNot(CT_OC_MSG_NAME)
-            && tmp->IsNot(CT_OC_MSG_FUNC)))
+         || (  tmp->IsNot(E_Token::CT_OC_MSG_NAME)
+            && tmp->IsNot(E_Token::CT_OC_MSG_FUNC)))
       {
          return(candidate_chunk_first_on_line(pc));
       }
@@ -612,13 +612,13 @@ void indent_text()
 
       // Mark continuation lines if absolute indentation is requested
       if (  options::indent_continue() < 0
-         && (  pc->Is(CT_PAREN_OPEN)
-            || pc->Is(CT_LPAREN_OPEN)
-            || pc->Is(CT_SPAREN_OPEN)
-            || pc->Is(CT_FPAREN_OPEN)
-            || pc->Is(CT_RPAREN_OPEN)
-            || pc->Is(CT_SQUARE_OPEN)
-            || pc->Is(CT_ANGLE_OPEN)))
+         && (  pc->Is(E_Token::CT_PAREN_OPEN)
+            || pc->Is(E_Token::CT_LPAREN_OPEN)
+            || pc->Is(E_Token::CT_SPAREN_OPEN)
+            || pc->Is(E_Token::CT_FPAREN_OPEN)
+            || pc->Is(E_Token::CT_RPAREN_OPEN)
+            || pc->Is(E_Token::CT_SQUARE_OPEN)
+            || pc->Is(E_Token::CT_ANGLE_OPEN)))
       {
          Chunk *next = pc->GetNext();
 
@@ -655,14 +655,14 @@ void indent_text()
       //  forces string literal to column-1 [Fix for 1246]
       log_rule_B("indent_col1_multi_string_literal");
 
-      if (  (pc->GetType() == CT_STRING_MULTI)
+      if (  (pc->GetType() == E_Token::CT_STRING_MULTI)
          && !language_is_set(lang_flag_e::LANG_OC)                      // Issue #1795
          && options::indent_col1_multi_string_literal())
       {
          string str = pc->GetLogText();
 
          if (  (str[0] == '@')
-            && (pc->GetPrev()->GetType() == CT_NEWLINE))
+            && (pc->GetPrev()->GetType() == E_Token::CT_NEWLINE))
          {
             indent_column_set(1);
             reindent_line(pc, indent_column);
@@ -671,14 +671,14 @@ void indent_text()
          }
       }
 
-      if (pc->Is(CT_NEWLINE))
+      if (pc->Is(E_Token::CT_NEWLINE))
       {
          LOG_FMT(LINDLINE, "%s(%d): orig line is %zu, <Newline>\n",
                  __func__, __LINE__, pc->GetOrigLine());
       }
-      else if (pc->Is(CT_NL_CONT))
+      else if (pc->Is(E_Token::CT_NL_CONT))
       {
-         LOG_FMT(LINDLINE, "%s(%d): orig line is %zu, CT_NL_CONT\n",
+         LOG_FMT(LINDLINE, "%s(%d): orig line is %zu, E_Token::CT_NL_CONT\n",
                  __func__, __LINE__, pc->GetOrigLine());
       }
       else
@@ -711,10 +711,10 @@ void indent_text()
          {
             Chunk *next = pc->GetNextNcNnl();
 
-            if (  pc->GetParentType() == CT_FUNC_DEF
-               || (  pc->Is(CT_COMMENT)
+            if (  pc->GetParentType() == E_Token::CT_FUNC_DEF
+               || (  pc->Is(E_Token::CT_COMMENT)
                   && next->IsNotNullChunk()
-                  && next->GetParentType() == CT_FUNC_DEF))
+                  && next->GetParentType() == E_Token::CT_FUNC_DEF))
             {
                in_func_def = true;
                frm.push(pc, __func__, __LINE__);
@@ -727,8 +727,8 @@ void indent_text()
          {
             Chunk *prev = pc->GetPrev();
 
-            if (  prev->Is(CT_BRACE_CLOSE)
-               && prev->GetParentType() == CT_FUNC_DEF)
+            if (  prev->Is(E_Token::CT_BRACE_CLOSE)
+               && prev->GetParentType() == E_Token::CT_FUNC_DEF)
             {
                in_func_def = false;
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
@@ -754,8 +754,8 @@ void indent_text()
              * If we just removed an #endregion, then check to see if a
              * PP_REGION_INDENT entry is right below it
              */
-            if (  type == CT_PP_ENDREGION
-               && frm.top().GetOpenToken() == CT_PP_REGION_INDENT)
+            if (  type == E_Token::CT_PP_ENDREGION
+               && frm.top().GetOpenToken() == E_Token::CT_PP_REGION_INDENT)
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -763,12 +763,12 @@ void indent_text()
             }
          }
       }
-      else if (pc->Is(CT_PREPROC)) // #
+      else if (pc->Is(E_Token::CT_PREPROC)) // #
       {
          // Close out PP_IF_INDENT before playing with the parse frames
-         if (  frm.top().GetOpenToken() == CT_PP_IF_INDENT
-            && (  pc->GetParentType() == CT_PP_ENDIF
-               || pc->GetParentType() == CT_PP_ELSE))
+         if (  frm.top().GetOpenToken() == E_Token::CT_PP_IF_INDENT
+            && (  pc->GetParentType() == E_Token::CT_PP_ENDIF
+               || pc->GetParentType() == E_Token::CT_PP_ELSE))
          {
             LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -781,7 +781,7 @@ void indent_text()
          log_rule_B("pp_region_indent_code");
 
          if (  options::pp_region_indent_code()
-            && pc->GetParentType() == CT_PP_REGION)
+            && pc->GetParentType() == E_Token::CT_PP_REGION)
          {
             Chunk *next = pc->GetNext();
 
@@ -790,9 +790,9 @@ void indent_text()
                break;
             }
             // Hack to get the logs to look right
-            next->SetType(CT_PP_REGION_INDENT);
+            next->SetType(E_Token::CT_PP_REGION_INDENT);
             frm.push(next, __func__, __LINE__);
-            next->SetType(CT_PP_REGION);
+            next->SetType(E_Token::CT_PP_REGION);
 
             // Indent one level
             frm.top().SetIndent(frm.prev().GetIndent() + indent_size);
@@ -806,7 +806,7 @@ void indent_text()
          // If option set, remove indent inside switch statement
          log_rule_B("indent_switch_pp");
 
-         if (  frm.top().GetOpenToken() == CT_CASE
+         if (  frm.top().GetOpenToken() == E_Token::CT_CASE
             && !options::indent_switch_pp())
          {
             frm.push(pc, __func__, __LINE__);
@@ -823,8 +823,8 @@ void indent_text()
          log_rule_B("pp_if_indent_code");
 
          if (  options::pp_if_indent_code()
-            && (  pc->GetParentType() == CT_PP_IF
-               || pc->GetParentType() == CT_PP_ELSE))
+            && (  pc->GetParentType() == E_Token::CT_PP_IF
+               || pc->GetParentType() == E_Token::CT_PP_ELSE))
          {
             Chunk *next = pc->GetNext();
 
@@ -844,10 +844,10 @@ void indent_text()
             log_rule_B("pp_indent_extern");
 
             while (  preproc_next->IsNotNullChunk()
-                  && preproc_next->IsNot(CT_NEWLINE))
+                  && preproc_next->IsNot(E_Token::CT_NEWLINE))
             {
-               if (  (preproc_next->Is(CT_BRACE_OPEN))
-                  || (preproc_next->Is(CT_BRACE_CLOSE)))
+               if (  (preproc_next->Is(E_Token::CT_BRACE_OPEN))
+                  || (preproc_next->Is(E_Token::CT_BRACE_CLOSE)))
                {
                   if (options::pp_indent_brace() == 0)
                   {
@@ -860,11 +860,11 @@ void indent_text()
                      break;
                   }
                }
-               else if (  (  preproc_next->Is(CT_FUNC_DEF)
+               else if (  (  preproc_next->Is(E_Token::CT_FUNC_DEF)
                           && !options::pp_indent_func_def())
-                       || (  preproc_next->Is(CT_CASE)
+                       || (  preproc_next->Is(E_Token::CT_CASE)
                           && !options::pp_indent_case())
-                       || (  preproc_next->Is(CT_EXTERN)
+                       || (  preproc_next->Is(E_Token::CT_EXTERN)
                           && !options::pp_indent_extern()))
                {
                   should_indent_preproc = false;
@@ -878,7 +878,7 @@ void indent_text()
                // Hack to get the logs to look right
 
                const E_Token memtype = next->GetType();
-               next->SetType(CT_PP_IF_INDENT);
+               next->SetType(E_Token::CT_PP_IF_INDENT);
                frm.push(next, __func__, __LINE__);
                next->SetType(memtype);
 
@@ -909,13 +909,13 @@ void indent_text()
 
          if (options::indent_member_single())
          {
-            if (pc->GetParentType() == CT_PP_IF)
+            if (pc->GetParentType() == E_Token::CT_PP_IF)
             {
                // do nothing
             }
-            else if (pc->GetParentType() == CT_PP_ELSE)
+            else if (pc->GetParentType() == E_Token::CT_PP_ELSE)
             {
-               if (  frm.top().GetOpenToken() == CT_MEMBER
+               if (  frm.top().GetOpenToken() == E_Token::CT_MEMBER
                   && frm.top().GetPopChunk()->IsNotNullChunk()
                   && frm.top().GetOpenChunk() != frmbkup.top().GetOpenChunk())
                {
@@ -923,15 +923,15 @@ void indent_text()
 
                   if (tmp->IsNotNullChunk())
                   {
-                     if (  tmp->Is(CT_WORD)
-                        || tmp->Is(CT_TYPE))
+                     if (  tmp->Is(E_Token::CT_WORD)
+                        || tmp->Is(E_Token::CT_TYPE))
                      {
                         tmp = pc->GetNextNcNnlNpp();
                      }
-                     else if (  tmp->Is(CT_FUNC_CALL)
-                             || tmp->Is(CT_FPAREN_OPEN))
+                     else if (  tmp->Is(E_Token::CT_FUNC_CALL)
+                             || tmp->Is(E_Token::CT_FPAREN_OPEN))
                      {
-                        tmp = tmp->GetNextType(CT_FPAREN_CLOSE, tmp->GetLevel());
+                        tmp = tmp->GetNextType(E_Token::CT_FPAREN_CLOSE, tmp->GetLevel());
 
                         if (tmp->IsNotNullChunk())
                         {
@@ -946,10 +946,10 @@ void indent_text()
                   }
                }
             }
-            else if (pc->GetParentType() == CT_PP_ENDIF)
+            else if (pc->GetParentType() == E_Token::CT_PP_ENDIF)
             {
-               if (  frmbkup.top().GetOpenToken() == CT_MEMBER
-                  && frm.top().GetOpenToken() == CT_MEMBER)
+               if (  frmbkup.top().GetOpenToken() == E_Token::CT_MEMBER
+                  && frm.top().GetOpenToken() == E_Token::CT_MEMBER)
                {
                   frm.top().SetPopChunk(frmbkup.top().GetPopChunk());
                }
@@ -964,8 +964,8 @@ void indent_text()
          }
          frm.push(pp_next, __func__, __LINE__);
 
-         if (  pc->GetParentType() == CT_PP_DEFINE
-            || pc->GetParentType() == CT_PP_UNDEF)
+         if (  pc->GetParentType() == E_Token::CT_PP_DEFINE
+            || pc->GetParentType() == E_Token::CT_PP_UNDEF)
          {
             log_rule_B("pp_define_at_level");
             frm.top().SetIndentTmp(options::pp_define_at_level()
@@ -986,8 +986,8 @@ void indent_text()
             frm.top().SetIndentTab(frm.top().GetIndent());
             log_indent_tmp();
          }
-         else if (  (  pc->GetParentType() == CT_PP_PRAGMA
-                    || pc->GetParentType() == CT_PP_OTHER)
+         else if (  (  pc->GetParentType() == E_Token::CT_PP_PRAGMA
+                    || pc->GetParentType() == E_Token::CT_PP_OTHER)
                  && options::pp_define_at_level())
          {
             log_rule_B("pp_define_at_level");
@@ -998,7 +998,7 @@ void indent_text()
             frm.top().SetIndentTab(frm.top().GetIndent());
             log_indent_tmp();
          }
-         else if (  pc->GetParentType() == CT_PP_INCLUDE
+         else if (  pc->GetParentType() == E_Token::CT_PP_INCLUDE
                  && options::pp_include_at_level())
          {
             log_rule_B("pp_include_at_level");
@@ -1011,9 +1011,9 @@ void indent_text()
          }
          else
          {
-            if (  (frm.prev().GetOpenToken() == CT_PP_REGION_INDENT)
-               || (  (frm.prev().GetOpenToken() == CT_PP_IF_INDENT)
-                  && (frm.top().GetOpenToken() != CT_PP_ENDIF)))
+            if (  (frm.prev().GetOpenToken() == E_Token::CT_PP_REGION_INDENT)
+               || (  (frm.prev().GetOpenToken() == E_Token::CT_PP_IF_INDENT)
+                  && (frm.top().GetOpenToken() != E_Token::CT_PP_ENDIF)))
             {
                frm.top().SetIndent(frm.prev(2).GetIndent());
                log_indent();
@@ -1028,16 +1028,16 @@ void indent_text()
 
             int val = 0;
 
-            if (  pc->GetParentType() == CT_PP_REGION
-               || pc->GetParentType() == CT_PP_ENDREGION)
+            if (  pc->GetParentType() == E_Token::CT_PP_REGION
+               || pc->GetParentType() == E_Token::CT_PP_ENDREGION)
             {
                log_rule_B("pp_indent_region");
                val = options::pp_indent_region();
                log_indent();
             }
-            else if (  pc->GetParentType() == CT_PP_IF
-                    || pc->GetParentType() == CT_PP_ELSE
-                    || pc->GetParentType() == CT_PP_ENDIF)
+            else if (  pc->GetParentType() == E_Token::CT_PP_IF
+                    || pc->GetParentType() == E_Token::CT_PP_ELSE
+                    || pc->GetParentType() == E_Token::CT_PP_ENDIF)
             {
                log_rule_B("pp_indent_if");
                val = options::pp_indent_if();
@@ -1061,7 +1061,7 @@ void indent_text()
 
       if (options::indent_xml_string() > 0)
       {
-         if (pc->Is(CT_STRING))
+         if (pc->Is(E_Token::CT_STRING))
          {
             if (  pc->Len() > 4
                && xml_indent > 0
@@ -1099,8 +1099,8 @@ void indent_text()
          if (frm.top().GetOpenLevel() >= pc->GetLevel())
          {
             // process virtual braces closes (no text output)
-            if (  pc->Is(CT_VBRACE_CLOSE)
-               && frm.top().GetOpenToken() == CT_VBRACE_OPEN)
+            if (  pc->Is(E_Token::CT_VBRACE_CLOSE)
+               && frm.top().GetOpenToken() == E_Token::CT_VBRACE_OPEN)
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -1116,14 +1116,14 @@ void indent_text()
                }
             }
 
-            if (  pc->Is(CT_BRACE_CLOSE)
-               && pc->GetParentType() == CT_ENUM)
+            if (  pc->Is(E_Token::CT_BRACE_CLOSE)
+               && pc->GetParentType() == E_Token::CT_ENUM)
             {
                Chunk *prev_ncnl = pc->GetPrevNcNnl();
                LOG_FMT(LINDLINE, "%s(%d): prev_ncnl is '%s', orig line is %zu, orig col is %zu\n",
                        __func__, __LINE__, prev_ncnl->GetLogText(), prev_ncnl->GetOrigLine(), prev_ncnl->GetOrigCol());
 
-               if (prev_ncnl->Is(CT_COMMA))
+               if (prev_ncnl->Is(E_Token::CT_COMMA))
                {
                   LOG_FMT(LINDLINE, "%s(%d): prev_ncnl is comma\n", __func__, __LINE__);
                }
@@ -1147,11 +1147,11 @@ void indent_text()
             log_rule_B("indent_inside_ternary_operator");
 
             if (  options::indent_inside_ternary_operator()
-               && (frm.top().GetOpenToken() == CT_COND_COLON)
+               && (frm.top().GetOpenToken() == E_Token::CT_COND_COLON)
                && (  pc->IsSemicolon()
-                  || pc->Is(CT_COMMA)
-                  || pc->Is(CT_OC_MSG_NAME)
-                  || pc->Is(CT_SPAREN_CLOSE))) // Issue #1130, #1715
+                  || pc->Is(E_Token::CT_COMMA)
+                  || pc->Is(E_Token::CT_OC_MSG_NAME)
+                  || pc->Is(E_Token::CT_SPAREN_CLOSE))) // Issue #1130, #1715
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -1160,8 +1160,8 @@ void indent_text()
 
             // End any assign operations with a semicolon on the same level
             if (  pc->IsSemicolon()
-               && (  (frm.top().GetOpenToken() == CT_IMPORT)
-                  || (frm.top().GetOpenToken() == CT_USING)))
+               && (  (frm.top().GetOpenToken() == E_Token::CT_IMPORT)
+                  || (frm.top().GetOpenToken() == E_Token::CT_USING)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -1170,8 +1170,8 @@ void indent_text()
 
             // End any custom macro-based open/closes
             if (  !token_used
-               && (frm.top().GetOpenToken() == CT_MACRO_OPEN)
-               && pc->Is(CT_MACRO_CLOSE))
+               && (frm.top().GetOpenToken() == E_Token::CT_MACRO_OPEN)
+               && pc->Is(E_Token::CT_MACRO_CLOSE))
             {
                token_used = true;
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
@@ -1180,18 +1180,18 @@ void indent_text()
             }
 
             // End any CPP/ObjC class colon stuff
-            if (  (  (frm.top().GetOpenToken() == CT_CLASS_COLON)
-                  || (frm.top().GetOpenToken() == CT_CONSTR_COLON))
-               && (  pc->Is(CT_BRACE_OPEN)
-                  || pc->Is(CT_OC_END)
-                  || pc->Is(CT_OC_SCOPE)
-                  || pc->Is(CT_OC_PROPERTY)
-                  || pc->Is(CT_TYPEDEF) // Issue #2675
-                  || pc->Is(CT_MACRO_OPEN)
-                  || pc->Is(CT_MACRO_CLOSE)
+            if (  (  (frm.top().GetOpenToken() == E_Token::CT_CLASS_COLON)
+                  || (frm.top().GetOpenToken() == E_Token::CT_CONSTR_COLON))
+               && (  pc->Is(E_Token::CT_BRACE_OPEN)
+                  || pc->Is(E_Token::CT_OC_END)
+                  || pc->Is(E_Token::CT_OC_SCOPE)
+                  || pc->Is(E_Token::CT_OC_PROPERTY)
+                  || pc->Is(E_Token::CT_TYPEDEF) // Issue #2675
+                  || pc->Is(E_Token::CT_MACRO_OPEN)
+                  || pc->Is(E_Token::CT_MACRO_CLOSE)
                   || (  language_is_set(lang_flag_e::LANG_OC)
                      && pc->IsComment()
-                     && pc->GetParentType() == CT_COMMENT_WHOLE) // Issue #2675
+                     && pc->GetParentType() == E_Token::CT_COMMENT_WHOLE) // Issue #2675
                   || pc->IsSemicolon()))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
@@ -1200,9 +1200,9 @@ void indent_text()
             }
 
             // End ObjC class colon stuff inside of generic definition (like Test<T1: id<T3>>)
-            if (  (frm.top().GetOpenToken() == CT_CLASS_COLON)
-               && pc->Is(CT_ANGLE_CLOSE)
-               && pc->GetParentType() == CT_OC_GENERIC_SPEC)
+            if (  (frm.top().GetOpenToken() == E_Token::CT_CLASS_COLON)
+               && pc->Is(E_Token::CT_ANGLE_CLOSE)
+               && pc->GetParentType() == E_Token::CT_OC_GENERIC_SPEC)
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -1212,20 +1212,20 @@ void indent_text()
             // End Objc nested message and boxed array
             // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
             if (  language_is_set(lang_flag_e::LANG_OC)
-               && pc->Is(CT_SQUARE_CLOSE)
-               && pc->GetParentType() == CT_OC_AT
+               && pc->Is(E_Token::CT_SQUARE_CLOSE)
+               && pc->GetParentType() == E_Token::CT_OC_AT
                && frm.top().GetOpenLevel() >= pc->GetLevel())
             {
                size_t count = 1;
                Chunk  *next = pc->GetNextNc();
 
                while (  next->IsNotNullChunk()
-                     && (  (  next->Is(CT_BRACE_CLOSE)
-                           && next->GetParentType() == CT_OC_AT)
-                        || (  next->Is(CT_SQUARE_CLOSE)
-                           && next->GetParentType() == CT_OC_AT)
-                        || (  next->Is(CT_SQUARE_CLOSE)
-                           && next->GetParentType() == CT_OC_MSG)))
+                     && (  (  next->Is(E_Token::CT_BRACE_CLOSE)
+                           && next->GetParentType() == E_Token::CT_OC_AT)
+                        || (  next->Is(E_Token::CT_SQUARE_CLOSE)
+                           && next->GetParentType() == E_Token::CT_OC_AT)
+                        || (  next->Is(E_Token::CT_SQUARE_CLOSE)
+                           && next->GetParentType() == E_Token::CT_OC_MSG)))
                {
                   count++;
                   next = next->GetNextNc();
@@ -1236,7 +1236,7 @@ void indent_text()
                {
                   while (count-- > 0)
                   {
-                     if (frm.top().GetOpenToken() == CT_SQUARE_OPEN)
+                     if (frm.top().GetOpenToken() == E_Token::CT_SQUARE_OPEN)
                      {
                         if (frm.GetParenCount() == 0)
                         {
@@ -1269,9 +1269,9 @@ void indent_text()
             }
 
             // a case is ended with another case or a close brace
-            if (  (frm.top().GetOpenToken() == CT_CASE)
-               && (  pc->Is(CT_BRACE_CLOSE)
-                  || pc->Is(CT_CASE)))
+            if (  (frm.top().GetOpenToken() == E_Token::CT_CASE)
+               && (  pc->Is(E_Token::CT_BRACE_CLOSE)
+                  || pc->Is(E_Token::CT_CASE)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -1287,7 +1287,7 @@ void indent_text()
             LOG_FMT(LINDLINE, "%s(%d):     pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
 
-            if (  (frm.top().GetOpenToken() == CT_MEMBER)
+            if (  (frm.top().GetOpenToken() == E_Token::CT_MEMBER)
                && frm.top().GetPopChunk() == pc)
             {
                LOG_FMT(LINDLINE, "%s(%d):     pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
@@ -1295,10 +1295,10 @@ void indent_text()
                frm.pop(__func__, __LINE__, pc);
             }
 
-            if (  (frm.top().GetOpenToken() == CT_LAMBDA)
-               && (  pc->Is(CT_SEMICOLON)
-                  || pc->Is(CT_COMMA)
-                  || pc->Is(CT_BRACE_OPEN)))
+            if (  (frm.top().GetOpenToken() == E_Token::CT_LAMBDA)
+               && (  pc->Is(E_Token::CT_SEMICOLON)
+                  || pc->Is(E_Token::CT_COMMA)
+                  || pc->Is(E_Token::CT_BRACE_OPEN)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -1308,9 +1308,9 @@ void indent_text()
             log_rule_B("indent_access_spec_body");
 
             if (  options::indent_access_spec_body()
-               && (frm.top().GetOpenToken() == CT_ACCESS)
-               && (  pc->Is(CT_BRACE_CLOSE)
-                  || pc->Is(CT_ACCESS)))
+               && (frm.top().GetOpenToken() == E_Token::CT_ACCESS)
+               && (  pc->Is(E_Token::CT_BRACE_CLOSE)
+                  || pc->Is(E_Token::CT_ACCESS)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -1319,8 +1319,8 @@ void indent_text()
 
             // return & throw are ended with a semicolon
             if (  pc->IsSemicolon()
-               && (  (frm.top().GetOpenToken() == CT_RETURN)
-                  || (frm.top().GetOpenToken() == CT_THROW)))
+               && (  (frm.top().GetOpenToken() == E_Token::CT_RETURN)
+                  || (frm.top().GetOpenToken() == E_Token::CT_THROW)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -1328,9 +1328,9 @@ void indent_text()
             }
 
             // an OC SCOPE ('-' or '+') ends with a semicolon or brace open
-            if (  (frm.top().GetOpenToken() == CT_OC_SCOPE)
+            if (  (frm.top().GetOpenToken() == E_Token::CT_OC_SCOPE)
                && (  pc->IsSemicolon()
-                  || pc->Is(CT_BRACE_OPEN)))
+                  || pc->Is(E_Token::CT_BRACE_OPEN)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -1341,10 +1341,10 @@ void indent_text()
              * a typedef and an OC SCOPE ('-' or '+') ends with a semicolon or
              * brace open
              */
-            if (  (frm.top().GetOpenToken() == CT_TYPEDEF)
+            if (  (frm.top().GetOpenToken() == E_Token::CT_TYPEDEF)
                && (  pc->IsSemicolon()
                   || pc->IsParenOpen()
-                  || pc->Is(CT_BRACE_OPEN)))
+                  || pc->Is(E_Token::CT_BRACE_OPEN)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -1352,7 +1352,7 @@ void indent_text()
             }
 
             // an SQL EXEC is ended with a semicolon
-            if (  (frm.top().GetOpenToken() == CT_SQL_EXEC)
+            if (  (frm.top().GetOpenToken() == E_Token::CT_SQL_EXEC)
                && pc->IsSemicolon())
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
@@ -1361,9 +1361,9 @@ void indent_text()
             }
 
             // an CLASS is ended with a semicolon or brace open
-            if (  (frm.top().GetOpenToken() == CT_CLASS)
-               && (  pc->Is(CT_CLASS_COLON)
-                  || pc->Is(CT_BRACE_OPEN)
+            if (  (frm.top().GetOpenToken() == E_Token::CT_CLASS)
+               && (  pc->Is(E_Token::CT_CLASS_COLON)
+                  || pc->Is(E_Token::CT_BRACE_OPEN)
                   || pc->IsSemicolon()))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
@@ -1374,10 +1374,10 @@ void indent_text()
 
             // Pop OC msg selector stack
             if (  options::indent_oc_inside_msg_sel()
-               && (frm.top().GetOpenToken() != CT_SQUARE_OPEN)
+               && (frm.top().GetOpenToken() != E_Token::CT_SQUARE_OPEN)
                && frm.top().GetOpenLevel() >= pc->GetLevel()
-               && (  pc->Is(CT_OC_MSG_FUNC)
-                  || pc->Is(CT_OC_MSG_NAME))) // Issue #2658
+               && (  pc->Is(E_Token::CT_OC_MSG_FUNC)
+                  || pc->Is(E_Token::CT_OC_MSG_NAME))) // Issue #2658
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -1386,13 +1386,13 @@ void indent_text()
 
             // Close out parenthesis and squares
             if (  (frm.top().GetOpenToken() == (pc->GetType() - 1))
-               && (  pc->Is(CT_PAREN_CLOSE)
-                  || pc->Is(CT_LPAREN_CLOSE)                     // Issue #3054
-                  || pc->Is(CT_SPAREN_CLOSE)
-                  || pc->Is(CT_FPAREN_CLOSE)
-                  || pc->Is(CT_RPAREN_CLOSE)                     // Issue #3914
-                  || pc->Is(CT_SQUARE_CLOSE)
-                  || pc->Is(CT_ANGLE_CLOSE))
+               && (  pc->Is(E_Token::CT_PAREN_CLOSE)
+                  || pc->Is(E_Token::CT_LPAREN_CLOSE)                     // Issue #3054
+                  || pc->Is(E_Token::CT_SPAREN_CLOSE)
+                  || pc->Is(E_Token::CT_FPAREN_CLOSE)
+                  || pc->Is(E_Token::CT_RPAREN_CLOSE)                     // Issue #3914
+                  || pc->Is(E_Token::CT_SQUARE_CLOSE)
+                  || pc->Is(E_Token::CT_ANGLE_CLOSE))
                && (  !pc->TestFlags(PCF_CONT_LINE)
                   || options::indent_continue() >= 0))
             {
@@ -1418,7 +1418,7 @@ void indent_text()
 
       log_rule_B("indent_single_newlines");
 
-      if (  pc->Is(CT_NEWLINE)
+      if (  pc->Is(E_Token::CT_NEWLINE)
          && options::indent_single_newlines())
       {
          pc->SetNlColumn(indent_column);
@@ -1434,10 +1434,10 @@ void indent_text()
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetColumn(), pc->ElidedText(copy));
 
       // Issue #672
-      if (  pc->Is(CT_BRACE_OPEN)
+      if (  pc->Is(E_Token::CT_BRACE_OPEN)
          && classFound)
       {
-         LOG_FMT(LINDENT, "%s(%d): CT_BRACE_OPEN found, CLOSE IT\n",
+         LOG_FMT(LINDENT, "%s(%d): E_Token::CT_BRACE_OPEN found, CLOSE IT\n",
                  __func__, __LINE__);
          LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -1462,35 +1462,35 @@ void indent_text()
       log_rule_B("indent_braces_no_func");
       log_rule_B("indent_braces_no_class");
       log_rule_B("indent_braces_no_struct");
-      const bool brace_indent = (  (  pc->Is(CT_BRACE_CLOSE)
-                                   || pc->Is(CT_BRACE_OPEN))
+      const bool brace_indent = (  (  pc->Is(E_Token::CT_BRACE_CLOSE)
+                                   || pc->Is(E_Token::CT_BRACE_OPEN))
                                 && options::indent_braces()
                                 && (  !options::indent_braces_no_func()
-                                   || pc->GetParentType() != CT_FUNC_DEF)
+                                   || pc->GetParentType() != E_Token::CT_FUNC_DEF)
                                 && (  !options::indent_braces_no_func()
-                                   || pc->GetParentType() != CT_FUNC_CLASS_DEF)
+                                   || pc->GetParentType() != E_Token::CT_FUNC_CLASS_DEF)
                                 && (  !options::indent_braces_no_class()
-                                   || pc->GetParentType() != CT_CLASS)
+                                   || pc->GetParentType() != E_Token::CT_CLASS)
                                 && (  !options::indent_braces_no_struct()
-                                   || pc->GetParentType() != CT_STRUCT));
+                                   || pc->GetParentType() != E_Token::CT_STRUCT));
       LOG_FMT(LINDENT, "%s(%d): brace_indent is %s\n",
               __func__, __LINE__, brace_indent ? "true" : "false");
 
-      if (pc->Is(CT_BRACE_CLOSE))
+      if (pc->Is(E_Token::CT_BRACE_CLOSE))
       {
          if (language_is_set(lang_flag_e::LANG_OC))
          {
-            if (  frm.top().GetOpenToken() == CT_BRACE_OPEN
+            if (  frm.top().GetOpenToken() == E_Token::CT_BRACE_OPEN
                && frm.top().GetOpenLevel() >= pc->GetLevel())
             {
                size_t count = 1;
                Chunk  *next = pc->GetNextNc();
 
                while (  next->IsNotNullChunk()
-                     && (  (  next->Is(CT_BRACE_CLOSE)
-                           && next->GetParentType() == CT_OC_AT)
-                        || (  next->Is(CT_SQUARE_CLOSE)
-                           && next->GetParentType() == CT_OC_AT)))
+                     && (  (  next->Is(E_Token::CT_BRACE_CLOSE)
+                           && next->GetParentType() == E_Token::CT_OC_AT)
+                        || (  next->Is(E_Token::CT_SQUARE_CLOSE)
+                           && next->GetParentType() == E_Token::CT_OC_AT)))
                {
                   count++;
                   next = next->GetNextNc();
@@ -1500,8 +1500,8 @@ void indent_text()
                // End Objc nested boxed dictionary
                // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
                if (  count > 0
-                  && pc->Is(CT_BRACE_CLOSE)
-                  && pc->GetParentType() == CT_OC_AT)
+                  && pc->Is(E_Token::CT_BRACE_CLOSE)
+                  && pc->GetParentType() == E_Token::CT_OC_AT)
                {
                   if (frm.top().GetIndentData().ref)
                   {
@@ -1566,7 +1566,7 @@ void indent_text()
             frm.pop(__func__, __LINE__, pc);
          }
       }
-      else if (pc->Is(CT_VBRACE_OPEN))
+      else if (pc->Is(E_Token::CT_VBRACE_OPEN))
       {
          frm.push(pc, __func__, __LINE__);
 
@@ -1594,8 +1594,8 @@ void indent_text()
          // Always indent on virtual braces
          indent_column_set(frm.top().GetIndentTmp());
       }
-      else if (  pc->Is(CT_BRACE_OPEN)
-              && pc->GetNext()->IsNot(CT_NAMESPACE))
+      else if (  pc->Is(E_Token::CT_BRACE_OPEN)
+              && pc->GetNext()->IsNot(E_Token::CT_NAMESPACE))
       {
          LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, orig col is %zu, text is '%s'\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText());
@@ -1604,13 +1604,13 @@ void indent_text()
          log_rule_B("indent_macro_brace");
 
          if (  !options::indent_macro_brace()
-            && frm.prev().GetOpenToken() == CT_PP_DEFINE
+            && frm.prev().GetOpenToken() == E_Token::CT_PP_DEFINE
             && frm.prev().GetOpenLine() == frm.top().GetOpenLine())
          {
             LOG_FMT(LINDENT2, "%s(%d): indent_macro_brace\n", __func__, __LINE__);
          }
          else if (  options::indent_cpp_lambda_body()
-                 && pc->GetParentType() == CT_CPP_LAMBDA)
+                 && pc->GetParentType() == E_Token::CT_CPP_LAMBDA)
          {
             log_rule_B("indent_cpp_lambda_body");
             frm.top().SetBraceIndent(frm.prev().GetIndent());
@@ -1618,7 +1618,7 @@ void indent_text()
             Chunk *head     = frm.top().GetOpenChunk()->GetPrevNcNnlNpp();
             Chunk *tail     = Chunk::NullChunkPtr;
             Chunk *frm_prev = frm.prev().GetOpenChunk();
-            bool  enclosure = (  frm_prev->GetParentType() != CT_FUNC_DEF           // Issue #3407
+            bool  enclosure = (  frm_prev->GetParentType() != E_Token::CT_FUNC_DEF           // Issue #3407
                               && frm_prev != frm_prev->GetClosingParen());
             bool  linematch = true;
 
@@ -1659,7 +1659,7 @@ void indent_text()
 
             for (auto it = frm.rbegin(); it != frm.rend() && tail->IsNotNullChunk(); ++it)
             {
-               if (!it->GetOpenChunk()->Is(CT_FPAREN_OPEN))
+               if (!it->GetOpenChunk()->Is(E_Token::CT_FPAREN_OPEN))
                {
                   continue;
                }
@@ -1718,7 +1718,7 @@ void indent_text()
          }
          else if (  language_is_set(lang_flag_e::LANG_CPP)
                  && options::indent_cpp_lambda_only_once()
-                 && (pc->GetParentType() == CT_CPP_LAMBDA))
+                 && (pc->GetParentType() == E_Token::CT_CPP_LAMBDA))
          {
             // test example cpp:30756
             log_rule_B("indent_cpp_lambda_only_once");
@@ -1752,8 +1752,8 @@ void indent_text()
          else if (  (  language_is_set(lang_flag_e::LANG_CS)
                     || language_is_set(lang_flag_e::LANG_JAVA))
                  && options::indent_cs_delegate_brace()
-                 && (  pc->GetParentType() == CT_LAMBDA
-                    || pc->GetParentType() == CT_DELEGATE))
+                 && (  pc->GetParentType() == E_Token::CT_LAMBDA
+                    || pc->GetParentType() == E_Token::CT_DELEGATE))
          {
             log_rule_B("indent_cs_delegate_brace");
             frm.top().SetBraceIndent(1 + (pc->GetBraceLevel() + 1) * indent_size);
@@ -1771,8 +1771,8 @@ void indent_text()
                     || language_is_set(lang_flag_e::LANG_JAVA))
                  && !options::indent_cs_delegate_brace()
                  && !options::indent_align_paren()
-                 && (  pc->GetParentType() == CT_LAMBDA
-                    || pc->GetParentType() == CT_DELEGATE))
+                 && (  pc->GetParentType() == E_Token::CT_LAMBDA
+                    || pc->GetParentType() == E_Token::CT_DELEGATE))
          {
             log_rule_B("indent_cs_delegate_brace");
             log_rule_B("indent_align_paren");
@@ -1794,7 +1794,7 @@ void indent_text()
          }
          else if (  !options::indent_paren_open_brace()
                  && !language_is_set(lang_flag_e::LANG_CS)
-                 && pc->GetParentType() == CT_CPP_LAMBDA
+                 && pc->GetParentType() == E_Token::CT_CPP_LAMBDA
                  && (  pc->TestFlags(PCF_IN_FCN_DEF)
                     || pc->TestFlags(PCF_IN_FCN_CTOR)) // Issue #2152
                  && pc->GetNextNc()->IsNewline())
@@ -1826,7 +1826,7 @@ void indent_text()
             frm.top().SetIndent(indent_column + indent_size);
             log_indent();
 
-            if (  (pc->GetParentType() == CT_OC_BLOCK_EXPR)
+            if (  (pc->GetParentType() == E_Token::CT_OC_BLOCK_EXPR)
                && pc->TestFlags(PCF_IN_OC_MSG))
             {
                frm.top().SetIndent(frm.prev().GetIndentTmp() + indent_size);
@@ -1843,7 +1843,7 @@ void indent_text()
          else if (  frm.GetParenCount() != 0
                  && !pc->TestFlags(PCF_IN_LAMBDA)) // Issue #3761
          {
-            if (frm.top().GetOpenChunk()->GetParentType() == CT_OC_BLOCK_EXPR)
+            if (frm.top().GetOpenChunk()->GetParentType() == E_Token::CT_OC_BLOCK_EXPR)
             {
                log_rule_B("indent_oc_block_msg");
 
@@ -1887,8 +1887,8 @@ void indent_text()
                      Chunk *bbc           = pc->GetClosingParen(); // block brace close '}'
                      Chunk *bbc_next_ncnl = bbc->GetNextNcNnl();
 
-                     if (  bbc_next_ncnl->GetType() == CT_OC_MSG_NAME
-                        || bbc_next_ncnl->GetType() == CT_OC_MSG_FUNC)
+                     if (  bbc_next_ncnl->GetType() == E_Token::CT_OC_MSG_NAME
+                        || bbc_next_ncnl->GetType() == E_Token::CT_OC_MSG_FUNC)
                      {
                         indent_from_brace   = false;
                         indent_from_colon   = false;
@@ -1925,8 +1925,8 @@ void indent_text()
                   log_indent();
                }
             }
-            else if (  frm.top().GetOpenChunk()->GetType() == CT_BRACE_OPEN
-                    && frm.top().GetOpenChunk()->GetParentType() == CT_OC_AT)
+            else if (  frm.top().GetOpenChunk()->GetType() == E_Token::CT_BRACE_OPEN
+                    && frm.top().GetOpenChunk()->GetParentType() == E_Token::CT_OC_AT)
             {
                // We are inside @{ ... } -- indent one tab from the paren
                if (frm.prev().GetIndentContinue())
@@ -1969,8 +1969,8 @@ void indent_text()
                log_indent();
             }
             else if (  options::indent_oc_inside_msg_sel()
-                    && (  frm.prev().GetOpenToken() == CT_OC_MSG_FUNC
-                       || frm.prev().GetOpenToken() == CT_OC_MSG_NAME)) // Issue #2658
+                    && (  frm.prev().GetOpenToken() == E_Token::CT_OC_MSG_FUNC
+                       || frm.prev().GetOpenToken() == E_Token::CT_OC_MSG_NAME)) // Issue #2658
             {
                log_rule_B("indent_oc_inside_msg_sel");
                // [Class Message:{<here>
@@ -1979,7 +1979,7 @@ void indent_text()
                indent_column_set(frm.prev().GetOpenChunk()->GetColumn());
             }
             // Issue #3813
-            else if (pc->TestFlags(PCF_OC_IN_BLOCK) && pc->GetParentType() == CT_SWITCH)
+            else if (pc->TestFlags(PCF_OC_IN_BLOCK) && pc->GetParentType() == E_Token::CT_SWITCH)
             {
                frm.top().SetIndent(frm.prev().GetIndentTmp());
             }
@@ -1995,8 +1995,8 @@ void indent_text()
                log_indent();
             }
          }
-         else if (  frm.top().GetOpenChunk()->GetType() == CT_BRACE_OPEN
-                 && frm.top().GetOpenChunk()->GetParentType() == CT_OC_AT)
+         else if (  frm.top().GetOpenChunk()->GetType() == E_Token::CT_BRACE_OPEN
+                 && frm.top().GetOpenChunk()->GetParentType() == E_Token::CT_OC_AT)
          {
             // We are inside @{ ... } -- indent one tab from the paren
             if (frm.prev().GetIndentContinue())
@@ -2010,15 +2010,15 @@ void indent_text()
             }
             log_indent();
          }
-         else if (  (  pc->GetParentType() == CT_BRACED_INIT_LIST
+         else if (  (  pc->GetParentType() == E_Token::CT_BRACED_INIT_LIST
                     || (  !options::indent_compound_literal_return()
-                       && pc->GetParentType() == CT_C_CAST))
-                 && frm.prev().GetOpenToken() == CT_RETURN)
+                       && pc->GetParentType() == E_Token::CT_C_CAST))
+                 && frm.prev().GetOpenToken() == E_Token::CT_RETURN)
          {
             log_rule_B("indent_compound_literal_return");
 
-            // we're returning either a c compound literal (CT_C_CAST) or a
-            // C++11 initialization list (CT_BRACED_INIT_LIST), use indent from the return.
+            // we're returning either a c compound literal (E_Token::CT_C_CAST) or a
+            // C++11 initialization list (E_Token::CT_BRACED_INIT_LIST), use indent from the return.
             if (frm.prev().GetIndentContinue())
             {
                frm.top().SetIndent(frm.prev().GetIndentTmp());
@@ -2032,7 +2032,7 @@ void indent_text()
          else
          {
             // Use the prev indent level + indent_size.
-            if (pc->GetParentType() == CT_SWITCH)
+            if (pc->GetParentType() == E_Token::CT_SWITCH)
             {
                frm.top().SetIndent(frm.prev().GetIndent() + options::indent_switch_body());
             }
@@ -2047,17 +2047,17 @@ void indent_text()
                     get_token_name(pc->GetParentType()));
 
             // If this brace is part of a statement, bump it out by indent_brace
-            if (  pc->GetParentType() == CT_IF
-               || pc->GetParentType() == CT_ELSE
-               || pc->GetParentType() == CT_ELSEIF
-               || pc->GetParentType() == CT_TRY
-               || pc->GetParentType() == CT_CATCH
-               || pc->GetParentType() == CT_DO
-               || pc->GetParentType() == CT_WHILE
-               || pc->GetParentType() == CT_USING_STMT
-               || pc->GetParentType() == CT_SWITCH
-               || pc->GetParentType() == CT_SYNCHRONIZED
-               || pc->GetParentType() == CT_FOR)
+            if (  pc->GetParentType() == E_Token::CT_IF
+               || pc->GetParentType() == E_Token::CT_ELSE
+               || pc->GetParentType() == E_Token::CT_ELSEIF
+               || pc->GetParentType() == E_Token::CT_TRY
+               || pc->GetParentType() == E_Token::CT_CATCH
+               || pc->GetParentType() == E_Token::CT_DO
+               || pc->GetParentType() == E_Token::CT_WHILE
+               || pc->GetParentType() == E_Token::CT_USING_STMT
+               || pc->GetParentType() == E_Token::CT_SWITCH
+               || pc->GetParentType() == E_Token::CT_SYNCHRONIZED
+               || pc->GetParentType() == E_Token::CT_FOR)
             {
                if (parent_token_indent != 0)
                {
@@ -2072,7 +2072,7 @@ void indent_text()
                   indent_column_set(indent_column + options::indent_brace());
                }
             }
-            else if (pc->GetParentType() == CT_CASE)
+            else if (pc->GetParentType() == E_Token::CT_CASE)
             {
                if (options::indent_ignore_case_brace())
                {
@@ -2101,7 +2101,7 @@ void indent_text()
                frm.top().SetIndentTmp(frm.top().GetIndent());
                log_indent_tmp();
             }
-            else if (  pc->GetParentType() == CT_CLASS
+            else if (  pc->GetParentType() == E_Token::CT_CLASS
                     && !options::indent_class())
             {
                log_rule_B("indent_class");
@@ -2110,7 +2110,7 @@ void indent_text()
                frm.top().SetIndent(frm.top().GetIndent() - indent_size);
                log_indent();
             }
-            else if (pc->GetParentType() == CT_NAMESPACE)
+            else if (pc->GetParentType() == E_Token::CT_NAMESPACE)
             {
                frm.top().SetNsCount(frm.prev().GetNsCount() + 1);
 
@@ -2159,7 +2159,7 @@ void indent_text()
                   }
                }
             }
-            else if (  pc->GetParentType() == CT_EXTERN
+            else if (  pc->GetParentType() == E_Token::CT_EXTERN
                     && !options::indent_extern())
             {
                log_rule_B("indent_extern");
@@ -2193,16 +2193,16 @@ void indent_text()
             }
             Chunk *prev = pc->GetPrev();
 
-            if (  pc->GetParentType() == CT_BRACED_INIT_LIST
-               && prev->Is(CT_BRACE_OPEN)
-               && prev->GetParentType() == CT_BRACED_INIT_LIST)
+            if (  pc->GetParentType() == E_Token::CT_BRACED_INIT_LIST
+               && prev->Is(E_Token::CT_BRACE_OPEN)
+               && prev->GetParentType() == E_Token::CT_BRACED_INIT_LIST)
             {
                indent_column = frm.prev().GetBraceIndent();
                frm.top().SetIndent(frm.prev().GetIndent());
                log_indent();
             }
             else if (  !pc->IsNewlineBetween(next)
-                    && next->GetParentType() != CT_BRACED_INIT_LIST
+                    && next->GetParentType() != E_Token::CT_BRACED_INIT_LIST
                     && options::indent_token_after_brace()
                     && !pc->TestFlags(PCF_ONE_LINER)) // Issue #1108
             {
@@ -2227,9 +2227,9 @@ void indent_text()
          // Save the brace indent
          frm.top().SetBraceIndent(indent_column);
       }
-      else if (pc->Is(CT_SQL_END))
+      else if (pc->Is(E_Token::CT_SQL_END))
       {
-         if (frm.top().GetOpenToken() == CT_SQL_BEGIN)
+         if (frm.top().GetOpenToken() == E_Token::CT_SQL_BEGIN)
          {
             LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -2238,9 +2238,9 @@ void indent_text()
             log_indent_tmp();
          }
       }
-      else if (  pc->Is(CT_SQL_BEGIN)
-              || pc->Is(CT_MACRO_OPEN)
-              || (  pc->Is(CT_CLASS)
+      else if (  pc->Is(E_Token::CT_SQL_BEGIN)
+              || pc->Is(E_Token::CT_MACRO_OPEN)
+              || (  pc->Is(E_Token::CT_CLASS)
                  && language_is_set(lang_flag_e::LANG_CS))) // Issue #3536
       {
          frm.push(pc, __func__, __LINE__);
@@ -2252,7 +2252,7 @@ void indent_text()
          frm.top().SetIndentTab(frm.top().GetIndent());
          log_indent_tmp();
       }
-      else if (pc->Is(CT_SQL_EXEC))
+      else if (pc->Is(E_Token::CT_SQL_EXEC))
       {
          frm.push(pc, __func__, __LINE__);
 
@@ -2262,14 +2262,14 @@ void indent_text()
          frm.top().SetIndentTmp(frm.top().GetIndent());
          log_indent_tmp();
       }
-      else if (pc->Is(CT_MACRO_ELSE))
+      else if (pc->Is(E_Token::CT_MACRO_ELSE))
       {
-         if (frm.top().GetOpenToken() == CT_MACRO_OPEN)
+         if (frm.top().GetOpenToken() == E_Token::CT_MACRO_OPEN)
          {
             indent_column_set(frm.prev().GetIndent());
          }
       }
-      else if (pc->Is(CT_CASE))
+      else if (pc->Is(E_Token::CT_CASE))
       {
          // Start a case - indent options::indent_switch_case() from the switch level
          log_rule_B("indent_switch_case");
@@ -2307,12 +2307,12 @@ void indent_text()
             }
          }
       }
-      else if (pc->Is(CT_BREAK))
+      else if (pc->Is(E_Token::CT_BREAK))
       {
          Chunk *prev = pc->GetPrevNcNnl();
 
-         if (  prev->Is(CT_BRACE_CLOSE)
-            && prev->GetParentType() == CT_CASE)
+         if (  prev->Is(E_Token::CT_BRACE_CLOSE)
+            && prev->GetParentType() == E_Token::CT_CASE)
          {
             // issue #663 + issue #1366
             Chunk *prev_prev_newline = pc->GetPrevNl()->GetPrevNl();
@@ -2324,7 +2324,7 @@ void indent_text()
             }
          }
       }
-      else if (pc->Is(CT_LABEL))
+      else if (pc->Is(E_Token::CT_LABEL))
       {
          if (options::indent_ignore_label())
          {
@@ -2359,7 +2359,7 @@ void indent_text()
             }
          }
       }
-      else if (pc->Is(CT_ACCESS))
+      else if (pc->Is(E_Token::CT_ACCESS))
       {
          log_rule_B("indent_access_spec_body");
 
@@ -2417,8 +2417,8 @@ void indent_text()
             }
          }
       }
-      else if (  pc->Is(CT_CLASS_COLON)
-              || pc->Is(CT_CONSTR_COLON))
+      else if (  pc->Is(E_Token::CT_CLASS_COLON)
+              || pc->Is(E_Token::CT_CONSTR_COLON))
       {
          // just indent one level
          frm.push(pc, __func__, __LINE__);
@@ -2430,7 +2430,7 @@ void indent_text()
          frm.top().SetIndentTab(frm.top().GetIndent());
          log_indent_tmp();
 
-         if (pc->Is(CT_CLASS_COLON))
+         if (pc->Is(E_Token::CT_CLASS_COLON))
          {
             if (options::indent_ignore_before_class_colon())
             {
@@ -2450,7 +2450,7 @@ void indent_text()
          log_rule_B("indent_class_colon");
 
          if (  options::indent_class_colon()
-            && pc->Is(CT_CLASS_COLON))
+            && pc->Is(E_Token::CT_CLASS_COLON))
          {
             log_rule_B("indent_class_on_colon");
 
@@ -2471,7 +2471,7 @@ void indent_text()
                }
             }
          }
-         else if (pc->Is(CT_CONSTR_COLON))
+         else if (pc->Is(E_Token::CT_CONSTR_COLON))
          {
             if (options::indent_ignore_before_constr_colon())
             {
@@ -2529,10 +2529,10 @@ void indent_text()
             }
          }
       }
-      else if (  pc->Is(CT_PAREN_OPEN)
-              && (  pc->GetParentType() == CT_ASM
+      else if (  pc->Is(E_Token::CT_PAREN_OPEN)
+              && (  pc->GetParentType() == E_Token::CT_ASM
                  || (  pc->GetPrevNcNnl()->IsNotNullChunk()
-                    && pc->GetPrevNcNnl()->GetType() == CT_ASM))
+                    && pc->GetPrevNcNnl()->GetType() == E_Token::CT_ASM))
               && options::indent_ignore_asm_block())
       {
          log_rule_B("indent_ignore_asm_block");
@@ -2561,13 +2561,13 @@ void indent_text()
 
          reindent_line(pc, indent_column);
       }
-      else if (  (  pc->Is(CT_PAREN_OPEN)
-                 || pc->Is(CT_LPAREN_OPEN)                     // Issue #3054
-                 || pc->Is(CT_SPAREN_OPEN)
-                 || pc->Is(CT_FPAREN_OPEN)
-                 || pc->Is(CT_RPAREN_OPEN)                     // Issue #3914
-                 || pc->Is(CT_SQUARE_OPEN)
-                 || pc->Is(CT_ANGLE_OPEN))
+      else if (  (  pc->Is(E_Token::CT_PAREN_OPEN)
+                 || pc->Is(E_Token::CT_LPAREN_OPEN)                     // Issue #3054
+                 || pc->Is(E_Token::CT_SPAREN_OPEN)
+                 || pc->Is(E_Token::CT_FPAREN_OPEN)
+                 || pc->Is(E_Token::CT_RPAREN_OPEN)                     // Issue #3914
+                 || pc->Is(E_Token::CT_SQUARE_OPEN)
+                 || pc->Is(E_Token::CT_ANGLE_OPEN))
               && (  !pc->TestFlags(PCF_CONT_LINE)
                  || options::indent_continue() >= 0))
       {
@@ -2580,8 +2580,8 @@ void indent_text()
 
          // Check if this paren belongs to a macro-no-indent or macro-no-format-args - if so, skip indent changes
          if (  prev_ncnl->IsNotNullChunk()
-            && (  prev_ncnl->Is(CT_MACRO_NO_INDENT)
-               || prev_ncnl->Is(CT_MACRO_NO_FMT_ARGS)))
+            && (  prev_ncnl->Is(E_Token::CT_MACRO_NO_INDENT)
+               || prev_ncnl->Is(E_Token::CT_MACRO_NO_FMT_ARGS)))
          {
             // For macro-no-indent and macro-no-format-args, we still push the frame to track matching parens,
             // but we don't change the indentation
@@ -2615,14 +2615,14 @@ void indent_text()
                Chunk *prev = open_paren->GetPrevNcNnl();
 
                // open paren is preceded by a bool and that is preceded or followed by a new line
-               if (prev->Is(CT_BOOL) && (prev->GetPrevNc()->IsNewline() || prev->GetNextNc()->IsNewline()))
+               if (prev->Is(E_Token::CT_BOOL) && (prev->GetPrevNc()->IsNewline() || prev->GetNextNc()->IsNewline()))
                {
                   indent_bool_more = true;
                }
                Chunk *next = close_paren->GetNextNcNnl();
 
                // close paren is followed by a bool and that is preceded or followed by a new line
-               if (next->Is(CT_BOOL) && (next->GetNextNc()->IsNewline() || next->GetPrevNc()->IsNewline()))
+               if (next->Is(E_Token::CT_BOOL) && (next->GetNextNc()->IsNewline() || next->GetPrevNc()->IsNewline()))
                {
                   indent_bool_more = true;
                }
@@ -2639,7 +2639,7 @@ void indent_text()
             }
             log_indent();
 
-            if (  pc->Is(CT_SQUARE_OPEN)
+            if (  pc->Is(E_Token::CT_SQUARE_OPEN)
                && language_is_set(lang_flag_e::LANG_D))
             {
                frm.top().SetIndentTab(frm.top().GetIndent());
@@ -2649,11 +2649,11 @@ void indent_text()
             log_rule_B("indent_align_paren");
 
             if (  options::indent_inside_ternary_operator()
-               && (  pc->Is(CT_FPAREN_OPEN)
-                  || pc->Is(CT_PAREN_OPEN))
+               && (  pc->Is(E_Token::CT_FPAREN_OPEN)
+                  || pc->Is(E_Token::CT_PAREN_OPEN))
                && frm.size() > 2
-               && (  frm.prev().GetOpenToken() == CT_QUESTION
-                  || frm.prev().GetOpenToken() == CT_COND_COLON)
+               && (  frm.prev().GetOpenToken() == E_Token::CT_QUESTION
+                  || frm.prev().GetOpenToken() == E_Token::CT_COND_COLON)
                && !options::indent_align_paren())
             {
                frm.top().SetIndent(frm.prev().GetIndentTmp() + indent_size);
@@ -2662,24 +2662,24 @@ void indent_text()
                frm.top().SetIndentTmp(frm.top().GetIndent());
                log_indent_tmp();
             }
-            else if (  (  pc->Is(CT_FPAREN_OPEN)
-                       || pc->Is(CT_ANGLE_OPEN))
+            else if (  (  pc->Is(E_Token::CT_FPAREN_OPEN)
+                       || pc->Is(E_Token::CT_ANGLE_OPEN))
                     && (  (  options::indent_func_call_param()
-                          && (  pc->GetParentType() == CT_FUNC_CALL
-                             || pc->GetParentType() == CT_FUNC_CALL_USER))
+                          && (  pc->GetParentType() == E_Token::CT_FUNC_CALL
+                             || pc->GetParentType() == E_Token::CT_FUNC_CALL_USER))
                        || (  options::indent_func_proto_param()
-                          && pc->GetParentType() == CT_FUNC_PROTO)
+                          && pc->GetParentType() == E_Token::CT_FUNC_PROTO)
                        || (  options::indent_func_class_param()
-                          && (  pc->GetParentType() == CT_FUNC_CLASS_DEF
-                             || pc->GetParentType() == CT_FUNC_CLASS_PROTO))
+                          && (  pc->GetParentType() == E_Token::CT_FUNC_CLASS_DEF
+                             || pc->GetParentType() == E_Token::CT_FUNC_CLASS_PROTO))
                        || (  options::indent_template_param()
-                          && pc->GetParentType() == CT_TEMPLATE)
+                          && pc->GetParentType() == E_Token::CT_TEMPLATE)
                        || (  options::indent_func_ctor_var_param()
-                          && pc->GetParentType() == CT_FUNC_CTOR_VAR)
+                          && pc->GetParentType() == E_Token::CT_FUNC_CTOR_VAR)
                        || (  options::indent_func_def_param()
-                          && pc->GetParentType() == CT_FUNC_DEF)
+                          && pc->GetParentType() == E_Token::CT_FUNC_DEF)
                        || (  !options::indent_func_def_param()        // Issue #931
-                          && pc->GetParentType() == CT_FUNC_DEF
+                          && pc->GetParentType() == E_Token::CT_FUNC_DEF
                           && options::indent_func_def_param_paren_pos_threshold() > 0
                           && pc->GetOrigCol() > options::indent_func_def_param_paren_pos_threshold())))
             {
@@ -2694,25 +2694,25 @@ void indent_text()
                size_t idx = (!frm.empty()) ? frm.size() - 2 : 0;
 
                while (  (  (  idx > 0
-                           && frm.at(idx).GetOpenToken() != CT_BRACE_OPEN
-                           && frm.at(idx).GetOpenToken() != CT_VBRACE_OPEN
-                           && frm.at(idx).GetOpenToken() != CT_PAREN_OPEN
-                           && frm.at(idx).GetOpenToken() != CT_FPAREN_OPEN
-                           && frm.at(idx).GetOpenToken() != CT_RPAREN_OPEN                     // Issue #3914
-                           && frm.at(idx).GetOpenToken() != CT_SPAREN_OPEN
-                           && frm.at(idx).GetOpenToken() != CT_SQUARE_OPEN
-                           && frm.at(idx).GetOpenToken() != CT_ANGLE_OPEN
-                           && frm.at(idx).GetOpenToken() != CT_CASE
-                           && frm.at(idx).GetOpenToken() != CT_MEMBER
-                           && frm.at(idx).GetOpenToken() != CT_QUESTION
-                           && frm.at(idx).GetOpenToken() != CT_COND_COLON
-                           && frm.at(idx).GetOpenToken() != CT_LAMBDA
-                           && frm.at(idx).GetOpenToken() != CT_ASSIGN_NL)
+                           && frm.at(idx).GetOpenToken() != E_Token::CT_BRACE_OPEN
+                           && frm.at(idx).GetOpenToken() != E_Token::CT_VBRACE_OPEN
+                           && frm.at(idx).GetOpenToken() != E_Token::CT_PAREN_OPEN
+                           && frm.at(idx).GetOpenToken() != E_Token::CT_FPAREN_OPEN
+                           && frm.at(idx).GetOpenToken() != E_Token::CT_RPAREN_OPEN                     // Issue #3914
+                           && frm.at(idx).GetOpenToken() != E_Token::CT_SPAREN_OPEN
+                           && frm.at(idx).GetOpenToken() != E_Token::CT_SQUARE_OPEN
+                           && frm.at(idx).GetOpenToken() != E_Token::CT_ANGLE_OPEN
+                           && frm.at(idx).GetOpenToken() != E_Token::CT_CASE
+                           && frm.at(idx).GetOpenToken() != E_Token::CT_MEMBER
+                           && frm.at(idx).GetOpenToken() != E_Token::CT_QUESTION
+                           && frm.at(idx).GetOpenToken() != E_Token::CT_COND_COLON
+                           && frm.at(idx).GetOpenToken() != E_Token::CT_LAMBDA
+                           && frm.at(idx).GetOpenToken() != E_Token::CT_ASSIGN_NL)
                         || frm.at(idx).GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk()))
-                     && (  frm.at(idx).GetOpenToken() != CT_CLASS_COLON
-                        && frm.at(idx).GetOpenToken() != CT_CONSTR_COLON
-                        && !(  frm.at(idx).GetOpenToken() == CT_LAMBDA
-                            && frm.at(idx).GetOpenChunk()->GetPrevNc()->GetType() == CT_NEWLINE)))
+                     && (  frm.at(idx).GetOpenToken() != E_Token::CT_CLASS_COLON
+                        && frm.at(idx).GetOpenToken() != E_Token::CT_CONSTR_COLON
+                        && !(  frm.at(idx).GetOpenToken() == E_Token::CT_LAMBDA
+                            && frm.at(idx).GetOpenChunk()->GetPrevNc()->GetType() == E_Token::CT_NEWLINE)))
                {
                   if (idx == 0)
                   {
@@ -2748,10 +2748,10 @@ void indent_text()
                frm.top().SetIndentTab(frm.top().GetIndent());
             }
             else if (  options::indent_oc_inside_msg_sel()
-                    && pc->Is(CT_PAREN_OPEN)
+                    && pc->Is(E_Token::CT_PAREN_OPEN)
                     && frm.size() > 2
-                    && (  frm.prev().GetOpenToken() == CT_OC_MSG_FUNC
-                       || frm.prev().GetOpenToken() == CT_OC_MSG_NAME)
+                    && (  frm.prev().GetOpenToken() == E_Token::CT_OC_MSG_FUNC
+                       || frm.prev().GetOpenToken() == E_Token::CT_OC_MSG_NAME)
                     && !options::indent_align_paren()) // Issue #2658
             {
                log_rule_B("indent_oc_inside_msg_sel");
@@ -2764,7 +2764,7 @@ void indent_text()
                frm.top().SetIndentTmp(frm.top().GetIndent());
                log_indent_tmp();
             }
-            else if (  pc->Is(CT_PAREN_OPEN)
+            else if (  pc->Is(E_Token::CT_PAREN_OPEN)
                     && !pc->GetNext()->IsNewline()
                     && !options::indent_align_paren()
                     && !pc->TestFlags(PCF_IN_SPAREN))
@@ -2812,8 +2812,8 @@ void indent_text()
                {
                   size_t sub = 2;
 
-                  if (  (frm.prev().GetOpenToken() == CT_ASSIGN)
-                     || (frm.prev().GetOpenToken() == CT_RETURN))
+                  if (  (frm.prev().GetOpenToken() == E_Token::CT_ASSIGN)
+                     || (frm.prev().GetOpenToken() == E_Token::CT_RETURN))
                   {
                      sub = 3;
                   }
@@ -2832,9 +2832,9 @@ void indent_text()
                         // skipped = true;  // Set to true at the end of the code block
                      }
 
-                     if (  (  frm.at(sub + 1).GetOpenToken() == CT_CLASS_COLON
-                           || frm.at(sub + 1).GetOpenToken() == CT_CONSTR_COLON)
-                        && (frm.at(sub + 1).GetOpenChunk()->GetPrev()->Is(CT_NEWLINE)))
+                     if (  (  frm.at(sub + 1).GetOpenToken() == E_Token::CT_CLASS_COLON
+                           || frm.at(sub + 1).GetOpenToken() == E_Token::CT_CONSTR_COLON)
+                        && (frm.at(sub + 1).GetOpenChunk()->GetPrev()->Is(E_Token::CT_NEWLINE)))
                      {
                         sub = sub + 1;
                      }
@@ -2850,7 +2850,7 @@ void indent_text()
                   if (  next->IsNotNullChunk()
                      && !next->IsComment())
                   {
-                     if (next->Is(CT_SPACE))
+                     if (next->Is(E_Token::CT_SPACE))
                      {
                         next = next->GetNextNc();
 
@@ -2889,16 +2889,16 @@ void indent_text()
                      && vardefcol == 0)
                   || (  !options::use_indent_continue_only_once()  // Issue #1160
                      && !options::indent_ignore_first_continue())) // Issue #3561
-               && (  pc->Is(CT_FPAREN_OPEN)
+               && (  pc->Is(E_Token::CT_FPAREN_OPEN)
                   && pc->GetPrev()->IsNewline())
-               && (  (  (  pc->GetParentType() == CT_FUNC_PROTO
-                        || pc->GetParentType() == CT_FUNC_CLASS_PROTO)
+               && (  (  (  pc->GetParentType() == E_Token::CT_FUNC_PROTO
+                        || pc->GetParentType() == E_Token::CT_FUNC_CLASS_PROTO)
                      && options::indent_paren_after_func_decl())
-                  || (  (  pc->GetParentType() == CT_FUNC_DEF
-                        || pc->GetParentType() == CT_FUNC_CLASS_DEF)
+                  || (  (  pc->GetParentType() == E_Token::CT_FUNC_DEF
+                        || pc->GetParentType() == E_Token::CT_FUNC_CLASS_DEF)
                      && options::indent_paren_after_func_def())
-                  || (  (  pc->GetParentType() == CT_FUNC_CALL
-                        || pc->GetParentType() == CT_FUNC_CALL_USER)
+                  || (  (  pc->GetParentType() == E_Token::CT_FUNC_CALL
+                        || pc->GetParentType() == E_Token::CT_FUNC_CALL_USER)
                      && options::indent_paren_after_func_call())
                   || !pc->GetNext()->IsNewline()))
             {
@@ -2909,7 +2909,7 @@ void indent_text()
             }
             log_rule_B("indent_continue");
 
-            if (  pc->GetParentType() != CT_OC_AT
+            if (  pc->GetParentType() != E_Token::CT_OC_AT
                && (  options::indent_ignore_first_continue()
                   || options::indent_continue() != 0)
                && !skipped)
@@ -2926,12 +2926,12 @@ void indent_text()
 
                if (  pc->GetLevel() == pc->GetBraceLevel()
                   && !options::indent_ignore_first_continue()
-                  && (  pc->Is(CT_FPAREN_OPEN)
-                     || pc->Is(CT_RPAREN_OPEN)                   // Issue #1170
-                     || pc->Is(CT_SPAREN_OPEN)
-                     || (  pc->Is(CT_SQUARE_OPEN)
-                        && pc->GetParentType() != CT_OC_MSG)
-                     || pc->Is(CT_ANGLE_OPEN)))                  // Issue #1170
+                  && (  pc->Is(E_Token::CT_FPAREN_OPEN)
+                     || pc->Is(E_Token::CT_RPAREN_OPEN)                   // Issue #1170
+                     || pc->Is(E_Token::CT_SPAREN_OPEN)
+                     || (  pc->Is(E_Token::CT_SQUARE_OPEN)
+                        && pc->GetParentType() != E_Token::CT_OC_MSG)
+                     || pc->Is(E_Token::CT_ANGLE_OPEN)))                  // Issue #1170
                {
                   log_rule_B("use_indent_continue_only_once");
 
@@ -2966,7 +2966,7 @@ void indent_text()
 
                      log_rule_B("indent_sparen_extra");
 
-                     if (  pc->Is(CT_SPAREN_OPEN)
+                     if (  pc->Is(E_Token::CT_SPAREN_OPEN)
                         && options::indent_sparen_extra() != 0)
                      {
                         frm.top().SetIndent(frm.top().GetIndent() + options::indent_sparen_extra());
@@ -2982,14 +2982,14 @@ void indent_text()
          }  // end else (not macro-no-indent)
       }
       else if (  options::indent_member_single()
-              && pc->Is(CT_MEMBER)
+              && pc->Is(E_Token::CT_MEMBER)
               && (strcmp(pc->GetLogText(), ".") == 0)
               && (  language_is_set(lang_flag_e::LANG_CS)
                  || language_is_set(lang_flag_e::LANG_CPP)))
       {
          log_rule_B("indent_member_single");
 
-         if (frm.top().GetOpenToken() != CT_MEMBER)
+         if (frm.top().GetOpenToken() != E_Token::CT_MEMBER)
          {
             frm.push(pc, __func__, __LINE__);
             Chunk *tmp = frm.top().GetOpenChunk()->GetPrevNcNnlNpp();
@@ -3009,7 +3009,7 @@ void indent_text()
 
          if (pc->GetPrev()->IsNewline())
          {
-            if (  pc->Is(CT_MEMBER)                           // Issue #2890
+            if (  pc->Is(E_Token::CT_MEMBER)                           // Issue #2890
                && language_is_set(lang_flag_e::LANG_CPP))
             {
                // will be done at another place
@@ -3022,18 +3022,18 @@ void indent_text()
                did_newline = false;
             }
          }
-         //check for the series of CT_member chunks else pop it.
+         //check for the series of E_Token::CT_member chunks else pop it.
          Chunk *tmp = pc->GetNextNcNnlNpp();
 
          if (tmp->IsNotNullChunk())
          {
-            if (tmp->Is(CT_FUNC_CALL))
+            if (tmp->Is(E_Token::CT_FUNC_CALL))
             {
-               tmp = tmp->GetNextType(CT_FPAREN_CLOSE, tmp->GetLevel());
+               tmp = tmp->GetNextType(E_Token::CT_FPAREN_CLOSE, tmp->GetLevel());
                tmp = tmp->GetNextNcNnlNpp();
             }
-            else if (  tmp->Is(CT_WORD)
-                    || tmp->Is(CT_TYPE))
+            else if (  tmp->Is(E_Token::CT_WORD)
+                    || tmp->Is(E_Token::CT_TYPE))
             {
                tmp = tmp->GetNextNcNnlNpp();
             }
@@ -3041,7 +3041,7 @@ void indent_text()
 
          if (  tmp->IsNotNullChunk()
             && (  (strcmp(tmp->GetLogText(), ".") != 0)
-               || tmp->IsNot(CT_MEMBER)))
+               || tmp->IsNot(E_Token::CT_MEMBER)))
          {
             if (tmp->IsParenClose())
             {
@@ -3066,9 +3066,9 @@ void indent_text()
             }
          }
       }
-      else if (  pc->Is(CT_ASSIGN)
-              || pc->Is(CT_IMPORT)
-              || (  pc->Is(CT_USING)
+      else if (  pc->Is(E_Token::CT_ASSIGN)
+              || pc->Is(E_Token::CT_IMPORT)
+              || (  pc->Is(E_Token::CT_USING)
                  && language_is_set(lang_flag_e::LANG_CS)))
       {
          /*
@@ -3076,10 +3076,10 @@ void indent_text()
           * just indent one level,
           * otherwise align on the '='.
           */
-         if (  pc->Is(CT_ASSIGN)
+         if (  pc->Is(E_Token::CT_ASSIGN)
             && pc->GetPrev()->IsNewline())
          {
-            if (frm.top().GetOpenToken() == CT_ASSIGN_NL)
+            if (frm.top().GetOpenToken() == E_Token::CT_ASSIGN_NL)
             {
                frm.top().SetIndentTmp(frm.top().GetIndent());
             }
@@ -3104,8 +3104,8 @@ void indent_text()
              * assignments should be same and one more than this line's indent.
              * so popping the previous assign and pushing the new one
              */
-            if (  frm.top().GetOpenToken() == CT_ASSIGN
-               && pc->Is(CT_ASSIGN))
+            if (  frm.top().GetOpenToken() == E_Token::CT_ASSIGN
+               && pc->Is(E_Token::CT_ASSIGN))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -3113,10 +3113,10 @@ void indent_text()
             }
             frm.push(pc, __func__, __LINE__);
 
-            if (  pc->Is(CT_ASSIGN)
+            if (  pc->Is(E_Token::CT_ASSIGN)
                && pc->GetPrev()->IsNewline())
             {
-               frm.top().SetOpenToken(CT_ASSIGN_NL);
+               frm.top().SetOpenToken(E_Token::CT_ASSIGN_NL);
             }
             log_rule_B("indent_continue");
 
@@ -3132,9 +3132,9 @@ void indent_text()
                log_indent();
 
                if (  pc->GetLevel() == pc->GetBraceLevel()
-                  && (  pc->IsNot(CT_ASSIGN)
-                     || (  pc->GetParentType() != CT_FUNC_PROTO
-                        && pc->GetParentType() != CT_FUNC_DEF)))
+                  && (  pc->IsNot(E_Token::CT_ASSIGN)
+                     || (  pc->GetParentType() != E_Token::CT_FUNC_PROTO
+                        && pc->GetParentType() != E_Token::CT_FUNC_DEF)))
                {
                   log_rule_B("use_indent_continue_only_once");
 
@@ -3172,10 +3172,10 @@ void indent_text()
                }
                log_indent();
 
-               if (  pc->Is(CT_ASSIGN)
+               if (  pc->Is(E_Token::CT_ASSIGN)
                   && next->IsNewline())
                {
-                  frm.top().SetOpenToken(CT_ASSIGN_NL);
+                  frm.top().SetOpenToken(E_Token::CT_ASSIGN_NL);
                   frm.top().SetIndentTab(frm.top().GetIndent());
                }
             }
@@ -3188,9 +3188,9 @@ void indent_text()
             log_indent_tmp();
          }
       }
-      else if (  pc->Is(CT_RETURN)
-              || (  pc->Is(CT_THROW)
-                 && pc->GetParentType() == CT_NONE))
+      else if (  pc->Is(E_Token::CT_RETURN)
+              || (  pc->Is(E_Token::CT_THROW)
+                 && pc->GetParentType() == E_Token::CT_NONE))
       {
          // don't count returns inside a () or []
          if (  pc->GetLevel() == pc->GetBraceLevel()
@@ -3205,7 +3205,7 @@ void indent_text()
             // to properly indent object initializers returned by functions.
             log_rule_B("indent_off_after_return_new");
             bool indent_after_return = (  next->IsNotNullChunk()
-                                       && next->GetType() == CT_NEW)
+                                       && next->GetType() == E_Token::CT_NEW)
                                        ? !options::indent_off_after_return_new()
                                        : !options::indent_off_after_return();
 
@@ -3217,7 +3217,7 @@ void indent_text()
                log_rule_B("indent_single_after_return");
 
                if (  next->IsNewline()
-                  || (  pc->Is(CT_RETURN)
+                  || (  pc->Is(E_Token::CT_RETURN)
                      && options::indent_single_after_return()))
                {
                   // apply normal single indentation
@@ -3235,8 +3235,8 @@ void indent_text()
             log_indent();
          }
       }
-      else if (  pc->Is(CT_OC_SCOPE)
-              || pc->Is(CT_TYPEDEF))
+      else if (  pc->Is(E_Token::CT_OC_SCOPE)
+              || pc->Is(E_Token::CT_TYPEDEF))
       {
          frm.push(pc, __func__, __LINE__);
          // Issue #405
@@ -3267,31 +3267,31 @@ void indent_text()
             log_indent();
          }
       }
-      else if (pc->Is(CT_C99_MEMBER))
+      else if (pc->Is(E_Token::CT_C99_MEMBER))
       {
          // nothing to do
       }
-      else if (pc->Is(CT_WHERE_SPEC))
+      else if (pc->Is(E_Token::CT_WHERE_SPEC))
       {
          /* class indentation is ok already, just need to adjust func */
          /* TODO: make this configurable, obviously.. */
-         if (  pc->GetParentType() == CT_FUNC_DEF
-            || pc->GetParentType() == CT_FUNC_PROTO
-            || (  pc->GetParentType() == CT_STRUCT
-               && frm.top().GetOpenToken() != CT_CLASS_COLON))
+         if (  pc->GetParentType() == E_Token::CT_FUNC_DEF
+            || pc->GetParentType() == E_Token::CT_FUNC_PROTO
+            || (  pc->GetParentType() == E_Token::CT_STRUCT
+               && frm.top().GetOpenToken() != E_Token::CT_CLASS_COLON))
          {
             indent_column_set(frm.top().GetIndent() + 4);
          }
       }
       else if (  options::indent_inside_ternary_operator()
-              && (  pc->Is(CT_QUESTION)
-                 || pc->Is(CT_COND_COLON))) // Issue #1130, #1715
+              && (  pc->Is(E_Token::CT_QUESTION)
+                 || pc->Is(E_Token::CT_COND_COLON))) // Issue #1130, #1715
       {
          log_rule_B("indent_inside_ternary_operator");
 
          // Pop any colons before because they should already be processed
-         while (  pc->Is(CT_COND_COLON)
-               && frm.top().GetOpenToken() == CT_COND_COLON)
+         while (  pc->Is(E_Token::CT_COND_COLON)
+               && frm.top().GetOpenToken() == E_Token::CT_COND_COLON)
          {
             frm.pop(__func__, __LINE__, pc);
          }
@@ -3299,8 +3299,8 @@ void indent_text()
 
          // Pop Question from stack in ternary operator
          if (  options::indent_inside_ternary_operator()
-            && pc->Is(CT_COND_COLON)
-            && frm.top().GetOpenToken() == CT_QUESTION)
+            && pc->Is(E_Token::CT_COND_COLON)
+            && frm.top().GetOpenToken() == E_Token::CT_QUESTION)
          {
             LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -3315,10 +3315,10 @@ void indent_text()
          frm.top().SetIndentTmp(frm.top().GetIndent());
          log_indent_tmp();
       }
-      else if (  pc->Is(CT_LAMBDA)
+      else if (  pc->Is(E_Token::CT_LAMBDA)
               && (  language_is_set(lang_flag_e::LANG_CS)
                  || language_is_set(lang_flag_e::LANG_JAVA))
-              && pc->GetNextNcNnlNpp()->IsNot(CT_BRACE_OPEN)
+              && pc->GetNextNcNnlNpp()->IsNot(E_Token::CT_BRACE_OPEN)
               && options::indent_cs_delegate_body())
       {
          log_rule_B("indent_cs_delegate_body");
@@ -3344,9 +3344,9 @@ void indent_text()
          log_indent_tmp();
       }
       else if (  options::indent_oc_inside_msg_sel()
-              && (  pc->Is(CT_OC_MSG_FUNC)
-                 || pc->Is(CT_OC_MSG_NAME))
-              && pc->GetNextNcNnl()->Is(CT_OC_COLON)) // Issue #2658
+              && (  pc->Is(E_Token::CT_OC_MSG_FUNC)
+                 || pc->Is(E_Token::CT_OC_MSG_NAME))
+              && pc->GetNextNcNnl()->Is(E_Token::CT_OC_COLON)) // Issue #2658
       {
          log_rule_B("indent_oc_inside_msg_sel");
          // Pop the OC msg name that is on the top of the stack
@@ -3364,7 +3364,7 @@ void indent_text()
          // Issue #3294
          Chunk *next = pc->GetNext();
 
-         if (next->Is(CT_COND_COLON))
+         if (next->Is(E_Token::CT_COND_COLON))
          {
             LOG_FMT(LINDLINE, "%s(%d): Comment and COND_COLON: pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -3401,12 +3401,12 @@ void indent_text()
 
       if (  options::indent_shift() == 1
          && !pc->TestFlags(PCF_IN_ENUM)
-         && pc->GetParentType() != CT_OPERATOR
+         && pc->GetParentType() != E_Token::CT_OPERATOR
          && !pc->IsComment()
-         && pc->IsNot(CT_BRACE_OPEN)
+         && pc->IsNot(E_Token::CT_BRACE_OPEN)
          && !pc->IsEmptyText())
       {
-         if (pc->Is(CT_SHIFT))
+         if (pc->Is(E_Token::CT_SHIFT))
          {
             in_shift      = true;
             current_shift = pc;
@@ -3415,14 +3415,14 @@ void indent_text()
          if (  in_shift
             && (  (  pc->GetLevel() < current_shift->GetLevel()
                   && (  pc->IsParenClose()
-                     || pc->Is(CT_BRACE_CLOSE)))
+                     || pc->Is(E_Token::CT_BRACE_CLOSE)))
                || (  pc->GetLevel() == current_shift->GetLevel()
-                  && (  pc->Is(CT_COMMA)
-                     || pc->Is(CT_SEMICOLON)
-                     || pc->Is(CT_COMPARE)
-                     || pc->Is(CT_SCOMPARE)
-                     || pc->Is(CT_BOOL)
-                     || pc->Is(CT_SBOOL)))))
+                  && (  pc->Is(E_Token::CT_COMMA)
+                     || pc->Is(E_Token::CT_SEMICOLON)
+                     || pc->Is(E_Token::CT_COMPARE)
+                     || pc->Is(E_Token::CT_SCOMPARE)
+                     || pc->Is(E_Token::CT_BOOL)
+                     || pc->Is(E_Token::CT_SBOOL)))))
          {
             in_shift      = false;
             current_shift = Chunk::NullChunkPtr;
@@ -3433,7 +3433,7 @@ void indent_text()
          LOG_FMT(LINDENT2, "%s(%d): in_shift is %s\n",
                  __func__, __LINE__, in_shift ? "TRUE" : "FALSE");
 
-         if (  prev2->Is(CT_NEWLINE)
+         if (  prev2->Is(E_Token::CT_NEWLINE)
             && in_shift)
          {
             shiftcontcol = calc_indent_continue(frm);
@@ -3448,8 +3448,8 @@ void indent_text()
 
             for (int i = frm.size() - 1; i >= 0; i--)
             {
-               if (  frm.at(i).GetOpenToken() == CT_RETURN
-                  || frm.at(i).GetOpenToken() == CT_ASSIGN)
+               if (  frm.at(i).GetOpenToken() == E_Token::CT_RETURN
+                  || frm.at(i).GetOpenToken() == E_Token::CT_ASSIGN)
                {
                   need_workaround = true;
                   sub             = frm.size() - i;
@@ -3466,8 +3466,8 @@ void indent_text()
 
       // Handle variable definition continuation indenting
       if (  vardefcol == 0
-         && (  pc->Is(CT_WORD)
-            || pc->Is(CT_FUNC_CTOR_VAR))
+         && (  pc->Is(E_Token::CT_WORD)
+            || pc->Is(E_Token::CT_FUNC_CTOR_VAR))
          && !pc->TestFlags(PCF_IN_FCN_DEF)
          && pc->TestFlags(PCF_VAR_1ST_DEF))
       {
@@ -3498,7 +3498,7 @@ void indent_text()
             // BUT, we need to skip backward over any '*'
             Chunk *tmp = pc->GetPrevNc();
 
-            while (tmp->Is(CT_PTR_TYPE))
+            while (tmp->Is(E_Token::CT_PTR_TYPE))
             {
                vardefcol = tmp->GetColumn();
                tmp       = tmp->GetPrevNc();
@@ -3506,11 +3506,11 @@ void indent_text()
             // BUT, we need to skip backward over any '::' or TYPE
             //tmp = pc->GetPrevNc();
 
-            //if (tmp->Is(CT_DC_MEMBER))
+            //if (tmp->Is(E_Token::CT_DC_MEMBER))
             //{
             //   // look for a type
             //   Chunk *tmp2 = tmp->GetPrevNc();
-            //   if (tmp2->Is(CT_TYPE))
+            //   if (tmp2->Is(E_Token::CT_TYPE))
             //   {
             //      // we have something like "SomeLongNamespaceName::Foo()"
             //      vardefcol = tmp2->GetColumn();
@@ -3522,9 +3522,9 @@ void indent_text()
       }
 
       if (  pc->IsSemicolon()
-         || (  pc->Is(CT_BRACE_OPEN)
-            && (  pc->GetParentType() == CT_FUNCTION
-               || pc->GetParentType() == CT_CLASS))) //Issue #3576
+         || (  pc->Is(E_Token::CT_BRACE_OPEN)
+            && (  pc->GetParentType() == E_Token::CT_FUNCTION
+               || pc->GetParentType() == E_Token::CT_CLASS))) //Issue #3576
       {
          vardefcol = 0;
       }
@@ -3565,14 +3565,14 @@ void indent_text()
 
          if (  vardefcol > 0
             && pc->GetLevel() == pc->GetBraceLevel()
-            && (  prev->Is(CT_COMMA)
-               || prev->Is(CT_TYPE)
-               || prev->Is(CT_PTR_TYPE)
-               || prev->Is(CT_WORD)))
+            && (  prev->Is(E_Token::CT_COMMA)
+               || prev->Is(E_Token::CT_TYPE)
+               || prev->Is(E_Token::CT_PTR_TYPE)
+               || prev->Is(E_Token::CT_WORD)))
          {
             Chunk *tmp = pc;
 
-            while (tmp->Is(CT_PTR_TYPE))
+            while (tmp->Is(E_Token::CT_PTR_TYPE))
             {
                tmp = tmp->GetNextNcNnl();
             }
@@ -3582,8 +3582,8 @@ void indent_text()
             log_pcf_flags(LINDENT2, tmp->GetFlags());                   // Issue #2332
 
             if (  tmp->TestFlags(PCF_VAR_DEF)
-               && (  tmp->Is(CT_WORD)
-                  || tmp->Is(CT_FUNC_CTOR_VAR)))
+               && (  tmp->Is(E_Token::CT_WORD)
+                  || tmp->Is(E_Token::CT_FUNC_CTOR_VAR)))
             {
                do_vardefcol = true;
             }
@@ -3594,7 +3594,7 @@ void indent_text()
          {
             // no change
          }
-         else if (  pc->GetParentType() == CT_SQL_EXEC
+         else if (  pc->GetParentType() == E_Token::CT_SQL_EXEC
                  && options::indent_preserve_sql())
          {
             log_rule_B("indent_preserve_sql");
@@ -3604,12 +3604,12 @@ void indent_text()
          }
          else if (  !options::indent_member_single()
                  && !pc->TestFlags(PCF_STMT_START)
-                 && (  pc->Is(CT_MEMBER)
-                    || (  pc->Is(CT_DC_MEMBER)
-                       && prev->Is(CT_TYPE))
-                    || (  prev->Is(CT_MEMBER)
-                       || (  prev->Is(CT_DC_MEMBER)
-                          && prevv->Is(CT_TYPE)))))
+                 && (  pc->Is(E_Token::CT_MEMBER)
+                    || (  pc->Is(E_Token::CT_DC_MEMBER)
+                       && prev->Is(E_Token::CT_TYPE))
+                    || (  prev->Is(E_Token::CT_MEMBER)
+                       || (  prev->Is(E_Token::CT_DC_MEMBER)
+                          && prevv->Is(E_Token::CT_TYPE)))))
          {
             log_rule_B("indent_member_single");
             log_rule_B("indent_member");
@@ -3630,7 +3630,7 @@ void indent_text()
                     __func__, __LINE__, pc->GetOrigLine(), shiftcontcol);
             reindent_line(pc, shiftcontcol);
          }
-         else if (  pc->Is(CT_NAMESPACE)
+         else if (  pc->Is(E_Token::CT_NAMESPACE)
                  && options::indent_namespace()
                  && options::indent_namespace_single_indent()
                  && frm.top().GetNsCount())
@@ -3641,8 +3641,8 @@ void indent_text()
                     __func__, __LINE__, pc->GetOrigLine(), frm.top().GetBraceIndent());
             reindent_line(pc, frm.top().GetBraceIndent());
          }
-         else if (  pc->Is(CT_STRING)
-                 && prev->Is(CT_STRING)
+         else if (  pc->Is(E_Token::CT_STRING)
+                 && prev->Is(E_Token::CT_STRING)
                  && options::indent_align_string())
          {
             log_rule_B("indent_align_string");
@@ -3657,8 +3657,8 @@ void indent_text()
                Chunk *tmp = prev;
 
                while (  tmp->GetPrev()->IsNotNullChunk()
-                     && (  tmp->GetPrev()->Is(CT_WORD)
-                        || tmp->GetPrev()->Is(CT_STRING)))
+                     && (  tmp->GetPrev()->Is(E_Token::CT_WORD)
+                        || tmp->GetPrev()->Is(E_Token::CT_STRING)))
                {
                   tmp = tmp->GetPrev();
                }
@@ -3674,14 +3674,14 @@ void indent_text()
                     __func__, __LINE__, pc->GetOrigLine(), frm.top().GetIndentTmp());
             indent_comment(pc, frm.top().GetIndentTmp());
          }
-         else if (pc->Is(CT_PREPROC))
+         else if (pc->Is(E_Token::CT_PREPROC))
          {
             LOG_FMT(LINDENT, "%s(%d): orig line is %zu, pp-indent => %zu [%s]\n",
                     __func__, __LINE__, pc->GetOrigLine(), indent_column, pc->GetLogText());
             reindent_line(pc, indent_column);
          }
          else if (  pc->IsParenClose()
-                 || pc->Is(CT_ANGLE_CLOSE))
+                 || pc->Is(E_Token::CT_ANGLE_CLOSE))
          {
             /*
              * This is a big hack. We assume that since we hit a paren close,
@@ -3764,7 +3764,7 @@ void indent_text()
                      LOG_FMT(LINDLINE, "%s(%d): ck2 orig line is %zu, orig col is %zu, ck2->text is '%s'\n",
                              __func__, __LINE__, ck2->GetOrigLine(), ck2->GetOrigCol(), ck2->GetLogText());
 
-                     if (pc->GetPrev()->GetType() == CT_NEWLINE)
+                     if (pc->GetPrev()->GetType() == E_Token::CT_NEWLINE)
                      {
                         LOG_FMT(LINDLINE, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
@@ -3779,30 +3779,30 @@ void indent_text()
                         Chunk *searchNext = search->GetNext();
 
                         // Issue #3407 - Skip over a possible 'noexcept' keyword before going forward.
-                        if (searchNext->GetType() == CT_NOEXCEPT)
+                        if (searchNext->GetType() == E_Token::CT_NOEXCEPT)
                         {
                            searchNext = searchNext->GetNext();
                         }
 
-                        if (  searchNext->GetType() == CT_SEMICOLON
-                           || searchNext->GetType() == CT_MEMBER            // Issue #2582
-                           || searchNext->GetType() == CT_NEWLINE)
+                        if (  searchNext->GetType() == E_Token::CT_SEMICOLON
+                           || searchNext->GetType() == E_Token::CT_MEMBER            // Issue #2582
+                           || searchNext->GetType() == E_Token::CT_NEWLINE)
                         {
                            LOG_FMT(LINDLINE, "%s(%d):\n", __func__, __LINE__);
                            search = search->GetOpeningParen();
 
                            if (  options::indent_oc_inside_msg_sel()
-                              && search->GetPrevNcNnl()->Is(CT_OC_COLON)
-                              && (  frm.top().GetOpenToken() == CT_OC_MSG_FUNC
-                                 || frm.top().GetOpenToken() == CT_OC_MSG_NAME)) // Issue #2658
+                              && search->GetPrevNcNnl()->Is(E_Token::CT_OC_COLON)
+                              && (  frm.top().GetOpenToken() == E_Token::CT_OC_MSG_FUNC
+                                 || frm.top().GetOpenToken() == E_Token::CT_OC_MSG_NAME)) // Issue #2658
                            {
                               log_rule_B("indent_oc_inside_msg_sel");
                               // [Class Message:(...)<here>
                               indent_column_set(frm.top().GetOpenChunk()->GetColumn());
                            }
                            else if (  options::indent_inside_ternary_operator()
-                                   && (  frm.top().GetOpenToken() == CT_QUESTION
-                                      || frm.top().GetOpenToken() == CT_COND_COLON)) // Issue #1130, #1715
+                                   && (  frm.top().GetOpenToken() == E_Token::CT_QUESTION
+                                      || frm.top().GetOpenToken() == E_Token::CT_COND_COLON)) // Issue #1130, #1715
                            {
                               log_rule_B("indent_inside_ternary_operator");
                               indent_column_set(frm.top().GetIndent());
@@ -3835,7 +3835,7 @@ void indent_text()
             LOG_FMT(LINDENT, "%s(%d): next2 is orig line is %zu, text is '%s'\n",
                     __func__, __LINE__, next2->GetOrigLine(), next2->GetLogText());
 
-            if (  pc->GetParentType() == CT_FUNC_DEF
+            if (  pc->GetParentType() == E_Token::CT_FUNC_DEF
                && prev2->IsNewline()
                && next2->IsNewline())
             {
@@ -3855,7 +3855,7 @@ void indent_text()
             }
             reindent_line(pc, indent_value);
          }
-         else if (pc->Is(CT_COMMA))
+         else if (pc->Is(E_Token::CT_COMMA))
          {
             bool indent_align  = false;
             bool indent_ignore = false;
@@ -3886,13 +3886,13 @@ void indent_text()
             reindent_line(pc, indent_column);
          }
          else if (  options::indent_func_const()
-                 && pc->Is(CT_QUALIFIER)
+                 && pc->Is(E_Token::CT_QUALIFIER)
                  && strncasecmp(pc->GetLogText(), "const", pc->Len()) == 0
-                 && (  next->Is(CT_BRACED)
+                 && (  next->Is(E_Token::CT_BRACED)
                     || next->IsBraceOpen()
-                    || next->Is(CT_NEWLINE)
-                    || next->Is(CT_SEMICOLON)
-                    || next->Is(CT_THROW)))
+                    || next->Is(E_Token::CT_NEWLINE)
+                    || next->Is(E_Token::CT_SEMICOLON)
+                    || next->Is(E_Token::CT_THROW)))
          {
             // indent const - void GetFoo(void)\n const\n { return (m_Foo); }
             log_rule_B("indent_func_const");
@@ -3902,8 +3902,8 @@ void indent_text()
             reindent_line(pc, indent_column);
          }
          else if (  options::indent_func_throw()
-                 && pc->Is(CT_THROW)
-                 && pc->GetParentType() != CT_NONE)
+                 && pc->Is(E_Token::CT_THROW)
+                 && pc->GetParentType() != E_Token::CT_NONE)
          {
             // indent throw - void GetFoo(void)\n throw()\n { return (m_Foo); }
             log_rule_B("indent_func_throw");
@@ -3912,7 +3912,7 @@ void indent_text()
                     __func__, __LINE__, pc->GetOrigLine(), indent_column, pc->GetLogText());
             reindent_line(pc, indent_column);
          }
-         else if (pc->Is(CT_SEMICOLON))
+         else if (pc->Is(E_Token::CT_SEMICOLON))
          {
             if (  pc->TestFlags(PCF_IN_FOR)
                && options::indent_semicolon_for_paren())
@@ -3944,7 +3944,7 @@ void indent_text()
                reindent_line(pc, indent_column);
             }
          }
-         else if (pc->Is(CT_BOOL))
+         else if (pc->Is(E_Token::CT_BOOL))
          {
             if (frm.top().GetOpenChunk()->IsParenOpen())
             {
@@ -3980,8 +3980,8 @@ void indent_text()
                     __func__, __LINE__, pc->GetOrigLine(), indent_column, pc->GetLogText());
             reindent_line(pc, indent_column);
          }
-         else if (  pc->Is(CT_ARITH)
-                 || pc->Is(CT_CARET))
+         else if (  pc->Is(E_Token::CT_ARITH)
+                 || pc->Is(E_Token::CT_CARET))
          {
             log_rule_B("indent_ignore_arith");
 
@@ -3993,7 +3993,7 @@ void indent_text()
                     __func__, __LINE__, pc->GetOrigLine(), indent_column, pc->GetLogText());
             reindent_line(pc, indent_column);
          }
-         else if (pc->Is(CT_SHIFT))
+         else if (pc->Is(E_Token::CT_SHIFT))
          {
             log_rule_B("indent_shift");
 
@@ -4005,7 +4005,7 @@ void indent_text()
                     __func__, __LINE__, pc->GetOrigLine(), indent_column, pc->GetLogText());
             reindent_line(pc, indent_column);
          }
-         else if (pc->Is(CT_ASSIGN))
+         else if (pc->Is(E_Token::CT_ASSIGN))
          {
             log_rule_B("indent_ignore_assign");
 
@@ -4018,10 +4018,10 @@ void indent_text()
             reindent_line(pc, indent_column);
          }
          else if (  options::indent_ternary_operator() == 1
-                 && prev->Is(CT_COND_COLON))
+                 && prev->Is(E_Token::CT_COND_COLON))
          {
             log_rule_B("indent_ternary_operator");
-            Chunk *tmp = prev->GetPrevType(CT_QUESTION);
+            Chunk *tmp = prev->GetPrevType(E_Token::CT_QUESTION);
 
             if (tmp->IsNotNullChunk())
             {
@@ -4036,7 +4036,7 @@ void indent_text()
             }
          }
          else if (  options::indent_ternary_operator() == 2
-                 && pc->Is(CT_COND_COLON))
+                 && pc->Is(E_Token::CT_COND_COLON))
          {
             log_rule_B("indent_ternary_operator");
             // get the parent, the QUESTION
@@ -4050,8 +4050,8 @@ void indent_text()
             }
          }
          else if (  options::indent_oc_inside_msg_sel()
-                 && (  pc->Is(CT_OC_MSG_FUNC)
-                    || pc->Is(CT_OC_MSG_NAME))) // Issue #2658
+                 && (  pc->Is(E_Token::CT_OC_MSG_FUNC)
+                    || pc->Is(E_Token::CT_OC_MSG_NAME))) // Issue #2658
          {
             log_rule_B("indent_oc_inside_msg_sel");
             reindent_line(pc, frm.top().GetIndent());
@@ -4066,7 +4066,7 @@ void indent_text()
                LOG_FMT(LINDPC, "%s(%d): (frm.at(ttidx).pc)->GetParentType() is %s\n",
                        __func__, __LINE__, get_token_name((frm.at(ttidx).GetOpenChunk())->GetParentType()));
 
-               if ((frm.at(ttidx).GetOpenChunk())->GetParentType() == CT_FUNC_CALL)
+               if ((frm.at(ttidx).GetOpenChunk())->GetParentType() == E_Token::CT_FUNC_CALL)
                {
                   LOG_FMT(LINDPC, "FUNC_CALL OK [%d]\n", __LINE__);
 
@@ -4087,29 +4087,29 @@ void indent_text()
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetColumn(), pc->GetLogText(), indent_column);
 
             if (  use_indent
-               && pc->IsNot(CT_PP_IGNORE)) // Leave indentation alone for PP_IGNORE tokens
+               && pc->IsNot(E_Token::CT_PP_IGNORE)) // Leave indentation alone for PP_IGNORE tokens
             {
                log_rule_B("pos_conditional");
 
-               if (  (  pc->Is(CT_QUESTION)      // Issue #2101
-                     || pc->Is(CT_COND_COLON))   // Issue #2101
+               if (  (  pc->Is(E_Token::CT_QUESTION)      // Issue #2101
+                     || pc->Is(E_Token::CT_COND_COLON))   // Issue #2101
                   && options::pos_conditional() == TP_IGNORE)
                {
                   // do not indent this line
                   LOG_FMT(LINDENT, "%s(%d): %zu] don't indent this line\n",
                           __func__, __LINE__, pc->GetOrigLine());
                }
-               else if (pc->Is(CT_BREAK))
+               else if (pc->Is(E_Token::CT_BREAK))
                {
                   // Issue #1692
                   log_rule_B("indent_switch_break_with_case");
 
                   // Issue #2281
                   if (  options::indent_switch_break_with_case()
-                     && pc->GetTypeOfParent() == CT_SWITCH)
+                     && pc->GetTypeOfParent() == E_Token::CT_SWITCH)
                   {
                      // look for a case before Issue #2735
-                     Chunk *whereIsCase = pc->GetPrevType(CT_CASE, pc->GetLevel());
+                     Chunk *whereIsCase = pc->GetPrevType(E_Token::CT_CASE, pc->GetLevel());
 
                      if (whereIsCase->IsNotNullChunk())
                      {
@@ -4127,7 +4127,7 @@ void indent_text()
                      reindent_line(pc, indent_column);
                   }
                }
-               else if (  pc->Is(CT_MEMBER)                      // Issue #2890
+               else if (  pc->Is(E_Token::CT_MEMBER)                      // Issue #2890
                        && language_is_set(lang_flag_e::LANG_CPP))
                {
                   // comment name: XXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -4155,7 +4155,7 @@ void indent_text()
 
                      size_t vor_col = 0;
 
-                     if (token_before->Is(CT_ASSIGN))
+                     if (token_before->Is(E_Token::CT_ASSIGN))
                      {
                         Chunk *before_Assign = frm.at(temp_ttidx - 1).GetOpenChunk();
 
@@ -4171,14 +4171,14 @@ void indent_text()
                            indent_column = vor_col + 2 * indent_size;
                         }
                      }
-                     else if (token_before->Is(CT_BRACE_OPEN))
+                     else if (token_before->Is(E_Token::CT_BRACE_OPEN))
                      {
                         vor_col = token_before->GetColumn();
                         LOG_FMT(LINDPC, "%s(%d): text is '%s', token_before->GetType() is %s, column is %zu\n",
                                 __func__, __LINE__, token_before->GetLogText(), get_token_name(token_before->GetType()), vor_col);
                         indent_column = vor_col + 2 * indent_size;
                      }
-                     else if (token_before->Is(CT_RETURN))
+                     else if (token_before->Is(E_Token::CT_RETURN))
                      {
                         Chunk *before_Return = frm.at(temp_ttidx - 1).GetOpenChunk();
                         vor_col = before_Return->GetColumn();
@@ -4210,9 +4210,9 @@ void indent_text()
          }
          did_newline = false;
 
-         if (  pc->Is(CT_SQL_EXEC)
-            || pc->Is(CT_SQL_BEGIN)
-            || pc->Is(CT_SQL_END))
+         if (  pc->Is(E_Token::CT_SQL_EXEC)
+            || pc->Is(E_Token::CT_SQL_BEGIN)
+            || pc->Is(E_Token::CT_SQL_END))
          {
             sql_col      = pc->GetColumn();
             sql_orig_col = pc->GetOrigCol();
@@ -4222,7 +4222,7 @@ void indent_text()
          if (pc->TestFlags(PCF_VAR_TYPE))
          {
             if (  !frm.top().GetNonVardef()
-               && (frm.top().GetOpenToken() == CT_BRACE_OPEN))
+               && (frm.top().GetOpenToken() == E_Token::CT_BRACE_OPEN))
             {
                log_rule_B("indent_var_def_blk");
                int val = options::indent_var_def_blk();
@@ -4248,8 +4248,8 @@ void indent_text()
 
       // if we hit a newline, reset indent_tmp
       if (  pc->IsNewline()
-         || pc->Is(CT_COMMENT_MULTI)
-         || pc->Is(CT_COMMENT_CPP))
+         || pc->Is(E_Token::CT_COMMENT_MULTI)
+         || pc->Is(E_Token::CT_COMMENT_CPP))
       {
          log_indent();
          frm.top().SetIndentTmp(frm.top().GetIndent());
@@ -4259,9 +4259,9 @@ void indent_text()
           * Handle the case of a multi-line #define w/o anything on the
           * first line (indent_tmp will be 1 or 0)
           */
-         if (  pc->Is(CT_NL_CONT)
+         if (  pc->Is(E_Token::CT_NL_CONT)
             && frm.top().GetIndentTmp() <= indent_size
-            && frm.top().GetOpenToken() != CT_PP_DEFINE)
+            && frm.top().GetOpenToken() != E_Token::CT_PP_DEFINE)
          {
             frm.top().SetIndentTmp(indent_size + 1);
             log_indent_tmp();
@@ -4273,7 +4273,7 @@ void indent_text()
       log_rule_B("indent_xml_string");
 
       if (  options::indent_xml_string() > 0
-         && pc->Is(CT_STRING)
+         && pc->Is(E_Token::CT_STRING)
          && pc->Len() > 4
          && pc->GetText()[1] == '<'
          && pc->GetText()[2] != '/'
@@ -4289,14 +4289,14 @@ void indent_text()
       // Issue #672
       log_rule_B("indent_continue_class_head");
 
-      if (  pc->Is(CT_CLASS)
+      if (  pc->Is(E_Token::CT_CLASS)
          && (  language_is_set(lang_flag_e::LANG_CPP)
             || language_is_set(lang_flag_e::LANG_JAVA))
          && (  options::indent_ignore_first_continue()
             || options::indent_continue_class_head() != 0)
          && !classFound)
       {
-         LOG_FMT(LINDENT, "%s(%d): orig line is %zu, CT_CLASS found, OPEN IT\n",
+         LOG_FMT(LINDENT, "%s(%d): orig line is %zu, E_Token::CT_CLASS found, OPEN IT\n",
                  __func__, __LINE__, pc->GetOrigLine());
          frm.push(pc, __func__, __LINE__);
 
@@ -4317,7 +4317,7 @@ void indent_text()
       }
       pc = pc->GetNext();
 
-      if (pc->Is(CT_SPACE))                       // Issue #3710
+      if (pc->Is(E_Token::CT_SPACE))                       // Issue #3710
       {
          pc = pc->GetNext();
       }
@@ -4335,7 +4335,7 @@ null_pc:
 
    // Throw out any VBRACE_OPEN at the end - implied with the end of file
    while (  !frm.empty()
-         && frm.top().GetOpenToken() == CT_VBRACE_OPEN)
+         && frm.top().GetOpenToken() == E_Token::CT_VBRACE_OPEN)
    {
       frm.pop(__func__, __LINE__, pc);
    }
@@ -4384,7 +4384,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start, bool forward)
       {
          nl_count = 0;
       }
-      else if (  pc->Is(CT_COMMENT_MULTI)
+      else if (  pc->Is(E_Token::CT_COMMENT_MULTI)
               || (forward && pc->IsBraceClose())
               || (!forward && pc->IsBraceOpen()))
       {
@@ -4405,16 +4405,16 @@ static bool single_line_comment_indent_rule_applies(Chunk *start, bool forward)
 
 static bool is_end_of_assignment(Chunk *pc, const ParsingFrame &frm)
 {
-   return(  (  frm.top().GetOpenToken() == CT_ASSIGN_NL
-            || frm.top().GetOpenToken() == CT_MEMBER
-            || frm.top().GetOpenToken() == CT_ASSIGN)
+   return(  (  frm.top().GetOpenToken() == E_Token::CT_ASSIGN_NL
+            || frm.top().GetOpenToken() == E_Token::CT_MEMBER
+            || frm.top().GetOpenToken() == E_Token::CT_ASSIGN)
          && (  pc->IsSemicolon()
-            || pc->Is(CT_COMMA)
-            || pc->Is(CT_BRACE_OPEN)
-            || pc->Is(CT_SPAREN_CLOSE)
-            || (  pc->Is(CT_SQUARE_OPEN)
-               && pc->GetParentType() == CT_ASSIGN))
-         && pc->GetParentType() != CT_CPP_LAMBDA);
+            || pc->Is(E_Token::CT_COMMA)
+            || pc->Is(E_Token::CT_BRACE_OPEN)
+            || pc->Is(E_Token::CT_SPAREN_CLOSE)
+            || (  pc->Is(E_Token::CT_SQUARE_OPEN)
+               && pc->GetParentType() == E_Token::CT_ASSIGN))
+         && pc->GetParentType() != E_Token::CT_CPP_LAMBDA);
 }
 
 
@@ -4587,7 +4587,7 @@ void indent_preproc()
       LOG_FMT(LPPIS, "%s(%d): orig line is %zu, orig col is %zu, pc->Type is %s, text is '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->GetLogText());
 
-      if (pc->IsNot(CT_PREPROC))
+      if (pc->IsNot(E_Token::CT_PREPROC))
       {
          continue;
       }
@@ -4632,19 +4632,19 @@ void indent_preproc()
       // Mark as already handled if not region stuff or in column 1
       log_rule_B("pp_indent_at_level");
 
-      bool at_file_level = pc->GetBraceLevel() <= ((pc->GetParentType() == CT_PP_DEFINE) ? 1 : 0);
+      bool at_file_level = pc->GetBraceLevel() <= ((pc->GetParentType() == E_Token::CT_PP_DEFINE) ? 1 : 0);
 
       if (  (  (  at_file_level
                && !options::pp_indent_at_level0())
             || (  !at_file_level
                && !options::pp_indent_at_level()))
-         && pc->GetParentType() != CT_PP_REGION
-         && pc->GetParentType() != CT_PP_ENDREGION)
+         && pc->GetParentType() != E_Token::CT_PP_REGION
+         && pc->GetParentType() != E_Token::CT_PP_ENDREGION)
       {
          log_rule_B("pp_define_at_level");
 
          if (  !options::pp_define_at_level()
-            || pc->GetParentType() != CT_PP_DEFINE)
+            || pc->GetParentType() != E_Token::CT_PP_DEFINE)
          {
             pc->SetFlagBits(PCF_DONT_INDENT);
          }

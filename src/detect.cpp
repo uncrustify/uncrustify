@@ -162,14 +162,14 @@ static void detect_space_options()
          break;
       }
 
-      if (  pc->Is(CT_ARITH)
-         || pc->Is(CT_SHIFT))
+      if (  pc->Is(E_Token::CT_ARITH)
+         || pc->Is(E_Token::CT_SHIFT))
       {
          vote_sp_arith.vote(pc, next);
          vote_sp_arith.vote(prev, pc);
       }
 
-      if (pc->Is(CT_ASSIGN))
+      if (pc->Is(E_Token::CT_ASSIGN))
       {
          if (!pc->TestFlags(PCF_IN_ENUM))
          {
@@ -183,40 +183,40 @@ static void detect_space_options()
          }
       }
 
-      if (pc->Is(CT_SQUARE_OPEN))
+      if (pc->Is(E_Token::CT_SQUARE_OPEN))
       {
          vote_sp_before_square.vote(prev, pc);
          vote_sp_inside_square.vote(pc, next);
       }
 
-      if (pc->Is(CT_SQUARE_CLOSE))
+      if (pc->Is(E_Token::CT_SQUARE_CLOSE))
       {
          vote_sp_inside_square.vote(prev, pc);
       }
 
-      if (pc->Is(CT_TSQUARE))
+      if (pc->Is(E_Token::CT_TSQUARE))
       {
          vote_sp_before_squares.vote(prev, pc);
       }
 
-      if (pc->Is(CT_BOOL))
+      if (pc->Is(E_Token::CT_BOOL))
       {
          vote_sp_bool.vote(prev, pc);
          vote_sp_bool.vote(pc, next);
       }
 
-      if (pc->Is(CT_COMPARE))
+      if (pc->Is(E_Token::CT_COMPARE))
       {
          vote_sp_compare.vote(prev, pc);
          vote_sp_compare.vote(pc, next);
       }
 
-      if (pc->Is(CT_PAREN_CLOSE))
+      if (pc->Is(E_Token::CT_PAREN_CLOSE))
       {
          vote_sp_inside_paren.vote(prev, pc);
       }
 
-      if (pc->Is(CT_PAREN_OPEN))
+      if (pc->Is(E_Token::CT_PAREN_OPEN))
       {
          vote_sp_inside_paren.vote(pc, next);
       }
@@ -230,18 +230,18 @@ static void detect_space_options()
       }
 
       if (  pc->IsParenClose()
-         && next->Is(CT_BRACE_OPEN))
+         && next->Is(E_Token::CT_BRACE_OPEN))
       {
          vote_sp_paren_brace.vote(pc, next);
       }
 
-      if (pc->Is(CT_PTR_TYPE))
+      if (pc->Is(E_Token::CT_PTR_TYPE))
       {
-         if (prev->Is(CT_PTR_TYPE))
+         if (prev->Is(E_Token::CT_PTR_TYPE))
          {
             vote_sp_between_ptr_star.vote(prev, pc);
          }
-         else if (next->IsNot(CT_WORD))
+         else if (next->IsNot(E_Token::CT_WORD))
          {
             vote_sp_before_unnamed_ptr_star.vote(prev, pc);
          }
@@ -256,14 +256,14 @@ static void detect_space_options()
          }
       }
 
-      if (pc->Is(CT_BYREF))
+      if (pc->Is(E_Token::CT_BYREF))
       {
-         if (next->IsNot(CT_WORD))
+         if (next->IsNot(E_Token::CT_WORD))
          {
             vote_sp_before_unnamed_byref.vote(prev, pc);
          }
 
-         if (prev->Is(CT_PTR_TYPE))
+         if (prev->Is(E_Token::CT_PTR_TYPE))
          {
             vote_sp_between_ptr_ref.vote(prev, pc);
          }
@@ -274,18 +274,18 @@ static void detect_space_options()
          vote_sp_after_byref.vote(pc, next);
       }
 
-      if (  pc->IsNot(CT_PTR_TYPE)
-         && (  prev->Is(CT_QUALIFIER)
-            || prev->Is(CT_TYPE)))
+      if (  pc->IsNot(E_Token::CT_PTR_TYPE)
+         && (  prev->Is(E_Token::CT_QUALIFIER)
+            || prev->Is(E_Token::CT_TYPE)))
       {
          vote_sp_after_type.vote(prev, pc);
       }
 
-      if (pc->Is(CT_ANGLE_OPEN))
+      if (pc->Is(E_Token::CT_ANGLE_OPEN))
       {
          vote_sp_inside_angle.vote(pc, next);
 
-         if (prev->Is(CT_TEMPLATE))
+         if (prev->Is(E_Token::CT_TEMPLATE))
          {
             vote_sp_template_angle.vote(prev, pc);
          }
@@ -295,7 +295,7 @@ static void detect_space_options()
          }
       }
 
-      if (pc->Is(CT_ANGLE_CLOSE))
+      if (pc->Is(E_Token::CT_ANGLE_CLOSE))
       {
          vote_sp_inside_angle.vote(prev, pc);
 
@@ -303,7 +303,7 @@ static void detect_space_options()
          {
             vote_sp_angle_paren.vote(prev, pc);
          }
-         else if (  next->Is(CT_WORD)
+         else if (  next->Is(E_Token::CT_WORD)
                  || CharTable::IsKw1(next->GetText()[0]))
          {
             vote_sp_angle_word.vote(prev, pc);
@@ -314,17 +314,17 @@ static void detect_space_options()
          }
       }
 
-      if (pc->Is(CT_SPAREN_OPEN))
+      if (pc->Is(E_Token::CT_SPAREN_OPEN))
       {
          vote_sp_before_sparen.vote(prev, pc);
          vote_sp_inside_sparen.vote(pc, next);
       }
 
-      if (pc->Is(CT_SPAREN_CLOSE))
+      if (pc->Is(E_Token::CT_SPAREN_CLOSE))
       {
          vote_sp_inside_sparen.vote(prev, pc);
 
-         if (next->Is(CT_BRACE_OPEN))
+         if (next->Is(E_Token::CT_BRACE_OPEN))
          {
             vote_sp_sparen_brace.vote(pc, next);
          }
@@ -334,25 +334,25 @@ static void detect_space_options()
          }
       }
 
-      if (pc->Is(CT_SEMICOLON))
+      if (pc->Is(E_Token::CT_SEMICOLON))
       {
-         if (pc->GetParentType() == CT_FOR)
+         if (pc->GetParentType() == E_Token::CT_FOR)
          {
-            if (prev->Is(CT_SPAREN_OPEN))
+            if (prev->Is(E_Token::CT_SPAREN_OPEN))
             {
                // empty, ie for (;;)
                //               ^ is prev
                //                ^ is pc
                vote_sp_before_semi_for_empty.vote(prev, pc);
             }
-            else if (next->Is(CT_SPAREN_CLOSE))
+            else if (next->Is(E_Token::CT_SPAREN_CLOSE))
             {
                // empty, ie for (;;)
                //                 ^ is pc
                //                  ^ is next
                vote_sp_after_semi_for_empty.vote(pc, next);
             }
-            else if (prev->IsNot(CT_SEMICOLON))
+            else if (prev->IsNot(E_Token::CT_SEMICOLON))
             {
                // empty, ie for (; i < 8;)
                //                       ^ is pc
@@ -361,7 +361,7 @@ static void detect_space_options()
                vote_sp_before_semi_for.vote(prev, pc);
             }
          }
-         else if (prev->Is(CT_VBRACE_OPEN))
+         else if (prev->Is(E_Token::CT_VBRACE_OPEN))
          {
             vote_sp_special_semi.vote(prev->GetPrev(), pc);
          }
@@ -371,42 +371,42 @@ static void detect_space_options()
          }
       }
 
-      if (pc->Is(CT_COMMA))
+      if (pc->Is(E_Token::CT_COMMA))
       {
          vote_sp_before_comma.vote(prev, pc);
          vote_sp_after_comma.vote(pc, next);
       }
 
-      if (pc->Is(CT_CLASS_COLON))
+      if (pc->Is(E_Token::CT_CLASS_COLON))
       {
          vote_sp_before_class_colon.vote(prev, pc);
          vote_sp_after_class_colon.vote(pc, next);
       }
 
-      if (pc->Is(CT_BRACE_OPEN))
+      if (pc->Is(E_Token::CT_BRACE_OPEN))
       {
-         if (prev->Is(CT_ELSE))
+         if (prev->Is(E_Token::CT_ELSE))
          {
             vote_sp_else_brace.vote(prev, pc);
          }
-         else if (prev->Is(CT_CATCH))
+         else if (prev->Is(E_Token::CT_CATCH))
          {
             vote_sp_catch_brace.vote(prev, pc);
          }
-         else if (prev->Is(CT_FINALLY))
+         else if (prev->Is(E_Token::CT_FINALLY))
          {
             vote_sp_catch_brace.vote(prev, pc);
          }
-         else if (prev->Is(CT_TRY))
+         else if (prev->Is(E_Token::CT_TRY))
          {
             vote_sp_catch_brace.vote(prev, pc);
          }
-         else if (prev->Is(CT_GETSET))
+         else if (prev->Is(E_Token::CT_GETSET))
          {
             vote_sp_catch_brace.vote(prev, pc);
          }
 
-         if (next->Is(CT_BRACE_CLOSE))
+         if (next->Is(E_Token::CT_BRACE_CLOSE))
          {
             vote_sp_inside_braces_empty.vote(pc, next);
          }
@@ -416,19 +416,19 @@ static void detect_space_options()
          }
       }
 
-      if (pc->Is(CT_BRACE_CLOSE))
+      if (pc->Is(E_Token::CT_BRACE_CLOSE))
       {
          vote_sp_inside_braces.vote(prev, pc);
 
-         if (next->Is(CT_ELSE))
+         if (next->Is(E_Token::CT_ELSE))
          {
             vote_sp_brace_else.vote(pc, next);
          }
-         else if (next->Is(CT_CATCH))
+         else if (next->Is(E_Token::CT_CATCH))
          {
             vote_sp_brace_catch.vote(pc, next);
          }
-         else if (next->Is(CT_FINALLY))
+         else if (next->Is(E_Token::CT_FINALLY))
          {
             vote_sp_brace_finally.vote(pc, next);
          }

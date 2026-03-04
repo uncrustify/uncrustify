@@ -15,6 +15,6 @@ bool cs_top_is_question(const ChunkStack &cs, size_t level)
 {
    Chunk *pc = cs.Empty() ? Chunk::NullChunkPtr : cs.Top()->m_pc;
 
-   return(  pc->Is(CT_QUESTION)
+   return(  pc->Is(E_Token::CT_QUESTION)
          && pc->GetLevel() == level);
 }
