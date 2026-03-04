@@ -132,14 +132,21 @@ Chunk *align_func_param(Chunk *start)
          chunk_count = 0;
          size_t level  = pc->GetLevel();
          size_t nl_cnt = pc->GetNlCountFiltered(skip_budgets[level]);
+         LOG_FMT(LAS, "%s(%d): NL orig line %zu, level %zu, nl_cnt %zu, budget: empty=%zu pp=%zu cmt=%zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), level, nl_cnt,
+                 skip_budgets[level].empty_lines, skip_budgets[level].pp_lines, skip_budgets[level].cmt_lines);
 
          if (nl_cnt > 0)
          {
             many_as[level].NewLines(nl_cnt);
          }
       }
-      else if (pc->GetLevel() <= start->GetLevel())
+      else if (  pc->GetLevel() <= start->GetLevel()
+              && !pc->TestFlags(PCF_IN_PREPROC))
       {
+         LOG_FMT(LAS, "%s(%d): BREAK at orig line %zu, text '%s', type %s, pc level %zu, start level %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetLogText(),
+                 get_token_name(pc->GetType()), pc->GetLevel(), start->GetLevel());
          break;
       }
       else if (pc->TestFlags(PCF_VAR_DEF))
