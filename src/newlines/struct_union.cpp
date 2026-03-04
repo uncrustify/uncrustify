@@ -42,9 +42,9 @@ void newlines_struct_union(Chunk *start, iarf_e nl_opt, bool leave_trailing)
          && pc->GetLevel() >= level)
    {
       if (  pc->GetLevel() == level
-         && (  pc->Is(CT_BRACE_OPEN)
+         && (  pc->Is(E_Token::BRACE_OPEN)
             || pc->IsSemicolon()
-            || pc->Is(CT_ASSIGN)))
+            || pc->Is(E_Token::ASSIGN)))
       {
          break;
       }
@@ -53,12 +53,12 @@ void newlines_struct_union(Chunk *start, iarf_e nl_opt, bool leave_trailing)
    }
 
    // If we hit a brace open, then we need to toy with the newlines
-   if (pc->Is(CT_BRACE_OPEN))
+   if (pc->Is(E_Token::BRACE_OPEN))
    {
       // Skip over embedded C comments
       Chunk *next = pc->GetNext();
 
-      while (next->Is(CT_COMMENT))
+      while (next->Is(E_Token::COMMENT))
       {
          next = next->GetNext();
       }

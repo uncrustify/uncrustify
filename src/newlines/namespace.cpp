@@ -38,7 +38,7 @@ void newlines_namespace(Chunk *start)
    {
       return;
    }
-   Chunk *braceOpen = start->GetNextType(CT_BRACE_OPEN, start->GetLevel());
+   Chunk *braceOpen = start->GetNextType(E_Token::BRACE_OPEN, start->GetLevel());
 
    LOG_FMT(LNEWLINE, "%s(%d): braceOpen orig line is %zu, orig col is %zu, text is '%s'\n",
            __func__, __LINE__, braceOpen->GetOrigLine(), braceOpen->GetOrigCol(), braceOpen->GetLogText());

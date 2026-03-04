@@ -67,17 +67,17 @@ Chunk *skip_to_expression_start(Chunk *pc);
 
 
 /**
- * Skips over the rest of the template if ang_open is indeed a CT_ANGLE_OPEN.
- * Points to the chunk after the CT_ANGLE_CLOSE.
- * If the chunk isn't an CT_ANGLE_OPEN, then it is returned.
+ * Skips over the rest of the template if ang_open is indeed a E_Token::ANGLE_OPEN.
+ * Points to the chunk after the E_Token::ANGLE_CLOSE.
+ * If the chunk isn't an E_Token::ANGLE_OPEN, then it is returned.
  */
 Chunk *skip_template_next(Chunk *ang_open);
 
 
 /**
- * Skips over the rest of the template if ang_close is indeed a CT_ANGLE_CLOSE.
- * Points to the chunk before the CT_ANGLE_OPEN
- * If the chunk isn't an CT_ANGLE_CLOSE, then it is returned.
+ * Skips over the rest of the template if ang_close is indeed a E_Token::ANGLE_CLOSE.
+ * Points to the chunk before the E_Token::ANGLE_OPEN
+ * If the chunk isn't an E_Token::ANGLE_CLOSE, then it is returned.
  */
 Chunk *skip_template_prev(Chunk *ang_close);
 
@@ -88,47 +88,47 @@ Chunk *skip_to_next_statement(Chunk *pc);
 
 /**
  * Skips the rest of the array definitions if ary_def is indeed a
- * CT_TSQUARE or CT_SQUARE_OPEN
+ * E_Token::TSQUARE or E_Token::SQUARE_OPEN
  */
 Chunk *skip_tsquare_next(Chunk *ary_def);
 
 
 /**
- * If pc is CT_ATTRIBUTE, then skip it and everything preceding the closing
- * paren; return the chunk marked CT_FPAREN_CLOSE
- * If the chunk isn't a CT_ATTRIBUTE, then it is returned.
+ * If pc is E_Token::ATTRIBUTE, then skip it and everything preceding the closing
+ * paren; return the chunk marked E_Token::FPAREN_CLOSE
+ * If the chunk isn't a E_Token::ATTRIBUTE, then it is returned.
  */
 Chunk *skip_attribute(Chunk *attr);
 
 
 /**
- * If attr is CT_ATTRIBUTE, then skip it and the parens and return the chunk
- * after the CT_FPAREN_CLOSE.
- * If the chunk isn't an CT_ATTRIBUTE, then it is returned.
+ * If attr is E_Token::ATTRIBUTE, then skip it and the parens and return the chunk
+ * after the E_Token::FPAREN_CLOSE.
+ * If the chunk isn't an E_Token::ATTRIBUTE, then it is returned.
  */
 Chunk *skip_attribute_next(Chunk *attr);
 
 
 /**
- * If fp_close is a CT_FPAREN_CLOSE with a parent of CT_ATTRIBUTE, then skip it
- * and the '__attribute__' thingy and return the chunk before CT_ATTRIBUTE.
+ * If fp_close is a E_Token::FPAREN_CLOSE with a parent of E_Token::ATTRIBUTE, then skip it
+ * and the '__attribute__' thingy and return the chunk before E_Token::ATTRIBUTE.
  * Otherwise return fp_close.
  */
 Chunk *skip_attribute_prev(Chunk *fp_close);
 
 
 /**
- * If pc is CT_DECLSPEC, then skip it and everything preceding the closing
- * paren; return the chunk marked CT_FPAREN_CLOSE
- * If the chunk isn't a CT_DECLSPEC, then it is returned.
+ * If pc is E_Token::DECLSPEC, then skip it and everything preceding the closing
+ * paren; return the chunk marked E_Token::FPAREN_CLOSE
+ * If the chunk isn't a E_Token::DECLSPEC, then it is returned.
  */
 Chunk *skip_declspec(Chunk *pc);
 
 
 /**
- * If pc is CT_DECLSPEC, then skip it and the parens and return the chunk
- * after the CT_FPAREN_CLOSE.
- * If the chunk isn't a CT_DECLSPEC, then it is returned.
+ * If pc is E_Token::DECLSPEC, then skip it and the parens and return the chunk
+ * after the E_Token::FPAREN_CLOSE.
+ * If the chunk isn't a E_Token::DECLSPEC, then it is returned.
  */
 Chunk *skip_declspec_next(Chunk *pc);
 

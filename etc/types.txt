@@ -1,8 +1,8 @@
 #
-# a simple list of stuff that should be detected as a CT_TYPE
+# a simple list of stuff that should be detected as a E_Token::TYPE
 # this usually isn't necessary because types are detected from the context.
 #
-# In the future, I may allow arbitrary CT_xxx stuff to be specified, as
+# In the future, I may allow arbitrary E_Token::xxx stuff to be specified, as
 # well as a language
 #
 

@@ -163,7 +163,7 @@ void ParsingFrameStack::pop(ParsingFrame &pf)
 
 int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
 {
-   if (pc->IsNot(CT_PREPROC))
+   if (pc->IsNot(E_Token::PREPROC))
    {
       return(pp_level);
    }
@@ -197,15 +197,15 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
       LOG_FMT(LPF, " <In> ");
       fl_log(LPF, frm);
 
-      if (pc->GetParentType() == CT_PP_IF)
+      if (pc->GetParentType() == E_Token::PP_IF)
       {
          // An #if pushes a copy of the current frame on the stack
          pp_level++;
          push(frm);
-         frm.SetIfdefType(CT_PP_IF);
+         frm.SetIfdefType(E_Token::PP_IF);
          txt = "if-push";
       }
-      else if (pc->GetParentType() == CT_PP_ELSE)
+      else if (pc->GetParentType() == E_Token::PP_ELSE)
       {
          if (out_pp_level == 0)
          {
@@ -225,17 +225,17 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
           */
          bool if_block = false;
 
-         if (frm.GetIfdefType() == CT_PP_IF)
+         if (frm.GetIfdefType() == E_Token::PP_IF)
          {
             // we have [...] [base]-[if], so push an [else]
             push(frm);
-            frm.SetIfdefType(CT_PP_ELSE);
+            frm.SetIfdefType(E_Token::PP_ELSE);
             if_block = true;
          }
          size_t brace_level = frm.GetBraceLevel();
          // we have [...] [base] [if]-[else], copy [base] over [else]
          fl_copy_2nd_tos(frm, m_frames);
-         frm.SetIfdefType(CT_PP_ELSE);
+         frm.SetIfdefType(E_Token::PP_ELSE);
 
          if (if_block)
          {
@@ -277,7 +277,7 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
          }
          txt = "else-push";
       }
-      else if (pc->GetParentType() == CT_PP_ENDIF)
+      else if (pc->GetParentType() == E_Token::PP_ENDIF)
       {
          /*
           * we may have [...] [base] [if]-[else] or [...] [base]-[if].
@@ -302,7 +302,7 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
          }
          out_pp_level--;
 
-         if (frm.GetIfdefType() == CT_PP_ELSE)
+         if (frm.GetIfdefType() == E_Token::PP_ELSE)
          {
             size_t brace_level = frm.GetBraceLevel(); // brace level or current #else block
             /*
@@ -338,7 +338,7 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
 
             txt = "endif-trash/pop";
          }
-         else if (frm.GetIfdefType() == CT_PP_IF)
+         else if (frm.GetIfdefType() == E_Token::PP_IF)
          {
             /*
              * We have: [...] [base] [if]

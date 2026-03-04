@@ -70,13 +70,13 @@ log_rule(parse_next : rule is 'disable_processing_nl_cont'
 log_rule(tokenize : rule is 'newlines'
 brace_cleanup : orig line is 1, orig col is 1, text 'struct', type is STRUCT, PRE is false
 brace_cleanup : pp level is 0
-parse_cleanup : orig line is 1, orig col is 1, type is STRUCT, tos is 0, TOS.type is EOF, TOS.stage is NONE,    chunk flags: [0x0:]
+parse_cleanup : orig line is 1, orig col is 1, type is STRUCT, tos is 0, TOS.type is EOFILE, TOS.stage is NONE,    chunk flags: [0x0:]
 parse_cleanup : orig line is 1, type is STRUCT, text is 'struct'
 parse_cleanup : frame statement count is 0, expression count is 0
 parse_cleanup : frame statement count is 1, expression count is 1
 brace_cleanup : orig line is 1, orig col is 8, text 'TelegramIndex', type is TYPE, PRE is false
 brace_cleanup : pp level is 0
-parse_cleanup : orig line is 1, orig col is 8, type is TYPE, tos is 0, TOS.type is EOF, TOS.stage is NONE,    chunk flags: [0x0:]
+parse_cleanup : orig line is 1, orig col is 8, type is TYPE, tos is 0, TOS.type is EOFILE, TOS.stage is NONE,    chunk flags: [0x0:]
 parse_cleanup : orig line is 1, type is TYPE, text is 'TelegramIndex'
 parse_cleanup : frame statement count is 1, expression count is 1
 parse_cleanup : frame statement count is 2, expression count is 2
@@ -84,7 +84,7 @@ brace_cleanup : orig line is 1, orig col is 21, <Newline>, PRE is false
 brace_cleanup : pp level is 0
 brace_cleanup : orig line is 2, orig col is 1, text '{', type is BRACE_OPEN, PRE is false
 brace_cleanup : pp level is 0
-parse_cleanup : orig line is 2, orig col is 1, type is BRACE_OPEN, tos is 0, TOS.type is EOF, TOS.stage is NONE,    chunk flags: [0x200000000:PUNCTUATOR]
+parse_cleanup : orig line is 2, orig col is 1, type is BRACE_OPEN, tos is 0, TOS.type is EOFILE, TOS.stage is NONE,    chunk flags: [0x200000000:PUNCTUATOR]
 parse_cleanup : orig line is 2, type is BRACE_OPEN, text is '{'
 parse_cleanup : frame statement count is 2, expression count is 2
 parse_cleanup : frame statement count is 3, expression count is 3
@@ -361,7 +361,7 @@ parse_cleanup : frame statement count is 1, expression count is 1
 parse_cleanup : frame statement count is 0, expression count is 0
 brace_cleanup : orig line is 15, orig col is 2, text ';', type is SEMICOLON, PRE is false
 brace_cleanup : pp level is 0
-parse_cleanup : orig line is 15, orig col is 2, type is SEMICOLON, tos is 0, TOS.type is EOF, TOS.stage is NONE,    chunk flags: [0x200000000:PUNCTUATOR]
+parse_cleanup : orig line is 15, orig col is 2, type is SEMICOLON, tos is 0, TOS.type is EOFILE, TOS.stage is NONE,    chunk flags: [0x200000000:PUNCTUATOR]
 parse_cleanup : orig line is 15, type is SEMICOLON, text is ';'
 parse_cleanup : frame statement count is 0, expression count is 0
 parse_cleanup : frame statement count is 1, expression count is 1

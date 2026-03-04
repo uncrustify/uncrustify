@@ -37,7 +37,7 @@ void newlines_eat_start_end()
 
       if (pc->IsNotNullChunk())
       {
-         if (pc->Is(CT_NEWLINE))
+         if (pc->Is(E_Token::NEWLINE))
          {
             if (options::nl_start_of_file() == IARF_REMOVE)
             {
@@ -64,7 +64,7 @@ void newlines_eat_start_end()
             log_rule_B("nl_start_of_file");
             log_rule_B("nl_start_of_file_min");
             Chunk chunk;
-            chunk.SetType(CT_NEWLINE);
+            chunk.SetType(E_Token::NEWLINE);
             chunk.SetOrigLine(pc->GetOrigLine());
             chunk.SetOrigCol(pc->GetOrigCol());
             chunk.SetPpLevel(pc->GetPpLevel());
@@ -92,7 +92,7 @@ void newlines_eat_start_end()
 
       if (pc->IsNotNullChunk())
       {
-         if (pc->Is(CT_NEWLINE))
+         if (pc->Is(E_Token::NEWLINE))
          {
             if (options::nl_end_of_file() == IARF_REMOVE)
             {
@@ -125,7 +125,7 @@ void newlines_eat_start_end()
             log_rule_B("nl_end_of_file");
             log_rule_B("nl_end_of_file_min");
             Chunk chunk;
-            chunk.SetType(CT_NEWLINE);
+            chunk.SetType(E_Token::NEWLINE);
             chunk.SetOrigLine(pc->GetOrigLine());
             chunk.SetOrigCol(pc->GetOrigCol());
             chunk.SetPpLevel(pc->GetPpLevel());

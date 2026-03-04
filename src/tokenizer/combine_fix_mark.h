@@ -33,7 +33,7 @@ void fix_fcn_def_params(Chunk *start);
 
 
 /**
- * CT_TYPE_CAST follows this pattern:
+ * E_Token::TYPE_CAST follows this pattern:
  * dynamic_cast<...>(...)
  *
  * Mark everything between the <> as a type and set the paren parent
@@ -60,7 +60,7 @@ void fix_typedef(Chunk *start);
 
 /**
  * We are on the start of a sequence that could be a variable definition
- *  - FPAREN_OPEN (parent == CT_FOR)
+ *  - FPAREN_OPEN (parent == E_Token::FOR)
  *  - BRACE_OPEN
  *  - SEMICOLON
  */
@@ -73,11 +73,11 @@ void mark_cpp_constructor(Chunk *pc);
 /**
  * Mark all chunks belonging to a C++ lambda expression
  *
- * @param square_open points to a chunk of type CT_SQUARE_OPEN, and the parent type is
- *                    assumed to have already been assigned the value CT_CPP_LAMBDA;
+ * @param square_open points to a chunk of type E_Token::SQUARE_OPEN, and the parent type is
+ *                    assumed to have already been assigned the value E_Token::CPP_LAMBDA;
  *                    under this assumption, the function marks all chunks as PCF_IN_LAMBDA
- *                    until the corresponding closing CT_BRACE_CLOSE (with parent type
- *                    CT_CPP_LAMBDA) is encountered
+ *                    until the corresponding closing E_Token::BRACE_CLOSE (with parent type
+ *                    E_Token::CPP_LAMBDA) is encountered
  */
 void mark_cpp_lambda(Chunk *square_open);
 
@@ -90,8 +90,8 @@ void mark_define_expressions();
 
 
 /**
- * Just mark every CT_WORD until a semicolon as CT_SQL_WORD.
- * Adjust the levels if pc is CT_SQL_BEGIN
+ * Just mark every E_Token::WORD until a semicolon as E_Token::SQL_WORD.
+ * Adjust the levels if pc is E_Token::SQL_BEGIN
  */
 void mark_exec_sql(Chunk *pc);
 
@@ -100,7 +100,7 @@ void mark_exec_sql(Chunk *pc);
  * Changes the return type to type and set the parent.
  *
  * @param pc           the last chunk of the return type
- * @param parent_type  CT_NONE (no change) or the new parent type
+ * @param parent_type  E_Token::NONE (no change) or the new parent type
  */
 void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type);
 
@@ -173,7 +173,7 @@ void mark_template_func(Chunk *pc, Chunk *pc_next);
 /**
  * We are on the first word of a variable definition.
  * Mark all the variable names with PCF_VAR_1ST and PCF_VAR_DEF as appropriate.
- * Also mark any '*' encountered as a CT_PTR_TYPE.
+ * Also mark any '*' encountered as a E_Token::PTR_TYPE.
  * Skip over []. Go until a ';' is hit.
  *
  * Example input:

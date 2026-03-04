@@ -14,9 +14,9 @@
 
 void collapse_empty_body(Chunk *br_open)
 {
-   for (Chunk *pc = br_open->GetNext(); pc->IsNot(CT_BRACE_CLOSE); pc = pc->GetNext())
+   for (Chunk *pc = br_open->GetNext(); pc->IsNot(E_Token::BRACE_CLOSE); pc = pc->GetNext())
    {
-      if (  pc->Is(CT_NEWLINE)
+      if (  pc->Is(E_Token::NEWLINE)
          && pc->SafeToDeleteNl())
       {
          pc = pc->GetPrev();

@@ -78,8 +78,8 @@ void newline_del_between(Chunk *start, Chunk *end)
    if (  !start_removed
       && end->IsString("{")
       && (  start->IsString(")")
-         || start->Is(CT_DO)
-         || start->Is(CT_ELSE)))
+         || start->Is(E_Token::DO)
+         || start->Is(E_Token::ELSE)))
    {
       end->MoveAfter(start);
    }

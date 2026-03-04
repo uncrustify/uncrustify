@@ -28,9 +28,9 @@ void newline_iarf(Chunk *pc, iarf_e av)
    log_func_stack(LNFD, "CallStack:");
    Chunk *after = pc->GetNextNnl();
 
-   if (  (pc->IsNotNullChunk() && pc->Is(CT_FPAREN_OPEN))                         // Issue #2914
-      && pc->GetParentType() == CT_FUNC_CALL
-      && after->Is(CT_COMMENT_CPP)
+   if (  (pc->IsNotNullChunk() && pc->Is(E_Token::FPAREN_OPEN))                         // Issue #2914
+      && pc->GetParentType() == E_Token::FUNC_CALL
+      && after->Is(E_Token::COMMENT_CPP)
       && options::donot_add_nl_before_cpp_comment())
    {
       return;
@@ -48,7 +48,7 @@ void newline_iarf_pair(Chunk *before, Chunk *after, iarf_e av, bool check_nl_ass
 
    if (  before == Chunk::NullChunkPtr
       || after == Chunk::NullChunkPtr
-      || after->Is(CT_IGNORED))
+      || after->Is(E_Token::IGNORED))
    {
       return;
    }

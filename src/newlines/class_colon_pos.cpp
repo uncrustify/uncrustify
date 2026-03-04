@@ -32,7 +32,7 @@ void newlines_class_colon_pos(E_Token tok)
    iarf_e      anc;
    iarf_e      ncia;
 
-   if (tok == CT_CLASS_COLON)
+   if (tok == E_Token::CLASS_COLON)
    {
       tpc = options::pos_class_colon();
       log_rule_B("pos_class_colon");
@@ -43,7 +43,7 @@ void newlines_class_colon_pos(E_Token tok)
       pcc = options::pos_class_comma();
       log_rule_B("pos_class_comma");
    }
-   else // tok == CT_CONSTR_COLON
+   else // tok == E_Token::CONSTR_COLON
    {
       tpc = options::pos_constr_colon();
       log_rule_B("pos_constr_colon");
@@ -91,11 +91,11 @@ void newlines_class_colon_pos(E_Token tok)
          prev   = pc->GetPrevNc();
          next   = pc->GetNextNc();
 
-         if (pc->Is(CT_CONSTR_COLON))
+         if (pc->Is(E_Token::CONSTR_COLON))
          {
             LOG_FMT(LBLANKD, "%s(%d): pc orig line is %zu, orig col is %zu, text '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
-            Chunk *paren_vor_value = pc->GetNextType(CT_FPAREN_OPEN, pc->GetLevel());
+            Chunk *paren_vor_value = pc->GetNextType(E_Token::FPAREN_OPEN, pc->GetLevel());
 
             if (  with_acv
                && paren_vor_value->IsNotNullChunk())
@@ -158,8 +158,8 @@ void newlines_class_colon_pos(E_Token tok)
       else
       {
          // (pc->GetType() != tok)
-         if (  pc->Is(CT_BRACE_OPEN)
-            || pc->Is(CT_SEMICOLON))
+         if (  pc->Is(E_Token::BRACE_OPEN)
+            || pc->Is(E_Token::SEMICOLON))
          {
             ccolon = Chunk::NullChunkPtr;
 
@@ -170,12 +170,12 @@ void newlines_class_colon_pos(E_Token tok)
             continue;
          }
 
-         if (  pc->Is(CT_COMMA)
+         if (  pc->Is(E_Token::COMMA)
             && pc->GetLevel() == ccolon->GetLevel())
          {
             LOG_FMT(LBLANKD, "%s(%d): orig line is %zu, orig col is %zu, text '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
-            Chunk *paren_vor_value = pc->GetNextType(CT_FPAREN_OPEN, pc->GetLevel());
+            Chunk *paren_vor_value = pc->GetNextType(E_Token::FPAREN_OPEN, pc->GetLevel());
 
             if (  with_acv
                && paren_vor_value->IsNotNullChunk())
@@ -195,7 +195,7 @@ void newlines_class_colon_pos(E_Token tok)
                   {
                      Chunk *after = pc->GetNext();   // Issue #2759
 
-                     if (after->IsNot(CT_COMMENT_CPP))
+                     if (after->IsNot(E_Token::COMMENT_CPP))
                      {
                         newline_force_after(pc);
                      }

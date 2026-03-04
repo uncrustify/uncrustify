@@ -54,7 +54,7 @@ void newlines_cleanup_angles()
       LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy));
 
-      if (pc->Is(CT_ANGLE_OPEN))
+      if (pc->Is(E_Token::ANGLE_OPEN))
       {
          newline_template(pc);
       }
@@ -80,13 +80,13 @@ void newlines_cleanup_braces(bool first)
       LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy));
 
-      if (  pc->Is(CT_IF)
-         || pc->Is(CT_CONSTEXPR))
+      if (  pc->Is(E_Token::IF)
+         || pc->Is(E_Token::CONSTEXPR))
       {
          log_rule_B("nl_if_brace");
          newlines_if_for_while_switch(pc, options::nl_if_brace());
       }
-      else if (pc->Is(CT_ELSEIF))
+      else if (pc->Is(E_Token::ELSEIF))
       {
          log_rule_B("nl_elseif_brace");
          iarf_e arg = options::nl_elseif_brace();
@@ -94,12 +94,12 @@ void newlines_cleanup_braces(bool first)
          newlines_if_for_while_switch(
             pc, (arg != IARF_IGNORE) ? arg : options::nl_if_brace());
       }
-      else if (pc->Is(CT_FOR))
+      else if (pc->Is(E_Token::FOR))
       {
          log_rule_B("nl_for_brace");
          newlines_if_for_while_switch(pc, options::nl_for_brace());
       }
-      else if (pc->Is(CT_CATCH))
+      else if (pc->Is(E_Token::CATCH))
       {
          log_rule_B("nl_oc_brace_catch");
 
@@ -116,7 +116,7 @@ void newlines_cleanup_braces(bool first)
          }
          Chunk *next = pc->GetNextNcNnl();
 
-         if (next->Is(CT_BRACE_OPEN))
+         if (next->Is(E_Token::BRACE_OPEN))
          {
             log_rule_B("nl_oc_catch_brace");
 
@@ -148,53 +148,53 @@ void newlines_cleanup_braces(bool first)
             }
          }
       }
-      else if (pc->Is(CT_WHILE))
+      else if (pc->Is(E_Token::WHILE))
       {
          log_rule_B("nl_while_brace");
          newlines_if_for_while_switch(pc, options::nl_while_brace());
       }
-      else if (pc->Is(CT_USING_STMT))
+      else if (pc->Is(E_Token::USING_STMT))
       {
          log_rule_B("nl_using_brace");
          newlines_if_for_while_switch(pc, options::nl_using_brace());
       }
-      else if (pc->Is(CT_D_SCOPE_IF))
+      else if (pc->Is(E_Token::D_SCOPE_IF))
       {
          log_rule_B("nl_scope_brace");
          newlines_if_for_while_switch(pc, options::nl_scope_brace());
       }
-      else if (pc->Is(CT_UNITTEST))
+      else if (pc->Is(E_Token::UNITTEST))
       {
          log_rule_B("nl_unittest_brace");
          newlines_do_else(pc, options::nl_unittest_brace());
       }
-      else if (pc->Is(CT_D_VERSION_IF))
+      else if (pc->Is(E_Token::D_VERSION_IF))
       {
          log_rule_B("nl_version_brace");
          newlines_if_for_while_switch(pc, options::nl_version_brace());
       }
-      else if (pc->Is(CT_SWITCH))
+      else if (pc->Is(E_Token::SWITCH))
       {
          log_rule_B("nl_switch_brace");
          newlines_if_for_while_switch(pc, options::nl_switch_brace());
       }
-      else if (pc->Is(CT_SYNCHRONIZED))
+      else if (pc->Is(E_Token::SYNCHRONIZED))
       {
          log_rule_B("nl_synchronized_brace");
          newlines_if_for_while_switch(pc, options::nl_synchronized_brace());
       }
-      else if (pc->Is(CT_DO))
+      else if (pc->Is(E_Token::DO))
       {
          log_rule_B("nl_do_brace");
          newlines_do_else(pc, options::nl_do_brace());
       }
-      else if (pc->Is(CT_ELSE))
+      else if (pc->Is(E_Token::ELSE))
       {
          log_rule_B("nl_brace_else");
          newlines_cuddle_uncuddle(pc, options::nl_brace_else());
          Chunk *next = pc->GetNextNcNnl();
 
-         if (next->Is(CT_ELSEIF))
+         if (next->Is(E_Token::ELSEIF))
          {
             log_rule_B("nl_else_if");
             newline_iarf_pair(pc, next, options::nl_else_if());
@@ -202,36 +202,36 @@ void newlines_cleanup_braces(bool first)
          log_rule_B("nl_else_brace");
          newlines_do_else(pc, options::nl_else_brace());
       }
-      else if (pc->Is(CT_TRY))
+      else if (pc->Is(E_Token::TRY))
       {
          log_rule_B("nl_try_brace");
          newlines_do_else(pc, options::nl_try_brace());
          // Issue #1734
          Chunk *po = pc->GetNextNcNnl();
-         flag_parens(po, PCF_IN_TRY_BLOCK, po->GetType(), CT_NONE, false);
+         flag_parens(po, PCF_IN_TRY_BLOCK, po->GetType(), E_Token::NONE, false);
       }
-      else if (pc->Is(CT_GETSET))
+      else if (pc->Is(E_Token::GETSET))
       {
          log_rule_B("nl_getset_brace");
          newlines_do_else(pc, options::nl_getset_brace());
       }
-      else if (pc->Is(CT_FINALLY))
+      else if (pc->Is(E_Token::FINALLY))
       {
          log_rule_B("nl_brace_finally");
          newlines_cuddle_uncuddle(pc, options::nl_brace_finally());
          log_rule_B("nl_finally_brace");
          newlines_do_else(pc, options::nl_finally_brace());
       }
-      else if (pc->Is(CT_WHILE_OF_DO))
+      else if (pc->Is(E_Token::WHILE_OF_DO))
       {
          log_rule_B("nl_brace_while");
          newlines_cuddle_uncuddle(pc, options::nl_brace_while());
       }
-      else if (pc->Is(CT_BRACE_OPEN))
+      else if (pc->Is(E_Token::BRACE_OPEN))
       {
          switch (pc->GetParentType())
          {
-         case CT_DOUBLE_BRACE:
+         case E_Token::DOUBLE_BRACE:
          {
             log_rule_B("nl_paren_dbrace_open");
 
@@ -248,7 +248,7 @@ void newlines_cleanup_braces(bool first)
             break;
          }
 
-         case CT_ENUM:
+         case E_Token::ENUM:
          {
             log_rule_B("nl_enum_own_lines");
 
@@ -265,8 +265,8 @@ void newlines_cleanup_braces(bool first)
             break;
          }
 
-         case CT_STRUCT:
-         case CT_UNION:
+         case E_Token::STRUCT:
+         case E_Token::UNION:
          {
             log_rule_B("nl_ds_struct_enum_cmt");
 
@@ -277,7 +277,7 @@ void newlines_cleanup_braces(bool first)
             break;
          }
 
-         case CT_CLASS:
+         case E_Token::CLASS:
          {
             if (pc->GetLevel() == pc->GetBraceLevel())
             {
@@ -288,7 +288,7 @@ void newlines_cleanup_braces(bool first)
             break;
          }
 
-         case CT_OC_CLASS:
+         case E_Token::OC_CLASS:
          {
             if (pc->GetLevel() == pc->GetBraceLevel())
             {
@@ -300,13 +300,13 @@ void newlines_cleanup_braces(bool first)
                   LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s'\n",
                           __func__, __LINE__, tmp->GetOrigLine(), tmp->GetOrigCol(), tmp->GetLogText());
 
-                  if (  tmp->Is(CT_OC_INTF)
-                     || tmp->Is(CT_OC_IMPL))
+                  if (  tmp->Is(E_Token::OC_INTF)
+                     || tmp->Is(E_Token::OC_IMPL))
                   {
                      LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, may be remove/force newline before {\n",
                              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
 
-                     if (tmp->Is(CT_OC_INTF))
+                     if (tmp->Is(E_Token::OC_INTF))
                      {
                         log_rule_B("nl_oc_interface_brace");
                         newlines_do_else(pc->GetPrevNnl(), options::nl_oc_interface_brace());
@@ -323,7 +323,7 @@ void newlines_cleanup_braces(bool first)
             break;
          }
 
-         case CT_BRACED_INIT_LIST:
+         case E_Token::BRACED_INIT_LIST:
          {
             // Issue #1052
             log_rule_B("nl_create_list_one_liner");
@@ -336,11 +336,11 @@ void newlines_cleanup_braces(bool first)
             Chunk *prev = pc->GetPrevNnl();
 
             if (  prev->IsNotNullChunk()
-               && (  prev->GetType() == CT_TYPE
-                  || prev->GetType() == CT_WORD
-                  || prev->GetType() == CT_ASSIGN                      // Issue #2957
-                  || prev->GetParentType() == CT_TEMPLATE
-                  || prev->GetParentType() == CT_DECLTYPE))
+               && (  prev->GetType() == E_Token::TYPE
+                  || prev->GetType() == E_Token::WORD
+                  || prev->GetType() == E_Token::ASSIGN                      // Issue #2957
+                  || prev->GetParentType() == E_Token::TEMPLATE
+                  || prev->GetParentType() == E_Token::DECLTYPE))
             {
                log_rule_B("nl_type_brace_init_lst");
                newline_iarf_pair(prev, pc, options::nl_type_brace_init_lst(), true);
@@ -348,7 +348,7 @@ void newlines_cleanup_braces(bool first)
             break;
          }
 
-         case CT_OC_BLOCK_EXPR:
+         case E_Token::OC_BLOCK_EXPR:
          {
             // issue # 477
             log_rule_B("nl_oc_block_brace");
@@ -356,7 +356,7 @@ void newlines_cleanup_braces(bool first)
             break;
          }
 
-         case CT_FUNC_CLASS_DEF:                             // Issue #2343
+         case E_Token::FUNC_CLASS_DEF:                             // Issue #2343
          {
             if (!one_liner_nl_ok(pc))
             {
@@ -387,7 +387,7 @@ void newlines_cleanup_braces(bool first)
          {
             Chunk *next = pc->GetNextNc(E_Scope::PREPROC);
 
-            if (next->Is(CT_BRACE_OPEN))
+            if (next->Is(E_Token::BRACE_OPEN))
             {
                newline_iarf_pair(pc, next, options::nl_brace_brace());
             }
@@ -398,11 +398,11 @@ void newlines_cleanup_braces(bool first)
          {
             // do nothing
          }
-         else if (next->Is(CT_BRACE_CLOSE))
+         else if (next->Is(E_Token::BRACE_CLOSE))
          {
             // TODO: add an option to split open empty statements? { };
          }
-         else if (next->Is(CT_BRACE_OPEN))
+         else if (next->Is(E_Token::BRACE_OPEN))
          {
             // already handled
          }
@@ -411,14 +411,14 @@ void newlines_cleanup_braces(bool first)
             next = pc->GetNextNcNnl();
 
             // Handle unnamed temporary direct-list-initialization
-            if (pc->GetParentType() == CT_BRACED_INIT_LIST)
+            if (pc->GetParentType() == E_Token::BRACED_INIT_LIST)
             {
                log_rule_B("nl_type_brace_init_lst_open");
                newline_iarf_pair(pc, pc->GetNextNnl(),
                                  options::nl_type_brace_init_lst_open(), true);
             }
             // Handle nl_after_brace_open
-            else if (  (  pc->GetParentType() == CT_CPP_LAMBDA
+            else if (  (  pc->GetParentType() == E_Token::CPP_LAMBDA
                        || pc->GetLevel() == pc->GetBraceLevel())
                     && options::nl_after_brace_open())
             {
@@ -448,7 +448,7 @@ void newlines_cleanup_braces(bool first)
                         log_rule_B("nl_after_brace_open_cmt");
 
                         if (  !options::nl_after_brace_open_cmt()
-                           && tmp->IsNot(CT_COMMENT_MULTI))
+                           && tmp->IsNot(E_Token::COMMENT_MULTI))
                         {
                            break;
                         }
@@ -466,7 +466,7 @@ void newlines_cleanup_braces(bool first)
          log_rule_B("nl_type_brace_init_lst_open");
          log_rule_B("nl_type_brace_init_lst_close");
 
-         if (!(  pc->GetParentType() == CT_BRACED_INIT_LIST
+         if (!(  pc->GetParentType() == E_Token::BRACED_INIT_LIST
               && options::nl_type_brace_init_lst_open() == IARF_IGNORE
               && options::nl_type_brace_init_lst_close() == IARF_IGNORE))
          {
@@ -475,7 +475,7 @@ void newlines_cleanup_braces(bool first)
          }
 
          // Handle nl_before_brace_open
-         if (  pc->Is(CT_BRACE_OPEN)
+         if (  pc->Is(E_Token::BRACE_OPEN)
             && pc->GetLevel() == pc->GetBraceLevel()
             && options::nl_before_brace_open())
          {
@@ -496,14 +496,14 @@ void newlines_cleanup_braces(bool first)
                // Step back to previous non-newline item
                Chunk *tmp = pc->GetPrev();
 
-               if (!tmp->Is(CT_NEWLINE))
+               if (!tmp->Is(E_Token::NEWLINE))
                {
                   newline_iarf(tmp, IARF_ADD);
                }
             }
          }
       }
-      else if (pc->Is(CT_BRACE_CLOSE))
+      else if (pc->Is(E_Token::BRACE_CLOSE))
       {
          // newline between a close brace and x
          log_rule_B("nl_brace_brace");
@@ -512,7 +512,7 @@ void newlines_cleanup_braces(bool first)
          {
             Chunk *next = pc->GetNextNc(E_Scope::PREPROC);
 
-            if (next->Is(CT_BRACE_CLOSE))
+            if (next->Is(E_Token::BRACE_CLOSE))
             {
                log_rule_B("nl_brace_brace");
                newline_iarf_pair(pc, next, options::nl_brace_brace());
@@ -524,7 +524,7 @@ void newlines_cleanup_braces(bool first)
          {
             Chunk *next = pc->GetNextNc(E_Scope::PREPROC);
 
-            if (next->Is(CT_SQUARE_CLOSE))
+            if (next->Is(E_Token::SQUARE_CLOSE))
             {
                log_rule_B("nl_brace_square");
                newline_iarf_pair(pc, next, options::nl_brace_square());
@@ -538,13 +538,13 @@ void newlines_cleanup_braces(bool first)
 
             log_rule_B("nl_brace_fparen");
 
-            if (  next->Is(CT_NEWLINE)
+            if (  next->Is(E_Token::NEWLINE)
                && (options::nl_brace_fparen() == IARF_REMOVE))
             {
                next = next->GetNextNc(E_Scope::PREPROC);  // Issue #1000
             }
 
-            if (next->Is(CT_FPAREN_CLOSE))
+            if (next->Is(E_Token::FPAREN_CLOSE))
             {
                log_rule_B("nl_brace_fparen");
                newline_iarf_pair(pc, next, options::nl_brace_fparen());
@@ -553,7 +553,7 @@ void newlines_cleanup_braces(bool first)
          // newline before a close brace
          log_rule_B("nl_type_brace_init_lst_close");
 
-         if (  pc->GetParentType() == CT_BRACED_INIT_LIST
+         if (  pc->GetParentType() == E_Token::BRACED_INIT_LIST
             && options::nl_type_brace_init_lst_close() != IARF_IGNORE)
          {
             // Handle unnamed temporary direct-list-initialization
@@ -575,14 +575,14 @@ void newlines_cleanup_braces(bool first)
                log_rule_B("nl_inside_empty_func");
 
                if (  options::nl_inside_empty_func() > 0
-                  && pc->GetPrevNnl()->Is(CT_BRACE_OPEN)
-                  && (  pc->GetParentType() == CT_FUNC_CLASS_DEF
-                     || pc->GetParentType() == CT_FUNC_DEF))
+                  && pc->GetPrevNnl()->Is(E_Token::BRACE_OPEN)
+                  && (  pc->GetParentType() == E_Token::FUNC_CLASS_DEF
+                     || pc->GetParentType() == E_Token::FUNC_DEF))
                {
                   blank_line_set(prev, options::nl_inside_empty_func);
                }
                else if (  options::nl_inside_namespace() > 0
-                       && pc->GetParentType() == CT_NAMESPACE)
+                       && pc->GetParentType() == E_Token::NAMESPACE)
                {
                   blank_line_set(prev, options::nl_inside_namespace);
                }
@@ -596,9 +596,9 @@ void newlines_cleanup_braces(bool first)
             }
          }
          else if (  options::nl_ds_struct_enum_close_brace()
-                 && (  pc->GetParentType() == CT_ENUM
-                    || pc->GetParentType() == CT_STRUCT
-                    || pc->GetParentType() == CT_UNION))
+                 && (  pc->GetParentType() == E_Token::ENUM
+                    || pc->GetParentType() == E_Token::STRUCT
+                    || pc->GetParentType() == E_Token::UNION))
          {
             log_rule_B("nl_ds_struct_enum_close_brace");
 
@@ -622,38 +622,38 @@ void newlines_cleanup_braces(bool first)
          log_rule_B("nl_brace_struct_var");
 
          if (  (options::nl_brace_struct_var() != IARF_IGNORE)
-            && (  pc->GetParentType() == CT_STRUCT
-               || pc->GetParentType() == CT_ENUM
-               || pc->GetParentType() == CT_UNION))
+            && (  pc->GetParentType() == E_Token::STRUCT
+               || pc->GetParentType() == E_Token::ENUM
+               || pc->GetParentType() == E_Token::UNION))
          {
             Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
 
-            if (  next->IsNot(CT_SEMICOLON)
-               && next->IsNot(CT_COMMA))
+            if (  next->IsNot(E_Token::SEMICOLON)
+               && next->IsNot(E_Token::COMMA))
             {
                log_rule_B("nl_brace_struct_var");
                newline_iarf(pc, options::nl_brace_struct_var());
             }
          }
-         else if (  pc->GetParentType() != CT_OC_AT
-                 && pc->GetParentType() != CT_BRACED_INIT_LIST
+         else if (  pc->GetParentType() != E_Token::OC_AT
+                 && pc->GetParentType() != E_Token::BRACED_INIT_LIST
                  && (  options::nl_after_brace_close()
-                    || pc->GetParentType() == CT_FUNC_CLASS_DEF
-                    || pc->GetParentType() == CT_FUNC_DEF
-                    || pc->GetParentType() == CT_OC_MSG_DECL))
+                    || pc->GetParentType() == E_Token::FUNC_CLASS_DEF
+                    || pc->GetParentType() == E_Token::FUNC_DEF
+                    || pc->GetParentType() == E_Token::OC_MSG_DECL))
          {
             log_rule_B("nl_after_brace_close");
             Chunk *next = pc->GetNext();
 
-            if (  next->IsNot(CT_SEMICOLON)
-               && next->IsNot(CT_COMMA)
-               && next->IsNot(CT_SPAREN_CLOSE)    // Issue #664
-               && next->IsNot(CT_SQUARE_CLOSE)
-               && next->IsNot(CT_FPAREN_CLOSE)
-               && next->IsNot(CT_PAREN_CLOSE)
-               && next->IsNot(CT_WHILE_OF_DO)
-               && next->IsNot(CT_VBRACE_CLOSE)        // Issue #666
-               && (  next->IsNot(CT_BRACE_CLOSE)
+            if (  next->IsNot(E_Token::SEMICOLON)
+               && next->IsNot(E_Token::COMMA)
+               && next->IsNot(E_Token::SPAREN_CLOSE)    // Issue #664
+               && next->IsNot(E_Token::SQUARE_CLOSE)
+               && next->IsNot(E_Token::FPAREN_CLOSE)
+               && next->IsNot(E_Token::PAREN_CLOSE)
+               && next->IsNot(E_Token::WHILE_OF_DO)
+               && next->IsNot(E_Token::VBRACE_CLOSE)  // Issue #666
+               && (  next->IsNot(E_Token::BRACE_CLOSE)
                   || !next->TestFlags(PCF_ONE_LINER)) // #1258
                && !pc->TestFlags(PCF_IN_ARRAY_ASSIGN)
                && !pc->TestFlags(PCF_IN_TYPEDEF)
@@ -665,7 +665,7 @@ void newlines_cleanup_braces(bool first)
                newline_end_newline(pc);
             }
          }
-         else if (pc->GetParentType() == CT_NAMESPACE)
+         else if (pc->GetParentType() == E_Token::NAMESPACE)
          {
             log_rule_B("nl_after_namespace");
 
@@ -681,7 +681,7 @@ void newlines_cleanup_braces(bool first)
             }
          }
       }
-      else if (pc->Is(CT_VBRACE_OPEN))
+      else if (pc->Is(E_Token::VBRACE_OPEN))
       {
          log_rule_B("nl_after_vbrace_open");
          log_rule_B("nl_after_vbrace_open_empty");
@@ -701,7 +701,7 @@ void newlines_cleanup_braces(bool first)
             {
                log_rule_B("nl_after_vbrace_open");
                add_it = (  options::nl_after_vbrace_open()
-                        && next->IsNot(CT_VBRACE_CLOSE)
+                        && next->IsNot(E_Token::VBRACE_CLOSE)
                         && !next->IsCommentOrNewline());
             }
 
@@ -714,13 +714,13 @@ void newlines_cleanup_braces(bool first)
          log_rule_B("nl_create_for_one_liner");
          log_rule_B("nl_create_while_one_liner");
 
-         if (  (  (  pc->GetParentType() == CT_IF
-                  || pc->GetParentType() == CT_ELSEIF
-                  || pc->GetParentType() == CT_ELSE)
+         if (  (  (  pc->GetParentType() == E_Token::IF
+                  || pc->GetParentType() == E_Token::ELSEIF
+                  || pc->GetParentType() == E_Token::ELSE)
                && options::nl_create_if_one_liner())
-            || (  pc->GetParentType() == CT_FOR
+            || (  pc->GetParentType() == E_Token::FOR
                && options::nl_create_for_one_liner())
-            || (  pc->GetParentType() == CT_WHILE
+            || (  pc->GetParentType() == E_Token::WHILE
                && options::nl_create_while_one_liner()))
          {
             nl_create_one_liner(pc);
@@ -729,19 +729,19 @@ void newlines_cleanup_braces(bool first)
          log_rule_B("nl_split_for_one_liner");
          log_rule_B("nl_split_while_one_liner");
 
-         if (  (  (  pc->GetParentType() == CT_IF
-                  || pc->GetParentType() == CT_ELSEIF
-                  || pc->GetParentType() == CT_ELSE)
+         if (  (  (  pc->GetParentType() == E_Token::IF
+                  || pc->GetParentType() == E_Token::ELSEIF
+                  || pc->GetParentType() == E_Token::ELSE)
                && options::nl_split_if_one_liner())
-            || (  pc->GetParentType() == CT_FOR
+            || (  pc->GetParentType() == E_Token::FOR
                && options::nl_split_for_one_liner())
-            || (  pc->GetParentType() == CT_WHILE
+            || (  pc->GetParentType() == E_Token::WHILE
                && options::nl_split_while_one_liner()))
          {
             if (pc->TestFlags(PCF_ONE_LINER))
             {
                // split one-liner
-               Chunk *end = pc->GetNext()->GetNextType(CT_SEMICOLON)->GetNext();
+               Chunk *end = pc->GetNext()->GetNextType(E_Token::SEMICOLON)->GetNext();
                // Scan for clear flag
                LOG_FMT(LNEWLINE, "(%d) ", __LINE__);
                LOG_FMT(LNEWLINE, "\n");
@@ -760,7 +760,7 @@ void newlines_cleanup_braces(bool first)
             }
          }
       }
-      else if (pc->Is(CT_VBRACE_CLOSE))
+      else if (pc->Is(E_Token::VBRACE_CLOSE))
       {
          log_rule_B("nl_after_vbrace_close");
 
@@ -772,8 +772,8 @@ void newlines_cleanup_braces(bool first)
             }
          }
       }
-      else if (  pc->Is(CT_SQUARE_OPEN)
-              && pc->GetParentType() == CT_OC_MSG)
+      else if (  pc->Is(E_Token::SQUARE_OPEN)
+              && pc->GetParentType() == E_Token::OC_MSG)
       {
          log_rule_B("nl_oc_msg_args");
 
@@ -782,23 +782,23 @@ void newlines_cleanup_braces(bool first)
             newline_oc_msg(pc);
          }
       }
-      else if (pc->Is(CT_STRUCT))
+      else if (pc->Is(E_Token::STRUCT))
       {
          log_rule_B("nl_struct_brace");
          newlines_struct_union(pc, options::nl_struct_brace(), true);
       }
-      else if (pc->Is(CT_UNION))
+      else if (pc->Is(E_Token::UNION))
       {
          log_rule_B("nl_union_brace");
          newlines_struct_union(pc, options::nl_union_brace(), true);
       }
-      else if (pc->Is(CT_ENUM))
+      else if (pc->Is(E_Token::ENUM))
       {
          newlines_enum(pc);
       }
-      else if (pc->Is(CT_CASE))
+      else if (pc->Is(E_Token::CASE))
       {
-         // Note: 'default' also maps to CT_CASE
+         // Note: 'default' also maps to E_Token::CASE
          log_rule_B("nl_before_case");
 
          if (options::nl_before_case())
@@ -806,36 +806,36 @@ void newlines_cleanup_braces(bool first)
             newline_case(pc);
          }
       }
-      else if (pc->Is(CT_THROW))
+      else if (pc->Is(E_Token::THROW))
       {
          Chunk *prev = pc->GetPrev();
 
-         if (  prev->Is(CT_PAREN_CLOSE)
-            || prev->Is(CT_FPAREN_CLOSE))         // Issue #1122
+         if (  prev->Is(E_Token::PAREN_CLOSE)
+            || prev->Is(E_Token::FPAREN_CLOSE))         // Issue #1122
          {
             log_rule_B("nl_before_throw");
             newline_iarf(pc->GetPrevNcNnlNi(), options::nl_before_throw());   // Issue #2279
          }
       }
-      else if (  pc->Is(CT_QUALIFIER)
+      else if (  pc->Is(E_Token::QUALIFIER)
               && !strcmp(pc->GetLogText(), "throws"))
       {
          Chunk *prev = pc->GetPrev();
 
-         if (  prev->Is(CT_PAREN_CLOSE)
-            || prev->Is(CT_FPAREN_CLOSE))         // Issue #1122
+         if (  prev->Is(E_Token::PAREN_CLOSE)
+            || prev->Is(E_Token::FPAREN_CLOSE))         // Issue #1122
          {
             log_rule_B("nl_before_throw");
             newline_iarf(pc->GetPrevNcNnlNi(), options::nl_before_throw());   // Issue #2279
          }
       }
-      else if (pc->Is(CT_CASE_COLON))
+      else if (pc->Is(E_Token::CASE_COLON))
       {
          Chunk *next = pc->GetNextNnl();
 
          log_rule_B("nl_case_colon_brace");
 
-         if (  next->Is(CT_BRACE_OPEN)
+         if (  next->Is(E_Token::BRACE_OPEN)
             && options::nl_case_colon_brace() != IARF_IGNORE)
          {
             newline_iarf(pc, options::nl_case_colon_brace());
@@ -846,11 +846,11 @@ void newlines_cleanup_braces(bool first)
             newline_case_colon(pc);
          }
       }
-      else if (pc->Is(CT_SPAREN_CLOSE))
+      else if (pc->Is(E_Token::SPAREN_CLOSE))
       {
          Chunk *next = pc->GetNextNcNnl();
 
-         if (next->Is(CT_BRACE_OPEN))
+         if (next->Is(E_Token::BRACE_OPEN))
          {
             /*
              * TODO: this could be used to control newlines between the
@@ -859,7 +859,7 @@ void newlines_cleanup_braces(bool first)
              */
          }
       }
-      else if (pc->Is(CT_RETURN))
+      else if (pc->Is(E_Token::RETURN))
       {
          log_rule_B("nl_before_return");
 
@@ -874,7 +874,7 @@ void newlines_cleanup_braces(bool first)
             newline_after_return(pc);
          }
       }
-      else if (pc->Is(CT_SEMICOLON))
+      else if (pc->Is(E_Token::SEMICOLON))
       {
          log_rule_B("nl_after_semicolon");
          //log_rule_NL("nl_after_semicolon");                      // this is still a beta test
@@ -885,7 +885,7 @@ void newlines_cleanup_braces(bool first)
          {
             Chunk *next = pc->GetNext();
 
-            while (next->Is(CT_VBRACE_CLOSE))
+            while (next->Is(E_Token::VBRACE_CLOSE))
             {
                next = next->GetNext();
             }
@@ -904,7 +904,7 @@ void newlines_cleanup_braces(bool first)
                }
             }
          }
-         else if (pc->GetParentType() == CT_CLASS)
+         else if (pc->GetParentType() == E_Token::CLASS)
          {
             log_rule_B("nl_after_class");
 
@@ -932,7 +932,7 @@ void newlines_cleanup_braces(bool first)
             }
          }
       }
-      else if (pc->Is(CT_FPAREN_OPEN))
+      else if (pc->Is(E_Token::FPAREN_OPEN))
       {
          log_rule_B("nl_func_decl_start");
          log_rule_B("nl_func_def_start");
@@ -962,11 +962,11 @@ void newlines_cleanup_braces(bool first)
          log_rule_B("nl_func_def_paren_empty");
          log_rule_B("nl_func_paren_empty");
 
-         if (  (  pc->GetParentType() == CT_FUNC_DEF
-               || pc->GetParentType() == CT_FUNC_PROTO
-               || pc->GetParentType() == CT_FUNC_CLASS_DEF
-               || pc->GetParentType() == CT_FUNC_CLASS_PROTO
-               || pc->GetParentType() == CT_OPERATOR)
+         if (  (  pc->GetParentType() == E_Token::FUNC_DEF
+               || pc->GetParentType() == E_Token::FUNC_PROTO
+               || pc->GetParentType() == E_Token::FUNC_CLASS_DEF
+               || pc->GetParentType() == E_Token::FUNC_CLASS_PROTO
+               || pc->GetParentType() == E_Token::OPERATOR)
             && (  options::nl_func_decl_start() != IARF_IGNORE
                || options::nl_func_def_start() != IARF_IGNORE
                || options::nl_func_decl_start_single() != IARF_IGNORE
@@ -997,8 +997,8 @@ void newlines_cleanup_braces(bool first)
          {
             newline_func_def_or_call(pc);
          }
-         else if (  (  pc->GetParentType() == CT_FUNC_CALL
-                    || pc->GetParentType() == CT_FUNC_CALL_USER)
+         else if (  (  pc->GetParentType() == E_Token::FUNC_CALL
+                    || pc->GetParentType() == E_Token::FUNC_CALL_USER)
                  && (  (options::nl_func_call_start_multi_line())
                     || (options::nl_func_call_args_multi_line())
                     || (options::nl_func_call_end_multi_line())
@@ -1031,35 +1031,35 @@ void newlines_cleanup_braces(bool first)
             newline_iarf(pc, IARF_REMOVE);
          }
       }
-      else if (pc->Is(CT_FPAREN_CLOSE))                          // Issue #2758
+      else if (pc->Is(E_Token::FPAREN_CLOSE))                          // Issue #2758
       {
-         if (  (  pc->GetParentType() == CT_FUNC_CALL
-               || pc->GetParentType() == CT_FUNC_CALL_USER)
+         if (  (  pc->GetParentType() == E_Token::FUNC_CALL
+               || pc->GetParentType() == E_Token::FUNC_CALL_USER)
             && options::nl_func_call_end() != IARF_IGNORE)
          {
             log_rule_B("nl_func_call_end");
             newline_iarf(pc->GetPrev(), options::nl_func_call_end());
          }
       }
-      else if (pc->Is(CT_ANGLE_CLOSE))
+      else if (pc->Is(E_Token::ANGLE_CLOSE))
       {
-         if (pc->GetParentType() == CT_TEMPLATE)
+         if (pc->GetParentType() == E_Token::TEMPLATE)
          {
             Chunk *next = pc->GetNextNcNnl();
 
             if (  next->IsNotNullChunk()
                && next->GetLevel() == next->GetBraceLevel())
             {
-               Chunk *tmp = pc->GetPrevType(CT_ANGLE_OPEN, pc->GetLevel())->GetPrevNcNnlNi();   // Issue #2279
+               Chunk *tmp = pc->GetPrevType(E_Token::ANGLE_OPEN, pc->GetLevel())->GetPrevNcNnlNi();   // Issue #2279
 
-               if (tmp->Is(CT_TEMPLATE))
+               if (tmp->Is(E_Token::TEMPLATE))
                {
-                  if (next->Is(CT_USING))
+                  if (next->Is(E_Token::USING))
                   {
                      newline_iarf(pc, options::nl_template_using());
                      log_rule_B("nl_template_using");
                   }
-                  else if (next->GetParentType() == CT_FUNC_DEF) // function definition
+                  else if (next->GetParentType() == E_Token::FUNC_DEF) // function definition
                   {
                      iarf_e const action =
                         newline_template_option(
@@ -1072,7 +1072,7 @@ void newlines_cleanup_braces(bool first)
                      log_rule_B("nl_template_func");
                      newline_iarf(pc, action);
                   }
-                  else if (next->GetParentType() == CT_FUNC_PROTO) // function declaration
+                  else if (next->GetParentType() == E_Token::FUNC_PROTO) // function declaration
                   {
                      iarf_e const action =
                         newline_template_option(
@@ -1085,8 +1085,8 @@ void newlines_cleanup_braces(bool first)
                      log_rule_B("nl_template_func");
                      newline_iarf(pc, action);
                   }
-                  else if (  next->Is(CT_TYPE)
-                          || next->Is(CT_QUALIFIER)) // variable
+                  else if (  next->Is(E_Token::TYPE)
+                          || next->Is(E_Token::QUALIFIER)) // variable
                   {
                      newline_iarf(pc, options::nl_template_var());
                      log_rule_B("nl_template_var");
@@ -1121,8 +1121,8 @@ void newlines_cleanup_braces(bool first)
             }
          }
       }
-      else if (  pc->Is(CT_NAMESPACE)
-              && pc->GetParentType() != CT_USING)
+      else if (  pc->Is(E_Token::NAMESPACE)
+              && pc->GetParentType() != E_Token::USING)
       {
          // Issue #2387
          Chunk *next = pc->GetNextNcNnl();
@@ -1131,11 +1131,11 @@ void newlines_cleanup_braces(bool first)
          {
             next = next->GetNextNcNnl();
 
-            if (!next->Is(CT_ASSIGN))
+            if (!next->Is(E_Token::ASSIGN))
             {
                // Issue #1235
                // Issue #2186
-               Chunk *braceOpen = pc->GetNextType(CT_BRACE_OPEN, pc->GetLevel());
+               Chunk *braceOpen = pc->GetNextType(E_Token::BRACE_OPEN, pc->GetLevel());
 
                if (braceOpen->IsNullChunk())
                {
@@ -1152,9 +1152,9 @@ void newlines_cleanup_braces(bool first)
             }
          }
       }
-      else if (pc->Is(CT_SQUARE_OPEN))
+      else if (pc->Is(E_Token::SQUARE_OPEN))
       {
-         if (  pc->GetParentType() == CT_ASSIGN
+         if (  pc->GetParentType() == E_Token::ASSIGN
             && !pc->TestFlags(PCF_ONE_LINER))
          {
             Chunk *tmp = pc->GetPrevNcNnlNi();   // Issue #2279
@@ -1179,7 +1179,7 @@ void newlines_cleanup_braces(bool first)
 
             if (tmp->IsNewline())
             {
-               tmp = pc->GetNextType(CT_SQUARE_CLOSE, pc->GetLevel());
+               tmp = pc->GetNextType(E_Token::SQUARE_CLOSE, pc->GetLevel());
 
                if (tmp->IsNotNullChunk())
                {
@@ -1188,7 +1188,7 @@ void newlines_cleanup_braces(bool first)
             }
          }
       }
-      else if (pc->Is(CT_ACCESS))
+      else if (pc->Is(E_Token::ACCESS))
       {
          // Make sure there is a newline before an access spec
          if (options::nl_before_access_spec() > 0)
@@ -1202,7 +1202,7 @@ void newlines_cleanup_braces(bool first)
             }
          }
       }
-      else if (pc->Is(CT_ACCESS_COLON))
+      else if (pc->Is(E_Token::ACCESS_COLON))
       {
          // Make sure there is a newline after an access spec
          if (options::nl_after_access_spec() > 0)
@@ -1216,7 +1216,7 @@ void newlines_cleanup_braces(bool first)
             }
          }
       }
-      else if (pc->Is(CT_PP_DEFINE))
+      else if (pc->Is(E_Token::PP_DEFINE))
       {
          if (options::nl_multi_line_define())
          {
@@ -1232,12 +1232,12 @@ void newlines_cleanup_braces(bool first)
          //log_rule_NL("nl_remove_extra_newlines");                          // this is still a beta test
          newline_iarf(pc, IARF_REMOVE);
       }
-      else if (  pc->Is(CT_MEMBER)
+      else if (  pc->Is(E_Token::MEMBER)
               && (  language_is_set(lang_flag_e::LANG_JAVA)
                  || language_is_set(lang_flag_e::LANG_CPP)))                 // Issue #2574
       {
          // Issue #1124
-         if (pc->GetParentType() != CT_FUNC_DEF)
+         if (pc->GetParentType() != E_Token::FUNC_DEF)
          {
             newline_iarf(pc->GetPrevNnl(), options::nl_before_member());
             log_rule_B("nl_before_member");
@@ -1266,8 +1266,8 @@ void newlines_cleanup_dup()
    {
       next = next->GetNext();
 
-      if (  pc->Is(CT_NEWLINE)
-         && next->Is(CT_NEWLINE))
+      if (  pc->Is(E_Token::NEWLINE)
+         && next->Is(E_Token::NEWLINE))
       {
          next->SetNlCount(std::max(pc->GetNlCount(), next->GetNlCount()));
          Chunk::Delete(pc);

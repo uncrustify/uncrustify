@@ -31,8 +31,8 @@ These are the chunks that are parsed:
 See token_enum.h for a complete list.
 See punctuators.cpp and keywords.cpp for examples of how they are used.
 
-In the code, chunk types are prefixed with 'CT_'.
-The CT_WORD token is changed into a more specific token using the lookup table
+In the code, chunk types are prefixed with 'E_Token::'.
+The E_Token::WORD token is changed into a more specific token using the lookup table
 in keywords.cpp
 
 
@@ -41,9 +41,9 @@ Step 2 - Tokenize Cleanup
 
 The second step is to change the token type for certain constructs that need
 to be adjusted early on.
-For example, the '<' token can be either a CT_COMPARE or CT_ANGLE_OPEN.
+For example, the '<' token can be either a E_Token::COMPARE or E_Token::ANGLE_OPEN.
 Both are handled very differently.
-If a CT_WORD follows CT_ENUM/CT_STRUCT/CT_UNION, then it is marked as a CT_TYPE.
+If a E_Token::WORD follows E_Token::ENUM/E_Token::STRUCT/E_Token::UNION, then it is marked as a E_Token::TYPE.
 Basically, anything that doesn't depend on the nesting level can be done at this
 stage.
 
@@ -74,7 +74,7 @@ chunks.  This proved to be a silly idea.  But the name of the file stuck.
 
 This is where most of the interesting identification stuff goes on.
 Colons type are detected, variables are marked, functions are labeled, etc.
-Also, all the punctuators are classified. Ie, CT_MINUS become CT_NEG or CT_ARITH.
+Also, all the punctuators are classified. Ie, E_Token::MINUS become E_Token::NEG or E_Token::ARITH.
 
  - Types are marked.
  - Functions are marked.
@@ -82,10 +82,10 @@ Also, all the punctuators are classified. Ie, CT_MINUS become CT_NEG or CT_ARITH
  - finds and marks casts
  - finds and marks variable definitions (for aligning)
  - finds and marks assignments that may be aligned
- - changes CT_INCDEC_AFTER to CT_INCDEC_BEFORE
- - changes CT_STAR to either CT_PTR_TYPE, CT_DEREF or CT_ARITH
- - changes CT_MINUS to either CT_NEG or CT_ARITH
- - changes CT_PLUS and CT_ADDR to CT_ARITH, if needed
+ - changes E_Token::INCDEC_AFTER to E_Token::INCDEC_BEFORE
+ - changes E_Token::STAR to either E_Token::PTR_TYPE, E_Token::DEREF or E_Token::ARITH
+ - changes E_Token::MINUS to either E_Token::NEG or E_Token::ARITH
+ - changes E_Token::PLUS and E_Token::ADDR to E_Token::ARITH, if needed
  - other stuff?
 
 
@@ -93,8 +93,8 @@ Casts
 -----
 Casts are detected as follows:
  - paren pair not part of if/for/etc nor part of a function
- - contains only CT_QUALIFIER, CT_TYPE, '*', and no more than one CT_WORD
- - is not followed by CT_ARITH
+ - contains only E_Token::QUALIFIER, E_Token::TYPE, '*', and no more than one E_Token::WORD
+ - is not followed by E_Token::ARITH
 
 Tough cases:
 (foo) * bar;

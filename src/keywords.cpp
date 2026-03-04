@@ -171,8 +171,8 @@ static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag)
 
 static const chunk_tag_t *kw_static_match(bool orig_list, const chunk_tag_t *tag, int lang_flags)
 {
-   bool in_pp = (  cpd.in_preproc != CT_NONE
-                && cpd.in_preproc != CT_PP_DEFINE);
+   bool in_pp = (  cpd.in_preproc != E_Token::NONE
+                && cpd.in_preproc != E_Token::PP_DEFINE);
 
    for (const chunk_tag_t *iter = kw_static_first(tag);
         (orig_list) ? (iter < &keywords[ARRAY_SIZE(keywords)]) : (iter < &keyword_for_lang[language_count]);
@@ -198,7 +198,7 @@ E_Token find_keyword_type(const char *word, size_t len)
 {
    if (len == 0)
    {
-      return(CT_NONE);
+      return(E_Token::NONE);
    }
    // check the dynamic word list first
    string           ss(word, len);
@@ -211,7 +211,7 @@ E_Token find_keyword_type(const char *word, size_t len)
    chunk_tag_t key;
 
    key.tag        = ss.c_str();
-   key.type       = CT_NONE;
+   key.type       = E_Token::NONE;
    key.lang_flags = 0;
 
    // check the static word list
@@ -223,11 +223,11 @@ E_Token find_keyword_type(const char *word, size_t len)
       if (  strcmp(p_ret->tag, "__pragma") == 0
          || strcmp(p_ret->tag, "_Pragma") == 0)
       {
-         cpd.in_preproc = CT_PREPROC;
+         cpd.in_preproc = E_Token::PREPROC;
       }
       p_ret = kw_static_match(false, p_ret, cpd.lang_flags);
    }
-   return((p_ret != nullptr) ? p_ret->type : CT_WORD);
+   return((p_ret != nullptr) ? p_ret->type : E_Token::WORD);
 } // find_keyword_type
 
 
@@ -268,7 +268,7 @@ int load_keyword_file(const char *filename)
          if (  argc == 1
             && CharTable::IsKw1(*args[0]))
          {
-            add_keyword(args[0], CT_TYPE);
+            add_keyword(args[0], E_Token::TYPE);
          }
          else
          {
@@ -293,37 +293,37 @@ void print_custom_keywords(FILE *pfile)
    {
       E_Token tt = keyword_pair.second;
 
-      if (tt == CT_TYPE)
+      if (tt == E_Token::TYPE)
       {
          fprintf(pfile, "custom type %*.s%s\n",
                  uncrustify::limits::MAX_OPTION_NAME_LEN - 10, " ",
                  keyword_pair.first.c_str());
       }
-      else if (tt == CT_MACRO_OPEN)
+      else if (tt == E_Token::MACRO_OPEN)
       {
          fprintf(pfile, "macro-open %*.s%s\n",
                  uncrustify::limits::MAX_OPTION_NAME_LEN - 11, " ",
                  keyword_pair.first.c_str());
       }
-      else if (tt == CT_MACRO_CLOSE)
+      else if (tt == E_Token::MACRO_CLOSE)
       {
          fprintf(pfile, "macro-close %*.s%s\n",
                  uncrustify::limits::MAX_OPTION_NAME_LEN - 12, " ",
                  keyword_pair.first.c_str());
       }
-      else if (tt == CT_MACRO_ELSE)
+      else if (tt == E_Token::MACRO_ELSE)
       {
          fprintf(pfile, "macro-else %*.s%s\n",
                  uncrustify::limits::MAX_OPTION_NAME_LEN - 11, " ",
                  keyword_pair.first.c_str());
       }
-      else if (tt == CT_MACRO_NO_INDENT)
+      else if (tt == E_Token::MACRO_NO_INDENT)
       {
          fprintf(pfile, "macro-no-indent %*.s%s\n",
                  uncrustify::limits::MAX_OPTION_NAME_LEN - 16, " ",
                  keyword_pair.first.c_str());
       }
-      else if (tt == CT_MACRO_NO_FMT_ARGS)
+      else if (tt == E_Token::MACRO_NO_FMT_ARGS)
       {
          fprintf(pfile, "macro-no-format-args %*.s%s\n",
                  uncrustify::limits::MAX_OPTION_NAME_LEN - 21, " ",
@@ -353,44 +353,44 @@ pattern_class_e get_token_pattern_class(E_Token tok)
    // TODO: instead of this switch better assign the pattern class to each statement
    switch (tok)
    {
-   case CT_IF:
-   case CT_ELSEIF:
-   case CT_SWITCH:
-   case CT_FOR:
-   case CT_WHILE:
-   case CT_SYNCHRONIZED:
-   case CT_USING_STMT:
-   case CT_LOCK:
-   case CT_D_WITH:
-   case CT_D_VERSION_IF:
-   case CT_D_SCOPE_IF:
+   case E_Token::IF:
+   case E_Token::ELSEIF:
+   case E_Token::SWITCH:
+   case E_Token::FOR:
+   case E_Token::WHILE:
+   case E_Token::SYNCHRONIZED:
+   case E_Token::USING_STMT:
+   case E_Token::LOCK:
+   case E_Token::D_WITH:
+   case E_Token::D_VERSION_IF:
+   case E_Token::D_SCOPE_IF:
       return(pattern_class_e::PBRACED);
 
-   case CT_ELSE:
+   case E_Token::ELSE:
       return(pattern_class_e::ELSE);
 
-   case CT_DO:
-   case CT_TRY:
-   case CT_FINALLY:
-   case CT_BODY:
-   case CT_UNITTEST:
-   case CT_UNSAFE:
-   case CT_VOLATILE:
-   case CT_GETSET:
+   case E_Token::DO:
+   case E_Token::TRY:
+   case E_Token::FINALLY:
+   case E_Token::BODY:
+   case E_Token::UNITTEST:
+   case E_Token::UNSAFE:
+   case E_Token::VOLATILE:
+   case E_Token::GETSET:
       return(pattern_class_e::BRACED);
 
-   case CT_CATCH:
-   case CT_D_VERSION:
-   case CT_DEBUG:
+   case E_Token::CATCH:
+   case E_Token::D_VERSION:
+   case E_Token::DEBUG:
       return(pattern_class_e::OPBRACED);
 
-   case CT_NAMESPACE:
+   case E_Token::NAMESPACE:
       return(pattern_class_e::VBRACED);
 
-   case CT_WHILE_OF_DO:
+   case E_Token::WHILE_OF_DO:
       return(pattern_class_e::PAREN);
 
-   case CT_INVARIANT:
+   case E_Token::INVARIANT:
       return(pattern_class_e::OPPAREN);
 
    default:

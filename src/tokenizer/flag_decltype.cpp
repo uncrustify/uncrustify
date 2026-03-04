@@ -12,11 +12,11 @@ bool flag_cpp_decltype(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (pc->Is(CT_DECLTYPE))
+   if (pc->Is(E_Token::DECLTYPE))
    {
       auto paren_open = pc->GetNextNcNnl();
 
-      if (paren_open->Is(CT_PAREN_OPEN))
+      if (paren_open->Is(E_Token::PAREN_OPEN))
       {
          // We would like to simply call Chunk::SkipToMatch(), but it finds
          // a match based on level, and the level is 0 for all chunks in some
@@ -35,8 +35,8 @@ bool flag_cpp_decltype(Chunk *pc)
 
          for (int level = 1; pc->IsNotNullChunk() && level > 0; pc = pc->GetNextNcNnl())
          {
-            level += pc->Is(CT_PAREN_OPEN);
-            level -= pc->Is(CT_PAREN_CLOSE);
+            level += pc->Is(E_Token::PAREN_OPEN);
+            level -= pc->Is(E_Token::PAREN_CLOSE);
             pc->SetFlagBits(PCF_IN_DECLTYPE);
          }
 

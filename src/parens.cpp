@@ -27,8 +27,8 @@ static void add_parens_between(Chunk *first, Chunk *last);
  *
  * Adds optional parens in an IF or SWITCH conditional statement.
  *
- * This basically just checks for a CT_COMPARE that isn't surrounded by parens.
- * The edges for the compare are the open, close and any CT_BOOL tokens.
+ * This basically just checks for a E_Token::COMPARE that isn't surrounded by parens.
+ * The edges for the compare are the open, close and any E_Token::BOOL tokens.
  *
  * This only handles VERY simple patterns:
  *   (!a && b)         => (!a && b)          -- no change
@@ -53,15 +53,15 @@ void do_parens()
 
       while ((pc = pc->GetNextNcNnl())->IsNotNullChunk())
       {
-         if (  pc->IsNot(CT_SPAREN_OPEN)
-            || (  pc->GetParentType() != CT_IF
-               && pc->GetParentType() != CT_ELSEIF
-               && pc->GetParentType() != CT_SWITCH))
+         if (  pc->IsNot(E_Token::SPAREN_OPEN)
+            || (  pc->GetParentType() != E_Token::IF
+               && pc->GetParentType() != E_Token::ELSEIF
+               && pc->GetParentType() != E_Token::SWITCH))
          {
             continue;
          }
          // Grab the close sparen
-         Chunk *pclose = pc->GetNextType(CT_SPAREN_CLOSE, pc->GetLevel(), E_Scope::PREPROC);
+         Chunk *pclose = pc->GetNextType(E_Token::SPAREN_CLOSE, pc->GetLevel(), E_Scope::PREPROC);
 
          if (pclose->IsNotNullChunk())
          {
@@ -87,7 +87,7 @@ void do_parens_assign()                         // Issue #3316
 
       while ((pc = pc->GetNextNcNnl())->IsNotNullChunk())
       {
-         if (pc->Is(CT_ASSIGN))
+         if (pc->Is(E_Token::ASSIGN))
          {
             if (pc->TestFlags(PCF_IN_SPAREN))            // Issue #4239
             {
@@ -110,12 +110,12 @@ void do_parens_assign()                         // Issue #3316
                   break;
                }
 
-               if (p->Is(CT_PAREN_OPEN))
+               if (p->Is(E_Token::PAREN_OPEN))
                {
                   check_level--;
                }
 
-               if (p->Is(CT_SPAREN_OPEN))
+               if (p->Is(E_Token::SPAREN_OPEN))
                {
                   break;
                }
@@ -129,7 +129,7 @@ void do_parens_assign()                         // Issue #3316
             LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu, type is %s\n",
                     __func__, __LINE__, p->GetOrigLine(), p->GetLogText(), p->GetLevel(), get_token_name(p->GetType()));
 
-            if (p->GetParentType() == CT_WHILE)
+            if (p->GetParentType() == E_Token::WHILE)
             {
                continue;
             }
@@ -137,7 +137,7 @@ void do_parens_assign()                         // Issue #3316
             if (pc->TestFlags(PCF_IN_ENUM))            // Issue #4191
             {
                // look for COMMA or BRACE_CLOSE, what occurs first
-               Chunk *found_comma = pc->GetNextType(CT_COMMA, pc->GetLevel());
+               Chunk *found_comma = pc->GetNextType(E_Token::COMMA, pc->GetLevel());
 
                if (found_comma->IsNotNullChunk())
                {
@@ -147,7 +147,7 @@ void do_parens_assign()                         // Issue #3316
                else
                {
                   // look for BRACE_CLOSE
-                  Chunk *found_brace = pc->GetNextType(CT_BRACE_CLOSE, pc->GetLevel() - 1);
+                  Chunk *found_brace = pc->GetNextType(E_Token::BRACE_CLOSE, pc->GetLevel() - 1);
                   check_bool_parens(pc, found_brace, 0);
                   pc = found_brace;
                }
@@ -155,7 +155,7 @@ void do_parens_assign()                         // Issue #3316
             else
             {
                // Grab the semicolon, must be the same block
-               Chunk *semicolon = pc->GetNextType(CT_SEMICOLON, pc->GetLevel(), E_Scope::PREPROC);
+               Chunk *semicolon = pc->GetNextType(E_Token::SEMICOLON, pc->GetLevel(), E_Scope::PREPROC);
 
                if (semicolon->IsNotNullChunk())
                {
@@ -181,7 +181,7 @@ void do_parens_return()                         // Issue #3316
 
       while ((pc = pc->GetNextNcNnl())->IsNotNullChunk())
       {
-         if (pc->Is(CT_RETURN))
+         if (pc->Is(E_Token::RETURN))
          {
             LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetLogText(), pc->GetLevel());
@@ -200,12 +200,12 @@ void do_parens_return()                         // Issue #3316
                   break;
                }
 
-               if (p->Is(CT_PAREN_OPEN))
+               if (p->Is(E_Token::PAREN_OPEN))
                {
                   check_level--;
                }
 
-               if (p->Is(CT_SPAREN_OPEN))
+               if (p->Is(E_Token::SPAREN_OPEN))
                {
                   break;
                }
@@ -219,12 +219,12 @@ void do_parens_return()                         // Issue #3316
             LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu, type is %s\n",
                     __func__, __LINE__, p->GetOrigLine(), p->GetLogText(), p->GetLevel(), get_token_name(p->GetType()));
 
-            if (p->GetParentType() == CT_WHILE)
+            if (p->GetParentType() == E_Token::WHILE)
             {
                continue;
             }
             // Grab the semicolon
-            Chunk *semicolon = pc->GetNextType(CT_SEMICOLON, pc->GetLevel(), E_Scope::PREPROC);
+            Chunk *semicolon = pc->GetNextType(E_Token::SEMICOLON, pc->GetLevel(), E_Scope::PREPROC);
 
             if (semicolon->IsNotNullChunk())
             {
@@ -257,7 +257,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
    }
    Chunk pc;
 
-   pc.SetType(CT_PAREN_OPEN);
+   pc.SetType(E_Token::PAREN_OPEN);
    pc.SetOrigLine(first_n->GetOrigLine());
    pc.SetColumn(first_n->GetColumn());                         // Issue #3236
    pc.SetOrigCol(first_n->GetOrigCol());                       // Issue #3236
@@ -273,7 +273,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
 
    Chunk *last_prev = last->GetPrevNcNnl(E_Scope::PREPROC);
 
-   pc.SetType(CT_PAREN_CLOSE);
+   pc.SetType(E_Token::PAREN_CLOSE);
    pc.SetOrigLine(last_prev->GetOrigLine());
    pc.SetColumn(last_prev->GetColumn() + 1);                         // Issue #3236
    pc.SetOrigCol(last_prev->GetOrigCol() + 1);                       // Issue #3236
@@ -324,10 +324,10 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
          return;
       }
 
-      if (  pc->Is(CT_BOOL)
-         || pc->Is(CT_QUESTION)
-         || pc->Is(CT_COND_COLON)
-         || pc->Is(CT_COMMA))
+      if (  pc->Is(E_Token::BOOL)
+         || pc->Is(E_Token::QUESTION)
+         || pc->Is(E_Token::COND_COLON)
+         || pc->Is(E_Token::COMMA))
       {
          LOG_FMT(LPARADD2, " -- %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->GetType()),
@@ -344,7 +344,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
          }
          ref = pc;
       }
-      else if (pc->Is(CT_COMPARE))
+      else if (pc->Is(E_Token::COMPARE))
       {
          LOG_FMT(LPARADD2, " -- compare '%s' at line %zu, orig col is %zu, level is %zu\n",
                  pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
@@ -360,7 +360,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
             pc = next;
          }
       }
-      else if (pc->Is(CT_SEMICOLON))                      // Issue #3236
+      else if (pc->Is(E_Token::SEMICOLON))                      // Issue #3236
       {
          LOG_FMT(LPARADD, "%s(%d): ++++ popen on line %zu, orig col is %zu, level is %zu\n",
                  __func__, __LINE__,
@@ -370,9 +370,9 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
                  pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
          ref = pc;
       }
-      else if (  pc->Is(CT_BRACE_OPEN)
-              || pc->Is(CT_SQUARE_OPEN)
-              || pc->Is(CT_ANGLE_OPEN))
+      else if (  pc->Is(E_Token::BRACE_OPEN)
+              || pc->Is(E_Token::SQUARE_OPEN)
+              || pc->Is(E_Token::ANGLE_OPEN))
       {
          // Skip [], {}, and <>
          pc = pc->GetClosingParen();

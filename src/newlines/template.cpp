@@ -49,7 +49,7 @@ void newline_template(Chunk *start)
       pc = pc->GetNextNcNnl();
    }
 
-   if (pc->Is(CT_ANGLE_CLOSE))
+   if (pc->Is(E_Token::ANGLE_CLOSE))
    {
       if (add_start)
       {
@@ -69,7 +69,7 @@ void newline_template(Chunk *start)
               pc_1->IsNotNullChunk() && pc_1->GetLevel() > start->GetLevel();
               pc_1 = pc_1->GetNextNcNnl())
          {
-            if (  pc_1->Is(CT_COMMA)
+            if (  pc_1->Is(E_Token::COMMA)
                && (pc_1->GetLevel() == (start->GetLevel() + 1)))
             {
                Chunk *tmp = pc_1->GetNext();
@@ -94,7 +94,7 @@ iarf_e newline_template_option(Chunk *pc, iarf_e special, iarf_e base, iarf_e fa
 {
    Chunk *const prev = pc->GetPrevNcNnl();
 
-   if (  prev->Is(CT_ANGLE_OPEN)
+   if (  prev->Is(E_Token::ANGLE_OPEN)
       && special != IARF_IGNORE)
    {
       return(special);

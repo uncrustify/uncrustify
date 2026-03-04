@@ -21,17 +21,17 @@ void do_parent_for_pp()
 
    while (pc->IsNotNullChunk())
    {
-      // CT_PP_IF,            // #if, #ifdef, or #ifndef
-      // CT_PP_ELSE,          // #else or #elif
-      // CT_PP_ENDIF,         // #endif
-      if (pc->Is(CT_PP_IF))
+      // E_Token::PP_IF,            // #if, #ifdef, or #ifndef
+      // E_Token::PP_ELSE,          // #else or #elif
+      // E_Token::PP_ENDIF,         // #endif
+      if (pc->Is(E_Token::PP_IF))
       {
          LOG_FMT(LMCB, "%s(%d): IF: orig line %zu, orig col is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
          log_pcf_flags(LMCB, pc->GetFlags());
          viz.push_back(pc);
       }
-      else if (pc->Is(CT_PP_ELSE))
+      else if (pc->Is(E_Token::PP_ELSE))
       {
          LOG_FMT(LMCB, "%s(%d): ELSE: orig line %zu, orig col is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
@@ -40,7 +40,7 @@ void do_parent_for_pp()
          Chunk  *a    = viz.at(level - 1);
          pc->SetParent(a);
       }
-      else if (pc->Is(CT_PP_ENDIF))
+      else if (pc->Is(E_Token::PP_ENDIF))
       {
          LOG_FMT(LMCB, "%s(%d): ENDIF: orig line %zu, orig col is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());

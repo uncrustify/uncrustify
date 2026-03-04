@@ -37,7 +37,7 @@ void check_double_brace_init(Chunk *bo1)
          return;
       }
 
-      if (bo2->Is(CT_BRACE_OPEN))
+      if (bo2->Is(E_Token::BRACE_OPEN))
       {
          // found a potential double brace
          Chunk *bc2 = bo2->GetClosingParen();
@@ -53,19 +53,19 @@ void check_double_brace_init(Chunk *bo1)
             return;
          }
 
-         if (bc1->Is(CT_BRACE_CLOSE))
+         if (bc1->Is(E_Token::BRACE_CLOSE))
          {
             LOG_FMT(LJDBI, " - end, orig line is %zu, orig col is %zu\n", bc2->GetOrigLine(), bc2->GetOrigCol());
             // delete bo2 and bc1
             bo1->Text() += bo2->GetText();
             bo1->SetOrigColEnd(bo2->GetOrigColEnd());
             Chunk::Delete(bo2);
-            bo1->SetParentType(CT_DOUBLE_BRACE);
+            bo1->SetParentType(E_Token::DOUBLE_BRACE);
 
             bc2->Text() += bc1->GetText();
             bc2->SetOrigColEnd(bc1->GetOrigColEnd());
             Chunk::Delete(bc1);
-            bc2->SetParentType(CT_DOUBLE_BRACE);
+            bc2->SetParentType(E_Token::DOUBLE_BRACE);
             return;
          }
       }

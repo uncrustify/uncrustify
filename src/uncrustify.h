@@ -24,7 +24,7 @@ const char *get_token_name(E_Token token);
 /**
  * Grab the token id for the text.
  *
- * @return token, will be CT_NONE on failure to match
+ * @return token, will be E_Token::NONE on failure to match
  */
 E_Token find_token_name(const char *text);
 

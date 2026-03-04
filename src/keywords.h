@@ -22,8 +22,8 @@
  * used in the file "Issue_3353.h" under.
  * The strings representing the tokens ("in" and "out"), are found in the
  * original table: static chunk_tag_t keywords[] because they are used by
- * other languages. They are tokenized as CT_IN and CT_OUT.
- * The correct tokenization is CT_FUNC_VAR.
+ * other languages. They are tokenized as E_Token::IN and E_Token::OUT.
+ * The correct tokenization is E_Token::FUNC_VAR.
  *
  * It is necessary to create (at run time) a new table with all the keywords
  * proper to the used language.
@@ -59,7 +59,7 @@ int load_keyword_file(const char *filename);
  * @param word  Pointer to the text -- NOT zero terminated
  * @param len   The length of the text
  *
- * @return CT_WORD (no match) or the keyword token
+ * @return E_Token::WORD (no match) or the keyword token
  */
 E_Token find_keyword_type(const char *word, size_t len);
 
@@ -68,7 +68,7 @@ E_Token find_keyword_type(const char *word, size_t len);
  * Adds a keyword to the list of dynamic keywords
  *
  * @param tag   The tag (string) must be zero terminated
- * @param type  The type, usually CT_TYPE
+ * @param type  The type, usually E_Token::TYPE
  */
 void add_keyword(const std::string &tag, E_Token type);
 

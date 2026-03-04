@@ -75,8 +75,8 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
    }
    Chunk chunk = *pc;
 
-   chunk.SetType(CT_VSEMICOLON);
-   chunk.SetParentType(CT_NONE);
+   chunk.SetType(E_Token::VSEMICOLON);
+   chunk.SetParentType(E_Token::NONE);
    chunk.Text() = options::mod_pawn_semicolon() ? ";" : "";
    chunk.SetColumn(pc->GetColumn() + pc->Len());
 
@@ -101,19 +101,19 @@ void pawn_scrub_vsemi()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (pc->IsNot(CT_VSEMICOLON))
+      if (pc->IsNot(E_Token::VSEMICOLON))
       {
          continue;
       }
       Chunk *prev = pc->GetPrevNcNnl();
 
-      if (prev->Is(CT_BRACE_CLOSE))
+      if (prev->Is(E_Token::BRACE_CLOSE))
       {
-         if (  prev->GetParentType() == CT_IF
-            || prev->GetParentType() == CT_ELSE
-            || prev->GetParentType() == CT_SWITCH
-            || prev->GetParentType() == CT_CASE
-            || prev->GetParentType() == CT_WHILE_OF_DO)
+         if (  prev->GetParentType() == E_Token::IF
+            || prev->GetParentType() == E_Token::ELSE
+            || prev->GetParentType() == E_Token::SWITCH
+            || prev->GetParentType() == E_Token::CASE
+            || prev->GetParentType() == E_Token::WHILE_OF_DO)
          {
             pc->Text().clear();
          }
@@ -132,31 +132,31 @@ static bool pawn_continued(Chunk *pc, size_t br_level)
    }
 
    if (  pc->GetLevel() > br_level
-      || pc->Is(CT_ARITH)
-      || pc->Is(CT_SHIFT)
-      || pc->Is(CT_CARET)
-      || pc->Is(CT_QUESTION)
-      || pc->Is(CT_BOOL)
-      || pc->Is(CT_ASSIGN)
-      || pc->Is(CT_COMMA)
-      || pc->Is(CT_COMPARE)
-      || pc->Is(CT_IF)
-      || pc->Is(CT_ELSE)
-      || pc->Is(CT_DO)
-      || pc->Is(CT_SWITCH)
-      || pc->Is(CT_WHILE)
-      || pc->Is(CT_BRACE_OPEN)
-      || pc->Is(CT_VBRACE_OPEN)
-      || pc->Is(CT_FPAREN_OPEN)
-      || pc->GetParentType() == CT_IF
-      || pc->GetParentType() == CT_ELSE
-      || pc->GetParentType() == CT_ELSEIF
-      || pc->GetParentType() == CT_DO
-      || pc->GetParentType() == CT_FOR
-      || pc->GetParentType() == CT_SWITCH
-      || pc->GetParentType() == CT_WHILE
-      || pc->GetParentType() == CT_FUNC_DEF
-      || pc->GetParentType() == CT_ENUM
+      || pc->Is(E_Token::ARITH)
+      || pc->Is(E_Token::SHIFT)
+      || pc->Is(E_Token::CARET)
+      || pc->Is(E_Token::QUESTION)
+      || pc->Is(E_Token::BOOL)
+      || pc->Is(E_Token::ASSIGN)
+      || pc->Is(E_Token::COMMA)
+      || pc->Is(E_Token::COMPARE)
+      || pc->Is(E_Token::IF)
+      || pc->Is(E_Token::ELSE)
+      || pc->Is(E_Token::DO)
+      || pc->Is(E_Token::SWITCH)
+      || pc->Is(E_Token::WHILE)
+      || pc->Is(E_Token::BRACE_OPEN)
+      || pc->Is(E_Token::VBRACE_OPEN)
+      || pc->Is(E_Token::FPAREN_OPEN)
+      || pc->GetParentType() == E_Token::IF
+      || pc->GetParentType() == E_Token::ELSE
+      || pc->GetParentType() == E_Token::ELSEIF
+      || pc->GetParentType() == E_Token::DO
+      || pc->GetParentType() == E_Token::FOR
+      || pc->GetParentType() == E_Token::SWITCH
+      || pc->GetParentType() == E_Token::WHILE
+      || pc->GetParentType() == E_Token::FUNC_DEF
+      || pc->GetParentType() == E_Token::ENUM
       || pc->GetFlags().test_any(PCF_IN_ENUM | PCF_IN_STRUCT)
       || pc->IsString(":")
       || pc->IsString("+")
@@ -182,7 +182,7 @@ void pawn_prescan()
    while (pc->IsNotNullChunk())
    {
       if (  did_nl
-         && pc->IsNot(CT_PREPROC)
+         && pc->IsNot(E_Token::PREPROC)
          && !pc->IsNewline()
          && pc->GetLevel() == 0)
       {
@@ -193,7 +193,7 @@ void pawn_prescan()
       // note that continued lines are ignored
       if (pc->IsNotNullChunk())
       {
-         did_nl = (pc->Is(CT_NEWLINE));
+         did_nl = (pc->Is(E_Token::NEWLINE));
       }
       pc = pc->GetNextNc();
    }
@@ -207,7 +207,7 @@ static Chunk *pawn_process_line(Chunk *start)
    //LOG_FMT(LSYS, "%s: %d - %s\n", __func__,
    //        start->GetOrigLine(), start->GetLogText());
 
-   if (  start->Is(CT_NEW)
+   if (  start->Is(E_Token::NEW)
       || start->IsString("const"))
    {
       return(pawn_process_variable(start));
@@ -215,7 +215,7 @@ static Chunk *pawn_process_line(Chunk *start)
    // if a open paren is found before an assign, then this is a function
    Chunk *fcn = Chunk::NullChunkPtr;
 
-   if (start->Is(CT_WORD))
+   if (start->Is(E_Token::WORD))
    {
       fcn = start;
    }
@@ -223,13 +223,13 @@ static Chunk *pawn_process_line(Chunk *start)
 
    while (  ((pc = pc->GetNextNc())->IsNotNullChunk())
          && !pc->IsString("(")
-         && pc->IsNot(CT_ASSIGN)
-         && pc->IsNot(CT_NEWLINE))
+         && pc->IsNot(E_Token::ASSIGN)
+         && pc->IsNot(E_Token::NEWLINE))
    {
       if (  pc->GetLevel() == 0
-         && (  pc->Is(CT_FUNCTION)
-            || pc->Is(CT_WORD)
-            || pc->Is(CT_OPERATOR_VAL)))
+         && (  pc->Is(E_Token::FUNCTION)
+            || pc->Is(E_Token::WORD)
+            || pc->Is(E_Token::OPERATOR_VAL)))
       {
          fcn = pc;
       }
@@ -237,7 +237,7 @@ static Chunk *pawn_process_line(Chunk *start)
 
    if (pc->IsNotNullChunk())
    {
-      if (pc->Is(CT_ASSIGN))
+      if (pc->Is(E_Token::ASSIGN))
       {
          return(pawn_process_variable(pc));
       }
@@ -249,9 +249,9 @@ static Chunk *pawn_process_line(Chunk *start)
       return(pawn_mark_function0(start, fcn));
    }
 
-   if (start->Is(CT_ENUM))
+   if (start->Is(E_Token::ENUM))
    {
-      pc = start->GetNextType(CT_BRACE_CLOSE, start->GetLevel());
+      pc = start->GetNextType(E_Token::BRACE_CLOSE, start->GetLevel());
       return(pc);
    }
    //LOG_FMT(LSYS, "%s: Don't understand line %d, starting with '%s' [%s]\n",
@@ -273,7 +273,7 @@ static Chunk *pawn_process_variable(Chunk *start)
 
    while ((pc = pc->GetNextNc())->IsNotNullChunk())
    {
-      if (  pc->Is(CT_NEWLINE)
+      if (  pc->Is(E_Token::NEWLINE)
          && prev->IsNotNullChunk()
          && !pawn_continued(prev, start->GetLevel()))
       {
@@ -308,7 +308,7 @@ void pawn_add_virtual_semicolons()
          }
 
          if (  prev->IsNullChunk()
-            || (  pc->IsNot(CT_NEWLINE)
+            || (  pc->IsNot(E_Token::NEWLINE)
                && !pc->IsBraceClose()))
          {
             continue;
@@ -335,26 +335,26 @@ static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
    // handle prototypes
    if (start == fcn)
    {
-      Chunk *last = fcn->GetNextType(CT_PAREN_CLOSE, fcn->GetLevel())->GetNext();
+      Chunk *last = fcn->GetNextType(E_Token::PAREN_CLOSE, fcn->GetLevel())->GetNext();
 
-      if (last->Is(CT_SEMICOLON))
+      if (last->Is(E_Token::SEMICOLON))
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' proto due to semicolon\n",
                  __func__, fcn->GetOrigLine(), fcn->GetLogText());
-         fcn->SetType(CT_FUNC_PROTO);
+         fcn->SetType(E_Token::FUNC_PROTO);
          return(last);
       }
    }
    else
    {
-      if (  start->Is(CT_FORWARD)
-         || start->Is(CT_NATIVE))
+      if (  start->Is(E_Token::FORWARD)
+         || start->Is(E_Token::NATIVE))
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' [%s] proto due to %s\n",
                  __func__, fcn->GetOrigLine(), fcn->GetLogText(),
                  get_token_name(fcn->GetType()),
                  get_token_name(start->GetType()));
-         fcn->SetType(CT_FUNC_PROTO);
+         fcn->SetType(E_Token::FUNC_PROTO);
          return(fcn->GetNextNc());
       }
    }
@@ -368,7 +368,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
    LOG_FUNC_ENTRY();
 
    // We are on a function definition
-   pc->SetType(CT_FUNC_DEF);
+   pc->SetType(E_Token::FUNC_DEF);
 
    LOG_FMT(LPFUNC, "%s: %zu:%zu %s\n",
            __func__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText());
@@ -393,8 +393,8 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle open %s\n",
               __func__, pc->GetOrigLine(), pc->GetLogText(), get_token_name(last->GetType()));
 
-      last->SetType(CT_ANGLE_OPEN);
-      last->SetParentType(CT_FUNC_DEF);
+      last->SetType(E_Token::ANGLE_OPEN);
+      last->SetParentType(E_Token::FUNC_DEF);
 
       while (  ((last = last->GetNext())->IsNotNullChunk())
             && !last->IsString(">"))
@@ -406,8 +406,8 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle close %s\n",
                  __func__, pc->GetOrigLine(), pc->GetLogText(), get_token_name(last->GetType()));
-         last->SetType(CT_ANGLE_CLOSE);
-         last->SetParentType(CT_FUNC_DEF);
+         last->SetType(E_Token::ANGLE_CLOSE);
+         last->SetParentType(E_Token::FUNC_DEF);
       }
       last = last->GetNextNcNnl();
    }
@@ -417,14 +417,14 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       return(last);
    }
 
-   if (last->Is(CT_BRACE_OPEN))
+   if (last->Is(E_Token::BRACE_OPEN))
    {
-      last->SetParentType(CT_FUNC_DEF);
-      last = last->GetNextType(CT_BRACE_CLOSE, last->GetLevel());
+      last->SetParentType(E_Token::FUNC_DEF);
+      last = last->GetNextType(E_Token::BRACE_CLOSE, last->GetLevel());
 
       if (last->IsNotNullChunk())
       {
-         last->SetParentType(CT_FUNC_DEF);
+         last->SetParentType(E_Token::FUNC_DEF);
       }
    }
    else
@@ -439,8 +439,8 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       }
       Chunk chunk = *last;
       chunk.Text().clear();
-      chunk.SetType(CT_VBRACE_OPEN);
-      chunk.SetParentType(CT_FUNC_DEF);
+      chunk.SetType(E_Token::VBRACE_OPEN);
+      chunk.SetParentType(E_Token::FUNC_DEF);
 
       Chunk *prev = chunk.CopyAndAddBefore(last);
       last = prev;
@@ -453,14 +453,14 @@ static Chunk *pawn_process_func_def(Chunk *pc)
          LOG_FMT(LPFUNC, "%s:%zu] check %s, level %zu\n",
                  __func__, prev->GetOrigLine(), get_token_name(prev->GetType()), prev->GetLevel());
 
-         if (  prev->Is(CT_NEWLINE)
+         if (  prev->Is(E_Token::NEWLINE)
             && prev->GetLevel() == 0)
          {
             Chunk *next = prev->GetNextNcNnl();
 
             if (  next->IsNotNullChunk()
-               && next->IsNot(CT_ELSE)
-               && next->IsNot(CT_WHILE_OF_DO))
+               && next->IsNot(E_Token::ELSE)
+               && next->IsNot(E_Token::WHILE_OF_DO))
             {
                break;
             }
@@ -477,8 +477,8 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       }
       chunk = *last;
       chunk.Text().clear();
-      chunk.SetType(CT_VBRACE_CLOSE);
-      chunk.SetParentType(CT_FUNC_DEF);
+      chunk.SetType(E_Token::VBRACE_CLOSE);
+      chunk.SetParentType(E_Token::FUNC_DEF);
       chunk.SetColumn(chunk.GetColumn() + last->Len());
       chunk.SetLevel(0);
       chunk.SetBraceLevel(0);
@@ -493,7 +493,7 @@ Chunk *pawn_check_vsemicolon(Chunk *pc)
    LOG_FUNC_ENTRY();
 
    // Grab the open VBrace
-   Chunk *vb_open = pc->GetPrevType(CT_VBRACE_OPEN);
+   Chunk *vb_open = pc->GetPrevType(E_Token::VBRACE_OPEN);
 
    /*
     * Grab the item before the newline

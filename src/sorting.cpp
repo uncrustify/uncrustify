@@ -203,7 +203,7 @@ static bool has_dot(const UncText &chunk_text)
  */
 static UncText chunk_sort_str(Chunk *pc)
 {
-   if (pc->GetParentType() == CT_PP_INCLUDE)
+   if (pc->GetParentType() == E_Token::PP_INCLUDE)
    {
       return(UncText{ pc->GetText(), 0, pc->Len() - 1 });
    }
@@ -316,7 +316,7 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc1->GetLogText(), pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
 
-      if (pc1->Is(CT_MEMBER))
+      if (pc1->Is(E_Token::MEMBER))
       {
          pc1 = pc1->GetNext();
          LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
@@ -326,7 +326,7 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc2->GetLogText(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
 
-      if (pc2->Is(CT_MEMBER))
+      if (pc2->Is(E_Token::MEMBER))
       {
          pc2 = pc2->GetNext();
          LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
@@ -625,7 +625,7 @@ void sort_imports()
          bool did_import = false;
 
          if (  p_imp->IsNotNullChunk()
-            && (  p_last->Is(CT_SEMICOLON)
+            && (  p_last->Is(E_Token::SEMICOLON)
                || p_imp->TestFlags(PCF_IN_PREPROC)))
          {
             if (num_chunks < max_number_to_sort)
@@ -675,7 +675,7 @@ void sort_imports()
          p_imp      = Chunk::NullChunkPtr;
          p_last     = Chunk::NullChunkPtr;
       }
-      else if (pc->Is(CT_IMPORT))
+      else if (pc->Is(E_Token::IMPORT))
       {
          log_rule_B("mod_sort_import");
 
@@ -684,7 +684,7 @@ void sort_imports()
             p_imp = pc->GetNext();
          }
       }
-      else if (pc->Is(CT_USING))
+      else if (pc->Is(E_Token::USING))
       {
          log_rule_B("mod_sort_using");
 
@@ -693,7 +693,7 @@ void sort_imports()
             p_imp = pc->GetNext();
          }
       }
-      else if (pc->Is(CT_PP_INCLUDE))
+      else if (pc->Is(E_Token::PP_INCLUDE))
       {
          log_rule_B("mod_sort_include");
 

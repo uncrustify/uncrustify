@@ -19,7 +19,7 @@ class Chunk;
  * @brief return the chunk the follows after a C array
  *
  * The provided chunk is considered an array if it is an opening square
- * (CT_SQUARE_OPEN) and the matching close is followed by an equal sign '='
+ * (E_Token::SQUARE_OPEN) and the matching close is followed by an equal sign '='
  *
  * Example:                  array[25] = 12;
  *                               /|\     /|\

@@ -94,23 +94,23 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine_of_code,
          {
             LOG_FMT(LGUY, " orig line is %zu, (%zu) ", the_line_to_be_prot, tokenCounter);
 
-            if (pc->Is(CT_NEWLINE))
+            if (pc->Is(E_Token::NEWLINE))
             {
                LOG_FMT(LGUY, "<NL>(new line count is %zu), ", pc->GetNlCount());
             }
-            else if (pc->Is(CT_VBRACE_CLOSE))
+            else if (pc->Is(E_Token::VBRACE_CLOSE))
             {
-               LOG_FMT(LGUY, "<CT_VBRACE_CLOSE>, ");
+               LOG_FMT(LGUY, "<E_Token::VBRACE_CLOSE>, ");
             }
-            else if (pc->Is(CT_VBRACE_OPEN))
+            else if (pc->Is(E_Token::VBRACE_OPEN))
             {
-               LOG_FMT(LGUY, "<CT_VBRACE_OPEN>, ");
+               LOG_FMT(LGUY, "<E_Token::VBRACE_OPEN>, ");
             }
-            else if (pc->Is(CT_SPACE))
+            else if (pc->Is(E_Token::SPACE))
             {
-               LOG_FMT(LGUY, "<CT_SPACE>, ");
+               LOG_FMT(LGUY, "<E_Token::SPACE>, ");
             }
-            else if (pc->Is(CT_IGNORED))
+            else if (pc->Is(E_Token::IGNORED))
             {
                LOG_FMT(LGUY, "<IGNORED> ");
             }
@@ -122,7 +122,7 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine_of_code,
                     pc->GetColumn(), pc->GetPpLevel(), get_token_name(pc->GetType()),
                     get_token_name(pc->GetParentType()), pc->GetOrigCol());
 
-            if (pc->Is(CT_IGNORED))
+            if (pc->Is(E_Token::IGNORED))
             {
                LOG_FMT(LGUY, "\n");
             }
@@ -132,7 +132,7 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine_of_code,
                log_pcf_flags(LGUY, pc->GetFlags());
             }
 
-            if (pc->Is(CT_COND_COLON))
+            if (pc->Is(E_Token::COND_COLON))
             {
                Chunk *pa = pc->GetParent();
                LOG_FMT(LGUY, "<> pa-type is %s, orig_line is %zu\n", get_token_name(pa->GetType()), pa->GetOrigLine());
@@ -261,7 +261,7 @@ void rebuild_the_line(int theLine_of_code, size_t the_line_to_be_prot, bool incr
    {
       if (pc->GetOrigLine() == the_line_to_be_prot)
       {
-         if (pc->Is(CT_NEWLINE))
+         if (pc->Is(E_Token::NEWLINE))
          {
             where              = pc->GetColumn();
             rebuildLine[where] = '\0';
@@ -269,8 +269,8 @@ void rebuild_the_line(int theLine_of_code, size_t the_line_to_be_prot, bool incr
 
             break;
          }
-         else if (  pc->Is(CT_VBRACE_OPEN)
-                 || pc->Is(CT_VBRACE_CLOSE))
+         else if (  pc->Is(E_Token::VBRACE_OPEN)
+                 || pc->Is(E_Token::VBRACE_CLOSE))
          {
             has_a_virtual_brace = true;
             size_t col = pc->GetOrigCol();
@@ -340,25 +340,25 @@ void prot_some_lines(const char *func_name, int theLine_of_code, size_t from_lin
 
          LOG_FMT(LGUY, " orig line is %zu, (%zu), ", lineNumber, tokenCounter);
 
-         if (pc->Is(CT_NEWLINE))
+         if (pc->Is(E_Token::NEWLINE))
          {
             LOG_FMT(LGUY, "<NL>(new line count is %zu), ", pc->GetNlCount());
             tokenCounter = 0;
             lineNumber   = lineNumber + pc->GetNlCount();
          }
-         else if (pc->Is(CT_VBRACE_CLOSE))
+         else if (pc->Is(E_Token::VBRACE_CLOSE))
          {
-            LOG_FMT(LGUY, "<CT_VBRACE_CLOSE>, ");
+            LOG_FMT(LGUY, "<E_Token::VBRACE_CLOSE>, ");
          }
-         else if (pc->Is(CT_VBRACE_OPEN))
+         else if (pc->Is(E_Token::VBRACE_OPEN))
          {
-            LOG_FMT(LGUY, "<CT_VBRACE_OPEN>, ");
+            LOG_FMT(LGUY, "<E_Token::VBRACE_OPEN>, ");
          }
-         else if (pc->Is(CT_SPACE))
+         else if (pc->Is(E_Token::SPACE))
          {
-            LOG_FMT(LGUY, "<CT_SPACE>, ");
+            LOG_FMT(LGUY, "<E_Token::SPACE>, ");
          }
-         else if (pc->Is(CT_IGNORED))
+         else if (pc->Is(E_Token::IGNORED))
          {
             LOG_FMT(LGUY, "<IGNORED> ");
          }
@@ -370,7 +370,7 @@ void prot_some_lines(const char *func_name, int theLine_of_code, size_t from_lin
                  pc->GetColumn(), pc->GetPpLevel(), get_token_name(pc->GetType()),
                  get_token_name(pc->GetParentType()), pc->GetOrigCol());
 
-         if (pc->Is(CT_IGNORED))
+         if (pc->Is(E_Token::IGNORED))
          {
             LOG_FMT(LGUY, "\n");
          }
@@ -380,7 +380,7 @@ void prot_some_lines(const char *func_name, int theLine_of_code, size_t from_lin
             log_pcf_flags(LGUY, pc->GetFlags());
          }
 
-         if (pc->Is(CT_COND_COLON))
+         if (pc->Is(E_Token::COND_COLON))
          {
             Chunk *pa = pc->GetParent();
             LOG_FMT(LGUY, "<> pa-type is %s, orig_line is %zu\n", get_token_name(pa->GetType()), pa->GetOrigLine());
@@ -421,25 +421,25 @@ void prot_all_lines(const char *func_name, int theLine_of_code)
 
       LOG_FMT(LGUY, " orig line is %zu,%zu, orig column is %zu, ", pc->GetOrigLine(), tokenCounter, pc->GetOrigCol());
 
-      if (pc->Is(CT_NEWLINE))
+      if (pc->Is(E_Token::NEWLINE))
       {
          LOG_FMT(LGUY, "<NL>(new line count is %zu), ", pc->GetNlCount());
          tokenCounter = 0;
          lineNumber   = lineNumber + pc->GetNlCount();
       }
-      else if (pc->Is(CT_VBRACE_CLOSE))
+      else if (pc->Is(E_Token::VBRACE_CLOSE))
       {
-         LOG_FMT(LGUY, "<CT_VBRACE_CLOSE>, ");
+         LOG_FMT(LGUY, "<E_Token::VBRACE_CLOSE>, ");
       }
-      else if (pc->Is(CT_VBRACE_OPEN))
+      else if (pc->Is(E_Token::VBRACE_OPEN))
       {
-         LOG_FMT(LGUY, "<CT_VBRACE_OPEN>, ");
+         LOG_FMT(LGUY, "<E_Token::VBRACE_OPEN>, ");
       }
-      else if (pc->Is(CT_SPACE))
+      else if (pc->Is(E_Token::SPACE))
       {
-         LOG_FMT(LGUY, "<CT_SPACE>, ");
+         LOG_FMT(LGUY, "<E_Token::SPACE>, ");
       }
-      else if (pc->Is(CT_IGNORED))
+      else if (pc->Is(E_Token::IGNORED))
       {
          LOG_FMT(LGUY, "<IGNORED> ");
       }
@@ -475,8 +475,8 @@ void examine_Data(const char *func_name, int theLine_of_code, int what)
 
       for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
-         if (  pc->Is(CT_SQUARE_CLOSE)
-            || pc->Is(CT_TSQUARE))
+         if (  pc->Is(E_Token::SQUARE_CLOSE)
+            || pc->Is(E_Token::TSQUARE))
          {
             LOG_FMT(LGUY, "\n");
             LOG_FMT(LGUY, "1:(%d),", theLine_of_code);
@@ -493,7 +493,7 @@ void examine_Data(const char *func_name, int theLine_of_code, int what)
       {
          if (pc->GetOrigLine() == 7)
          {
-            if (pc->Is(CT_NEWLINE))
+            if (pc->Is(E_Token::NEWLINE))
             {
                LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->GetOrigLine(), pc->GetOrigCol());
             }
@@ -511,7 +511,7 @@ void examine_Data(const char *func_name, int theLine_of_code, int what)
 
       for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
-         if (pc->Is(CT_NEWLINE))
+         if (pc->Is(E_Token::NEWLINE))
          {
             LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->GetOrigLine(), pc->GetOrigCol());
          }
@@ -530,7 +530,7 @@ void examine_Data(const char *func_name, int theLine_of_code, int what)
       {
          if (pc->GetOrigLine() == 6)
          {
-            if (pc->Is(CT_NEWLINE))
+            if (pc->Is(E_Token::NEWLINE))
             {
                LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->GetOrigLine(), pc->GetOrigCol());
             }
@@ -613,7 +613,7 @@ void dump_out(size_t type)
             fprintf(D_file, "  after tab %d\n", pc->GetAfterTab());
          }
 
-         if (pc->IsNot(CT_NEWLINE))
+         if (pc->IsNot(E_Token::NEWLINE))
          {
             fprintf(D_file, "  text %s\n", pc->GetLogText());
          }
@@ -707,7 +707,7 @@ void dump_in(size_t type)
             }
             else if (strcasecmp(parts[0], "text") == 0)
             {
-               if (chunk.GetType() != CT_NEWLINE)
+               if (chunk.GetType() != E_Token::NEWLINE)
                {
                   chunk.Text() = parts[1];
                }
@@ -885,7 +885,7 @@ void examine_token(const char *func_name, int theLine_of_code, size_t orig_line_
 
                // size_t          m_columnIndent;
                // size_t          m_nlCount;
-               if (pc->Is(CT_NEWLINE))
+               if (pc->Is(E_Token::NEWLINE))
                {
                   LOG_FMT(LGUY, "   nl_count is %zu\n", pc->GetNlCount());
                }

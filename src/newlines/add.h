@@ -18,7 +18,7 @@ Chunk *newline_add_before(Chunk *pc);
  * If there is already a newline between then, nothing is done.
  * Otherwise a newline is inserted.
  *
- * If end is CT_BRACE_OPEN and a comment and newline follow, then
+ * If end is E_Token::BRACE_OPEN and a comment and newline follow, then
  * the brace open is moved instead of inserting a newline.
  *
  * In this situation:

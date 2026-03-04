@@ -28,7 +28,7 @@ def scan_file(file_path):
         else:
             if len(cur_token) > 0:
                 idx1 = line.find('{')
-                idx2 = line.find('CT_')
+                idx2 = line.find('E_Token::')
                 if idx1 >= 0 and idx2 > idx1:
                     tok = line[idx1 + 1:idx2].strip()
                     if tok.startswith('R"'):

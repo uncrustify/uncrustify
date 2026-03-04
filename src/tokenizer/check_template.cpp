@@ -35,14 +35,14 @@ bool invalid_open_angle_template(Chunk *prev)
    }
    // A template requires a word/type right before the open angle
    // It can also appear after the square brackets of a lambda
-   return(  prev->IsNot(CT_WORD)
-         && prev->IsNot(CT_TYPE)
-         && prev->IsNot(CT_COMMA)
-         && prev->IsNot(CT_QUALIFIER)
-         && prev->IsNot(CT_OPERATOR_VAL)
-         && prev->IsNot(CT_SQUARE_CLOSE)
-         && prev->IsNot(CT_TSQUARE)
-         && prev->GetParentType() != CT_OPERATOR);
+   return(  prev->IsNot(E_Token::WORD)
+         && prev->IsNot(E_Token::TYPE)
+         && prev->IsNot(E_Token::COMMA)
+         && prev->IsNot(E_Token::QUALIFIER)
+         && prev->IsNot(E_Token::OPERATOR_VAL)
+         && prev->IsNot(E_Token::SQUARE_CLOSE)
+         && prev->IsNot(E_Token::TSQUARE)
+         && prev->GetParentType() != E_Token::OPERATOR);
 }
 
 
@@ -52,14 +52,14 @@ Chunk *handle_double_angle_close(Chunk *pc)
 
    if (next->IsNotNullChunk())
    {
-      if (  pc->Is(CT_ANGLE_CLOSE)
-         && next->Is(CT_ANGLE_CLOSE)
-         && pc->GetParentType() == CT_NONE
+      if (  pc->Is(E_Token::ANGLE_CLOSE)
+         && next->Is(E_Token::ANGLE_CLOSE)
+         && pc->GetParentType() == E_Token::NONE
          && (pc->GetOrigColEnd() + 1) == next->GetOrigCol()
-         && next->GetParentType() == CT_NONE)
+         && next->GetParentType() == E_Token::NONE)
       {
          pc->Text().append('>');
-         pc->SetType(CT_SHIFT);
+         pc->SetType(E_Token::SHIFT);
          pc->SetOrigColEnd(next->GetOrigColEnd());
 
          Chunk *tmp = next->GetNextNcNnl();
@@ -69,7 +69,7 @@ Chunk *handle_double_angle_close(Chunk *pc)
       else
       {
          // bug #663
-         pc->SetType(CT_COMPARE);
+         pc->SetType(E_Token::COMPARE);
       }
    }
    return(next);
@@ -90,9 +90,9 @@ void check_template(Chunk *start, bool in_type_cast)
    Chunk *end;
    Chunk *pc;
 
-   if (prev->Is(CT_TEMPLATE))
+   if (prev->Is(E_Token::TEMPLATE))
    {
-      LOG_FMT(LTEMPL, "%s(%d): CT_TEMPLATE:\n", __func__, __LINE__);
+      LOG_FMT(LTEMPL, "%s(%d): E_Token::TEMPLATE:\n", __func__, __LINE__);
 
       // We have: "template< ... >", which is a template declaration
       size_t level  = 1;
@@ -121,15 +121,15 @@ void check_template(Chunk *start, bool in_type_cast)
             }
          }
 
-         if (pc->Is(CT_DECLTYPE))
+         if (pc->Is(E_Token::DECLTYPE))
          {
             flag_cpp_decltype(pc);
          }
-         else if (pc->Is(CT_PAREN_OPEN))
+         else if (pc->Is(E_Token::PAREN_OPEN))
          {
             ++parens;
          }
-         else if (pc->Is(CT_PAREN_CLOSE))
+         else if (pc->Is(E_Token::PAREN_CLOSE))
          {
             --parens;
          }
@@ -180,7 +180,7 @@ void check_template(Chunk *start, bool in_type_cast)
        *
        * }
        *
-       * Finally, if we are inside an 'if' statement and hit a CT_BOOL,
+       * Finally, if we are inside an 'if' statement and hit a E_Token::BOOL,
        * then it isn't a template.
        */
 
@@ -188,7 +188,7 @@ void check_template(Chunk *start, bool in_type_cast)
       {
          LOG_FMT(LTEMPL, "%s(%d): - after type %s + ( - Not a template\n",
                  __func__, __LINE__, get_token_name(prev->GetType()));
-         start->SetType(CT_COMPARE);
+         start->SetType(E_Token::COMPARE);
          return;
       }
       LOG_FMT(LTEMPL, "%s(%d): - prev->GetType() is %s -\n",
@@ -201,19 +201,19 @@ void check_template(Chunk *start, bool in_type_cast)
 
       while (pc->IsNotNullChunk())
       {
-         if (  (  pc->Is(CT_SEMICOLON)
+         if (  (  pc->Is(E_Token::SEMICOLON)
                && hit_semicolon)
-            || pc->Is(CT_SQUARE_CLOSE))
+            || pc->Is(E_Token::SQUARE_CLOSE))
          {
             break;
          }
 
-         if (pc->Is(CT_DECLTYPE))
+         if (pc->Is(E_Token::DECLTYPE))
          {
             flag_cpp_decltype(pc);
          }
 
-         if (pc->Is(CT_BRACE_OPEN))
+         if (pc->Is(E_Token::BRACE_OPEN))
          {
             if (  !pc->TestFlags(PCF_IN_DECLTYPE)
                || !detect_cpp_braced_init_list(pc->GetPrev(), pc))
@@ -223,25 +223,25 @@ void check_template(Chunk *start, bool in_type_cast)
             flag_cpp_braced_init_list(pc->GetPrev(), pc);
          }
 
-         if (  pc->Is(CT_BRACE_CLOSE)
-            && pc->GetParentType() != CT_BRACED_INIT_LIST
+         if (  pc->Is(E_Token::BRACE_CLOSE)
+            && pc->GetParentType() != E_Token::BRACED_INIT_LIST
             && !pc->TestFlags(PCF_IN_DECLTYPE))
          {
             break;
          }
 
-         if (  pc->Is(CT_SEMICOLON)
+         if (  pc->Is(E_Token::SEMICOLON)
             && !hit_semicolon)
          {
             hit_semicolon = true;
          }
 
-         if (  (  (  pc->Is(CT_IF)
-                  || pc->Is(CT_RETURN)
-                  || pc->Is(CT_WHILE)
-                  || pc->Is(CT_WHILE_OF_DO))
+         if (  (  (  pc->Is(E_Token::IF)
+                  || pc->Is(E_Token::RETURN)
+                  || pc->Is(E_Token::WHILE)
+                  || pc->Is(E_Token::WHILE_OF_DO))
                && !hit_semicolon)
-            || (  pc->Is(CT_FOR)
+            || (  pc->Is(E_Token::FOR)
                && hit_semicolon))
          {
             in_if = true;
@@ -257,7 +257,7 @@ void check_template(Chunk *start, bool in_type_cast)
       E_Token          tokens[MAX_TOKEN_COUNT];
       size_t           num_tokens = 1;
 
-      tokens[0] = CT_ANGLE_OPEN;
+      tokens[0] = E_Token::ANGLE_OPEN;
 
       for (pc = start->GetNextNcNnl(E_Scope::PREPROC);
            pc->IsNotNullChunk();
@@ -268,7 +268,7 @@ void check_template(Chunk *start, bool in_type_cast)
 
          log_rule_B("tok_split_gte");
 
-         if (pc->Is(CT_BRACE_OPEN))                     // Issue #2886
+         if (pc->Is(E_Token::BRACE_OPEN))                     // Issue #2886
          {
             // look for the closing brace
             Chunk *A = pc->GetClosingParen();
@@ -278,7 +278,7 @@ void check_template(Chunk *start, bool in_type_cast)
          }
 
          if (  num_tokens > 0
-            && (tokens[num_tokens - 1] == CT_ANGLE_OPEN)
+            && (tokens[num_tokens - 1] == E_Token::ANGLE_OPEN)
             && (pc->GetText()[0] == '>')
             && (pc->Len() > 1)
             && (  options::tok_split_gte()
@@ -296,14 +296,14 @@ void check_template(Chunk *start, bool in_type_cast)
 
          if (pc->IsString("<"))
          {
-            if (  num_tokens > 0 && (tokens[num_tokens - 1] == CT_PAREN_OPEN)
+            if (  num_tokens > 0 && (tokens[num_tokens - 1] == E_Token::PAREN_OPEN)
                && invalid_open_angle_template(pc->GetPrev()))
             {
-               pc->SetType(CT_COMPARE); // Issue #3127
+               pc->SetType(E_Token::COMPARE); // Issue #3127
             }
             else
             {
-               tokens[num_tokens] = CT_ANGLE_OPEN;
+               tokens[num_tokens] = E_Token::ANGLE_OPEN;
                num_tokens++;
 
                if (num_tokens >= MAX_TOKEN_COUNT)
@@ -319,7 +319,7 @@ void check_template(Chunk *start, bool in_type_cast)
          else if (pc->IsString(">"))
          {
             if (  num_tokens > 0
-               && (tokens[num_tokens - 1] == CT_PAREN_OPEN))
+               && (tokens[num_tokens - 1] == E_Token::PAREN_OPEN))
             {
                handle_double_angle_close(pc);
             }
@@ -328,18 +328,18 @@ void check_template(Chunk *start, bool in_type_cast)
             {
                break;
             }
-            else if (tokens[num_tokens] != CT_ANGLE_OPEN)
+            else if (tokens[num_tokens] != E_Token::ANGLE_OPEN)
             {
                break; // unbalanced parentheses
             }
          }
          else if (  in_if
-                 && (  pc->Is(CT_BOOL)
-                    || pc->Is(CT_COMPARE)))
+                 && (  pc->Is(E_Token::BOOL)
+                    || pc->Is(E_Token::COMPARE)))
          {
             break;
          }
-         else if (pc->Is(CT_BRACE_OPEN))
+         else if (pc->Is(E_Token::BRACE_OPEN))
          {
             if (  !pc->TestFlags(PCF_IN_DECLTYPE)
                || !detect_cpp_braced_init_list(pc->GetPrev(), pc))
@@ -349,22 +349,22 @@ void check_template(Chunk *start, bool in_type_cast)
             auto brace_open  = pc->GetNextNcNnl();
             auto brace_close = brace_open->GetClosingParen();
 
-            brace_open->SetParentType(CT_BRACED_INIT_LIST);
-            brace_close->SetParentType(CT_BRACED_INIT_LIST);
+            brace_open->SetParentType(E_Token::BRACED_INIT_LIST);
+            brace_close->SetParentType(E_Token::BRACED_INIT_LIST);
          }
-         else if (  pc->Is(CT_BRACE_CLOSE)
-                 && pc->GetParentType() != CT_BRACED_INIT_LIST
+         else if (  pc->Is(E_Token::BRACE_CLOSE)
+                 && pc->GetParentType() != E_Token::BRACED_INIT_LIST
                  && !pc->TestFlags(PCF_IN_DECLTYPE))
          {
             break;
          }
-         else if (pc->Is(CT_SEMICOLON))
+         else if (pc->Is(E_Token::SEMICOLON))
          {
             break;
          }
-         else if (pc->Is(CT_PAREN_OPEN))
+         else if (pc->Is(E_Token::PAREN_OPEN))
          {
-            tokens[num_tokens] = CT_PAREN_OPEN;
+            tokens[num_tokens] = E_Token::PAREN_OPEN;
             num_tokens++;
 
             if (num_tokens >= MAX_TOKEN_COUNT)
@@ -376,12 +376,12 @@ void check_template(Chunk *start, bool in_type_cast)
                exit(EX_SOFTWARE);
             }
          }
-         else if (  pc->Is(CT_QUESTION)                    // Issue #2949
+         else if (  pc->Is(E_Token::QUESTION)                    // Issue #2949
                  && language_is_set(lang_flag_e::LANG_CPP))
          {
             break;
          }
-         else if (pc->Is(CT_PAREN_CLOSE))
+         else if (pc->Is(E_Token::PAREN_CLOSE))
          {
             if (num_tokens == 0)
             {
@@ -391,7 +391,7 @@ void check_template(Chunk *start, bool in_type_cast)
                exit(EX_SOFTWARE);
             }
 
-            if (tokens[--num_tokens] != CT_PAREN_OPEN)
+            if (tokens[--num_tokens] != E_Token::PAREN_OPEN)
             {
                break;  // unbalanced parentheses
             }
@@ -401,30 +401,30 @@ void check_template(Chunk *start, bool in_type_cast)
       end = pc;
    }
 
-   if (end->Is(CT_ANGLE_CLOSE))
+   if (end->Is(E_Token::ANGLE_CLOSE))
    {
       pc = end->GetNextNcNnl(E_Scope::PREPROC);
 
       if (  pc->IsNullChunk()
-         || pc->IsNot(CT_NUMBER))
+         || pc->IsNot(E_Token::NUMBER))
       {
          LOG_FMT(LTEMPL, "%s(%d): Template detected\n", __func__, __LINE__);
          LOG_FMT(LTEMPL, "%s(%d):     from orig line %zu, orig col %zu\n",
                  __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol());
          LOG_FMT(LTEMPL, "%s(%d):     to   orig line %zu, orig col %zu\n",
                  __func__, __LINE__, end->GetOrigLine(), end->GetOrigCol());
-         start->SetParentType(CT_TEMPLATE);
+         start->SetParentType(E_Token::TEMPLATE);
 
          check_template_args(start, end);
 
-         end->SetParentType(CT_TEMPLATE);
+         end->SetParentType(E_Token::TEMPLATE);
          end->SetFlagBits(PCF_IN_TEMPLATE);
          return;
       }
    }
    LOG_FMT(LTEMPL, "%s(%d): - Not a template: end = %s\n",
            __func__, __LINE__, (end->IsNotNullChunk() ? get_token_name(end->GetType()) : "<null>"));
-   start->SetType(CT_COMPARE);
+   start->SetType(E_Token::COMPARE);
 } // check_template
 
 
@@ -454,18 +454,18 @@ void check_template_arg(Chunk *start, Chunk *end)
       Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
       pc->SetFlagBits(PCF_IN_TEMPLATE);
 
-      if (  pc->Is(CT_DECLTYPE)
-         || pc->Is(CT_SIZEOF))
+      if (  pc->Is(E_Token::DECLTYPE)
+         || pc->Is(E_Token::SIZEOF))
       {
          expressionIsNumeric = true;
          break;
       }
 
-      if (next->IsNot(CT_PAREN_OPEN))
+      if (next->IsNot(E_Token::PAREN_OPEN))
       {
-         if (  pc->Is(CT_NUMBER)
-            || pc->Is(CT_ARITH)
-            || pc->Is(CT_SHIFT))
+         if (  pc->Is(E_Token::NUMBER)
+            || pc->Is(E_Token::ARITH)
+            || pc->Is(E_Token::SHIFT))
          {
             expressionIsNumeric = true;
             break;
@@ -489,10 +489,10 @@ void check_template_arg(Chunk *start, Chunk *end)
          Chunk *prev  = pc->GetPrevNcNnl(E_Scope::PREPROC);
          Chunk *prev2 = prev->GetPrevNcNnl(E_Scope::PREPROC);
 
-         if (  prev->Is(CT_ELLIPSIS)                 // Issue #3309
-            && prev2->Is(CT_TYPENAME))
+         if (  prev->Is(E_Token::ELLIPSIS)                 // Issue #3309
+            && prev2->Is(E_Token::TYPENAME))
          {
-            pc->SetType(CT_PARAMETER_PACK);
+            pc->SetType(E_Token::PARAMETER_PACK);
          }
          else
          {
@@ -517,7 +517,7 @@ void check_template_args(Chunk *start, Chunk *end)
    {
       switch (pc->GetType())
       {
-      case CT_COMMA:
+      case E_Token::COMMA:
 
          if (tokens.empty())
          {
@@ -527,24 +527,24 @@ void check_template_args(Chunk *start, Chunk *end)
          }
          break;
 
-      case CT_ANGLE_OPEN:
-      case CT_PAREN_OPEN:
+      case E_Token::ANGLE_OPEN:
+      case E_Token::PAREN_OPEN:
          tokens.push_back(pc->GetType());
          break;
 
-      case CT_ANGLE_CLOSE:
+      case E_Token::ANGLE_CLOSE:
 
          if (  !tokens.empty()
-            && tokens.back() == CT_ANGLE_OPEN)
+            && tokens.back() == E_Token::ANGLE_OPEN)
          {
             tokens.pop_back();
          }
          break;
 
-      case CT_PAREN_CLOSE:
+      case E_Token::PAREN_CLOSE:
 
          if (  !tokens.empty()
-            && tokens.back() == CT_PAREN_OPEN)
+            && tokens.back() == E_Token::PAREN_OPEN)
          {
             tokens.pop_back();
          }

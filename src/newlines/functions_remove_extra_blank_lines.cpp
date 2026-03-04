@@ -39,9 +39,9 @@ void newlines_functions_remove_extra_blank_lines()
       LOG_FMT(LNEWLINE, "%s(%d): orig line is %zu, orig col is %zu, text '%s', type is %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
 
-      if (  pc->IsNot(CT_BRACE_OPEN)
-         || (  pc->GetParentType() != CT_FUNC_DEF
-            && pc->GetParentType() != CT_CPP_LAMBDA))
+      if (  pc->IsNot(E_Token::BRACE_OPEN)
+         || (  pc->GetParentType() != E_Token::FUNC_DEF
+            && pc->GetParentType() != E_Token::CPP_LAMBDA))
       {
          continue;
       }
@@ -49,14 +49,14 @@ void newlines_functions_remove_extra_blank_lines()
 
       while (pc->IsNotNullChunk())
       {
-         if (  pc->Is(CT_BRACE_CLOSE)
+         if (  pc->Is(E_Token::BRACE_CLOSE)
             && pc->GetLevel() == startMoveLevel)
          {
             break;
          }
 
          // delete newlines
-         if (  !pc->Is(CT_COMMENT_MULTI)   // Issue #2195
+         if (  !pc->Is(E_Token::COMMENT_MULTI)   // Issue #2195
             && pc->GetNlCount() > nl_max_blank_in_func)
          {
             LOG_FMT(LNEWLINE, "%s(%d): orig line is %zu, orig col is %zu, text '%s', type is %s\n",

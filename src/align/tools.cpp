@@ -17,11 +17,11 @@
 
 Chunk *skip_c99_array(Chunk *sq_open)
 {
-   if (sq_open->Is(CT_SQUARE_OPEN))
+   if (sq_open->Is(E_Token::SQUARE_OPEN))
    {
       Chunk *tmp = sq_open->GetClosingParen()->GetNextNc();
 
-      if (tmp->Is(CT_ASSIGN))
+      if (tmp->Is(E_Token::ASSIGN))
       {
          return(tmp->GetNextNc());
       }
@@ -41,7 +41,7 @@ Chunk *scan_ib_line(Chunk *start)
 
    if (tmp->IsNotNullChunk())
    {
-      start->SetParentType(CT_TSQUARE);
+      start->SetParentType(E_Token::TSQUARE);
       start            = tmp;
       cpd.al_c99_array = true;
    }
@@ -71,10 +71,10 @@ Chunk *scan_ib_line(Chunk *start)
       {
          // do nothing
       }
-      else if (  pc->Is(CT_ASSIGN)
-              || pc->Is(CT_BRACE_OPEN)
-              || pc->Is(CT_BRACE_CLOSE)
-              || pc->Is(CT_COMMA))
+      else if (  pc->Is(E_Token::ASSIGN)
+              || pc->Is(E_Token::BRACE_OPEN)
+              || pc->Is(E_Token::BRACE_CLOSE)
+              || pc->Is(E_Token::COMMA))
       {
          size_t token_width = space_col_align(pc, next);
 
@@ -161,11 +161,11 @@ void ib_shift_out(size_t idx, size_t num)
       bool  is_empty = false;                  // Issue #3786
       Chunk *tmp     = cpd.al[idx].ref;
 
-      if (tmp->Is(CT_BRACE_CLOSE))
+      if (tmp->Is(E_Token::BRACE_CLOSE))
       {
          Chunk *pre = tmp->GetPrev();
 
-         if (pre->Is(CT_COMMA))
+         if (pre->Is(E_Token::COMMA))
          {
             is_empty = true;
          }
@@ -185,7 +185,7 @@ Chunk *step_back_over_member(Chunk *pc)
    Chunk *tmp = pc->GetPrevNcNnl();
 
    // Skip over any class stuff: bool CFoo::bar()
-   while (tmp->Is(CT_DC_MEMBER))
+   while (tmp->Is(E_Token::DC_MEMBER))
    {
       pc  = tmp->GetPrevNcNnl();
       tmp = pc->GetPrevNcNnl();

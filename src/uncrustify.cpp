@@ -470,7 +470,7 @@ int main(int argc, char *argv[])
    }
 
    // make sure we have token_names.h in sync with token_enum.h
-   static_assert(ARRAY_SIZE(token_names) == CT_TOKEN_COUNT_, "");
+   static_assert(ARRAY_SIZE(token_names) == E_Token::TOKEN_COUNT_, "");
 #endif // DEBUG
 
    Args arg(argc, argv);
@@ -619,7 +619,7 @@ int main(int argc, char *argv[])
 
    while ((p_arg = arg.Params("--type", idx)) != nullptr)
    {
-      add_keyword(p_arg, CT_TYPE);
+      add_keyword(p_arg, E_Token::TYPE);
    }
    bool arg_l_is_set = false;
 
@@ -1753,19 +1753,19 @@ static void add_func_header(E_Token type, const MemoryFile &fm)
       // Check for one liners for classes. Declarations only. Walk down the chunks.
       ref = pc;
 
-      if (  ref->Is(CT_CLASS)
-         && ref->GetParentType() == CT_NONE
+      if (  ref->Is(E_Token::CLASS)
+         && ref->GetParentType() == E_Token::NONE
          && ref->GetNext())
       {
          ref = ref->GetNext();
 
-         if (  ref->Is(CT_TYPE)
+         if (  ref->Is(E_Token::TYPE)
             && ref->GetParentType() == type
             && ref->GetNext())
          {
             ref = ref->GetNext();
 
-            if (  ref->Is(CT_SEMICOLON)
+            if (  ref->Is(E_Token::SEMICOLON)
                && ref->GetLevel() == pc->GetLevel())
             {
                continue;
@@ -1775,16 +1775,16 @@ static void add_func_header(E_Token type, const MemoryFile &fm)
       // Check for one liners for functions. There'll be a closing brace w/o any newlines. Walk down the chunks.
       ref = pc;
 
-      if (  ref->Is(CT_FUNC_DEF)
-         && ref->GetParentType() == CT_NONE
+      if (  ref->Is(E_Token::FUNC_DEF)
+         && ref->GetParentType() == E_Token::NONE
          && ref->GetNext())
       {
          int found_brace = 0;                                 // Set if a close brace is found before a newline
 
-         while (  ref->IsNot(CT_NEWLINE)
+         while (  ref->IsNot(E_Token::NEWLINE)
                && (ref = ref->GetNext())) // TODO: is the assignment of ref wanted here?, better move it to the loop
          {
-            if (ref->Is(CT_BRACE_CLOSE))
+            if (ref->Is(E_Token::BRACE_CLOSE))
             {
                found_brace = 1;
                break;
@@ -1809,26 +1809,26 @@ static void add_func_header(E_Token type, const MemoryFile &fm)
       {
          // Bail if we change level or find an access specifier colon
          if (  ref->GetLevel() != pc->GetLevel()
-            || ref->Is(CT_ACCESS_COLON))
+            || ref->Is(E_Token::ACCESS_COLON))
          {
             do_insert = true;
             break;
          }
 
          // If we hit an angle close, back up to the angle open
-         if (ref->Is(CT_ANGLE_CLOSE))
+         if (ref->Is(E_Token::ANGLE_CLOSE))
          {
-            ref = ref->GetPrevType(CT_ANGLE_OPEN, ref->GetLevel(), E_Scope::PREPROC);
+            ref = ref->GetPrevType(E_Token::ANGLE_OPEN, ref->GetLevel(), E_Scope::PREPROC);
             continue;
          }
 
          // Bail if we hit a preprocessor and cmt_insert_before_preproc is false
          if (ref->TestFlags(PCF_IN_PREPROC))
          {
-            tmp = ref->GetPrevType(CT_PREPROC, ref->GetLevel());
+            tmp = ref->GetPrevType(E_Token::PREPROC, ref->GetLevel());
 
             if (  tmp->IsNotNullChunk()
-               && tmp->GetParentType() == CT_PP_IF)
+               && tmp->GetParentType() == E_Token::PP_IF)
             {
                tmp = tmp->GetPrevNnl();
 
@@ -1851,8 +1851,8 @@ static void add_func_header(E_Token type, const MemoryFile &fm)
 
          if (  ref->GetLevel() == pc->GetLevel()
             && (  ref->TestFlags(PCF_IN_PREPROC)
-               || ref->Is(CT_SEMICOLON)
-               || ref->Is(CT_BRACE_CLOSE)))
+               || ref->Is(E_Token::SEMICOLON)
+               || ref->Is(E_Token::BRACE_CLOSE)))
          {
             do_insert = true;
             break;
@@ -1907,28 +1907,28 @@ static void add_msg_header(E_Token type, const MemoryFile &fm)
 
       while ((ref = ref->GetPrev())->IsNotNullChunk())
       {
-         // ignore the CT_TYPE token that is the result type
+         // ignore the E_Token::TYPE token that is the result type
          if (  ref->GetLevel() != pc->GetLevel()
-            && (  ref->Is(CT_TYPE)
-               || ref->Is(CT_PTR_TYPE)))
+            && (  ref->Is(E_Token::TYPE)
+               || ref->Is(E_Token::PTR_TYPE)))
          {
             continue;
          }
 
          // If we hit a parentheses around return type, back up to the open parentheses
-         if (ref->Is(CT_PAREN_CLOSE))
+         if (ref->Is(E_Token::PAREN_CLOSE))
          {
-            ref = ref->GetPrevType(CT_PAREN_OPEN, ref->GetLevel(), E_Scope::PREPROC);
+            ref = ref->GetPrevType(E_Token::PAREN_OPEN, ref->GetLevel(), E_Scope::PREPROC);
             continue;
          }
 
          // Bail if we hit a preprocessor and cmt_insert_before_preproc is false
          if (ref->TestFlags(PCF_IN_PREPROC))
          {
-            tmp = ref->GetPrevType(CT_PREPROC, ref->GetLevel());
+            tmp = ref->GetPrevType(E_Token::PREPROC, ref->GetLevel());
 
             if (  tmp->IsNotNullChunk()
-               && tmp->GetParentType() == CT_PP_IF)
+               && tmp->GetParentType() == E_Token::PP_IF)
             {
                tmp = tmp->GetPrevNnl();
 
@@ -1944,7 +1944,7 @@ static void add_msg_header(E_Token type, const MemoryFile &fm)
 
          if (  ref->GetLevel() == pc->GetLevel()
             && (  ref->TestFlags(PCF_IN_PREPROC)
-               || ref->Is(CT_OC_SCOPE)))
+               || ref->Is(E_Token::OC_SCOPE)))
          {
             ref = ref->GetPrev();
 
@@ -2126,24 +2126,24 @@ void uncrustify_file(const MemoryFile &fm, FILE *pfout, const char *parsed_file,
    {
       log_rule_B("cmt_insert_function_header");
 
-      add_func_header(CT_FUNC_DEF, cpd.func_hdr);
+      add_func_header(E_Token::FUNC_DEF, cpd.func_hdr);
 
       if (options::cmt_insert_before_ctor_dtor())
       {
-         add_func_header(CT_FUNC_CLASS_DEF, cpd.func_hdr);
+         add_func_header(E_Token::FUNC_CLASS_DEF, cpd.func_hdr);
       }
    }
 
    if (!cpd.class_hdr.data.empty())
    {
       log_rule_B("cmt_insert_class_header");
-      add_func_header(CT_CLASS, cpd.class_hdr);
+      add_func_header(E_Token::CLASS, cpd.class_hdr);
    }
 
    if (!cpd.oc_msg_hdr.data.empty())
    {
       log_rule_B("cmt_insert_oc_message_header");
-      add_msg_header(CT_OC_MSG_DECL, cpd.oc_msg_hdr);
+      add_msg_header(E_Token::OC_MSG_DECL, cpd.oc_msg_hdr);
    }
    do_parent_for_pp();
 
@@ -2245,20 +2245,20 @@ void uncrustify_file(const MemoryFile &fm, FILE *pfout, const char *parsed_file,
       if (options::pos_bool() != TP_IGNORE)
       {
          log_rule_B("pos_bool");
-         newlines_chunk_pos(CT_BOOL, options::pos_bool());
+         newlines_chunk_pos(E_Token::BOOL, options::pos_bool());
       }
 
       if (options::pos_compare() != TP_IGNORE)
       {
          log_rule_B("pos_compare");
-         newlines_chunk_pos(CT_COMPARE, options::pos_compare());
+         newlines_chunk_pos(E_Token::COMPARE, options::pos_compare());
       }
 
       if (options::pos_conditional() != TP_IGNORE)
       {
          log_rule_B("pos_conditional");
-         newlines_chunk_pos(CT_COND_COLON, options::pos_conditional());
-         newlines_chunk_pos(CT_QUESTION, options::pos_conditional());
+         newlines_chunk_pos(E_Token::COND_COLON, options::pos_conditional());
+         newlines_chunk_pos(E_Token::QUESTION, options::pos_conditional());
       }
 
       if (  options::pos_comma() != TP_IGNORE
@@ -2266,29 +2266,29 @@ void uncrustify_file(const MemoryFile &fm, FILE *pfout, const char *parsed_file,
       {
          log_rule_B("pos_comma");
          log_rule_B("pos_enum_comma");
-         newlines_chunk_pos(CT_COMMA, options::pos_comma());
+         newlines_chunk_pos(E_Token::COMMA, options::pos_comma());
       }
 
       if (options::pos_assign() != TP_IGNORE)
       {
          log_rule_B("pos_assign");
-         newlines_chunk_pos(CT_ASSIGN, options::pos_assign());
+         newlines_chunk_pos(E_Token::ASSIGN, options::pos_assign());
       }
 
       if (options::pos_arith() != TP_IGNORE)
       {
          log_rule_B("pos_arith");
-         newlines_chunk_pos(CT_ARITH, options::pos_arith());
-         newlines_chunk_pos(CT_CARET, options::pos_arith());
+         newlines_chunk_pos(E_Token::ARITH, options::pos_arith());
+         newlines_chunk_pos(E_Token::CARET, options::pos_arith());
       }
 
       if (options::pos_shift() != TP_IGNORE)
       {
          log_rule_B("pos_shift");
-         newlines_chunk_pos(CT_SHIFT, options::pos_shift());
+         newlines_chunk_pos(E_Token::SHIFT, options::pos_shift());
       }
-      newlines_class_colon_pos(CT_CLASS_COLON);
-      newlines_class_colon_pos(CT_CONSTR_COLON);
+      newlines_class_colon_pos(E_Token::CLASS_COLON);
+      newlines_class_colon_pos(E_Token::CONSTR_COLON);
 
       if (options::nl_squeeze_ifdef())
       {
@@ -2522,7 +2522,7 @@ void uncrustify_end()
    cpd.did_newline = true;
    cpd.pp_level    = 0;
    cpd.changes     = 0;
-   cpd.in_preproc  = CT_NONE;
+   cpd.in_preproc  = E_Token::NONE;
    memset(cpd.le_counts, 0, sizeof(cpd.le_counts));
    cpd.preproc_ncnl_count                     = 0;
    cpd.ifdef_over_whole_file                  = 0;
@@ -2555,7 +2555,7 @@ E_Token find_token_name(const char *text)
          }
       }
    }
-   return(CT_NONE);
+   return(E_Token::NONE);
 }
 
 

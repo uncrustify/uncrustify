@@ -12,7 +12,7 @@
 class Chunk;
 
 /**
- * Removes any CT_NEWLINE or CT_NL_CONT between start and end.
+ * Removes any E_Token::NEWLINE or E_Token::NL_CONT between start and end.
  * Start must be before end on the chunk list.
  * If the 'PCF_IN_PREPROC' status differs between two tags, we can't remove
  * the newline.

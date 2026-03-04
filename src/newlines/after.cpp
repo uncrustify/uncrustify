@@ -20,7 +20,7 @@ void newline_after_label_colon()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (pc->IsNot(CT_LABEL_COLON))
+      if (pc->IsNot(E_Token::LABEL_COLON))
       {
          continue;
       }
@@ -35,7 +35,7 @@ void newline_after_multiline_comment()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (pc->IsNot(CT_COMMENT_MULTI))
+      if (pc->IsNot(E_Token::COMMENT_MULTI))
       {
          continue;
       }
@@ -58,13 +58,13 @@ void newline_after_return(const Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   const Chunk *semi  = start->GetNextType(CT_SEMICOLON, start->GetLevel());
+   const Chunk *semi  = start->GetNextType(E_Token::SEMICOLON, start->GetLevel());
    const Chunk *after = semi->GetNextNcNnlNet();
 
    // If we hit a brace or an 'else', then a newline isn't needed
    if (  after->IsNullChunk()
       || after->IsBraceClose()
-      || after->Is(CT_ELSE))
+      || after->Is(E_Token::ELSE))
    {
       return;
    }
@@ -72,7 +72,7 @@ void newline_after_return(const Chunk *start)
 
    for (pc = semi->GetNext(); pc != after; pc = pc->GetNext())
    {
-      if (pc->Is(CT_NEWLINE))
+      if (pc->Is(E_Token::NEWLINE))
       {
          if (pc->GetNlCount() < 2)
          {

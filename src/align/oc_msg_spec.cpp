@@ -26,7 +26,7 @@ void align_oc_msg_spec(size_t span)
       {
          as.NewLines(pc->GetNlCount());
       }
-      else if (pc->Is(CT_OC_MSG_SPEC))
+      else if (pc->Is(E_Token::OC_MSG_SPEC))
       {
          as.Add(pc);
       }

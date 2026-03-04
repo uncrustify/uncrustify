@@ -13,7 +13,7 @@ function(generate_token_names src_file dst_file)
   string(REPLACE "\n" ";" token_lines "${token_lines}")
 
   foreach(token_line ${token_lines})
-    if(${token_line} MATCHES "^[ \t]*CT_([A-Z0-9_]+),.*$")
+    if(${token_line} MATCHES "^[ \t]*([A-Z0-9_]+),.*$")
       list(APPEND tokens "   \"${CMAKE_MATCH_1}\",\n")
     endif()
   endforeach()

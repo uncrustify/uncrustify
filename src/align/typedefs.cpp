@@ -55,7 +55,7 @@ void align_typedefs(size_t span)
       }
       else
       {
-         if (pc->Is(CT_TYPEDEF))
+         if (pc->Is(E_Token::TYPEDEF))
          {
             c_typedef = pc;
          }

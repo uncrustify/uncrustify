@@ -52,7 +52,7 @@ void newline_oc_msg(Chunk *start)
          break;
       }
 
-      if (pc->Is(CT_OC_COLON) && pc->GetLevel() - 1 == start->GetLevel())
+      if (pc->Is(E_Token::OC_COLON) && pc->GetLevel() - 1 == start->GetLevel())
       {
          parameter_count++;
       }
@@ -129,7 +129,7 @@ void newline_oc_msg(Chunk *start)
          break;
       }
 
-      if (pc->Is(CT_OC_MSG_NAME) && pc->GetLevel() - 1 == start->GetLevel())
+      if (pc->Is(E_Token::OC_MSG_NAME) && pc->GetLevel() - 1 == start->GetLevel())
       {
          newline_add_before(pc);
       }

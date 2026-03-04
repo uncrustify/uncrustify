@@ -37,14 +37,14 @@ static void cleanup_objc_property(Chunk *start);
 
 /**
  * Marks ObjC specific chunks in property declaration (getter/setter attribute)
- * Will mark 'test4Setter'and ':' in '@property (setter=test4Setter:, strong) int test4;' as CT_OC_SEL_NAME
+ * Will mark 'test4Setter'and ':' in '@property (setter=test4Setter:, strong) int test4;' as E_Token::OC_SEL_NAME
  */
 static void mark_selectors_in_property_with_open_paren(Chunk *open_paren);
 
 
 /**
  * Marks ObjC specific chunks in property declaration ( attributes)
- * Changes all the CT_WORD and CT_TYPE to CT_OC_PROPERTY_ATTR
+ * Changes all the E_Token::WORD and E_Token::TYPE to E_Token::OC_PROPERTY_ATTR
  */
 static void mark_attributes_in_property_with_open_paren(Chunk *open_paren);
 
@@ -61,7 +61,7 @@ void split_off_angle_close(Chunk *pc)
 
    pc->Text().resize(1);
    pc->SetOrigColEnd(pc->GetOrigCol() + 1);
-   pc->SetType(CT_ANGLE_CLOSE);
+   pc->SetType(E_Token::ANGLE_CLOSE);
 
    nc.SetType(ct->type);
    nc.Text().pop_front();
@@ -101,25 +101,25 @@ void tokenize_trailing_return_types()
       LOG_FMT(LNOTE, "%s(%d): orig line is %zu, orig col is %zu, text is '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy));
 
-      if (  pc->Is(CT_MEMBER)
+      if (  pc->Is(E_Token::MEMBER)
          && (strcmp(pc->GetLogText(), "->") == 0))
       {
          Chunk *tmp = pc->GetPrevNcNnl();
          Chunk *tmp_2;
          Chunk *open_paren;
 
-         if (tmp->Is(CT_QUALIFIER))
+         if (tmp->Is(E_Token::QUALIFIER))
          {
             // auto max(int a, int b) const -> int;
             // auto f11() const -> bool;
             tmp = tmp->GetPrevNcNnl();
          }
-         else if (tmp->Is(CT_NOEXCEPT))
+         else if (tmp->Is(E_Token::NOEXCEPT))
          {
             // noexcept is present
             tmp_2 = tmp->GetPrevNcNnl();
 
-            if (tmp_2->Is(CT_QUALIFIER))
+            if (tmp_2->Is(E_Token::QUALIFIER))
             {
                // auto f12() const noexcept -> bool;
                // auto f15() const noexcept -> bool = delete;
@@ -132,17 +132,17 @@ void tokenize_trailing_return_types()
                tmp = tmp_2;
             }
          }
-         else if (tmp->Is(CT_PAREN_CLOSE))
+         else if (tmp->Is(E_Token::PAREN_CLOSE))
          {
-            open_paren = tmp->GetPrevType(CT_PAREN_OPEN, tmp->GetLevel());
+            open_paren = tmp->GetPrevType(E_Token::PAREN_OPEN, tmp->GetLevel());
             tmp        = open_paren->GetPrevNcNnl();
 
-            if (tmp->Is(CT_NOEXCEPT))
+            if (tmp->Is(E_Token::NOEXCEPT))
             {
                // noexcept is present
                tmp_2 = tmp->GetPrevNcNnl();
 
-               if (tmp_2->Is(CT_QUALIFIER))
+               if (tmp_2->Is(E_Token::QUALIFIER))
                {
                   // auto f13() const noexcept(true) -> bool;
                   // auto f14() const noexcept(false) -> bool;
@@ -159,12 +159,12 @@ void tokenize_trailing_return_types()
                   tmp = tmp_2;
                }
             }
-            else if (tmp->Is(CT_THROW))
+            else if (tmp->Is(E_Token::THROW))
             {
                // throw is present
                tmp_2 = tmp->GetPrevNcNnl();
 
-               if (tmp_2->Is(CT_QUALIFIER))
+               if (tmp_2->Is(E_Token::QUALIFIER))
                {
                   // auto f23() const throw() -> bool;
                   // auto f24() const throw() -> bool = delete;
@@ -187,11 +187,11 @@ void tokenize_trailing_return_types()
             LOG_FMT(LNOTE, "%s(%d): NOT COVERED\n", __func__, __LINE__);
          }
 
-         if (  tmp->Is(CT_FPAREN_CLOSE)
-            && (  tmp->GetParentType() == CT_FUNC_PROTO
-               || tmp->GetParentType() == CT_FUNC_DEF))
+         if (  tmp->Is(E_Token::FPAREN_CLOSE)
+            && (  tmp->GetParentType() == E_Token::FUNC_PROTO
+               || tmp->GetParentType() == E_Token::FUNC_DEF))
          {
-            pc->SetType(CT_TRAILING_RET);
+            pc->SetType(E_Token::TRAILING_RET);
             LOG_FMT(LNOTE, "%s(%d): set trailing return type for text is '%s'\n",
                     __func__, __LINE__, pc->GetLogText());                  // Issue #3222
             // TODO
@@ -199,24 +199,24 @@ void tokenize_trailing_return_types()
             // noptr-declarator ( parameter-list ) cv(optional) ref(optional) except(optional) attr(optional) -> trailing
             Chunk *next = pc->GetNextNcNnl();
 
-            if (next->Is(CT_DECLTYPE))
+            if (next->Is(E_Token::DECLTYPE))
             {
                // TODO
             }
-            else if (next->Is(CT_WORD))
+            else if (next->Is(E_Token::WORD))
             {
-               next->SetType(CT_TYPE);                         // Issue #3222
+               next->SetType(E_Token::TYPE);                         // Issue #3222
                next = next->GetNextNcNnl();
 
-               if (next->Is(CT_ARITH))
+               if (next->Is(E_Token::ARITH))
                {
                   if (next->GetText()[0] == '*')
                   {
-                     next->SetType(CT_PTR_TYPE);
+                     next->SetType(E_Token::PTR_TYPE);
                   }
                   else if (next->GetText()[0] == '&')                       // Issue #3407
                   {
-                     next->SetType(CT_BYREF);
+                     next->SetType(E_Token::BYREF);
                   }
                }
             }
@@ -248,18 +248,18 @@ void tokenize_cleanup()
 
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      if (pc->Is(CT_SQUARE_OPEN))
+      if (pc->Is(E_Token::SQUARE_OPEN))
       {
          next = pc->GetNextNcNnl();
 
-         if (next->Is(CT_SQUARE_CLOSE))
+         if (next->Is(E_Token::SQUARE_CLOSE))
          {
             // Change '[' + ']' into '[]'
-            pc->SetType(CT_TSQUARE);
+            pc->SetType(E_Token::TSQUARE);
             pc->Text() = "[]";
             /*
-             * bug #664: The original m_origColEnd of CT_SQUARE_CLOSE is
-             * stored at m_origColEnd of CT_TSQUARE.
+             * bug #664: The original m_origColEnd of E_Token::SQUARE_CLOSE is
+             * stored at m_origColEnd of E_Token::TSQUARE.
              * pc->SetOrigColEnd(pc->GetOrigColEnd() + 1);
              */
             pc->SetOrigColEnd(next->GetOrigColEnd());
@@ -267,7 +267,7 @@ void tokenize_cleanup()
          }
       }
 
-      if (  pc->Is(CT_SEMICOLON)
+      if (  pc->Is(E_Token::SEMICOLON)
          && pc->TestFlags(PCF_IN_PREPROC)
          && !pc->GetNextNcNnl(E_Scope::PREPROC))
       {
@@ -276,17 +276,17 @@ void tokenize_cleanup()
       }
    }
 
-   // change := to CT_SQL_ASSIGN Issue #527
+   // change := to E_Token::SQL_ASSIGN Issue #527
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      if (pc->Is(CT_COLON))
+      if (pc->Is(E_Token::COLON))
       {
          next = pc->GetNextNcNnl();
 
-         if (next->Is(CT_ASSIGN))
+         if (next->Is(E_Token::ASSIGN))
          {
             // Change ':' + '=' into ':='
-            pc->SetType(CT_SQL_ASSIGN);
+            pc->SetType(E_Token::SQL_ASSIGN);
             pc->Text() = ":=";
             pc->SetOrigColEnd(next->GetOrigColEnd());
             Chunk::Delete(next);
@@ -301,79 +301,79 @@ void tokenize_cleanup()
    while (  pc->IsNotNullChunk()
          && next->IsNotNullChunk())
    {
-      if (  pc->Is(CT_DOT)
+      if (  pc->Is(E_Token::DOT)
          && language_is_set(lang_flag_e::LANG_ALLC))
       {
-         pc->SetType(CT_MEMBER);
+         pc->SetType(E_Token::MEMBER);
       }
 
       // Determine the version stuff (D only)
-      if (pc->Is(CT_D_VERSION))
+      if (pc->Is(E_Token::D_VERSION))
       {
-         if (next->Is(CT_PAREN_OPEN))
+         if (next->Is(E_Token::PAREN_OPEN))
          {
-            pc->SetType(CT_D_VERSION_IF);
+            pc->SetType(E_Token::D_VERSION_IF);
          }
          else
          {
-            if (next->IsNot(CT_ASSIGN))
+            if (next->IsNot(E_Token::ASSIGN))
             {
                LOG_FMT(LERR, "%s(%d): %s:%zu: version: Unexpected token %s\n",
                        __func__, __LINE__, cpd.filename.c_str(), pc->GetOrigLine(), get_token_name(next->GetType()));
                exit(EX_SOFTWARE);
             }
-            pc->SetType(CT_WORD);
+            pc->SetType(E_Token::WORD);
          }
       }
 
       // Determine the scope stuff (D only)
-      if (pc->Is(CT_D_SCOPE))
+      if (pc->Is(E_Token::D_SCOPE))
       {
-         if (next->Is(CT_PAREN_OPEN))
+         if (next->Is(E_Token::PAREN_OPEN))
          {
-            pc->SetType(CT_D_SCOPE_IF);
+            pc->SetType(E_Token::D_SCOPE_IF);
          }
          else
          {
-            pc->SetType(CT_TYPE);
+            pc->SetType(E_Token::TYPE);
          }
       }
 
       /*
-       * Change CT_BASE before CT_PAREN_OPEN to CT_WORD.
+       * Change E_Token::BASE before E_Token::PAREN_OPEN to E_Token::WORD.
        * public myclass() : base() {}
        * -or-
        * var x = (T)base.y;
        */
-      if (  pc->Is(CT_BASE)
-         && (  next->Is(CT_PAREN_OPEN)
-            || next->Is(CT_DOT)))
+      if (  pc->Is(E_Token::BASE)
+         && (  next->Is(E_Token::PAREN_OPEN)
+            || next->Is(E_Token::DOT)))
       {
-         pc->SetType(CT_WORD);
+         pc->SetType(E_Token::WORD);
       }
 
-      if (  pc->Is(CT_ENUM)
-         && (  next->Is(CT_STRUCT)
-            || next->Is(CT_CLASS)))
+      if (  pc->Is(E_Token::ENUM)
+         && (  next->Is(E_Token::STRUCT)
+            || next->Is(E_Token::CLASS)))
       {
-         next->SetType(CT_ENUM_CLASS);
+         next->SetType(E_Token::ENUM_CLASS);
       }
       Chunk *next_non_attr = language_is_set(lang_flag_e::LANG_CPP) ? skip_attribute_next(next) : next;
 
       /*
-       * Change CT_WORD after CT_ENUM, CT_UNION, CT_STRUCT, or CT_CLASS to CT_TYPE
-       * Change CT_WORD before CT_WORD to CT_TYPE
+       * Change E_Token::WORD after E_Token::ENUM, E_Token::UNION, E_Token::STRUCT, or E_Token::CLASS to E_Token::TYPE
+       * Change E_Token::WORD before E_Token::WORD to E_Token::TYPE
        */
-      if (next_non_attr->Is(CT_WORD))
+      if (next_non_attr->Is(E_Token::WORD))
       {
          if (pc->IsClassEnumStructOrUnion())
          {
-            next_non_attr->SetType(CT_TYPE);
+            next_non_attr->SetType(E_Token::TYPE);
          }
 
-         if (pc->Is(CT_WORD))
+         if (pc->Is(E_Token::WORD))
          {
-            pc->SetType(CT_TYPE);
+            pc->SetType(E_Token::TYPE);
          }
       }
 
@@ -381,13 +381,13 @@ void tokenize_cleanup()
        * change extern to qualifier if extern isn't followed by a string or
        * an open parenthesis
        */
-      if (pc->Is(CT_EXTERN))
+      if (pc->Is(E_Token::EXTERN))
       {
-         if (next->Is(CT_STRING))
+         if (next->Is(E_Token::STRING))
          {
             // Probably 'extern "C"'
          }
-         else if (next->Is(CT_PAREN_OPEN))
+         else if (next->Is(E_Token::PAREN_OPEN))
          {
             // Probably 'extern (C)'
          }
@@ -397,62 +397,62 @@ void tokenize_cleanup()
             Chunk *tmp = next->GetNextNcNnl();
 
             if (  tmp->IsNullChunk()
-               || tmp->IsNot(CT_BRACE_OPEN))
+               || tmp->IsNot(E_Token::BRACE_OPEN))
             {
-               pc->SetType(CT_QUALIFIER);
+               pc->SetType(E_Token::QUALIFIER);
             }
          }
       }
 
       /*
-       * Change CT_STAR to CT_PTR_TYPE if preceded by
-       *     CT_TYPE, CT_QUALIFIER, or CT_PTR_TYPE
+       * Change E_Token::STAR to E_Token::PTR_TYPE if preceded by
+       *     E_Token::TYPE, E_Token::QUALIFIER, or E_Token::PTR_TYPE
        * or by a
-       *     CT_WORD which is preceded by CT_DC_MEMBER: '::aaa *b'
+       *     E_Token::WORD which is preceded by E_Token::DC_MEMBER: '::aaa *b'
        */
-      if (  (next->Is(CT_STAR))
+      if (  (next->Is(E_Token::STAR))
          || (  language_is_set(lang_flag_e::LANG_CPP)
-            && (next->Is(CT_CARET)))
+            && (next->Is(E_Token::CARET)))
          || (  (  language_is_set(lang_flag_e::LANG_CS)
                || language_is_set(lang_flag_e::LANG_VALA))
-            && (next->Is(CT_QUESTION))
+            && (next->Is(E_Token::QUESTION))
             && (strcmp(pc->GetLogText(), "null") != 0)))
       {
-         if (  pc->Is(CT_TYPE)
-            || pc->Is(CT_QUALIFIER)
-            || pc->Is(CT_PTR_TYPE))
+         if (  pc->Is(E_Token::TYPE)
+            || pc->Is(E_Token::QUALIFIER)
+            || pc->Is(E_Token::PTR_TYPE))
          {
-            next->SetType(CT_PTR_TYPE);
+            next->SetType(E_Token::PTR_TYPE);
          }
          else if (  (  language_is_set(lang_flag_e::LANG_CS)
                     || language_is_set(lang_flag_e::LANG_VALA))
-                 && next->Is(CT_QUESTION))
+                 && next->Is(E_Token::QUESTION))
          {
             Chunk *tmp = next->GetNextNcNnl();
 
-            if (tmp->Is(CT_TSQUARE))
+            if (tmp->Is(E_Token::TSQUARE))
             {
                // word?[]   Array of nullables.
-               next->SetType(CT_PTR_TYPE);
+               next->SetType(E_Token::PTR_TYPE);
             }
          }
       }
 
-      if (  pc->Is(CT_TYPE_CAST)
-         && next->Is(CT_ANGLE_OPEN))
+      if (  pc->Is(E_Token::TYPE_CAST)
+         && next->Is(E_Token::ANGLE_OPEN))
       {
-         next->SetParentType(CT_TYPE_CAST);
+         next->SetParentType(E_Token::TYPE_CAST);
          in_type_cast = true;
       }
 
-      if (pc->Is(CT_DECLTYPE))
+      if (pc->Is(E_Token::DECLTYPE))
       {
          flag_cpp_decltype(pc);
       }
 
-      // Change angle open/close to CT_COMPARE, if not a template thingy
-      if (  pc->Is(CT_ANGLE_OPEN)
-         && pc->GetParentType() != CT_TYPE_CAST)
+      // Change angle open/close to E_Token::COMPARE, if not a template thingy
+      if (  pc->Is(E_Token::ANGLE_OPEN)
+         && pc->GetParentType() != E_Token::TYPE_CAST)
       {
          /*
           * pretty much all languages except C use <> for something other than
@@ -469,18 +469,18 @@ void tokenize_cleanup()
          }
          else
          {
-            // convert CT_ANGLE_OPEN to CT_COMPARE
-            pc->SetType(CT_COMPARE);
+            // convert E_Token::ANGLE_OPEN to E_Token::COMPARE
+            pc->SetType(E_Token::COMPARE);
          }
       }
 
-      if (  pc->Is(CT_ANGLE_CLOSE)
-         && pc->GetParentType() != CT_TEMPLATE)
+      if (  pc->Is(E_Token::ANGLE_CLOSE)
+         && pc->GetParentType() != E_Token::TEMPLATE)
       {
          if (in_type_cast)
          {
             in_type_cast = false;
-            pc->SetParentType(CT_TYPE_CAST);
+            pc->SetParentType(E_Token::TYPE_CAST);
          }
          else
          {
@@ -491,37 +491,37 @@ void tokenize_cleanup()
       if (language_is_set(lang_flag_e::LANG_D))
       {
          // Check for the D string concat symbol '~'
-         if (  pc->Is(CT_INV)
-            && (  prev->Is(CT_STRING)
-               || prev->Is(CT_WORD)
-               || next->Is(CT_STRING)))
+         if (  pc->Is(E_Token::INV)
+            && (  prev->Is(E_Token::STRING)
+               || prev->Is(E_Token::WORD)
+               || next->Is(E_Token::STRING)))
          {
-            pc->SetType(CT_CONCAT);
+            pc->SetType(E_Token::CONCAT);
          }
 
          // Check for the D template symbol '!' (word + '!' + word or '(')
-         if (  pc->Is(CT_NOT)
-            && prev->Is(CT_WORD)
-            && (  next->Is(CT_PAREN_OPEN)
-               || next->Is(CT_WORD)
-               || next->Is(CT_TYPE)
-               || next->Is(CT_NUMBER)
-               || next->Is(CT_NUMBER_FP)
-               || next->Is(CT_STRING)
-               || next->Is(CT_STRING_MULTI)))
+         if (  pc->Is(E_Token::NOT)
+            && prev->Is(E_Token::WORD)
+            && (  next->Is(E_Token::PAREN_OPEN)
+               || next->Is(E_Token::WORD)
+               || next->Is(E_Token::TYPE)
+               || next->Is(E_Token::NUMBER)
+               || next->Is(E_Token::NUMBER_FP)
+               || next->Is(E_Token::STRING)
+               || next->Is(E_Token::STRING_MULTI)))
          {
-            pc->SetType(CT_D_TEMPLATE);
+            pc->SetType(E_Token::D_TEMPLATE);
          }
 
          // handle "version(unittest) { }" vs "unittest { }"
-         if (  pc->Is(CT_UNITTEST)
-            && prev->Is(CT_PAREN_OPEN))
+         if (  pc->Is(E_Token::UNITTEST)
+            && prev->Is(E_Token::PAREN_OPEN))
          {
-            pc->SetType(CT_WORD);
+            pc->SetType(E_Token::WORD);
          }
 
          // handle 'static if' and merge the tokens
-         if (  pc->Is(CT_IF)
+         if (  pc->Is(E_Token::IF)
             && prev->IsString("static"))
          {
             // delete PREV and merge with IF
@@ -542,52 +542,52 @@ void tokenize_cleanup()
       if (language_is_set(lang_flag_e::LANG_CPP))
       {
          // Change Word before '::' into a type
-         if (  pc->Is(CT_WORD)
-            && next->Is(CT_DC_MEMBER))
+         if (  pc->Is(E_Token::WORD)
+            && next->Is(E_Token::DC_MEMBER))
          {
             prev = pc->GetPrev();
 
             if (prev->IsNullChunk())                  // Issue #3010
             {
-               pc->SetType(CT_TYPE);
+               pc->SetType(E_Token::TYPE);
             }
             else
             {
-               if (prev->Is(CT_COLON))
+               if (prev->Is(E_Token::COLON))
                {
                   // nothing to do
                }
                else
                {
-                  pc->SetType(CT_TYPE);
+                  pc->SetType(E_Token::TYPE);
                }
             }
          }
 
          // Set parent type for 'if constexpr'
-         if (  prev->Is(CT_IF)
-            && pc->Is(CT_QUALIFIER)
+         if (  prev->Is(E_Token::IF)
+            && pc->Is(E_Token::QUALIFIER)
             && pc->IsString("constexpr"))
          {
-            pc->SetType(CT_CONSTEXPR);
+            pc->SetType(E_Token::CONSTEXPR);
          }
       }
 
-      // Change get/set to CT_WORD if not followed by a brace open
-      if (  pc->Is(CT_GETSET)
-         && next->IsNot(CT_BRACE_OPEN))
+      // Change get/set to E_Token::WORD if not followed by a brace open
+      if (  pc->Is(E_Token::GETSET)
+         && next->IsNot(E_Token::BRACE_OPEN))
       {
-         if (  next->Is(CT_SEMICOLON)
-            && (  prev->Is(CT_BRACE_CLOSE)
-               || prev->Is(CT_BRACE_OPEN)
-               || prev->Is(CT_SEMICOLON)))
+         if (  next->Is(E_Token::SEMICOLON)
+            && (  prev->Is(E_Token::BRACE_CLOSE)
+               || prev->Is(E_Token::BRACE_OPEN)
+               || prev->Is(E_Token::SEMICOLON)))
          {
-            pc->SetType(CT_GETSET_EMPTY);
-            next->SetParentType(CT_GETSET);
+            pc->SetType(E_Token::GETSET_EMPTY);
+            next->SetParentType(E_Token::GETSET);
          }
          else
          {
-            pc->SetType(CT_WORD);
+            pc->SetType(E_Token::WORD);
          }
       }
 
@@ -595,34 +595,34 @@ void tokenize_cleanup()
        * Interface is only a keyword in MS land if followed by 'class' or 'struct'
        * likewise, 'class' may be a member name in Java.
        */
-      if (  pc->Is(CT_CLASS)
+      if (  pc->Is(E_Token::CLASS)
          && !CharTable::IsKw1(next->GetText()[0]))
       {
-         if (  next->IsNot(CT_DC_MEMBER)
-            && next->IsNot(CT_ATTRIBUTE))                       // Issue #2570
+         if (  next->IsNot(E_Token::DC_MEMBER)
+            && next->IsNot(E_Token::ATTRIBUTE))                       // Issue #2570
          {
-            pc->SetType(CT_WORD);
+            pc->SetType(E_Token::WORD);
          }
-         else if (  prev->Is(CT_DC_MEMBER)
-                 || prev->Is(CT_TYPE))
+         else if (  prev->Is(E_Token::DC_MEMBER)
+                 || prev->Is(E_Token::TYPE))
          {
-            pc->SetType(CT_TYPE);
+            pc->SetType(E_Token::TYPE);
          }
-         else if (next->Is(CT_DC_MEMBER))
+         else if (next->Is(E_Token::DC_MEMBER))
          {
             Chunk *next2 = next->GetNextNcNnlNet();
 
-            if (  next2->Is(CT_INV)      // CT_INV hasn't turned into CT_DESTRUCTOR just yet
-               || (  next2->Is(CT_CLASS) // constructor isn't turned into CT_FUNC* just yet
+            if (  next2->Is(E_Token::INV)      // E_Token::INV hasn't turned into E_Token::DESTRUCTOR just yet
+               || (  next2->Is(E_Token::CLASS) // constructor isn't turned into E_Token::FUNC* just yet
                   && !strcmp(pc->GetLogText(), next2->GetLogText())))
             {
-               pc->SetType(CT_TYPE);
+               pc->SetType(E_Token::TYPE);
             }
          }
       }
 
       /*
-       * Change item after operator (>=, ==, etc) to a CT_OPERATOR_VAL
+       * Change item after operator (>=, ==, etc) to a E_Token::OPERATOR_VAL
        * Usually the next item is part of the operator.
        * In a few cases the next few tokens are part of it:
        *  operator +       - common case
@@ -638,39 +638,39 @@ void tokenize_cleanup()
        * In all cases except the last, this will put the entire operator value
        * in one chunk.
        */
-      if (pc->Is(CT_OPERATOR))
+      if (pc->Is(E_Token::OPERATOR))
       {
          Chunk *tmp2 = next->GetNext();
 
          // Handle special case of () operator -- [] already handled
-         if (next->Is(CT_PAREN_OPEN))
+         if (next->Is(E_Token::PAREN_OPEN))
          {
             Chunk *tmp = next->GetNext();
 
-            if (tmp->Is(CT_PAREN_CLOSE))
+            if (tmp->Is(E_Token::PAREN_CLOSE))
             {
                next->Text() = "()";
-               next->SetType(CT_OPERATOR_VAL);
+               next->SetType(E_Token::OPERATOR_VAL);
                Chunk::Delete(tmp);
                next->SetOrigColEnd(next->GetOrigColEnd() + 1);
             }
          }
-         else if (  next->Is(CT_ANGLE_CLOSE)
-                 && tmp2->Is(CT_ANGLE_CLOSE)
+         else if (  next->Is(E_Token::ANGLE_CLOSE)
+                 && tmp2->Is(E_Token::ANGLE_CLOSE)
                  && tmp2->GetOrigCol() == next->GetOrigColEnd())
          {
             next->Text().append('>');
             next->SetOrigColEnd(next->GetOrigColEnd() + 1);
-            next->SetType(CT_OPERATOR_VAL);
+            next->SetType(E_Token::OPERATOR_VAL);
             Chunk::Delete(tmp2);
          }
          else if (next->TestFlags(PCF_PUNCTUATOR))
          {
-            next->SetType(CT_OPERATOR_VAL);
+            next->SetType(E_Token::OPERATOR_VAL);
          }
          else
          {
-            next->SetType(CT_TYPE);
+            next->SetType(E_Token::TYPE);
 
             /*
              * Replace next with a collection of all tokens that are part of
@@ -681,13 +681,13 @@ void tokenize_cleanup()
 
             while ((tmp = tmp2->GetNext())->IsNotNullChunk())
             {
-               if (  tmp->IsNot(CT_WORD)
-                  && tmp->IsNot(CT_TYPE)
-                  && tmp->IsNot(CT_QUALIFIER)
-                  && tmp->IsNot(CT_STAR)
-                  && tmp->IsNot(CT_CARET)
-                  && tmp->IsNot(CT_AMP)
-                  && tmp->IsNot(CT_TSQUARE))
+               if (  tmp->IsNot(E_Token::WORD)
+                  && tmp->IsNot(E_Token::TYPE)
+                  && tmp->IsNot(E_Token::QUALIFIER)
+                  && tmp->IsNot(E_Token::STAR)
+                  && tmp->IsNot(E_Token::CARET)
+                  && tmp->IsNot(E_Token::AMP)
+                  && tmp->IsNot(E_Token::TSQUARE))
                {
                   break;
                }
@@ -707,34 +707,34 @@ void tokenize_cleanup()
             {
                Chunk::Delete(tmp2);
             }
-            next->SetType(CT_OPERATOR_VAL);
+            next->SetType(E_Token::OPERATOR_VAL);
 
             next->SetOrigColEnd(next->GetOrigCol() + next->Len());
          }
-         next->SetParentType(CT_OPERATOR);
+         next->SetParentType(E_Token::OPERATOR);
 
          LOG_FMT(LOPERATOR, "%s(%d): %zu:%zu operator '%s'\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), next->GetLogText());
       }
 
       // Change private, public, protected into either a qualifier or label
-      if (pc->Is(CT_ACCESS))
+      if (pc->Is(E_Token::ACCESS))
       {
-         // Handle Qt slots - maybe should just check for a CT_WORD?
+         // Handle Qt slots - maybe should just check for a E_Token::WORD?
          if (  next->IsString("slots")
             || next->IsString("Q_SLOTS"))
          {
             Chunk *tmp = next->GetNext();
 
-            if (tmp->Is(CT_COLON))
+            if (tmp->Is(E_Token::COLON))
             {
                next = tmp;
             }
          }
 
-         if (next->Is(CT_COLON))
+         if (next->Is(E_Token::COLON))
          {
-            next->SetType(CT_ACCESS_COLON);
+            next->SetType(E_Token::ACCESS_COLON);
             Chunk *tmp;
 
             if ((tmp = next->GetNextNcNnl())->IsNotNullChunk())
@@ -747,7 +747,7 @@ void tokenize_cleanup()
          {
             pc->SetType((  pc->IsString("signals")
                         || pc->IsString("Q_SIGNALS"))
-                           ? CT_WORD : CT_QUALIFIER);
+                           ? E_Token::WORD : E_Token::QUALIFIER);
          }
       }
 
@@ -755,10 +755,10 @@ void tokenize_cleanup()
       if (  (  pc->IsString("EXEC", false)
             && next->IsString("SQL", false))
          || (  (*pc->GetText().GetLogText() == '$')
-            && pc->IsNot(CT_SQL_WORD)
+            && pc->IsNot(E_Token::SQL_WORD)
                /* but avoid breaking tokenization for C# 6 interpolated strings. */
             && (  !language_is_set(lang_flag_e::LANG_CS)
-               || (  pc->Is(CT_STRING)
+               || (  pc->Is(E_Token::STRING)
                   && (!pc->GetText().startswith("$\""))
                   && (!pc->GetText().startswith("$@\""))))))
       {
@@ -768,7 +768,7 @@ void tokenize_cleanup()
          {
             if (*pc->GetText().GetLogText() == '$')
             {
-               pc->SetType(CT_SQL_EXEC);
+               pc->SetType(E_Token::SQL_EXEC);
 
                if (pc->Len() > 1)
                {
@@ -779,7 +779,7 @@ void tokenize_cleanup()
                   pc->Text().resize(1);
                   pc->SetOrigColEnd(pc->GetOrigCol() + 1);
 
-                  nc.SetType(CT_SQL_WORD);
+                  nc.SetType(E_Token::SQL_WORD);
                   nc.Text().pop_front();
                   nc.SetOrigCol(nc.GetOrigCol() + 1);
                   nc.SetColumn(nc.GetColumn() + 1);
@@ -792,21 +792,21 @@ void tokenize_cleanup()
 
             if (tmp->IsString("BEGIN", false))
             {
-               pc->SetType(CT_SQL_BEGIN);
+               pc->SetType(E_Token::SQL_BEGIN);
             }
             else if (tmp->IsString("END", false))
             {
-               pc->SetType(CT_SQL_END);
+               pc->SetType(E_Token::SQL_END);
             }
             else
             {
-               pc->SetType(CT_SQL_EXEC);
+               pc->SetType(E_Token::SQL_EXEC);
             }
 
-            // Change words into CT_SQL_WORD until CT_SEMICOLON
+            // Change words into E_Token::SQL_WORD until E_Token::SEMICOLON
             while (tmp->IsNotNullChunk())
             {
-               if (tmp->Is(CT_SEMICOLON))
+               if (tmp->Is(E_Token::SEMICOLON))
                {
                   break;
                }
@@ -815,7 +815,7 @@ void tokenize_cleanup()
                   && (  unc_isalpha(*tmp->GetText().GetLogText())
                      || (*tmp->GetText().GetLogText() == '$')))
                {
-                  tmp->SetType(CT_SQL_WORD);
+                  tmp->SetType(E_Token::SQL_WORD);
                }
                tmp = tmp->GetNextNcNnl();
             }
@@ -823,7 +823,7 @@ void tokenize_cleanup()
       }
 
       // handle MS abomination 'for each'
-      if (  pc->Is(CT_FOR)
+      if (  pc->Is(E_Token::FOR)
          && next->IsString("each")
          && (next == pc->GetNext()))
       {
@@ -835,16 +835,16 @@ void tokenize_cleanup()
          next = pc->GetNextNcNnl();
 
          // label the 'in'
-         if (next->Is(CT_PAREN_OPEN))
+         if (next->Is(E_Token::PAREN_OPEN))
          {
             Chunk *tmp = next->GetNextNcNnl();
 
             while (  tmp->IsNotNullChunk()
-                  && tmp->IsNot(CT_PAREN_CLOSE))
+                  && tmp->IsNot(E_Token::PAREN_CLOSE))
             {
                if (tmp->IsString("in"))
                {
-                  tmp->SetType(CT_IN);
+                  tmp->SetType(E_Token::IN);
                   break;
                }
                tmp = tmp->GetNextNcNnl();
@@ -858,72 +858,72 @@ void tokenize_cleanup()
        */
       if (language_is_set(lang_flag_e::LANG_OC))
       {
-         if (  (  pc->Is(CT_IF)
-               || pc->Is(CT_FOR)
-               || pc->Is(CT_WHILE))
-            && !next->Is(CT_PAREN_OPEN))
+         if (  (  pc->Is(E_Token::IF)
+               || pc->Is(E_Token::FOR)
+               || pc->Is(E_Token::WHILE))
+            && !next->Is(E_Token::PAREN_OPEN))
          {
-            pc->SetType(CT_WORD);
+            pc->SetType(E_Token::WORD);
          }
 
-         if (  pc->Is(CT_DO)
-            && (  prev->Is(CT_MINUS)
-               || next->Is(CT_SQUARE_CLOSE)))
+         if (  pc->Is(E_Token::DO)
+            && (  prev->Is(E_Token::MINUS)
+               || next->Is(E_Token::SQUARE_CLOSE)))
          {
-            pc->SetType(CT_WORD);
-         }
-
-         // Fix self keyword back to word when mixing c++/objective-c
-         if (  pc->Is(CT_THIS)
-            && !strcmp(pc->GetLogText(), "self")
-            && (  next->Is(CT_COMMA)
-               || next->Is(CT_PAREN_CLOSE)))
-         {
-            pc->SetType(CT_WORD);
+            pc->SetType(E_Token::WORD);
          }
 
          // Fix self keyword back to word when mixing c++/objective-c
-         if (  pc->Is(CT_THIS)
+         if (  pc->Is(E_Token::THIS)
             && !strcmp(pc->GetLogText(), "self")
-            && (  next->Is(CT_COMMA)
-               || next->Is(CT_PAREN_CLOSE)))
+            && (  next->Is(E_Token::COMMA)
+               || next->Is(E_Token::PAREN_CLOSE)))
          {
-            pc->SetType(CT_WORD);
+            pc->SetType(E_Token::WORD);
+         }
+
+         // Fix self keyword back to word when mixing c++/objective-c
+         if (  pc->Is(E_Token::THIS)
+            && !strcmp(pc->GetLogText(), "self")
+            && (  next->Is(E_Token::COMMA)
+               || next->Is(E_Token::PAREN_CLOSE)))
+         {
+            pc->SetType(E_Token::WORD);
          }
       }
 
       // Vala allows keywords to be used as identifiers
       if (language_is_set(lang_flag_e::LANG_VALA))
       {
-         if (  find_keyword_type(pc->GetLogText(), pc->Len()) != CT_WORD
-            && (  prev->Is(CT_DOT)
-               || next->Is(CT_DOT)
-               || prev->Is(CT_MEMBER)
-               || next->Is(CT_MEMBER)
-               || prev->Is(CT_TYPE)))
+         if (  find_keyword_type(pc->GetLogText(), pc->Len()) != E_Token::WORD
+            && (  prev->Is(E_Token::DOT)
+               || next->Is(E_Token::DOT)
+               || prev->Is(E_Token::MEMBER)
+               || next->Is(E_Token::MEMBER)
+               || prev->Is(E_Token::TYPE)))
          {
-            pc->SetType(CT_WORD);
+            pc->SetType(E_Token::WORD);
          }
       }
 
       // Another hack to clean up more keyword abuse
-      if (  pc->Is(CT_CLASS)
-         && (  prev->Is(CT_DOT)
-            || next->Is(CT_DOT)
-            || prev->Is(CT_MEMBER)  // Issue #3031
-            || next->Is(CT_MEMBER)))
+      if (  pc->Is(E_Token::CLASS)
+         && (  prev->Is(E_Token::DOT)
+            || next->Is(E_Token::DOT)
+            || prev->Is(E_Token::MEMBER)  // Issue #3031
+            || next->Is(E_Token::MEMBER)))
       {
-         pc->SetType(CT_WORD);
+         pc->SetType(E_Token::WORD);
       }
 
       // Detect Objective C class name
-      if (  pc->Is(CT_OC_IMPL)
-         || pc->Is(CT_OC_INTF)
-         || pc->Is(CT_OC_PROTOCOL))
+      if (  pc->Is(E_Token::OC_IMPL)
+         || pc->Is(E_Token::OC_INTF)
+         || pc->Is(E_Token::OC_PROTOCOL))
       {
-         if (next->IsNot(CT_PAREN_OPEN))
+         if (next->IsNot(E_Token::PAREN_OPEN))
          {
-            next->SetType(CT_OC_CLASS);
+            next->SetType(E_Token::OC_CLASS);
          }
          next->SetParentType(pc->GetType());
 
@@ -934,7 +934,7 @@ void tokenize_cleanup()
             tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
             log_ruleStart("start statementi/ expression", tmp);
          }
-         tmp = pc->GetNextType(CT_OC_END, pc->GetLevel());
+         tmp = pc->GetNextType(E_Token::OC_END, pc->GetLevel());
 
          if (tmp->IsNotNullChunk())
          {
@@ -942,19 +942,19 @@ void tokenize_cleanup()
          }
       }
 
-      if (pc->Is(CT_OC_INTF))
+      if (pc->Is(E_Token::OC_INTF))
       {
          Chunk *tmp = pc->GetNextNcNnl(E_Scope::PREPROC);
 
          while (  tmp->IsNotNullChunk()
-               && tmp->IsNot(CT_OC_END))
+               && tmp->IsNot(E_Token::OC_END))
          {
             if (get_token_pattern_class(tmp->GetType()) != pattern_class_e::NONE)
             {
-               LOG_FMT(LOBJCWORD, "%s(%d): @interface %zu:%zu change '%s' (%s) to CT_WORD\n",
+               LOG_FMT(LOBJCWORD, "%s(%d): @interface %zu:%zu change '%s' (%s) to E_Token::WORD\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), tmp->GetLogText(),
                        get_token_name(tmp->GetType()));
-               tmp->SetType(CT_WORD);
+               tmp->SetType(E_Token::WORD);
             }
             tmp = tmp->GetNextNcNnl(E_Scope::PREPROC);
          }
@@ -967,10 +967,10 @@ void tokenize_cleanup()
        *   @interface ClassName ()
        *   @implementation ClassName ()
        */
-      if (  (  pc->GetParentType() == CT_OC_IMPL
-            || pc->GetParentType() == CT_OC_INTF
-            || pc->Is(CT_OC_CLASS))
-         && next->Is(CT_PAREN_OPEN))
+      if (  (  pc->GetParentType() == E_Token::OC_IMPL
+            || pc->GetParentType() == E_Token::OC_INTF
+            || pc->Is(E_Token::OC_CLASS))
+         && next->Is(E_Token::PAREN_OPEN))
       {
          next->SetParentType(pc->GetParentType());
 
@@ -979,18 +979,18 @@ void tokenize_cleanup()
          if (  tmp->IsNotNullChunk()
             && tmp->GetNext()->IsNotNullChunk())
          {
-            if (tmp->Is(CT_PAREN_CLOSE))
+            if (tmp->Is(E_Token::PAREN_CLOSE))
             {
-               //tmp->SetType(CT_OC_CLASS_EXT);
+               //tmp->SetType(E_Token::OC_CLASS_EXT);
                tmp->SetParentType(pc->GetParentType());
             }
             else
             {
-               tmp->SetType(CT_OC_CATEGORY);
+               tmp->SetType(E_Token::OC_CATEGORY);
                tmp->SetParentType(pc->GetParentType());
             }
          }
-         tmp = pc->GetNextType(CT_PAREN_CLOSE, pc->GetLevel());
+         tmp = pc->GetNextType(E_Token::PAREN_CLOSE, pc->GetLevel());
 
          if (tmp->IsNotNullChunk())
          {
@@ -1003,9 +1003,9 @@ void tokenize_cleanup()
        *   @property NSString *stringProperty;
        *   @property(nonatomic, retain) NSMutableDictionary *shareWith;
        */
-      if (pc->Is(CT_OC_PROPERTY))
+      if (pc->Is(E_Token::OC_PROPERTY))
       {
-         if (next->IsNot(CT_PAREN_OPEN))
+         if (next->IsNot(E_Token::PAREN_OPEN))
          {
             next->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
             log_ruleStart("start statement/ expression", next);
@@ -1022,8 +1022,8 @@ void tokenize_cleanup()
        *   @selector(msgNameWith1Arg:)
        *   @selector(msgNameWith2Args:arg2Name:)
        */
-      if (  pc->Is(CT_OC_SEL)
-         && next->Is(CT_PAREN_OPEN))
+      if (  pc->Is(E_Token::OC_SEL)
+         && next->Is(E_Token::PAREN_OPEN))
       {
          next->SetParentType(pc->GetType());
 
@@ -1031,37 +1031,37 @@ void tokenize_cleanup()
 
          if (tmp->IsNotNullChunk())
          {
-            tmp->SetType(CT_OC_SEL_NAME);
+            tmp->SetType(E_Token::OC_SEL_NAME);
             tmp->SetParentType(pc->GetType());
 
             while ((tmp = tmp->GetNextNcNnl())->IsNotNullChunk())
             {
-               if (tmp->Is(CT_PAREN_CLOSE))
+               if (tmp->Is(E_Token::PAREN_CLOSE))
                {
-                  tmp->SetParentType(CT_OC_SEL);
+                  tmp->SetParentType(E_Token::OC_SEL);
                   break;
                }
-               tmp->SetType(CT_OC_SEL_NAME);
+               tmp->SetType(E_Token::OC_SEL_NAME);
                tmp->SetParentType(pc->GetType());
             }
          }
       }
 
       // Handle special preprocessor junk
-      if (pc->Is(CT_PREPROC))
+      if (pc->Is(E_Token::PREPROC))
       {
          pc->SetParentType(next->GetType());
       }
 
       // Detect "pragma region" and "pragma endregion"
-      if (  pc->Is(CT_PP_PRAGMA)
-         && next->Is(CT_PREPROC_BODY))
+      if (  pc->Is(E_Token::PP_PRAGMA)
+         && next->Is(E_Token::PREPROC_BODY))
       {
          if (  (strncmp(next->GetText().GetLogText(), "region", 6) == 0)
             || (strncmp(next->GetText().GetLogText(), "endregion", 9) == 0))
          // TODO: probably better use strncmp
          {
-            pc->SetType((*next->GetText().GetLogText() == 'r') ? CT_PP_REGION : CT_PP_ENDREGION);
+            pc->SetType((*next->GetText().GetLogText() == 'r') ? E_Token::PP_REGION : E_Token::PP_ENDREGION);
 
             prev->SetParentType(pc->GetType());
          }
@@ -1069,37 +1069,37 @@ void tokenize_cleanup()
 
       // Change 'default(' into a sizeof-like statement
       if (  language_is_set(lang_flag_e::LANG_CS)
-         && pc->Is(CT_DEFAULT)
-         && next->Is(CT_PAREN_OPEN))
+         && pc->Is(E_Token::DEFAULT)
+         && next->Is(E_Token::PAREN_OPEN))
       {
-         pc->SetType(CT_SIZEOF);
+         pc->SetType(E_Token::SIZEOF);
       }
 
-      if (  pc->Is(CT_UNSAFE)
-         && next->IsNot(CT_BRACE_OPEN))
+      if (  pc->Is(E_Token::UNSAFE)
+         && next->IsNot(E_Token::BRACE_OPEN))
       {
-         pc->SetType(CT_QUALIFIER);
+         pc->SetType(E_Token::QUALIFIER);
       }
 
-      if (  (  pc->Is(CT_USING)
-            || (  pc->Is(CT_TRY)
+      if (  (  pc->Is(E_Token::USING)
+            || (  pc->Is(E_Token::TRY)
                && language_is_set(lang_flag_e::LANG_JAVA)))
-         && next->Is(CT_PAREN_OPEN))
+         && next->Is(E_Token::PAREN_OPEN))
       {
-         pc->SetType(CT_USING_STMT);
+         pc->SetType(E_Token::USING_STMT);
       }
 
       // Add minimal support for C++0x rvalue references
-      if (  pc->Is(CT_BOOL)
+      if (  pc->Is(E_Token::BOOL)
          && language_is_set(lang_flag_e::LANG_CPP)
          && pc->IsString("&&"))
       {
-         if (prev->Is(CT_TYPE))
+         if (prev->Is(E_Token::TYPE))
          {
             // Issue # 1002
             if (!pc->TestFlags(PCF_IN_TEMPLATE))
             {
-               pc->SetType(CT_BYREF);
+               pc->SetType(E_Token::BYREF);
             }
          }
       }
@@ -1108,11 +1108,11 @@ void tokenize_cleanup()
        * HACK: treat try followed by a colon as a qualifier to handle this:
        *   A::A(int) try : B() { } catch (...) { }
        */
-      if (  pc->Is(CT_TRY)
+      if (  pc->Is(E_Token::TRY)
          && pc->IsString("try")
-         && next->Is(CT_COLON))
+         && next->Is(E_Token::COLON))
       {
-         pc->SetType(CT_QUALIFIER);
+         pc->SetType(E_Token::QUALIFIER);
       }
 
       /*
@@ -1120,40 +1120,40 @@ void tokenize_cleanup()
        * a qualifier.
        */
       if (  language_is_set(lang_flag_e::LANG_JAVA)
-         && pc->Is(CT_SYNCHRONIZED)
-         && next->IsNot(CT_PAREN_OPEN))
+         && pc->Is(E_Token::SYNCHRONIZED)
+         && next->IsNot(E_Token::PAREN_OPEN))
       {
-         pc->SetType(CT_QUALIFIER);
+         pc->SetType(E_Token::QUALIFIER);
       }
 
-      // change CT_DC_MEMBER + CT_FOR into CT_DC_MEMBER + CT_FUNC_CALL
-      if (  pc->Is(CT_FOR)
-         && pc->GetPrev()->Is(CT_DC_MEMBER))
+      // change E_Token::DC_MEMBER + E_Token::FOR into E_Token::DC_MEMBER + E_Token::FUNC_CALL
+      if (  pc->Is(E_Token::FOR)
+         && pc->GetPrev()->Is(E_Token::DC_MEMBER))
       {
-         pc->SetType(CT_FUNC_CALL);
+         pc->SetType(E_Token::FUNC_CALL);
       }
 
       // Mark tokens inside macro-no-format-args macros
-      // When we find CT_MACRO_NO_FMT_ARGS, mark all tokens inside its parentheses
+      // When we find E_Token::MACRO_NO_FMT_ARGS, mark all tokens inside its parentheses
       // including the macro name, opening paren, all contents, and closing paren
-      if (pc->Is(CT_MACRO_NO_FMT_ARGS))
+      if (pc->Is(E_Token::MACRO_NO_FMT_ARGS))
       {
          // Find the opening paren
          Chunk *open_paren = next;
 
          // Skip any whitespace/newlines/comments between macro name and paren
          while (  open_paren->IsNotNullChunk()
-               && (  open_paren->Is(CT_NEWLINE)
-                  || open_paren->Is(CT_COMMENT)
-                  || open_paren->Is(CT_COMMENT_CPP)
-                  || open_paren->Is(CT_COMMENT_MULTI)))
+               && (  open_paren->Is(E_Token::NEWLINE)
+                  || open_paren->Is(E_Token::COMMENT)
+                  || open_paren->Is(E_Token::COMMENT_CPP)
+                  || open_paren->Is(E_Token::COMMENT_MULTI)))
          {
             open_paren = open_paren->GetNext();
          }
 
          if (  open_paren->IsNotNullChunk()
-            && (  open_paren->Is(CT_PAREN_OPEN)
-               || open_paren->Is(CT_FPAREN_OPEN)))
+            && (  open_paren->Is(E_Token::PAREN_OPEN)
+               || open_paren->Is(E_Token::FPAREN_OPEN)))
          {
             // Mark the macro name itself
             pc->SetFlagBits(PCF_IN_MACRO_NO_FMT_ARGS);
@@ -1167,13 +1167,13 @@ void tokenize_cleanup()
 
             while (tmp->IsNotNullChunk() && paren_level > 0)
             {
-               if (  tmp->Is(CT_PAREN_OPEN)
-                  || tmp->Is(CT_FPAREN_OPEN))
+               if (  tmp->Is(E_Token::PAREN_OPEN)
+                  || tmp->Is(E_Token::FPAREN_OPEN))
                {
                   paren_level++;
                }
-               else if (  tmp->Is(CT_PAREN_CLOSE)
-                       || tmp->Is(CT_FPAREN_CLOSE))
+               else if (  tmp->Is(E_Token::PAREN_CLOSE)
+                       || tmp->Is(E_Token::FPAREN_CLOSE))
                {
                   paren_level--;
                }
@@ -1195,9 +1195,9 @@ void tokenize_cleanup()
 
 static void cleanup_objc_property(Chunk *start)
 {
-   assert(start->Is(CT_OC_PROPERTY));
+   assert(start->Is(E_Token::OC_PROPERTY));
 
-   Chunk *open_paren = start->GetNextType(CT_PAREN_OPEN, start->GetLevel());
+   Chunk *open_paren = start->GetNextType(E_Token::PAREN_OPEN, start->GetLevel());
 
    if (open_paren->IsNullChunk())
    {
@@ -1206,7 +1206,7 @@ static void cleanup_objc_property(Chunk *start)
    }
    open_paren->SetParentType(start->GetType());
 
-   Chunk *tmp = start->GetNextType(CT_PAREN_CLOSE, start->GetLevel());
+   Chunk *tmp = start->GetNextType(E_Token::PAREN_CLOSE, start->GetLevel());
 
    if (tmp->IsNotNullChunk())
    {
@@ -1218,7 +1218,7 @@ static void cleanup_objc_property(Chunk *start)
          tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
          log_ruleStart("start statement/ expression", tmp);
 
-         tmp = tmp->GetNextType(CT_SEMICOLON, start->GetLevel());
+         tmp = tmp->GetNextType(E_Token::SEMICOLON, start->GetLevel());
 
          if (tmp->IsNotNullChunk())
          {
@@ -1233,26 +1233,26 @@ static void cleanup_objc_property(Chunk *start)
 
 static void mark_selectors_in_property_with_open_paren(Chunk *open_paren)
 {
-   assert(open_paren->Is(CT_PAREN_OPEN));
+   assert(open_paren->Is(E_Token::PAREN_OPEN));
 
    Chunk *tmp = open_paren;
 
-   while (tmp->IsNot(CT_PAREN_CLOSE))
+   while (tmp->IsNot(E_Token::PAREN_CLOSE))
    {
-      if (  tmp->Is(CT_WORD)
+      if (  tmp->Is(E_Token::WORD)
          && (  tmp->IsString("setter")
             || tmp->IsString("getter")))
       {
          tmp = tmp->GetNext();
 
          while (  tmp->IsNotNullChunk()
-               && tmp->IsNot(CT_COMMA)
-               && tmp->IsNot(CT_PAREN_CLOSE))
+               && tmp->IsNot(E_Token::COMMA)
+               && tmp->IsNot(E_Token::PAREN_CLOSE))
          {
-            if (  tmp->Is(CT_WORD)
+            if (  tmp->Is(E_Token::WORD)
                || tmp->IsString(":"))
             {
-               tmp->SetType(CT_OC_SEL_NAME);
+               tmp->SetType(E_Token::OC_SEL_NAME);
             }
             tmp = tmp->GetNext();
          }
@@ -1267,20 +1267,20 @@ static void mark_selectors_in_property_with_open_paren(Chunk *open_paren)
 
 static void mark_attributes_in_property_with_open_paren(Chunk *open_paren)
 {
-   assert(open_paren->Is(CT_PAREN_OPEN));
+   assert(open_paren->Is(E_Token::PAREN_OPEN));
 
    Chunk *tmp = open_paren;
 
-   while (tmp->IsNot(CT_PAREN_CLOSE))
+   while (tmp->IsNot(E_Token::PAREN_CLOSE))
    {
       Chunk *next = tmp->GetNext();
 
-      if (  (  tmp->Is(CT_COMMA)
-            || tmp->Is(CT_PAREN_OPEN))
-         && (  next->Is(CT_WORD)
-            || next->Is(CT_TYPE)))
+      if (  (  tmp->Is(E_Token::COMMA)
+            || tmp->Is(E_Token::PAREN_OPEN))
+         && (  next->Is(E_Token::WORD)
+            || next->Is(E_Token::TYPE)))
       {
-         next->SetType(CT_OC_PROPERTY_ATTR);
+         next->SetType(E_Token::OC_PROPERTY_ATTR);
       }
       tmp = next;
    }

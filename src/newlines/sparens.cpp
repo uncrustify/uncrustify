@@ -24,11 +24,11 @@ void newlines_sparens()
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *sparen_open = Chunk::GetHead()->GetNextType(CT_SPAREN_OPEN, ANY_LEVEL);
+   for (Chunk *sparen_open = Chunk::GetHead()->GetNextType(E_Token::SPAREN_OPEN, ANY_LEVEL);
         sparen_open->IsNotNullChunk();
-        sparen_open = sparen_open->GetNextType(CT_SPAREN_OPEN, ANY_LEVEL))
+        sparen_open = sparen_open->GetNextType(E_Token::SPAREN_OPEN, ANY_LEVEL))
    {
-      Chunk *sparen_close = sparen_open->GetNextType(CT_SPAREN_CLOSE, sparen_open->GetLevel());
+      Chunk *sparen_close = sparen_open->GetNextType(E_Token::SPAREN_CLOSE, sparen_open->GetLevel());
 
       if (sparen_close->IsNullChunk())
       {
@@ -61,8 +61,8 @@ void newlines_sparens()
          // add/remove trailing newline in an if condition
          const Chunk *ctrl_structure = sparen_open->GetPrevNcNnl();
 
-         if (  ctrl_structure->Is(CT_IF)
-            || ctrl_structure->Is(CT_ELSEIF))
+         if (  ctrl_structure->Is(E_Token::IF)
+            || ctrl_structure->Is(E_Token::ELSEIF))
          {
             log_rule_B("nl_before_if_closing_paren");
             newline_iarf_pair(sparen_content_end, sparen_close, options::nl_before_if_closing_paren());

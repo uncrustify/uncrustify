@@ -29,22 +29,22 @@ void newlines_squeeze_ifdef()
 
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      if (  pc->Is(CT_PREPROC)
+      if (  pc->Is(E_Token::PREPROC)
          && (  pc->GetLevel() > 0
             || options::nl_squeeze_ifdef_top_level()))
       {
          log_rule_B("nl_squeeze_ifdef_top_level");
          Chunk *ppr = pc->GetNext();
 
-         if (  ppr->Is(CT_PP_IF)
-            || ppr->Is(CT_PP_ELSE)
-            || ppr->Is(CT_PP_ENDIF))
+         if (  ppr->Is(E_Token::PP_IF)
+            || ppr->Is(E_Token::PP_ELSE)
+            || ppr->Is(E_Token::PP_ENDIF))
          {
             Chunk *pnl = Chunk::NullChunkPtr;
             Chunk *nnl = ppr->GetNextNl();
 
-            if (  ppr->Is(CT_PP_ELSE)
-               || ppr->Is(CT_PP_ENDIF))
+            if (  ppr->Is(E_Token::PP_ELSE)
+               || ppr->Is(E_Token::PP_ENDIF))
             {
                pnl = pc->GetPrevNl();
             }
@@ -68,8 +68,8 @@ void newlines_squeeze_ifdef()
                   }
                }
 
-               if (  ppr->Is(CT_PP_IF)
-                  || ppr->Is(CT_PP_ELSE))
+               if (  ppr->Is(E_Token::PP_IF)
+                  || ppr->Is(E_Token::PP_ELSE))
                {
                   if (nnl->GetNlCount() > 1)
                   {
@@ -98,7 +98,7 @@ void newlines_squeeze_paren_close()
       Chunk *next;
       Chunk *prev;
 
-      if (pc->Is(CT_NEWLINE))
+      if (pc->Is(E_Token::NEWLINE))
       {
          prev = pc->GetPrev();
       }
@@ -124,7 +124,7 @@ void newlines_squeeze_paren_close()
             tmp = tmp->GetPrev();
          }
 
-         if (tmp->IsNot(CT_NEWLINE))
+         if (tmp->IsNot(E_Token::NEWLINE))
          {
             flag = false;
          }
@@ -133,7 +133,7 @@ void newlines_squeeze_paren_close()
          {
             if (next_op->IsOnSameLine(prev_op))
             {
-               if (pc->Is(CT_NEWLINE))
+               if (pc->Is(E_Token::NEWLINE))
                {
                   pc = next;
                }

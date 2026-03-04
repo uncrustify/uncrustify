@@ -24,12 +24,12 @@ constexpr static auto LCURRENT = LNEWLINE;
 
 bool is_class_one_liner(Chunk *pc)
 {
-   if (  (  pc->Is(CT_FUNC_CLASS_DEF)
-         || pc->Is(CT_FUNC_DEF))
+   if (  (  pc->Is(E_Token::FUNC_CLASS_DEF)
+         || pc->Is(E_Token::FUNC_DEF))
       && pc->TestFlags(PCF_IN_CLASS))
    {
       // Find opening brace
-      pc = pc->GetNextType(CT_BRACE_OPEN, pc->GetLevel());
+      pc = pc->GetNextType(E_Token::BRACE_OPEN, pc->GetLevel());
       return(  pc->IsNotNullChunk()
             && pc->TestFlags(PCF_ONE_LINER));
    }
@@ -46,12 +46,12 @@ void nl_create_list_liner(Chunk *brace_open)
    {
       return;
    }
-   Chunk *closing = brace_open->GetNextType(CT_BRACE_CLOSE, brace_open->GetLevel());
+   Chunk *closing = brace_open->GetNextType(E_Token::BRACE_CLOSE, brace_open->GetLevel());
    Chunk *tmp     = brace_open;
 
    do
    {
-      if (tmp->Is(CT_COMMA))
+      if (tmp->Is(E_Token::COMMA))
       {
          return;
       }
@@ -77,7 +77,7 @@ void nl_create_one_liner(Chunk *vbrace_open)
    }
    size_t nl_total = 0;
 
-   while (tmp->IsNot(CT_VBRACE_CLOSE))
+   while (tmp->IsNot(E_Token::VBRACE_CLOSE))
    {
       if (tmp->IsNewline())
       {
@@ -109,19 +109,19 @@ void nl_handle_define(Chunk *pc)
 
    while ((nl = nl->GetNext())->IsNotNullChunk())
    {
-      if (nl->Is(CT_NEWLINE))
+      if (nl->Is(E_Token::NEWLINE))
       {
          return;
       }
 
-      if (  nl->Is(CT_MACRO)
-         || (  nl->Is(CT_FPAREN_CLOSE)
-            && nl->GetParentType() == CT_MACRO_FUNC))
+      if (  nl->Is(E_Token::MACRO)
+         || (  nl->Is(E_Token::FPAREN_CLOSE)
+            && nl->GetParentType() == E_Token::MACRO_FUNC))
       {
          ref = nl;
       }
 
-      if (nl->Is(CT_NL_CONT))
+      if (nl->Is(E_Token::NL_CONT))
       {
          if (ref->IsNotNullChunk())
          {
@@ -158,7 +158,7 @@ bool one_liner_nl_ok(Chunk *pc)
 
    if (br_open->IsBraceClose())
    {
-      br_open = br_open->GetPrevType(br_open->Is(CT_BRACE_CLOSE) ? CT_BRACE_OPEN : CT_VBRACE_OPEN,
+      br_open = br_open->GetPrevType(br_open->Is(E_Token::BRACE_CLOSE) ? E_Token::BRACE_OPEN : E_Token::VBRACE_OPEN,
                                      br_open->GetLevel(), E_Scope::ALL);
    }
    else
@@ -189,7 +189,7 @@ bool one_liner_nl_ok(Chunk *pc)
       log_rule_B("nl_assign_leave_one_liners");
 
       if (  options::nl_assign_leave_one_liners()
-         && pc->GetParentType() == CT_ASSIGN)
+         && pc->GetParentType() == E_Token::ASSIGN)
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (assign)\n", __func__, __LINE__);
          return(false);
@@ -197,7 +197,7 @@ bool one_liner_nl_ok(Chunk *pc)
       log_rule_B("nl_enum_leave_one_liners");
 
       if (  options::nl_enum_leave_one_liners()
-         && pc->GetParentType() == CT_ENUM)
+         && pc->GetParentType() == E_Token::ENUM)
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (enum)\n", __func__, __LINE__);
          return(false);
@@ -205,7 +205,7 @@ bool one_liner_nl_ok(Chunk *pc)
       log_rule_B("nl_getset_leave_one_liners");
 
       if (  options::nl_getset_leave_one_liners()
-         && pc->GetParentType() == CT_GETSET)
+         && pc->GetParentType() == E_Token::GETSET)
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (get/set), a new line may NOT be added\n", __func__, __LINE__);
          return(false);
@@ -214,7 +214,7 @@ bool one_liner_nl_ok(Chunk *pc)
       log_rule_B("nl_cs_property_leave_one_liners");
 
       if (  options::nl_cs_property_leave_one_liners()
-         && pc->GetParentType() == CT_CS_PROPERTY)
+         && pc->GetParentType() == E_Token::CS_PROPERTY)
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (c# property), a new line may NOT be added\n", __func__, __LINE__);
          return(false);
@@ -223,8 +223,8 @@ bool one_liner_nl_ok(Chunk *pc)
       log_ruleNL("nl_func_leave_one_liners", pc);
 
       if (  options::nl_func_leave_one_liners()
-         && (  pc->GetParentType() == CT_FUNC_DEF
-            || pc->GetParentType() == CT_FUNC_CLASS_DEF))
+         && (  pc->GetParentType() == E_Token::FUNC_DEF
+            || pc->GetParentType() == E_Token::FUNC_CLASS_DEF))
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (func def)\n", __func__, __LINE__);
          return(false);
@@ -232,7 +232,7 @@ bool one_liner_nl_ok(Chunk *pc)
       log_rule_B("nl_func_leave_one_liners");
 
       if (  options::nl_func_leave_one_liners()
-         && pc->GetParentType() == CT_OC_MSG_DECL)
+         && pc->GetParentType() == E_Token::OC_MSG_DECL)
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (method def)\n", __func__, __LINE__);
          return(false);
@@ -240,7 +240,7 @@ bool one_liner_nl_ok(Chunk *pc)
       log_rule_B("nl_cpp_lambda_leave_one_liners");
 
       if (  options::nl_cpp_lambda_leave_one_liners()
-         && ((pc->GetParentType() == CT_CPP_LAMBDA)))
+         && ((pc->GetParentType() == E_Token::CPP_LAMBDA)))
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (lambda)\n", __func__, __LINE__);
          return(false);
@@ -256,9 +256,9 @@ bool one_liner_nl_ok(Chunk *pc)
       log_rule_B("nl_if_leave_one_liners");
 
       if (  options::nl_if_leave_one_liners()
-         && (  pc->GetParentType() == CT_IF
-            || pc->GetParentType() == CT_ELSEIF
-            || pc->GetParentType() == CT_ELSE))
+         && (  pc->GetParentType() == E_Token::IF
+            || pc->GetParentType() == E_Token::ELSEIF
+            || pc->GetParentType() == E_Token::ELSE))
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (if/else)\n", __func__, __LINE__);
          return(false);
@@ -266,7 +266,7 @@ bool one_liner_nl_ok(Chunk *pc)
       log_rule_B("nl_while_leave_one_liners");
 
       if (  options::nl_while_leave_one_liners()
-         && pc->GetParentType() == CT_WHILE)
+         && pc->GetParentType() == E_Token::WHILE)
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (while)\n", __func__, __LINE__);
          return(false);
@@ -274,7 +274,7 @@ bool one_liner_nl_ok(Chunk *pc)
       log_rule_B("nl_do_leave_one_liners");
 
       if (  options::nl_do_leave_one_liners()
-         && pc->GetParentType() == CT_DO)
+         && pc->GetParentType() == E_Token::DO)
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (do)\n", __func__, __LINE__);
          return(false);
@@ -282,7 +282,7 @@ bool one_liner_nl_ok(Chunk *pc)
       log_rule_B("nl_for_leave_one_liners");
 
       if (  options::nl_for_leave_one_liners()
-         && pc->GetParentType() == CT_FOR)
+         && pc->GetParentType() == E_Token::FOR)
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (for)\n", __func__, __LINE__);
          return(false);
@@ -290,7 +290,7 @@ bool one_liner_nl_ok(Chunk *pc)
       log_rule_B("nl_namespace_two_to_one_liner - 2");
 
       if (  options::nl_namespace_two_to_one_liner()
-         && pc->GetParentType() == CT_NAMESPACE)
+         && pc->GetParentType() == E_Token::NAMESPACE)
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (namespace)\n", __func__, __LINE__);
          return(false);
@@ -354,7 +354,7 @@ bool nl_collapse_braced_one_liner(Chunk *br_open)
 {
    LOG_FUNC_ENTRY();
 
-   if (!br_open->Is(CT_BRACE_OPEN))
+   if (!br_open->Is(E_Token::BRACE_OPEN))
    {
       return(false);
    }
@@ -379,19 +379,19 @@ bool nl_collapse_braced_one_liner(Chunk *br_open)
 
    while ((tmp = tmp->GetNext()) != br_close)
    {
-      if (tmp->Is(CT_BRACE_OPEN))
+      if (tmp->Is(E_Token::BRACE_OPEN))
       {
          brace_depth++;
       }
-      else if (tmp->Is(CT_BRACE_CLOSE))
+      else if (tmp->Is(E_Token::BRACE_CLOSE))
       {
          brace_depth--;
       }
-      else if (tmp->Is(CT_PAREN_OPEN) || tmp->Is(CT_SPAREN_OPEN) || tmp->Is(CT_FPAREN_OPEN))
+      else if (tmp->Is(E_Token::PAREN_OPEN) || tmp->Is(E_Token::SPAREN_OPEN) || tmp->Is(E_Token::FPAREN_OPEN))
       {
          paren_depth++;
       }
-      else if (tmp->Is(CT_PAREN_CLOSE) || tmp->Is(CT_SPAREN_CLOSE) || tmp->Is(CT_FPAREN_CLOSE))
+      else if (tmp->Is(E_Token::PAREN_CLOSE) || tmp->Is(E_Token::SPAREN_CLOSE) || tmp->Is(E_Token::FPAREN_CLOSE))
       {
          paren_depth--;
       }
@@ -403,12 +403,12 @@ bool nl_collapse_braced_one_liner(Chunk *br_open)
 
       if (  brace_depth == 0
          && paren_depth == 0
-         && (  tmp->Is(CT_SEMICOLON)
-            || tmp->Is(CT_IF)
-            || tmp->Is(CT_FOR)
-            || tmp->Is(CT_WHILE)
-            || tmp->Is(CT_DO)
-            || tmp->Is(CT_SWITCH)))
+         && (  tmp->Is(E_Token::SEMICOLON)
+            || tmp->Is(E_Token::IF)
+            || tmp->Is(E_Token::FOR)
+            || tmp->Is(E_Token::WHILE)
+            || tmp->Is(E_Token::DO)
+            || tmp->Is(E_Token::SWITCH)))
       {
          stmt_count++;
       }

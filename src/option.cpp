@@ -45,7 +45,7 @@ static const char *DOC_TEXT_END = R"___(
 #       `set BOOL __AND__ __OR__`
 #
 #     tokenTypes are defined in src/token_enum.h, use them without the
-#     'CT_' prefix: 'CT_BOOL' => 'BOOL'
+#     'E_Token::' prefix: 'E_Token::BOOL' => 'BOOL'
 #
 #
 # - Token(s) can be treated as type(s) with the 'type' option.
@@ -1011,34 +1011,34 @@ void process_option_line(const std::string &config_line, const char *filename,
    {
       for (size_t i = 1; i < args.size(); ++i)
       {
-         add_keyword(args[i], CT_TYPE);
+         add_keyword(args[i], E_Token::TYPE);
       }
    }
    else if (cmd == "macro-open")
    {
-      add_keyword(args[1], CT_MACRO_OPEN);
+      add_keyword(args[1], E_Token::MACRO_OPEN);
    }
    else if (cmd == "macro-close")
    {
-      add_keyword(args[1], CT_MACRO_CLOSE);
+      add_keyword(args[1], E_Token::MACRO_CLOSE);
    }
    else if (cmd == "macro-else")
    {
-      add_keyword(args[1], CT_MACRO_ELSE);
+      add_keyword(args[1], E_Token::MACRO_ELSE);
    }
    else if (cmd == "macro-no-indent")
    {
-      add_keyword(args[1], CT_MACRO_NO_INDENT);
+      add_keyword(args[1], E_Token::MACRO_NO_INDENT);
    }
    else if (cmd == "macro-no-format-args")
    {
-      add_keyword(args[1], CT_MACRO_NO_FMT_ARGS);
+      add_keyword(args[1], E_Token::MACRO_NO_FMT_ARGS);
    }
    else if (cmd == "set")
    {
       const auto token = find_token_name(args[1].c_str());
 
-      if (token != CT_NONE)
+      if (token != E_Token::NONE)
       {
          LOG_FMT(LNOTE, "%s:%d set '%s':",
                  filename, cpd.line_number, args[1].c_str());

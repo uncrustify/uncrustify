@@ -37,8 +37,8 @@ void align_init_brace(Chunk *start)
    Chunk *pcSingle = scan_ib_line(pc);
 
    if (  pcSingle->IsNullChunk()
-      || (  pcSingle->Is(CT_BRACE_CLOSE)
-         && pcSingle->GetParentType() == CT_ASSIGN))
+      || (  pcSingle->Is(E_Token::BRACE_CLOSE)
+         && pcSingle->GetParentType() == E_Token::ASSIGN))
    {
       // single line - nothing to do
       LOG_FMT(LALBR, "%s(%d): single line - nothing to do\n", __func__, __LINE__);
@@ -69,7 +69,7 @@ void align_init_brace(Chunk *start)
 
    if (  options::align_on_tabstop()
       && cpd.al_cnt >= 1
-      && (cpd.al[0].type == CT_ASSIGN))
+      && (cpd.al[0].type == E_Token::ASSIGN))
    {
       cpd.al[0].col = align_tab_column(cpd.al[0].col);
    }
@@ -128,7 +128,7 @@ void align_init_brace(Chunk *start)
             }
 
             // Comma's need to 'fall back' to the previous token
-            if (pc->Is(CT_COMMA))
+            if (pc->Is(E_Token::COMMA))
             {
                next = pc->GetNext();
 
@@ -142,10 +142,10 @@ void align_init_brace(Chunk *start)
 
                   if (  (idx < (cpd.al_cnt - 1))
                      && options::align_number_right()
-                     && (  next->Is(CT_NUMBER_FP)
-                        || next->Is(CT_NUMBER)
-                        || next->Is(CT_POS)
-                        || next->Is(CT_NEG)))
+                     && (  next->Is(E_Token::NUMBER_FP)
+                        || next->Is(E_Token::NUMBER)
+                        || next->Is(E_Token::POS)
+                        || next->Is(E_Token::NEG)))
                   {
                      // Need to wait until the next match to indent numbers
                      num_token = next;
@@ -176,10 +176,10 @@ void align_init_brace(Chunk *start)
                   next = pc->GetNext();
 
                   if (  !next->IsNewline()
-                     && (  next->Is(CT_NUMBER_FP)
-                        || next->Is(CT_NUMBER)
-                        || next->Is(CT_POS)
-                        || next->Is(CT_NEG)))
+                     && (  next->Is(E_Token::NUMBER_FP)
+                        || next->Is(E_Token::NUMBER)
+                        || next->Is(E_Token::POS)
+                        || next->Is(E_Token::NEG)))
                   {
                      // Need to wait until the next match to indent numbers
                      num_token = next;

@@ -20,31 +20,31 @@ static bool for_needs_rewrite(Chunk *pc, E_Token desired_type)
    // preferred syntax for infinite loops and this 'for' is an infinite loop
    // with no extra tokens (such as inline comments).
 
-   if (desired_type == CT_FOR)
+   if (desired_type == E_Token::FOR)
    {
       return(false);
    }
    pc = pc->GetNext();
 
-   if (!pc->Is(CT_SPAREN_OPEN))
+   if (!pc->Is(E_Token::SPAREN_OPEN))
    {
       return(false);
    }
    pc = pc->GetNext();
 
-   if (!pc->Is(CT_SEMICOLON))
+   if (!pc->Is(E_Token::SEMICOLON))
    {
       return(false);
    }
    pc = pc->GetNext();
 
-   if (!pc->Is(CT_SEMICOLON))
+   if (!pc->Is(E_Token::SEMICOLON))
    {
       return(false);
    }
    pc = pc->GetNext();
 
-   if (!pc->Is(CT_SPAREN_CLOSE))
+   if (!pc->Is(E_Token::SPAREN_CLOSE))
    {
       return(false);
    }
@@ -62,7 +62,7 @@ static bool while_needs_rewrite(Chunk *keyword, E_Token desired_type, const char
    Chunk *condition = oparen->GetNext();
    Chunk *cparen    = condition->GetNext();
 
-   if (!oparen->Is(CT_SPAREN_OPEN))
+   if (!oparen->Is(E_Token::SPAREN_OPEN))
    {
       return(false);
    }
@@ -73,16 +73,16 @@ static bool while_needs_rewrite(Chunk *keyword, E_Token desired_type, const char
       return(false);
    }
 
-   if (!cparen->Is(CT_SPAREN_CLOSE))
+   if (!cparen->Is(E_Token::SPAREN_CLOSE))
    {
       return(false);
    }
 
-   if (keyword->Is(CT_WHILE_OF_DO))
+   if (keyword->Is(E_Token::WHILE_OF_DO))
    {
       Chunk *semicolon = cparen->GetNext();
 
-      if (!semicolon->Is(CT_SEMICOLON))
+      if (!semicolon->Is(E_Token::SEMICOLON))
       {
          return(false);
       }
@@ -114,18 +114,18 @@ void rewrite_loop_keyword(Chunk *keyword, E_Token new_type)
 
    switch (new_type)
    {
-   case CT_DO:
+   case E_Token::DO:
       keyword->SetOrigColEnd(keyword->GetOrigColEnd() + strlen("do") - keyword->Len());
       keyword->Text() = "do";
       break;
 
-   case CT_WHILE:
-   case CT_WHILE_OF_DO:
+   case E_Token::WHILE:
+   case E_Token::WHILE_OF_DO:
       keyword->SetOrigColEnd(keyword->GetOrigColEnd() + strlen("while") - keyword->Len());
       keyword->Text() = "while";
       break;
 
-   case CT_FOR:
+   case E_Token::FOR:
       keyword->SetOrigColEnd(keyword->GetOrigColEnd() + strlen("for") - keyword->Len());
       keyword->Text() = "for";
       break;
@@ -162,23 +162,23 @@ static void rewrite_loop_condition(Chunk * &source, Chunk * &destination,
    move_one_token(source, destination, desired_type);
 
    // Move the condition
-   if (desired_type == CT_FOR)
+   if (desired_type == E_Token::FOR)
    {
-      source->SetType(CT_SEMICOLON);
-      source->SetParentType(CT_FOR);
+      source->SetType(E_Token::SEMICOLON);
+      source->SetParentType(E_Token::FOR);
       source->Text() = ";";
       move_one_token(source, destination, desired_type);
       destination = (destination)->CopyAndAddAfter(destination);
    }
    else
    {
-      source->SetType(CT_WORD);
+      source->SetType(E_Token::WORD);
       source->Text() = desired_condition;
       move_one_token(source, destination, desired_type);
    }
 
    // If converting a 'for' to a 'while', delete the second semicolon
-   if (source->Is(CT_SEMICOLON))
+   if (source->Is(E_Token::SEMICOLON))
    {
       Chunk *next_source = source->GetNext();
       Chunk::Delete(source);
@@ -219,27 +219,27 @@ void rewrite_infinite_loops()
    switch (options::mod_infinite_loop())
    {
    case 1: // for(;;)
-      desired_type      = CT_FOR;
+      desired_type      = E_Token::FOR;
       desired_condition = nullptr;
       break;
 
    case 2: // while(true)
-      desired_type      = CT_WHILE;
+      desired_type      = E_Token::WHILE;
       desired_condition = "true";
       break;
 
    case 3: // do...while(true)
-      desired_type      = CT_WHILE_OF_DO;
+      desired_type      = E_Token::WHILE_OF_DO;
       desired_condition = "true";
       break;
 
    case 4: // while(1)
-      desired_type      = CT_WHILE;
+      desired_type      = E_Token::WHILE;
       desired_condition = "1";
       break;
 
    case 5: // do...while(1)
-      desired_type      = CT_WHILE_OF_DO;
+      desired_type      = E_Token::WHILE_OF_DO;
       desired_condition = "1";
       break;
 
@@ -249,26 +249,26 @@ void rewrite_infinite_loops()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      if (pc->Is(CT_DO))
+      if (pc->Is(E_Token::DO))
       {
          Chunk *start_brace   = find_start_brace(pc);
          Chunk *end_brace     = start_brace->GetClosingParen();
          Chunk *while_keyword = end_brace->GetNextNcNnl();
 
-         if (  !while_keyword->Is(CT_WHILE_OF_DO)
+         if (  !while_keyword->Is(E_Token::WHILE_OF_DO)
             || !while_needs_rewrite(while_keyword, desired_type, desired_condition))
          {
             continue;
          }
 
-         if (desired_type == CT_WHILE_OF_DO)
+         if (desired_type == E_Token::WHILE_OF_DO)
          {
             // Change the loop condition
             rewrite_loop_in_place(while_keyword, desired_type, desired_condition);
 
             // Update the braces' parent types
-            start_brace->SetParentType(CT_DO);
-            end_brace->SetParentType(CT_DO);
+            start_brace->SetParentType(E_Token::DO);
+            end_brace->SetParentType(E_Token::DO);
          }
          else
          {
@@ -292,30 +292,30 @@ void rewrite_infinite_loops()
             end_brace->SetParentType(desired_type);
          }
       }
-      else if (  (  pc->Is(CT_WHILE)
+      else if (  (  pc->Is(E_Token::WHILE)
                  && while_needs_rewrite(pc, desired_type, desired_condition))
-              || (  pc->Is(CT_FOR)
+              || (  pc->Is(E_Token::FOR)
                  && for_needs_rewrite(pc, desired_type)))
       {
          Chunk *start_brace = find_start_brace(pc);
          Chunk *end_brace   = start_brace->GetClosingParen();
 
-         if (desired_type == CT_WHILE_OF_DO)
+         if (desired_type == E_Token::WHILE_OF_DO)
          {
             Chunk *top    = pc;
             Chunk *bottom = end_brace;
 
-            if (bottom->Is(CT_VBRACE_CLOSE))
+            if (bottom->Is(E_Token::VBRACE_CLOSE))
             {
                // Insert a new line before the new 'while' keyword
                newline_add_before(bottom);
             }
             // Add a 'while' at the bottom of the loop
             bottom = top->CopyAndAddAfter(bottom);
-            rewrite_loop_keyword(bottom, CT_WHILE_OF_DO);
+            rewrite_loop_keyword(bottom, E_Token::WHILE_OF_DO);
 
             // Change the 'while' at the top of the loop to a 'do'
-            rewrite_loop_keyword(top, CT_DO);
+            rewrite_loop_keyword(top, E_Token::DO);
             top = top->GetNext();
 
             // Move the tokens from the top to the bottom
@@ -323,12 +323,12 @@ void rewrite_infinite_loops()
 
             // Add the final semicolon
             bottom = bottom->CopyAndAddAfter(bottom);
-            bottom->SetType(CT_SEMICOLON);
+            bottom->SetType(E_Token::SEMICOLON);
             bottom->Text() = ";";
 
             // Update the braces' parent types
-            start_brace->SetParentType(CT_DO);
-            end_brace->SetParentType(CT_DO);
+            start_brace->SetParentType(E_Token::DO);
+            end_brace->SetParentType(E_Token::DO);
          }
          else
          {

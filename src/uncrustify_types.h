@@ -172,7 +172,7 @@ enum class pattern_class_e : unsigned int
               *    add, get, remove, set                                      */
    PBRACED,  /** keyword + parens + braced statement:
               *    if, elseif, switch, for, while, synchronized,
-              *    using, lock, with, version, CT_D_SCOPE_IF                  */
+              *    using, lock, with, version, E_Token::D_SCOPE_IF                  */
    OPBRACED, /** keyword + optional parens + braced statement:
               *    catch, version, debug                                      */
    VBRACED,  /** keyword + value + braced statement:
@@ -181,7 +181,7 @@ enum class pattern_class_e : unsigned int
               *    while-of-do                                                */
    OPPAREN,  /** keyword + optional parens:
               *    invariant (D lang)                                         */
-   ELSE,     /** Special case of pattern_class_e::BRACED for handling CT_IF
+   ELSE,     /** Special case of pattern_class_e::BRACED for handling E_Token::IF
               *    else                                                       */
 };
 

@@ -152,12 +152,12 @@ static void split_before_chunk(Chunk *pc)
       // Mark open and close parens as continuation line chunks.
       // This will prevent an additional level and frame to be
       // added to the current frame stack (issue 3105).
-      if (  prev->Is(CT_PAREN_OPEN)
-         || prev->Is(CT_LPAREN_OPEN)
-         || prev->Is(CT_SPAREN_OPEN)
-         || prev->Is(CT_FPAREN_OPEN)
-         || prev->Is(CT_SQUARE_OPEN)
-         || prev->Is(CT_ANGLE_OPEN))
+      if (  prev->Is(E_Token::PAREN_OPEN)
+         || prev->Is(E_Token::LPAREN_OPEN)
+         || prev->Is(E_Token::SPAREN_OPEN)
+         || prev->Is(E_Token::FPAREN_OPEN)
+         || prev->Is(E_Token::SQUARE_OPEN)
+         || prev->Is(E_Token::ANGLE_OPEN))
       {
          LOG_FMT(LSPLIT, "%s(%d): set PCF_LINE_CONT for prev text '%s', orig line is %zu, orig col is %zu\n",
                  __func__, __LINE__, prev->GetLogText(), prev->GetOrigLine(), prev->GetOrigCol());
@@ -182,25 +182,25 @@ static void split_before_chunk(Chunk *pc)
 
 static TokenPriority pri_table[] =
 {
-   { CT_SEMICOLON,    1 },
-   { CT_COMMA,        2 },
-   { CT_BOOL,         3 },
-   { CT_COMPARE,      4 },
-   { CT_SHIFT,        5 },
-   { CT_ARITH,        6 },
-   { CT_CARET,        7 },
-   { CT_ASSIGN,       9 },
-   { CT_STRING,      10 },
-   { CT_FOR_COLON,   11 },
-   { CT_QUESTION,    20 }, // allow break in ? : for ls_code_width
-   { CT_COND_COLON,  20 },
-   { CT_FPAREN_OPEN, 21 }, // break after function open paren not followed by close paren
-   { CT_QUALIFIER,   25 },
-   { CT_CLASS,       25 },
-   { CT_STRUCT,      25 },
-   { CT_TYPE,        25 },
-   { CT_TYPENAME,    25 },
-   { CT_VOLATILE,    25 },
+   { E_Token::SEMICOLON,    1 },
+   { E_Token::COMMA,        2 },
+   { E_Token::BOOL,         3 },
+   { E_Token::COMPARE,      4 },
+   { E_Token::SHIFT,        5 },
+   { E_Token::ARITH,        6 },
+   { E_Token::CARET,        7 },
+   { E_Token::ASSIGN,       9 },
+   { E_Token::STRING,      10 },
+   { E_Token::FOR_COLON,   11 },
+   { E_Token::QUESTION,    20 }, // allow break in ? : for ls_code_width
+   { E_Token::COND_COLON,  20 },
+   { E_Token::FPAREN_OPEN, 21 }, // break after function open paren not followed by close paren
+   { E_Token::QUALIFIER,   25 },
+   { E_Token::CLASS,       25 },
+   { E_Token::STRUCT,      25 },
+   { E_Token::TYPE,        25 },
+   { E_Token::TYPENAME,    25 },
+   { E_Token::VOLATILE,    25 },
 };
 
 
@@ -210,12 +210,12 @@ void do_code_width()
    LOG_FMT(LSPLIT, "%s(%d)\n", __func__, __LINE__);
 
    // If indent_continue is negative, we want to look for long lines splits,
-   // so raise CT_FPAREN_OPEN priority to get better results.
+   // so raise E_Token::FPAREN_OPEN priority to get better results.
    if (options::indent_continue() < 0)
    {
       for (TokenPriority &token : pri_table)
       {
-         if (token.tok == CT_FPAREN_OPEN)
+         if (token.tok == E_Token::FPAREN_OPEN)
          {
             token.pri = 8; // Before assignment priority
             break;
@@ -226,11 +226,11 @@ void do_code_width()
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (  !pc->IsCommentOrNewline()
-         && pc->IsNot(CT_SPACE)
+         && pc->IsNot(E_Token::SPACE)
          && is_past_width(pc))
       {
-         if (  pc->Is(CT_VBRACE_CLOSE)  // don't break if a vbrace close
-            && pc->IsLastChunkOnLine()) // is the last chunk on its line
+         if (  pc->Is(E_Token::VBRACE_CLOSE) // don't break if a vbrace close
+            && pc->IsLastChunkOnLine())      // is the last chunk on its line
          {
             continue;
          }
@@ -290,7 +290,7 @@ static void try_split_here(SplitEntry &ent, Chunk *pc)
 
    if (  prev->IsNullChunk()
       || (  prev->IsNewline()
-         && pc->IsNot(CT_STRING)))
+         && pc->IsNot(E_Token::STRING)))
    {
       if (prev->IsNotNullChunk())
       {
@@ -301,11 +301,11 @@ static void try_split_here(SplitEntry &ent, Chunk *pc)
    }
 
    // Can't split a function without arguments
-   if (pc->Is(CT_FPAREN_OPEN))
+   if (pc->Is(E_Token::FPAREN_OPEN))
    {
       Chunk *next = pc->GetNext();
 
-      if (next->Is(CT_FPAREN_CLOSE))
+      if (next->Is(E_Token::FPAREN_CLOSE))
       {
          LOG_FMT(LSPLIT, "%s(%d): can't split a function without arguments, return\n", __func__, __LINE__);
          return;
@@ -313,11 +313,11 @@ static void try_split_here(SplitEntry &ent, Chunk *pc)
    }
 
    // Only split concatenated strings
-   if (pc->Is(CT_STRING))
+   if (pc->Is(E_Token::STRING))
    {
       Chunk *next = pc->GetNext();
 
-      if (next->IsNot(CT_STRING))
+      if (next->IsNot(E_Token::STRING))
       {
          LOG_FMT(LSPLIT, "%s(%d): only split concatenated strings, return\n", __func__, __LINE__);
          return;
@@ -337,7 +337,7 @@ static void try_split_here(SplitEntry &ent, Chunk *pc)
    {
       Chunk *next = pc->GetNext();
 
-      if (  next->IsNot(CT_WORD)
+      if (  next->IsNot(E_Token::WORD)
          && (get_split_pri(next->GetType()) != 25))
       {
          LOG_FMT(LSPLIT, "%s(%d): don't break after last term of a qualified type, return\n", __func__, __LINE__);
@@ -351,16 +351,16 @@ static void try_split_here(SplitEntry &ent, Chunk *pc)
    {
       // comma has a higher priority than bool, but in case nl_bool_expr_hierarchical is turned on
       // we want to break on bool if it is less nested than comma, so here the priority inversion is handled
-      if (  pc->Is(CT_COMMA)
-         && ent.pc->Is(CT_BOOL)
+      if (  pc->Is(E_Token::COMMA)
+         && ent.pc->Is(E_Token::BOOL)
          && ent.pc->GetLevel() < pc->GetLevel())
       {
          LOG_FMT(LSPLIT, "%s(%d): don't break after comma if there is a bool on less nested level\n", __func__, __LINE__);
          return;
       }
 
-      if (  pc->Is(CT_BOOL)
-         && ent.pc->Is(CT_COMMA)
+      if (  pc->Is(E_Token::BOOL)
+         && ent.pc->Is(E_Token::COMMA)
          && ent.pc->GetLevel() > pc->GetLevel())
       {
          LOG_FMT(LSPLIT, "%s(%d): found possible split on bool, because comma is on more nested level\n",
@@ -372,7 +372,7 @@ static void try_split_here(SplitEntry &ent, Chunk *pc)
    if (  ent.pc->IsNullChunk()
       || pc_pri < ent.pri
       || (  pc_pri == ent.pri
-         && pc->IsNot(CT_FPAREN_OPEN)
+         && pc->IsNot(E_Token::FPAREN_OPEN)
          && pc->GetLevel() < ent.pc->GetLevel()))
    {
       LOG_FMT(LSPLIT, "%s(%d): found possible split\n", __func__, __LINE__);
@@ -424,7 +424,7 @@ static bool split_line(Chunk *start)
    }
    else if (  start->TestFlags(PCF_IN_FCN_DEF)
            || start->TestFlags(PCF_IN_FCN_CALL)
-           || start->GetParentType() == CT_FUNC_PROTO)            // Issue #1169
+           || start->GetParentType() == E_Token::FUNC_PROTO)            // Issue #1169
    {
       /*
        * If this is in a function call or prototype, split on commas or right
@@ -457,7 +457,7 @@ static bool split_line(Chunk *start)
    LOG_FMT(LSPLIT, "%s(%d): try to find a split point\n", __func__, __LINE__);
    SplitEntry ent;
    ent.pc  = Chunk::NullChunkPtr;
-   ent.pri = CT_UNKNOWN;
+   ent.pri = E_Token::UNKNOWN;
 
    Chunk *pc = start->GetPrev();
    Chunk *prev;
@@ -468,7 +468,7 @@ static bool split_line(Chunk *start)
       LOG_FMT(LSPLIT, "%s(%d): text '%s', orig line is %zu, orig col is %zu\n",
               __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
 
-      if (pc->IsNot(CT_SPACE))
+      if (pc->IsNot(E_Token::SPACE))
       {
          try_split_here(ent, pc);
 
@@ -511,7 +511,7 @@ static bool split_line(Chunk *start)
       log_rule_B("pos_shift");
       log_rule_B("pos_bool");
 
-      if (ent.pc->Is(CT_BOOL))
+      if (ent.pc->Is(E_Token::BOOL))
       {
          if (  options::nl_bool_expr_hierarchical()
             && (  options::pos_bool() == TP_LEAD
@@ -522,19 +522,19 @@ static bool split_line(Chunk *start)
          }
       }
 
-      if (  (  ent.pc->Is(CT_SHIFT)
+      if (  (  ent.pc->Is(E_Token::SHIFT)
             && (options::pos_shift() & TP_LEAD))
-         || (  (  ent.pc->Is(CT_ARITH)
-               || ent.pc->Is(CT_CARET))
+         || (  (  ent.pc->Is(E_Token::ARITH)
+               || ent.pc->Is(E_Token::CARET))
             && (options::pos_arith() & TP_LEAD))
-         || (  ent.pc->Is(CT_ASSIGN)
+         || (  ent.pc->Is(E_Token::ASSIGN)
             && (options::pos_assign() & TP_LEAD))
-         || (  ent.pc->Is(CT_COMPARE)
+         || (  ent.pc->Is(E_Token::COMPARE)
             && (options::pos_compare() & TP_LEAD))
-         || (  (  ent.pc->Is(CT_COND_COLON)
-               || ent.pc->Is(CT_QUESTION))
+         || (  (  ent.pc->Is(E_Token::COND_COLON)
+               || ent.pc->Is(E_Token::QUESTION))
             && (options::pos_conditional() & TP_LEAD))
-         || (  ent.pc->Is(CT_BOOL)
+         || (  ent.pc->Is(E_Token::BOOL)
             && (options::pos_bool() & TP_LEAD)))
       {
          pc = ent.pc;
@@ -556,18 +556,18 @@ static bool split_line(Chunk *start)
       // On comma, close parenthesis/bracket/braces or semicolon, empty
       // parenthesis/brackets/braces pairs, skip after them since they
       // are small chunks and the split looks much better.
-      if (  pc->Is(CT_COMMA)
+      if (  pc->Is(E_Token::COMMA)
          || pc->IsSemicolon()
          || pc->IsParenClose()
          || pc->IsBraceClose()
-         || pc->Is(CT_ANGLE_CLOSE)
-         || pc->Is(CT_SQUARE_CLOSE)
+         || pc->Is(E_Token::ANGLE_CLOSE)
+         || pc->Is(E_Token::SQUARE_CLOSE)
          || (  pc->IsParenOpen()
             && next->IsParenClose())
          || (  pc->IsBraceOpen()
             && next->IsBraceClose())
-         || (  pc->Is(CT_SQUARE_OPEN)
-            && next->Is(CT_SQUARE_CLOSE))
+         || (  pc->Is(E_Token::SQUARE_OPEN)
+            && next->Is(E_Token::SQUARE_CLOSE))
          || pc->Len() == 0)
       {
          LOG_FMT(LSPLIT, "Move forward past the chuck");
@@ -590,18 +590,18 @@ static bool split_line(Chunk *start)
       pc = pc->GetNext();
       Chunk *next = pc->GetNext();
 
-      while (  pc->Is(CT_COMMA)
+      while (  pc->Is(E_Token::COMMA)
             || pc->IsSemicolon()
             || pc->IsParenClose()
             || pc->IsBraceClose()
-            || pc->Is(CT_ANGLE_CLOSE)
-            || pc->Is(CT_SQUARE_CLOSE)
+            || pc->Is(E_Token::ANGLE_CLOSE)
+            || pc->Is(E_Token::SQUARE_CLOSE)
             || (  pc->IsParenOpen()
                && next->IsParenClose())
             || (  pc->IsBraceOpen()
                && next->IsBraceClose())
-            || (  pc->Is(CT_SQUARE_OPEN)
-               && next->Is(CT_SQUARE_CLOSE)))
+            || (  pc->Is(E_Token::SQUARE_OPEN)
+               && next->Is(E_Token::SQUARE_CLOSE)))
       {
          pc   = next;
          next = pc->GetNext();
@@ -648,7 +648,7 @@ static void split_for_stmt(Chunk *start)
 
    while ((pc = pc->GetPrev())->IsNotNullChunk())
    {
-      if (pc->Is(CT_SPAREN_OPEN))
+      if (pc->Is(E_Token::SPAREN_OPEN))
       {
          open_paren = pc;
          break;
@@ -671,8 +671,8 @@ static void split_for_stmt(Chunk *start)
 
    pc = start;
 
-   if (  pc->Is(CT_SEMICOLON)
-      && pc->GetParentType() == CT_FOR)
+   if (  pc->Is(E_Token::SEMICOLON)
+      && pc->GetParentType() == E_Token::FOR)
    {
       st[count++] = pc;
    }
@@ -683,8 +683,8 @@ static void split_for_stmt(Chunk *start)
          && pc->IsNotNullChunk()
          && pc->TestFlags(PCF_IN_SPAREN))
    {
-      if (  pc->Is(CT_SEMICOLON)
-         && pc->GetParentType() == CT_FOR)
+      if (  pc->Is(E_Token::SEMICOLON)
+         && pc->GetParentType() == E_Token::FOR)
       {
          st[count++] = pc;
       }
@@ -696,8 +696,8 @@ static void split_for_stmt(Chunk *start)
          && ((pc = pc->GetNext())->IsNotNullChunk())
          && pc->TestFlags(PCF_IN_SPAREN))
    {
-      if (  pc->Is(CT_SEMICOLON)
-         && pc->GetParentType() == CT_FOR)
+      if (  pc->Is(E_Token::SEMICOLON)
+         && pc->GetParentType() == E_Token::FOR)
       {
          st[count++] = pc;
       }
@@ -720,7 +720,7 @@ static void split_for_stmt(Chunk *start)
 
    while ((pc = pc->GetNext()) != start)
    {
-      if (  pc->Is(CT_COMMA)
+      if (  pc->Is(E_Token::COMMA)
          && (pc->GetLevel() == (open_paren->GetLevel() + 1)))
       {
          split_before_chunk(pc->GetNext());
@@ -736,7 +736,7 @@ static void split_for_stmt(Chunk *start)
 
    while ((pc = pc->GetNext()) != start)
    {
-      if (  pc->Is(CT_ASSIGN)
+      if (  pc->Is(E_Token::ASSIGN)
          && (pc->GetLevel() == (open_paren->GetLevel() + 1)))
       {
          split_before_chunk(pc->GetNext());
@@ -766,7 +766,7 @@ static void split_fcn_params_full(Chunk *start)
       LOG_FMT(LSPLIT, "  %s(%d): %s, orig col is %zu, level is %zu\n",
               __func__, __LINE__, fpo->GetLogText(), fpo->GetOrigCol(), fpo->GetLevel());
 
-      if (  fpo->Is(CT_FPAREN_OPEN)
+      if (  fpo->Is(E_Token::FPAREN_OPEN)
          && (fpo->GetLevel() == start->GetLevel() - 1))
       {
          LOG_FMT(LSPLIT, "  %s(%d): found open paren\n", __func__, __LINE__);
@@ -784,7 +784,7 @@ static void split_fcn_params_full(Chunk *start)
       }
 
       if (  (pc->GetLevel() == (fpo->GetLevel() + 1))
-         && pc->Is(CT_COMMA))
+         && pc->Is(E_Token::COMMA))
       {
          split_before_chunk(pc->GetNext());
       }
@@ -814,7 +814,7 @@ void split_bool_expr(Chunk *start)
       LOG_FMT(LSPLIT, "  %s(%d): %s, orig col is %zu, level is %zu\n",
               __func__, __LINE__, pc->GetLogText(), pc->GetOrigCol(), pc->GetLevel());
 
-      if (pc->Is(CT_BOOL))
+      if (pc->Is(E_Token::BOOL))
       {
          last_operator_bool = pc;
       }
@@ -825,7 +825,7 @@ void split_bool_expr(Chunk *start)
    do
    {
       // in case this operator is preceded/succeeded by newline, it is already broken on it, skip it
-      if (pc->Is(CT_BOOL))
+      if (pc->Is(E_Token::BOOL))
       {
          bool already_broken = lead ? pc->GetPrev()->IsNewline() : pc->GetNext()->IsNewline();
 
@@ -835,7 +835,7 @@ void split_bool_expr(Chunk *start)
          }
       }
 
-      if (pc->Is(CT_RETURN))
+      if (pc->Is(E_Token::RETURN))
       {
          return_statement = pc;
       }
@@ -847,7 +847,7 @@ void split_bool_expr(Chunk *start)
 
    do
    {
-      if (  pc->Is(CT_BOOL)
+      if (  pc->Is(E_Token::BOOL)
          && pc->GetLevel() == top_level)
       {
          // in case of TP_TRAIL_BREAK and last operator is already at the end of line, skip it
@@ -898,7 +898,7 @@ static void split_template(Chunk *start)
       LOG_FMT(LSPLIT, "  %s(%d): prev '%s'\n", __func__, __LINE__, prev->GetLogText());
 
       if (  prev->IsNewline()
-         || prev->Is(CT_COMMA))
+         || prev->Is(E_Token::COMMA))
       {
          break;
       }

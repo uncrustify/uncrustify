@@ -1,13 +1,13 @@
 The alignment at the sign '=' must be divided in different cases.
-Case  CT_ASSIGN
+Case  E_Token::ASSIGN
         The most common case such as:
         a = 1;
 
-Case  CT_ASSIGN_DEFAULT_ARG
+Case  E_Token::ASSIGN_DEFAULT_ARG
         The default value for an argument such as:
         Foo( int Foo = 5 );
 
-Case  CT_ASSIGN_FUNC_PROTO
+Case  E_Token::ASSIGN_FUNC_PROTO
         The function prototype modifier such as:
         void* operator new(std::size_t) = delete;
         Foo( const Foo & ) = default;

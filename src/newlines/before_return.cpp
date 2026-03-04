@@ -35,7 +35,7 @@ void newline_before_return(Chunk *start)
    // Trailing comments are considered part of the previous token, not the
    // return statement.  They are handled below.
    while (  pc->IsComment()
-         && pc->GetParentType() != CT_COMMENT_END)
+         && pc->GetParentType() != E_Token::COMMENT_END)
    {
       pc = pc->GetPrev();
 
@@ -50,16 +50,16 @@ void newline_before_return(Chunk *start)
 
    // Peek over trailing comment of previous token
    if (  pc->IsComment()
-      && pc->GetParentType() == CT_COMMENT_END)
+      && pc->GetParentType() == E_Token::COMMENT_END)
    {
       pc = pc->GetPrev();
    }
 
    // Don't add extra blanks after an opening brace or a case statement
    if (  pc->IsNullChunk()
-      || (  pc->Is(CT_BRACE_OPEN)
-         || pc->Is(CT_VBRACE_OPEN)
-         || pc->Is(CT_CASE_COLON)))
+      || (  pc->Is(E_Token::BRACE_OPEN)
+         || pc->Is(E_Token::VBRACE_OPEN)
+         || pc->Is(E_Token::CASE_COLON)))
    {
       return;
    }

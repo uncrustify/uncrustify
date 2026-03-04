@@ -36,8 +36,8 @@ void newlines_do_else(Chunk *start, iarf_e nl_opt)
    Chunk *next = start->GetNextNcNnl();
 
    if (  next->IsNotNullChunk()
-      && (  next->Is(CT_BRACE_OPEN)
-         || next->Is(CT_VBRACE_OPEN)))
+      && (  next->Is(E_Token::BRACE_OPEN)
+         || next->Is(E_Token::VBRACE_OPEN)))
    {
       if (!one_liner_nl_ok(next))
       {
@@ -46,13 +46,13 @@ void newlines_do_else(Chunk *start, iarf_e nl_opt)
       }
       LOG_FMT(LNL1LINE, "%s(%d): a new line may be added\n", __func__, __LINE__);
 
-      if (next->Is(CT_VBRACE_OPEN))
+      if (next->Is(E_Token::VBRACE_OPEN))
       {
          // Can only add - we don't want to create a one-line here
          if (nl_opt & IARF_ADD)
          {
             newline_iarf_pair(start, next->GetNextNcNnl(), nl_opt);
-            Chunk *tmp = next->GetNextType(CT_VBRACE_CLOSE, next->GetLevel());
+            Chunk *tmp = next->GetNextType(E_Token::VBRACE_CLOSE, next->GetLevel());
 
             if (  !tmp->GetNextNc()->IsNewline()
                && !tmp->GetPrevNc()->IsNewline())

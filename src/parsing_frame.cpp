@@ -26,7 +26,7 @@ using std::invalid_argument;
 
 ParenStackEntry::ParenStackEntry()
 {
-   m_openToken       = CT_EOF;
+   m_openToken       = E_Token::EOFILE;
    m_openChunk       = Chunk::NullChunkPtr;
    m_openLevel       = 0;
    m_openLine        = 0;
@@ -39,7 +39,7 @@ ParenStackEntry::ParenStackEntry()
    m_indentContinue  = false;
    m_inPreproc       = false;
    m_nonVardef       = false;
-   m_parent          = CT_NONE;
+   m_parent          = E_Token::NONE;
    m_stage           = E_BraceStage::NONE;
    m_indentationData = { Chunk::NullChunkPtr, 0 };
    m_popChunk        = Chunk::NullChunkPtr;
@@ -62,7 +62,7 @@ ParsingFrame::ParsingFrame()
    m_ppLevel     = 0;
    m_sParenCount = 0;
    m_parenCount  = 0;
-   m_ifdefType   = E_Token::CT_NONE;
+   m_ifdefType   = E_Token::NONE;
    m_stmtCount   = 0;
    m_exprCount   = 0;
 }
@@ -158,67 +158,67 @@ void ParsingFrame::pop(const char *func, int line, Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (  pc->GetType() == CT_ACCESS
-      || pc->GetType() == CT_ANGLE_CLOSE
-      || pc->GetType() == CT_ANGLE_OPEN
-      || pc->GetType() == CT_ARITH                    // Issue #3965
-      || pc->GetType() == CT_ASSIGN
-      || pc->GetType() == CT_ASSIGN_FUNC_PROTO        // Issue #4026
-      || pc->GetType() == CT_BRACE_CLOSE
-      || pc->GetType() == CT_BRACE_OPEN
-      || pc->GetType() == CT_BOOL
-      || pc->GetType() == CT_CARET                    // Issue #4593
-      || pc->GetType() == CT_CASE
-      || pc->GetType() == CT_CLASS_COLON
-      || pc->GetType() == CT_COMMA
-      || pc->GetType() == CT_COMMENT
-      || pc->GetType() == CT_COMMENT_CPP
-      || pc->GetType() == CT_COMMENT_MULTI
-      || pc->GetType() == CT_COMPARE                  // Issue #3915
-      || pc->GetType() == CT_COND_COLON
-      || pc->GetType() == CT_DC_MEMBER                // Issue #4026
-      || pc->GetType() == CT_DESTRUCTOR               // Issue #4593
-      || pc->GetType() == CT_ELLIPSIS                 // Issue #4223
-      || pc->GetType() == CT_FPAREN_CLOSE
-      || pc->GetType() == CT_FPAREN_OPEN
-      || pc->GetType() == CT_FUNC_CTOR_VAR            // Issue #4026
-      || pc->GetType() == CT_INCDEC_AFTER             // Issue #4026
-      || pc->GetType() == CT_LPAREN_CLOSE
-      || pc->GetType() == CT_LPAREN_OPEN
-      || pc->GetType() == CT_MACRO_CLOSE
-      || pc->GetType() == CT_MACRO_FUNC_CALL          // Issue #4026
-      || pc->GetType() == CT_MACRO_OPEN
-      || pc->GetType() == CT_MEMBER                   // Issue #3996
-      || pc->GetType() == CT_NEWLINE
-      || pc->GetType() == CT_NONE
-      || pc->GetType() == CT_OC_END
-      || pc->GetType() == CT_OC_MSG_NAME
-      || pc->GetType() == CT_OC_PROPERTY
-      || pc->GetType() == CT_OC_SCOPE
-      || pc->GetType() == CT_OPERATOR                 // Issue #4026
-      || pc->GetType() == CT_PARAMETER_PACK           // Issue #4075
-      || pc->GetType() == CT_PAREN_CLOSE
-      || pc->GetType() == CT_PAREN_OPEN
-      || pc->GetType() == CT_PREPROC
-      || pc->GetType() == CT_QUESTION                 // Issue #4023
-      || pc->GetType() == CT_RPAREN_CLOSE             // Issue #3914
-      || pc->GetType() == CT_RPAREN_OPEN
-      || pc->GetType() == CT_SBOOL                    // Issue #3965
-      || pc->GetType() == CT_SEMICOLON
-      || pc->GetType() == CT_SHIFT                    // Issue #3983
-      || pc->GetType() == CT_SPAREN_CLOSE
-      || pc->GetType() == CT_SPAREN_OPEN
-      || pc->GetType() == CT_SQL_END
-      || pc->GetType() == CT_SQUARE_CLOSE
-      || pc->GetType() == CT_SQUARE_OPEN
-      || pc->GetType() == CT_TEMPLATE                 // Issue #4220
-      || pc->GetType() == CT_TPAREN_CLOSE
-      || pc->GetType() == CT_TPAREN_OPEN
-      || pc->GetType() == CT_TYPEDEF
-      || pc->GetType() == CT_VBRACE_CLOSE
-      || pc->GetType() == CT_VBRACE_OPEN
-      || pc->GetType() == CT_VSEMICOLON
-      || pc->GetType() == CT_WORD)
+   if (  pc->GetType() == E_Token::ACCESS
+      || pc->GetType() == E_Token::ANGLE_CLOSE
+      || pc->GetType() == E_Token::ANGLE_OPEN
+      || pc->GetType() == E_Token::ARITH                    // Issue #3965
+      || pc->GetType() == E_Token::ASSIGN
+      || pc->GetType() == E_Token::ASSIGN_FUNC_PROTO        // Issue #4026
+      || pc->GetType() == E_Token::BRACE_CLOSE
+      || pc->GetType() == E_Token::BRACE_OPEN
+      || pc->GetType() == E_Token::BOOL
+      || pc->GetType() == E_Token::CARET                    // Issue #4593
+      || pc->GetType() == E_Token::CASE
+      || pc->GetType() == E_Token::CLASS_COLON
+      || pc->GetType() == E_Token::COMMA
+      || pc->GetType() == E_Token::COMMENT
+      || pc->GetType() == E_Token::COMMENT_CPP
+      || pc->GetType() == E_Token::COMMENT_MULTI
+      || pc->GetType() == E_Token::COMPARE                  // Issue #3915
+      || pc->GetType() == E_Token::COND_COLON
+      || pc->GetType() == E_Token::DC_MEMBER                // Issue #4026
+      || pc->GetType() == E_Token::DESTRUCTOR               // Issue #4593
+      || pc->GetType() == E_Token::ELLIPSIS                 // Issue #4223
+      || pc->GetType() == E_Token::FPAREN_CLOSE
+      || pc->GetType() == E_Token::FPAREN_OPEN
+      || pc->GetType() == E_Token::FUNC_CTOR_VAR            // Issue #4026
+      || pc->GetType() == E_Token::INCDEC_AFTER             // Issue #4026
+      || pc->GetType() == E_Token::LPAREN_CLOSE
+      || pc->GetType() == E_Token::LPAREN_OPEN
+      || pc->GetType() == E_Token::MACRO_CLOSE
+      || pc->GetType() == E_Token::MACRO_FUNC_CALL          // Issue #4026
+      || pc->GetType() == E_Token::MACRO_OPEN
+      || pc->GetType() == E_Token::MEMBER                   // Issue #3996
+      || pc->GetType() == E_Token::NEWLINE
+      || pc->GetType() == E_Token::NONE
+      || pc->GetType() == E_Token::OC_END
+      || pc->GetType() == E_Token::OC_MSG_NAME
+      || pc->GetType() == E_Token::OC_PROPERTY
+      || pc->GetType() == E_Token::OC_SCOPE
+      || pc->GetType() == E_Token::OPERATOR                 // Issue #4026
+      || pc->GetType() == E_Token::PARAMETER_PACK           // Issue #4075
+      || pc->GetType() == E_Token::PAREN_CLOSE
+      || pc->GetType() == E_Token::PAREN_OPEN
+      || pc->GetType() == E_Token::PREPROC
+      || pc->GetType() == E_Token::QUESTION                 // Issue #4023
+      || pc->GetType() == E_Token::RPAREN_CLOSE             // Issue #3914
+      || pc->GetType() == E_Token::RPAREN_OPEN
+      || pc->GetType() == E_Token::SBOOL                    // Issue #3965
+      || pc->GetType() == E_Token::SEMICOLON
+      || pc->GetType() == E_Token::SHIFT                    // Issue #3983
+      || pc->GetType() == E_Token::SPAREN_CLOSE
+      || pc->GetType() == E_Token::SPAREN_OPEN
+      || pc->GetType() == E_Token::SQL_END
+      || pc->GetType() == E_Token::SQUARE_CLOSE
+      || pc->GetType() == E_Token::SQUARE_OPEN
+      || pc->GetType() == E_Token::TEMPLATE                 // Issue #4220
+      || pc->GetType() == E_Token::TPAREN_CLOSE
+      || pc->GetType() == E_Token::TPAREN_OPEN
+      || pc->GetType() == E_Token::TYPEDEF
+      || pc->GetType() == E_Token::VBRACE_CLOSE
+      || pc->GetType() == E_Token::VBRACE_OPEN
+      || pc->GetType() == E_Token::VSEMICOLON
+      || pc->GetType() == E_Token::WORD)
    {
       LOG_FMT(LINDPSE, "ParsingFrame::pop (%s:%d): orig line is %4zu, orig col is %4zu, type is %12s\n",
               func, line, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));

@@ -33,19 +33,19 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       LOG_FMT(LFPARAM, "%s(%d): text is '%s', type is %s\n",
               __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()));
 
-      if (  pc->Is(CT_QUALIFIER)
-         || pc->Is(CT_STRUCT)
-         || pc->Is(CT_ENUM)
-         || pc->Is(CT_UNION)
-         || pc->Is(CT_TYPENAME))
+      if (  pc->Is(E_Token::QUALIFIER)
+         || pc->Is(E_Token::STRUCT)
+         || pc->Is(E_Token::ENUM)
+         || pc->Is(E_Token::UNION)
+         || pc->Is(E_Token::TYPENAME))
       {
          LOG_FMT(LFPARAM, "%s(%d): <== %s! (yes)\n",
                  __func__, __LINE__, get_token_name(pc->GetType()));
          return(true);
       }
 
-      if (  pc->Is(CT_WORD)
-         || pc->Is(CT_TYPE))
+      if (  pc->Is(E_Token::WORD)
+         || pc->Is(E_Token::TYPE))
       {
          ++word_count;
 
@@ -55,13 +55,13 @@ bool can_be_full_param(Chunk *start, Chunk *end)
             first_word_set = true;
          }
 
-         if (pc->Is(CT_TYPE))
+         if (pc->Is(E_Token::TYPE))
          {
             ++type_count;
          }
       }
-      else if (  pc->Is(CT_MEMBER)
-              || pc->Is(CT_DC_MEMBER))
+      else if (  pc->Is(E_Token::MEMBER)
+              || pc->Is(E_Token::DC_MEMBER))
       {
          if (word_count > 0)
          {
@@ -73,19 +73,19 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       {
          // chunk is OK
       }
-      else if (pc->Is(CT_ASSIGN))
+      else if (pc->Is(E_Token::ASSIGN))
       {
          // chunk is OK (default values)
          break;
       }
-      else if (pc->Is(CT_ANGLE_OPEN))
+      else if (pc->Is(E_Token::ANGLE_OPEN))
       {
          LOG_FMT(LFPARAM, "%s(%d): <== template\n",
                  __func__, __LINE__);
 
          return(true);
       }
-      else if (pc->Is(CT_ELLIPSIS))
+      else if (pc->Is(E_Token::ELLIPSIS))
       {
          LOG_FMT(LFPARAM, "%s(%d): <== ellipsis\n",
                  __func__, __LINE__);
@@ -93,7 +93,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          return(true);
       }
       else if (  word_count == 0
-              && pc->Is(CT_PAREN_OPEN))
+              && pc->Is(E_Token::PAREN_OPEN))
       {
          // Check for old-school func proto param '(type)'
          Chunk *tmp1 = pc->GetClosingParen(E_Scope::PREPROC);
@@ -109,7 +109,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
             return(false);
          }
 
-         if (  tmp2->Is(CT_COMMA)
+         if (  tmp2->Is(E_Token::COMMA)
             || tmp2->IsParenClose())
          {
             do
@@ -137,7 +137,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       }
       else if (  (  word_count == 1
                  || (word_count == type_count))
-              && pc->Is(CT_PAREN_OPEN))
+              && pc->Is(E_Token::PAREN_OPEN))
       {
          // Check for func proto param 'void (*name)' or 'void (*name)(params)' or 'void (^name)(params)'
          // <name> can be optional
@@ -149,7 +149,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          }
          Chunk *tmp2 = tmp1->GetNextNcNnl(E_Scope::PREPROC);
 
-         if (tmp2->Is(CT_QUALIFIER))
+         if (tmp2->Is(E_Token::QUALIFIER))
          {
             // tmp2 is the "nullable" qualifier in this case:
             // void (^nullable name)(params)
@@ -171,7 +171,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          if (  !tmp3->IsString(")")
             || !(  tmp1->IsString("*")
                 || tmp1->IsString("^")) // Issue #2656
-            || !(  tmp2->GetType() == CT_WORD
+            || !(  tmp2->GetType() == E_Token::WORD
                 || tmp2->IsString(")")))
          {
             LOG_FMT(LFPARAM, "%s(%d): <== '%s' not fcn type!\n",
@@ -200,12 +200,12 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          word_count = 1;
          type_count = 1;
       }
-      else if (pc->Is(CT_TSQUARE))
+      else if (pc->Is(E_Token::TSQUARE))
       {
          // ignore it
       }
       else if (  word_count == 1
-              && pc->Is(CT_SQUARE_OPEN))
+              && pc->Is(E_Token::SQUARE_OPEN))
       {
          // skip over any array stuff
          pc = pc->GetClosingParen(E_Scope::PREPROC);
@@ -213,7 +213,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
                  __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()));
       }
       else if (  word_count == 2
-              && pc->Is(CT_SQUARE_OPEN))
+              && pc->Is(E_Token::SQUARE_OPEN))
       {
          // Bug #671: is it such as: bool foo[FOO_MAX]
          pc = pc->GetClosingParen(E_Scope::PREPROC);
@@ -256,7 +256,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
               __func__, __LINE__);
       // Oh, joy, we are in Most Vexing Parse territory
       Chunk *brace =
-         start->GetPrevType(CT_BRACE_OPEN, start->GetBraceLevel() - 1);
+         start->GetPrevType(E_Token::BRACE_OPEN, start->GetBraceLevel() - 1);
 
       if (brace->IsNotNullChunk())
       {
@@ -266,8 +266,8 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       }
 
       if (  brace->IsNotNullChunk()
-         && (  brace->GetParentType() == CT_CLASS
-            || brace->GetParentType() == CT_STRUCT))
+         && (  brace->GetParentType() == E_Token::CLASS
+            || brace->GetParentType() == E_Token::STRUCT))
       {
          // A Most Vexing Parse variable declaration cannot occur in the body
          // of a struct/class, so we probably have a function prototype
@@ -329,22 +329,22 @@ bool chunk_ends_type(Chunk *start)
               pc->GetOrigLine(), pc->GetOrigCol());
       log_pcf_flags(LFTYPE, pc->GetFlags());
 
-      if (  pc->Is(CT_WORD)
-         || pc->Is(CT_TYPE)
-         || pc->Is(CT_PTR_TYPE)
-         || pc->Is(CT_STAR)
-         || pc->Is(CT_STRUCT)
-         || pc->Is(CT_DC_MEMBER)
-         || pc->Is(CT_PP)
-         || pc->Is(CT_QUALIFIER)
+      if (  pc->Is(E_Token::WORD)
+         || pc->Is(E_Token::TYPE)
+         || pc->Is(E_Token::PTR_TYPE)
+         || pc->Is(E_Token::STAR)
+         || pc->Is(E_Token::STRUCT)
+         || pc->Is(E_Token::DC_MEMBER)
+         || pc->Is(E_Token::PP)
+         || pc->Is(E_Token::QUALIFIER)
          || (  (  language_is_set(lang_flag_e::LANG_CPP)
                || language_is_set(lang_flag_e::LANG_OC))                       // Issue #2727
-            && pc->GetParentType() == CT_TEMPLATE
-            && (  pc->Is(CT_ANGLE_OPEN)
-               || pc->Is(CT_ANGLE_CLOSE)))
+            && pc->GetParentType() == E_Token::TEMPLATE
+            && (  pc->Is(E_Token::ANGLE_OPEN)
+               || pc->Is(E_Token::ANGLE_CLOSE)))
          || (  (  language_is_set(lang_flag_e::LANG_CS)
                || language_is_set(lang_flag_e::LANG_VALA))
-            && (pc->Is(CT_MEMBER))))
+            && (pc->Is(E_Token::MEMBER))))
       {
          cnt++;
          last_expr = pc->TestFlags(PCF_EXPR_START)
@@ -359,22 +359,22 @@ bool chunk_ends_type(Chunk *start)
 
       if (  (  pc->IsSemicolon()
             && !pc->TestFlags(PCF_IN_FOR))
-         || pc->Is(CT_TYPEDEF)
-         || pc->Is(CT_BRACE_OPEN)
+         || pc->Is(E_Token::TYPEDEF)
+         || pc->Is(E_Token::BRACE_OPEN)
          || pc->IsBraceClose()
-         || pc->Is(CT_FPAREN_CLOSE)
+         || pc->Is(E_Token::FPAREN_CLOSE)
          || pc->IsOCForinOpenParen()
-         || pc->Is(CT_MACRO)
-         || pc->Is(CT_PP_IF)
-         || pc->Is(CT_PP_ELSE)
-         || pc->Is(CT_PP_ENDIF)
-         || pc->GetParentType() == CT_PP_INCLUDE                       // Issue #3233
-         || (  (  pc->Is(CT_COMMA)
+         || pc->Is(E_Token::MACRO)
+         || pc->Is(E_Token::PP_IF)
+         || pc->Is(E_Token::PP_ELSE)
+         || pc->Is(E_Token::PP_ENDIF)
+         || pc->GetParentType() == E_Token::PP_INCLUDE                       // Issue #3233
+         || (  (  pc->Is(E_Token::COMMA)
                && !pc->TestFlags(PCF_IN_FCN_CALL)
                && get_cpp_template_angle_nest_level(start) ==
                   get_cpp_template_angle_nest_level(pc))
             && last_expr)
-         || (  pc->Is(CT_SPAREN_OPEN)
+         || (  pc->Is(E_Token::SPAREN_OPEN)
             && last_lval))
       {
          ret = cnt > 0;
@@ -444,13 +444,13 @@ size_t get_cpp_template_angle_nest_level(Chunk *pc)
    while (  pc->IsNotNullChunk()
          && pc->TestFlags(PCF_IN_TEMPLATE))
    {
-      if (  pc->Is(CT_ANGLE_CLOSE)
-         && pc->GetParentType() == CT_TEMPLATE)
+      if (  pc->Is(E_Token::ANGLE_CLOSE)
+         && pc->GetParentType() == E_Token::TEMPLATE)
       {
          --nestLevel;
       }
-      else if (  pc->Is(CT_ANGLE_OPEN)
-              && pc->GetParentType() == CT_TEMPLATE)
+      else if (  pc->Is(E_Token::ANGLE_OPEN)
+              && pc->GetParentType() == E_Token::TEMPLATE)
       {
          ++nestLevel;
       }
@@ -469,8 +469,8 @@ Chunk *get_d_template_types(ChunkStack &cs, Chunk *open_paren)
    while (  tmp->IsNullChunk()
          && tmp->GetLevel() > open_paren->GetLevel())
    {
-      if (  tmp->Is(CT_TYPE)
-         || tmp->Is(CT_WORD))
+      if (  tmp->Is(E_Token::TYPE)
+         || tmp->Is(E_Token::WORD))
       {
          if (maybe_type)
          {
@@ -479,7 +479,7 @@ Chunk *get_d_template_types(ChunkStack &cs, Chunk *open_paren)
          }
          maybe_type = false;
       }
-      else if (tmp->Is(CT_COMMA))
+      else if (tmp->Is(E_Token::COMMA))
       {
          maybe_type = true;
       }
@@ -500,7 +500,7 @@ bool go_on(Chunk *pc, Chunk *start)
    if (pc->TestFlags(PCF_IN_FOR))
    {
       return(  (!pc->IsSemicolon())
-            && (!(pc->Is(CT_COLON))));
+            && (!(pc->Is(E_Token::COLON))));
    }
    return(!pc->IsSemicolon());
 } // go_on
@@ -526,21 +526,21 @@ void make_type(Chunk *pc)
 
    if (pc->IsNotNullChunk())
    {
-      if (pc->Is(CT_WORD))
+      if (pc->Is(E_Token::WORD))
       {
-         pc->SetType(CT_TYPE);
+         pc->SetType(E_Token::TYPE);
       }
       else if (  (  pc->IsStar()
                  || pc->IsMsRef()
                  || pc->IsNullable())
               && pc->GetPrev()->IsTypeDefinition())               // Issue # 2640
       {
-         pc->SetType(CT_PTR_TYPE);
+         pc->SetType(E_Token::PTR_TYPE);
       }
       else if (  pc->IsAddress()
-              && pc->GetPrev()->IsNot(CT_SQUARE_OPEN))            // Issue # 2166
+              && pc->GetPrev()->IsNot(E_Token::SQUARE_OPEN))            // Issue # 2166
       {
-         pc->SetType(CT_BYREF);
+         pc->SetType(E_Token::BYREF);
       }
    }
 } // make_type

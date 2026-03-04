@@ -64,7 +64,7 @@ void align_same_func_call_params()
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
       }
 
-      if (pc->IsNot(CT_FUNC_CALL))
+      if (pc->IsNot(E_Token::FUNC_CALL))
       {
          if (pc->IsNewline())
          {
@@ -75,9 +75,9 @@ void align_same_func_call_params()
 
             fcn_as.NewLines(pc->GetNlCount());
          }
-         else if (pc->Is(CT_FUNC_CTOR_VAR))                             // Issue #3916
+         else if (pc->Is(E_Token::FUNC_CTOR_VAR))                             // Issue #3916
          {
-            Chunk *open_paren  = pc->GetNextType(CT_FPAREN_OPEN, pc->GetLevel());
+            Chunk *open_paren  = pc->GetNextType(E_Token::FPAREN_OPEN, pc->GetLevel());
             Chunk *close_paren = open_paren->GetClosingParen();
             LOG_FMT(LAS, "%s(%3d): orig line is %zu, orig col is %zu, text '%s', type is %s\n",
                     __func__, __LINE__, open_paren->GetOrigLine(), open_paren->GetOrigCol(), open_paren->GetLogText(), get_token_name(open_paren->GetType()));
@@ -106,16 +106,16 @@ void align_same_func_call_params()
          }
          continue;
       }
-      // only if (pc->Is(CT_FUNC_CALL))
+      // only if (pc->Is(E_Token::FUNC_CALL))
       // Only align function calls that are right after a newline
       Chunk *prev = pc->GetPrev();
 
-      while (  prev->Is(CT_MEMBER)
-            || prev->Is(CT_DC_MEMBER))
+      while (  prev->Is(E_Token::MEMBER)
+            || prev->Is(E_Token::DC_MEMBER))
       {
          Chunk *tprev = prev->GetPrev();
 
-         if (tprev->IsNot(CT_TYPE))
+         if (tprev->IsNot(E_Token::TYPE))
          {
             prev = tprev;
             break;
@@ -220,10 +220,10 @@ void align_same_func_call_params()
 
                if (!options::align_number_right())
                {
-                  if (  chunks[idx]->Is(CT_NUMBER_FP)
-                     || chunks[idx]->Is(CT_NUMBER)
-                     || chunks[idx]->Is(CT_POS)
-                     || chunks[idx]->Is(CT_NEG))
+                  if (  chunks[idx]->Is(E_Token::NUMBER_FP)
+                     || chunks[idx]->Is(E_Token::NUMBER)
+                     || chunks[idx]->Is(E_Token::POS)
+                     || chunks[idx]->Is(E_Token::NEG))
                   {
                      log_rule_B("align_on_tabstop");
                      array_of_AlignStack[idx].m_right_align = !options::align_on_tabstop();
@@ -256,7 +256,7 @@ void align_params(Chunk *start, std::deque<Chunk *> &chunks)
    chunks.clear();
 
    bool  hit_comma = true;
-   Chunk *pc       = start->GetNextType(CT_FPAREN_OPEN, start->GetLevel());
+   Chunk *pc       = start->GetNextType(E_Token::FPAREN_OPEN, start->GetLevel());
 
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
@@ -264,8 +264,8 @@ void align_params(Chunk *start, std::deque<Chunk *> &chunks)
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText());
 
       if (  pc->IsNewline()
-         || pc->Is(CT_SEMICOLON)
-         || (  pc->Is(CT_FPAREN_CLOSE)
+         || pc->Is(E_Token::SEMICOLON)
+         || (  pc->Is(E_Token::FPAREN_CLOSE)
             && pc->GetLevel() == start->GetLevel()))
       {
          break;
@@ -280,7 +280,7 @@ void align_params(Chunk *start, std::deque<Chunk *> &chunks)
             chunks.push_back(pc);
             hit_comma = false;
          }
-         else if (pc->Is(CT_COMMA))
+         else if (pc->Is(E_Token::COMMA))
          {
             hit_comma = true;
          }

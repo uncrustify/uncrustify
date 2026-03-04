@@ -52,9 +52,9 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
               __func__, __LINE__, pc->GetOrigLine(), pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       // Don't check inside SPAREN, PAREN or SQUARE groups
-      if (  pc->Is(CT_SPAREN_OPEN)
-         || pc->Is(CT_SQUARE_OPEN)
-         || pc->Is(CT_PAREN_OPEN))
+      if (  pc->Is(E_Token::SPAREN_OPEN)
+         || pc->Is(E_Token::SQUARE_OPEN)
+         || pc->Is(E_Token::PAREN_OPEN))
       {
          LOG_FMT(LALASS, "%s(%d)OK: Don't check inside SPAREN, PAREN or SQUARE groups, type is %s\n",
                  __func__, __LINE__, get_token_name(pc->GetType()));
@@ -69,8 +69,8 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
       }
 
       // Recurse if a brace set is found
-      if (  pc->Is(CT_BRACE_OPEN)
-         && !(pc->GetParentType() == CT_BRACED_INIT_LIST))
+      if (  pc->Is(E_Token::BRACE_OPEN)
+         && !(pc->GetParentType() == E_Token::BRACED_INIT_LIST))
       {
          size_t myspan;
          size_t mythresh;
@@ -96,9 +96,9 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
       }
 
       // Done with this brace set?
-      if (  (  pc->Is(CT_BRACE_CLOSE)
-            || pc->Is(CT_VBRACE_CLOSE))
-         && !(pc->GetParentType() == CT_BRACED_INIT_LIST))
+      if (  (  pc->Is(E_Token::BRACE_CLOSE)
+            || pc->Is(E_Token::VBRACE_CLOSE))
+         && !(pc->GetParentType() == E_Token::BRACED_INIT_LIST))
       {
          pc = pc->GetNext();
          break;
@@ -132,8 +132,8 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
       }
       else if (  equ_count == 0
               && !pc->TestFlags(PCF_IN_TEMPLATE)
-              && pc->Is(CT_BRACE_OPEN)
-              && (pc->GetParentType() == CT_BRACED_INIT_LIST))
+              && pc->Is(E_Token::BRACE_OPEN)
+              && (pc->GetParentType() == E_Token::BRACED_INIT_LIST))
       {
          equ_count++;
          LOG_FMT(LALASS, "%s(%d)OK: align_braced_init_list_span() is %d\n",

@@ -31,7 +31,7 @@ void newlines_remove_disallowed()
       next = pc->GetNext();
 
       if (  next->IsNotNullChunk()
-         && !next->Is(CT_NEWLINE)
+         && !next->Is(E_Token::NEWLINE)
          && !can_increase_nl(pc))
       {
          LOG_FMT(LBLANKD, "%s(%d): force to 1 orig line is %zu, orig col is %zu\n",

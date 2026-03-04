@@ -23,23 +23,23 @@ void remove_extra_returns()
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), pc->Len(),
               get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
-      if (  pc->Is(CT_RETURN)
+      if (  pc->Is(E_Token::RETURN)
          && !pc->TestFlags(PCF_IN_PREPROC))
       {
          // we might be in a class, check it                                     Issue #2705
          // look for a closing brace
          bool  remove_it      = false;
-         Chunk *closing_brace = pc->GetNextType(CT_BRACE_CLOSE, 1);
+         Chunk *closing_brace = pc->GetNextType(E_Token::BRACE_CLOSE, 1);
          LOG_FMT(LRMRETURN, "%s(%d): on orig line %zu, level is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetLevel());
 
          if (closing_brace->IsNotNullChunk())
          {
-            if (closing_brace->GetParentType() == CT_FUNC_CLASS_DEF)
+            if (closing_brace->GetParentType() == E_Token::FUNC_CLASS_DEF)
             {
                // we have a class. Do nothing
             }
-            else if (  closing_brace->GetParentType() == CT_FUNC_DEF
+            else if (  closing_brace->GetParentType() == E_Token::FUNC_DEF
                     && pc->GetLevel() < 2)
             {
                remove_it = true;
@@ -51,13 +51,13 @@ void remove_extra_returns()
             // look for a closing brace
             // make sure we are at level 1 because 'return' could
             // be part of nested 'if' blocks
-            closing_brace = pc->GetNextType(CT_BRACE_CLOSE, 0);
+            closing_brace = pc->GetNextType(E_Token::BRACE_CLOSE, 0);
             LOG_FMT(LRMRETURN, "%s(%d): on orig line %zu, level is %zu\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetLevel());
 
             if (closing_brace->IsNotNullChunk())
             {
-               if (  closing_brace->GetParentType() == CT_FUNC_DEF
+               if (  closing_brace->GetParentType() == E_Token::FUNC_DEF
                   && pc->GetLevel() < 2)
                {
                   remove_it = true;
@@ -70,7 +70,7 @@ void remove_extra_returns()
             Chunk *semicolon = pc->GetNextNcNnl();
 
             if (  semicolon->IsNotNullChunk()
-               && semicolon->Is(CT_SEMICOLON))
+               && semicolon->Is(E_Token::SEMICOLON))
             {
                LOG_FMT(LRMRETURN, "%s(%d): Removed 'return;' on orig line %zu\n",
                        __func__, __LINE__, pc->GetOrigLine());

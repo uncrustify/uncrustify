@@ -21,13 +21,13 @@ void align_struct_initializers()
    {
       Chunk *prev = pc->GetPrevNcNnl();
 
-      if (  prev->Is(CT_ASSIGN)
-         && (  pc->Is(CT_BRACE_OPEN)
+      if (  prev->Is(E_Token::ASSIGN)
+         && (  pc->Is(E_Token::BRACE_OPEN)
             || (  language_is_set(lang_flag_e::LANG_D)
-               && pc->Is(CT_SQUARE_OPEN))))
+               && pc->Is(E_Token::SQUARE_OPEN))))
       {
          align_init_brace(pc);
       }
-      pc = pc->GetNextType(CT_BRACE_OPEN);
+      pc = pc->GetNextType(E_Token::BRACE_OPEN);
    }
 } // align_struct_initializers

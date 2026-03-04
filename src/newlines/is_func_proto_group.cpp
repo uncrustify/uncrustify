@@ -36,14 +36,14 @@ bool is_func_proto_group(Chunk *pc, E_Token one_liner_type)
    {
       log_rule_B("nl_class_leave_one_liner_groups");
 
-      if (pc->Is(CT_BRACE_CLOSE))
+      if (pc->Is(E_Token::BRACE_CLOSE))
       {
          return(pc->TestFlags(PCF_ONE_LINER));
       }
       else
       {
          // Find opening brace
-         pc = pc->GetNextType(CT_BRACE_OPEN, pc->GetLevel());
+         pc = pc->GetNextType(E_Token::BRACE_OPEN, pc->GetLevel());
          return(  pc->IsNotNullChunk()
                && pc->TestFlags(PCF_ONE_LINER));
       }

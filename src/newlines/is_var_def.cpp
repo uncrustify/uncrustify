@@ -20,8 +20,8 @@ using namespace uncrustify;
 //! Check if token starts a variable declaration
 bool is_var_def(Chunk *pc, Chunk *next)
 {
-   if (  pc->Is(CT_DECLTYPE)
-      && next->Is(CT_PAREN_OPEN))
+   if (  pc->Is(E_Token::DECLTYPE)
+      && next->Is(E_Token::PAREN_OPEN))
    {
       // If current token starts a decltype expression, skip it
       next = next->GetClosingParen();
@@ -32,21 +32,21 @@ bool is_var_def(Chunk *pc, Chunk *next)
       // Otherwise, if the current token is not a type --> not a declaration
       return(false);
    }
-   else if (next->Is(CT_DC_MEMBER))
+   else if (next->Is(E_Token::DC_MEMBER))
    {
-      // If next token is CT_DC_MEMBER, skip it
+      // If next token is E_Token::DC_MEMBER, skip it
       next = next->SkipDcMember();
    }
-   else if (next->Is(CT_ANGLE_OPEN))
+   else if (next->Is(E_Token::ANGLE_OPEN))
    {
       // If we have a template type, skip it
       next = next->GetClosingParen();
       next = next->GetNextNcNnl();
    }
    bool is = (  (  next->IsTypeDefinition()
-                && next->GetParentType() != CT_FUNC_DEF)           // Issue #2639
-             || next->Is(CT_WORD)
-             || next->Is(CT_FUNC_CTOR_VAR));
+                && next->GetParentType() != E_Token::FUNC_DEF)           // Issue #2639
+             || next->Is(E_Token::WORD)
+             || next->Is(E_Token::FUNC_CTOR_VAR));
 
    return(is);
 } // is_var_def

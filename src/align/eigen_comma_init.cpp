@@ -58,7 +58,7 @@ void align_eigen_comma_init()
       {
          // Ignore any deeper levels when aligning
       }
-      else if (pc->Is(CT_SEMICOLON))
+      else if (pc->Is(E_Token::SEMICOLON))
       {
          // A semicolon at the same level flushes
          as.Flush();
@@ -68,7 +68,7 @@ void align_eigen_comma_init()
               && !pc->TestFlags(PCF_IN_TYPEDEF)
               && pc->IsString("<<"))
       {
-         if (pc->GetParentType() == CT_OPERATOR)
+         if (pc->GetParentType() == E_Token::OPERATOR)
          {
             // Ignore operator<<
          }
@@ -102,7 +102,7 @@ void align_eigen_comma_init()
          Chunk *prev = pc->GetPrev();
 
          if (  prev->IsNewline()
-            && pc->GetPrevNcNnl()->Is(CT_COMMA))
+            && pc->GetPrevNcNnl()->Is(E_Token::COMMA))
          {
             log_rule_B("align_eigen_comma_init");
             as.Add(pc);

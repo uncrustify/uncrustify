@@ -39,10 +39,10 @@ void newline_case(Chunk *start)
       {
          return;
       }
-   } while (  prev->IsNot(CT_BRACE_OPEN)
-           && prev->IsNot(CT_BRACE_CLOSE)
-           && prev->IsNot(CT_SEMICOLON)
-           && prev->IsNot(CT_CASE_COLON));
+   } while (  prev->IsNot(E_Token::BRACE_OPEN)
+           && prev->IsNot(E_Token::BRACE_CLOSE)
+           && prev->IsNot(E_Token::SEMICOLON)
+           && prev->IsNot(E_Token::CASE_COLON));
 
    if (prev->IsNullChunk())
    {
@@ -56,8 +56,8 @@ void newline_case(Chunk *start)
    }
 
    // Only add an extra line after a semicolon or brace close
-   if (  prev->Is(CT_SEMICOLON)
-      || prev->Is(CT_BRACE_CLOSE))
+   if (  prev->Is(E_Token::SEMICOLON)
+      || prev->Is(E_Token::BRACE_CLOSE))
    {
       if (  pc->IsNewline()
          && pc->GetNlCount() < 2)

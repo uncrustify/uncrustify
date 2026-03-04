@@ -68,44 +68,44 @@ Chunk *align_func_param(Chunk *start)
       chunk_count++;
       LOG_CHUNK(LTOK, pc);
 
-      if (pc->Is(CT_FUNC_VAR))                    // Issue #2278
+      if (pc->Is(E_Token::FUNC_VAR))                    // Issue #2278
       {
          // look after 'protect parenthesis'
          Chunk *after = pc->GetNextNc();
 
-         if (after->Is(CT_PAREN_CLOSE))
+         if (after->Is(E_Token::PAREN_CLOSE))
          {
-            Chunk *before = after->GetPrevType(CT_PAREN_OPEN, after->GetLevel());
+            Chunk *before = after->GetPrevType(E_Token::PAREN_OPEN, after->GetLevel());
 
             if (before->IsNotNullChunk())
             {
                // these are 'protect parenthesis'
                // change the types and the level
-               before->SetType(CT_PPAREN_OPEN);
-               after->SetType(CT_PPAREN_CLOSE);
+               before->SetType(E_Token::PPAREN_OPEN);
+               after->SetType(E_Token::PPAREN_CLOSE);
                pc->SetLevel(before->GetLevel());
                Chunk *tmp = pc->GetPrevNc();
 
-               if (tmp->Is(CT_PTR_TYPE))
+               if (tmp->Is(E_Token::PTR_TYPE))
                {
                   tmp->SetLevel(before->GetLevel());
                }
             }
          }
-         else if (after->Is(CT_TPAREN_CLOSE))
+         else if (after->Is(E_Token::TPAREN_CLOSE))
          {
-            Chunk *before = after->GetPrevType(CT_TPAREN_OPEN, after->GetLevel());
+            Chunk *before = after->GetPrevType(E_Token::TPAREN_OPEN, after->GetLevel());
 
             if (before->IsNotNullChunk())
             {
                // these are 'protect parenthesis'
                // change the types and the level
-               before->SetType(CT_TPAREN_OPEN);
-               after->SetType(CT_TPAREN_CLOSE);
+               before->SetType(E_Token::TPAREN_OPEN);
+               after->SetType(E_Token::TPAREN_CLOSE);
                pc->SetLevel(before->GetLevel());
                Chunk *tmp = pc->GetPrevNc();
 
-               if (tmp->Is(CT_PTR_TYPE))
+               if (tmp->Is(E_Token::PTR_TYPE))
                {
                   tmp->SetLevel(before->GetLevel());
                }
@@ -148,7 +148,7 @@ Chunk *align_func_param(Chunk *start)
             break;
          }
       }
-      else if (pc->Is(CT_COMMA))
+      else if (pc->Is(E_Token::COMMA))
       {
          if (pc->TestFlags(PCF_IN_TEMPLATE))            // Issue #2757
          {
@@ -191,12 +191,12 @@ void align_func_params()
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(),
               get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
-      if (  pc->IsNot(CT_FPAREN_OPEN)
-         || (  pc->GetParentType() != CT_FUNC_PROTO
-            && pc->GetParentType() != CT_FUNC_DEF
-            && pc->GetParentType() != CT_FUNC_CLASS_PROTO
-            && pc->GetParentType() != CT_FUNC_CLASS_DEF
-            && pc->GetParentType() != CT_TYPEDEF))
+      if (  pc->IsNot(E_Token::FPAREN_OPEN)
+         || (  pc->GetParentType() != E_Token::FUNC_PROTO
+            && pc->GetParentType() != E_Token::FUNC_DEF
+            && pc->GetParentType() != E_Token::FUNC_CLASS_PROTO
+            && pc->GetParentType() != E_Token::FUNC_CLASS_DEF
+            && pc->GetParentType() != E_Token::TYPEDEF))
       {
          continue;
       }
