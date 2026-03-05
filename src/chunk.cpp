@@ -813,16 +813,11 @@ bool Chunk::IsStringAndLevel(const char *str, const size_t len,
 
 Chunk *Chunk::GetClosingParen(E_Scope scope) const
 {
-   if (  Is(E_Token::CT_PAREN_OPEN)
-      || Is(E_Token::CT_SPAREN_OPEN)
-      || Is(E_Token::CT_FPAREN_OPEN)
-      || Is(E_Token::CT_TPAREN_OPEN)
-      || Is(E_Token::CT_BRACE_OPEN)
-      || Is(E_Token::CT_VBRACE_OPEN)
-      || Is(E_Token::CT_ANGLE_OPEN)
-      || Is(E_Token::CT_SQUARE_OPEN))
+   E_Token token = getMatchingToken(m_type, true);
+
+   if (token != E_Token::CT_NONE)
    {
-      return(GetNextType((E_Token)(m_type + 1), m_level, scope));
+      return(GetNextType(token, m_level, scope));
    }
    return(const_cast<Chunk *>(this));
 } // Chunk::GetClosingParen
@@ -830,16 +825,11 @@ Chunk *Chunk::GetClosingParen(E_Scope scope) const
 
 Chunk *Chunk::GetOpeningParen(E_Scope scope) const
 {
-   if (  Is(E_Token::CT_PAREN_CLOSE)
-      || Is(E_Token::CT_SPAREN_CLOSE)
-      || Is(E_Token::CT_FPAREN_CLOSE)
-      || Is(E_Token::CT_TPAREN_CLOSE)
-      || Is(E_Token::CT_BRACE_CLOSE)
-      || Is(E_Token::CT_VBRACE_CLOSE)
-      || Is(E_Token::CT_ANGLE_CLOSE)
-      || Is(E_Token::CT_SQUARE_CLOSE))
+   E_Token token = getMatchingToken(m_type, false);
+
+   if (token != E_Token::CT_NONE)
    {
-      return(GetPrevType((E_Token)(m_type - 1), m_level, scope));
+      return(GetPrevType(token, m_level, scope));
    }
    return(const_cast<Chunk *>(this));
 } // Chunk::GetOpeningParen

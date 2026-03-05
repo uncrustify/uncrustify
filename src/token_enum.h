@@ -22,7 +22,7 @@
  * program can work with. The parser and scanner assigns one of these to
  * each chunk/token.
  */
-enum E_Token
+enum class E_Token : unsigned short int
 {
    // see also const char *get_token_name(E_Token token)
    CT_NONE,
@@ -404,5 +404,17 @@ enum E_Token
 
    CT_TOKEN_COUNT_  // NOTE: Keep this the last entry because it's used as a counter.
 };
+
+
+/**
+ * Returns the E_Token of a matching parenthesis (open or close) or NONE
+ * if the token is not a parenthesis.
+ *
+ * @param token     the token to match
+ * @param openClose true  = find closing parenthesis/brace
+ *                  false = find opening parenthesis/brace
+ */
+E_Token getMatchingToken(E_Token token, bool openClose);
+
 
 #endif /* TOKEN_ENUM_H_INCLUDED */

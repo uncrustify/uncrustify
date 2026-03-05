@@ -470,7 +470,7 @@ int main(int argc, char *argv[])
    }
 
    // make sure we have token_names.h in sync with token_enum.h
-   static_assert(ARRAY_SIZE(token_names) == E_Token::CT_TOKEN_COUNT_, "");
+   static_assert(ARRAY_SIZE(token_names) == static_cast<int>(E_Token::CT_TOKEN_COUNT_), "");
 #endif // DEBUG
 
    Args arg(argc, argv);
@@ -2532,13 +2532,14 @@ void uncrustify_end()
 
 const char *get_token_name(E_Token token)
 {
-   if (  token >= 0
-      && (token < static_cast<int> ARRAY_SIZE(token_names))
-      && (token_names[token] != nullptr))
+   unsigned short int token_idx = static_cast<unsigned short int>(token);
+
+   if (  (token_idx < static_cast<int> ARRAY_SIZE(token_names))
+      && (token_names[token_idx] != nullptr))
    {
-      return(token_names[token]);
+      return(token_names[token_idx]);
    }
-   return("???");
+   return("Unknown token");
 }
 
 

@@ -175,7 +175,7 @@ void do_braces()
          continue;
       }
       Chunk         *br_open = pc;
-      const E_Token brc_type = E_Token(pc->GetType() + 1); // corresponds to closing type
+      const E_Token brc_type = pc->GetClosingParen()->GetType(); // corresponds to closing type
       // Detect empty bodies
       Chunk         *tmp = pc->GetNextNcNnl();
 

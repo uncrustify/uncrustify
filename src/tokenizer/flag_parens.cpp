@@ -60,7 +60,7 @@ Chunk *flag_parens(Chunk *po, PcfFlags flags, E_Token opentype, E_Token parent_t
       if (opentype != E_Token::CT_NONE)
       {
          po->SetType(opentype);
-         paren_close->SetType((E_Token)(opentype + 1));
+         paren_close->SetType(getMatchingToken(opentype, true));
       }
 
       if (parent_type != E_Token::CT_NONE)

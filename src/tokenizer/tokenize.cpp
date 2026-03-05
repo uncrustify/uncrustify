@@ -1665,7 +1665,7 @@ static bool parse_word(TokenContext &ctx, Chunk &pc, bool skipcheck)
           * the config 'set' feature, there's no way to do a pair of tokens as a word
           * substitution. */
          if (  pc.GetType() == E_Token::CT_PP_IGNORE
-            && !cpd.in_preproc)
+            && cpd.in_preproc != E_Token::CT_NONE)
          {
             pc.SetType(find_keyword_type(pc.GetLogText(), pc.GetText().size()));
          }

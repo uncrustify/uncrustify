@@ -3577,9 +3577,14 @@ void add_long_preprocessor_conditional_block_comment()
             // Found the matching #else or #endif - make sure a newline is next
             tmp = tmp->GetNext();
 
-            LOG_FMT(LPPIF, "next item type %d (is %s)\n",
-                    (tmp ? tmp->GetType() : -1), (tmp ? tmp->IsNewline() ? "newline"
-                                             : tmp->IsComment() ? "comment" : "other" : "---"));
+            if (tmp->IsNullChunk())
+            {
+               LOG_FMT(LPPIF, "next item is the null chunk\n");
+            }
+            else
+            {
+               LOG_FMT(LPPIF, "next item type is %s\n", get_token_name(tmp->GetType()));
+            }
 
             if (  tmp->IsNullChunk()
                || tmp->Is(E_Token::CT_NEWLINE)) // tmp->IsNewline())
