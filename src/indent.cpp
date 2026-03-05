@@ -1385,7 +1385,7 @@ void indent_text()
             }
 
             // Close out parenthesis and squares
-            if (  (frm.top().GetOpenToken() == (pc->GetType() - 1))
+            if (  (frm.top().GetOpenToken() == pc->GetOpeningParen()->GetType())
                && (  pc->Is(E_Token::CT_PAREN_CLOSE)
                   || pc->Is(E_Token::CT_LPAREN_CLOSE)                     // Issue #3054
                   || pc->Is(E_Token::CT_SPAREN_CLOSE)
@@ -3690,7 +3690,7 @@ void indent_text()
             LOG_FMT(LINDLINE, "%s(%d): indent_column is %zu\n",
                     __func__, __LINE__, indent_column);
 
-            if (frm.lastPopped().GetOpenToken() == E_Token(pc->GetType() - 1))
+            if (frm.lastPopped().GetOpenToken() == pc->GetOpeningParen()->GetType())
             {
                // Issue # 405
                LOG_FMT(LINDLINE, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', type is %s\n",

@@ -457,8 +457,8 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
          && (  (frm.top().GetOpenToken() == E_Token::CT_FPAREN_OPEN)
             || (frm.top().GetOpenToken() == E_Token::CT_SPAREN_OPEN)))
       {
-         // TODO: fix enum hack
-         pc->SetType(static_cast<E_Token>(frm.top().GetOpenToken() + 1));
+         E_Token closeToken = getMatchingToken(frm.top().GetOpenToken(), true);
+         pc->SetType(closeToken);
 
          if (pc->Is(E_Token::CT_SPAREN_CLOSE))
          {
@@ -466,9 +466,10 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
             pc->ResetFlagBits(PCF_IN_SPAREN);
          }
       }
-
       // Make sure the open / close match
-      if (pc->IsNot((E_Token)(frm.top().GetOpenToken() + 1)))
+      E_Token closeToken = getMatchingToken(frm.top().GetOpenToken(), true);
+
+      if (pc->IsNot(closeToken))
       {
          if (pc->TestFlags(PCF_IN_PREPROC))                // Issue #3113, #3283
          {
@@ -483,7 +484,7 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
             if (AA.GetOpenToken() != E_Token::CT_EOF)
             {
                LOG_FMT(LWARN, "%s(%d): (frm.top().type + 1) is %s\n",
-                       __func__, __LINE__, get_token_name((E_Token)(frm.top().GetOpenToken() + 1)));
+                       __func__, __LINE__, get_token_name(getMatchingToken(frm.top().GetOpenToken(), true)));
             }
 
             if (  frm.top().GetOpenToken() != E_Token::CT_EOF

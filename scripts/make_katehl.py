@@ -5,7 +5,7 @@ import io
 import os
 import re
 
-re_token = re.compile(r'^CT_(\w+),')
+re_token = re.compile(r'^E_Token::CT_(\w+),')
 re_version = re.compile(r'.*UNCRUSTIFY_VERSION\s*"Uncrustify-([^"]+)"')
 re_option = re.compile(r'extern (Bounded)?Option<[^>]+>')
 re_enum_decl = re.compile(r'enum class (\w+)( *// *<(\w+)>)?')

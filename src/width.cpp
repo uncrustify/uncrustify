@@ -201,6 +201,7 @@ static TokenPriority pri_table[] =
    { E_Token::CT_TYPE,        25 },
    { E_Token::CT_TYPENAME,    25 },
    { E_Token::CT_VOLATILE,    25 },
+   { E_Token::CT_UNKNOWN,     99 },
 };
 
 
@@ -457,7 +458,7 @@ static bool split_line(Chunk *start)
    LOG_FMT(LSPLIT, "%s(%d): try to find a split point\n", __func__, __LINE__);
    SplitEntry ent;
    ent.pc  = Chunk::NullChunkPtr;
-   ent.pri = E_Token::CT_UNKNOWN;
+   ent.pri = get_split_pri(E_Token::CT_UNKNOWN);
 
    Chunk *pc = start->GetPrev();
    Chunk *prev;

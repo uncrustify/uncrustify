@@ -365,6 +365,7 @@ set(uncrustify_sources
   src/tokenizer/tokenize_cleanup.cpp
   src/tokenizer/tokenize.cpp
   src/too_big_for_nl_max.cpp
+  src/token_enum.cpp
   src/unc_ctype.cpp
   src/uncrustify.cpp
   src/uncrustify_emscripten.cpp
