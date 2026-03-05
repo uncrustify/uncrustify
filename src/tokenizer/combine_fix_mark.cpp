@@ -346,6 +346,21 @@ void fix_fcn_def_params(Chunk *start)
 
    while (pc->IsNotNullChunk())
    {
+      // Skip PP directives that appear at a lower level inside function params
+      // (e.g. #define inside a struct method's parameter list)
+      if (  pc->Is(E_Token::CT_PREPROC)
+         && pc->GetLevel() < level)
+      {
+         do
+         {
+            pc = pc->GetNextNcNnl();
+         } while (  pc->IsNotNullChunk()
+                 && pc->TestFlags(PCF_IN_PREPROC)
+                 && pc->GetLevel() < level);
+
+         continue;
+      }
+
       if (  (  (start->Len() == 1)
             && (start->GetText()[0] == ')'))
          || pc->GetLevel() < level)
@@ -1968,7 +1983,9 @@ void mark_function(Chunk *pc)
 
       while (tmp != paren_close)
       {
-         tmp2 = tmp->GetNextNcNnl();
+         // Use Npp to skip PP directives (#ifdef, #define, etc.) that may
+         // appear inside function parameters at a lower level in nested contexts
+         tmp2 = tmp->GetNextNcNnlNpp();
 
          if (  tmp->Is(E_Token::CT_COMMA)
             && (tmp->GetLevel() == (paren_open->GetLevel() + 1)))

@@ -26,9 +26,10 @@ bool can_be_full_param(Chunk *start, Chunk *end)
    Chunk *first_word    = Chunk::NullChunkPtr;
    bool  first_word_set = false;
 
+   // Use Npp to skip PP directives that may appear between parameters
    for (pc = start;
         pc->IsNotNullChunk() && pc != end;
-        pc = pc->GetNextNcNnl(E_Scope::PREPROC))
+        pc = pc->GetNextNcNnlNpp(E_Scope::PREPROC))
    {
       LOG_FMT(LFPARAM, "%s(%d): text is '%s', type is %s\n",
               __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()));
@@ -199,6 +200,15 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          // reset some vars to allow [] after parens
          word_count = 1;
          type_count = 1;
+      }
+      else if (word_count >= 1 && pc->Is(CT_PAREN_OPEN))
+      {
+         // Handle macro-wrapped parameters, e.g. 'void foo(int _MACRO(param), ...)'
+         // The previous CT_PAREN_OPEN branch handles function-pointer syntax
+         // (word_count == type_count with '*' or '^' inside); this fallback
+         // covers macro calls that don't match that pattern.
+         pc = pc->GetClosingParen(E_Scope::PREPROC);
+         continue;
       }
       else if (pc->Is(E_Token::CT_TSQUARE))
       {

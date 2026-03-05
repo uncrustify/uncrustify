@@ -3315,6 +3315,24 @@ align_func_params;
 extern BoundedOption<unsigned, 0, 16>
 align_func_params_span;
 
+// Number of empty lines to ignore in span calculation for align_func_params_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_func_params_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_func_params_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_func_params_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_func_params_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_func_params_span_num_cmt_lines;
+
 // The threshold for aligning function parameter definitions.
 // Use a negative number for absolute thresholds.
 //
@@ -3608,6 +3626,24 @@ align_struct_init_span;
 // 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 16>
 align_typedef_span;
+
+// Number of empty lines to ignore in span calculation for align_typedef_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_typedef_span_num_empty_lines;
+
+// Number of preprocessor directive lines to ignore in span calculation for align_typedef_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_typedef_span_num_pp_lines;
+
+// Number of comment-only lines to ignore in span calculation for align_typedef_span.
+//
+// 0: Don't skip any lines (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_typedef_span_num_cmt_lines;
 
 // The minimum space between the type and the synonym of a typedef.
 extern BoundedOption<unsigned, 0, 16>

@@ -42,6 +42,8 @@ The following span options currently support line filters:
   | align_var_class_span     | Member variables in classes                   |
   | align_var_struct_span    | Member variables in structs/unions            |
   | align_func_proto_span    | Function prototypes/declarations              |
+  | align_func_params_span   | Function parameters within a definition       |
+  | align_typedef_span       | Typedef statements                            |
   | align_assign_span        | Equal sign alignment for variables,           |
   |                          | functions declarations and default parameters |
   | align_enum_equ_span      | Equal sign alignment in enums                 |
@@ -114,6 +116,54 @@ Configuration:
 Result:
   - First 3 members align because #ifdef/#endif lines are skipped.
   - Last member does not align because no empty lines are allowed and span=1.
+
+
+Example: Function Parameters Alignment
+---------------------------------------
+
+Code with preprocessor directives between parameters:
+
+    void process(int            param1,
+                 #ifdef FEATURE_A
+                 double         param2,
+                 #endif
+                 unsigned long  param3
+                );
+
+Configuration:
+    align_func_params_span               = 1
+    align_func_params_span_num_pp_lines  = 1
+
+Result: param1, param2 and param3 all align because:
+  - Between param1 and param2, 1 PP line (#ifdef) is skipped (budget: 1)
+  - Between param2 and param3, 1 PP line (#endif) is skipped (budget: 1)
+
+Note: This also works when the function is nested inside a namespace,
+class, or struct. PP directives like #define that appear at a lower
+nesting level are correctly handled.
+
+
+Example: Typedef Alignment
+--------------------------
+
+Code with preprocessor directives between typedefs:
+
+    typedef VeryLongTypeName TypeAlias1;
+    #ifdef FEATURE_A
+    typedef int              TypeAlias2;
+    #endif
+
+    typedef double           TypeAlias3;
+
+Configuration:
+    align_typedef_span               = 1
+    align_typedef_span_num_pp_lines  = 1
+
+Result:
+  - TypeAlias1 and TypeAlias2 align because the #ifdef line is skipped
+    (budget: 1).
+  - TypeAlias3 does not align because the empty line after #endif breaks
+    the span (no empty line budget configured).
 
 
 Multi-Line Comments

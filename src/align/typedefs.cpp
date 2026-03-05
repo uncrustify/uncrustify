@@ -32,14 +32,26 @@ void align_typedefs(size_t span)
    log_rule_B("align_typedef_amp_style");
    as.m_amp_style = static_cast<AlignStack::StarStyle>(options::align_typedef_amp_style());
 
-   Chunk *c_typedef = Chunk::NullChunkPtr;
-   Chunk *pc        = Chunk::GetHead();
+   // Line skip configuration
+   log_rule_B("align_typedef_span_num_empty_lines");
+   log_rule_B("align_typedef_span_num_pp_lines");
+   log_rule_B("align_typedef_span_num_cmt_lines");
+   LineSkipConfig skip_cfg = {};
+   skip_cfg.empty_lines = options::align_typedef_span_num_empty_lines();
+   skip_cfg.pp_lines    = options::align_typedef_span_num_pp_lines();
+   skip_cfg.cmt_lines   = options::align_typedef_span_num_cmt_lines();
+
+   // Working copy of skip config - budget is decremented as lines are skipped
+   LineSkipConfig skip_budget = skip_cfg;
+
+   Chunk          *c_typedef = Chunk::NullChunkPtr;
+   Chunk          *pc        = Chunk::GetHead();
 
    while (pc->IsNotNullChunk())
    {
       if (pc->IsNewline())
       {
-         as.NewLines(pc->GetNlCount());
+         as.NewLines(pc->GetNlCountFiltered(skip_budget));
          c_typedef = Chunk::NullChunkPtr;
       }
       else if (c_typedef->IsNotNullChunk())
@@ -47,6 +59,7 @@ void align_typedefs(size_t span)
          if (pc->TestFlags(PCF_ANCHOR))
          {
             as.Add(pc);
+            skip_budget = skip_cfg;  // Reset budget after adding
             LOG_FMT(LALTD, "%s(%d): typedef @ %zu:%zu, tag '%s' @ %zu:%zu\n",
                     __func__, __LINE__, c_typedef->GetOrigLine(), c_typedef->GetOrigCol(),
                     pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
