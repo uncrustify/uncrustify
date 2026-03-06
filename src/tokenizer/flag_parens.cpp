@@ -23,7 +23,7 @@ Chunk *flag_parens(Chunk *po, PcfFlags flags, E_Token opentype, E_Token parent_t
       LOG_FMT(LERR, "%s(%d): no match for '%s' at [%zu:%zu]",
               __func__, __LINE__, po->GetLogText(), po->GetOrigLine(), po->GetOrigCol());
       log_func_stack_inline(LERR);
-      exit(EX_SOFTWARE);
+      return(Chunk::NullChunkPtr);
    }
    LOG_FMT(LFLPAREN, "%s(%d): between  po is '%s', orig line is %zu, orig col is %zu, and\n",
            __func__, __LINE__, po->GetLogText(), po->GetOrigLine(), po->GetOrigCol());

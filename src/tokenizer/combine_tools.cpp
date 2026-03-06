@@ -201,7 +201,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          word_count = 1;
          type_count = 1;
       }
-      else if (word_count >= 1 && pc->Is(CT_PAREN_OPEN))
+      else if (word_count >= 1 && pc->Is(E_Token::CT_PAREN_OPEN))
       {
          // Handle macro-wrapped parameters, e.g. 'void foo(int _MACRO(param), ...)'
          // The previous CT_PAREN_OPEN branch handles function-pointer syntax
