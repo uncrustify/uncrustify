@@ -819,7 +819,7 @@ Chunk *Chunk::GetClosingParen(E_Scope scope) const
    {
       return(GetNextType(token, m_level, scope));
    }
-   return(const_cast<Chunk *>(this));
+   return(Chunk::NullChunkPtr);
 } // Chunk::GetClosingParen
 
 
@@ -831,7 +831,7 @@ Chunk *Chunk::GetOpeningParen(E_Scope scope) const
    {
       return(GetPrevType(token, m_level, scope));
    }
-   return(const_cast<Chunk *>(this));
+   return(Chunk::NullChunkPtr);
 } // Chunk::GetOpeningParen
 
 

@@ -1615,12 +1615,14 @@ void indent_text()
             log_rule_B("indent_cpp_lambda_body");
             frm.top().SetBraceIndent(frm.prev().GetIndent());
 
-            Chunk *head     = frm.top().GetOpenChunk()->GetPrevNcNnlNpp();
-            Chunk *tail     = Chunk::NullChunkPtr;
-            Chunk *frm_prev = frm.prev().GetOpenChunk();
-            bool  enclosure = (  frm_prev->GetParentType() != E_Token::CT_FUNC_DEF           // Issue #3407
-                              && frm_prev != frm_prev->GetClosingParen());
-            bool  linematch = true;
+            Chunk *head         = frm.top().GetOpenChunk()->GetPrevNcNnlNpp();
+            Chunk *tail         = Chunk::NullChunkPtr;
+            Chunk *frm_prev     = frm.prev().GetOpenChunk();
+            Chunk *frmPrevClose = frm_prev->GetClosingParen();
+            bool  enclosure     = (  frm_prev->GetParentType() != E_Token::CT_FUNC_DEF       // Issue #3407
+                                  && frmPrevClose->IsNotNullChunk()
+                                  && frm_prev != frmPrevClose);
+            bool linematch = true;
 
             for (auto it = frm.rbegin(); it != frm.rend() && tail->IsNullChunk(); ++it)
             {
@@ -1676,21 +1678,24 @@ void indent_text()
             // 2a. If it's an assignment, check that both sides of the assignment operator are on the same line
             // 2b. If it's inside some closure, check that all the frames are on the same line,
             //     and it is in the top level closure, and indent_continue is non-zero
-            bool sameLine = frm.top().GetOpenChunk()->GetClosingParen()->IsOnSameLine(tail);
+            Chunk *frmPrevOpen = frm.prev().GetOpenChunk();
+            Chunk *frmTopOpen  = frm.top().GetOpenChunk();
+            Chunk *frmTopClose = frm.top().GetOpenChunk()->GetClosingParen();
+            bool  sameLine     = frmTopClose->IsNotNullChunk() && frmTopClose->IsOnSameLine(tail);
 
-            bool isAssignSameLine =
+            bool  isAssignSameLine =
                !enclosure
                && options::align_assign_span() == 0
                && !options::indent_align_assign()
-               && frm.prev().GetOpenChunk()->GetPrevNcNnlNpp()->IsOnSameLine(frm.prev().GetOpenChunk())
-               && frm.prev().GetOpenChunk()->IsOnSameLine(frm.prev().GetOpenChunk()->GetNextNcNnlNpp());
+               && frmPrevOpen->GetPrevNcNnlNpp()->IsOnSameLine(frmPrevOpen)
+               && frmPrevOpen->IsOnSameLine(frmPrevOpen->GetNextNcNnlNpp());
 
             bool closureSameLineTopLevel =
                (options::indent_continue() > 0)
                && enclosure
                && linematch
                && toplevel
-               && frm.top().GetOpenChunk()->GetClosingParen()->IsOnSameLine(frm.top().GetOpenChunk());
+               && frmTopClose->IsNotNullChunk() && frmTopClose->IsOnSameLine(frmTopOpen);
 
             if (  sameLine
                && (  (isAssignSameLine)
