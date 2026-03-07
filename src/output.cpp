@@ -343,8 +343,7 @@ static void add_char(uint32_t ch, bool is_literal)
 
          int indent_with_tabs = options::pp_indent_with_tabs();
 
-         if (  cpd.in_preproc != E_Token::CT_PREPROC
-            || indent_with_tabs == -1)
+         if (indent_with_tabs == -1)
          {
             indent_with_tabs = options::indent_with_tabs();
          }
