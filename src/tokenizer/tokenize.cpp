@@ -113,17 +113,16 @@ struct TokenContext
             break;
 
          case '\n':
+            c.row++;
+            c.col = 1;
+            break;
 
-            if (c.last_ch != '\r')
+         case '\r':
+            if (peek() != '\n')
             {
                c.row++;
                c.col = 1;
             }
-            break;
-
-         case '\r':
-            c.row++;
-            c.col = 1;
             break;
 
          default:
@@ -1829,12 +1828,11 @@ static bool parse_whitespace(TokenContext &ctx, Chunk &pc)
    size_t nl_count = 0;
    size_t ch       = 0;
 
-   // REVISIT: use a better whitespace detector?
    while (  ctx.more()
          && unc_isspace(ctx.peek()))
    {
       int lastcol = ctx.c.col;
-      ch = ctx.get();   // throw away the whitespace char
+      ch = ctx.get();
 
       switch (ch)
       {
@@ -2143,8 +2141,8 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
    // Save off the current column
    pc.SetType(E_Token::CT_NONE);
    pc.SetOrigLine(ctx.c.row);
-   pc.SetColumn(ctx.c.col);
    pc.SetOrigCol(ctx.c.col);
+   pc.SetColumn(ctx.c.col);
    pc.SetNlCount(0);
    pc.SetFlags(PCF_NONE);
 
@@ -2730,12 +2728,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
       chunk.SetOrigPrevSp(prev_sp);
       prev_sp = 0;
 
-      if (chunk.GetType() == E_Token::CT_NEWLINE)
-      {
-         last_was_tab = chunk.GetAfterTab();
-         chunk.SetAfterTab(false);
-      }
-      else if (chunk.GetType() == E_Token::CT_NL_CONT)
+      if (chunk.IsNewline())
       {
          last_was_tab = chunk.GetAfterTab();
          chunk.SetAfterTab(false);
