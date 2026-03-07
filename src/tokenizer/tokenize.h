@@ -41,14 +41,14 @@ int find_enable_processing_comment_marker(const UncText &text, std::size_t start
 /**
  * @brief Parse the text into chunks
  *
- * This function parses or tokenizes the whole buffer into a list.
- * It has to do some tricks to parse preprocessors.
+ * This function parses or tokenizes the whole buffer into a list of chunks.
+ * It has to do some tricks to parse preprocessor code.
  *
- * If output_text() were called immediately after, two things would happen:
+ * If output_text() were called immediately after this, two things would happen:
  *  - trailing whitespace are removed.
  *  - leading space & tabs are converted to the appropriate format.
  *
- * All the tokens are inserted before ref. If ref is NULL, they are inserted
+ * All the tokens are inserted before ref. If ref is Chunk::NullChunkPtr, they are inserted
  * at the end of the list.  Line numbers are relative to the start of the data.
  */
 void tokenize(const std::deque<int> &data, Chunk *ref);
