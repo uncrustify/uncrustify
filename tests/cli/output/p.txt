@@ -19,7 +19,7 @@ debug_decode_the_flags          = true
          The flags are: [0xc0001:IN_PREPROC,STMT_START,EXPR_START]
 #   1>             ASSIGN|               NONE|     PARENT_NOT_SET[ 19/ 19/ 21/  1][ 2][1/1/0][        2 0000 0001][0-0]                   +=
          The flags are: [0x200000001:IN_PREPROC,PUNCTUATOR]
-#   1>            NL_CONT|               NONE|     PARENT_NOT_SET[ 22/ 22/  1/  1][ 2][1/1/0][             8 0001][1-0]                      \␤
+#   1>            NL_CONT|               NONE|     PARENT_NOT_SET[ 22/ 22/  0/  1][ 2][1/1/0][             8 0001][1-0]                      \␤
          The flags are: [0x80001:IN_PREPROC,EXPR_START]
 #   2>               WORD|               NONE|     PARENT_NOT_SET[  9/  1/  7/  0][ 6][1/1/0][             8 0001][0-0]         s8_foo
          The flags are: [0x80001:IN_PREPROC,EXPR_START]
@@ -29,17 +29,17 @@ debug_decode_the_flags          = true
          The flags are: [0x80001:IN_PREPROC,EXPR_START]
 #   2>          SEMICOLON|               NONE|     PARENT_NOT_SET[ 25/ 17/ 18/  0][ 1][1/1/0][        2 0000 0001][0-0]                         ;
          The flags are: [0x200000001:IN_PREPROC,PUNCTUATOR]
-#   2>            NEWLINE|               NONE|     PARENT_NOT_SET[ 26/ 18/  1/  0][ 1][0/0/0][                  0][2-0]                          ␤
+#   2>            NEWLINE|               NONE|     PARENT_NOT_SET[ 26/ 18/ 19/  0][ 1][0/0/0][                  0][2-0]                          ␤
          The flags are: [0x0:]
 #   4>             STRUCT|               NONE|     PARENT_NOT_SET[  1/  1/  7/  0][ 6][0/0/0][             e 0000][0-0] struct
          The flags are: [0xe0000:FORCE_SPACE,STMT_START,EXPR_START]
 #   4>               TYPE|             STRUCT|     PARENT_NOT_SET[  8/  8/ 21/  1][13][0/0/0][                  0][0-0]        TelegramIndex
          The flags are: [0x0:]
-#   4>            NEWLINE|               NONE|     PARENT_NOT_SET[ 21/ 21/  1/  0][ 1][0/0/0][                  0][1-0]                     ␤
+#   4>            NEWLINE|               NONE|     PARENT_NOT_SET[ 21/ 21/ 22/  0][ 1][0/0/0][                  0][1-0]                     ␤
          The flags are: [0x0:]
 #   5>         BRACE_OPEN|             STRUCT|     PARENT_NOT_SET[  1/  1/  2/  0][ 1][0/0/0][        2 0000 0400][0-0] {
          The flags are: [0x200000400:IN_CLASS,PUNCTUATOR]
-#   5>            NEWLINE|               NONE|     PARENT_NOT_SET[  2/  2/  1/  0][ 1][1/1/0][                  2][1-0]  ␤
+#   5>            NEWLINE|               NONE|     PARENT_NOT_SET[  2/  2/  3/  0][ 1][1/1/0][                  2][1-0]  ␤
          The flags are: [0x2:IN_STRUCT]
 #   6>     FUNC_CLASS_DEF|               NONE|     PARENT_NOT_SET[  9/  1/ 14/  0][13][1/1/0][             c 0402][0-0]         TelegramIndex
          The flags are: [0xc0402:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START]
@@ -65,7 +65,7 @@ debug_decode_the_flags          = true
          The flags are: [0x200000512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 #   6>       CONSTR_COLON|               NONE|     PARENT_NOT_SET[ 57/ 49/ 50/  1][ 1][1/1/0][        2 0000 0502][0-0]                                                         :
          The flags are: [0x200000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
-#   6>            NEWLINE|               NONE|     PARENT_NOT_SET[ 58/ 50/  1/  0][ 1][1/1/0][                  2][1-0]                                                          ␤
+#   6>            NEWLINE|               NONE|     PARENT_NOT_SET[ 58/ 50/ 51/  0][ 1][1/1/0][                  2][1-0]                                                          ␤
          The flags are: [0x2:IN_STRUCT]
 #   7>      FUNC_CTOR_VAR|               NONE|     PARENT_NOT_SET[ 17/  1/  9/  0][ 8][1/1/0][             c 0502][0-0]                 pTelName
          The flags are: [0xc0502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,STMT_START,EXPR_START]
@@ -77,7 +77,7 @@ debug_decode_the_flags          = true
          The flags are: [0x200000512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 #   7>              COMMA|               NONE|     PARENT_NOT_SET[ 29/ 13/ 14/  0][ 1][1/1/0][        2 0000 0502][0-0]                             ,
          The flags are: [0x200000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
-#   7>            NEWLINE|               NONE|     PARENT_NOT_SET[ 30/ 14/  1/  0][ 1][1/1/0][                  2][1-0]                              ␤
+#   7>            NEWLINE|               NONE|     PARENT_NOT_SET[ 30/ 14/ 15/  0][ 1][1/1/0][                  2][1-0]                              ␤
          The flags are: [0x2:IN_STRUCT]
 #   8>      FUNC_CTOR_VAR|               NONE|     PARENT_NOT_SET[ 17/  1/ 10/  0][ 9][1/1/0][             8 0502][0-0]                 nTelIndex
          The flags are: [0x80502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,EXPR_START]
@@ -87,15 +87,15 @@ debug_decode_the_flags          = true
          The flags are: [0x80512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
 #   8>       FPAREN_CLOSE|      FUNC_CTOR_VAR|     PARENT_NOT_SET[ 28/ 12/ 13/  0][ 1][1/1/0][        2 0000 0512][0-0]                            )
          The flags are: [0x200000512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
-#   8>            NEWLINE|               NONE|     PARENT_NOT_SET[ 29/ 13/  1/  0][ 1][1/1/0][                  2][1-0]                             ␤
+#   8>            NEWLINE|               NONE|     PARENT_NOT_SET[ 29/ 13/ 14/  0][ 1][1/1/0][                  2][1-0]                             ␤
          The flags are: [0x2:IN_STRUCT]
 #   9>         BRACE_OPEN|     FUNC_CLASS_DEF|     PARENT_NOT_SET[  9/  1/  2/  0][ 1][1/1/0][        2 8000 0402][0-0]         {
          The flags are: [0x280000402:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
-#   9>            NEWLINE|               NONE|     PARENT_NOT_SET[ 10/  2/  1/  0][ 1][2/2/0][                  2][1-0]          ␤
+#   9>            NEWLINE|               NONE|     PARENT_NOT_SET[ 10/  2/  3/  0][ 1][2/2/0][                  2][1-0]          ␤
          The flags are: [0x2:IN_STRUCT]
 #  10>        BRACE_CLOSE|     FUNC_CLASS_DEF|     PARENT_NOT_SET[  9/  1/  2/  0][ 1][1/1/0][        2 8000 0402][0-0]         }
          The flags are: [0x280000402:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
-#  10>            NEWLINE|               NONE|     PARENT_NOT_SET[ 10/  2/  1/  0][ 1][1/1/0][                  2][2-0]          ␤
+#  10>            NEWLINE|               NONE|     PARENT_NOT_SET[ 10/  2/  3/  0][ 1][1/1/0][                  2][2-0]          ␤
          The flags are: [0x2:IN_STRUCT]
 #  12>         DESTRUCTOR|     FUNC_CLASS_DEF|     PARENT_NOT_SET[  9/  1/  2/  0][ 1][1/1/0][        2 000c 0402][0-0]         ~
          The flags are: [0x2000c0402:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START,PUNCTUATOR]
@@ -105,15 +105,15 @@ debug_decode_the_flags          = true
          The flags are: [0x200000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 #  12>       FPAREN_CLOSE|     FUNC_CLASS_DEF|     PARENT_NOT_SET[ 24/ 16/ 17/  0][ 1][1/1/0][        2 0000 0512][0-0]                        )
          The flags are: [0x200000512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
-#  12>            NEWLINE|               NONE|     PARENT_NOT_SET[ 25/ 17/  1/  0][ 1][1/1/0][                  2][1-0]                         ␤
+#  12>            NEWLINE|               NONE|     PARENT_NOT_SET[ 25/ 17/ 18/  0][ 1][1/1/0][                  2][1-0]                         ␤
          The flags are: [0x2:IN_STRUCT]
 #  13>         BRACE_OPEN|     FUNC_CLASS_DEF|     PARENT_NOT_SET[  9/  1/  2/  0][ 1][1/1/0][        2 8000 0402][0-0]         {
          The flags are: [0x280000402:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
-#  13>            NEWLINE|               NONE|     PARENT_NOT_SET[ 10/  2/  1/  0][ 1][2/2/0][                  2][1-0]          ␤
+#  13>            NEWLINE|               NONE|     PARENT_NOT_SET[ 10/  2/  3/  0][ 1][2/2/0][                  2][1-0]          ␤
          The flags are: [0x2:IN_STRUCT]
 #  14>        BRACE_CLOSE|     FUNC_CLASS_DEF|     PARENT_NOT_SET[  9/  1/  2/  0][ 1][1/1/0][        2 8000 0402][0-0]         }
          The flags are: [0x280000402:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
-#  14>            NEWLINE|               NONE|     PARENT_NOT_SET[ 10/  2/  1/  0][ 1][1/1/0][                  2][2-0]          ␤
+#  14>            NEWLINE|               NONE|     PARENT_NOT_SET[ 10/  2/  3/  0][ 1][1/1/0][                  2][2-0]          ␤
          The flags are: [0x2:IN_STRUCT]
 #  16>          QUALIFIER|               NONE|     PARENT_NOT_SET[  9/  1/  6/  0][ 5][1/1/0][            8e 0402][0-0]         const
          The flags are: [0x8e0402:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
@@ -127,7 +127,7 @@ debug_decode_the_flags          = true
          The flags are: [0x3000402:IN_STRUCT,IN_CLASS,VAR_DEF,VAR_1ST]
 #  16>          SEMICOLON|               NONE|     PARENT_NOT_SET[ 35/ 27/ 28/  0][ 1][1/1/0][        2 0000 0402][0-0]                                   ;
          The flags are: [0x200000402:IN_STRUCT,IN_CLASS,PUNCTUATOR]
-#  16>            NEWLINE|               NONE|     PARENT_NOT_SET[ 36/ 28/  1/  0][ 1][1/1/0][                  2][1-0]                                    ␤
+#  16>            NEWLINE|               NONE|     PARENT_NOT_SET[ 36/ 28/ 29/  0][ 1][1/1/0][                  2][1-0]                                    ␤
          The flags are: [0x2:IN_STRUCT]
 #  17>               TYPE|               NONE|     PARENT_NOT_SET[  9/  1/  9/  0][ 8][1/1/0][            8e 0402][0-0]         unsigned
          The flags are: [0x8e0402:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
@@ -137,12 +137,12 @@ debug_decode_the_flags          = true
          The flags are: [0x3000402:IN_STRUCT,IN_CLASS,VAR_DEF,VAR_1ST]
 #  17>          SEMICOLON|               NONE|     PARENT_NOT_SET[ 32/ 24/ 25/  0][ 1][1/1/0][        2 0000 0402][0-0]                                ;
          The flags are: [0x200000402:IN_STRUCT,IN_CLASS,PUNCTUATOR]
-#  17>            NEWLINE|               NONE|     PARENT_NOT_SET[ 33/ 25/  1/  0][ 1][1/1/0][                  2][1-0]                                 ␤
+#  17>            NEWLINE|               NONE|     PARENT_NOT_SET[ 33/ 25/ 26/  0][ 1][1/1/0][                  2][1-0]                                 ␤
          The flags are: [0x2:IN_STRUCT]
 #  18>        BRACE_CLOSE|             STRUCT|     PARENT_NOT_SET[  1/  1/  2/  0][ 1][0/0/0][        2 0000 0402][0-0] }
          The flags are: [0x200000402:IN_STRUCT,IN_CLASS,PUNCTUATOR]
 #  18>          SEMICOLON|             STRUCT|     PARENT_NOT_SET[  2/  2/  3/  0][ 1][0/0/0][        2 0000 0000][0-0]  ;
          The flags are: [0x200000000:PUNCTUATOR]
-#  18>            NEWLINE|               NONE|     PARENT_NOT_SET[  3/  3/  1/  0][ 1][0/0/0][                  0][2-0]   ␤
+#  18>            NEWLINE|               NONE|     PARENT_NOT_SET[  3/  3/  4/  0][ 1][0/0/0][                  0][2-0]   ␤
          The flags are: [0x0:]
 # -=====-
