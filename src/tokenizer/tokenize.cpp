@@ -198,11 +198,13 @@ static bool parse_cr_string(TokenContext &ctx, Chunk &pc, size_t q_idx);
 
 
 /**
- * Count the number of whitespace characters.
+ * Count the number of whitespace characters and newlines.
+ * Stops on the first non whitespace and non newline character.
  *
- * @param pc  The structure to update, str is an input.
+ * @param ctx  The tokenizer context
+ * @param pc   The chunk to update after parsing
  *
- * @return Whether whitespace was parsed
+ * @return Whether a whitespace or newline chunk was parsed
  */
 static bool parse_whitespace(TokenContext &ctx, Chunk &pc);
 
@@ -1837,25 +1839,45 @@ static bool parse_whitespace(TokenContext &ctx, Chunk &pc)
 
       switch (ch)
       {
+      case '\n':
       case '\r':
 
-         if (ctx.expect('\n'))
+         if (!nl_count)
+         {
+            pc.SetOrigCol(lastcol);
+         }
+
+         if (ch == '\n')
+         {
+            // LF ending
+            ++LE_COUNT(LF);
+
+            if (!nl_count)
+            {
+               pc.SetOrigColEnd(lastcol + 1);
+            }
+         }
+         else if (ctx.peek() == '\n')
          {
             // CRLF ending
             ++LE_COUNT(CRLF);
+            ctx.get();
+
+            if (!nl_count)
+            {
+               pc.SetOrigColEnd(lastcol + 2);
+            }
          }
          else
          {
             // CR ending
             ++LE_COUNT(CR);
-         }
-         nl_count++;
-         pc.SetOrigPrevSp(0);
-         break;
 
-      case '\n':
-         // LF ending
-         ++LE_COUNT(LF);
+            if (!nl_count)
+            {
+               pc.SetOrigColEnd(lastcol + 1);
+            }
+         }
          nl_count++;
          pc.SetOrigPrevSp(0);
          break;
@@ -1870,7 +1892,7 @@ static bool parse_whitespace(TokenContext &ctx, Chunk &pc)
 
       default:
          break;
-      }
+      } // switch
    }
 
    if (ch != 0)
@@ -2760,9 +2782,12 @@ void tokenize(const deque<int> &data, Chunk *ref)
             num_stripped++;                    // Issue #1966
          }
       }
-      // Store off the end column
-      chunk.SetOrigColEnd(ctx.c.col - num_stripped); // Issue #1966 and #3565
 
+      // Store off the end column
+      if (!chunk.IsNewline())
+      {
+         chunk.SetOrigColEnd(ctx.c.col - num_stripped); // Issue #1966 and #3565
+      }
       // Make the whitespace we disposed of be attributed to the next chunk
       prev_sp = num_stripped;
 

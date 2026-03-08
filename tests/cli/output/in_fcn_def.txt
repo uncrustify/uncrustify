@@ -20,7 +20,7 @@
 #   1>               WORD|               NONE|     PARENT_NOT_SET[ 29/ 29/ 30/  1][ 1][0/1/0][           100 0008][0-0]                             d
 #   1>       FPAREN_CLOSE|         FUNC_PROTO|     PARENT_NOT_SET[ 30/ 30/ 31/  0][ 1][0/0/0][        2 0000 0008][0-0]                              )
 #   1>          SEMICOLON|           FUNC_VAR|     PARENT_NOT_SET[ 31/ 31/ 32/  0][ 1][0/0/0][        2 0000 0000][0-0]                               ;
-#   1>            NEWLINE|               NONE|     PARENT_NOT_SET[ 32/ 32/  1/  0][ 1][0/0/0][                  0][1-0]                                ␤
+#   1>            NEWLINE|               NONE|     PARENT_NOT_SET[ 32/ 32/ 33/  0][ 1][0/0/0][                  0][1-0]                                ␤
 #   2>               TYPE|         FUNC_PROTO|     PARENT_NOT_SET[  1/  1/  5/  0][ 4][0/0/0][             e 0000][0-0] void
 #   2>         FUNC_PROTO|               NONE|     PARENT_NOT_SET[  6/  6/ 14/  1][ 8][0/0/0][                  0][0-0]      function
 #   2>        FPAREN_OPEN|         FUNC_PROTO|     PARENT_NOT_SET[ 14/ 14/ 15/  0][ 1][0/0/0][        2 0000 0000][0-0]              (
@@ -31,7 +31,7 @@
 #   2>               WORD|               NONE|     PARENT_NOT_SET[ 29/ 29/ 30/  1][ 1][0/1/0][           100 0008][0-0]                             d
 #   2>       FPAREN_CLOSE|         FUNC_PROTO|     PARENT_NOT_SET[ 30/ 30/ 31/  0][ 1][0/0/0][        2 0000 0008][0-0]                              )
 #   2>          SEMICOLON|         FUNC_PROTO|     PARENT_NOT_SET[ 31/ 31/ 32/  0][ 1][0/0/0][        2 0000 0000][0-0]                               ;
-#   2>            NEWLINE|               NONE|     PARENT_NOT_SET[ 32/ 32/  1/  0][ 1][0/0/0][                  0][1-0]                                ␤
+#   2>            NEWLINE|               NONE|     PARENT_NOT_SET[ 32/ 32/ 33/  0][ 1][0/0/0][                  0][1-0]                                ␤
 #   3>            TYPEDEF|               NONE|     PARENT_NOT_SET[  1/  1/  8/  0][ 7][0/0/0][             e 0000][0-0] typedef
 #   3>               TYPE|          FUNC_TYPE|     PARENT_NOT_SET[  9/  9/ 13/  1][ 4][0/0/0][                 80][0-1]         void
 #   3>        TPAREN_OPEN|          FUNC_TYPE|     PARENT_NOT_SET[ 14/ 14/ 15/  1][ 1][0/0/0][        2 0000 0080][0-0]              (
@@ -46,7 +46,7 @@
 #   3>               WORD|               NONE|     PARENT_NOT_SET[ 37/ 37/ 38/  1][ 1][0/1/0][           100 0088][0-0]                                     d
 #   3>       FPAREN_CLOSE|         FUNC_PROTO|     PARENT_NOT_SET[ 38/ 38/ 39/  0][ 1][0/0/0][        2 0000 0088][0-0]                                      )
 #   3>          SEMICOLON|            TYPEDEF|     PARENT_NOT_SET[ 39/ 39/ 40/  0][ 1][0/0/0][        2 0000 0080][0-0]                                       ;
-#   3>            NEWLINE|               NONE|     PARENT_NOT_SET[ 40/ 40/  1/  0][ 1][0/0/0][                  0][1-0]                                        ␤
+#   3>            NEWLINE|               NONE|     PARENT_NOT_SET[ 40/ 40/ 41/  0][ 1][0/0/0][                  0][1-0]                                        ␤
 #   4>            TYPEDEF|               NONE|     PARENT_NOT_SET[  1/  1/  8/  0][ 7][0/0/0][             e 0000][0-0] typedef
 #   4>               TYPE|               NONE|     PARENT_NOT_SET[  9/  9/ 13/  1][ 4][0/0/0][             2 0080][0-1]         void
 #   4>          FUNC_TYPE|            TYPEDEF|     PARENT_NOT_SET[ 14/ 14/ 22/  1][ 8][0/0/0][                 80][0-0]              function
@@ -58,5 +58,5 @@
 #   4>               WORD|               NONE|     PARENT_NOT_SET[ 37/ 37/ 38/  1][ 1][0/1/0][           100 0080][0-0]                                     d
 #   4>       FPAREN_CLOSE|            TYPEDEF|     PARENT_NOT_SET[ 38/ 38/ 39/  0][ 1][0/0/0][        2 0000 0080][0-0]                                      )
 #   4>          SEMICOLON|            TYPEDEF|     PARENT_NOT_SET[ 39/ 39/ 40/  0][ 1][0/0/0][        2 0000 0080][0-0]                                       ;
-#   4>            NEWLINE|               NONE|     PARENT_NOT_SET[ 40/ 40/  1/  0][ 1][0/0/0][                  0][2-0]                                        ␤
+#   4>            NEWLINE|               NONE|     PARENT_NOT_SET[ 40/ 40/ 41/  0][ 1][0/0/0][                  0][2-0]                                        ␤
 # -=====-
