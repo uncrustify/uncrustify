@@ -33,6 +33,16 @@ typedef NS_ENUM(NSInteger, MyEnum) {
                         bar:(id)bar NS_SWIFT_NAME(init(foo:bar:));
 @end
 
+// Test that macro-no-format-args colons on a continuation line do not
+// cause align_oc_decl_colon to insert extra spaces in the method selector
+@interface URLUtils : NSObject
+- (nullable NSString *)findFirstValueForQueryItemName:(NSString *)name
+  HELPER_SWIFT_RENAMED(findFirstValue(forQueryItemName:));
+- (void)setQueryItemWithName:(NSString *)name
+                       value:(NSString *)value
+  HELPER_SWIFT_RENAMED(setQueryItem(name:value:));
+@end
+
 // Test that normal code still gets properly formatted
 void normalFunction(int a,int b,int c) {
     int x = a+b+c;

@@ -71,7 +71,8 @@ void align_oc_msg_colon(Chunk *so)
       }
       else if (  !did_line
               && (lcnt < span + 1)
-              && pc->Is(E_Token::CT_OC_COLON))
+              && pc->Is(E_Token::CT_OC_COLON)
+              && !pc->TestFlags(PCF_IN_MACRO_NO_FMT_ARGS))
       {
          has_colon = true;
          cas.Add(pc);

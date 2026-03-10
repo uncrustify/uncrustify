@@ -61,7 +61,8 @@ void align_oc_decl_colon()
             did_line = false;
          }
          else if (  !did_line
-                 && pc->Is(E_Token::CT_OC_COLON))
+                 && pc->Is(E_Token::CT_OC_COLON)
+                 && !pc->TestFlags(PCF_IN_MACRO_NO_FMT_ARGS))
          {
             cas.Add(pc);
 
