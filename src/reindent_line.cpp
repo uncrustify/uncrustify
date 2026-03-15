@@ -122,3 +122,20 @@ void reindent_line(Chunk *pc, size_t column)
    } while (  pc->IsNotNullChunk()
            && pc->GetNlCount() == 0);
 } // reindent_line
+
+
+void shift_the_rest_of_the_line(Chunk *first)
+{
+   // shift all the tokens in this line to the right  Issue #3236
+   for (Chunk *temp = first; ; temp = temp->GetNext())
+   {
+      temp->SetColumn(temp->GetColumn() + 1);                         // Issue #3236
+      temp->SetOrigCol(temp->GetOrigCol() + 1);                       // Issue #3236
+      temp->SetOrigColEnd(temp->GetOrigColEnd() + 1);                 // Issue #3236
+
+      if (temp->Is(E_Token::CT_NEWLINE))
+      {
+         break;
+      }
+   }
+} // shift_the_rest_of_the_line

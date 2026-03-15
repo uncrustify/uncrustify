@@ -20,4 +20,12 @@
 void reindent_line(Chunk *pc, size_t column);
 
 
+/**
+ * Shift all the tokens in this line to the right
+ *
+ * @param first The chunk from which to start shifting
+ */
+void shift_the_rest_of_the_line(Chunk *first);
+
+
 #endif /* REINDENT_LINE_H_INCLUDED */
