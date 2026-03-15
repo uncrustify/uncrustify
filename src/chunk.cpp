@@ -978,20 +978,3 @@ size_t Chunk::GetNlCountFiltered(LineSkipConfig &skip) const
    }
    return(nl_count); // Return the count of newlines that *could not* be ignored by any budget
 } // Chunk::GetNlCountFiltered
-
-
-void shift_the_rest_of_the_line(Chunk *first)
-{
-   // shift all the tokens in this line to the right  Issue #3236
-   for (Chunk *temp = first; ; temp = temp->GetNext())
-   {
-      temp->SetColumn(temp->GetColumn() + 1);                         // Issue #3236
-      temp->SetOrigCol(temp->GetOrigCol() + 1);                       // Issue #3236
-      temp->SetOrigColEnd(temp->GetOrigColEnd() + 1);                 // Issue #3236
-
-      if (temp->Is(E_Token::CT_NEWLINE))
-      {
-         break;
-      }
-   }
-} // shift_the_rest_of_the_line

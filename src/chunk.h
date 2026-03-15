@@ -1904,8 +1904,4 @@ inline Chunk *Chunk::CopyAndAddBefore(Chunk *ref) const
 }
 
 
-// shift all the tokens in this line to the right  Issue #3236
-void shift_the_rest_of_the_line(Chunk *first);
-
-
 #endif /* CHUNK_LIST_H_INCLUDED */

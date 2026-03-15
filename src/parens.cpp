@@ -6,6 +6,7 @@
  * @license GPL v2+
  */
 #include "parens.h"
+#include "reindent_line.h"
 
 #include "log_rules.h"
 
