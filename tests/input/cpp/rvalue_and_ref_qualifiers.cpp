@@ -461,9 +461,10 @@ typedef void (MyClass::*MfpTypedef)() &&;
 typedef int&& (MyClass::*MfpReturnRvalue)() &&;
 using ComplexMFP = std::vector<int>&& (MyClass::*)(std::string&&) const &&;
 using MFPArray = void (MyClass::*[10])() &&;
+using DeepNestedMFP = void (A::B::C::*)() const &&;
+bool b = (obj.*static_cast<int (B::*)(int)>(pm))(42)&&otherCheck();
 
 // static_assert, deleted/defaulted
-
 static_assert(std::is_integral_v<int> && std::is_signed_v<int>);
 static_assert(sizeof(int) == 4 && alignof(int) == 4, "Size check");
 

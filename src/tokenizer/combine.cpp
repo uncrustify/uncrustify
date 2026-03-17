@@ -6090,40 +6090,40 @@ static bool is_function_ref_qualifier_context(Chunk *pc)
       return(true);
    }
 
-   // Handle member function pointer type in using alias declarations:
-   // Pattern: using MFP = Type (Class::*)(Args) const &&;
-   // The pattern before paren is: (Class::*) - func_name is E_Token::CT_PAREN_CLOSE
-   if (func_name->Is(E_Token::CT_PAREN_CLOSE))
+   // Handle member function pointer type in using/typedef declarations:
+   // Patterns:
+   //   using MFP = Type (Class::*)(Args) const &&;
+   //   using MFPArray = Type (Class::*[N])(Args) &&;
+   //   typedef Type (Class::*MfpTypedef)(Args) &&;
+   // The pattern before paren is: (Class::*...) - func_name is CT_PAREN_CLOSE or CT_FPAREN_CLOSE
+   if (  func_name->Is(E_Token::CT_PAREN_CLOSE)
+      || func_name->Is(E_Token::CT_FPAREN_CLOSE))
    {
       Chunk *inner_open = func_name->GetOpeningParen();
 
       if (inner_open->IsNotNullChunk())
       {
-         // Look inside for ::* pattern (member pointer)
-         bool found_dc_member = false;
-         bool found_star      = false;
+         // Look inside for adjacent ::* pattern (member pointer declaration).
+         // We check for DC_MEMBER immediately followed by STAR/PTR_TYPE one level
+         // deeper than the opening paren to avoid matching nested ::* patterns
+         size_t target_level = inner_open->GetLevel() + 1;
 
          for (Chunk *inner = inner_open->GetNext(); inner != func_name && inner->IsNotNullChunk(); inner = inner->GetNext())
          {
-            if (inner->Is(E_Token::CT_DC_MEMBER))
+            if (  inner->Is(E_Token::CT_DC_MEMBER)
+               && inner->GetLevel() == target_level)
             {
-               found_dc_member = true;
-            }
+               Chunk *after_dc_member = inner->GetNext();
 
-            if (  inner->Is(E_Token::CT_STAR)
-               || inner->Is(E_Token::CT_PTR_TYPE))
-            {
-               found_star = true;
-            }
-         }
-
-         if (found_dc_member && found_star)
-         {
-            if (pc->GetParentType() == E_Token::CT_USING_ALIAS)
-            {
-               LOG_FMT(LFCNR, "%s(%d): found member function pointer ref-qualifier in using alias at orig line %zu, orig col %zu\n",
-                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
-               return(true);
+               if (  after_dc_member->IsNotNullChunk()
+                  && after_dc_member != func_name
+                  && (  after_dc_member->Is(E_Token::CT_STAR)
+                     || after_dc_member->Is(E_Token::CT_PTR_TYPE)))
+               {
+                  LOG_FMT(LFCNR, "%s(%d): found member function pointer ref-qualifier at orig line %zu, orig col %zu\n",
+                          __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
+                  return(true);
+               }
             }
          }
       }
