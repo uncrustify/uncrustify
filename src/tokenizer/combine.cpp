@@ -6131,22 +6131,10 @@ static bool is_function_ref_qualifier_context(Chunk *pc)
 
    // Handle out-of-class function definitions: ClassName::funcName() &&
    // The function name may be classified as E_Token::CT_FUNC_CALL, but we need to verify
-   // it's preceded by :: (scope resolution) to distinguish from actual function calls
-   // unless we're in a class definition context (operators within class body)
+   // the context to distinguish from actual function calls
    if (func_name->Is(E_Token::CT_FUNC_CALL))
    {
-      // Check if func_name is preceded by ::
-      Chunk *before_func = func_name->GetPrevNcNnlNi();
-
-      if (before_func->Is(E_Token::CT_DC_MEMBER))
-      {
-         // This is ClassName::funcName() - an out-of-class definition
-         return(true);
-      }
-      // Check if we're in a class/struct context by looking at brace level
-      // Check if this looks like a class member declaration by seeing if
-      // the statement ends with a semicolon (declaration) rather than being
-      // part of an expression
+      // Check if this looks like a declaration/definition context by seeing what follows the && token
       Chunk *next = pc->GetNextNcNnl();
 
       // Skip over any trailing parts: const, noexcept, override, final, etc.

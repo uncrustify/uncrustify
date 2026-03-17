@@ -682,7 +682,7 @@ if (a == Foo::a&&a == Foo::a)
 {}
 auto val1 = (a == Foo::a&&isFoo);
 bool val2 = Foo::a&&Foo::check();
-auto val3 = ns1::ns2::check() && ns3::validate();
+auto val3 = ns1::ns2::check()&&ns3::validate();
 
 // init-if, init-switch, range-for
 
