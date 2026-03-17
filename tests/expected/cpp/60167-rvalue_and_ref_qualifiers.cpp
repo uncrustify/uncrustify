@@ -35,27 +35,27 @@ std::map<std::string, std::string>&& multiParam() &&;
 
 // bool in conditions
 
-for(auto x = true; x && y; y++)
+for(auto x = true; x&&y; y++)
 {}
 
-if(a && b)
+if(a&&b)
 {}
 
-if(!(a && b))
+if(!(a&&b))
 {}
 
-if(auto foo = 42; a && b)
+if(auto foo = 42; a&&b)
 {}
 
-if(int&& x = getValue(); x && 0)
+if(int&& x = getValue(); x&&0)
 {}
 
-if(a && b = c)
+if(a&&b = c)
 {}
 
-if(a && b = []() {
-		    return(true);
-	    }())
+if(a&&b = []() {
+		  return(true);
+	  }())
 {}
 
 // chained method calls
@@ -63,18 +63,18 @@ if(a && b = []() {
 void chainedMethodTest()
 {
 	if (  ptr->func(42)
-	      && !ptr->otherFunc(21)
-	      && (prev = ptr->getStuff())->isValid())
+	      &&!ptr->otherFunc(21)
+	      &&(prev = ptr->getStuff())->isValid())
 	{
 	}
 	while (  check()
-	         && (result = compute())->isReady()
-	         && funcCall())
+	         &&(result = compute())->isReady()
+	         &&funcCall())
 	{
 	}
 	return(  isEnabled()
-	         && (  isReady()
-	               || isDone()));
+	         &&(  isReady()
+	              ||isDone()));
 }
 
 // rvalue params
@@ -107,20 +107,20 @@ int&& x = static_cast<int&&> (42);
 // bool ops in templates
 
 void mixed() {
-	if (a && b && condition())
+	if (a&&b&&condition())
 	{
 		int&& temp = std::move(value);
 	}
 }
 
 template<class B1 = void, class B2 = void>
-struct conjunction : bool_constant<B1::value1 && B2::value2> {};
+struct conjunction : bool_constant<B1::value1&&B2::value2> {};
 
 template<bool B>
-struct enableIfBool : std::enable_if<B && true> {};
+struct enableIfBool : std::enable_if<B&&true> {};
 
 template<typename T>
-using isValid = std::bool_constant<std::is_class_v<T> && std::is_move_constructible_v<T> >;
+using isValid = std::bool_constant<std::is_class_v<T>&&std::is_move_constructible_v<T> >;
 
 template<typename T>
 class Container {
@@ -135,11 +135,11 @@ int&& value;
 
 // global scope bool with template traits
 
-bool globalBool1 = std::is_class<T> && y;
-bool globalBool2 = std::is_class<T> && y();
-bool globalBool3 = x && std::is_class<T>;
-bool globalBool4 = x() && std::is_class<T>;
-auto globalBool5 = std::is_class_v<T> && std::is_move_constructible_v<T>;
+bool globalBool1 = std::is_class<T>&&y;
+bool globalBool2 = std::is_class<T>&&y();
+bool globalBool3 = x&&std::is_class<T>;
+bool globalBool4 = x()&&std::is_class<T>;
+auto globalBool5 = std::is_class_v<T>&&std::is_move_constructible_v<T>;
 
 // lambdas
 
@@ -164,9 +164,9 @@ template<typename T, typename U>
 std::tuple<int&&, std::vector<int&&>&&>&& func9(T&& a, U&& b);
 
 int&& ref = (x > 0) ? static_cast<int&&> (a) : static_cast<int&&> (b);
-auto ternaryTemplate1 = (a && foo<int>()) ? 1 : 2;
-auto ternaryTemplate2 = (a && bar<int, float>()) ? 1 : 2;
-auto ternaryTemplate3 = (check() && validate<T>()) ? doSomething() : doOther();
+auto ternaryTemplate1 = (a&&foo<int>()) ? 1 : 2;
+auto ternaryTemplate2 = (a&&bar<int, float>()) ? 1 : 2;
+auto ternaryTemplate3 = (check()&&validate<T>()) ? doSomething() : doOther();
 
 for (auto&& item : container) {}
 for (int&& val : getTemporaryVector()) {}
@@ -176,9 +176,9 @@ for (int&& val : getTemporaryVector()) {}
 using MemberPtr = int MyClass::*;
 using RvalueRefMemberFunc = void (MyClass::*)(int&&);
 
-bool result1 = a && b && c && d;
+bool result1 = a&&b&&c&&d;
 void multiParam(int&& a, double&& b, std::string&& c);
-if (expr1 && expr2) {
+if (expr1&&expr2) {
 	Type&& temp = getValue();
 }
 
@@ -307,22 +307,22 @@ std::function<void(std::tuple<int&&, std::tuple<int&&, std::vector<std::string&&
 // multi-line bool
 
 bool multiLineResult1 = condition1
-                        && condition2
-                        && condition3;
+                        &&condition2
+                        &&condition3;
 
 bool multiLineResult2 = (a > b)
-                        && (c < d)
-                        && (e == f);
+                        &&(c < d)
+                        &&(e == f);
 
 bool multiLineResult3 = condition1
-                        && condition2
-                        || condition3
-                        && condition4;
+                        &&condition2
+                        ||condition3
+                        &&condition4;
 
 void testMultiLine() {
 	if (longCondition1
-	    && longCondition2
-	    && longCondition3)
+	    &&longCondition2
+	    &&longCondition3)
 	{
 		int&& temp = getValue();
 	}
@@ -330,82 +330,88 @@ void testMultiLine() {
 
 bool checkAll() {
 	return isValid()
-	       && isReady()
-	       && isEnabled();
+	       &&isReady()
+	       &&isEnabled();
+}
+
+void updateWidgets()
+{
+	checked = isEmpty()&&
+	          (event & logfile);
 }
 
 // fold expressions
 
 template<typename ... Ts>
 constexpr bool allTrueUnary(Ts... args) {
-	return (... && args);
+	return (...&&args);
 }
 
 template<typename ... Ts>
 constexpr bool allTrueBinary(Ts... args) {
-	return (true && ... && args);
+	return (true&&...&&args);
 }
 
 template<typename ... Ts>
 constexpr bool allTrueRight(Ts... args) {
-	return (args && ...);
+	return (args&&...);
 }
 
 template<typename ... Ts>
 constexpr bool foldWithRvalue(Ts&&... args) {
-	return (... && static_cast<bool> (args));
+	return (...&&static_cast<bool> (args));
 }
 
 template<typename ... Ts>
 constexpr auto foldMixed(Ts&&... args) {
-	return (std::forward<Ts> (args) && ...);
+	return (std::forward<Ts> (args)&&...);
 }
 
 // sfinae, noexcept
 
 template<typename T,
-         typename = std::enable_if_t<std::is_integral<T>::value && std::is_signed<T>::value> >
+         typename = std::enable_if_t<std::is_integral<T>::value&&std::is_signed<T>::value> >
 void sfinaeFunc(T&& t);
 
 template<typename T,
          typename = std::enable_if_t<
 		 std::is_move_constructible<T>::value
-		 && std::is_move_assignable<T>::value> >
+		 &&std::is_move_assignable<T>::value> >
 T sfinaeReturn(T&& val) {
 	return std::move(val);
 }
 
 template<typename T, typename U,
-         std::enable_if_t<std::is_convertible<T, U>::value && std::is_class<T>::value, int> = 0>
+         std::enable_if_t<std::is_convertible<T, U>::value&&std::is_class<T>::value, int> = 0>
 void multiSfinae(T&& t, U&& u);
 
 template<typename T>
-void noexceptAnd(T&& t) noexcept(std::is_nothrow_move_constructible_v<T> && true);
+void noexceptAnd(T&& t) noexcept(std::is_nothrow_move_constructible_v<T>&&true);
 
 template<typename T>
 void noexceptComplex(T&& t) noexcept(
 	std::is_nothrow_move_constructible_v<T>
-	&& std::is_nothrow_move_assignable_v<T>);
+	&&std::is_nothrow_move_assignable_v<T>);
 
 template<typename T, typename U>
 void noexceptMulti(T&& t, U&& u) noexcept(
 	std::is_nothrow_move_constructible_v<T>
-	&& std::is_nothrow_move_constructible_v<U>
-	&& noexcept(std::declval<T>() + std::declval<U>()));
+	&&std::is_nothrow_move_constructible_v<U>
+	&&noexcept(std::declval<T>() + std::declval<U>()));
 
 class NoexceptClass {
 NoexceptClass(NoexceptClass&& other) noexcept(
-	std::is_nothrow_move_constructible_v<int> && true);
+	std::is_nothrow_move_constructible_v<int>&&true);
 };
 
 template<typename T>
 class ExplicitSfinaeClass {
 template<typename U = T,
-         std::enable_if_t<sizeof(U) > 8 && std::is_trivially_copyable<U>::value, int> = 0>
-                                                                                        explicit ExplicitSfinaeClass(U&& val);
+         std::enable_if_t<sizeof(U) > 8&&std::is_trivially_copyable<U>::value, int> = 0>
+                                                                                      explicit ExplicitSfinaeClass(U&& val);
 
 template<typename U = T,
-         std::enable_if_t<std::is_integral<U>::value && !std::is_same<U, bool>::value, int> = 0>
+         std::enable_if_t<std::is_integral<U>::value&&!std::is_same<U, bool>::value, int> = 0>
 operator U&&() &&;
 };
 
@@ -413,8 +419,8 @@ template<typename T, typename U>
 struct ExplicitMulti {
 	template<typename V = T, typename W = U,
 	         std::enable_if_t<std::is_convertible<V, W>::value
-	                          && sizeof(V) <= sizeof(W)
-	                          && std::is_trivial<V>::value, int> = 0>
+	                          &&sizeof(V) <= sizeof(W)
+	                          &&std::is_trivial<V>::value, int> = 0>
 	ExplicitMulti(V&& t, W&& u);
 };
 
@@ -436,16 +442,16 @@ operator std::vector<T>&&() &&;
 operator std::map<int, int>&&() &&;
 };
 
-decltype(true && false) decl1;
-decltype(a && b) decl2;
+decltype(true&&false) decl1;
+decltype(a&&b) decl2;
 decltype(getValue())&& decl3 = getValue();
 decltype(expr)&& decl4 = std::move(expr);
 template<typename T>
-decltype(std::declval<T>() && std::declval<T>()) declBoolInside(T&& t);
+decltype(std::declval<T>()&&std::declval<T>()) declBoolInside(T&& t);
 template<typename T>
 decltype(std::declval<T>())&& declRefOutside(T&& t);
 decltype(auto) declAuto1 = std::move(value);
-decltype(decltype(a && b)() && decltype(c && d)()) nestedDecl;
+decltype(decltype(a&&b)()&&decltype(c&&d)()) nestedDecl;
 
 template<typename T>
 decltype(static_cast<T&&> (std::declval<T>()).getValue()) getValueType(T&& t);
@@ -459,27 +465,27 @@ using DecltypeRvalueRef = decltype(T&&);
 using MfpRvalue = void (MyClass::*)() &&;
 using MfpConstRvalue = void (MyClass::*)() const &&;
 using MfpParamRvalue = void (MyClass::*)(int&&) &&;
-typedef void (MyClass::*MfpTypedef)() &&;
-typedef int&& (MyClass::*MfpReturnRvalue)() &&;
+typedef void (MyClass::*MfpTypedef)()&&;
+typedef int&& (MyClass::*MfpReturnRvalue)()&&;
 using ComplexMFP = std::vector<int>&& (MyClass::*)(std::string&&) const &&;
-using MFPArray = void (MyClass::*[10])() &&;
+using MFPArray = void (MyClass::*[10])()&&;
 
 // static_assert, deleted/defaulted
 
-static_assert(std::is_integral_v<int> && std::is_signed_v<int>);
-static_assert(sizeof(int) == 4 && alignof(int) == 4, "Size check");
+static_assert(std::is_integral_v<int>&&std::is_signed_v<int>);
+static_assert(sizeof(int) == 4&&alignof(int) == 4, "Size check");
 
 static_assert(
 	std::is_move_constructible_v<std::string>
-	&& std::is_move_assignable_v<std::string>
-	&& std::is_nothrow_move_constructible_v<std::string>,
+	&&std::is_move_assignable_v<std::string>
+	&&std::is_nothrow_move_constructible_v<std::string>,
 	"String must be efficiently movable");
 
 template<typename T>
 struct StaticAssertClass {
-	static_assert(std::is_class_v<T> && !std::is_final_v<T>);
+	static_assert(std::is_class_v<T>&&!std::is_final_v<T>);
 	void method(T&& t) {
-		static_assert(std::is_rvalue_reference_v<T&&> && true);
+		static_assert(std::is_rvalue_reference_v<T&&>&&true);
 	}
 };
 
@@ -509,78 +515,78 @@ template<template<typename ...> class C, typename ... Ts>
 C<Ts...>&& forwardContainer(C<Ts...>&& c);
 
 template<template<typename> class C, typename T,
-         std::enable_if_t<std::is_move_constructible<C<T> >::value && std::is_default_constructible<C<T> >::value, int> = 0>
+         std::enable_if_t<std::is_move_constructible<C<T> >::value&&std::is_default_constructible<C<T> >::value, int> = 0>
 void constrainedTemplate(C<T>&& container);
 
 template<template<template<typename> class> class Outer, template<typename> class Inner>
 void nestedTemplateTemplate(Outer<Inner>&& arg);
 
-std::conditional_t<std::is_integral_v<int> && std::is_signed_v<int>, int&&, float&> condMember1;
-std::conditional_t<A && B, std::conditional_t<C && D, T&&, U&&>, V&> condMember2;
-std::enable_if_t<std::is_class_v<T> && std::is_move_constructible_v<T>, T&&> enableIfRvalue;
+std::conditional_t<std::is_integral_v<int>&&std::is_signed_v<int>, int&&, float&> condMember1;
+std::conditional_t<A&&B, std::conditional_t<C&&D, T&&, U&&>, V&> condMember2;
+std::enable_if_t<std::is_class_v<T>&&std::is_move_constructible_v<T>, T&&> enableIfRvalue;
 
 template<typename T>
 auto nestedConditional(T&& t)
-->std::conditional_t<std::is_rvalue_reference_v<T&&> && true, T&&, T&>;
+->std::conditional_t<std::is_rvalue_reference_v<T&&>&&true, T&&, T&>;
 
 // complex lambdas
 
 auto lambdaBool1 = [](int&& t) {
-			   return std::is_integral<decltype(t)>::value && true;
+			   return std::is_integral<decltype(t)>::value&&true;
 		   };
 
 auto lambdaBool2 = [](auto&& t) {
 			   return std::is_class<std::decay_t<decltype(t)> >::value
-			          && std::is_move_constructible<std::decay_t<decltype(t)> >::value;
+			          &&std::is_move_constructible<std::decay_t<decltype(t)> >::value;
 		   };
 
 auto lambdaGeneric = [](auto&& t) {
-			     if (sizeof(t) > 0 && true) {
+			     if (sizeof(t) > 0&&true) {
 				     return std::forward<decltype(t)> (t);
 			     }
 			     return t;
 		     };
 
 auto lambdaMulti = [](auto&& t, auto&& u) {
-			   return (sizeof(t) > 0 && sizeof(u) > 0);
+			   return (sizeof(t) > 0&&sizeof(u) > 0);
 		   };
 
 auto iifeResult1 = [](int&& x) {
 			   return x > 0;
-		   }(42) && flag;
+		   }(42)&&flag;
 auto iifeResult2 = [](int&& x) {
 			   return x;
-		   }(std::move(val)) && condition;
+		   }(std::move(val))&&condition;
 
 auto iifeChain = [](){
 			 return true;
-		 }() && [] (){ return true; } () && finalCheck;
+		 }()&& [] (){ return true; } ()&&finalCheck;
 
 auto&& iifeRvalue = [](int&& x) -> int&& {
 			    return std::move(x);
 		    }(42);
 
-if ([] (int&& x){ return x > 0; } (getValue()) && otherCondition) {
+if ([] (int&& x){ return x > 0; } (getValue())&&otherCondition) {
 	int&& temp = getValue();
 }
 
 auto iifeCapture = [&](int&& x) {
-			   return x && captured;
-		   }(42) && external;
+			   return x&&captured;
+		   }(42)&&external;
 
 // mixed contexts
 
-bool b1 = (x && y) ? getValue<int&&>() : getValue<float&&>();
-void mixedDefault(int&& x = (a && b) ? 1 : 2);
+bool b1 = (x&&y) ? getValue<int&&>() : getValue<float&&>();
+void mixedDefault(int&& x = (a&&b) ? 1 : 2);
 
 auto multiContext = [](int&& x) {
-			    return x && true;
+			    return x&&true;
 		    };
 
-auto ternaryMixed = (a && b) ? std::move(c) : (d && e) ? std::move(f) : std::move(g);
+auto ternaryMixed = (a&&b) ? std::move(c) : (d&&e) ? std::move(f) : std::move(g);
 
-auto returnMixed(int&& x) -> decltype(x && true) {
-	return x && condition;
+auto returnMixed(int&& x) -> decltype(x&&true) {
+	return x&&condition;
 }
 
 // attributes, constexpr
@@ -590,9 +596,9 @@ auto returnMixed(int&& x) -> decltype(x && true) {
 void attrParam([[maybe_unused]] int&& x);
 
 constexpr int&& constexprReturn();
-constexpr bool constexprAnd = true && false;
+constexpr bool constexprAnd = true&&false;
 constexpr auto constexprMixed(int&& x) -> bool {
-	return x && true;
+	return x&&true;
 }
 
 // structured bindings, ctad
@@ -611,13 +617,13 @@ struct Generator {
 
 template<typename T>
 void ifConstexprTest(T&& t) {
-	if constexpr (std::is_integral_v<T> && std::is_signed_v<T>) {
+	if constexpr (std::is_integral_v<T>&&std::is_signed_v<T>) {
 		int&& temp = static_cast<int&&> (t);
 	}
 
 	if constexpr (std::is_class_v<T>
-	              && std::is_move_constructible_v<T>
-	              && std::is_copy_constructible_v<T>)
+	              &&std::is_move_constructible_v<T>
+	              &&std::is_copy_constructible_v<T>)
 	{
 		T&& moved = std::move(t);
 	}
@@ -640,42 +646,42 @@ template<typename T>
 void genericTemplate(T&& x);
 
 template<typename T>
-auto genericReturn(T&& x)->decltype(x && true);
+auto genericReturn(T&& x)->decltype(x&&true);
 
 // sparen, variadics
 
 template<typename ... Ts>
 void packTest(Ts&&... args) {
-	bool all = (... && static_cast<bool> (args));
+	bool all = (...&&static_cast<bool> (args));
 }
 
 template<typename ... Ts>
 bool packAllTrue(Ts&&... args) {
-	return (true && ... && args);
+	return (true&&...&&args);
 }
 
 template<typename ... Ts>
 auto packForward(Ts&&... args) {
-	return (std::forward<Ts> (args) && ...);
+	return (std::forward<Ts> (args)&&...);
 }
 
 int a = 0;
 bool isFoo = true;
 
-if (a == Foo::a && isFoo)
+if (a == Foo::a&&isFoo)
 {}
-if (a == Foo::a && Foo::check())
+if (a == Foo::a&&Foo::check())
 {}
-if (ns1::ns2::check() && ns3::validate())
+if (ns1::ns2::check()&&ns3::validate())
 {}
-while (Foo::check() && Bar::isReady())
+while (Foo::check()&&Bar::isReady())
 {}
-for (int i = 0; Foo::check() && i < 10; ++i)
+for (int i = 0; Foo::check()&&i < 10; ++i)
 {}
-if (a == Foo::a && a == Foo::a)
+if (a == Foo::a&&a == Foo::a)
 {}
-auto val1 = (a == Foo::a && isFoo);
-bool val2 = Foo::a && Foo::check();
+auto val1 = (a == Foo::a&&isFoo);
+bool val2 = Foo::a&&Foo::check();
 auto val3 = ns1::ns2::check() && ns3::validate();
 
 // init-if, init-switch, range-for
@@ -686,7 +692,7 @@ case 0: break;
 default: break;
 }
 for (std::vector<int>&& item : getVectors()) {}
-if (std::is_integral_v<int> && std::is_signed_v<int>) {}
+if (std::is_integral_v<int>&&std::is_signed_v<int>) {}
 
 switch (std::optional<int>&& opt = getOpt(); opt.has_value()) {
 case true: break;
@@ -700,11 +706,11 @@ switch (std::pair<int&&, std::string&&>&& p = getPair(); p.first) {
 case 0: break;
 default: break;
 }
-switch (std::is_integral_v<T&&> && std::is_signed_v<T&&>) {
+switch (std::is_integral_v<T&&>&&std::is_signed_v<T&&>) {
 case true: break;
 case false: break;
 }
-switch (std::vector<int&&>&& v = getVec(); v.size() > 0 && v.front() > 0) {
+switch (std::vector<int&&>&& v = getVec(); v.size() > 0&&v.front() > 0) {
 case true: break;
 case false: break;
 }
@@ -770,7 +776,7 @@ bool operator&&(const TplOp<U>&) const &&;
 
 template<typename U>
 class SfinaeOp {
-template<typename V = U, std::enable_if_t<std::is_integral_v<V> && std::is_signed_v<V>, int> = 0>
+template<typename V = U, std::enable_if_t<std::is_integral_v<V>&&std::is_signed_v<V>, int> = 0>
 SfinaeOp<U>&& operator+(SfinaeOp<U>&&) &&;
 };
 
@@ -837,12 +843,12 @@ MyClass4&& operator+(MyClass4&& lhs, MyClass4&& rhs) {
 int DOMString::find()
 {
 	{
-		if( (a && b) ) return l;
+		if( (a&&b) ) return l;
 	}
 }
 
 bool strcasecmp()
 {
-	if ( !( a && b ) ) return true;
+	if ( !( a&&b ) ) return true;
 }
 //<<
