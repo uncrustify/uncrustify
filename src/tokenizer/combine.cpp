@@ -6153,8 +6153,8 @@ static bool is_function_ref_qualifier_context(Chunk *pc)
       while (  next->IsNotNullChunk()
             && (  next->Is(E_Token::CT_QUALIFIER)
                || next->Is(E_Token::CT_NOEXCEPT)
-               || next->Is(E_Token::CT_PAREN_OPEN)    // noexcept(...)
-               || next->Is(E_Token::CT_PAREN_CLOSE)))
+               || (  next->Is(E_Token::CT_PAREN_OPEN)
+                  && next->GetPrevNcNnl()->Is(E_Token::CT_NOEXCEPT))))
       {
          if (next->Is(E_Token::CT_PAREN_OPEN))
          {

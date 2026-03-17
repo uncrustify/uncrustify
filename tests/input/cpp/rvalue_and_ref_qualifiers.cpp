@@ -326,6 +326,12 @@ bool checkAll() {
         && isEnabled();
 }
 
+void updateWidgets()
+{
+   checked = isEmpty()&&
+             (event & logfile);
+}
+
 // fold expressions
 
 template<typename... Ts>
