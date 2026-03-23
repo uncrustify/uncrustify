@@ -75,6 +75,16 @@ void chainedMethodTest()
             || isDone()));
 }
 
+// boolean && inside method call arguments
+
+bool checkMemberCall()
+{
+	m_option1->setConflict(f1 && f2);
+	m_option1.setConflict(f1 && f2);
+	setConflict(f1 && f2);
+	setConflict<int>(f1 && f2);
+}
+
 // rvalue params
 
 void func(int&&param);

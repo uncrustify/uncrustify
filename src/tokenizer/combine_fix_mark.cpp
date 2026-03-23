@@ -1715,6 +1715,7 @@ void mark_function(Chunk *pc)
          // If we are on a TYPE or WORD, then this could be a proto or def
          if (  prev->Is(E_Token::CT_TYPE)
             || prev->Is(E_Token::CT_WORD)
+            || prev->Is(E_Token::CT_PARAMETER_PACK)
             || (prev->IsParenClose() && prev->GetParentType() == E_Token::CT_DECLTYPE))
          {
             if (!hit_star)
@@ -1750,6 +1751,7 @@ void mark_function(Chunk *pc)
             && prev->IsNot(E_Token::CT_QUALIFIER)
             && prev->IsNot(E_Token::CT_TYPE)
             && prev->IsNot(E_Token::CT_WORD)
+            && prev->IsNot(E_Token::CT_PARAMETER_PACK)
             && !prev->IsPointerOperator()
             && !(prev->IsParenClose() && prev->GetParentType() == E_Token::CT_DECLTYPE))
          {
@@ -1777,6 +1779,22 @@ void mark_function(Chunk *pc)
          if (prev->Is(E_Token::CT_ANGLE_CLOSE))
          {
             prev = skip_template_prev(prev);
+         }
+         // Skip over decltype(...)
+         else if (prev->IsParenClose() && prev->GetParentType() == E_Token::CT_DECLTYPE)
+         {
+            prev = prev->GetOpeningParen();
+
+            if (prev->IsNotNullChunk())
+            {
+               prev = prev->GetPrevNcNnlNpp();   // move back to decltype keyword
+            }
+
+            if (  prev->IsNotNullChunk()
+               && prev->Is(E_Token::CT_DECLTYPE))
+            {
+               prev = prev->GetPrevNcNnlNpp();   // skip past decltype
+            }
          }
          else
          {

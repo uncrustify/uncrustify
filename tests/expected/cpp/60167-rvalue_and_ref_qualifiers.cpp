@@ -77,6 +77,16 @@ void chainedMethodTest()
 	              ||isDone()));
 }
 
+// boolean && inside method call arguments
+
+bool checkMemberCall()
+{
+	m_option1->setConflict(f1&&f2);
+	m_option1.setConflict(f1&&f2);
+	setConflict(f1&&f2);
+	setConflict<int> (f1&&f2);
+}
+
 // rvalue params
 
 void func(int&& param);
@@ -820,7 +830,9 @@ MyClass4&& MyClass4::process(MyClass4&& other) && {
 	return std::move(other);
 }
 template<typename T>
-T&& Container2<T>::get() && { return std::move(m_value); }
+T&& Container2<T>::get() && {
+	return std::move(m_value);
+}
 template<typename T>
 Container2<T&&>&& Container2<T&&>::move() && {
 	return std::move(*this);

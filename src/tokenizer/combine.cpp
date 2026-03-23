@@ -1337,6 +1337,12 @@ static bool handle_rvalue_forwarding_ref(Chunk *prev, Chunk *pc, Chunk *next)
    {
       E_Token paren_parent = open_paren->GetParentType();
 
+      // && inside a function call's argument list is always boolean
+      if (paren_parent == E_Token::CT_FUNC_CALL)
+      {
+         return(false);
+      }
+
       // A FUNC_CTOR_VAR inside a function body is a variable construction
       // like:  Object obj(a && b)
       if (paren_parent == E_Token::CT_FUNC_CTOR_VAR && prev->Is(E_Token::CT_WORD))
