@@ -124,7 +124,7 @@ static void split_for_stmt(Chunk *start);
 static inline bool is_past_width(Chunk *pc)
 {
    // allow char to sit at last column by subtracting 1
-   size_t currCol    = pc->GetColumn() + pc->Len() - 1;
+   size_t currCol    = pc->GetColumnEnd() - 1;
    bool   past_width = currCol > options::code_width();
 
    LOG_FMT(LSPLIT, "%s(%d): orig line %zu, orig col %zu, curr col %zu, text '%s', past width %s\n",

@@ -1095,7 +1095,7 @@ void output_text(FILE *pfile)
             log_rule_B("align_with_tabs");
             allow_tabs = (  options::align_with_tabs()
                          && pc->TestFlags(PCF_WAS_ALIGNED)
-                         && ((prev->GetColumn() + prev->Len() + 1) != pc->GetColumn()));
+                         && ((prev->GetColumnEnd() + 1) != pc->GetColumn()));
 
             log_rule_B("align_keep_tabs");
 

@@ -2640,7 +2640,7 @@ void indent_text()
             }
             else
             {
-               frm.top().SetIndent(pc->GetColumn() + pc->Len());
+               frm.top().SetIndent(pc->GetColumnEnd());
             }
             log_indent();
 
@@ -3186,7 +3186,7 @@ void indent_text()
             }
             else
             {
-               frm.top().SetIndent(pc->GetColumn() + pc->Len() + 1);
+               frm.top().SetIndent(pc->GetColumnEnd() + 1);
                log_indent();
             }
             frm.top().SetIndentTmp(frm.top().GetIndent());
@@ -4626,12 +4626,12 @@ void indent_preproc()
          {
             log_rule_B("pp_space_after ADD");
             const size_t mult = options::pp_space_count();
-            reindent_line(next, pc->GetColumn() + pc->Len() + (pp_level * mult));
+            reindent_line(next, pc->GetColumnEnd() + (pp_level * mult));
          }
          else if (options::pp_space_after() & IARF_REMOVE)
          {
             log_rule_B("pp_space_after REMOVE");
-            reindent_line(next, pc->GetColumn() + pc->Len());
+            reindent_line(next, pc->GetColumnEnd());
          }
       }
       // Mark as already handled if not region stuff or in column 1

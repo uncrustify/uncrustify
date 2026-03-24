@@ -281,7 +281,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
 
       if (ref != ali)
       {
-         gap = ali->GetColumn() - (ref->GetColumn() + ref->Len());
+         gap = ali->GetColumn() - ref->GetColumnEnd();
       }
       Chunk *tmp = ali;
 
@@ -300,7 +300,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
             && m_star_style == SS_DANGLE))     // TODO: add m_msref_style
       {
          col_adj = start->GetColumn() - ali->GetColumn();
-         gap     = start->GetColumn() - (ref->GetColumn() + ref->Len());
+         gap     = start->GetColumn() - ref->GetColumnEnd();
       }
       // See if this pushes out the max_col
       const size_t endcol = ali->GetColumn() + col_adj
@@ -448,7 +448,7 @@ void AlignStack::Flush()
 
       if (pc != pc->GetAlignData().ref)
       {
-         gap = pc->GetColumn() - (pc->GetAlignData().ref->GetColumn() + pc->GetAlignData().ref->Len());
+         gap = pc->GetColumn() - pc->GetAlignData().ref->GetColumnEnd();
       }
 
       if (m_star_style == SS_DANGLE)
@@ -458,7 +458,7 @@ void AlignStack::Flush()
          if (tmp->IsPointerOperator())
          {
             col_adj = pc->GetAlignData().start->GetColumn() - pc->GetColumn();
-            gap     = pc->GetAlignData().start->GetColumn() - (pc->GetAlignData().ref->GetColumn() + pc->GetAlignData().ref->Len());
+            gap     = pc->GetAlignData().start->GetColumn() - pc->GetAlignData().ref->GetColumnEnd();
          }
       }
 
