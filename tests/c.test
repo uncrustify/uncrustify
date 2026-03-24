@@ -606,40 +606,40 @@
 10143  c/align_var_struct_span_num_mixed-5.cfg            c/align_var_struct_span_num_mixed.c
 
 # align_var_def_span_num_* tests
-10144  c/align_var_def_span_num_empty_lines-1.cfg         c/align_var_def_span_num_empty_lines.c
-10145  c/align_var_def_span_num_empty_lines-2.cfg         c/align_var_def_span_num_empty_lines.c
-10146  c/align_var_def_span_num_empty_lines-3.cfg         c/align_var_def_span_num_empty_lines.c
-10147  c/align_var_def_span_num_cmt_lines-1.cfg           c/align_var_def_span_num_cmt_lines.c
-10148  c/align_var_def_span_num_cmt_lines-2.cfg           c/align_var_def_span_num_cmt_lines.c
-10149  c/align_var_def_span_num_cmt_lines-3.cfg           c/align_var_def_span_num_cmt_lines.c
-10150  c/align_var_def_span_num_pp_lines-1.cfg            c/align_var_def_span_num_pp_lines.c
-10151  c/align_var_def_span_num_pp_lines-2.cfg            c/align_var_def_span_num_pp_lines.c
-10152  c/align_var_def_span_num_pp_lines-3.cfg            c/align_var_def_span_num_pp_lines.c
-10153  c/align_var_def_span_num_mixed-1.cfg               c/align_var_def_span_num_mixed.c
-10154  c/align_var_def_span_num_mixed-2.cfg               c/align_var_def_span_num_mixed.c
-10155  c/align_var_def_span_num_mixed-3.cfg               c/align_var_def_span_num_mixed.c
-10156  c/align_var_def_span_num_mixed-4.cfg               c/align_var_def_span_num_mixed.c
-10157  c/align_var_def_span_num_mixed-5.cfg               c/align_var_def_span_num_mixed.c
+10144  common/align_var_def_span_num_empty_lines-1.cfg         c/align_var_def_span_num_empty_lines.c
+10145  common/align_var_def_span_num_empty_lines-2.cfg         c/align_var_def_span_num_empty_lines.c
+10146  common/align_var_def_span_num_empty_lines-3.cfg         c/align_var_def_span_num_empty_lines.c
+10147  common/align_var_def_span_num_cmt_lines-1.cfg           c/align_var_def_span_num_cmt_lines.c
+10148  common/align_var_def_span_num_cmt_lines-2.cfg           c/align_var_def_span_num_cmt_lines.c
+10149  common/align_var_def_span_num_cmt_lines-3.cfg           c/align_var_def_span_num_cmt_lines.c
+10150  common/align_var_def_span_num_pp_lines-1.cfg            c/align_var_def_span_num_pp_lines.c
+10151  common/align_var_def_span_num_pp_lines-2.cfg            c/align_var_def_span_num_pp_lines.c
+10152  common/align_var_def_span_num_pp_lines-3.cfg            c/align_var_def_span_num_pp_lines.c
+10153  common/align_var_def_span_num_mixed-1.cfg               c/align_var_def_span_num_mixed.c
+10154  common/align_var_def_span_num_mixed-2.cfg               c/align_var_def_span_num_mixed.c
+10155  common/align_var_def_span_num_mixed-3.cfg               c/align_var_def_span_num_mixed.c
+10156  common/align_var_def_span_num_mixed-4.cfg               c/align_var_def_span_num_mixed.c
+10157  common/align_var_def_span_num_mixed-5.cfg               c/align_var_def_span_num_mixed.c
 
 # align_func_proto_span_num_* tests - Empty lines
 10158  c/align_func_proto_span_num_empty_lines-1.cfg         c/align_func_proto_span_num_empty_lines.c
-10159  c/align_func_proto_span_num_empty_lines-2.cfg         c/align_func_proto_span_num_empty_lines.c
-10160  c/align_func_proto_span_num_empty_lines-3.cfg         c/align_func_proto_span_num_empty_lines.c
+10159  common/align_func_proto_span_num_empty_lines-2.cfg         c/align_func_proto_span_num_empty_lines.c
+10160  common/align_func_proto_span_num_empty_lines-3.cfg         c/align_func_proto_span_num_empty_lines.c
 
 # align_func_proto_span_num_* tests - Comment lines
-10161  c/align_func_proto_span_num_cmt_lines-1.cfg           c/align_func_proto_span_num_cmt_lines.c
-10162  c/align_func_proto_span_num_cmt_lines-2.cfg           c/align_func_proto_span_num_cmt_lines.c
-10163  c/align_func_proto_span_num_cmt_lines-3.cfg           c/align_func_proto_span_num_cmt_lines.c
+10161  common/align_func_proto_span_num_cmt_lines-1.cfg           c/align_func_proto_span_num_cmt_lines.c
+10162  common/align_func_proto_span_num_cmt_lines-2.cfg           c/align_func_proto_span_num_cmt_lines.c
+10163  common/align_func_proto_span_num_cmt_lines-3.cfg           c/align_func_proto_span_num_cmt_lines.c
 
 # align_func_proto_span_num_* tests - Preprocessor lines
-10164  c/align_func_proto_span_num_pp_lines-1.cfg            c/align_func_proto_span_num_pp_lines.c
-10165  c/align_func_proto_span_num_pp_lines-2.cfg            c/align_func_proto_span_num_pp_lines.c
-10166  c/align_func_proto_span_num_pp_lines-3.cfg            c/align_func_proto_span_num_pp_lines.c
+10164  common/align_func_proto_span_num_pp_lines-1.cfg            c/align_func_proto_span_num_pp_lines.c
+10165  common/align_func_proto_span_num_pp_lines-2.cfg            c/align_func_proto_span_num_pp_lines.c
+10166  common/align_func_proto_span_num_pp_lines-3.cfg            c/align_func_proto_span_num_pp_lines.c
 
 # align_func_proto_span_num_* tests - Mixed configurations
 10167  c/align_func_proto_span_num_mixed-1.cfg               c/align_func_proto_span_num_mixed.c
 10168  c/align_func_proto_span_num_mixed-2.cfg               c/align_func_proto_span_num_mixed.c
-10169  c/align_func_proto_span_num_mixed-3.cfg               c/align_func_proto_span_num_mixed.c
+10169  common/align_func_proto_span_num_mixed-3.cfg               c/align_func_proto_span_num_mixed.c
 10170  c/align_func_proto_span_num_mixed-4.cfg               c/align_func_proto_span_num_mixed.c
 10171  c/align_func_proto_span_num_mixed-5.cfg               c/align_func_proto_span_num_mixed.c
 
@@ -647,30 +647,30 @@
 10172  c/align_func_proto_span_0_num_mixed.cfg               c/align_func_proto_span_num_mixed.c
 
 # align_assign_span_num_* tests - Empty lines
-10173  c/align_assign_span_num_empty_lines-1.cfg         c/align_assign_span_num_empty_lines.c
+10173  common/align_assign_span_num_empty_lines-1.cfg         c/align_assign_span_num_empty_lines.c
 
 # align_enum_equ_span_num_* tests - Empty lines
-10174  c/align_enum_equ_span_num_empty_lines-1.cfg       c/align_enum_equ_span_num_empty_lines.c
+10174  common/align_enum_equ_span_num_empty_lines-1.cfg       c/align_enum_equ_span_num_empty_lines.c
 
 # align_assign_span_num_* tests - Comment lines
-10175  c/align_assign_span_num_cmt_lines-1.cfg           c/align_assign_span_num_cmt_lines.c
-10176  c/align_assign_span_num_cmt_lines-2.cfg           c/align_assign_span_num_cmt_lines.c
-10177  c/align_assign_span_num_cmt_lines-3.cfg           c/align_assign_span_num_cmt_lines.c
+10175  common/align_assign_span_num_cmt_lines-1.cfg           c/align_assign_span_num_cmt_lines.c
+10176  common/align_assign_span_num_cmt_lines-2.cfg           c/align_assign_span_num_cmt_lines.c
+10177  common/align_assign_span_num_cmt_lines-3.cfg           c/align_assign_span_num_cmt_lines.c
 
 # align_assign_span_num_* tests - Preprocessor lines
-10178  c/align_assign_span_num_pp_lines-1.cfg            c/align_assign_span_num_pp_lines.c
-10179  c/align_assign_span_num_pp_lines-2.cfg            c/align_assign_span_num_pp_lines.c
-10180  c/align_assign_span_num_pp_lines-3.cfg            c/align_assign_span_num_pp_lines.c
+10178  common/align_assign_span_num_pp_lines-1.cfg            c/align_assign_span_num_pp_lines.c
+10179  common/align_assign_span_num_pp_lines-2.cfg            c/align_assign_span_num_pp_lines.c
+10180  common/align_assign_span_num_pp_lines-3.cfg            c/align_assign_span_num_pp_lines.c
 
 # align_enum_equ_span_num_* tests - Comment lines
-10181  c/align_enum_equ_span_num_cmt_lines-1.cfg         c/align_enum_equ_span_num_cmt_lines.c
-10182  c/align_enum_equ_span_num_cmt_lines-2.cfg         c/align_enum_equ_span_num_cmt_lines.c
-10183  c/align_enum_equ_span_num_cmt_lines-3.cfg         c/align_enum_equ_span_num_cmt_lines.c
+10181  common/align_enum_equ_span_num_cmt_lines-1.cfg         c/align_enum_equ_span_num_cmt_lines.c
+10182  common/align_enum_equ_span_num_cmt_lines-2.cfg         c/align_enum_equ_span_num_cmt_lines.c
+10183  common/align_enum_equ_span_num_cmt_lines-3.cfg         c/align_enum_equ_span_num_cmt_lines.c
 
 # align_enum_equ_span_num_* tests - Preprocessor lines
-10184  c/align_enum_equ_span_num_pp_lines-1.cfg          c/align_enum_equ_span_num_pp_lines.c
-10185  c/align_enum_equ_span_num_pp_lines-2.cfg          c/align_enum_equ_span_num_pp_lines.c
-10186  c/align_enum_equ_span_num_pp_lines-3.cfg          c/align_enum_equ_span_num_pp_lines.c
+10184  common/align_enum_equ_span_num_pp_lines-1.cfg          c/align_enum_equ_span_num_pp_lines.c
+10185  common/align_enum_equ_span_num_pp_lines-2.cfg          c/align_enum_equ_span_num_pp_lines.c
+10186  common/align_enum_equ_span_num_pp_lines-3.cfg          c/align_enum_equ_span_num_pp_lines.c
 
 # Issue #4545 - Consistent spacing after cast in typedef struct vs bare struct
 10187  common/empty.cfg                                   c/Issue_4545.c
