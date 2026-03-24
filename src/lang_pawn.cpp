@@ -78,7 +78,7 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
    chunk.SetType(E_Token::CT_VSEMICOLON);
    chunk.SetParentType(E_Token::CT_NONE);
    chunk.Text() = options::mod_pawn_semicolon() ? ";" : "";
-   chunk.SetColumn(pc->GetColumn() + pc->Len());
+   chunk.SetColumn(pc->GetColumnEnd());
 
    LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %zu, prev='%s' [%s]\n",
            __func__, pc->GetOrigLine(), pc->GetLogText(),

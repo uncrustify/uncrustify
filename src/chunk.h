@@ -253,6 +253,11 @@ public:
    size_t GetColumn() const;
 
    /**
+    * @brief Returns the end column of the chunk
+    */
+   size_t GetColumnEnd() const;
+
+   /**
     * @brief Sets the column of the chunk
     * @param col the column of the chunk
     */
@@ -1339,6 +1344,12 @@ inline void Chunk::SetOrigPrevSp(size_t col)
 inline size_t Chunk::GetColumn() const
 {
    return(m_column);
+}
+
+
+inline size_t Chunk::GetColumnEnd() const
+{
+   return(m_column + Len());
 }
 
 

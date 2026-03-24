@@ -994,7 +994,7 @@ Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type,
    }
    // TODO: expand comment type to cover other comment styles?
 
-   new_cmt.SetColumn(ref->GetColumn() + ref->Len() + 1);
+   new_cmt.SetColumn(ref->GetColumnEnd() + 1);
    new_cmt.SetOrigCol(new_cmt.GetColumn());
 
    return(new_cmt.CopyAndAddAfter(ref));

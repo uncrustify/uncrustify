@@ -3830,7 +3830,7 @@ void space_text()
                    * If there was a space, we need to force one, otherwise
                    * try to keep the comment in the same column.
                    */
-                  size_t col_min = pc->GetColumn() + pc->Len() + ((next->GetOrigPrevSp() > 0) ? 1 : 0);
+                  size_t col_min = pc->GetColumnEnd() + ((next->GetOrigPrevSp() > 0) ? 1 : 0);
                   column = next->GetOrigCol();
 
                   if (column < col_min)

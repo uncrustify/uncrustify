@@ -166,7 +166,7 @@ comment_align_e get_comment_align_type(Chunk *cmt)
          || prev->Is(E_Token::CT_BRACE_CLOSE))
       {
          // TODO: make the magic 3 configurable
-         if ((cmt->GetColumn() - (prev->GetColumn() + prev->Len())) < 3)
+         if ((cmt->GetColumn() - prev->GetColumnEnd()) < 3)
          {
             cmt_type = (prev->Is(E_Token::CT_PP_ENDIF)) ? comment_align_e::ENDIF : comment_align_e::BRACE;
          }
