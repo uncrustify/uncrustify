@@ -39,7 +39,7 @@ Preliminary checks
 ==================
 
 Prior to making a release, verify that the repository is in a stable state
-and that all CI (continuous integration - AppVeyor) has passed.
+and that all CI (continuous integration) tests have passed.
 This should ensure all tests pass and building is working,
 including cross-compiling for Windows.
 
