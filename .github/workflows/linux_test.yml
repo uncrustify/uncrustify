@@ -1,4 +1,4 @@
-name: uncrustify_test
+name: Linux test
 on: [push, pull_request]
 
 # Cancel any in-progress CI runs for a PR if it is updated
@@ -9,6 +9,7 @@ concurrency:
 jobs:
   uncrustify:
     name: ${{ matrix.build_type }} - ${{ matrix.generator }}
+
     strategy:
       matrix:
         include:
@@ -16,11 +17,17 @@ jobs:
             generator: Ninja
           - build_type: Release
             generator: Unix Makefiles
+
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: seanmiddleditch/gha-setup-ninja@master
-      - name: cmake-part-and-tests
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Configure CMake
         env:
           BADGE: linux
           CMAKE_CXX_FLAGS_disabled: >-
@@ -39,7 +46,20 @@ jobs:
           # -fsanitize=undefined
           # -fsanitize=vla-bound
         run: |
-          cmake -B build -G "${{ matrix.generator }}" -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}"
-          cmake --build build --parallel $(nproc)
+          cmake -B build -G "${{ matrix.generator }}" \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}" \
+            -DUNCRUSTIFY_SEPARATE_TESTS=ON
+
+      - name: Build
+        run: |
+          cores=$(nproc)
+          echo "Detected CPU cores: $cores"
+          cmake --build build --parallel $cores
+
+      - name: Run tests
+        run: |
           cd build
-          ../scripts/run_ctest.py -j $(nproc)
+          cores=$(nproc)
+          echo "Detected CPU cores: $cores"
+          ../scripts/run_ctest.py -j $cores

@@ -1,4 +1,3 @@
-[![AppVeyor](https://img.shields.io/appveyor/ci/uncrustify/uncrustify/master.svg?style=flat-square&label=Windows)](https://ci.appveyor.com/project/uncrustify/uncrustify)
 [![Coverage Status](https://coveralls.io/repos/github/uncrustify/uncrustify/badge.svg?branch=master)](https://coveralls.io/github/uncrustify/uncrustify?branch=master)
 <a href="#"><img src="https://img.shields.io/badge/C++-11-blue.svg?style=flat-square"></a>
 [![Conan Center](https://shields.io/conan/v/uncrustify)](https://conan.io/center/uncrustify)
@@ -162,7 +161,7 @@ Here are some areas that need attention:
 Firstly take a look at the [CONTRIBUTING.md](https://github.com/uncrustify/uncrustify/blob/master/CONTRIBUTING.md)
 
 Currently we have two continuous integration systems that test your PRs,
-TravisCI and Appveyor.
+TravisCI and Github actions.
 Tested are the test cases, the formatting of the code base and
 the output of the command line options.
 
