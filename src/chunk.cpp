@@ -602,7 +602,7 @@ void Chunk::SetType(const E_Token token)
    {
       LOG_FMT(LSETTYP, "'%s'", GetLogText());
    }
-   LOG_FMT(LSETTYP, ", len is %ld\n", Len());
+   LOG_FMT(LSETTYP, ", len is %zu\n", Len());
    LOG_FMT(LSETTYP, "   m_type is %s, m_parentType is %s => token is %s\n",
            get_token_name(m_type), get_token_name(m_parentType), get_token_name(token));
    m_type = token;
