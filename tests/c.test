@@ -704,3 +704,6 @@
 10215  common/align_typedef_span_num_pp_lines-1.cfg     c/align_typedef_span_num_pp_lines.c
 10216  common/align_typedef_span_num_pp_lines-2.cfg     c/align_typedef_span_num_pp_lines.c
 10217  common/align_typedef_span_num_pp_lines-3.cfg     c/align_typedef_span_num_pp_lines.c
+
+# Bug: if else on func one liners leads to incorrect space #4590
+10218  c/nl_func_leave_one_liners_vbrace.cfg            c/nl_func_leave_one_liners_vbrace.c
