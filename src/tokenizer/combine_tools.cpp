@@ -204,7 +204,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       else if (word_count >= 1 && pc->Is(E_Token::CT_PAREN_OPEN))
       {
          // Handle macro-wrapped parameters, e.g. 'void foo(int _MACRO(param), ...)'
-         // The previous CT_PAREN_OPEN branch handles function-pointer syntax
+         // The previous E_Token::CT_PAREN_OPEN branch handles function-pointer syntax
          // (word_count == type_count with '*' or '^' inside); this fallback
          // covers macro calls that don't match that pattern.
          pc = pc->GetClosingParen(E_Scope::PREPROC);
@@ -360,6 +360,16 @@ bool chunk_ends_type(Chunk *start)
          last_expr = pc->TestFlags(PCF_EXPR_START)
                      && !pc->TestFlags(PCF_IN_FCN_CALL);
          last_lval = pc->TestFlags(PCF_LVALUE);
+         continue;
+      }
+
+      /* Skip over attributes when scanning backwards for type detection.
+       * Attributes like [[nodiscard]] should not terminate type scanning.
+       */
+      if (pc->Is(E_Token::CT_ATTRIBUTE))
+      {
+         LOG_FMT(LFTYPE, "%s(%d): SKIPPING attribute %s '%s'\n",
+                 __func__, __LINE__, get_token_name(pc->GetType()), pc->GetLogText());
          continue;
       }
       /* If a comma is encountered within a template, it must be
