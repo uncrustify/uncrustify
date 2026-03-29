@@ -1085,6 +1085,19 @@ void newlines_cleanup_braces(bool first)
                      log_rule_B("nl_template_func");
                      newline_iarf(pc, action);
                   }
+                  else if (next->Is(E_Token::CT_DEDUCTION_GUIDE)) // C++17 deduction guide
+                  {
+                     iarf_e const action =
+                        newline_template_option(
+                           pc,
+                           options::nl_template_func_decl_special(),
+                           options::nl_template_func_decl(),
+                           options::nl_template_func());
+                     log_rule_B("nl_template_func_decl_special");
+                     log_rule_B("nl_template_func_decl");
+                     log_rule_B("nl_template_func");
+                     newline_iarf(pc, action);
+                  }
                   else if (  next->Is(E_Token::CT_TYPE)
                           || next->Is(E_Token::CT_QUALIFIER)) // variable
                   {

@@ -274,6 +274,7 @@ enum class E_Token : unsigned short int
    CT_EXECUTION_CONTEXT, // Keyword for use in lambda statement: [] CT_EXECUTION_CONTEXT ()->{}
    CT_TRAILING_RET,      // '->' in 'auto fname(...) -> type;'
                          // '->' in 'auto fname(...) const -> type;'
+   CT_DEDUCTION_GUIDE,   // C++17 deduction guide: 'template<T> Class(T) -> Class<T>;'
    CT_BIT_COLON,         // a ':' in a variable declaration
    CT_ENUM_COLON,        // a ':' in a enum definition
 

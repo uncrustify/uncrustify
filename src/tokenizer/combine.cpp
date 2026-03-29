@@ -4432,6 +4432,93 @@ static void handle_cpp_template(Chunk *pc)
             tmp->SetParentType(E_Token::CT_TEMPLATE);
          }
       }
+      else
+      {
+         // Check for C++17 deduction guide:
+         // template<T> ClassName(params) -> ClassName<T>;
+         // template<T> explicit ClassName(params) -> ClassName<T>;
+
+         // Skip over qualifiers like 'explicit'
+         if (tmp->Is(E_Token::CT_QUALIFIER))
+         {
+            tmp = tmp->GetNextNcNnl();
+         }
+
+         // Look for pattern: WORD/FUNC_CALL ( ... ) -> TYPE < ... > ;
+         if (  tmp->Is(E_Token::CT_WORD)
+            || tmp->Is(E_Token::CT_FUNC_CALL))
+         {
+            Chunk *name       = tmp;
+            Chunk *paren_open = name->GetNextNcNnl();
+
+            if (  paren_open->IsNotNullChunk()
+               && (  paren_open->Is(E_Token::CT_PAREN_OPEN)
+                  || paren_open->Is(E_Token::CT_FPAREN_OPEN)))
+            {
+               Chunk *paren_close = paren_open->GetClosingParen();
+
+               if (paren_close->IsNotNullChunk())
+               {
+                  Chunk *arrow = paren_close->GetNextNcNnl();
+
+                  if (  arrow->IsNotNullChunk()
+                     && arrow->Is(E_Token::CT_MEMBER)
+                     && arrow->IsString("->"))
+                  {
+                     LOG_FMT(LFCN, "%s(%d): Detected C++17 deduction guide at line %zu\n",
+                             __func__, __LINE__, name->GetOrigLine());
+
+                     // Mark the name as a deduction guide
+                     name->SetType(E_Token::CT_DEDUCTION_GUIDE);
+                     name->SetParentType(E_Token::CT_TEMPLATE);
+
+                     // Mark the parentheses as function parentheses with deduction guide parent
+                     paren_open->SetType(E_Token::CT_FPAREN_OPEN);
+                     paren_open->SetParentType(E_Token::CT_DEDUCTION_GUIDE);
+                     paren_close->SetType(E_Token::CT_FPAREN_CLOSE);
+                     paren_close->SetParentType(E_Token::CT_DEDUCTION_GUIDE);
+
+                     // Mark the arrow as trailing return type with deduction guide parent
+                     arrow->SetType(E_Token::CT_TRAILING_RET);
+                     arrow->SetParentType(E_Token::CT_DEDUCTION_GUIDE);
+
+                     // Process the return type: ClassName<T>;
+                     Chunk *ret_type = arrow->GetNextNcNnl();
+
+                     if (ret_type->IsNotNullChunk())
+                     {
+                        // Mark it as type with deduction guide parent
+                        ret_type->SetType(E_Token::CT_TYPE);
+                        ret_type->SetParentType(E_Token::CT_DEDUCTION_GUIDE);
+
+                        Chunk *angle_open = ret_type->GetNextNcNnl();
+
+                        // Mark the CT_ANGLE_OPEN/CLOSE and following semicolon with deduction guide parent
+                        if (  angle_open->IsNotNullChunk()
+                           && angle_open->Is(E_Token::CT_ANGLE_OPEN))
+                        {
+                           angle_open->SetParentType(E_Token::CT_DEDUCTION_GUIDE);
+
+                           Chunk *angle_close = angle_open->GetClosingParen();
+
+                           if (angle_close->IsNotNullChunk())
+                           {
+                              angle_close->SetParentType(E_Token::CT_DEDUCTION_GUIDE);
+
+                              Chunk *semi = angle_close->GetNextType(E_Token::CT_SEMICOLON, ret_type->GetLevel());
+
+                              if (semi->IsNotNullChunk())
+                              {
+                                 semi->SetParentType(E_Token::CT_DEDUCTION_GUIDE);
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
    }
 } // handle_cpp_template
 

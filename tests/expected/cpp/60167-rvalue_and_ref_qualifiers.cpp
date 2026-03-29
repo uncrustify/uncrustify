@@ -651,7 +651,7 @@ struct DeducedClass {
 };
 
 template<typename T>
-DeducedClass(T&&)->DeducedClass<T>;
+DeducedClass(T&&) -> DeducedClass<T>;
 
 template<typename T>
 void genericTemplate(T&& x);

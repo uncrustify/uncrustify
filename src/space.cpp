@@ -1149,6 +1149,18 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_assign());
    }
 
+   // C++17 deduction guide arrow: ClassName(T) -> ClassName<T>
+   // Falls back to sp_trailing_return if set to ignore.
+   if (  options::sp_deduction_guide_arrow() != IARF_IGNORE
+      && (  (  first->Is(E_Token::CT_TRAILING_RET)
+            && first->GetParentType() == E_Token::CT_DEDUCTION_GUIDE)
+         || (  second->Is(E_Token::CT_TRAILING_RET)
+            && second->GetParentType() == E_Token::CT_DEDUCTION_GUIDE)))
+   {
+      log_rule("sp_deduction_guide_arrow");
+      return(options::sp_deduction_guide_arrow());
+   }
+
    if (  first->Is(E_Token::CT_TRAILING_RET)
       || first->Is(E_Token::CT_CPP_LAMBDA_RET)
       || second->Is(E_Token::CT_TRAILING_RET)
@@ -1805,6 +1817,37 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
       // Add or remove space between a constructor/destructor and the open
       // parenthesis.
+      log_rule("sp_func_class_paren");
+      return(options::sp_func_class_paren());
+   }
+
+   // C++17 deduction guide: template<T> ClassName(T) -> ClassName<T>;
+   // Falls back to sp_func_class_paren / sp_func_class_paren_empty.
+   if (  first->Is(E_Token::CT_DEDUCTION_GUIDE)
+      && second->Is(E_Token::CT_FPAREN_OPEN))
+   {
+      Chunk *next = second->GetNextNcNnl();
+
+      if (next->Is(E_Token::CT_FPAREN_CLOSE))
+      {
+         if (options::sp_deduction_guide_paren_empty() != IARF_IGNORE)
+         {
+            log_rule("sp_deduction_guide_paren_empty");
+            return(options::sp_deduction_guide_paren_empty());
+         }
+
+         if (options::sp_func_class_paren_empty() != IARF_IGNORE)
+         {
+            log_rule("sp_func_class_paren_empty");
+            return(options::sp_func_class_paren_empty());
+         }
+      }
+
+      if (options::sp_deduction_guide_paren() != IARF_IGNORE)
+      {
+         log_rule("sp_deduction_guide_paren");
+         return(options::sp_deduction_guide_paren());
+      }
       log_rule("sp_func_class_paren");
       return(options::sp_func_class_paren());
    }
