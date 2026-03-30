@@ -1054,6 +1054,13 @@ void newlines_cleanup_braces(bool first)
 
                if (tmp->Is(E_Token::CT_TEMPLATE))
                {
+                  // Skip past qualifiers like 'explicit' to find the actual declaration that follows the template
+                  while (  next->IsNotNullChunk()
+                        && next->Is(E_Token::CT_QUALIFIER))
+                  {
+                     next = next->GetNextNcNnl();
+                  }
+
                   if (next->Is(E_Token::CT_USING))
                   {
                      newline_iarf(pc, options::nl_template_using());
