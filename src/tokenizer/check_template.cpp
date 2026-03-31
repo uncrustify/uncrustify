@@ -492,7 +492,10 @@ void check_template_arg(Chunk *start, Chunk *end)
          if (  prev->Is(E_Token::CT_ELLIPSIS)                 // Issue #3309
             && prev2->Is(E_Token::CT_TYPENAME))
          {
-            pc->SetType(E_Token::CT_PARAMETER_PACK);
+            if (!pc->Is(E_Token::CT_ANGLE_CLOSE))
+            {
+               pc->SetType(E_Token::CT_PARAMETER_PACK);
+            }
          }
          else
          {
