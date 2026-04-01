@@ -946,6 +946,21 @@ sp_func_class_paren;
 extern Option<iarf_e>
 sp_func_class_paren_empty;
 
+// Add or remove space between a C++17 deduction guide name and '('.
+// Falls back to sp_func_class_paren if set to ignore.
+extern Option<iarf_e>
+sp_deduction_guide_paren;
+
+// Add or remove space between a C++17 deduction guide name and '()' if empty.
+// Falls back to sp_func_class_paren_empty if set to ignore.
+extern Option<iarf_e>
+sp_deduction_guide_paren_empty;
+
+// Add or remove space around '->' in a C++17 deduction guide.
+// Falls back to sp_trailing_return if set to ignore.
+extern Option<iarf_e>
+sp_deduction_guide_arrow;
+
 // Add or remove space after 'return'.
 extern Option<iarf_e>
 sp_return; // = IARF_FORCE

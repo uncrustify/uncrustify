@@ -1054,6 +1054,13 @@ void newlines_cleanup_braces(bool first)
 
                if (tmp->Is(E_Token::CT_TEMPLATE))
                {
+                  // Skip past qualifiers like 'explicit' to find the actual declaration that follows the template
+                  while (  next->IsNotNullChunk()
+                        && next->Is(E_Token::CT_QUALIFIER))
+                  {
+                     next = next->GetNextNcNnl();
+                  }
+
                   if (next->Is(E_Token::CT_USING))
                   {
                      newline_iarf(pc, options::nl_template_using());
@@ -1073,6 +1080,19 @@ void newlines_cleanup_braces(bool first)
                      newline_iarf(pc, action);
                   }
                   else if (next->GetParentType() == E_Token::CT_FUNC_PROTO) // function declaration
+                  {
+                     iarf_e const action =
+                        newline_template_option(
+                           pc,
+                           options::nl_template_func_decl_special(),
+                           options::nl_template_func_decl(),
+                           options::nl_template_func());
+                     log_rule_B("nl_template_func_decl_special");
+                     log_rule_B("nl_template_func_decl");
+                     log_rule_B("nl_template_func");
+                     newline_iarf(pc, action);
+                  }
+                  else if (next->Is(E_Token::CT_DEDUCTION_GUIDE)) // C++17 deduction guide
                   {
                      iarf_e const action =
                         newline_template_option(
