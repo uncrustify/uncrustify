@@ -518,8 +518,34 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       {
          // Add or remove space after ';', except when followed by a comment.
          // see the tests cpp:34517-34519
-         log_rule("sp_after_semi");
-         return(options::sp_after_semi());
+
+         // issue #4590: Don't add space when ';' is inside a one-liner body
+         // and is followed by virtual closing braces that lead directly into
+         // a real closing brace. Virtual braces have zero length, so the
+         // space would incorrectly appear before the real '}'.
+         bool skip = false;
+
+         if (  second->Is(E_Token::CT_VBRACE_CLOSE)
+            && first->TestFlags(PCF_ONE_LINER))
+         {
+            Chunk *tmp = second;
+
+            while (tmp->Is(E_Token::CT_VBRACE_CLOSE))
+            {
+               tmp = tmp->GetNext();
+            }
+
+            if (tmp->Is(E_Token::CT_BRACE_CLOSE))
+            {
+               skip = true;
+            }
+         }
+
+         if (!skip)
+         {
+            log_rule("sp_after_semi");
+            return(options::sp_after_semi());
+         }
       }
       // Let the comment spacing rules handle this
    }

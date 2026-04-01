@@ -2905,7 +2905,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
 
       if (pc->Is(E_Token::CT_NEWLINE))
       {
-         LOG_FMT(LBCTRL, "%s(%d): orig line is %zu, orig col is %zu, text is '<Newline>', len is %ld, nl count is %zu\n",
+         LOG_FMT(LBCTRL, "%s(%d): orig line is %zu, orig col is %zu, text is '<Newline>', len is %zu, nl count is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Len(), pc->GetNlCount());
       }
       else if (pc->Is(E_Token::CT_VBRACE_OPEN))
