@@ -616,6 +616,7 @@
 31614  cpp/Issue_3309-i.cfg                                 cpp/Issue_3309.cpp
 31615  cpp/Issue_3309-f.cfg                                 cpp/Issue_3309.cpp
 31616  cpp/Issue_3309-r.cfg                                 cpp/Issue_3309.cpp
+31617  common/empty.cfg                                     cpp/Issue_4683.cpp
 
 31620  common/sp_after_type-f.cfg                           cpp/sp_after_type.cpp
 31621  cpp/sp_after_type-i.cfg                              cpp/sp_after_type.cpp
