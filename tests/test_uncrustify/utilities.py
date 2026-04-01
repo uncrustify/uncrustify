@@ -6,15 +6,19 @@
 #
 
 import argparse
+import concurrent.futures
 import os
 import subprocess
 import sys
+import threading
 
 from .ansicolor import printc
 from .config import config, all_tests, FAIL_ATTRS, PASS_ATTRS, SKIP_ATTRS
 from .failure import (Failure, MismatchFailure, UnexpectedlyPassingFailure,
                       UnstableFailure)
 from .test import FormatTest
+
+_print_lock = threading.Lock()
 
 
 # -----------------------------------------------------------------------------
@@ -68,6 +72,12 @@ def add_source_tests_arguments(parser):
     parser.add_argument('-p', '--show-all', action='store_true',
                         help='show passed/skipped tests')
 
+    parser.add_argument('-j', '--jobs', type=int,
+                        default=int(os.environ.get('UNCRUSTIFY_TEST_JOBS', 1)),
+                        metavar='N',
+                        help='number of parallel test jobs '
+                             '(default: $UNCRUSTIFY_TEST_JOBS or 1)')
+
 
 # -----------------------------------------------------------------------------
 def add_format_tests_arguments(parser):
@@ -75,6 +85,12 @@ def add_format_tests_arguments(parser):
 
     parser.add_argument('-p', '--show-all', action='store_true',
                         help='show passed/skipped tests')
+
+    parser.add_argument('-j', '--jobs', type=int,
+                        default=int(os.environ.get('UNCRUSTIFY_TEST_JOBS', 1)),
+                        metavar='N',
+                        help='number of parallel test jobs '
+                             '(default: $UNCRUSTIFY_TEST_JOBS or 1)')
 
     parser.add_argument('-r', '--select', metavar='CASE(S)', type=str,
                         help='select tests to be executed')
@@ -120,41 +136,59 @@ def parse_args(parser):
 
 
 # -----------------------------------------------------------------------------
-def run_tests(tests, args, selector=None):
-    pass_count = 0
-    fail_count = 0
-    mismatch_count = 0
-    unstable_count = 0
-    unexpectedly_passing_count = 0
-
-    for test in tests:
-        if selector is not None and not selector.test(test.test_name):
-            if args.show_all:
+def _run_one_test(test, args, selector):
+    if selector is not None and not selector.test(test.test_name):
+        if args.show_all:
+            with _print_lock:
                 printc("SKIPPED: ", test.test_name, **SKIP_ATTRS)
-            continue
+        return 'skipped'
 
-        try:
-            test.run(args)
-            if args.show_all:
-                outcome = 'XFAILED' if test.test_xfail else 'PASSED'
+    try:
+        test.run(args)
+        if args.show_all:
+            outcome = 'XFAILED' if test.test_xfail else 'PASSED'
+            with _print_lock:
                 printc('{}: '.format(outcome), test.test_name, **PASS_ATTRS)
-            pass_count += 1
-        except UnstableFailure:
-            unstable_count += 1
-        except MismatchFailure:
-            mismatch_count += 1
-        except UnexpectedlyPassingFailure:
-            unexpectedly_passing_count += 1
-        except Failure:
-            fail_count += 1
+        return 'passing'
+    except UnstableFailure:
+        return 'unstable'
+    except MismatchFailure:
+        return 'mismatch'
+    except UnexpectedlyPassingFailure:
+        return 'xpass'
+    except Failure:
+        return 'failing'
 
-    return {
-        'passing': pass_count,
-        'failing': fail_count,
-        'mismatch': mismatch_count,
-        'unstable': unstable_count,
-        'xpass': unexpectedly_passing_count
+
+# -----------------------------------------------------------------------------
+def run_tests(tests, args, selector=None):
+    counts = {
+        'passing': 0,
+        'failing': 0,
+        'mismatch': 0,
+        'unstable': 0,
+        'xpass': 0,
     }
+
+    jobs = getattr(args, 'jobs', 1) or 1
+
+    if jobs == 1:
+        results = (_run_one_test(t, args, selector) for t in tests)
+    else:
+        executor = concurrent.futures.ThreadPoolExecutor(max_workers=jobs)
+        results = executor.map(_run_one_test, tests,
+                               [args] * len(tests),
+                               [selector] * len(tests))
+
+    try:
+        for result in results:
+            if result != 'skipped':
+                counts[result] += 1
+    finally:
+        if jobs > 1:
+            executor.shutdown(wait=False)
+
+    return counts
 
 
 # -----------------------------------------------------------------------------

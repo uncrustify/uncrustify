@@ -62,4 +62,4 @@ jobs:
           cd build
           cores=$(nproc)
           echo "Detected CPU cores: $cores"
-          ../scripts/run_ctest.py -j $cores
+          UNCRUSTIFY_TEST_JOBS=$cores ../scripts/run_ctest.py -j $cores

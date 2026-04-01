@@ -44,4 +44,5 @@ jobs:
           $cores = (Get-CimInstance Win32_Processor).NumberOfCores
           Write-Output "Detected CPU cores: $cores"
           $env:PYTHONIOENCODING = "utf-8"
+          $env:UNCRUSTIFY_TEST_JOBS = $cores
           python ../scripts/run_ctest.py -- -j $cores -C ${{ matrix.configuration }}
