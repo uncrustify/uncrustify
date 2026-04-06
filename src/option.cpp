@@ -1341,7 +1341,36 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
 
          if (option->type() == OT_STRING)
          {
-            fprintf(pfile, "\"%s\"", val.c_str());
+            size_t to_be_escaped = 0;
+
+            for (const char c : val)
+            {
+               if (c == '"' || c == '\\')
+               {
+                  ++to_be_escaped;
+               }
+            }
+
+            if (to_be_escaped == 0)
+            {
+               fprintf(pfile, "\"%s\"", val.c_str());
+            }
+            else
+            {
+               std::string escaped;
+               escaped.reserve(val.length() + to_be_escaped);
+
+               for (const char c : val)
+               {
+                  if (c == '"' || c == '\\')
+                  {
+                     escaped.push_back('\\');
+                  }
+                  escaped.push_back(c);
+               }
+
+               fprintf(pfile, "\"%s\"", escaped.c_str());
+            }
          }
          else
          {

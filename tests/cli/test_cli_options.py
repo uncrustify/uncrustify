@@ -1051,5 +1051,38 @@ def main(args):
 
     print("Test $(year) keyword is OK")
 
+    print("Test string escaping round-trip in --update-config ...")
+    #
+    # Regression test: --update-config was stripping backslash escapes from
+    # quoted string option values (e.g. \" inside a string becoming ").
+    # The config is loaded, then written back; the output must preserve the
+    # original escaped forms so the round-trip is lossless.
+    #
+    out_txt, err_txt = proc(
+        uncr_bin,
+        ['-c', s_path_join(script_dir, 'config/string-escaping.cfg'),
+         '--update-config'])
+
+    # Each entry is the literal substring expected in the --update-config output.
+    # include_category_0 has an embedded escaped double-quote: \"
+    # include_category_1 has embedded escaped backslashes: \\
+    expected_substrings = [
+        'include_category_0              = "(?!.*generated.h\\").*"',
+        'include_category_1              = "path\\\\to\\\\file"',
+    ]
+
+    string_escape_ok = True
+    for expected in expected_substrings:
+        if expected not in out_txt:
+            print("\nProblem: string-escaping round-trip failed.")
+            print("  Expected substring: %r" % expected)
+            print("  Not found in --update-config output.")
+            string_escape_ok = False
+
+    if not string_escape_ok:
+        sys_exit(EX_SOFTWARE)
+
+    print("Test string escaping round-trip in --update-config is OK")
+
 if __name__ == "__main__":
     main(argv[1:])
