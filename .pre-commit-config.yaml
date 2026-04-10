@@ -72,7 +72,6 @@ repos:
       - id: uncrustify
         exclude: ^(tests/.*|documentation/.*)$
         args: [--replace, --no-backup, -c, forUncrustifySources.cfg, -l, CPP]
-      deactivate for a short time, 27. 1. 2026 guy
       - id: cppcheck
         exclude: ^(tests/.*|documentation/.*)$
         args:
