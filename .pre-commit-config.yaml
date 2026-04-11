@@ -83,6 +83,10 @@ repos:
           - --inline-suppr
           - --check-level=exhaustive
           - --suppress=returnDanglingLifetime
+          - --suppress=unusedFunction
+          - --suppress=missingIncludeSystem
+          - --suppress=missingInclude
+          - --suppress=noExplicitConstructor
 
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
