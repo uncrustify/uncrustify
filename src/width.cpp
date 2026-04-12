@@ -44,7 +44,7 @@ struct TokenPriority
 };
 
 
-static inline bool is_past_width(Chunk *pc);
+static inline bool is_past_width(Chunk const *pc);
 
 
 //! Split right after the chunk
