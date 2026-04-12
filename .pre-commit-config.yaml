@@ -87,6 +87,9 @@ repos:
           - --suppress=missingIncludeSystem
           - --suppress=missingInclude
           - --suppress=noExplicitConstructor
+          - --suppress=unmatchedSuppression
+          - --suppress=checkersReport
+          - --suppress=useStlAlgorithm
 
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
