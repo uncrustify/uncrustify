@@ -460,7 +460,7 @@ static bool split_line(Chunk *start)
    ent.pc  = Chunk::NullChunkPtr;
    ent.pri = get_split_pri(E_Token::CT_UNKNOWN);
 
-   Chunk *pc = start->GetPrev();
+   Chunk       *pc = start->GetPrev();
    Chunk const *prev;
 
    while (  pc->IsNotNullChunk()
@@ -798,13 +798,13 @@ void split_bool_expr(Chunk *start)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s(%d): start at '%s'\n", __func__, __LINE__, start->GetLogText());
-   bool   lead = options::pos_bool() & TP_LEAD ? true : false;
+   bool        lead = options::pos_bool() & TP_LEAD ? true : false;
 
-   Chunk  *pc                       = start;
-   Chunk  *last_operator_bool       = pc;
-   Chunk  const *return_statement   = Chunk::NullChunkPtr;
+   Chunk       *pc                 = start;
+   Chunk       *last_operator_bool = pc;
+   Chunk const *return_statement   = Chunk::NullChunkPtr;
 
-   size_t top_level = start->GetLevel();
+   size_t      top_level = start->GetLevel();
 
    LOG_FMT(LSPLIT, "  %s(%d): search for boolean operators\n", __func__, __LINE__);
 
