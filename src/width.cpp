@@ -44,7 +44,7 @@ struct TokenPriority
 };
 
 
-static inline bool is_past_width(Chunk *pc);
+static inline bool is_past_width(Chunk const *pc);
 
 
 //! Split right after the chunk
@@ -121,7 +121,7 @@ static void split_bool_expr(Chunk *start);
 static void split_for_stmt(Chunk *start);
 
 
-static inline bool is_past_width(Chunk *pc)
+static inline bool is_past_width(Chunk const *pc)
 {
    // allow char to sit at last column by subtracting 1
    size_t currCol    = pc->GetColumnEnd() - 1;
@@ -287,7 +287,7 @@ static void try_split_here(SplitEntry &ent, Chunk *pc)
       return;
    }
    // Can't split after a newline
-   Chunk *prev = pc->GetPrev();
+   Chunk const *prev = pc->GetPrev();
 
    if (  prev->IsNullChunk()
       || (  prev->IsNewline()
@@ -304,7 +304,7 @@ static void try_split_here(SplitEntry &ent, Chunk *pc)
    // Can't split a function without arguments
    if (pc->Is(E_Token::CT_FPAREN_OPEN))
    {
-      Chunk *next = pc->GetNext();
+      Chunk const *next = pc->GetNext();
 
       if (next->Is(E_Token::CT_FPAREN_CLOSE))
       {
@@ -316,7 +316,7 @@ static void try_split_here(SplitEntry &ent, Chunk *pc)
    // Only split concatenated strings
    if (pc->Is(E_Token::CT_STRING))
    {
-      Chunk *next = pc->GetNext();
+      Chunk const *next = pc->GetNext();
 
       if (next->IsNot(E_Token::CT_STRING))
       {
@@ -336,7 +336,7 @@ static void try_split_here(SplitEntry &ent, Chunk *pc)
    // don't break after last term of a qualified type
    if (pc_pri == 25)
    {
-      Chunk *next = pc->GetNext();
+      Chunk const *next = pc->GetNext();
 
       if (  next->IsNot(E_Token::CT_WORD)
          && (get_split_pri(next->GetType()) != 25))
@@ -460,8 +460,8 @@ static bool split_line(Chunk *start)
    ent.pc  = Chunk::NullChunkPtr;
    ent.pri = get_split_pri(E_Token::CT_UNKNOWN);
 
-   Chunk *pc = start->GetPrev();
-   Chunk *prev;
+   Chunk       *pc = start->GetPrev();
+   Chunk const *prev;
 
    while (  pc->IsNotNullChunk()
          && !pc->IsNewline())
@@ -552,7 +552,7 @@ static bool split_line(Chunk *start)
    if (pc->IsNullChunk())
    {
       pc = start;
-      Chunk *next = pc->GetNext();
+      Chunk const *next = pc->GetNext();
 
       // On comma, close parenthesis/bracket/braces or semicolon, empty
       // parenthesis/brackets/braces pairs, skip after them since they
@@ -775,7 +775,7 @@ static void split_fcn_params_full(Chunk *start)
       }
    }
    // Now break after every comma
-   Chunk *pc = fpo->GetNextNcNnl();
+   Chunk const *pc = fpo->GetNextNcNnl();
 
    while (pc->IsNotNullChunk())
    {
@@ -798,13 +798,13 @@ void split_bool_expr(Chunk *start)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s(%d): start at '%s'\n", __func__, __LINE__, start->GetLogText());
-   bool   lead = options::pos_bool() & TP_LEAD ? true : false;
+   bool        lead = options::pos_bool() & TP_LEAD ? true : false;
 
-   Chunk  *pc                 = start;
-   Chunk  *last_operator_bool = pc;
-   Chunk  *return_statement   = Chunk::NullChunkPtr;
+   Chunk       *pc                 = start;
+   Chunk       *last_operator_bool = pc;
+   Chunk const *return_statement   = Chunk::NullChunkPtr;
 
-   size_t top_level = start->GetLevel();
+   size_t      top_level = start->GetLevel();
 
    LOG_FMT(LSPLIT, "  %s(%d): search for boolean operators\n", __func__, __LINE__);
 
@@ -872,7 +872,7 @@ void split_bool_expr(Chunk *start)
          {
             split_line(pc->GetPrev());
          }
-         Chunk *nextNewLine = split_point->GetNextNl();
+         Chunk const *nextNewLine = split_point->GetNextNl();
 
          // split following line if too long
          if (is_past_width(nextNewLine->GetPrev()))
