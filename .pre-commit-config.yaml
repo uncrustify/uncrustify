@@ -73,7 +73,7 @@ repos:
         exclude: ^(tests/.*|documentation/.*)$
         args: [--replace, --no-backup, -c, forUncrustifySources.cfg, -l, CPP]
       - id: cppcheck
-        exclude: ^(tests/.*|documentation/.*)$
+        exclude: ^(tests/*|documentation/.*)$
         exclude: ^(detect.cpp|src/indent.cpp)$
         args:
           - --quiet
