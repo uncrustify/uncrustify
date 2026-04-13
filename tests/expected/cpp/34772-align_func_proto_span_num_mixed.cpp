@@ -26,3 +26,28 @@ int complex_func_seven();
 
 void final_func_eight();
 };
+
+class AnotherAPI
+{
+public:
+VeryLongReturnType another_func_nine();
+
+
+int short_ten();
+
+VeryLongReturnType long_named_func_eleven();
+#if 1
+#if 1
+#if 1
+int twelve();
+#endif
+#endif
+#endif
+
+VeryLongReturnType extra_long_func_thirteen();
+// cmt 1
+// cmt 2
+// cmt 3
+// cmt 4
+int fn_fourteen();
+};

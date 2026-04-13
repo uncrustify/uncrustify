@@ -23,3 +23,24 @@ int                complex_func_seven(void);
 #endif
 
 void               final_func_eight(void);
+
+VeryLongReturnType another_func_nine(void);
+
+
+int                short_ten(void);
+
+VeryLongReturnType long_named_func_eleven(void);
+#if 1
+#if 1
+#if 1
+int                twelve(void);
+#endif
+#endif
+#endif
+
+VeryLongReturnType extra_long_func_thirteen(void);
+// cmt 1
+// cmt 2
+// cmt 3
+// cmt 4
+int fn_fourteen(void);

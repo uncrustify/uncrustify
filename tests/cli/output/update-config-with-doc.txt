@@ -2708,6 +2708,21 @@ align_number_right              = false    # true/false
 # Whether to keep whitespace not required for alignment.
 align_keep_extra_space          = false    # true/false
 
+# Maximum budget of empty lines to skip for all alignment spans.
+#  0: No budget (don't skip any empty lines) (default).
+# >0: Default budget of empty lines to skip between candidates.
+global_span_num_empty_lines     = 0        # unsigned number
+
+# Maximum budget of preprocessor lines to skip for all alignment spans.
+#  0: No budget (don't skip any preprocessor lines) (default).
+# >0: Default budget of preprocessor lines to skip between candidates.
+global_span_num_pp_lines        = 0        # unsigned number
+
+# Maximum budget of comment lines to skip for all alignment spans.
+#  0: No budget (don't skip any comment lines) (default).
+# >0: Default budget of comment lines to skip between candidates.
+global_span_num_cmt_lines       = 0        # unsigned number
+
 # Whether to align variable definitions in prototypes and functions.
 align_func_params               = false    # true/false
 
@@ -2716,20 +2731,29 @@ align_func_params               = false    # true/false
 # 0: Don't align (default).
 align_func_params_span          = 0        # unsigned number
 
-# Number of empty lines to ignore in span calculation for align_func_params_span.
+# Maximum budget of empty lines to skip for align_func_params_span.
+#  -1: Use the global_span_num_empty_lines budget (default).
+#   0: No budget (don't skip any empty lines).
+#  >0: Skip up to this many empty lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_func_params_span_num_empty_lines = 0        # unsigned number
+# Default: -1
+align_func_params_span_num_empty_lines = -1       # number
 
-# Number of preprocessor directive lines to ignore in span calculation for align_func_params_span.
+# Maximum budget of preprocessor lines to skip for align_func_params_span.
+#  -1: Use the global_span_num_pp_lines budget (default).
+#   0: No budget (don't skip any preprocessor lines).
+#  >0: Skip up to this many preprocessor lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_func_params_span_num_pp_lines = 0        # unsigned number
+# Default: -1
+align_func_params_span_num_pp_lines = -1       # number
 
-# Number of comment-only lines to ignore in span calculation for align_func_params_span.
+# Maximum budget of comment lines to skip for align_func_params_span.
+#  -1: Use the global_span_num_cmt_lines budget (default).
+#   0: No budget (don't skip any comment lines).
+#  >0: Skip up to this many comment lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_func_params_span_num_cmt_lines = 0        # unsigned number
+# Default: -1
+align_func_params_span_num_cmt_lines = -1       # number
 
 # The threshold for aligning function parameter definitions.
 # Use a negative number for absolute thresholds.
@@ -2812,20 +2836,29 @@ align_var_def_attribute         = false    # true/false
 # Whether to align inline struct/enum/union variable definitions.
 align_var_def_inline            = false    # true/false
 
-# Number of empty lines to ignore in span calculation for align_var_def_span.
+# Maximum budget of empty lines to skip for align_var_def_span.
+#  -1: Use the global_span_num_empty_lines budget (default).
+#   0: No budget (don't skip any empty lines).
+#  >0: Skip up to this many empty lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_var_def_span_num_empty_lines = 0        # unsigned number
+# Default: -1
+align_var_def_span_num_empty_lines = -1       # number
 
-# Number of preprocessor directive lines to ignore in span calculation for align_var_def_span.
+# Maximum budget of preprocessor lines to skip for align_var_def_span.
+#  -1: Use the global_span_num_pp_lines budget (default).
+#   0: No budget (don't skip any preprocessor lines).
+#  >0: Skip up to this many preprocessor lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_var_def_span_num_pp_lines = 0        # unsigned number
+# Default: -1
+align_var_def_span_num_pp_lines = -1       # number
 
-# Number of comment-only lines to ignore in span calculation for align_var_def_span.
+# Maximum budget of comment lines to skip for align_var_def_span.
+#  -1: Use the global_span_num_cmt_lines budget (default).
+#   0: No budget (don't skip any comment lines).
+#  >0: Skip up to this many comment lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_var_def_span_num_cmt_lines = 0        # unsigned number
+# Default: -1
+align_var_def_span_num_cmt_lines = -1       # number
 
 # The span for aligning on '=' in assignments.
 #
@@ -2843,20 +2876,29 @@ align_assign_func_proto_span    = 0        # unsigned number
 # 0: No limit (default).
 align_assign_thresh             = 0        # number
 
-# Number of empty lines to ignore in span calculation for align_assign_span.
+# Maximum budget of empty lines to skip for align_assign_span.
+#  -1: Use the global_span_num_empty_lines budget (default).
+#   0: No budget (don't skip any empty lines).
+#  >0: Skip up to this many empty lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_assign_span_num_empty_lines = 0        # unsigned number
+# Default: -1
+align_assign_span_num_empty_lines = -1       # number
 
-# Number of preprocessor directive lines to ignore in span calculation for align_assign_span.
+# Maximum budget of preprocessor lines to skip for align_assign_span.
+#  -1: Use the global_span_num_pp_lines budget (default).
+#   0: No budget (don't skip any preprocessor lines).
+#  >0: Skip up to this many preprocessor lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_assign_span_num_pp_lines  = 0        # unsigned number
+# Default: -1
+align_assign_span_num_pp_lines  = -1       # number
 
-# Number of comment-only lines to ignore in span calculation for align_assign_span.
+# Maximum budget of comment lines to skip for align_assign_span.
+#  -1: Use the global_span_num_cmt_lines budget (default).
+#   0: No budget (don't skip any comment lines).
+#  >0: Skip up to this many comment lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_assign_span_num_cmt_lines = 0        # unsigned number
+# Default: -1
+align_assign_span_num_cmt_lines = -1       # number
 
 # Whether to align on the left most assignment when multiple
 # definitions are found on the same line.
@@ -2893,40 +2935,58 @@ align_enum_equ_span             = 0        # unsigned number
 # 0: no limit (default).
 align_enum_equ_thresh           = 0        # number
 
-# Number of empty lines to ignore in span calculation for align_enum_equ_span.
+# Maximum budget of empty lines to skip for align_enum_equ_span.
+#  -1: Use the global_span_num_empty_lines budget (default).
+#   0: No budget (don't skip any empty lines).
+#  >0: Skip up to this many empty lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_enum_equ_span_num_empty_lines = 0        # unsigned number
+# Default: -1
+align_enum_equ_span_num_empty_lines = -1       # number
 
-# Number of preprocessor directive lines to ignore in span calculation for align_enum_equ_span.
+# Maximum budget of preprocessor lines to skip for align_enum_equ_span.
+#  -1: Use the global_span_num_pp_lines budget (default).
+#   0: No budget (don't skip any preprocessor lines).
+#  >0: Skip up to this many preprocessor lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_enum_equ_span_num_pp_lines = 0        # unsigned number
+# Default: -1
+align_enum_equ_span_num_pp_lines = -1       # number
 
-# Number of comment-only lines to ignore in span calculation for align_enum_equ_span.
+# Maximum budget of comment lines to skip for align_enum_equ_span.
+#  -1: Use the global_span_num_cmt_lines budget (default).
+#   0: No budget (don't skip any comment lines).
+#  >0: Skip up to this many comment lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_enum_equ_span_num_cmt_lines = 0        # unsigned number
+# Default: -1
+align_enum_equ_span_num_cmt_lines = -1       # number
 
 # The span for aligning class member definitions.
 #
 # 0: Don't align (default).
 align_var_class_span            = 0        # unsigned number
 
-# Number of empty lines to ignore in span calculation for align_var_class_span.
+# Maximum budget of empty lines to skip for align_var_class_span.
+#  -1: Use the global_span_num_empty_lines budget (default).
+#   0: No budget (don't skip any empty lines).
+#  >0: Skip up to this many empty lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_var_class_span_num_empty_lines = 0        # unsigned number
+# Default: -1
+align_var_class_span_num_empty_lines = -1       # number
 
-# Number of preprocessor directive lines to ignore in span calculation for align_var_class_span.
+# Maximum budget of preprocessor lines to skip for align_var_class_span.
+#  -1: Use the global_span_num_pp_lines budget (default).
+#   0: No budget (don't skip any preprocessor lines).
+#  >0: Skip up to this many preprocessor lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_var_class_span_num_pp_lines = 0        # unsigned number
+# Default: -1
+align_var_class_span_num_pp_lines = -1       # number
 
-# Number of comment-only lines to ignore in span calculation for align_var_class_span.
+# Maximum budget of comment lines to skip for align_var_class_span.
+#  -1: Use the global_span_num_cmt_lines budget (default).
+#   0: No budget (don't skip any comment lines).
+#  >0: Skip up to this many comment lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_var_class_span_num_cmt_lines = 0        # unsigned number
+# Default: -1
+align_var_class_span_num_cmt_lines = -1       # number
 
 # The threshold for aligning class member definitions.
 # Use a negative number for absolute thresholds.
@@ -2942,20 +3002,29 @@ align_var_class_gap             = 0        # unsigned number
 # 0: Don't align (default).
 align_var_struct_span           = 0        # unsigned number
 
-# Number of empty lines to ignore in span calculation for align_var_struct_span.
+# Maximum budget of empty lines to skip for align_var_struct_span.
+#  -1: Use the global_span_num_empty_lines budget (default).
+#   0: No budget (don't skip any empty lines).
+#  >0: Skip up to this many empty lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_var_struct_span_num_empty_lines = 0        # unsigned number
+# Default: -1
+align_var_struct_span_num_empty_lines = -1       # number
 
-# Number of preprocessor directive lines to ignore in span calculation for align_var_struct_span.
+# Maximum budget of preprocessor lines to skip for align_var_struct_span.
+#  -1: Use the global_span_num_pp_lines budget (default).
+#   0: No budget (don't skip any preprocessor lines).
+#  >0: Skip up to this many preprocessor lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_var_struct_span_num_pp_lines = 0        # unsigned number
+# Default: -1
+align_var_struct_span_num_pp_lines = -1       # number
 
-# Number of comment-only lines to ignore in span calculation for align_var_struct_span.
+# Maximum budget of comment lines to skip for align_var_struct_span.
+#  -1: Use the global_span_num_cmt_lines budget (default).
+#   0: No budget (don't skip any comment lines).
+#  >0: Skip up to this many comment lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_var_struct_span_num_cmt_lines = 0        # unsigned number
+# Default: -1
+align_var_struct_span_num_cmt_lines = -1       # number
 
 # The threshold for aligning struct/union member definitions.
 # Use a negative number for absolute thresholds.
@@ -2976,20 +3045,29 @@ align_struct_init_span          = 0        # unsigned number
 # 0: Don't align (default).
 align_typedef_span              = 0        # unsigned number
 
-# Number of empty lines to ignore in span calculation for align_typedef_span.
+# Maximum budget of empty lines to skip for align_typedef_span.
+#  -1: Use the global_span_num_empty_lines budget (default).
+#   0: No budget (don't skip any empty lines).
+#  >0: Skip up to this many empty lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_typedef_span_num_empty_lines = 0        # unsigned number
+# Default: -1
+align_typedef_span_num_empty_lines = -1       # number
 
-# Number of preprocessor directive lines to ignore in span calculation for align_typedef_span.
+# Maximum budget of preprocessor lines to skip for align_typedef_span.
+#  -1: Use the global_span_num_pp_lines budget (default).
+#   0: No budget (don't skip any preprocessor lines).
+#  >0: Skip up to this many preprocessor lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_typedef_span_num_pp_lines = 0        # unsigned number
+# Default: -1
+align_typedef_span_num_pp_lines = -1       # number
 
-# Number of comment-only lines to ignore in span calculation for align_typedef_span.
+# Maximum budget of comment lines to skip for align_typedef_span.
+#  -1: Use the global_span_num_cmt_lines budget (default).
+#   0: No budget (don't skip any comment lines).
+#  >0: Skip up to this many comment lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_typedef_span_num_cmt_lines = 0        # unsigned number
+# Default: -1
+align_typedef_span_num_cmt_lines = -1       # number
 
 # The minimum space between the type and the synonym of a typedef.
 align_typedef_gap               = 0        # unsigned number
@@ -3053,20 +3131,29 @@ align_func_proto_span           = 0        # unsigned number
 # true:  continuation lines are not counted
 align_func_proto_span_ignore_cont_lines = false    # true/false
 
-# Number of empty lines to ignore in span calculation for align_func_proto_span.
+# Maximum budget of empty lines to skip for align_func_proto_span.
+#  -1: Use the global_span_num_empty_lines budget (default).
+#   0: No budget (don't skip any empty lines).
+#  >0: Skip up to this many empty lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_func_proto_span_num_empty_lines = 0        # unsigned number
+# Default: -1
+align_func_proto_span_num_empty_lines = -1       # number
 
-# Number of preprocessor directive lines to ignore in span calculation for align_func_proto_span.
+# Maximum budget of preprocessor lines to skip for align_func_proto_span.
+#  -1: Use the global_span_num_pp_lines budget (default).
+#   0: No budget (don't skip any preprocessor lines).
+#  >0: Skip up to this many preprocessor lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_func_proto_span_num_pp_lines = 0        # unsigned number
+# Default: -1
+align_func_proto_span_num_pp_lines = -1       # number
 
-# Number of comment-only lines to ignore in span calculation for align_func_proto_span.
+# Maximum budget of comment lines to skip for align_func_proto_span.
+#  -1: Use the global_span_num_cmt_lines budget (default).
+#   0: No budget (don't skip any comment lines).
+#  >0: Skip up to this many comment lines between candidates.
 #
-# 0: Don't skip any lines (default).
-align_func_proto_span_num_cmt_lines = 0        # unsigned number
+# Default: -1
+align_func_proto_span_num_cmt_lines = -1       # number
 
 # How to consider (or treat) the '*' in the alignment of function prototypes.
 #

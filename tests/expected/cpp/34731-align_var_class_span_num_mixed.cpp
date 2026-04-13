@@ -26,3 +26,36 @@ long int t;
 char     u;
 #endif
 };
+
+class SecondClass
+{
+public:
+char v;
+
+
+int  ww;
+};
+
+class ThirdClass
+{
+public:
+char aa;
+#if 1
+#if 1
+#if 1
+int bbb;
+#endif
+#endif
+#endif
+};
+
+class FourthClass
+{
+public:
+char cc;
+// cmt 1
+// cmt 2
+// cmt 3
+// cmt 4
+int ddd;
+};

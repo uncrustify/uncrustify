@@ -26,9 +26,46 @@ For each supported span option, three filter options may be available:
   <span_name>_num_cmt_lines    - Number of comment-only lines to skip
   <span_name>_num_pp_lines     - Number of preprocessor lines to skip
 
-All filter options default to 0 (disabled), preserving original behavior of <span_name>.
+Each specific filter option defaults to -1, which means "inherit from global".
 
-If <span_name> is set to 0, none of these options are used, as span alignment is disabled.
+
+Global Defaults & Priority
+--------------------------
+
+To avoid repeating the same settings for every alignment type, you can define
+a default "budget" for all spans at once using these three global options:
+
+  global_span_num_empty_lines  - Default empty lines to skip (default: 0)
+  global_span_num_cmt_lines    - Default comment-only lines to skip (default: 0)
+  global_span_num_pp_lines     - Default preprocessor lines to skip (default: 0)
+
+The actual budget used by a span is determined by this priority logic:
+
+  Value | Effect      | Description
+  ------|-------------|---------------------------------------------------------
+   -1   | INHERIT     | Uses the value from the global_span_num_xxx option.
+    0   | DISABLE     | No lines of this type are skipped (ignores the global).
+  >= 1  | OVERRIDE    | Skips up to this many lines (ignores the global).
+
+
+Example Configuration:
+----------------------
+
+  # 1. Setup global policy: skip 1 empty line and 1 PP directive everywhere
+  global_span_num_empty_lines = 1
+  global_span_num_pp_lines    = 1
+
+  # 2. Variable definitions: stricter than global (disable empty line skipping)
+  align_var_def_span_num_empty_lines = 0
+
+  # 3. Function prototypes: more relaxed (skip up to 3 comment lines)
+  align_func_proto_span_num_cmt_lines = 3
+
+  # Result:
+  # - var_def uses: empty=0, PP=1 (inherited), cmt=0 (inherited)
+  # - func_proto uses: empty=1 (inherited), PP=1 (inherited), cmt=3
+  # - all other spans use the global defaults (empty=1, PP=1, cmt=0)
+
 
 Currently Supported Spans
 -------------------------

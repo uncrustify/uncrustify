@@ -8,6 +8,7 @@
 
 #include "align/typedefs.h"
 
+#include "align/span_num_resolve.h"
 #include "align/stack.h"
 #include "log_rules.h"
 
@@ -32,14 +33,14 @@ void align_typedefs(size_t span)
    log_rule_B("align_typedef_amp_style");
    as.m_amp_style = static_cast<AlignStack::StarStyle>(options::align_typedef_amp_style());
 
-   // Line skip configuration
+   // Line skip configuration (resolve -1 to global value)
    log_rule_B("align_typedef_span_num_empty_lines");
    log_rule_B("align_typedef_span_num_pp_lines");
    log_rule_B("align_typedef_span_num_cmt_lines");
-   LineSkipConfig skip_cfg = {};
-   skip_cfg.empty_lines = options::align_typedef_span_num_empty_lines();
-   skip_cfg.pp_lines    = options::align_typedef_span_num_pp_lines();
-   skip_cfg.cmt_lines   = options::align_typedef_span_num_cmt_lines();
+   LineSkipConfig skip_cfg = resolve_span_num_config(
+      options::align_typedef_span_num_empty_lines(),
+      options::align_typedef_span_num_pp_lines(),
+      options::align_typedef_span_num_cmt_lines());
 
    // Working copy of skip config - budget is decremented as lines are skipped
    LineSkipConfig skip_budget = skip_cfg;

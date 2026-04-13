@@ -8,6 +8,7 @@
 
 #include "align/var_def_brace.h"
 
+#include "align/span_num_resolve.h"
 #include "align/stack.h"
 #include "align/tools.h"
 #include "log_rules.h"
@@ -46,9 +47,10 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       log_rule_B("align_var_struct_span_num_empty_lines");
       log_rule_B("align_var_struct_span_num_pp_lines");
       log_rule_B("align_var_struct_span_num_cmt_lines");
-      myskip_cfg.empty_lines = options::align_var_struct_span_num_empty_lines();
-      myskip_cfg.pp_lines    = options::align_var_struct_span_num_pp_lines();
-      myskip_cfg.cmt_lines   = options::align_var_struct_span_num_cmt_lines();
+      myskip_cfg = resolve_span_num_config(
+         options::align_var_struct_span_num_empty_lines(),
+         options::align_var_struct_span_num_pp_lines(),
+         options::align_var_struct_span_num_cmt_lines());
    }
    else if (start->GetParentType() == E_Token::CT_CLASS)
    {
@@ -61,9 +63,10 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       log_rule_B("align_var_class_span_num_empty_lines");
       log_rule_B("align_var_class_span_num_pp_lines");
       log_rule_B("align_var_class_span_num_cmt_lines");
-      myskip_cfg.empty_lines = options::align_var_class_span_num_empty_lines();
-      myskip_cfg.pp_lines    = options::align_var_class_span_num_pp_lines();
-      myskip_cfg.cmt_lines   = options::align_var_class_span_num_cmt_lines();
+      myskip_cfg = resolve_span_num_config(
+         options::align_var_class_span_num_empty_lines(),
+         options::align_var_class_span_num_pp_lines(),
+         options::align_var_class_span_num_cmt_lines());
    }
    else
    {
@@ -74,9 +77,10 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       log_rule_B("align_var_def_span_num_empty_lines");
       log_rule_B("align_var_def_span_num_pp_lines");
       log_rule_B("align_var_def_span_num_cmt_lines");
-      myskip_cfg.empty_lines = options::align_var_def_span_num_empty_lines();
-      myskip_cfg.pp_lines    = options::align_var_def_span_num_pp_lines();
-      myskip_cfg.cmt_lines   = options::align_var_def_span_num_cmt_lines();
+      myskip_cfg = resolve_span_num_config(
+         options::align_var_def_span_num_empty_lines(),
+         options::align_var_def_span_num_pp_lines(),
+         options::align_var_def_span_num_cmt_lines());
    }
    // Working copy of skip config - budgets are decremented as lines are skipped
    LineSkipConfig skip_budget = myskip_cfg;

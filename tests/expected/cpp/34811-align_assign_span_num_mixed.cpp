@@ -30,3 +30,37 @@ void test_method()
     float var8         = 800;
 }
 };
+
+class SecondClass
+{
+public:
+void second_method()
+{
+    char var9 = 'a';
+
+
+    int var10 = 42;
+}
+
+void third_method()
+{
+    char var11 = 'a';
+#if 1
+#if 1
+#if 1
+    int var12 = 42;
+#endif
+#endif
+#endif
+}
+
+void fourth_method()
+{
+    char var13 = 'a';
+    // cmt 1
+    // cmt 2
+    // cmt 3
+    // cmt 4
+    int var14 = 42;
+}
+};

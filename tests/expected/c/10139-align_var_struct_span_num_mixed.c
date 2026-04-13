@@ -25,3 +25,33 @@ struct TestStruct
 	char u;
 #endif
 };
+
+struct SecondStruct
+{
+	char v;
+
+
+	int ww;
+};
+
+struct ThirdStruct
+{
+	char aa;
+#if 1
+#if 1
+#if 1
+	int bbb;
+#endif
+#endif
+#endif
+};
+
+struct FourthStruct
+{
+	char cc;
+	// cmt 1
+	// cmt 2
+	// cmt 3
+	// cmt 4
+	int ddd;
+};

@@ -3328,6 +3328,24 @@ align_number_right;
 extern Option<bool>
 align_keep_extra_space;
 
+// Maximum budget of empty lines to skip for all alignment spans.
+//  0: No budget (don't skip any empty lines) (default).
+// >0: Default budget of empty lines to skip between candidates.
+extern BoundedOption<unsigned, 0, 5000>
+global_span_num_empty_lines;
+
+// Maximum budget of preprocessor lines to skip for all alignment spans.
+//  0: No budget (don't skip any preprocessor lines) (default).
+// >0: Default budget of preprocessor lines to skip between candidates.
+extern BoundedOption<unsigned, 0, 5000>
+global_span_num_pp_lines;
+
+// Maximum budget of comment lines to skip for all alignment spans.
+//  0: No budget (don't skip any comment lines) (default).
+// >0: Default budget of comment lines to skip between candidates.
+extern BoundedOption<unsigned, 0, 5000>
+global_span_num_cmt_lines;
+
 // Whether to align variable definitions in prototypes and functions.
 extern Option<bool>
 align_func_params;
@@ -3338,23 +3356,26 @@ align_func_params;
 extern BoundedOption<unsigned, 0, 16>
 align_func_params_span;
 
-// Number of empty lines to ignore in span calculation for align_func_params_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_func_params_span_num_empty_lines;
+// Maximum budget of empty lines to skip for align_func_params_span.
+//  -1: Use the global_span_num_empty_lines budget (default).
+//   0: No budget (don't skip any empty lines).
+//  >0: Skip up to this many empty lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_func_params_span_num_empty_lines; // = -1
 
-// Number of preprocessor directive lines to ignore in span calculation for align_func_params_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_func_params_span_num_pp_lines;
+// Maximum budget of preprocessor lines to skip for align_func_params_span.
+//  -1: Use the global_span_num_pp_lines budget (default).
+//   0: No budget (don't skip any preprocessor lines).
+//  >0: Skip up to this many preprocessor lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_func_params_span_num_pp_lines; // = -1
 
-// Number of comment-only lines to ignore in span calculation for align_func_params_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_func_params_span_num_cmt_lines;
+// Maximum budget of comment lines to skip for align_func_params_span.
+//  -1: Use the global_span_num_cmt_lines budget (default).
+//   0: No budget (don't skip any comment lines).
+//  >0: Skip up to this many comment lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_func_params_span_num_cmt_lines; // = -1
 
 // The threshold for aligning function parameter definitions.
 // Use a negative number for absolute thresholds.
@@ -3454,23 +3475,26 @@ align_var_def_attribute;
 extern Option<bool>
 align_var_def_inline;
 
-// Number of empty lines to ignore in span calculation for align_var_def_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_var_def_span_num_empty_lines;
+// Maximum budget of empty lines to skip for align_var_def_span.
+//  -1: Use the global_span_num_empty_lines budget (default).
+//   0: No budget (don't skip any empty lines).
+//  >0: Skip up to this many empty lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_var_def_span_num_empty_lines; // = -1
 
-// Number of preprocessor directive lines to ignore in span calculation for align_var_def_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_var_def_span_num_pp_lines;
+// Maximum budget of preprocessor lines to skip for align_var_def_span.
+//  -1: Use the global_span_num_pp_lines budget (default).
+//   0: No budget (don't skip any preprocessor lines).
+//  >0: Skip up to this many preprocessor lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_var_def_span_num_pp_lines; // = -1
 
-// Number of comment-only lines to ignore in span calculation for align_var_def_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_var_def_span_num_cmt_lines;
+// Maximum budget of comment lines to skip for align_var_def_span.
+//  -1: Use the global_span_num_cmt_lines budget (default).
+//   0: No budget (don't skip any comment lines).
+//  >0: Skip up to this many comment lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_var_def_span_num_cmt_lines; // = -1
 
 // The span for aligning on '=' in assignments.
 //
@@ -3491,23 +3515,26 @@ align_assign_func_proto_span;
 extern BoundedOption<signed, -1000, 5000>
 align_assign_thresh;
 
-// Number of empty lines to ignore in span calculation for align_assign_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_assign_span_num_empty_lines;
+// Maximum budget of empty lines to skip for align_assign_span.
+//  -1: Use the global_span_num_empty_lines budget (default).
+//   0: No budget (don't skip any empty lines).
+//  >0: Skip up to this many empty lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_assign_span_num_empty_lines; // = -1
 
-// Number of preprocessor directive lines to ignore in span calculation for align_assign_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_assign_span_num_pp_lines;
+// Maximum budget of preprocessor lines to skip for align_assign_span.
+//  -1: Use the global_span_num_pp_lines budget (default).
+//   0: No budget (don't skip any preprocessor lines).
+//  >0: Skip up to this many preprocessor lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_assign_span_num_pp_lines; // = -1
 
-// Number of comment-only lines to ignore in span calculation for align_assign_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_assign_span_num_cmt_lines;
+// Maximum budget of comment lines to skip for align_assign_span.
+//  -1: Use the global_span_num_cmt_lines budget (default).
+//   0: No budget (don't skip any comment lines).
+//  >0: Skip up to this many comment lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_assign_span_num_cmt_lines; // = -1
 
 // Whether to align on the left most assignment when multiple
 // definitions are found on the same line.
@@ -3550,23 +3577,26 @@ align_enum_equ_span;
 extern BoundedOption<signed, -1000, 5000>
 align_enum_equ_thresh;
 
-// Number of empty lines to ignore in span calculation for align_enum_equ_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_enum_equ_span_num_empty_lines;
+// Maximum budget of empty lines to skip for align_enum_equ_span.
+//  -1: Use the global_span_num_empty_lines budget (default).
+//   0: No budget (don't skip any empty lines).
+//  >0: Skip up to this many empty lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_enum_equ_span_num_empty_lines; // = -1
 
-// Number of preprocessor directive lines to ignore in span calculation for align_enum_equ_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_enum_equ_span_num_pp_lines;
+// Maximum budget of preprocessor lines to skip for align_enum_equ_span.
+//  -1: Use the global_span_num_pp_lines budget (default).
+//   0: No budget (don't skip any preprocessor lines).
+//  >0: Skip up to this many preprocessor lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_enum_equ_span_num_pp_lines; // = -1
 
-// Number of comment-only lines to ignore in span calculation for align_enum_equ_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_enum_equ_span_num_cmt_lines;
+// Maximum budget of comment lines to skip for align_enum_equ_span.
+//  -1: Use the global_span_num_cmt_lines budget (default).
+//   0: No budget (don't skip any comment lines).
+//  >0: Skip up to this many comment lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_enum_equ_span_num_cmt_lines; // = -1
 
 // The span for aligning class member definitions.
 //
@@ -3574,23 +3604,26 @@ align_enum_equ_span_num_cmt_lines;
 extern BoundedOption<unsigned, 0, 5000>
 align_var_class_span;
 
-// Number of empty lines to ignore in span calculation for align_var_class_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_var_class_span_num_empty_lines;
+// Maximum budget of empty lines to skip for align_var_class_span.
+//  -1: Use the global_span_num_empty_lines budget (default).
+//   0: No budget (don't skip any empty lines).
+//  >0: Skip up to this many empty lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_var_class_span_num_empty_lines; // = -1
 
-// Number of preprocessor directive lines to ignore in span calculation for align_var_class_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_var_class_span_num_pp_lines;
+// Maximum budget of preprocessor lines to skip for align_var_class_span.
+//  -1: Use the global_span_num_pp_lines budget (default).
+//   0: No budget (don't skip any preprocessor lines).
+//  >0: Skip up to this many preprocessor lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_var_class_span_num_pp_lines; // = -1
 
-// Number of comment-only lines to ignore in span calculation for align_var_class_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_var_class_span_num_cmt_lines;
+// Maximum budget of comment lines to skip for align_var_class_span.
+//  -1: Use the global_span_num_cmt_lines budget (default).
+//   0: No budget (don't skip any comment lines).
+//  >0: Skip up to this many comment lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_var_class_span_num_cmt_lines; // = -1
 
 // The threshold for aligning class member definitions.
 // Use a negative number for absolute thresholds.
@@ -3609,23 +3642,26 @@ align_var_class_gap;
 extern BoundedOption<unsigned, 0, 5000>
 align_var_struct_span;
 
-// Number of empty lines to ignore in span calculation for align_var_struct_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_var_struct_span_num_empty_lines;
+// Maximum budget of empty lines to skip for align_var_struct_span.
+//  -1: Use the global_span_num_empty_lines budget (default).
+//   0: No budget (don't skip any empty lines).
+//  >0: Skip up to this many empty lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_var_struct_span_num_empty_lines; // = -1
 
-// Number of preprocessor directive lines to ignore in span calculation for align_var_struct_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_var_struct_span_num_pp_lines;
+// Maximum budget of preprocessor lines to skip for align_var_struct_span.
+//  -1: Use the global_span_num_pp_lines budget (default).
+//   0: No budget (don't skip any preprocessor lines).
+//  >0: Skip up to this many preprocessor lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_var_struct_span_num_pp_lines; // = -1
 
-// Number of comment-only lines to ignore in span calculation for align_var_struct_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_var_struct_span_num_cmt_lines;
+// Maximum budget of comment lines to skip for align_var_struct_span.
+//  -1: Use the global_span_num_cmt_lines budget (default).
+//   0: No budget (don't skip any comment lines).
+//  >0: Skip up to this many comment lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_var_struct_span_num_cmt_lines; // = -1
 
 // The threshold for aligning struct/union member definitions.
 // Use a negative number for absolute thresholds.
@@ -3650,23 +3686,26 @@ align_struct_init_span;
 extern BoundedOption<unsigned, 0, 16>
 align_typedef_span;
 
-// Number of empty lines to ignore in span calculation for align_typedef_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_typedef_span_num_empty_lines;
+// Maximum budget of empty lines to skip for align_typedef_span.
+//  -1: Use the global_span_num_empty_lines budget (default).
+//   0: No budget (don't skip any empty lines).
+//  >0: Skip up to this many empty lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_typedef_span_num_empty_lines; // = -1
 
-// Number of preprocessor directive lines to ignore in span calculation for align_typedef_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_typedef_span_num_pp_lines;
+// Maximum budget of preprocessor lines to skip for align_typedef_span.
+//  -1: Use the global_span_num_pp_lines budget (default).
+//   0: No budget (don't skip any preprocessor lines).
+//  >0: Skip up to this many preprocessor lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_typedef_span_num_pp_lines; // = -1
 
-// Number of comment-only lines to ignore in span calculation for align_typedef_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_typedef_span_num_cmt_lines;
+// Maximum budget of comment lines to skip for align_typedef_span.
+//  -1: Use the global_span_num_cmt_lines budget (default).
+//   0: No budget (don't skip any comment lines).
+//  >0: Skip up to this many comment lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_typedef_span_num_cmt_lines; // = -1
 
 // The minimum space between the type and the synonym of a typedef.
 extern BoundedOption<unsigned, 0, 16>
@@ -3741,23 +3780,26 @@ align_func_proto_span;
 extern Option<bool>
 align_func_proto_span_ignore_cont_lines; // = false
 
-// Number of empty lines to ignore in span calculation for align_func_proto_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_func_proto_span_num_empty_lines;
+// Maximum budget of empty lines to skip for align_func_proto_span.
+//  -1: Use the global_span_num_empty_lines budget (default).
+//   0: No budget (don't skip any empty lines).
+//  >0: Skip up to this many empty lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_func_proto_span_num_empty_lines; // = -1
 
-// Number of preprocessor directive lines to ignore in span calculation for align_func_proto_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_func_proto_span_num_pp_lines;
+// Maximum budget of preprocessor lines to skip for align_func_proto_span.
+//  -1: Use the global_span_num_pp_lines budget (default).
+//   0: No budget (don't skip any preprocessor lines).
+//  >0: Skip up to this many preprocessor lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_func_proto_span_num_pp_lines; // = -1
 
-// Number of comment-only lines to ignore in span calculation for align_func_proto_span.
-//
-// 0: Don't skip any lines (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_func_proto_span_num_cmt_lines;
+// Maximum budget of comment lines to skip for align_func_proto_span.
+//  -1: Use the global_span_num_cmt_lines budget (default).
+//   0: No budget (don't skip any comment lines).
+//  >0: Skip up to this many comment lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_func_proto_span_num_cmt_lines; // = -1
 
 // How to consider (or treat) the '*' in the alignment of function prototypes.
 //

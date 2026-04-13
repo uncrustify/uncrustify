@@ -707,3 +707,26 @@
 
 # Bug: if else on func one liners leads to incorrect space #4590
 10218  c/nl_func_leave_one_liners_vbrace.cfg            c/nl_func_leave_one_liners_vbrace.c
+
+# global_span_num_*_lines tests (mixed lines via global fallback)
+10220  common/global_align_span_var_struct_num_lines-1.cfg  c/align_var_struct_span_num_mixed.c
+10221  common/global_align_span_var_struct_num_lines-2.cfg  c/align_var_struct_span_num_mixed.c
+10222  common/global_align_span_var_struct_num_lines-3.cfg  c/align_var_struct_span_num_mixed.c
+10223  common/global_align_span_var_def_num_lines-1.cfg  c/align_var_def_span_num_mixed.c
+10224  common/global_align_span_var_def_num_lines-2.cfg  c/align_var_def_span_num_mixed.c
+10225  common/global_align_span_var_def_num_lines-3.cfg  c/align_var_def_span_num_mixed.c
+10226  common/global_align_span_assign_num_lines-1.cfg  c/align_assign_span_num_mixed.c
+10227  common/global_align_span_assign_num_lines-2.cfg  c/align_assign_span_num_mixed.c
+10228  common/global_align_span_assign_num_lines-3.cfg  c/align_assign_span_num_mixed.c
+10229  common/global_align_span_enum_equ_num_lines-1.cfg  c/align_enum_equ_span_num_mixed.c
+10230  common/global_align_span_enum_equ_num_lines-2.cfg  c/align_enum_equ_span_num_mixed.c
+10231  common/global_align_span_enum_equ_num_lines-3.cfg  c/align_enum_equ_span_num_mixed.c
+10232  common/global_align_span_func_params_num_lines-1.cfg  c/align_func_params_span_num_mixed.c
+10233  common/global_align_span_func_params_num_lines-2.cfg  c/align_func_params_span_num_mixed.c
+10234  common/global_align_span_func_params_num_lines-3.cfg  c/align_func_params_span_num_mixed.c
+10235  common/global_align_span_func_proto_num_lines-1.cfg  c/align_func_proto_span_num_mixed.c
+10236  common/global_align_span_func_proto_num_lines-2.cfg  c/align_func_proto_span_num_mixed.c
+10237  common/global_align_span_func_proto_num_lines-3.cfg  c/align_func_proto_span_num_mixed.c
+10238  common/global_align_span_typedef_num_lines-1.cfg  c/align_typedef_span_num_mixed.c
+10239  common/global_align_span_typedef_num_lines-2.cfg  c/align_typedef_span_num_mixed.c
+10240  common/global_align_span_typedef_num_lines-3.cfg  c/align_typedef_span_num_mixed.c
