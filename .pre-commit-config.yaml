@@ -75,6 +75,7 @@ repos:
       - id: cppcheck
         exclude: ^(tests/.*|documentation/.*)$
         args:
+          - --version
           - --quiet
           - --force
           - --language=c++
