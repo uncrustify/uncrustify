@@ -8,6 +8,7 @@
 
 #include "align/assign.h"
 
+#include "align/span_num_resolve.h"
 #include "align/stack.h"
 #include "log_rules.h"
 #include <algorithm>
@@ -37,23 +38,23 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
    LOG_FMT(LALASS, "%s(%d): [my_level is %zu]: start checking with '%s', on orig line %zu, span is %zu, thresh is %zu\n",
            __func__, __LINE__, my_level, first->ElidedText(copy), first->GetOrigLine(), span, thresh);
 
-   // Line skip configuration for assignments
+   // Line skip configuration for assignments (resolve -1 to global value)
    log_rule_B("align_assign_span_num_empty_lines");
    log_rule_B("align_assign_span_num_pp_lines");
    log_rule_B("align_assign_span_num_cmt_lines");
-   LineSkipConfig assign_skip_cfg = {};
-   assign_skip_cfg.empty_lines = options::align_assign_span_num_empty_lines();
-   assign_skip_cfg.pp_lines    = options::align_assign_span_num_pp_lines();
-   assign_skip_cfg.cmt_lines   = options::align_assign_span_num_cmt_lines();
+   LineSkipConfig assign_skip_cfg = resolve_span_num_config(
+      options::align_assign_span_num_empty_lines(),
+      options::align_assign_span_num_pp_lines(),
+      options::align_assign_span_num_cmt_lines());
 
-   // Line skip configuration for enum assignments
+   // Line skip configuration for enum assignments (resolve -1 to global value)
    log_rule_B("align_enum_equ_span_num_empty_lines");
    log_rule_B("align_enum_equ_span_num_pp_lines");
    log_rule_B("align_enum_equ_span_num_cmt_lines");
-   LineSkipConfig enum_skip_cfg = {};
-   enum_skip_cfg.empty_lines = options::align_enum_equ_span_num_empty_lines();
-   enum_skip_cfg.pp_lines    = options::align_enum_equ_span_num_pp_lines();
-   enum_skip_cfg.cmt_lines   = options::align_enum_equ_span_num_cmt_lines();
+   LineSkipConfig enum_skip_cfg = resolve_span_num_config(
+      options::align_enum_equ_span_num_empty_lines(),
+      options::align_enum_equ_span_num_pp_lines(),
+      options::align_enum_equ_span_num_cmt_lines());
 
    // Working copy of skip config - budget is decremented as lines are skipped
    LineSkipConfig       skip_budget = { (parent_is_enum ? enum_skip_cfg : assign_skip_cfg) };

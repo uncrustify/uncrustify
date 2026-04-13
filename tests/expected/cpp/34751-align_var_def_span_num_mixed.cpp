@@ -29,3 +29,37 @@ void test_method()
 #endif
 }
 };
+
+class SecondClass
+{
+public:
+void second_method()
+{
+	char v;
+
+
+	int  ww;
+}
+
+void third_method()
+{
+	char aa;
+#if 1
+#if 1
+#if 1
+	int  bbb;
+#endif
+#endif
+#endif
+}
+
+void fourth_method()
+{
+	char cc;
+	// cmt 1
+	// cmt 2
+	// cmt 3
+	// cmt 4
+	int  ddd;
+}
+};

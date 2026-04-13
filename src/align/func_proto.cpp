@@ -8,6 +8,7 @@
 
 #include "align/func_proto.h"
 
+#include "align/span_num_resolve.h"
 #include "align/stack.h"
 #include "align/tools.h"
 #include "log_rules.h"
@@ -32,14 +33,14 @@ void align_func_proto(size_t span)
    log_rule_B("align_func_proto_thresh");
    mythresh = options::align_func_proto_thresh();
 
-   // Line skip configuration
+   // Line skip configuration (resolve -1 to global value)
    log_rule_B("align_func_proto_span_num_empty_lines");
    log_rule_B("align_func_proto_span_num_pp_lines");
    log_rule_B("align_func_proto_span_num_cmt_lines");
-   LineSkipConfig myskip_cfg = {};
-   myskip_cfg.empty_lines = options::align_func_proto_span_num_empty_lines();
-   myskip_cfg.pp_lines    = options::align_func_proto_span_num_pp_lines();
-   myskip_cfg.cmt_lines   = options::align_func_proto_span_num_cmt_lines();
+   LineSkipConfig myskip_cfg = resolve_span_num_config(
+      options::align_func_proto_span_num_empty_lines(),
+      options::align_func_proto_span_num_pp_lines(),
+      options::align_func_proto_span_num_cmt_lines());
 
    // Issue #2771
    // we align token-1 and token-2 if:

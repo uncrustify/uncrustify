@@ -399,6 +399,7 @@ set(uncrustify_headers
   src/align/preprocessor.h
   src/align/quick_align_again.h
   src/align/same_func_call_params.h
+  src/align/span_num_resolve.h
   src/align/stack.h
   src/align/struct_initializers.h
   src/align/tab_column.h
