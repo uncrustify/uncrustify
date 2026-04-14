@@ -1294,7 +1294,7 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
    {
       bool first = true;
 
-      for (auto *option : og.options)
+      for (auto const *option : og.options)
       {
          const auto val = option->str();
 

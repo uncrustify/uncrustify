@@ -91,6 +91,7 @@ repos:
           - --suppress=checkersReport
           - --suppress=useStlAlgorithm
           - --suppress=unusedStructMember
+          - --suppress=useInitializationList
 
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
