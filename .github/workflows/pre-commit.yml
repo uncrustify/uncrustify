@@ -55,17 +55,17 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           path: .cache/cppcheck
-          key: cppcheck-cache-${{ github.ref_name }}-${{ github.sha }}
+          key: cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.ref_name }}-${{ github.sha }}
           restore-keys: |
-            cppcheck-cache-${{ github.base_ref }}-
-            cppcheck-cache-
+            cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.base_ref }}-
+            cppcheck-${{ env.CPPCHECK_VERSION }}-cache-
       - uses: actions/cache/restore@v4
         if: github.event_name != 'pull_request'
         with:
           path: .cache/cppcheck
-          key: cppcheck-cache-${{ github.ref_name }}-${{ github.sha }}
+          key: cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.ref_name }}-${{ github.sha }}
           restore-keys: |
-            cppcheck-cache-
+            cppcheck-${{ env.CPPCHECK_VERSION }}-cache-
       - uses: actions/cache/restore@v4
         with:
           path: ~/.cache/pre-commit/
@@ -82,7 +82,7 @@ jobs:
         if: ${{ ! cancelled() }}
         with:
           path: .cache/cppcheck
-          key: cppcheck-cache-${{ github.ref_name }}-${{ github.sha }}
+          key: cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.ref_name }}-${{ github.sha }}
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2025.1.1
         if: ${{ failure() }}
