@@ -21,6 +21,6 @@ class Chunk;
  *    - unless the brace belongs to a namespace
  *      and nl_inside_namespace is non-zero
  */
-bool can_increase_nl(Chunk *nl);
+bool can_increase_nl(Chunk const *nl);
 
 #endif /* CAN_INCREASE_NL_H_INCLUDED */

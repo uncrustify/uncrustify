@@ -14,7 +14,7 @@
 /**
  * Test if an opening brace is part of a function call or definition.
  */
-bool is_func_call_or_def(Chunk *pc)
+bool is_func_call_or_def(Chunk const *pc)
 {
    if (  pc->GetParentType() == E_Token::CT_FUNC_DEF
       || pc->GetParentType() == E_Token::CT_FUNC_CALL

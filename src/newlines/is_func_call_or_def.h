@@ -13,6 +13,6 @@ class Chunk;
 /**
  * Test if an opening brace is part of a function call or definition.
  */
-bool is_func_call_or_def(Chunk *pc);
+bool is_func_call_or_def(Chunk const *pc);
 
 #endif /* NEWLINES_IS_FUNC_CALL_OR_DEF_H_INCLUDED */
