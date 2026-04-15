@@ -8,11 +8,12 @@ concurrency:
 
 jobs:
   uncrustify:
-    name: ${{ matrix.build_type }} - ${{ matrix.generator }}
+    name: ${{ matrix.configuration }} - ${{ matrix.generator }}
 
     strategy:
       matrix:
         configuration: [Debug, Release]
+        generator: ["Visual Studio 17 2022"]
 
     runs-on: windows-latest
 
