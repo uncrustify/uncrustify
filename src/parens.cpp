@@ -304,7 +304,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
    LOG_FUNC_ENTRY();
 
    Chunk const *ref        = popen;
-   bool  hit_compare = false;
+   bool        hit_compare = false;
 
    LOG_FMT(LPARADD, "%s(%d): nest is %d, popen on line %zu, orig col is %zu, pclose on line %zu, orig col is %zu, level is %zu\n",
            __func__, __LINE__, nest,

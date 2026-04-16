@@ -66,8 +66,8 @@ void align_oc_decl_colon()
          {
             cas.Add(pc);
 
-            Chunk *tmp  = pc->GetPrev(E_Scope::PREPROC);
-            Chunk *tmp2 = tmp->GetPrevNcNnl(E_Scope::PREPROC);
+            Chunk       *tmp  = pc->GetPrev(E_Scope::PREPROC);
+            Chunk const *tmp2 = tmp->GetPrevNcNnl(E_Scope::PREPROC);
 
             // Check for an un-labeled parameter
             if (  (  tmp->Is(E_Token::CT_WORD)

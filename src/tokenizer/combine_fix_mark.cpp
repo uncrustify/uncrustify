@@ -32,8 +32,8 @@ void fix_casts(Chunk *start)
    const char *detail    = "";
    size_t     count      = 0;
    int        word_count = 0;
-   bool       nope;
-   bool       doubtful_cast = false;
+   //bool       nope;
+   //bool       doubtful_cast = false;
 
 
    LOG_FMT(LCASTS, "%s(%d): start->text is '%s', orig line is %zu, orig col is %zu\n",
@@ -154,6 +154,7 @@ void fix_casts(Chunk *start)
        *  - if it's objective-c and the type is id, likely valid
        */
       verb = "guessed";
+      bool doubtful_cast = false;
 
       if (  (last->Len() > 3)
          && (last->GetText()[last->Len() - 2] == '_')
@@ -193,6 +194,8 @@ void fix_casts(Chunk *start)
        */
       pc    = paren_close->GetNextNcNnl();
       after = pc;
+
+      bool nope;
 
       do
       {

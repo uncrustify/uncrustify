@@ -1009,7 +1009,7 @@ public:
     * @brief swaps the two lines that are started by the current chunk and the other chunk
     * @param other the other chunk
     */
-   void SwapLines(Chunk *other);
+   void SwapLines(Chunk const *other);
 
    //!
    /**
