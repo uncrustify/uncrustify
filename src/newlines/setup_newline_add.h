@@ -20,6 +20,6 @@ class Chunk;
  * b. if/while/switch/for/etc ") {"
  * d. else "} else {"
  */
-void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next);
+void setup_newline_add(Chunk *prev, Chunk *nl, Chunk const *next);
 
 #endif /* SETUP_NEWLINES_ADD_H_INCLUDED */

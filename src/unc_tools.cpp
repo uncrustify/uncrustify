@@ -257,15 +257,11 @@ void rebuild_the_line(int theLine_of_code, size_t the_line_to_be_prot, bool incr
 
    for (Chunk const *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      size_t where = 0;
-
       if (pc->GetOrigLine() == the_line_to_be_prot)
       {
-         //size_t where = 0;
-
          if (pc->Is(E_Token::CT_NEWLINE))
          {
-            where              = pc->GetColumn();
+            size_t where = pc->GetColumn();
             rebuildLine[where] = '\0';
             virtualLine[where] = '\0';
 
@@ -293,16 +289,13 @@ void rebuild_the_line(int theLine_of_code, size_t the_line_to_be_prot, bool incr
                   LOG_FMT(LGUY, " ***** MANY is too little for this line %d\n", theLine_of_code);
                   exit(EX_SOFTWARE);
                }
-               //rebuildLine[col + x - 1] = B;
-               where              = col + x;
+               size_t where = col + x;
                rebuildLine[where] = B;
             }
          }
       } // if (pc->GetOrigLine() ...
       else if (pc->GetOrigLine() > the_line_to_be_prot)
       {
-         //rebuildLine[where] = '\0';
-         //virtualLine[where] = '\0';
          break;
       }
    } // for (Chunk *pc ...
