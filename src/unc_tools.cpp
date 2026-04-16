@@ -257,9 +257,11 @@ void rebuild_the_line(int theLine_of_code, size_t the_line_to_be_prot, bool incr
 
    for (Chunk const *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
+      size_t where = 0;
+
       if (pc->GetOrigLine() == the_line_to_be_prot)
       {
-         size_t where = 0;
+         //size_t where = 0;
 
          if (pc->Is(E_Token::CT_NEWLINE))
          {

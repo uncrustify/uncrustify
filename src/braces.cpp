@@ -1127,9 +1127,9 @@ void add_long_closebrace_comment()
          {
             break;
          }
-         size_t  nl_min  = 0;
-         Chunk   *tag_pc = Chunk::NullChunkPtr;
-         UncText xstr;
+         size_t      nl_min  = 0;
+         Chunk const *tag_pc = Chunk::NullChunkPtr;
+         UncText     xstr;
 
          if (  br_open->GetParentType() == E_Token::CT_FUNC_DEF
             || br_open->GetParentType() == E_Token::CT_OC_MSG_DECL)
@@ -1167,7 +1167,7 @@ void add_long_closebrace_comment()
 
             // next chunk, normally is going to be the namespace name
             // append it with a space to generate "namespace xyz"
-            Chunk *tmp_next = tag_pc->GetNextNcNnl();
+            Chunk const *tmp_next = tag_pc->GetNextNcNnl();
 
             if (tmp_next->IsNot(E_Token::CT_BRACE_OPEN)) // anonymous namespace -> ignore
             {
@@ -1196,7 +1196,7 @@ void add_long_closebrace_comment()
                xstr.append(" ");
                LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
                        __func__, __LINE__, xstr.GetLogText());
-               Chunk *tmp_next = cl_pc->GetNext();
+               Chunk const *tmp_next = cl_pc->GetNext();
                append_tag_name(xstr, tmp_next);
                LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
                        __func__, __LINE__, xstr.GetLogText());

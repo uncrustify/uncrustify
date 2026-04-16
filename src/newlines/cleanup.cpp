@@ -114,7 +114,7 @@ void newlines_cleanup_braces(bool first)
             log_rule_B("nl_brace_catch");
             newlines_cuddle_uncuddle(pc, options::nl_brace_catch());
          }
-         Chunk *next = pc->GetNextNcNnl();
+         Chunk const *next = pc->GetNextNcNnl();
 
          if (next->Is(E_Token::CT_BRACE_OPEN))
          {
@@ -295,7 +295,7 @@ void newlines_cleanup_braces(bool first)
                // Request #126
                // introduce two new options
                // look back if we have a @interface or a @implementation
-               for (Chunk *tmp = pc->GetPrev(); tmp->IsNotNullChunk(); tmp = tmp->GetPrev())
+               for (Chunk const *tmp = pc->GetPrev(); tmp->IsNotNullChunk(); tmp = tmp->GetPrev())
                {
                   LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s'\n",
                           __func__, __LINE__, tmp->GetOrigLine(), tmp->GetOrigCol(), tmp->GetLogText());
@@ -392,7 +392,7 @@ void newlines_cleanup_braces(bool first)
                newline_iarf_pair(pc, next, options::nl_brace_brace());
             }
          }
-         Chunk *next = pc->GetNextNnl();
+         Chunk const *next = pc->GetNextNnl();
 
          if (next->IsNullChunk())
          {
@@ -626,7 +626,7 @@ void newlines_cleanup_braces(bool first)
                || pc->GetParentType() == E_Token::CT_ENUM
                || pc->GetParentType() == E_Token::CT_UNION))
          {
-            Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
+            Chunk const *next = pc->GetNextNcNnl(E_Scope::PREPROC);
 
             if (  next->IsNot(E_Token::CT_SEMICOLON)
                && next->IsNot(E_Token::CT_COMMA))
@@ -643,7 +643,7 @@ void newlines_cleanup_braces(bool first)
                     || pc->GetParentType() == E_Token::CT_OC_MSG_DECL))
          {
             log_rule_B("nl_after_brace_close");
-            Chunk *next = pc->GetNext();
+            Chunk const *next = pc->GetNext();
 
             if (  next->IsNot(E_Token::CT_SEMICOLON)
                && next->IsNot(E_Token::CT_COMMA)
@@ -689,8 +689,8 @@ void newlines_cleanup_braces(bool first)
          if (  options::nl_after_vbrace_open()
             || options::nl_after_vbrace_open_empty())
          {
-            Chunk *next = pc->GetNext(E_Scope::PREPROC);
-            bool  add_it;
+            Chunk const *next = pc->GetNext(E_Scope::PREPROC);
+            bool        add_it;
 
             if (next->IsSemicolon())
             {
@@ -741,7 +741,7 @@ void newlines_cleanup_braces(bool first)
             if (pc->TestFlags(PCF_ONE_LINER))
             {
                // split one-liner
-               Chunk *end = pc->GetNext()->GetNextType(E_Token::CT_SEMICOLON)->GetNext();
+               Chunk const *end = pc->GetNext()->GetNextType(E_Token::CT_SEMICOLON)->GetNext();
                // Scan for clear flag
                LOG_FMT(LNEWLINE, "(%d) ", __LINE__);
                LOG_FMT(LNEWLINE, "\n");
@@ -808,7 +808,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->Is(E_Token::CT_THROW))
       {
-         Chunk *prev = pc->GetPrev();
+         Chunk const *prev = pc->GetPrev();
 
          if (  prev->Is(E_Token::CT_PAREN_CLOSE)
             || prev->Is(E_Token::CT_FPAREN_CLOSE))         // Issue #1122
@@ -820,7 +820,7 @@ void newlines_cleanup_braces(bool first)
       else if (  pc->Is(E_Token::CT_QUALIFIER)
               && !strcmp(pc->GetLogText(), "throws"))
       {
-         Chunk *prev = pc->GetPrev();
+         Chunk const *prev = pc->GetPrev();
 
          if (  prev->Is(E_Token::CT_PAREN_CLOSE)
             || prev->Is(E_Token::CT_FPAREN_CLOSE))         // Issue #1122
@@ -831,7 +831,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->Is(E_Token::CT_CASE_COLON))
       {
-         Chunk *next = pc->GetNextNnl();
+         Chunk const *next = pc->GetNextNnl();
 
          log_rule_B("nl_case_colon_brace");
 
@@ -848,7 +848,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->Is(E_Token::CT_SPAREN_CLOSE))
       {
-         Chunk *next = pc->GetNextNcNnl();
+         Chunk const *next = pc->GetNextNcNnl();
 
          if (next->Is(E_Token::CT_BRACE_OPEN))
          {
@@ -1045,12 +1045,12 @@ void newlines_cleanup_braces(bool first)
       {
          if (pc->GetParentType() == E_Token::CT_TEMPLATE)
          {
-            Chunk *next = pc->GetNextNcNnl();
+            Chunk const *next = pc->GetNextNcNnl();
 
             if (  next->IsNotNullChunk()
                && next->GetLevel() == next->GetBraceLevel())
             {
-               Chunk *tmp = pc->GetPrevType(E_Token::CT_ANGLE_OPEN, pc->GetLevel())->GetPrevNcNnlNi();   // Issue #2279
+               Chunk const *tmp = pc->GetPrevType(E_Token::CT_ANGLE_OPEN, pc->GetLevel())->GetPrevNcNnlNi();   // Issue #2279
 
                if (tmp->Is(E_Token::CT_TEMPLATE))
                {
@@ -1145,7 +1145,7 @@ void newlines_cleanup_braces(bool first)
               && pc->GetParentType() != E_Token::CT_USING)
       {
          // Issue #2387
-         Chunk *next = pc->GetNextNcNnl();
+         Chunk const *next = pc->GetNextNcNnl();
 
          if (next->IsNotNullChunk())
          {
@@ -1155,7 +1155,7 @@ void newlines_cleanup_braces(bool first)
             {
                // Issue #1235
                // Issue #2186
-               Chunk *braceOpen = pc->GetNextType(E_Token::CT_BRACE_OPEN, pc->GetLevel());
+               Chunk const *braceOpen = pc->GetNextType(E_Token::CT_BRACE_OPEN, pc->GetLevel());
 
                if (braceOpen->IsNullChunk())
                {
@@ -1214,7 +1214,7 @@ void newlines_cleanup_braces(bool first)
          if (options::nl_before_access_spec() > 0)
          {
             log_rule_B("nl_before_access_spec");
-            Chunk *prev = pc->GetPrev();
+            Chunk const *prev = pc->GetPrev();
 
             if (!prev->IsNewline())
             {
