@@ -73,6 +73,9 @@ repos:
         exclude: ^(tests/.*|documentation/.*)$
         args: [--replace, --no-backup, -c, forUncrustifySources.cfg, -l, CPP]
       - id: cppcheck
+        # the files detect.cpp and src/indent.cpp are big and they need long time
+        # to be explored/ cppchecked
+        # if the complete test is needed, please remove them from the exclude option
         exclude: ^(tests/.*|documentation/.*|detect.cpp|src/indent.cpp)$
         args:
           - --quiet

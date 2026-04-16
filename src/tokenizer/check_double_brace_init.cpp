@@ -21,7 +21,7 @@ void check_double_brace_init(Chunk *bo1)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LJDBI, "%s(%d): orig line is %zu, orig col is %zu", __func__, __LINE__, bo1->GetOrigLine(), bo1->GetOrigCol());
-   Chunk *pc = bo1->GetPrevNcNnlNi();   // Issue #2279
+   Chunk const *pc = bo1->GetPrevNcNnlNi();   // Issue #2279
 
    if (pc->IsNullChunk())
    {

@@ -159,7 +159,7 @@ void newline_func_def_or_call(Chunk *start)
                // def
 
                log_rule_B("nl_func_leave_one_liners");
-               Chunk *brace = closing->GetNextNcNnl();
+               Chunk const *brace = closing->GetNextNcNnl();
 
                if (  options::nl_func_leave_one_liners()
                   && (  brace->IsNullChunk()
