@@ -1286,7 +1286,7 @@ static void move_case_return()
             // Swap all lines between brace close and current token
             LOG_FMT(LMCB, "%s(%d): move line %zu before line %zu\n",
                     __func__, __LINE__, prev->GetOrigLine(), pc->GetOrigLine());
-            Chunk *curr = prev->GetNextNcNnl();
+            Chunk const *curr = prev->GetNextNcNnl();
 
             while (curr != pc)
             {

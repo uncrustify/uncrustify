@@ -14,7 +14,7 @@
 using namespace uncrustify;
 
 
-Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
+Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk const *pc)
 {
    LOG_FMT(LMCB, "%s(%d): cl_colon->text is '%s', orig line %zu, orig col is %zu, level is %zu\n",
            __func__, __LINE__, cl_colon->GetLogText(), cl_colon->GetOrigLine(), cl_colon->GetOrigCol(), cl_colon->GetLevel());
@@ -95,7 +95,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
    {
       if (is_comment->IsNotNullChunk())
       {
-         Chunk *second = Chunk::NullChunkPtr;
+         Chunk const *second = Chunk::NullChunkPtr;
 
          if (erst_found == 3)
          {
@@ -162,8 +162,8 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
          if (last->Is(E_Token::CT_PP_ENDIF))
          {
             // look for the parent and compare the positions
-            Chunk *parent_last = last->GetParent();
-            int   comp         = parent_last->ComparePosition(cl_colon);
+            Chunk const *parent_last = last->GetParent();
+            int         comp         = parent_last->ComparePosition(cl_colon);
             LOG_FMT(LMCB, "%s(%d): comp is %d\n",
                     __func__, __LINE__, comp);
 
@@ -171,7 +171,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
             {
                // cl_colon is after parent_last ==>
                // the closing brace will be set before #endif
-               Chunk *pp_start = last->GetPpStart();
+               Chunk const *pp_start = last->GetPpStart();
                last = pp_start->GetPrevNnl();
                LOG_FMT(LMCB, "%s(%d): text is '%s', orig line %zu, orig col is %zu\n",
                        __func__, __LINE__, last->GetLogText(), last->GetOrigLine(), last->GetOrigCol());

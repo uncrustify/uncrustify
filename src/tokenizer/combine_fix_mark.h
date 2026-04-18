@@ -29,7 +29,7 @@ void fix_casts(Chunk *start);
  *
  * @param start  points to the open paren
  */
-void fix_fcn_def_params(Chunk *start);
+void fix_fcn_def_params(Chunk const *start);
 
 
 /**
@@ -38,7 +38,7 @@ void fix_fcn_def_params(Chunk *start);
  *
  * Mark everything between the <> as a type and set the paren parent
  */
-void fix_type_cast(Chunk *start);
+void fix_type_cast(Chunk const *start);
 
 
 /**
@@ -55,7 +55,7 @@ void fix_type_cast(Chunk *start);
  * typedef <enum/struct/union> [type] [*] type [, [*]type] ;
  * typedef <enum/struct/union> [type] { ... } [*] type [, [*]type] ;
  */
-void fix_typedef(Chunk *start);
+void fix_typedef(Chunk const *start);
 
 
 /**
@@ -93,7 +93,7 @@ void mark_define_expressions();
  * Just mark every E_Token::CT_WORD until a semicolon as E_Token::CT_SQL_WORD.
  * Adjust the levels if pc is E_Token::CT_SQL_BEGIN
  */
-void mark_exec_sql(Chunk *pc);
+void mark_exec_sql(Chunk const *pc);
 
 
 /**
@@ -102,7 +102,7 @@ void mark_exec_sql(Chunk *pc);
  * @param pc           the last chunk of the return type
  * @param parent_type  E_Token::CT_NONE (no change) or the new parent type
  */
-void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type);
+void mark_function_return_type(Chunk const *fname, Chunk *start, E_Token parent_type);
 
 
 /**
@@ -148,7 +148,7 @@ bool mark_function_type(Chunk *pc);
  *  Just hit an assign. Go backwards until we hit an open brace/paren/square or
  * semicolon (TODO: other limiter?) and mark as a LValue.
  */
-void mark_lvalue(Chunk *pc);
+void mark_lvalue(Chunk const *pc);
 
 
 /**
@@ -167,7 +167,7 @@ void mark_struct_union_body(Chunk *start);
  * Or we could be on a variable def if it's followed by a word:
  *   Renderer<rgb32> rend;
  */
-void mark_template_func(Chunk *pc, Chunk *pc_next);
+void mark_template_func(Chunk *pc, Chunk const *pc_next);
 
 
 /**

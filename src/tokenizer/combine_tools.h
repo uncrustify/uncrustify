@@ -52,7 +52,7 @@ bool chunkstack_match(const ChunkStack &cs, Chunk const *pc);
 // *
 // * @param start  points to the open paren
 // */
-void fix_fcn_def_params(Chunk *pc);
+void fix_fcn_def_params(Chunk const *pc);
 
 
 void flag_series(Chunk *start, Chunk *end, PcfFlags set_flags, PcfFlags clr_flags = {}, E_Scope nav = E_Scope::ALL);

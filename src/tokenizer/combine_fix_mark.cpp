@@ -22,18 +22,16 @@ using namespace uncrustify;
 void fix_casts(Chunk *start)
 {
    LOG_FUNC_ENTRY();
-   Chunk      *pc;
-   Chunk      *prev;
-   Chunk      *first;
-   Chunk      *after;
-   Chunk      *last = Chunk::NullChunkPtr;
-   Chunk      *paren_close;
-   const char *verb      = "likely";
-   const char *detail    = "";
-   size_t     count      = 0;
-   int        word_count = 0;
-   //bool       nope;
-   //bool       doubtful_cast = false;
+   Chunk       *pc;
+   Chunk const *prev;
+   Chunk       *first;
+   Chunk const *after;
+   Chunk const *last = Chunk::NullChunkPtr;
+   Chunk       *paren_close;
+   const char  *verb      = "likely";
+   const char  *detail    = "";
+   size_t      count      = 0;
+   int         word_count = 0;
 
 
    LOG_FMT(LCASTS, "%s(%d): start->text is '%s', orig line is %zu, orig col is %zu\n",
@@ -318,7 +316,7 @@ void fix_casts(Chunk *start)
 } // fix_casts
 
 
-void fix_fcn_def_params(Chunk *start)
+void fix_fcn_def_params(Chunk const *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -422,7 +420,7 @@ void fix_fcn_def_params(Chunk *start)
 } // fix_fcn_def_params
 
 
-void fix_type_cast(Chunk *start)
+void fix_type_cast(Chunk const *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -473,7 +471,7 @@ void fix_type_cast(Chunk *start)
 } // fix_type_cast
 
 
-void fix_typedef(Chunk *start)
+void fix_typedef(Chunk const *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -669,7 +667,6 @@ Chunk *fix_variable_definition(Chunk *start)
    Chunk      *end;
    Chunk      *tmp_pc;
    ChunkStack cs;
-   int        idx;
    int        ref_idx;
 
    LOG_FMT(LFVD, "%s(%d): start at pc orig line is %zu, orig col is %zu\n",
@@ -773,7 +770,7 @@ Chunk *fix_variable_definition(Chunk *start)
       && (  (cs.Get(cs.Len() - 2)->m_pc->GetType() == E_Token::CT_MEMBER)
          || (cs.Get(cs.Len() - 2)->m_pc->GetType() == E_Token::CT_DC_MEMBER)))
    {
-      idx = cs.Len() - 2;
+      int idx = cs.Len() - 2;
 
       while (idx > 0)
       {
@@ -833,11 +830,11 @@ Chunk *fix_variable_definition(Chunk *start)
 void mark_cpp_constructor(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
-   Chunk *paren_open;
-   Chunk *tmp;
-   Chunk *after;
-   Chunk *var;
-   bool  is_destr = false;
+   Chunk       *paren_open;
+   Chunk       *tmp;
+   Chunk const *after;
+   Chunk       *var;
+   bool        is_destr = false;
 
    tmp = pc->GetPrevNcNnlNi();   // Issue #2279
 
@@ -954,7 +951,7 @@ void mark_cpp_lambda(Chunk *square_open)
    if (  square_open->Is(E_Token::CT_SQUARE_OPEN)
       && square_open->GetParentType() == E_Token::CT_CPP_LAMBDA)
    {
-      auto *brace_close = square_open->GetNextType(E_Token::CT_BRACE_CLOSE, square_open->GetLevel());
+      auto const *brace_close = square_open->GetNextType(E_Token::CT_BRACE_CLOSE, square_open->GetLevel());
 
       if (brace_close->GetParentType() == E_Token::CT_CPP_LAMBDA)
       {
@@ -971,10 +968,10 @@ void mark_define_expressions()
 {
    LOG_FUNC_ENTRY();
 
-   bool  in_define = false;
-   bool  first     = true;
-   Chunk *pc       = Chunk::GetHead();
-   Chunk *prev     = pc;
+   bool        in_define = false;
+   bool        first     = true;
+   Chunk       *pc       = Chunk::GetHead();
+   Chunk const *prev     = pc;
 
    while (pc->IsNotNullChunk())
    {
@@ -1027,7 +1024,7 @@ void mark_define_expressions()
 } // mark_define_expressions
 
 
-void mark_exec_sql(Chunk *pc)
+void mark_exec_sql(Chunk const *pc)
 {
    LOG_FUNC_ENTRY();
    Chunk *tmp;
@@ -1064,7 +1061,7 @@ void mark_exec_sql(Chunk *pc)
 } // mark_exec_sql
 
 
-void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
+void mark_function_return_type(Chunk const *fname, Chunk *start, E_Token parent_type)
 {
    LOG_FUNC_ENTRY();
    Chunk *pc = start;
@@ -1136,7 +1133,7 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
          {
             pc->SetParentType(parent_type);
          }
-         Chunk *prev = pc->GetPrevNcNnlNi();   // Issue #2279
+         Chunk const *prev = pc->GetPrevNcNnlNi();   // Issue #2279
 
          if (  !is_return_tuple
             || pc->IsNot(E_Token::CT_WORD)
@@ -1216,10 +1213,10 @@ void mark_function(Chunk *pc)
    {
       return;
    }
-   Chunk *tmp;
-   Chunk *semi = Chunk::NullChunkPtr;
-   Chunk *paren_open;
-   Chunk *paren_close;
+   Chunk       *tmp;
+   Chunk       *semi = Chunk::NullChunkPtr;
+   Chunk       *paren_open;
+   Chunk const *paren_close;
 
    // Find out what is before the operator
    if (pc->GetParentType() == E_Token::CT_OPERATOR)
@@ -1227,7 +1224,7 @@ void mark_function(Chunk *pc)
       LOG_FMT(LFCN, "%s(%d): orig line %zu, orig col %zu, text '%s",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText());
       log_pcf_flags(LFCN, pc->GetFlags());
-      Chunk *pc_op = pc->GetPrevType(E_Token::CT_OPERATOR, pc->GetLevel());
+      Chunk const *pc_op = pc->GetPrevType(E_Token::CT_OPERATOR, pc->GetLevel());
 
       if (  pc_op->IsNotNullChunk()
          && pc_op->TestFlags(PCF_EXPR_START))
@@ -1384,9 +1381,9 @@ void mark_function(Chunk *pc)
    if (  tmp->IsNotNullChunk()
       && tmp->IsString("("))
    {
-      Chunk *tmp1;
-      Chunk *tmp2;
-      Chunk *tmp3;
+      Chunk       *tmp1;
+      Chunk       *tmp2;
+      Chunk const *tmp3;
 
       // skip over any leading class/namespace in: "T(F::*A)();"
       tmp1 = next->GetNextNcNnl();
@@ -1469,7 +1466,7 @@ void mark_function(Chunk *pc)
       LOG_FMT(LFCN, "%s(%d): examine: text is '%s', orig line is %zu, orig col is %zu, type is %s\n",
               __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
       // look for an assignment. Issue #575
-      Chunk *temp = pc->GetNextType(E_Token::CT_ASSIGN, pc->GetLevel());
+      Chunk const *temp = pc->GetNextType(E_Token::CT_ASSIGN, pc->GetLevel());
 
       if (temp->IsNotNullChunk())
       {
@@ -1502,7 +1499,7 @@ void mark_function(Chunk *pc)
          && (  prev->Is(E_Token::CT_INV)
             || prev->Is(E_Token::CT_DC_MEMBER))))
    {
-      Chunk *destr = Chunk::NullChunkPtr;
+      Chunk const *destr = Chunk::NullChunkPtr;
 
       if (prev->Is(E_Token::CT_INV))
       {
@@ -1728,7 +1725,7 @@ void mark_function(Chunk *pc)
                isa_def = true;
                break;
             }
-            Chunk *prev_prev = prev->GetPrevNcNnlNpp();
+            Chunk const *prev_prev = prev->GetPrevNcNnlNpp();
 
             if (!prev_prev->Is(E_Token::CT_QUESTION))               // Issue #1753
             {
@@ -1810,7 +1807,7 @@ void mark_function(Chunk *pc)
       // Fixes issue #1634
       if (prev->IsParenClose())
       {
-         Chunk *preproc = prev->GetNextNcNnl();
+         Chunk const *preproc = prev->GetNextNcNnl();
 
          if (preproc->Is(E_Token::CT_PREPROC))
          {
@@ -2050,7 +2047,7 @@ void mark_function(Chunk *pc)
       }
       else if (pc->GetBraceLevel() > 0)
       {
-         Chunk *br_open = pc->GetPrevType(E_Token::CT_BRACE_OPEN, pc->GetBraceLevel() - 1);
+         Chunk const *br_open = pc->GetPrevType(E_Token::CT_BRACE_OPEN, pc->GetBraceLevel() - 1);
 
          if (  br_open->IsNotNullChunk()
             && br_open->GetParentType() != E_Token::CT_EXTERN
@@ -2062,7 +2059,7 @@ void mark_function(Chunk *pc)
             if (  !prev->IsString("*")
                && !prev->IsString("&"))
             {
-               Chunk *p_op = pc->GetPrevType(E_Token::CT_BRACE_OPEN, pc->GetBraceLevel() - 1);
+               Chunk const *p_op = pc->GetPrevType(E_Token::CT_BRACE_OPEN, pc->GetBraceLevel() - 1);
 
                if (  p_op->IsNotNullChunk()
                   && p_op->GetParentType() != E_Token::CT_CLASS
@@ -2091,8 +2088,8 @@ void mark_function(Chunk *pc)
    else
    {
       // see also Issue #2103
-      Chunk *funtionName = paren_open->GetPrevNcNnl();                    // Issue #3967
-      Chunk *a           = funtionName->GetPrevNcNnl();
+      Chunk const *funtionName = paren_open->GetPrevNcNnl();                    // Issue #3967
+      Chunk       *a           = funtionName->GetPrevNcNnl();
 
       while (a->IsNotNullChunk())
       {
@@ -2459,7 +2456,7 @@ nogo_exit:
 } // mark_function_type
 
 
-void mark_lvalue(Chunk *pc)
+void mark_lvalue(Chunk const *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -2547,13 +2544,13 @@ void mark_struct_union_body(Chunk *start)
 } // mark_struct_union_body
 
 
-void mark_template_func(Chunk *pc, Chunk *pc_next)
+void mark_template_func(Chunk *pc, Chunk const *pc_next)
 {
    LOG_FUNC_ENTRY();
 
    // We know angle_close must be there...
-   Chunk *angle_close = pc_next->GetNextType(E_Token::CT_ANGLE_CLOSE, pc->GetLevel());
-   Chunk *after       = angle_close->GetNextNcNnl();
+   Chunk const *angle_close = pc_next->GetNextType(E_Token::CT_ANGLE_CLOSE, pc->GetLevel());
+   Chunk       *after       = angle_close->GetNextNcNnl();
 
    if (after->IsNotNullChunk())
    {
@@ -2649,8 +2646,8 @@ Chunk *mark_variable_definition(Chunk *start)
       {
          // Check if this is a ref-qualifier (& or && after function close paren)
          // Ref-qualifiers should not be converted to E_Token::CT_BYREF here
-         Chunk *prev_tok        = pc->GetPrevNcNnlNi();
-         bool  is_ref_qualifier = false;
+         Chunk const *prev_tok        = pc->GetPrevNcNnlNi();
+         bool        is_ref_qualifier = false;
 
          if (  prev_tok->Is(E_Token::CT_FPAREN_CLOSE)
             || prev_tok->Is(E_Token::CT_PAREN_CLOSE))
@@ -2660,7 +2657,7 @@ Chunk *mark_variable_definition(Chunk *start)
          else if (prev_tok->Is(E_Token::CT_QUALIFIER))
          {
             // Check if qualifier follows a close paren (e.g., "const &")
-            Chunk *before_qual = prev_tok->GetPrevNcNnlNi();
+            Chunk const *before_qual = prev_tok->GetPrevNcNnlNi();
 
             if (  before_qual->Is(E_Token::CT_FPAREN_CLOSE)
                || before_qual->Is(E_Token::CT_PAREN_CLOSE))
