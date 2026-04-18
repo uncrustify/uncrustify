@@ -1574,3 +1574,26 @@
 60167  cpp/rvalue_and_ref_qualifiers.cfg                    cpp/rvalue_and_ref_qualifiers.cpp
 60170  cpp/nl_collapse_one_liner.cfg                       cpp/nl_collapse_one_liner.cpp
 60171  cpp/sp_deduction_guide_arrow.cfg                      cpp/deduction_guide.cpp
+
+# global_span_num_*_lines tests (mixed lines via global fallback)
+34860  common/global_align_span_var_class_num_lines-1.cfg   cpp/align_var_class_span_num_mixed.cpp
+34861  common/global_align_span_var_class_num_lines-2.cfg   cpp/align_var_class_span_num_mixed.cpp
+34862  common/global_align_span_var_class_num_lines-3.cfg   cpp/align_var_class_span_num_mixed.cpp
+34863  common/global_align_span_var_def_num_lines-1.cfg     cpp/align_var_def_span_num_mixed.cpp
+34864  common/global_align_span_var_def_num_lines-2.cfg     cpp/align_var_def_span_num_mixed.cpp
+34865  common/global_align_span_var_def_num_lines-3.cfg     cpp/align_var_def_span_num_mixed.cpp
+34866  common/global_align_span_assign_num_lines-1.cfg      cpp/align_assign_span_num_mixed.cpp
+34867  common/global_align_span_assign_num_lines-2.cfg      cpp/align_assign_span_num_mixed.cpp
+34868  common/global_align_span_assign_num_lines-3.cfg      cpp/align_assign_span_num_mixed.cpp
+34869  common/global_align_span_enum_equ_num_lines-1.cfg    cpp/align_enum_equ_span_num_mixed.cpp
+34870  common/global_align_span_enum_equ_num_lines-2.cfg    cpp/align_enum_equ_span_num_mixed.cpp
+34871  common/global_align_span_enum_equ_num_lines-3.cfg    cpp/align_enum_equ_span_num_mixed.cpp
+34872  common/global_align_span_func_params_num_lines-1.cfg  cpp/align_func_params_span_num_mixed_lines.h
+34873  common/global_align_span_func_params_num_lines-2.cfg  cpp/align_func_params_span_num_mixed_lines.h
+34874  common/global_align_span_func_params_num_lines-3.cfg  cpp/align_func_params_span_num_mixed_lines.h
+34875  common/global_align_span_func_proto_num_lines-1.cfg  cpp/align_func_proto_span_num_mixed.cpp
+34876  common/global_align_span_func_proto_num_lines-2.cfg  cpp/align_func_proto_span_num_mixed.cpp
+34877  common/global_align_span_func_proto_num_lines-3.cfg  cpp/align_func_proto_span_num_mixed.cpp
+34878  common/global_align_span_typedef_num_lines-1.cfg     cpp/align_typedef_span_num_mixed.cpp
+34879  common/global_align_span_typedef_num_lines-2.cfg     cpp/align_typedef_span_num_mixed.cpp
+34880  common/global_align_span_typedef_num_lines-3.cfg     cpp/align_typedef_span_num_mixed.cpp

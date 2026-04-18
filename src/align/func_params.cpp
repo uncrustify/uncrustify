@@ -7,6 +7,7 @@
  */
 #include "align/func_params.h"
 
+#include "align/span_num_resolve.h"
 #include "align/stack.h"
 #include "log_rules.h"
 
@@ -46,14 +47,14 @@ Chunk *align_func_param(Chunk *start)
    const size_t HOW_MANY_AS = 16;                         // Issue #2921
    AlignStack   many_as[HOW_MANY_AS + 1];
 
-   // Line skip configuration
+   // Line skip configuration (resolve -1 to global value)
    log_rule_B("align_func_params_span_num_empty_lines");
    log_rule_B("align_func_params_span_num_pp_lines");
    log_rule_B("align_func_params_span_num_cmt_lines");
-   LineSkipConfig skip_cfg = {};
-   skip_cfg.empty_lines = options::align_func_params_span_num_empty_lines();
-   skip_cfg.pp_lines    = options::align_func_params_span_num_pp_lines();
-   skip_cfg.cmt_lines   = options::align_func_params_span_num_cmt_lines();
+   LineSkipConfig skip_cfg = resolve_span_num_config(
+      options::align_func_params_span_num_empty_lines(),
+      options::align_func_params_span_num_pp_lines(),
+      options::align_func_params_span_num_cmt_lines());
 
    // Working copy of skip config - one budget per level
    LineSkipConfig skip_budgets[HOW_MANY_AS + 1];

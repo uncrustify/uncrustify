@@ -25,3 +25,33 @@ void test_func(void)
 	char              u;
 #endif
 }
+
+void second_func(void)
+{
+	char v;
+
+
+	int  ww;
+}
+
+void third_func(void)
+{
+	char aa;
+#if 1
+#if 1
+#if 1
+	int bbb;
+#endif
+#endif
+#endif
+}
+
+void fourth_func(void)
+{
+	char cc;
+	// cmt 1
+	// cmt 2
+	// cmt 3
+	// cmt 4
+	int ddd;
+}

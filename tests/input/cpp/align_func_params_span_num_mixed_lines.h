@@ -61,3 +61,27 @@ namespace OuterNamespace {  // level=1, brace_level=0
     };
 
 }
+
+VeryLongGlobalType another_global_func(int param1,
+
+
+                                     unsigned int param2
+                                    );
+
+VeryLongGlobalType third_global_func(int param1,
+#if 1
+#if 1
+#if 1
+                                  unsigned int param2
+#endif
+#endif
+#endif
+                                 );
+
+VeryLongGlobalType fourth_global_func(int param1,
+                                   // cmt 1
+                                   // cmt 2
+                                   // cmt 3
+                                   // cmt 4
+                                   unsigned int param2
+                                  );
