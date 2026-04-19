@@ -25,7 +25,7 @@ void newlines_squeeze_ifdef()
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *pc;
+   Chunk const *pc;
 
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
@@ -34,7 +34,7 @@ void newlines_squeeze_ifdef()
             || options::nl_squeeze_ifdef_top_level()))
       {
          log_rule_B("nl_squeeze_ifdef_top_level");
-         Chunk *ppr = pc->GetNext();
+         Chunk const *ppr = pc->GetNext();
 
          if (  ppr->Is(E_Token::CT_PP_IF)
             || ppr->Is(E_Token::CT_PP_ELSE)
@@ -48,11 +48,12 @@ void newlines_squeeze_ifdef()
             {
                pnl = pc->GetPrevNl();
             }
-            Chunk *tmp1;
-            Chunk *tmp2;
 
             if (nnl->IsNotNullChunk())
             {
+               Chunk const *tmp1;
+               Chunk const *tmp2;
+
                if (pnl->IsNotNullChunk())
                {
                   if (pnl->GetNlCount() > 1)
@@ -113,11 +114,11 @@ void newlines_squeeze_paren_close()
          && next->IsParenClose()
          && prev->IsParenClose())
       {
-         Chunk *prev_op = prev->GetOpeningParen();
-         Chunk *next_op = next->GetOpeningParen();
-         bool  flag     = true;
+         Chunk const *prev_op = prev->GetOpeningParen();
+         Chunk const *next_op = next->GetOpeningParen();
+         bool        flag     = true;
 
-         Chunk *tmp = prev;
+         Chunk const *tmp = prev;
 
          while (tmp->IsParenClose())
          {

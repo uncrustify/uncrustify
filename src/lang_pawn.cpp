@@ -22,7 +22,7 @@ using namespace uncrustify;
  * We need to check for 'open' braces/paren/etc because the level doesn't
  * change until the token after the open.
  */
-static bool pawn_continued(Chunk *pc, size_t br_level);
+static bool pawn_continued(Chunk const *pc, size_t br_level);
 
 
 /**
@@ -45,7 +45,7 @@ static Chunk *pawn_process_line(Chunk *start);
 
 
 //! We are on a level 0 function proto of def
-static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn);
+static Chunk *pawn_mark_function0(Chunk const *start, Chunk *fcn);
 
 
 /**
@@ -66,7 +66,7 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
    {
       return(pc);
    }
-   Chunk *next = pc->GetNextNc();
+   Chunk const *next = pc->GetNextNc();
 
    if (  next->IsNotNullChunk()
       && next->IsSemicolon())
@@ -105,7 +105,7 @@ void pawn_scrub_vsemi()
       {
          continue;
       }
-      Chunk *prev = pc->GetPrevNcNnl();
+      Chunk const *prev = pc->GetPrevNcNnl();
 
       if (prev->Is(E_Token::CT_BRACE_CLOSE))
       {
@@ -122,7 +122,7 @@ void pawn_scrub_vsemi()
 }
 
 
-static bool pawn_continued(Chunk *pc, size_t br_level)
+static bool pawn_continued(Chunk const *pc, size_t br_level)
 {
    LOG_FUNC_ENTRY();
 
@@ -328,7 +328,7 @@ void pawn_add_virtual_semicolons()
 } // pawn_add_virtual_semicolons
 
 
-static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
+static Chunk *pawn_mark_function0(Chunk const *start, Chunk *fcn)
 {
    LOG_FUNC_ENTRY();
 
@@ -377,8 +377,8 @@ static Chunk *pawn_process_func_def(Chunk *pc)
     * If we don't have a brace open right after the close fparen, then
     * we need to add virtual braces around the function body.
     */
-   Chunk *clp  = pc->GetNextString(")", 1, 0);
-   Chunk *last = clp->GetNextNcNnl();
+   Chunk const *clp  = pc->GetNextString(")", 1, 0);
+   Chunk       *last = clp->GetNextNcNnl();
 
    if (last->IsNotNullChunk())
    {
@@ -456,7 +456,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
          if (  prev->Is(E_Token::CT_NEWLINE)
             && prev->GetLevel() == 0)
          {
-            Chunk *next = prev->GetNextNcNnl();
+            Chunk const *next = prev->GetNextNcNnl();
 
             if (  next->IsNotNullChunk()
                && next->IsNot(E_Token::CT_ELSE)
@@ -493,7 +493,7 @@ Chunk *pawn_check_vsemicolon(Chunk *pc)
    LOG_FUNC_ENTRY();
 
    // Grab the open VBrace
-   Chunk *vb_open = pc->GetPrevType(E_Token::CT_VBRACE_OPEN);
+   Chunk const *vb_open = pc->GetPrevType(E_Token::CT_VBRACE_OPEN);
 
    /*
     * Grab the item before the newline

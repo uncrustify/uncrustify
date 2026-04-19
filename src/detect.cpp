@@ -34,11 +34,11 @@ public:
    //! Figure out the result of the vote and maybe update *m_av
    ~sp_votes();
 
-   void vote(Chunk *first, Chunk *second);
+   void vote(Chunk const *first, Chunk const *second);
 };
 
 
-void sp_votes::vote(Chunk *first, Chunk *second)
+void sp_votes::vote(Chunk const *first, Chunk const *second)
 {
    if (  first->IsNullChunk()
       || first->IsNewline()
