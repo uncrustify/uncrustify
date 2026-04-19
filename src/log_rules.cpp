@@ -13,7 +13,7 @@
 #include <utility> // for make_pair
 
 
-void log_rule2(const char *func, size_t line, const char *rule, Chunk *first, Chunk *second)
+void log_rule2(const char *func, size_t line, const char *rule, Chunk const *first, Chunk const *second)
 {
    LOG_FUNC_ENTRY();
 

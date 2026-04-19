@@ -34,11 +34,11 @@ void newlines_sparens()
       {
          continue;
       }
-      Chunk *sparen_content_start = sparen_open->GetNextNnl();
-      Chunk *sparen_content_end   = sparen_close->GetPrevNnl();
-      bool  is_multiline          = (
+      Chunk const *sparen_content_start = sparen_open->GetNextNnl();
+      Chunk       *sparen_content_end   = sparen_close->GetPrevNnl();
+      bool        is_multiline          = (
          sparen_content_start != sparen_content_end
-                                    && !sparen_content_start->IsOnSameLine(sparen_content_end));
+                                          && !sparen_content_start->IsOnSameLine(sparen_content_end));
 
       // Add a newline after '(' if an if/for/while/switch condition spans multiple lines,
       // as e.g. required by the ROS 2 development style guidelines:

@@ -1229,11 +1229,10 @@ bool load_option_file(const char *filename, int compat_level)
    {
       // check all characters of the line
       size_t howmany = line.length();
-      int    ch;
 
       for (size_t n = 0; n < howmany; n++)
       {
-         ch = line[n];
+         int ch = line[n];
 
          // do not check characters in comment part of line
          if ('#' == ch)
@@ -1294,7 +1293,7 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
    {
       bool first = true;
 
-      for (auto *option : og.options)
+      for (auto const *option : og.options)
       {
          const auto val = option->str();
 

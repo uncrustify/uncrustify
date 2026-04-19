@@ -466,7 +466,7 @@ bool Chunk::IsLastChunkOnLine() const
 } // Chunk::IsLastChunkOnLine
 
 
-void Chunk::SwapLines(Chunk *other)
+void Chunk::SwapLines(Chunk const *other)
 {
    // to swap lines we need to find the first chunk of the lines
    Chunk *pc1 = GetFirstChunkOnLine();
@@ -945,7 +945,7 @@ size_t Chunk::GetNlCountFiltered(LineSkipConfig &skip) const
          nl_count         -= consumed; // Reduce the count that will be returned
       }
       // Check the next chunk to determine what type of line this last remaining newline precedes.
-      Chunk *next = GetNext();
+      Chunk const *next = GetNext();
 
       // 2. Handle preprocessor lines (the line *after* the newline chunk)
       // We assume a newline precedes a single line type (PP, Comment, or regular code).

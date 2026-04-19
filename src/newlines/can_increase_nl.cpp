@@ -18,20 +18,20 @@ constexpr static auto LCURRENT = LNEWLINE;
 using namespace uncrustify;
 
 
-bool can_increase_nl(Chunk *nl)
+bool can_increase_nl(Chunk const *nl)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *prev = nl->GetPrevNc();
+   Chunk const *prev = nl->GetPrevNc();
 
-   Chunk *pcmt = nl->GetPrev();
-   Chunk *next = nl->GetNext();
+   Chunk const *pcmt = nl->GetPrev();
+   Chunk const *next = nl->GetNext();
 
    if (options::nl_squeeze_ifdef())
    {
       log_rule_B("nl_squeeze_ifdef");
 
-      Chunk *pp_start = prev->GetPpStart();
+      Chunk const *pp_start = prev->GetPpStart();
 
       if (  pp_start->IsNotNullChunk()
          && (  pp_start->GetParentType() == E_Token::CT_PP_IF

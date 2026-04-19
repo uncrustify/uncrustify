@@ -25,7 +25,6 @@ void annotations_newlines()
    LOG_FUNC_ENTRY();
 
    Chunk *next;
-   Chunk *prev;
    Chunk *ae;   // last token of the annotation
    Chunk *pc = Chunk::GetHead();
 
@@ -51,6 +50,7 @@ void annotations_newlines()
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(),
               ae->GetOrigLine(), ae->GetOrigCol(), ae->GetLogText());
 
+      Chunk const *prev;
       prev = ae->GetPrev();             // Issue #1845
       LOG_FMT(LANNOT, "%s(%d): prev orig line is %zu, orig col is %zu, text is '%s'\n",
               __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->GetLogText());

@@ -25,7 +25,7 @@ using namespace uncrustify;
 constexpr static auto LCURRENT = LNEWLINE;
 
 
-bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt)
+bool newlines_if_for_while_switch(Chunk const *start, iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
 
@@ -83,7 +83,7 @@ bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt)
          else
          {
             newline_iarf_pair(close_paren, brace_open, nl_opt);
-            Chunk *next = brace_open->GetNextNcNnl();
+            Chunk const *next = brace_open->GetNextNcNnl();
 
             if (brace_open->GetType() != next->GetType())                       // Issue #2836
             {
@@ -354,7 +354,7 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
  * Doesn't do anything if open brace before it
  * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
  */
-void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, uncrustify::iarf_e nl_opt)
+void newlines_if_for_while_switch_pre_blank_lines(Chunk const *start, uncrustify::iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
 
@@ -384,8 +384,6 @@ void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, uncrustify::iarf
 
       if (pc->IsNewline())
       {
-         last_nl = pc;
-
          // if we found 2 or more in a row
          if (  pc->GetNlCount() > 1
             || pc->GetPrevNvb()->IsNewline())

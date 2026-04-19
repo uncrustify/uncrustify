@@ -37,14 +37,14 @@ class ChunkStack;
  * @param start  the first chunk to look at
  * @param end    the chunk after the last one to look at
  */
-bool can_be_full_param(Chunk *start, Chunk *end);
+bool can_be_full_param(Chunk *start, Chunk const *end);
 
 
 //! Scan backwards to see if we might be on a type declaration
 bool chunk_ends_type(Chunk *start);
 
 
-bool chunkstack_match(const ChunkStack &cs, Chunk *pc);
+bool chunkstack_match(const ChunkStack &cs, Chunk const *pc);
 
 
 ///**
@@ -52,7 +52,7 @@ bool chunkstack_match(const ChunkStack &cs, Chunk *pc);
 // *
 // * @param start  points to the open paren
 // */
-void fix_fcn_def_params(Chunk *pc);
+void fix_fcn_def_params(Chunk const *pc);
 
 
 void flag_series(Chunk *start, Chunk *end, PcfFlags set_flags, PcfFlags clr_flags = {}, E_Scope nav = E_Scope::ALL);
@@ -64,18 +64,18 @@ void flag_series(Chunk *start, Chunk *end, PcfFlags set_flags, PcfFlags clr_flag
  * with respect to the root parent template; returns 0 if
  * the chunk is not part of a template parameter list
  */
-size_t get_cpp_template_angle_nest_level(Chunk *pc);
+size_t get_cpp_template_angle_nest_level(Chunk const *pc);
 
 
 /**
  * Parse off the types in the D template args, adds to cs
  * returns the close_paren
  */
-Chunk *get_d_template_types(ChunkStack &cs, Chunk *open_paren);
+Chunk *get_d_template_types(ChunkStack &cs, Chunk const *open_paren);
 
 
 //! help function for mark_variable_definition...
-bool go_on(Chunk *pc, Chunk *start);
+bool go_on(Chunk *pc, Chunk const *start);
 
 
 bool is_ucase_str(const char *str, size_t len);

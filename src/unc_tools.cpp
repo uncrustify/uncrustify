@@ -83,7 +83,7 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine_of_code,
    tokenCounter = 0;
    LOG_FMT(LGUY, "Prot_the_line:(%s:%d)(%zu)\n", func_name, theLine_of_code, counter);
 
-   for (Chunk *pc = pc_sub; pc->IsNotNullChunk(); pc = pc->GetNext())
+   for (Chunk const *pc = pc_sub; pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (pc->GetOrigLine() == the_line_to_be_prot)
       {
@@ -134,7 +134,7 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine_of_code,
 
             if (pc->Is(E_Token::CT_COND_COLON))
             {
-               Chunk *pa = pc->GetParent();
+               Chunk const *pa = pc->GetParent();
                LOG_FMT(LGUY, "<> pa-type is %s, orig_line is %zu\n", get_token_name(pa->GetType()), pa->GetOrigLine());
             }
 
@@ -182,7 +182,7 @@ void prot_the_columns(int theLine_of_code, size_t the_line_to_be_prot)
    counter++;
    LOG_FMT(LGUY, "%4d:", theLine_of_code);
 
-   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+   for (Chunk const *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (pc->GetOrigLine() == the_line_to_be_prot)
       {
@@ -211,7 +211,7 @@ void prot_the_OrigCols(int theLine_of_code, size_t the_line_to_be_prot)
    counter++;
    LOG_FMT(LGUY, "%4d:", theLine_of_code);
 
-   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+   for (Chunk const *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (pc->GetOrigLine() == the_line_to_be_prot)
       {
@@ -253,17 +253,15 @@ void rebuild_the_line(int theLine_of_code, size_t the_line_to_be_prot, bool incr
    virtualLine[MANY - 1] = '\0';
    LOG_FMT(LGUY, "%5d:(%5zu)", theLine_of_code, the_line_to_be_prot);
 
-   bool   has_a_virtual_brace = false;
+   bool has_a_virtual_brace = false;
 
-   size_t where = 0;
-
-   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+   for (Chunk const *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (pc->GetOrigLine() == the_line_to_be_prot)
       {
          if (pc->Is(E_Token::CT_NEWLINE))
          {
-            where              = pc->GetColumn();
+            size_t where = pc->GetColumn();
             rebuildLine[where] = '\0';
             virtualLine[where] = '\0';
 
@@ -291,16 +289,13 @@ void rebuild_the_line(int theLine_of_code, size_t the_line_to_be_prot, bool incr
                   LOG_FMT(LGUY, " ***** MANY is too little for this line %d\n", theLine_of_code);
                   exit(EX_SOFTWARE);
                }
-               //rebuildLine[col + x - 1] = B;
-               where              = col + x;
+               size_t where = col + x;
                rebuildLine[where] = B;
             }
          }
       } // if (pc->GetOrigLine() ...
       else if (pc->GetOrigLine() > the_line_to_be_prot)
       {
-         //rebuildLine[where] = '\0';
-         //virtualLine[where] = '\0';
          break;
       }
    } // for (Chunk *pc ...
@@ -327,7 +322,7 @@ void prot_some_lines(const char *func_name, int theLine_of_code, size_t from_lin
 
    LOG_FMT(LGUY, "Prot_some_lines:(%s:%d)(%zu)\n", func_name, theLine_of_code, counter);
 
-   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+   for (Chunk const *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (pc->GetOrigLine() > to_line)
       {
@@ -382,7 +377,7 @@ void prot_some_lines(const char *func_name, int theLine_of_code, size_t from_lin
 
          if (pc->Is(E_Token::CT_COND_COLON))
          {
-            Chunk *pa = pc->GetParent();
+            Chunk const *pa = pc->GetParent();
             LOG_FMT(LGUY, "<> pa-type is %s, orig_line is %zu\n", get_token_name(pa->GetType()), pa->GetOrigLine());
          }
 
@@ -415,7 +410,7 @@ void prot_all_lines(const char *func_name, int theLine_of_code)
 
    LOG_FMT(LGUY, "Prot_all_lines:(%s:%d)(%zu)\n", func_name, theLine_of_code, counter);
 
-   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+   for (Chunk const *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       tokenCounter++;
 
@@ -467,7 +462,7 @@ void examine_Data(const char *func_name, int theLine_of_code, int what)
 {
    LOG_FMT(LGUY, "\n%s:", func_name);
 
-   Chunk *pc;
+   Chunk const *pc;
 
    switch (what)
    {
@@ -565,7 +560,7 @@ void dump_out(size_t type)
 
    if (D_file != nullptr)
    {
-      for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+      for (Chunk const *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
          fprintf(D_file, "[%p]\n", pc);
          fprintf(D_file, "  type %s\n", get_token_name(pc->GetType()));
@@ -627,7 +622,7 @@ void dump_out(size_t type)
 void dump_in(size_t type)
 {
    char  buffer[256];
-   bool  aNewChunkIsFound = false;
+   //bool  aNewChunkIsFound = false;
    Chunk chunk;
    char  dumpFileName[300];
 
@@ -643,7 +638,8 @@ void dump_in(size_t type)
 
    if (D_file != nullptr)
    {
-      size_t lineNumber = 0;
+      bool   aNewChunkIsFound = false;
+      size_t lineNumber       = 0;
 
       while (fgets(buffer, sizeof(buffer), D_file) != nullptr)
       {
@@ -857,7 +853,7 @@ void examine_token(const char *func_name, int theLine_of_code, size_t orig_line_
    if (line_found)
    {
       // look for the searched column
-      for (Chunk *pc = pc_saved; pc->IsNotNullChunk(); pc = pc->GetNext())
+      for (Chunk const *pc = pc_saved; pc->IsNotNullChunk(); pc = pc->GetNext())
       {
          //LOG_FMT(LGUY, "orig line is %zu, ", pc->GetOrigLine());
          //LOG_FMT(LGUY, "orig column is %zu, ", pc->GetOrigCol());

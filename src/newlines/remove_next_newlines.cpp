@@ -13,7 +13,7 @@
 #include "mark_change.h"
 
 
-void remove_next_newlines(Chunk *start)
+void remove_next_newlines(Chunk const *start)
 {
    LOG_FUNC_ENTRY();
 

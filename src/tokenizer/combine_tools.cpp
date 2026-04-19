@@ -11,7 +11,7 @@
 #include "uncrustify.h"
 
 
-bool can_be_full_param(Chunk *start, Chunk *end)
+bool can_be_full_param(Chunk *start, Chunk const *end)
 {
    LOG_FUNC_ENTRY();
 
@@ -20,11 +20,11 @@ bool can_be_full_param(Chunk *start, Chunk *end)
    LOG_FMT(LFPARAM, "%s(%d): end->text   is '%s', type is %s\n",
            __func__, __LINE__, end->GetLogText(), get_token_name(end->GetType()));
 
-   int   word_count     = 0;
-   int   type_count     = 0;
-   Chunk *pc            = Chunk::NullChunkPtr;
-   Chunk *first_word    = Chunk::NullChunkPtr;
-   bool  first_word_set = false;
+   int         word_count     = 0;
+   int         type_count     = 0;
+   Chunk       *pc            = Chunk::NullChunkPtr;
+   Chunk const *first_word    = Chunk::NullChunkPtr;
+   bool        first_word_set = false;
 
    // Use Npp to skip PP directives that may appear between parameters
    for (pc = start;
@@ -97,13 +97,13 @@ bool can_be_full_param(Chunk *start, Chunk *end)
               && pc->Is(E_Token::CT_PAREN_OPEN))
       {
          // Check for old-school func proto param '(type)'
-         Chunk *tmp1 = pc->GetClosingParen(E_Scope::PREPROC);
+         Chunk const *tmp1 = pc->GetClosingParen(E_Scope::PREPROC);
 
          if (tmp1->IsNullChunk())
          {
             return(false);
          }
-         Chunk *tmp2 = tmp1->GetNextNcNnl(E_Scope::PREPROC);
+         Chunk const *tmp2 = tmp1->GetNextNcNnl(E_Scope::PREPROC);
 
          if (tmp2->IsNullChunk())
          {
@@ -142,7 +142,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       {
          // Check for func proto param 'void (*name)' or 'void (*name)(params)' or 'void (^name)(params)'
          // <name> can be optional
-         Chunk *tmp1 = pc->GetNextNcNnl(E_Scope::PREPROC);
+         Chunk const *tmp1 = pc->GetNextNcNnl(E_Scope::PREPROC);
 
          if (tmp1->IsNullChunk())
          {
@@ -246,7 +246,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
               __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()));
    }
 
-   Chunk *last = pc->GetPrevNcNnlNi();   // Issue #2279
+   Chunk const *last = pc->GetPrevNcNnlNi();   // Issue #2279
 
    LOG_FMT(LFPARAM, "%s(%d): last->text is '%s', type is %s\n",
            __func__, __LINE__, last->GetLogText(), get_token_name(last->GetType()));
@@ -265,8 +265,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       LOG_FMT(LFPARAM, "%s(%d): !MVP!\n",
               __func__, __LINE__);
       // Oh, joy, we are in Most Vexing Parse territory
-      Chunk *brace =
-         start->GetPrevType(E_Token::CT_BRACE_OPEN, start->GetBraceLevel() - 1);
+      Chunk const *brace = start->GetPrevType(E_Token::CT_BRACE_OPEN, start->GetBraceLevel() - 1);
 
       if (brace->IsNotNullChunk())
       {
@@ -414,11 +413,11 @@ bool chunk_ends_type(Chunk *start)
 } // chunk_ends_type
 
 
-bool chunkstack_match(const ChunkStack &cs, Chunk *pc)
+bool chunkstack_match(const ChunkStack &cs, Chunk const *pc)
 {
    for (size_t idx = 0; idx < cs.Len(); idx++)
    {
-      Chunk *tmp = cs.GetChunk(idx);
+      Chunk const *tmp = cs.GetChunk(idx);
 
       if (pc->GetText().equals(tmp->GetText()))
       {
@@ -456,7 +455,7 @@ void flag_series(Chunk *start, Chunk *end, PcfFlags set_flags, PcfFlags clr_flag
 } // flag_series
 
 
-size_t get_cpp_template_angle_nest_level(Chunk *pc)
+size_t get_cpp_template_angle_nest_level(Chunk const *pc)
 {
    LOG_FUNC_ENTRY();
    int nestLevel = 0;
@@ -480,7 +479,7 @@ size_t get_cpp_template_angle_nest_level(Chunk *pc)
 }
 
 
-Chunk *get_d_template_types(ChunkStack &cs, Chunk *open_paren)
+Chunk *get_d_template_types(ChunkStack &cs, Chunk const *open_paren)
 {
    LOG_FUNC_ENTRY();
    Chunk *tmp       = open_paren->GetNextNcNnl();
@@ -509,7 +508,7 @@ Chunk *get_d_template_types(ChunkStack &cs, Chunk *open_paren)
 } // get_d_template_types
 
 
-bool go_on(Chunk *pc, Chunk *start)
+bool go_on(Chunk *pc, Chunk const *start)
 {
    if (  pc->IsNullChunk()
       || pc->GetLevel() != start->GetLevel())

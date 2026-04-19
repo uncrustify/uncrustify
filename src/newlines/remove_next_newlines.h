@@ -10,6 +10,6 @@
 
 class Chunk;
 
-void remove_next_newlines(Chunk *start);
+void remove_next_newlines(Chunk const *start);
 
 #endif /* REMOVE_NEXT_NEWLINES_H_INCLUDED */

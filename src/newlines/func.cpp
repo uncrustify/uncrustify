@@ -55,7 +55,7 @@ void newline_func_def_or_call(Chunk *start)
             newline_iarf(prev, atmp);
          }
       }
-      Chunk *pc = start->GetNextNcNnl();
+      Chunk const *pc = start->GetNextNcNnl();
 
       if (pc->IsString(")"))
       {
@@ -118,7 +118,7 @@ void newline_func_def_or_call(Chunk *start)
 
       if (prev->IsNot(E_Token::CT_ACCESS_COLON))
       {
-         Chunk *tmp;
+         Chunk const *tmp;
 
          if (prev->Is(E_Token::CT_OPERATOR))
          {
@@ -144,9 +144,8 @@ void newline_func_def_or_call(Chunk *start)
 
          if (tmp_next->IsNot(E_Token::CT_FUNC_CLASS_DEF))
          {
-            Chunk  *closing = tmp->GetClosingParen();
-            Chunk  *brace   = closing->GetNextNcNnl();
-            iarf_e a;                                            // Issue #2561
+            Chunk const *closing = tmp->GetClosingParen();
+            iarf_e      a;                                       // Issue #2561
 
             if (  tmp->GetParentType() == E_Token::CT_FUNC_PROTO
                || tmp->GetParentType() == E_Token::CT_FUNC_CLASS_PROTO)
@@ -160,6 +159,7 @@ void newline_func_def_or_call(Chunk *start)
                // def
 
                log_rule_B("nl_func_leave_one_liners");
+               Chunk const *brace = closing->GetNextNcNnl();
 
                if (  options::nl_func_leave_one_liners()
                   && (  brace->IsNullChunk()
@@ -220,7 +220,7 @@ void newline_func_def_or_call(Chunk *start)
             }
          }
       }
-      Chunk *pc = start->GetNextNcNnl();
+      Chunk const *pc = start->GetNextNcNnl();
 
       if (pc->IsString(")"))
       {
@@ -403,15 +403,15 @@ void newline_func_multi_line(Chunk *start)
    if (  pc->Is(E_Token::CT_FPAREN_CLOSE)
       && start->IsNewlineBetween(pc))
    {
-      Chunk *start_next         = start->GetNextNcNnl();
-      bool  has_leading_closure = (  start_next->GetParentType() == E_Token::CT_OC_BLOCK_EXPR
-                                  || start_next->GetParentType() == E_Token::CT_CPP_LAMBDA
-                                  || start_next->Is(E_Token::CT_BRACE_OPEN));
+      Chunk const *start_next         = start->GetNextNcNnl();
+      bool        has_leading_closure = (  start_next->GetParentType() == E_Token::CT_OC_BLOCK_EXPR
+                                        || start_next->GetParentType() == E_Token::CT_CPP_LAMBDA
+                                        || start_next->Is(E_Token::CT_BRACE_OPEN));
 
-      Chunk *prev_end            = pc->GetPrevNcNnl();
-      bool  has_trailing_closure = (  prev_end->GetParentType() == E_Token::CT_OC_BLOCK_EXPR
-                                   || prev_end->GetParentType() == E_Token::CT_CPP_LAMBDA
-                                   || prev_end->Is(E_Token::CT_BRACE_OPEN));
+      Chunk const *prev_end            = pc->GetPrevNcNnl();
+      bool        has_trailing_closure = (  prev_end->GetParentType() == E_Token::CT_OC_BLOCK_EXPR
+                                         || prev_end->GetParentType() == E_Token::CT_CPP_LAMBDA
+                                         || prev_end->Is(E_Token::CT_BRACE_OPEN));
 
       if (  add_start
          && !start->GetNext()->IsNewline())
@@ -475,8 +475,8 @@ void newline_func_multi_line(Chunk *start)
 
                   if (options::nl_func_call_args_multi_line_ignore_closures())
                   {
-                     Chunk *prev_comma  = pc->GetPrevNcNnl();
-                     Chunk *after_comma = pc->GetNextNcNnl();
+                     Chunk const *prev_comma  = pc->GetPrevNcNnl();
+                     Chunk const *after_comma = pc->GetNextNcNnl();
 
                      if (!(  (  prev_comma->GetParentType() == E_Token::CT_OC_BLOCK_EXPR
                              || prev_comma->GetParentType() == E_Token::CT_CPP_LAMBDA

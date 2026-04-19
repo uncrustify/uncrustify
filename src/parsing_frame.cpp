@@ -154,7 +154,7 @@ void ParsingFrame::push(Chunk *pc, const char *func, int line, E_BraceStage stag
 }
 
 
-void ParsingFrame::pop(const char *func, int line, Chunk *pc)
+void ParsingFrame::pop(const char *func, int line, Chunk const *pc)
 {
    LOG_FUNC_ENTRY();
 

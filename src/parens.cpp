@@ -18,7 +18,7 @@ using namespace uncrustify;
 
 
 //! Add an open parenthesis after first and add a close parenthesis before the last
-static void add_parens_between(Chunk *first, Chunk *last);
+static void add_parens_between(Chunk const *first, Chunk *last);
 
 
 /**
@@ -97,8 +97,8 @@ void do_parens_assign()                         // Issue #3316
             LOG_FMT(LPARADD, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', level is %zu\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), pc->GetLevel());
             // look before for an open sparen
-            size_t check_level = pc->GetLevel();
-            Chunk  *p          = pc->GetPrevNc(E_Scope::PREPROC);
+            size_t      check_level = pc->GetLevel();
+            Chunk const *p          = pc->GetPrevNc(E_Scope::PREPROC);
 
             while (p->IsNotNullChunk())
             {
@@ -187,8 +187,8 @@ void do_parens_return()                         // Issue #3316
             LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetLogText(), pc->GetLevel());
             // look before for a open sparen
-            size_t check_level = pc->GetLevel();
-            Chunk  *p          = pc->GetPrevNc(E_Scope::PREPROC);
+            size_t      check_level = pc->GetLevel();
+            Chunk const *p          = pc->GetPrevNc(E_Scope::PREPROC);
 
             while (p->IsNotNullChunk())
             {
@@ -238,7 +238,7 @@ void do_parens_return()                         // Issue #3316
 } // do_parens_return
 
 
-static void add_parens_between(Chunk *first, Chunk *last)
+static void add_parens_between(Chunk const *first, Chunk *last)
 {
    LOG_FUNC_ENTRY();
 
@@ -303,8 +303,8 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *ref        = popen;
-   bool  hit_compare = false;
+   Chunk const *ref        = popen;
+   bool        hit_compare = false;
 
    LOG_FMT(LPARADD, "%s(%d): nest is %d, popen on line %zu, orig col is %zu, pclose on line %zu, orig col is %zu, level is %zu\n",
            __func__, __LINE__, nest,

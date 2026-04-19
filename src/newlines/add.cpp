@@ -125,7 +125,7 @@ Chunk *newline_add_between(Chunk *start, Chunk *end)
          if (pc->IsNewline())
          {
             // are there some more (comment + newline)s ?
-            Chunk *pc1 = end->GetNextNcNnl();
+            Chunk const *pc1 = end->GetNextNcNnl();
 
             if (!pc1->IsNewline())
             {

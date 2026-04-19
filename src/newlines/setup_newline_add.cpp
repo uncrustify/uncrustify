@@ -22,7 +22,7 @@
  * b. if/while/switch/for/etc ") {"
  * d. else "} else {"
  */
-void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
+void setup_newline_add(Chunk *prev, Chunk *nl, Chunk const *next)
 {
    LOG_FUNC_ENTRY();
 
