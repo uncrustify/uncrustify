@@ -325,11 +325,11 @@ bool chunk_ends_type(Chunk *start)
    {
       return(false);
    }
-   Chunk  *pc       = start;
-   bool   ret       = false;
-   size_t cnt       = 0;
-   bool   last_expr = false;
-   bool   last_lval = false;
+   Chunk const *pc       = start;
+   bool        ret       = false;
+   size_t      cnt       = 0;
+   bool        last_expr = false;
+   bool        last_lval = false;
 
    for ( ; pc->IsNotNullChunk(); pc = pc->GetPrevNcNnlNi()) // Issue #2279
    {
@@ -508,7 +508,7 @@ Chunk *get_d_template_types(ChunkStack &cs, Chunk const *open_paren)
 } // get_d_template_types
 
 
-bool go_on(Chunk *pc, Chunk const *start)
+bool go_on(Chunk const *pc, Chunk const *start)
 {
    if (  pc->IsNullChunk()
       || pc->GetLevel() != start->GetLevel())
