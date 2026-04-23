@@ -18,7 +18,7 @@ using namespace uncrustify;
 
 
 //! Check if token starts a variable declaration
-bool is_var_def(Chunk *pc, Chunk *next)
+bool is_var_def(Chunk const *pc, Chunk *next)
 {
    if (  pc->Is(E_Token::CT_DECLTYPE)
       && next->Is(E_Token::CT_PAREN_OPEN))
