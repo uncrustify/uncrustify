@@ -32,7 +32,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    size_t         myspan     = span;
    size_t         mythresh   = 0;
    size_t         mygap      = 0;
-   LineSkipConfig myskip_cfg = {};
+   LineSkipConfig myskip_cfg;
 
    // Override the span, if this is a struct/union
    if (  start->GetParentType() == E_Token::CT_STRUCT
