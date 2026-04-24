@@ -6,6 +6,7 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
+ * @author  Guy Maurel
  */
 
 #include "tokenizer/brace_cleanup.h"
