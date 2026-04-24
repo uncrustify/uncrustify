@@ -29,9 +29,9 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       return(Chunk::NullChunkPtr);
    }
    Chunk          *next;
-   size_t         myspan     = span;
-   size_t         mythresh   = 0;
-   size_t         mygap      = 0;
+   size_t         myspan   = span;
+   size_t         mythresh = 0;
+   size_t         mygap    = 0;
    LineSkipConfig myskip_cfg;
 
    // Override the span, if this is a struct/union
