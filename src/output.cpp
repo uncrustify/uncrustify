@@ -275,7 +275,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc);
  *  2. There is exactly one newline between then
  *  3. They are indented to the same level
  */
-static bool can_combine_comment(Chunk *pc, const cmt_reflow &cmt);
+static bool can_combine_comment(Chunk const *pc, const cmt_reflow &cmt);
 
 
 #define LOG_CONTTEXT() \
@@ -526,7 +526,7 @@ void output_parsed(FILE *pfile, bool withOptions)
    fprintf(pfile, "# Line                Tag         Parent_type  Type of the parent         Columns Len Br/Lvl/pp             Flags   Nl  Text");
 #endif // ifdef WIN32
 
-   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+   for (Chunk const *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
 #ifdef WIN32
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%2d][%d/%d/%d][%d-%d]",
@@ -579,7 +579,7 @@ void output_parsed_csv(FILE *pfile)
    fprintf(pfile, "Line,Tag,Parent_type,Type of the parent,Column,Orig Col Strt,"
            "Orig Col End,Orig Sp Before,Br,Lvl,pp,Flags,Nl Before,Nl After,Text,");
 
-   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+   for (Chunk const *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%zu,%zu,%zu,%zu,",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
@@ -638,10 +638,10 @@ void output_parsed_csv(FILE *pfile)
 // Compares two tracks according to second in descending order.
 bool compareTrack(TrackNumber t1, TrackNumber t2)
 {
-   char *t1s          = t1.second;
-   char *t2s          = t2.second;
-   int  vergleich     = strcmp(t2s, t1s);
-   bool int_vergleich = vergleich > 0;
+   char const *t1s          = t1.second;
+   char const *t2s          = t2.second;
+   int        vergleich     = strcmp(t2s, t1s);
+   bool       int_vergleich = vergleich > 0;
 
    return(int_vergleich);
 }
@@ -704,9 +704,9 @@ void DecodeTrackingData(Chunk *pc)
       LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
    }
 #endif
-   char *old_one   = nullptr;
-   bool first_text = true;
-   char tempText[80];
+   char const *old_one   = nullptr;
+   bool       first_text = true;
+   char       tempText[80];
 
    add_text("<a title=\"");
 
@@ -899,7 +899,7 @@ void output_text(FILE *pfile)
             else
             {
                // Try to keep the same relative spacing
-               Chunk *prev = pc->GetPrev();
+               Chunk const *prev = pc->GetPrev();
 
                if (prev->Is(E_Token::CT_PP_IGNORE))
                {
@@ -1091,7 +1091,7 @@ void output_text(FILE *pfile)
                reindent_line(pc, cpd.column);
             }
             // not the first item on a line
-            Chunk *prev = pc->GetPrev();
+            Chunk const *prev = pc->GetPrev();
             log_rule_B("align_with_tabs");
             allow_tabs = (  options::align_with_tabs()
                          && pc->TestFlags(PCF_WAS_ALIGNED)
@@ -1576,25 +1576,25 @@ static Chunk *get_next_function(Chunk *pc)
 }
 
 
-static Chunk *get_next_class(Chunk *pc)
+static Chunk *get_next_class(Chunk const *pc)
 {
    return(pc->GetNextType(E_Token::CT_CLASS)->GetNext());
 }
 
 
-static Chunk *get_prev_category(Chunk *pc)
+static Chunk *get_prev_category(Chunk const *pc)
 {
    return(pc->GetPrevType(E_Token::CT_OC_CATEGORY));
 }
 
 
-static Chunk *get_next_scope(Chunk *pc)
+static Chunk *get_next_scope(Chunk const *pc)
 {
    return(pc->GetNextType(E_Token::CT_OC_SCOPE));
 }
 
 
-static Chunk *get_prev_oc_class(Chunk *pc)
+static Chunk *get_prev_oc_class(Chunk const *pc)
 {
    return(pc->GetPrevType(E_Token::CT_OC_CLASS));
 }
@@ -1851,7 +1851,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
 } // output_cmt_start
 
 
-static bool can_combine_comment(Chunk *pc, const cmt_reflow &cmt)
+static bool can_combine_comment(Chunk const *pc, const cmt_reflow &cmt)
 {
    // We can't combine if there is something other than a newline next
    if (pc->GetParentType() == E_Token::CT_COMMENT_START)
@@ -1859,7 +1859,7 @@ static bool can_combine_comment(Chunk *pc, const cmt_reflow &cmt)
       return(false);
    }
    // next is a newline for sure, make sure it is a single newline
-   Chunk *next = pc->GetNext();
+   Chunk const *next = pc->GetNext();
 
    if (  next->IsNotNullChunk()
       && next->GetNlCount() == 1)
@@ -2910,7 +2910,7 @@ static bool kw_fcn_class(Chunk *cmt, UncText &out_txt)
    if ((  language_is_set(lang_flag_e::LANG_CPP)
        || language_is_set(lang_flag_e::LANG_OC)))
    {
-      Chunk *fcn = get_next_function(cmt);
+      Chunk const *fcn = get_next_function(cmt);
 
       if (fcn->Is(E_Token::CT_OC_MSG_DECL))
       {
@@ -2957,7 +2957,7 @@ static bool kw_fcn_class(Chunk *cmt, UncText &out_txt)
 
 static bool kw_fcn_message(Chunk *cmt, UncText &out_txt)
 {
-   Chunk *fcn = get_next_function(cmt);
+   Chunk const *fcn = get_next_function(cmt);
 
    if (fcn->IsNullChunk())
    {
@@ -2965,8 +2965,8 @@ static bool kw_fcn_message(Chunk *cmt, UncText &out_txt)
    }
    out_txt.append(fcn->GetText());
 
-   Chunk *tmp  = fcn->GetNextNcNnl();
-   Chunk *word = Chunk::NullChunkPtr;
+   Chunk       *tmp  = fcn->GetNextNcNnl();
+   Chunk const *word = Chunk::NullChunkPtr;
 
    while (tmp->IsNotNullChunk())
    {
@@ -2998,7 +2998,7 @@ static bool kw_fcn_message(Chunk *cmt, UncText &out_txt)
 
 static bool kw_fcn_category(Chunk *cmt, UncText &out_txt)
 {
-   Chunk *category = get_prev_category(cmt);
+   Chunk const *category = get_prev_category(cmt);
 
    if (category->IsNotNullChunk())
    {
@@ -3012,7 +3012,7 @@ static bool kw_fcn_category(Chunk *cmt, UncText &out_txt)
 
 static bool kw_fcn_scope(Chunk *cmt, UncText &out_txt)
 {
-   Chunk *scope = get_next_scope(cmt);
+   Chunk const *scope = get_next_scope(cmt);
 
    if (scope->IsNotNullChunk())
    {
@@ -3025,7 +3025,7 @@ static bool kw_fcn_scope(Chunk *cmt, UncText &out_txt)
 
 static bool kw_fcn_function(Chunk *cmt, UncText &out_txt)
 {
-   Chunk *fcn = get_next_function(cmt);
+   Chunk const *fcn = get_next_function(cmt);
 
    if (fcn->IsNotNullChunk())
    {
@@ -3047,20 +3047,20 @@ static bool kw_fcn_function(Chunk *cmt, UncText &out_txt)
 
 static bool kw_fcn_javaparam(Chunk *cmt, UncText &out_txt)
 {
-   Chunk *fcn = get_next_function(cmt);
+   Chunk const *fcn = get_next_function(cmt);
 
    if (fcn->IsNullChunk())
    {
       return(false);
    }
-   Chunk *fpo;
-   Chunk *fpc;
-   bool  has_param = true;
-   bool  need_nl   = false;
+   Chunk       *fpo;
+   Chunk const *fpc;
+   bool        has_param = true;
+   bool        need_nl   = false;
 
    if (fcn->Is(E_Token::CT_OC_MSG_DECL))
    {
-      Chunk *tmp = fcn->GetNextNcNnl();
+      Chunk const *tmp = fcn->GetNextNcNnl();
       has_param = false;
 
       while (tmp->IsNotNullChunk())
@@ -3091,7 +3091,8 @@ static bool kw_fcn_javaparam(Chunk *cmt, UncText &out_txt)
          }
          tmp = tmp->GetNextNcNnl();
       }
-      fpo = fpc = Chunk::NullChunkPtr;
+      fpo = Chunk::NullChunkPtr;
+      fpc = Chunk::NullChunkPtr;
    }
    else
    {
@@ -3131,7 +3132,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, UncText &out_txt)
 
    if (has_param)
    {
-      Chunk *prev = Chunk::NullChunkPtr;
+      Chunk const *prev = Chunk::NullChunkPtr;
       tmp = fpo;
 
       while ((tmp = tmp->GetNext())->IsNotNullChunk())
@@ -3192,7 +3193,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, UncText &out_txt)
 
 static bool kw_fcn_fclass(Chunk *cmt, UncText &out_txt)
 {
-   Chunk *fcn = get_next_function(cmt);
+   Chunk const *fcn = get_next_function(cmt);
 
    if (!fcn)
    {
@@ -3202,7 +3203,7 @@ static bool kw_fcn_fclass(Chunk *cmt, UncText &out_txt)
    if (fcn->TestFlags(PCF_IN_CLASS))
    {
       // if inside a class, we need to find to the class name
-      Chunk *tmp = fcn->GetPrevType(E_Token::CT_BRACE_OPEN, fcn->GetLevel() - 1);
+      Chunk const *tmp = fcn->GetPrevType(E_Token::CT_BRACE_OPEN, fcn->GetLevel() - 1);
       tmp = tmp->GetPrevType(E_Token::CT_CLASS, tmp->GetLevel());
 
       if (tmp->IsNullChunk())
@@ -3230,7 +3231,7 @@ static bool kw_fcn_fclass(Chunk *cmt, UncText &out_txt)
    else
    {
       // if outside a class, we expect "CLASS::METHOD(...)"
-      Chunk *tmp = fcn->GetPrevNcNnl();
+      Chunk const *tmp = fcn->GetPrevNcNnl();
 
       if (tmp->Is(E_Token::CT_OPERATOR))
       {
@@ -3483,7 +3484,7 @@ static void generate_if_conditional_as_text(UncText &dst, Chunk *ifdef)
 
    dst.clear();
 
-   for (Chunk *pc = ifdef; pc->IsNotNullChunk(); pc = pc->GetNext())
+   for (Chunk const *pc = ifdef; pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (column == -1)
       {
@@ -3522,8 +3523,8 @@ static void generate_if_conditional_as_text(UncText &dst, Chunk *ifdef)
 
 void add_long_preprocessor_conditional_block_comment()
 {
-   Chunk *pp_start = Chunk::NullChunkPtr;
-   Chunk *pp_end   = Chunk::NullChunkPtr;
+   Chunk const *pp_start = Chunk::NullChunkPtr;
+   Chunk const *pp_end   = Chunk::NullChunkPtr;
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {

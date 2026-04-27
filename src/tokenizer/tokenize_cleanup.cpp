@@ -32,7 +32,7 @@ using namespace uncrustify;
  * Marks ObjC specific chunks in property declaration, by setting
  * parent types and chunk types.
  */
-static void cleanup_objc_property(Chunk *start);
+static void cleanup_objc_property(Chunk const *start);
 
 
 /**
@@ -104,9 +104,9 @@ void tokenize_trailing_return_types()
       if (  pc->Is(E_Token::CT_MEMBER)
          && (strcmp(pc->GetLogText(), "->") == 0))
       {
-         Chunk *tmp = pc->GetPrevNcNnl();
-         Chunk *tmp_2;
-         Chunk *open_paren;
+         Chunk const *tmp = pc->GetPrevNcNnl();
+         Chunk       *tmp_2;
+         Chunk const *open_paren;
 
          if (tmp->Is(E_Token::CT_QUALIFIER))
          {
@@ -394,7 +394,7 @@ void tokenize_cleanup()
          else
          {
             // Something else followed by a open brace
-            Chunk *tmp = next->GetNextNcNnl();
+            Chunk const *tmp = next->GetNextNcNnl();
 
             if (  tmp->IsNullChunk()
                || tmp->IsNot(E_Token::CT_BRACE_OPEN))
@@ -428,7 +428,7 @@ void tokenize_cleanup()
                     || language_is_set(lang_flag_e::LANG_VALA))
                  && next->Is(E_Token::CT_QUESTION))
          {
-            Chunk *tmp = next->GetNextNcNnl();
+            Chunk const *tmp = next->GetNextNcNnl();
 
             if (tmp->Is(E_Token::CT_TSQUARE))
             {
@@ -610,7 +610,7 @@ void tokenize_cleanup()
          }
          else if (next->Is(E_Token::CT_DC_MEMBER))
          {
-            Chunk *next2 = next->GetNextNcNnlNet();
+            Chunk const *next2 = next->GetNextNcNnlNet();
 
             if (  next2->Is(E_Token::CT_INV)      // E_Token::CT_INV hasn't turned into E_Token::CT_DESTRUCTOR just yet
                || (  next2->Is(E_Token::CT_CLASS) // constructor isn't turned into E_Token::CT_FUNC* just yet
@@ -1178,7 +1178,7 @@ void tokenize_cleanup()
 } // tokenize_cleanup
 
 
-static void cleanup_objc_property(Chunk *start)
+static void cleanup_objc_property(Chunk const *start)
 {
    assert(start->Is(E_Token::CT_OC_PROPERTY));
 
@@ -1254,7 +1254,7 @@ static void mark_attributes_in_property_with_open_paren(Chunk *open_paren)
 {
    assert(open_paren->Is(E_Token::CT_PAREN_OPEN));
 
-   Chunk *tmp = open_paren;
+   Chunk const *tmp = open_paren;
 
    while (tmp->IsNot(E_Token::CT_PAREN_CLOSE))
    {

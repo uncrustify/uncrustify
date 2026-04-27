@@ -94,6 +94,7 @@ repos:
           - --suppress=useStlAlgorithm
           - --suppress=unusedStructMember
           - --suppress=useInitializationList
+          - --suppress=unusedPrivateFunction
 
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
