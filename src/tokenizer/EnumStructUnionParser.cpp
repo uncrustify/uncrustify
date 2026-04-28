@@ -2674,10 +2674,10 @@ void EnumStructUnionParser::try_post_identify_macro_calls()
        * so is to avoid mis-interpretation by code executed at a later time
        */
 
-      auto  *body_start        = get_body_start();
-      auto  *inheritance_start = get_inheritance_start();
-      Chunk *pc                = m_start;
-      Chunk *prev              = Chunk::NullChunkPtr;
+      auto const *body_start        = get_body_start();
+      auto const *inheritance_start = get_inheritance_start();
+      Chunk      *pc                = m_start;
+      Chunk      *prev              = Chunk::NullChunkPtr;
 
       do
       {
