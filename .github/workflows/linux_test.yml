@@ -27,6 +27,11 @@ jobs:
       - name: Set up Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
+      - name: Set up Node.js v24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
       - name: Configure CMake
         env:
           BADGE: linux

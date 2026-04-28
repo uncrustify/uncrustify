@@ -26,6 +26,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Set up Node.js v24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
       - name: Configure CMake
         run: |
           mkdir build

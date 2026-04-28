@@ -49,6 +49,10 @@ jobs:
           key: cppcheck-${{ env.CPPCHECK_VERSION }}-${{ runner.os }}-${{ hashFiles('~/cppcheck-install/cppcheck-build-stamp') }}
 
       # Project specific
+      - name: Set up Node.js v24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
       - uses: actions/checkout@v4
       - run: python -m pip install pre-commit
       - uses: actions/cache/restore@v4
