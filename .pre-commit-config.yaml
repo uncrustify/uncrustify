@@ -95,6 +95,7 @@ repos:
           - --suppress=unusedStructMember
           - --suppress=useInitializationList
           - --suppress=unusedPrivateFunction
+          - --suppress=constParameterCallback
 
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
