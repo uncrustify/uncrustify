@@ -182,21 +182,21 @@ private:
     * Returns true if the chunk under test is deemed to be located within a
     * conditional/ternary statement
     */
-   bool is_within_conditional(Chunk *pc) const;
+   bool is_within_conditional(Chunk const *pc) const;
 
 
    /**
     * Returns true if the chunk under test is deemed to be located within an
     * inheritance list
     */
-   bool is_within_inheritance_list(Chunk *pc) const;
+   bool is_within_inheritance_list(Chunk const *pc) const;
 
 
    /**
     * Returns true if the chunk under test is deemed to be located within a
     * where clause
     */
-   bool is_within_where_clause(Chunk *pc) const;
+   bool is_within_where_clause(Chunk const *pc) const;
 
 
    /**
