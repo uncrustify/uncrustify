@@ -96,6 +96,8 @@ repos:
           - --suppress=useInitializationList
           - --suppress=unusedPrivateFunction
           - --suppress=constParameterCallback
+          - --suppress=noCopyConstructor
+          - --suppress=noOperatorEq
 
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
