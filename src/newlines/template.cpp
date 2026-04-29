@@ -90,7 +90,7 @@ void newline_template(Chunk *start)
 } // newline_template
 
 
-iarf_e newline_template_option(Chunk *pc, iarf_e special, iarf_e base, iarf_e fallback)
+iarf_e newline_template_option(Chunk const *pc, iarf_e special, iarf_e base, iarf_e fallback)
 {
    Chunk const *prev = pc->GetPrevNcNnl();
 

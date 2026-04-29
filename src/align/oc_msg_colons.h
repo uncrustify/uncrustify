@@ -10,6 +10,6 @@
 #define ALIGN_OC_MSG_COLONS_H_INCLUDED
 
 //! Aligns OC messages
-void align_oc_msg_colons(Chunk const *so);
+void align_oc_msg_colons();
 
 #endif /* ALIGN_OC_MSG_COLONS_H_INCLUDED */
