@@ -346,6 +346,7 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
              */
             // check if #if block was unbalanced
             size_t brace_level = frm.GetBraceLevel();
+            size_t cur_size    = frm.size();
             pop(frm);
 
             if (brace_level != frm.GetBraceLevel())
@@ -360,6 +361,44 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
                {
                   exit(EX_SOFTWARE);
                }
+            }
+
+            /*
+             * If the #if block net-closed more paren-stack entries than it
+             * opened (e.g., it closed a brace that was opened before the #if),
+             * pop those extra entries from the restored (pre-#if) frame to keep
+             * the stack consistent with the current indentation state.
+             * This handles patterns like:
+             *   #ifdef __cplusplus
+             *   extern "C" {
+             *   #else
+             *   #endif
+             *   #ifdef __cplusplus
+             *   }
+             *   #endif
+             */
+            while (frm.size() > cur_size)
+            {
+               const E_Token open_tok = frm.top().GetOpenToken();
+
+               if (  open_tok == E_Token::CT_BRACE_OPEN
+                  || open_tok == E_Token::CT_VBRACE_OPEN)
+               {
+                  if (frm.GetBraceLevel() > 0)
+                  {
+                     frm.SetBraceLevel(frm.GetBraceLevel() - 1);
+                  }
+               }
+
+               if (  open_tok != E_Token::CT_EOF
+                  && open_tok != E_Token::CT_NONE)
+               {
+                  if (frm.GetParenLevel() > 0)
+                  {
+                     frm.SetParenLevel(frm.GetParenLevel() - 1);
+                  }
+               }
+               frm.pop(__func__, __LINE__, pc);
             }
             txt = "endif-pop";
          }
