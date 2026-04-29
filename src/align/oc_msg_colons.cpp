@@ -17,7 +17,7 @@ constexpr static auto LCURRENT = LOCMSG;
 using namespace uncrustify;
 
 
-void align_oc_msg_colon(Chunk *so)
+void align_oc_msg_colon(Chunk const *so)
 {
    LOG_FUNC_ENTRY();
 
