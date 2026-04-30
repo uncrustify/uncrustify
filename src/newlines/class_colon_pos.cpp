@@ -193,7 +193,7 @@ void newlines_class_colon_pos(E_Token tok)
                {
                   if (ncia == IARF_FORCE)          // nl_class_init_args, nl_constr_init_args: 5
                   {
-                     Chunk *after = pc->GetNext();   // Issue #2759
+                     Chunk const *after = pc->GetNext();   // Issue #2759
 
                      if (after->IsNot(E_Token::CT_COMMENT_CPP))
                      {

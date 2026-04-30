@@ -12,7 +12,7 @@
 
 class Chunk;
 
-void align_params(Chunk *start, std::deque<Chunk *> &chunks);
+void align_params(Chunk const *start, std::deque<Chunk *> &chunks);
 void align_same_func_call_params();
 
 #endif /* ALIGN_SAME_FUNC_CALL_PARAMS_H_INCLUDED */

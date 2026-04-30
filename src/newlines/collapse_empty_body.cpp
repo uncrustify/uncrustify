@@ -12,9 +12,9 @@
 #include "mark_change.h"
 
 
-void collapse_empty_body(Chunk *br_open)
+void collapse_empty_body(Chunk const *br_open)
 {
-   for (Chunk *pc = br_open->GetNext(); pc->IsNot(E_Token::CT_BRACE_CLOSE); pc = pc->GetNext())
+   for (Chunk const *pc = br_open->GetNext(); pc->IsNot(E_Token::CT_BRACE_CLOSE); pc = pc->GetNext())
    {
       if (  pc->Is(E_Token::CT_NEWLINE)
          && pc->SafeToDeleteNl())

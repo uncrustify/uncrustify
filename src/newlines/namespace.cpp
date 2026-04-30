@@ -22,7 +22,7 @@ constexpr static auto LCURRENT = LNEWLINE;
 // namespace {
 // namespace word {
 // namespace type::word {
-void newlines_namespace(Chunk *start)
+void newlines_namespace(Chunk const *start)
 {
    LOG_FUNC_ENTRY();
 

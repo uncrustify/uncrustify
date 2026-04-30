@@ -175,28 +175,28 @@ private:
     * Returns true if the chunk under test represents a potential end chunk past
     * which further parsing is not likely warranted
     */
-   bool is_potential_end_chunk(Chunk *pc) const;
+   bool is_potential_end_chunk(Chunk const *pc) const;
 
 
    /**
     * Returns true if the chunk under test is deemed to be located within a
     * conditional/ternary statement
     */
-   bool is_within_conditional(Chunk *pc) const;
+   bool is_within_conditional(Chunk const *pc) const;
 
 
    /**
     * Returns true if the chunk under test is deemed to be located within an
     * inheritance list
     */
-   bool is_within_inheritance_list(Chunk *pc) const;
+   bool is_within_inheritance_list(Chunk const *pc) const;
 
 
    /**
     * Returns true if the chunk under test is deemed to be located within a
     * where clause
     */
-   bool is_within_where_clause(Chunk *pc) const;
+   bool is_within_where_clause(Chunk const *pc) const;
 
 
    /**
@@ -267,7 +267,7 @@ private:
     * Marks the arguments within a template argument list bounded by the
     * starting and ending chunks
     */
-   void mark_template_args(Chunk *start, Chunk *end) const;
+   void mark_template_args(Chunk *start, Chunk const *end) const;
 
 
    /**

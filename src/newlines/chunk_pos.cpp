@@ -115,7 +115,7 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
             if (nl_flag & 1)
             {
                // remove newline if not preceded by a comment
-               Chunk *prev2 = prev->GetPrev();
+               Chunk const *prev2 = prev->GetPrev();
 
                if (  prev2->IsNotNullChunk()
                   && !(prev2->IsComment()))
@@ -127,7 +127,7 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
             if (nl_flag & 2)
             {
                // remove newline if not followed by a comment or by '{'
-               Chunk *next2 = next->GetNext();
+               Chunk const *next2 = next->GetNext();
 
                if (  next2->IsNotNullChunk()
                   && !next2->IsComment()
@@ -188,7 +188,7 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
          // we need to move the newline
          if (mode_local & TP_LEAD)
          {
-            Chunk *next2 = next->GetNext();
+            Chunk const *next2 = next->GetNext();
 
             if (  next2->Is(E_Token::CT_PREPROC)
                || (  chunk_type == E_Token::CT_ASSIGN

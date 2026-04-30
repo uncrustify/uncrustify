@@ -19,6 +19,6 @@ class Chunk;
  * Doesn't do anything if open brace before it
  * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
  */
-void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type);
+void newlines_func_pre_blank_lines(Chunk const *start, E_Token start_type);
 
 #endif /* NEWLINES_FUNC_PRE_BLANK_LINES_H_INCLUDED */
