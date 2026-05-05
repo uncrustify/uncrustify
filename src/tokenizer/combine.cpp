@@ -44,7 +44,7 @@ using namespace uncrustify;
  *
  * @param pc  the E_Token::CT_ASM item
  */
-static void flag_asm(Chunk *pc);
+static void flag_asm(Chunk const *pc);
 
 
 static void process_returns_and_throws();
@@ -270,7 +270,7 @@ static bool is_function_ref_qualifier_context(Chunk *pc);
  * @param pc    The && chunk
  * @return      true if handled, false otherwise
  */
-static bool handle_rvalue_angle_close(Chunk *prev, Chunk *pc);
+static bool handle_rvalue_angle_close(Chunk const *prev, Chunk *pc);
 
 
 /**
@@ -282,7 +282,7 @@ static bool handle_rvalue_angle_close(Chunk *prev, Chunk *pc);
  * @param next  The chunk after pc
  * @return      true if handled, false otherwise
  */
-static bool handle_rvalue_variadic(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_rvalue_variadic(Chunk const *prev, Chunk *pc, Chunk const *next);
 
 
 /**
@@ -299,7 +299,7 @@ static bool handle_rvalue_variadic(Chunk *prev, Chunk *pc, Chunk *next);
  * @param next  The chunk after pc
  * @return      true if handled (kept as BOOL), false otherwise
  */
-static bool handle_fold_expression(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_fold_expression(Chunk const *prev, Chunk const *pc, Chunk const *next);
 
 
 /**
@@ -311,7 +311,7 @@ static bool handle_fold_expression(Chunk *prev, Chunk *pc, Chunk *next);
  * @param next  The chunk after pc
  * @return      true if handled, false otherwise
  */
-static bool handle_rvalue_in_template(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_rvalue_in_template(Chunk const *prev, Chunk *pc, Chunk const *next);
 
 
 /**
@@ -326,7 +326,7 @@ static bool handle_rvalue_in_template(Chunk *prev, Chunk *pc, Chunk *next);
  * @param next  The chunk after pc
  * @return      true if handled, false otherwise
  */
-static bool handle_rvalue_function_decl(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_rvalue_function_decl(Chunk const *prev, Chunk *pc, Chunk *next);
 
 
 /**
@@ -339,7 +339,7 @@ static bool handle_rvalue_function_decl(Chunk *prev, Chunk *pc, Chunk *next);
  * @param next  The chunk after pc
  * @return      true if handled, false otherwise
  */
-static bool handle_rvalue_operator_decl(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_rvalue_operator_decl(Chunk const *prev, Chunk *pc, Chunk *next);
 
 
 /**
@@ -351,7 +351,7 @@ static bool handle_rvalue_operator_decl(Chunk *prev, Chunk *pc, Chunk *next);
  * @param next  The chunk after pc
  * @return      true if handled, false otherwise
  */
-static bool handle_rvalue_decltype(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_rvalue_decltype(Chunk const *prev, Chunk *pc, Chunk const *next);
 
 
 /**
@@ -363,7 +363,7 @@ static bool handle_rvalue_decltype(Chunk *prev, Chunk *pc, Chunk *next);
  * @param next  The chunk after pc
  * @return      true if handled, false otherwise
  */
-static bool handle_rvalue_namespace_qualified(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_rvalue_namespace_qualified(Chunk const *prev, Chunk *pc, Chunk const *next);
 
 
 /**
@@ -375,7 +375,7 @@ static bool handle_rvalue_namespace_qualified(Chunk *prev, Chunk *pc, Chunk *nex
  * @param next  The chunk after pc
  * @return      true if handled, false otherwise
  */
-static bool handle_rvalue_forwarding_ref(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_rvalue_forwarding_ref(Chunk const *prev, Chunk *pc, Chunk const *next);
 
 
 /**
@@ -399,7 +399,7 @@ static bool handle_rvalue_after_type(Chunk *prev, Chunk *pc);
  * @param next  The chunk after pc
  * @return      true if handled, false otherwise
  */
-static bool handle_rvalue_trailing_return(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_rvalue_trailing_return(Chunk *prev, Chunk *pc, Chunk const *next);
 
 
 /**
@@ -421,7 +421,7 @@ static bool handle_rvalue_trailing_return(Chunk *prev, Chunk *pc, Chunk *next);
  * @param next  The chunk after pc
  * @return      true if handled (classification decided), false otherwise
  */
-static bool handle_rvalue_in_sparen(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_rvalue_in_sparen(Chunk const *prev, Chunk *pc, Chunk const *next);
 
 
 /**
@@ -436,7 +436,7 @@ static bool handle_rvalue_in_sparen(Chunk *prev, Chunk *pc, Chunk *next);
  * @param next  The chunk after pc
  * @return      true if handled, false otherwise
  */
-static bool handle_rvalue_using_alias(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_rvalue_using_alias(Chunk *prev, Chunk *pc, Chunk const *next);
 
 /**
  * Handles && inside decltype(...) or noexcept(...) parentheses.
@@ -452,7 +452,7 @@ static bool handle_rvalue_using_alias(Chunk *prev, Chunk *pc, Chunk *next);
  * @param next  The chunk after pc
  * @return      true if handled, false otherwise
  */
-static bool handle_bool_inside_expression_context(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_bool_inside_expression_context(Chunk const *prev, Chunk *pc, Chunk *next);
 
 
 /**
@@ -467,7 +467,7 @@ static bool handle_bool_inside_expression_context(Chunk *prev, Chunk *pc, Chunk 
  * @param next  The chunk after pc
  * @return      true if handled (kept as BOOL), false otherwise
  */
-static bool handle_ternary_bool_context(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_ternary_bool_context(Chunk *prev, Chunk const *pc, Chunk *next);
 
 
 /**
@@ -481,7 +481,7 @@ static bool handle_ternary_bool_context(Chunk *prev, Chunk *pc, Chunk *next);
  * @param next  The chunk after pc
  * @return      true if handled, false otherwise
  */
-static bool handle_rvalue_conversion_operator(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_rvalue_conversion_operator(Chunk *prev, Chunk *pc, Chunk const *next);
 
 
 /**
@@ -497,10 +497,10 @@ static bool handle_rvalue_conversion_operator(Chunk *prev, Chunk *pc, Chunk *nex
  * @param next  The chunk after pc
  * @return      true if handled, false otherwise
  */
-static bool handle_rvalue_func_ptr_params(Chunk *prev, Chunk *pc, Chunk *next);
+static bool handle_rvalue_func_ptr_params(Chunk const *prev, Chunk *pc, Chunk const *next);
 
 
-static void flag_asm(Chunk *pc)
+static void flag_asm(Chunk const *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -571,11 +571,11 @@ static void flag_asm(Chunk *pc)
 } // flag_asm
 
 
-static bool handle_rvalue_angle_close(Chunk *prev, Chunk *pc)
+static bool handle_rvalue_angle_close(Chunk const *prev, Chunk *pc)
 {
    if (prev->Is(E_Token::CT_ANGLE_CLOSE))
    {
-      Chunk *next = pc->GetNextNcNnl();
+      Chunk const *next = pc->GetNextNcNnl();
 
       // If next is a unary operator (!, ~) this is a logical AND expression
       // Pattern: static_assert(std::is_class_v<T> && !std::is_same_v<T>)
@@ -640,7 +640,7 @@ static bool handle_rvalue_angle_close(Chunk *prev, Chunk *pc)
       // But skip:
       // - USING_ALIAS assignments which define types, not expressions
       // - Template default parameter assignments (T = int, T = U, etc.)
-      Chunk *tmp = pc->GetPrevNcNnlNi();
+      Chunk const *tmp = pc->GetPrevNcNnlNi();
 
       while (tmp->IsNotNullChunk())
       {
@@ -669,7 +669,7 @@ static bool handle_rvalue_angle_close(Chunk *prev, Chunk *pc)
 } // handle_rvalue_angle_close
 
 
-static bool handle_rvalue_variadic(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_rvalue_variadic(Chunk const *prev, Chunk *pc, Chunk const *next)
 {
    // Handle && as rvalue reference before ellipsis (variadic template parameter pack)
    // e.g. void func(Args&&... args);
@@ -685,7 +685,7 @@ static bool handle_rvalue_variadic(Chunk *prev, Chunk *pc, Chunk *next)
 }
 
 
-static bool handle_fold_expression(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_fold_expression(Chunk const *prev, Chunk const *pc, Chunk const *next)
 {
    // Handle && in C++17 fold expressions - keep as E_Token::CT_BOOL (logical operator)
    //
@@ -703,7 +703,7 @@ static bool handle_fold_expression(Chunk *prev, Chunk *pc, Chunk *next)
       // Check what comes after the ellipsis
       // In fold expression: (args && ...) - next after ellipsis is ) or &&
       // In variadic param:  Args&&... args - next after ellipsis is the param name (WORD)
-      Chunk *after_ellipsis = next->GetNextNcNnl();
+      Chunk const *after_ellipsis = next->GetNextNcNnl();
 
       if (  after_ellipsis->IsNotNullChunk()
          && (  after_ellipsis->Is(E_Token::CT_PAREN_CLOSE)
@@ -733,7 +733,7 @@ static bool handle_fold_expression(Chunk *prev, Chunk *pc, Chunk *next)
 } // handle_fold_expression
 
 
-static bool handle_rvalue_in_template(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_rvalue_in_template(Chunk const *prev, Chunk *pc, Chunk const *next)
 {
    if (!pc->TestFlags(PCF_IN_TEMPLATE))
    {
@@ -763,7 +763,7 @@ static bool handle_rvalue_in_template(Chunk *prev, Chunk *pc, Chunk *next)
       || next->Is(E_Token::CT_ANGLE_CLOSE))
    {
       // Check if we're in a type context by looking at what's before the TYPE
-      Chunk *before_type = prev->GetPrevNcNnlNi();
+      Chunk const *before_type = prev->GetPrevNcNnlNi();
 
       // Walk back through namespace-qualified types (std::string, ns::Type, etc)
       // Pattern: ns1::ns2::Type - we need to find what's before ns1
@@ -813,7 +813,7 @@ static bool handle_rvalue_in_template(Chunk *prev, Chunk *pc, Chunk *next)
 } // handle_rvalue_in_template
 
 
-static bool handle_rvalue_function_decl(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_rvalue_function_decl(Chunk const *prev, Chunk *pc, Chunk *next)
 {
    // Handle && as rvalue reference in function declarations with user-defined types
    //
@@ -840,7 +840,7 @@ static bool handle_rvalue_function_decl(Chunk *prev, Chunk *pc, Chunk *next)
       return(false);
    }
    // Try to find the function name - either directly or through qualified name
-   Chunk *func_name  = nullptr;
+   Chunk const *func_name  = Chunk::NullChunkPtr;
    Chunk *after_next = next->GetNextNcNnl();
 
    // Pattern 1: next is directly the function name followed by (
@@ -924,7 +924,7 @@ static bool handle_rvalue_function_decl(Chunk *prev, Chunk *pc, Chunk *next)
          // Check for template class member: Container<T>::get
          if (after_name->Is(E_Token::CT_ANGLE_OPEN))
          {
-            Chunk *angle_close = after_name->GetClosingParen();
+            Chunk const *angle_close = after_name->GetClosingParen();
 
             if (angle_close->IsNullChunk())
             {
@@ -943,7 +943,7 @@ static bool handle_rvalue_function_decl(Chunk *prev, Chunk *pc, Chunk *next)
       }
    }
 
-   if (func_name == nullptr)
+   if (func_name->IsNullChunk())
    {
       return(false);
    }
@@ -957,7 +957,7 @@ static bool handle_rvalue_function_decl(Chunk *prev, Chunk *pc, Chunk *next)
       return(false);
    }
    // Check if prev looks like a return type (declaration context)
-   Chunk *before_prev = prev->GetPrevNcNnlNi();
+   Chunk const *before_prev = prev->GetPrevNcNnlNi();
 
    // Walk back through namespace-qualified types (ns::Type or ns1::ns2::Type)
    while (  before_prev->Is(E_Token::CT_DC_MEMBER)
@@ -1004,7 +1004,7 @@ static bool handle_rvalue_function_decl(Chunk *prev, Chunk *pc, Chunk *next)
 } // handle_rvalue_function_decl
 
 
-static bool handle_rvalue_operator_decl(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_rvalue_operator_decl(Chunk const *prev, Chunk *pc, Chunk *next)
 {
    // Handle && in operator overload declarations with user-defined types
    // Pattern 1: TypeName&& operator=(...) - return type rvalue reference
@@ -1023,7 +1023,7 @@ static bool handle_rvalue_operator_decl(Chunk *prev, Chunk *pc, Chunk *next)
 
    // Check if next is directly E_Token::CT_OPERATOR or if next starts a class/namespace
    // qualification that leads to E_Token::CT_OPERATOR
-   Chunk *operator_chunk = next;
+   Chunk const *operator_chunk = next;
 
    if (!next->Is(E_Token::CT_OPERATOR))
    {
@@ -1070,7 +1070,7 @@ static bool handle_rvalue_operator_decl(Chunk *prev, Chunk *pc, Chunk *next)
    if (operator_chunk->Is(E_Token::CT_OPERATOR))
    {
       // Check if prev looks like a return type (declaration context)
-      Chunk *before_prev = prev->GetPrevNcNnlNi();
+      Chunk const *before_prev = prev->GetPrevNcNnlNi();
 
       bool  is_declaration_context = (  before_prev->IsNullChunk()
                                      || before_prev->Is(E_Token::CT_SEMICOLON)
@@ -1110,7 +1110,7 @@ static bool handle_rvalue_operator_decl(Chunk *prev, Chunk *pc, Chunk *next)
       if (is_param_context)
       {
          // Walk back to find if we're inside an operator declaration
-         Chunk *tmp = before_prev;
+         Chunk const *tmp = before_prev;
 
          while (tmp->IsNotNullChunk())
          {
@@ -1137,7 +1137,7 @@ static bool handle_rvalue_operator_decl(Chunk *prev, Chunk *pc, Chunk *next)
 } // handle_rvalue_operator_decl
 
 
-static bool handle_rvalue_decltype(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_rvalue_decltype(Chunk const *prev, Chunk *pc, Chunk const *next)
 {
    // Handle && after decltype(...) in function return or variable declaration context
    // Pattern: decltype(...)&& funcName(...);
@@ -1156,7 +1156,7 @@ static bool handle_rvalue_decltype(Chunk *prev, Chunk *pc, Chunk *next)
    {
       return(false);
    }
-   Chunk *after_next = next->GetNextNcNnl();
+   Chunk const *after_next = next->GetNextNcNnl();
 
    bool  is_function_decl = (  after_next->Is(E_Token::CT_PAREN_OPEN)
                             || after_next->Is(E_Token::CT_FPAREN_OPEN));
@@ -1168,13 +1168,13 @@ static bool handle_rvalue_decltype(Chunk *prev, Chunk *pc, Chunk *next)
       return(false);
    }
    // Walk back to find the matching open paren and check for decltype
-   Chunk *open_paren = prev->GetOpeningParen();
+   Chunk const *open_paren = prev->GetOpeningParen();
 
    if (open_paren->IsNullChunk())
    {
       return(false);
    }
-   Chunk *before_paren = open_paren->GetPrevNcNnlNi();
+   Chunk const *before_paren = open_paren->GetPrevNcNnlNi();
 
    if (before_paren->Is(E_Token::CT_DECLTYPE))
    {
@@ -1185,7 +1185,7 @@ static bool handle_rvalue_decltype(Chunk *prev, Chunk *pc, Chunk *next)
 } // handle_rvalue_decltype
 
 
-static bool handle_rvalue_namespace_qualified(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_rvalue_namespace_qualified(Chunk const *prev, Chunk *pc, Chunk const *next)
 {
    // Handle && after namespace-qualified types in function return context
    // Pattern: ns1::ns2::Type&& funcName(...); or ns::Type&& funcName(...) { }
@@ -1211,7 +1211,7 @@ static bool handle_rvalue_namespace_qualified(Chunk *prev, Chunk *pc, Chunk *nex
    }
    // Walk backward through the entire namespace-qualified chain
    // Pattern: ns1::ns2::ns3::Type - we need to find what's before ns1
-   Chunk *chain_start = before_prev;  // Currently at ::
+   Chunk const *chain_start = before_prev;  // Currently at ::
 
    while (chain_start->Is(E_Token::CT_DC_MEMBER))
    {
@@ -1246,7 +1246,7 @@ static bool handle_rvalue_namespace_qualified(Chunk *prev, Chunk *pc, Chunk *nex
    {
       return(false);
    }
-   Chunk *after_next = next->GetNextNcNnl();
+   Chunk const *after_next = next->GetNextNcNnl();
 
    if (  after_next->Is(E_Token::CT_PAREN_OPEN)
       || after_next->Is(E_Token::CT_FPAREN_OPEN))
@@ -1258,7 +1258,7 @@ static bool handle_rvalue_namespace_qualified(Chunk *prev, Chunk *pc, Chunk *nex
 } // handle_rvalue_namespace_qualified
 
 
-static bool handle_rvalue_forwarding_ref(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_rvalue_forwarding_ref(Chunk const *prev, Chunk *pc, Chunk const *next)
 {
    // Handle && as rvalue reference in function parameters when template parameter
    // is classified as E_Token::CT_WORD instead of E_Token::CT_TYPE (forwarding references)
@@ -1274,7 +1274,7 @@ static bool handle_rvalue_forwarding_ref(Chunk *prev, Chunk *pc, Chunk *next)
       return(false);
    }
    // Check if we're inside a function parameter list
-   Chunk *open_paren = pc->GetParent();
+   Chunk const *open_paren = pc->GetParent();
 
    // If GetParent doesn't give us the paren, search for it
    if (  open_paren->IsNullChunk()
@@ -1316,7 +1316,7 @@ static bool handle_rvalue_forwarding_ref(Chunk *prev, Chunk *pc, Chunk *next)
    // like if ( !( a && b ) )
    if (open_paren->Is(E_Token::CT_PAREN_OPEN))
    {
-      Chunk *before_open = open_paren->GetPrevNcNnlNi();
+      Chunk const *before_open = open_paren->GetPrevNcNnlNi();
 
       bool  is_func_paren = (  before_open->Is(E_Token::CT_FUNC_CALL)
                             || before_open->Is(E_Token::CT_FUNC_DEF)
@@ -1347,14 +1347,14 @@ static bool handle_rvalue_forwarding_ref(Chunk *prev, Chunk *pc, Chunk *next)
       // like:  Object obj(a && b)
       if (paren_parent == E_Token::CT_FUNC_CTOR_VAR && prev->Is(E_Token::CT_WORD))
       {
-         Chunk *func_name = open_paren->GetPrevNcNnlNi();
+         Chunk const *func_name = open_paren->GetPrevNcNnlNi();
 
          if (  func_name->IsNotNullChunk()
             && func_name->Is(E_Token::CT_FUNC_CTOR_VAR)
             && func_name->GetBraceLevel() >= 1)
          {
             // Check if we're inside a function body and not just inside a namespace/class/struct brace.
-            Chunk *br_open = func_name->GetPrevType(E_Token::CT_BRACE_OPEN, func_name->GetBraceLevel() - 1);
+            Chunk const *br_open = func_name->GetPrevType(E_Token::CT_BRACE_OPEN, func_name->GetBraceLevel() - 1);
 
             if (  br_open->IsNotNullChunk()
                && br_open->GetParentType() != E_Token::CT_NAMESPACE
@@ -1376,7 +1376,7 @@ static bool handle_rvalue_forwarding_ref(Chunk *prev, Chunk *pc, Chunk *next)
 
    if (next->Is(E_Token::CT_WORD))
    {
-      Chunk *after_next = next->GetNextNcNnl();
+      Chunk const *after_next = next->GetNextNcNnl();
 
       // In a parameter declaration, the variable name can only be followed by:
       //   - ) or , (end of parameter)
@@ -1401,7 +1401,7 @@ static bool handle_rvalue_forwarding_ref(Chunk *prev, Chunk *pc, Chunk *next)
    }
    // Make sure prev (the WORD) looks like a type name
    // by checking what comes before it - should be (, comma, qualifier, or attribute
-   Chunk *before_prev = prev->GetPrevNcNnlNi();
+   Chunk const *before_prev = prev->GetPrevNcNnlNi();
 
    bool  is_param_decl_context = (  before_prev->Is(E_Token::CT_FPAREN_OPEN)
                                  || before_prev->Is(E_Token::CT_PAREN_OPEN)
@@ -1421,7 +1421,7 @@ static bool handle_rvalue_forwarding_ref(Chunk *prev, Chunk *pc, Chunk *next)
 } // handle_rvalue_forwarding_ref
 
 
-static bool handle_rvalue_trailing_return(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_rvalue_trailing_return(Chunk *prev, Chunk *pc, Chunk const *next)
 {
    // Handle && in trailing return type context
    // Pattern: auto func() -> int&&; or auto func() -> SomeType&&
@@ -1452,7 +1452,7 @@ static bool handle_rvalue_trailing_return(Chunk *prev, Chunk *pc, Chunk *next)
    }
    // Walk back from prev to find E_Token::CT_TRAILING_RET, E_Token::CT_CPP_LAMBDA_RET, or E_Token::CT_MEMBER (->)
    // We may encounter: type names, ::, qualifiers (const), angle brackets for templates
-   Chunk *tmp = prev;
+   Chunk const *tmp = prev;
 
    while (tmp->IsNotNullChunk())
    {
@@ -1469,7 +1469,7 @@ static bool handle_rvalue_trailing_return(Chunk *prev, Chunk *pc, Chunk *next)
       {
          // Verify this looks like a trailing return context by checking
          // that the previous token is a close paren (function signature)
-         Chunk *before_arrow = tmp->GetPrevNcNnlNi();
+         Chunk const *before_arrow = tmp->GetPrevNcNnlNi();
 
          if (  before_arrow->Is(E_Token::CT_FPAREN_CLOSE)
             || before_arrow->Is(E_Token::CT_PAREN_CLOSE)
@@ -1528,13 +1528,13 @@ static bool handle_rvalue_after_type(Chunk *prev, Chunk *pc)
    // Check for E_Token::CT_PARAMETER_PACK directly (template parameters like T)
    if (prev->Is(E_Token::CT_PARAMETER_PACK))
    {
-      Chunk *next = pc->GetNextNcNnl();
+      Chunk const *next = pc->GetNextNcNnl();
 
       // If next is a word (variable name) and we can find an assignment or semicolon,
       // this is a variable declaration
       if (next->Is(E_Token::CT_WORD))
       {
-         Chunk *after_word = next->GetNextNcNnl();
+         Chunk const *after_word = next->GetNextNcNnl();
 
          if (  after_word->Is(E_Token::CT_ASSIGN)
             || after_word->Is(E_Token::CT_SEMICOLON))
@@ -1549,7 +1549,7 @@ static bool handle_rvalue_after_type(Chunk *prev, Chunk *pc)
    {
       return(false);
    }
-   Chunk *tmp = prev;
+   Chunk const *tmp = prev;
    LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
            __func__, __LINE__, tmp->GetOrigLine(), tmp->GetOrigCol(),
            tmp->GetLogText(), get_token_name(tmp->GetType()));
@@ -1566,7 +1566,7 @@ static bool handle_rvalue_after_type(Chunk *prev, Chunk *pc)
       return(true);
    }
    // look next, is there a "assign" before the ";"
-   Chunk *semi = pc->GetNextType(E_Token::CT_SEMICOLON, pc->GetLevel());                // Issue #2688
+   Chunk const *semi = pc->GetNextType(E_Token::CT_SEMICOLON, pc->GetLevel());                // Issue #2688
 
    if (semi->IsNotNullChunk())
    {
@@ -1574,7 +1574,7 @@ static bool handle_rvalue_after_type(Chunk *prev, Chunk *pc)
               __func__, __LINE__, semi->GetOrigLine(), semi->GetOrigCol(),
               semi->GetLogText(), get_token_name(semi->GetType()));
 
-      for (Chunk *test_it = pc; test_it != semi; test_it = test_it->GetNext())
+      for (Chunk const *test_it = pc; test_it != semi; test_it = test_it->GetNext())
       {
          LOG_FMT(LFCNR, "%s(%d): test_it orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
                  __func__, __LINE__, test_it->GetOrigLine(), test_it->GetOrigCol(),
@@ -1593,7 +1593,7 @@ static bool handle_rvalue_after_type(Chunk *prev, Chunk *pc)
 } // handle_rvalue_after_type
 
 
-static bool handle_rvalue_in_sparen(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_rvalue_in_sparen(Chunk const *prev, Chunk *pc, Chunk const *next)
 {
    // Handle && in statement parentheses (for, if, switch)
    //
@@ -1611,7 +1611,7 @@ static bool handle_rvalue_in_sparen(Chunk *prev, Chunk *pc, Chunk *next)
       return(false);
    }
    // Find the opening SPAREN
-   Chunk *sparen_open = pc->GetPrevType(E_Token::CT_SPAREN_OPEN, pc->GetLevel() - 1);
+   Chunk const *sparen_open = pc->GetPrevType(E_Token::CT_SPAREN_OPEN, pc->GetLevel() - 1);
 
    if (sparen_open->IsNullChunk())
    {
@@ -1637,7 +1637,7 @@ static bool handle_rvalue_in_sparen(Chunk *prev, Chunk *pc, Chunk *next)
       }
       // Look for a colon after the variable name (next) to confirm this is a range-based for loop.
       // At this stage of processing the colon is still E_Token::CT_COLON with PCF_IN_FOR flag
-      Chunk *after_next = next->GetNextNcNnl();
+      Chunk const *after_next = next->GetNextNcNnl();
 
       if (  after_next->Is(E_Token::CT_COLON)
          && after_next->TestFlags(PCF_IN_FOR))
@@ -1657,7 +1657,7 @@ static bool handle_rvalue_in_sparen(Chunk *prev, Chunk *pc, Chunk *next)
       // Look for a semicolon between SPAREN_OPEN and pc
       bool found_semicolon_before = false;
 
-      for (Chunk *tmp = sparen_open->GetNext(); tmp != pc && tmp->IsNotNullChunk(); tmp = tmp->GetNext())
+      for (Chunk const *tmp = sparen_open->GetNext(); tmp != pc && tmp->IsNotNullChunk(); tmp = tmp->GetNext())
       {
          if (tmp->Is(E_Token::CT_SEMICOLON))
          {
@@ -1693,11 +1693,11 @@ static bool handle_rvalue_in_sparen(Chunk *prev, Chunk *pc, Chunk *next)
       {
          // Look ahead: if there's an = after next followed by a semicolon, this is a variable declaration
          // Pattern: type && var = value; ...
-         Chunk *after_next = next->GetNextNcNnl();
+         Chunk const *after_next = next->GetNextNcNnl();
 
          if (after_next->Is(E_Token::CT_ASSIGN))
          {
-            for (Chunk *tmp = after_next->GetNext(); tmp->IsNotNullChunk(); tmp = tmp->GetNext())
+            for (Chunk const *tmp = after_next->GetNext(); tmp->IsNotNullChunk(); tmp = tmp->GetNext())
             {
                // Skip over brace and paren pairs to avoid matching semicolons inside nested blocks
                if (  tmp->Is(E_Token::CT_BRACE_OPEN)
@@ -1736,7 +1736,7 @@ static bool handle_rvalue_in_sparen(Chunk *prev, Chunk *pc, Chunk *next)
 } // handle_rvalue_in_sparen
 
 
-static bool handle_rvalue_using_alias(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_rvalue_using_alias(Chunk *prev, Chunk *pc, Chunk const *next)
 {
    // Handle && in using alias declarations
    // Pattern: using Name = Type&&;
@@ -1771,7 +1771,7 @@ static bool handle_rvalue_using_alias(Chunk *prev, Chunk *pc, Chunk *next)
       // Pattern: = void (int&&) where we're at the && inside (int&&)
       int paren_depth = 0;
 
-      for (Chunk *tmp = pc->GetPrevNcNnlNi(); tmp->IsNotNullChunk(); tmp = tmp->GetPrevNcNnlNi())
+      for (Chunk const *tmp = pc->GetPrevNcNnlNi(); tmp->IsNotNullChunk(); tmp = tmp->GetPrevNcNnlNi())
       {
          if (tmp->Is(E_Token::CT_PAREN_CLOSE))
          {
@@ -1782,7 +1782,7 @@ static bool handle_rvalue_using_alias(Chunk *prev, Chunk *pc, Chunk *next)
             if (paren_depth == 0)
             {
                // Found the opening paren, check what's before it
-               Chunk *before_paren = tmp->GetPrevNcNnlNi();
+               Chunk const *before_paren = tmp->GetPrevNcNnlNi();
 
                if (  before_paren->Is(E_Token::CT_TYPE)
                   || before_paren->Is(E_Token::CT_WORD))
@@ -1805,19 +1805,19 @@ static bool handle_rvalue_using_alias(Chunk *prev, Chunk *pc, Chunk *next)
    if (next->Is(E_Token::CT_PAREN_OPEN))
    {
       // Check for anonymous function pointer pattern: && ( * ) (
-      Chunk *star = next->GetNextNcNnl();
+      Chunk const *star = next->GetNextNcNnl();
 
       if (  star->IsNotNullChunk()
          && (  star->Is(E_Token::CT_DEREF)
             || star->Is(E_Token::CT_PTR_TYPE)
             || star->Is(E_Token::CT_STAR)))
       {
-         Chunk *close_paren = star->GetNextNcNnl();
+         Chunk const *close_paren = star->GetNextNcNnl();
 
          if (  close_paren->IsNotNullChunk()
             && close_paren->Is(E_Token::CT_PAREN_CLOSE))
          {
-            Chunk *param_paren = close_paren->GetNextNcNnl();
+            Chunk const *param_paren = close_paren->GetNextNcNnl();
 
             if (  param_paren->IsNotNullChunk()
                && (  param_paren->Is(E_Token::CT_PAREN_OPEN)
@@ -1849,7 +1849,7 @@ static bool handle_rvalue_using_alias(Chunk *prev, Chunk *pc, Chunk *next)
 } // handle_rvalue_using_alias
 
 
-static bool handle_bool_inside_expression_context(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_bool_inside_expression_context(Chunk const *prev, Chunk *pc, Chunk *next)
 {
    UNUSED(next);
 
@@ -1860,7 +1860,7 @@ static bool handle_bool_inside_expression_context(Chunk *prev, Chunk *pc, Chunk 
 
    // First, check if we're inside angle brackets (template context)
    // If so, && is likely a rvalue reference, not a boolean operator
-   Chunk *angle_check = pc->GetPrevNcNnlNi();
+   Chunk const *angle_check = pc->GetPrevNcNnlNi();
    int   angle_depth  = 0;
 
    while (angle_check->IsNotNullChunk())
@@ -1892,7 +1892,7 @@ static bool handle_bool_inside_expression_context(Chunk *prev, Chunk *pc, Chunk 
       angle_check = angle_check->GetPrevNcNnlNi();
    }
    // Walk backward to find the opening paren that contains this &&
-   Chunk *tmp = pc->GetPrevNcNnlNi();
+   Chunk const *tmp = pc->GetPrevNcNnlNi();
 
    while (tmp->IsNotNullChunk())
    {
@@ -1967,7 +1967,7 @@ static bool handle_bool_inside_expression_context(Chunk *prev, Chunk *pc, Chunk 
 } // handle_bool_inside_expression_context
 
 
-static bool handle_ternary_bool_context(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_ternary_bool_context(Chunk *prev, Chunk const *pc, Chunk *next)
 {
    UNUSED(prev);
 
@@ -1982,7 +1982,7 @@ static bool handle_ternary_bool_context(Chunk *prev, Chunk *pc, Chunk *next)
    // Walk forward from pc (the &&) to see if we hit a E_Token::CT_QUESTION before
    // hitting statement boundaries (;, {, etc.).
 
-   Chunk *tmp        = next;
+   Chunk const *tmp        = next;
    bool  seen_assign = false;
 
    while (tmp->IsNotNullChunk())
@@ -2045,7 +2045,7 @@ static bool handle_ternary_bool_context(Chunk *prev, Chunk *pc, Chunk *next)
 } // handle_ternary_bool_context
 
 
-static bool handle_rvalue_conversion_operator(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_rvalue_conversion_operator(Chunk *prev, Chunk *pc, Chunk const *next)
 {
    // Handle && in conversion operator return types
    // Pattern: operator int&&() - && should be BYREF
@@ -2068,7 +2068,7 @@ static bool handle_rvalue_conversion_operator(Chunk *prev, Chunk *pc, Chunk *nex
    }
    // Walk back from prev to find the operator keyword
    // We may encounter: type names, ::, const, etc.
-   Chunk *tmp = prev;
+   Chunk const *tmp = prev;
 
    while (tmp->IsNotNullChunk())
    {
@@ -2102,7 +2102,7 @@ static bool handle_rvalue_conversion_operator(Chunk *prev, Chunk *pc, Chunk *nex
 } // handle_rvalue_conversion_operator
 
 
-static bool handle_rvalue_func_ptr_params(Chunk *prev, Chunk *pc, Chunk *next)
+static bool handle_rvalue_func_ptr_params(Chunk const *prev, Chunk *pc, Chunk const *next)
 {
    // Handle && in function pointer or member function pointer type declarations.
    // Pattern: int&& (*func_ptr)(int&&, T&&);
@@ -2127,7 +2127,7 @@ static bool handle_rvalue_func_ptr_params(Chunk *prev, Chunk *pc, Chunk *next)
    // Walk backward to find an opening paren that is part of a function pointer pattern.
    // The pattern is: (...*...) ( <-- we're inside this paren
 
-   Chunk *paren_open = nullptr;
+   Chunk const *paren_open = Chunk::NullChunkPtr;
 
    // Find the containing paren by walking back
    int paren_depth = 0;
@@ -2183,7 +2183,7 @@ static bool handle_rvalue_func_ptr_params(Chunk *prev, Chunk *pc, Chunk *next)
       || before_paren->Is(E_Token::CT_ANGLE_CLOSE))
    {
       // Find the E_Token::CT_PAREN_CLOSE to check for pointer pattern.
-      Chunk *paren_close_to_check = nullptr;
+      Chunk const *paren_close_to_check = Chunk::NullChunkPtr;
 
       if (before_paren->Is(E_Token::CT_PAREN_CLOSE))
       {
@@ -2212,26 +2212,22 @@ static bool handle_rvalue_func_ptr_params(Chunk *prev, Chunk *pc, Chunk *next)
             }
          }
       }
-
       // Now check the found paren_close for pointer pattern (if any)
-      if (paren_close_to_check != nullptr)
-      {
-         Chunk *inner_open = paren_close_to_check->GetOpeningParen();
+      Chunk const *inner_open = paren_close_to_check->GetOpeningParen();
 
-         if (inner_open->IsNotNullChunk())
+      if (inner_open->IsNotNullChunk())
+      {
+         // Look inside for * (pointer) or ::* (member pointer)
+         for (Chunk const *inner = inner_open->GetNext(); inner != paren_close_to_check && inner->IsNotNullChunk(); inner = inner->GetNext())
          {
-            // Look inside for * (pointer) or ::* (member pointer)
-            for (Chunk *inner = inner_open->GetNext(); inner != paren_close_to_check && inner->IsNotNullChunk(); inner = inner->GetNext())
+            if (  inner->Is(E_Token::CT_STAR)
+               || inner->Is(E_Token::CT_PTR_TYPE)
+               || inner->Is(E_Token::CT_DEREF))
             {
-               if (  inner->Is(E_Token::CT_STAR)
-                  || inner->Is(E_Token::CT_PTR_TYPE)
-                  || inner->Is(E_Token::CT_DEREF))
-               {
-                  LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig col is %zu - && is rvalue ref in function pointer param\n",
-                          __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
-                  pc->SetType(E_Token::CT_BYREF);
-                  return(true);
-               }
+               LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig col is %zu - && is rvalue ref in function pointer param\n",
+                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
+               pc->SetType(E_Token::CT_BYREF);
+               return(true);
             }
          }
       }
@@ -2738,7 +2734,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       if (pc->IsEnum())
       {
          const size_t level = pc->GetLevel();
-         Chunk        *tmp  = pc;
+         Chunk        const *tmp  = pc;
 
          while (tmp->GetLevel() == level && tmp->IsNotNullChunk())
          {
@@ -2891,7 +2887,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
             if (tmp->Is(E_Token::CT_AMP))
             {
-               auto tmp2 = tmp->GetNextNcNnl();
+               //auto tmp2 = tmp->GetNextNcNnl();                    // teilweise OK
+               Chunk *tmp2 = tmp->GetNextNcNnl();                    // teilweise OK
 
                if (tmp2->Is(E_Token::CT_WORD))
                {
@@ -2913,7 +2910,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             else if (  tmp->Is(E_Token::CT_BOOL)
                     && tmp->IsString("&&"))
             {
-               auto tmp2 = tmp->GetNextNcNnl();
+               Chunk  tmp2 = tmp->GetNextNcNnl();
 
                if (tmp2->Is(E_Token::CT_WORD))
                {
