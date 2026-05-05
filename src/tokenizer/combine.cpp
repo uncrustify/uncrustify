@@ -2909,11 +2909,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             else if (  tmp->Is(E_Token::CT_BOOL)
                     && tmp->IsString("&&"))
             {
-<<<<<<< HEAD
-               auto const tmp2 = tmp->GetNextNcNnl();
-=======
                auto tmp2 = tmp->GetNextNcNnl();
->>>>>>> 0ad1912cb (Merge remote-tracking branch 'refs/remotes/origin/CPP-C2' into CPP-C2)
 
                if (tmp2->Is(E_Token::CT_WORD))
                {
