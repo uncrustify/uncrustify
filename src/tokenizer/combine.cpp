@@ -841,7 +841,7 @@ static bool handle_rvalue_function_decl(Chunk const *prev, Chunk *pc, Chunk *nex
    }
    // Try to find the function name - either directly or through qualified name
    Chunk const *func_name  = Chunk::NullChunkPtr;
-   Chunk *after_next = next->GetNextNcNnl();
+   Chunk       *after_next = next->GetNextNcNnl();
 
    // Pattern 1: next is directly the function name followed by (
    if (  after_next->Is(E_Token::CT_PAREN_OPEN)
@@ -1072,17 +1072,17 @@ static bool handle_rvalue_operator_decl(Chunk const *prev, Chunk *pc, Chunk *nex
       // Check if prev looks like a return type (declaration context)
       Chunk const *before_prev = prev->GetPrevNcNnlNi();
 
-      bool  is_declaration_context = (  before_prev->IsNullChunk()
-                                     || before_prev->Is(E_Token::CT_SEMICOLON)
-                                     || before_prev->Is(E_Token::CT_BRACE_OPEN)
-                                     || before_prev->Is(E_Token::CT_BRACE_CLOSE)
-                                     || before_prev->Is(E_Token::CT_QUALIFIER)      // static, const, inline, etc
-                                     || before_prev->Is(E_Token::CT_ANGLE_CLOSE)    // template<T>
-                                     || before_prev->Is(E_Token::CT_ACCESS_COLON)   // public:, private:
-                                     || before_prev->Is(E_Token::CT_VBRACE_OPEN)
-                                     || before_prev->Is(E_Token::CT_VBRACE_CLOSE)
-                                     || before_prev->Is(E_Token::CT_FRIEND)
-                                     || before_prev->Is(E_Token::CT_ATTRIBUTE));    // [[nodiscard]] etc.
+      bool        is_declaration_context = (  before_prev->IsNullChunk()
+                                           || before_prev->Is(E_Token::CT_SEMICOLON)
+                                           || before_prev->Is(E_Token::CT_BRACE_OPEN)
+                                           || before_prev->Is(E_Token::CT_BRACE_CLOSE)
+                                           || before_prev->Is(E_Token::CT_QUALIFIER)    // static, const, inline, etc
+                                           || before_prev->Is(E_Token::CT_ANGLE_CLOSE)  // template<T>
+                                           || before_prev->Is(E_Token::CT_ACCESS_COLON) // public:, private:
+                                           || before_prev->Is(E_Token::CT_VBRACE_OPEN)
+                                           || before_prev->Is(E_Token::CT_VBRACE_CLOSE)
+                                           || before_prev->Is(E_Token::CT_FRIEND)
+                                           || before_prev->Is(E_Token::CT_ATTRIBUTE)); // [[nodiscard]] etc.
 
       if (is_declaration_context)
       {
@@ -1158,9 +1158,9 @@ static bool handle_rvalue_decltype(Chunk const *prev, Chunk *pc, Chunk const *ne
    }
    Chunk const *after_next = next->GetNextNcNnl();
 
-   bool  is_function_decl = (  after_next->Is(E_Token::CT_PAREN_OPEN)
-                            || after_next->Is(E_Token::CT_FPAREN_OPEN));
-   bool  is_variable_decl = after_next->Is(E_Token::CT_ASSIGN);
+   bool        is_function_decl = (  after_next->Is(E_Token::CT_PAREN_OPEN)
+                                  || after_next->Is(E_Token::CT_FPAREN_OPEN));
+   bool        is_variable_decl = after_next->Is(E_Token::CT_ASSIGN);
 
    if (  !is_function_decl
       && !is_variable_decl)
@@ -1318,12 +1318,12 @@ static bool handle_rvalue_forwarding_ref(Chunk const *prev, Chunk *pc, Chunk con
    {
       Chunk const *before_open = open_paren->GetPrevNcNnlNi();
 
-      bool  is_func_paren = (  before_open->Is(E_Token::CT_FUNC_CALL)
-                            || before_open->Is(E_Token::CT_FUNC_DEF)
-                            || before_open->Is(E_Token::CT_FUNC_PROTO)
-                            || before_open->Is(E_Token::CT_TSQUARE)       // [](int&& x)
-                            || before_open->Is(E_Token::CT_SQUARE_CLOSE)  // [captures](int&& x)
-                            || before_open->Is(E_Token::CT_TYPE));        // type(T&& t)
+      bool        is_func_paren = (  before_open->Is(E_Token::CT_FUNC_CALL)
+                                  || before_open->Is(E_Token::CT_FUNC_DEF)
+                                  || before_open->Is(E_Token::CT_FUNC_PROTO)
+                                  || before_open->Is(E_Token::CT_TSQUARE)      // [](int&& x)
+                                  || before_open->Is(E_Token::CT_SQUARE_CLOSE) // [captures](int&& x)
+                                  || before_open->Is(E_Token::CT_TYPE));       // type(T&& t)
 
       if (!is_func_paren)
       {
@@ -1403,14 +1403,14 @@ static bool handle_rvalue_forwarding_ref(Chunk const *prev, Chunk *pc, Chunk con
    // by checking what comes before it - should be (, comma, qualifier, or attribute
    Chunk const *before_prev = prev->GetPrevNcNnlNi();
 
-   bool  is_param_decl_context = (  before_prev->Is(E_Token::CT_FPAREN_OPEN)
-                                 || before_prev->Is(E_Token::CT_PAREN_OPEN)
-                                 || before_prev->Is(E_Token::CT_COMMA)
-                                 || before_prev->Is(E_Token::CT_QUALIFIER)   // const T&&
-                                 || before_prev->Is(E_Token::CT_BYREF)       // chained refs
-                                 || before_prev->Is(E_Token::CT_PTR_TYPE)    // pointer before
-                                 || before_prev->Is(E_Token::CT_ANGLE_CLOSE) // after template: Container<T>&&
-                                 || before_prev->Is(E_Token::CT_ATTRIBUTE)); // [[maybe_unused]] int&& x
+   bool        is_param_decl_context = (  before_prev->Is(E_Token::CT_FPAREN_OPEN)
+                                       || before_prev->Is(E_Token::CT_PAREN_OPEN)
+                                       || before_prev->Is(E_Token::CT_COMMA)
+                                       || before_prev->Is(E_Token::CT_QUALIFIER)   // const T&&
+                                       || before_prev->Is(E_Token::CT_BYREF)       // chained refs
+                                       || before_prev->Is(E_Token::CT_PTR_TYPE)    // pointer before
+                                       || before_prev->Is(E_Token::CT_ANGLE_CLOSE) // after template: Container<T>&&
+                                       || before_prev->Is(E_Token::CT_ATTRIBUTE)); // [[maybe_unused]] int&& x
 
    if (is_param_decl_context)
    {
@@ -1861,7 +1861,7 @@ static bool handle_bool_inside_expression_context(Chunk const *prev, Chunk *pc, 
    // First, check if we're inside angle brackets (template context)
    // If so, && is likely a rvalue reference, not a boolean operator
    Chunk const *angle_check = pc->GetPrevNcNnlNi();
-   int   angle_depth  = 0;
+   int         angle_depth  = 0;
 
    while (angle_check->IsNotNullChunk())
    {
@@ -1983,7 +1983,7 @@ static bool handle_ternary_bool_context(Chunk *prev, Chunk const *pc, Chunk *nex
    // hitting statement boundaries (;, {, etc.).
 
    Chunk const *tmp        = next;
-   bool  seen_assign = false;
+   bool        seen_assign = false;
 
    while (tmp->IsNotNullChunk())
    {
@@ -2734,7 +2734,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       if (pc->IsEnum())
       {
          const size_t level = pc->GetLevel();
-         Chunk        const *tmp  = pc;
+         Chunk const  *tmp  = pc;
 
          while (tmp->GetLevel() == level && tmp->IsNotNullChunk())
          {
@@ -2887,8 +2887,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
             if (tmp->Is(E_Token::CT_AMP))
             {
-               //auto tmp2 = tmp->GetNextNcNnl();                    // teilweise OK
-               Chunk *tmp2 = tmp->GetNextNcNnl();                    // teilweise OK
+               Chunk const *tmp2 = tmp->GetNextNcNnl();                    // teilweise OK
 
                if (tmp2->Is(E_Token::CT_WORD))
                {
@@ -2910,7 +2909,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             else if (  tmp->Is(E_Token::CT_BOOL)
                     && tmp->IsString("&&"))
             {
-               Chunk  tmp2 = tmp->GetNextNcNnl();
+               Chunk const *tmp2 = tmp->GetNextNcNnl();
 
                if (tmp2->Is(E_Token::CT_WORD))
                {
