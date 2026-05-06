@@ -19,6 +19,7 @@
 #include "space.h"
 
 #include "add_space_table.h"
+#include "for_section.h"
 #include "log_rules.h"
 #include "options.h"
 #include "options_for_QT.h"
@@ -1099,6 +1100,27 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          return(options::sp_enum_assign());
       }
 
+      // Add or remove space before operators '+=', etc. in the increment
+      // expression of a 'for' statement.
+      // Overrides sp_for_assign / sp_assign / sp_before_assign /
+      // sp_assign_default.
+      if (  get_for_section(second) == 2
+         && options::sp_for_increment() != IARF_IGNORE)
+      {
+         log_rule("sp_for_increment");
+         return(options::sp_for_increment());
+      }
+
+      // Add or remove space before assignment operator '=', '+=', etc. inside
+      // the control parens of a 'for' statement.
+      // Overrides sp_assign / sp_before_assign / sp_assign_default.
+      if (  get_for_section(second) >= 0
+         && options::sp_for_assign() != IARF_IGNORE)
+      {
+         log_rule("sp_for_assign");
+         return(options::sp_for_assign());
+      }
+
       // Add or remove space around assignment operator '=' in a prototype.
       // If set to ignore, use sp_assign.
       if (  (options::sp_assign_default() != IARF_IGNORE)
@@ -1157,6 +1179,27 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          // Add or remove space around assignment '=' in enum.
          log_rule("sp_enum_assign");
          return(options::sp_enum_assign());
+      }
+
+      // Add or remove space after operators '+=', etc. in the increment
+      // expression of a 'for' statement.
+      // Overrides sp_for_assign / sp_assign / sp_after_assign /
+      // sp_assign_default.
+      if (  get_for_section(first) == 2
+         && options::sp_for_increment() != IARF_IGNORE)
+      {
+         log_rule("sp_for_increment");
+         return(options::sp_for_increment());
+      }
+
+      // Add or remove space after assignment operator '=', '+=', etc. inside
+      // the control parens of a 'for' statement.
+      // Overrides sp_assign / sp_after_assign / sp_assign_default.
+      if (  get_for_section(first) >= 0
+         && options::sp_for_assign() != IARF_IGNORE)
+      {
+         log_rule("sp_for_assign");
+         return(options::sp_for_assign());
       }
 
       // Add or remove space around assignment operator '=' in a prototype.
@@ -2704,6 +2747,28 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       || second->Is(E_Token::CT_COMPARE))
    {
       // Add or remove space around compare operator '<', '>', '==', etc.
+      // inside the control parens of a 'for' statement.
+      // Overrides sp_compare.
+      if (  options::sp_for_compare() != IARF_IGNORE
+         && (  get_for_section(first) >= 0
+            || get_for_section(second) >= 0))
+      {
+         log_rule("sp_for_compare");
+         return(options::sp_for_compare());
+      }
+
+      // Add or remove space around compare operator '<', '>', '==', etc.
+      // inside the control parens of statements other than 'for'
+      // (i.e. 'while', 'do { } while', 'if', 'switch', etc.).
+      // Overrides sp_compare.
+      if (  options::sp_sparen_compare() != IARF_IGNORE
+         && (  (first->TestFlags(PCF_IN_SPAREN) && get_for_section(first) < 0)
+            || (second->TestFlags(PCF_IN_SPAREN) && get_for_section(second) < 0)))
+      {
+         log_rule("sp_sparen_compare");
+         return(options::sp_sparen_compare());
+      }
+      // Add or remove space around compare operator '<', '>', '==', etc.
       log_rule("sp_compare");
       return(options::sp_compare());
    }
@@ -3240,6 +3305,17 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (  first->Is(E_Token::CT_INCDEC_BEFORE)
       || second->Is(E_Token::CT_INCDEC_AFTER))
    {
+      // Add or remove space around operators '++', '--' in the increment
+      // expression of a 'for' statement.
+      // Overrides sp_incdec.
+      const Chunk *incdec = first->Is(E_Token::CT_INCDEC_BEFORE) ? first : second;
+
+      if (  get_for_section(incdec) == 2
+         && options::sp_for_increment() != IARF_IGNORE)
+      {
+         log_rule("sp_for_increment");
+         return(options::sp_for_increment());
+      }
       // Add or remove space between '++' and '--' the word to which it is being
       // applied, as in '(--x)' or 'y++;'.
       log_rule("sp_incdec");

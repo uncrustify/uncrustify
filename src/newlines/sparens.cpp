@@ -9,6 +9,7 @@
 #include "newlines/sparens.h"
 
 #include "chunk.h"
+#include "for_section.h"
 #include "log_rules.h"
 #include "newlines/iarf.h"
 #include "options.h"
@@ -66,6 +67,57 @@ void newlines_sparens()
          {
             log_rule_B("nl_before_if_closing_paren");
             newline_iarf_pair(sparen_content_end, sparen_close, options::nl_before_if_closing_paren());
+         }
+      }
+
+      // Add or remove newline before operators inside the control parens of
+      // a 'for' statement: nl_for_assign / nl_for_compare / nl_for_increment.
+      // nl_for_increment overrides nl_for_assign in the increment section.
+      if (sparen_open->GetParentType() == E_Token::CT_FOR)
+      {
+         for (Chunk *pc = sparen_open->GetNext();
+              pc->IsNotNullChunk() && pc != sparen_close;
+              pc = pc->GetNext())
+         {
+            if (!pc->TestFlags(PCF_IN_FOR))
+            {
+               continue;
+            }
+            Chunk *prev = pc->GetPrev();
+
+            if (prev->IsNullChunk())
+            {
+               continue;
+            }
+
+            if (pc->Is(E_Token::CT_ASSIGN))
+            {
+               if (  get_for_section(pc) == 2
+                  && options::nl_for_increment() != IARF_IGNORE)
+               {
+                  log_rule_B("nl_for_increment");
+                  newline_iarf_pair(prev, pc, options::nl_for_increment());
+               }
+               else if (options::nl_for_assign() != IARF_IGNORE)
+               {
+                  log_rule_B("nl_for_assign");
+                  newline_iarf_pair(prev, pc, options::nl_for_assign());
+               }
+            }
+            else if (  pc->Is(E_Token::CT_COMPARE)
+                    && options::nl_for_compare() != IARF_IGNORE)
+            {
+               log_rule_B("nl_for_compare");
+               newline_iarf_pair(prev, pc, options::nl_for_compare());
+            }
+            else if (  (  pc->Is(E_Token::CT_INCDEC_BEFORE)
+                       || pc->Is(E_Token::CT_INCDEC_AFTER))
+                    && get_for_section(pc) == 2
+                    && options::nl_for_increment() != IARF_IGNORE)
+            {
+               log_rule_B("nl_for_increment");
+               newline_iarf_pair(prev, pc, options::nl_for_increment());
+            }
          }
       }
    }

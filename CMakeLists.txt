@@ -273,6 +273,7 @@ set(uncrustify_sources
   src/compat_posix.cpp
   src/compat_win32.cpp
   src/detect.cpp
+  src/for_section.cpp
   src/ifdef_over_whole_file.cpp
   src/indent.cpp
   src/keywords.cpp
@@ -420,6 +421,7 @@ set(uncrustify_headers
   src/detect.h
   src/enum_flags.h
   src/error_types.h
+  src/for_section.h
   src/ifdef_over_whole_file.h
   src/indent.h
   src/keywords.h

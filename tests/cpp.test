@@ -1605,3 +1605,8 @@
 34886  common/global_align_span_constr_value_num_lines-1.cfg cpp/align_constr_value_span_num_mixed.cpp
 34887  common/global_align_span_constr_value_num_lines-2.cfg cpp/align_constr_value_span_num_mixed.cpp
 34888  common/global_align_span_constr_value_num_lines-3.cfg cpp/align_constr_value_span_num_mixed.cpp
+34889  cpp/sp_for_assign_compare.cfg                        cpp/sp_for_assign_compare.cpp
+34890  cpp/sp_for_increment.cfg                             cpp/sp_for_increment.cpp
+34891  cpp/sp_sparen_compare.cfg                            cpp/sp_sparen_compare.cpp
+34892  cpp/nl_for_operators.cfg                             cpp/nl_for_operators.cpp
+34893  cpp/sp_for_nested.cfg                                cpp/sp_for_nested.cpp
