@@ -50,6 +50,14 @@ jobs:
 
       # Project specific
       - uses: actions/checkout@v6
+
+      #
+      # Remove existing cache files (before restoring, after checkout)
+      #
+      - run: |
+          find .cache -type f ! -name .gitkeep -delete
+          find .cache -type d -empty -delete
+
       - run: python -m pip install pre-commit
       - uses: actions/cache/restore@v5
         if: github.event_name == 'pull_request'
