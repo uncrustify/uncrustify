@@ -2887,7 +2887,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
             if (tmp->Is(E_Token::CT_AMP))
             {
-               auto tmp2 = tmp->GetNextNcNnl();
+               Chunk *tmp2 = tmp->GetNextNcNnl();
 
                if (tmp2->Is(E_Token::CT_WORD))
                {
@@ -2909,7 +2909,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             else if (  tmp->Is(E_Token::CT_BOOL)
                     && tmp->IsString("&&"))
             {
-               auto tmp2 = tmp->GetNextNcNnl();
+               Chunk *tmp2 = tmp->GetNextNcNnl();
 
                if (tmp2->Is(E_Token::CT_WORD))
                {
