@@ -45,7 +45,7 @@ void align_typedefs(size_t span)
    // Working copy of skip config - budget is decremented as lines are skipped
    LineSkipConfig skip_budget = skip_cfg;
 
-   Chunk          *c_typedef = Chunk::NullChunkPtr;
+   Chunk const    *c_typedef = Chunk::NullChunkPtr;
    Chunk          *pc        = Chunk::GetHead();
 
    while (pc->IsNotNullChunk())

@@ -25,7 +25,7 @@ void align_same_func_call_params()
    LOG_FUNC_ENTRY();
 
    Chunk                  *pc;
-   Chunk                  *align_root = Chunk::NullChunkPtr;
+   Chunk const            *align_root = Chunk::NullChunkPtr;
    Chunk                  *align_cur  = Chunk::NullChunkPtr;
    size_t                 align_len   = 0;
    size_t                 span        = 3;
@@ -77,8 +77,8 @@ void align_same_func_call_params()
          }
          else if (pc->Is(E_Token::CT_FUNC_CTOR_VAR))                             // Issue #3916
          {
-            Chunk *open_paren  = pc->GetNextType(E_Token::CT_FPAREN_OPEN, pc->GetLevel());
-            Chunk *close_paren = open_paren->GetClosingParen();
+            Chunk const *open_paren  = pc->GetNextType(E_Token::CT_FPAREN_OPEN, pc->GetLevel());
+            Chunk       *close_paren = open_paren->GetClosingParen();
             LOG_FMT(LAS, "%s(%3d): orig line is %zu, orig col is %zu, text '%s', type is %s\n",
                     __func__, __LINE__, open_paren->GetOrigLine(), open_paren->GetOrigCol(), open_paren->GetLogText(), get_token_name(open_paren->GetType()));
             LOG_FMT(LAS, "%s(%3d): orig line is %zu, orig col is %zu, text '%s', type is %s\n",
@@ -249,7 +249,7 @@ void align_same_func_call_params()
 } // align_same_func_call_params
 
 
-void align_params(Chunk *start, std::deque<Chunk *> &chunks)
+void align_params(Chunk const *start, std::deque<Chunk *> &chunks)
 {
    LOG_FUNC_ENTRY();
 
