@@ -36,7 +36,7 @@ static Chunk *skip_scope_resolution_and_nested_name_specifiers_rev(Chunk *);
  * Returns true if two adjacent chunks potentially match a pattern consistent
  * with that of a qualified identifier
  */
-static bool adj_tokens_match_qualified_identifier_pattern(Chunk *prev, Chunk *next)
+static bool adj_tokens_match_qualified_identifier_pattern(Chunk const *prev, Chunk const *next)
 {
    LOG_FUNC_ENTRY();
 
@@ -97,7 +97,7 @@ static bool adj_tokens_match_qualified_identifier_pattern(Chunk *prev, Chunk *ne
  * Returns true if two adjacent chunks potentially match a pattern consistent
  * with that of a variable definition
  */
-static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
+static bool adj_tokens_match_var_def_pattern(Chunk const *prev, Chunk const *next)
 {
    LOG_FUNC_ENTRY();
 
@@ -329,7 +329,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
  * @param after      points to the second chunk
  * @param test_equal if true, returns true when both chunks refer to the same chunk
  */
-static bool chunk_is_after(Chunk *pc, Chunk *after, bool test_equal = true)
+static bool chunk_is_after(Chunk const *pc, Chunk const *after, bool test_equal = true)
 {
    LOG_FUNC_ENTRY();
 
@@ -363,7 +363,7 @@ static bool chunk_is_after(Chunk *pc, Chunk *after, bool test_equal = true)
  * @param before     points to the second chunk
  * @param test_equal if true, returns true when both chunks refer to the same chunk
  */
-static bool chunk_is_before(Chunk *pc, Chunk *before, bool test_equal = true)
+static bool chunk_is_before(Chunk const *pc, Chunk const *before, bool test_equal = true)
 {
    LOG_FUNC_ENTRY();
 
@@ -399,7 +399,7 @@ static bool chunk_is_before(Chunk *pc, Chunk *before, bool test_equal = true)
  * @param test_equal if true, returns true when the first chunk tests equal to
  *                   either the second or third chunk
  */
-static bool chunk_is_between(Chunk *pc, Chunk *after, Chunk *before, bool test_equal = true)
+static bool chunk_is_between(Chunk const *pc, Chunk *after, Chunk *before, bool test_equal = true)
 {
    LOG_FUNC_ENTRY();
 
@@ -413,11 +413,11 @@ static bool chunk_is_between(Chunk *pc, Chunk *after, Chunk *before, bool test_e
  * the source file currently being processed. Note that a macro may be defined in
  * another source or header file, for which this function does not currently account
  */
-static bool chunk_is_macro_reference(Chunk *pc)
+static bool chunk_is_macro_reference(Chunk const *pc)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *next = Chunk::GetHead();
+   Chunk const *next = Chunk::GetHead();
 
    if (  (  language_is_set(lang_flag_e::LANG_CPP)
          || language_is_set(lang_flag_e::LANG_C))
@@ -1037,8 +1037,8 @@ bool EnumStructUnionParser::body_detected() const
 {
    LOG_FUNC_ENTRY();
 
-   auto *body_end   = get_body_end();
-   auto *body_start = get_body_start();
+   Chunk const *body_end   = get_body_end();
+   Chunk const *body_start = get_body_start();
 
    return(  body_end->IsNotNullChunk()
          && body_start->IsNotNullChunk());
@@ -1121,8 +1121,8 @@ Chunk *EnumStructUnionParser::get_inheritance_end() const
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *brace_open        = Chunk::NullChunkPtr;
-   auto  *inheritance_start = get_inheritance_start();
+   Chunk       *brace_open        = Chunk::NullChunkPtr;
+   Chunk const *inheritance_start = get_inheritance_start();
 
    if (inheritance_start->IsNotNullChunk())
    {
@@ -1211,8 +1211,8 @@ Chunk *EnumStructUnionParser::get_where_end() const
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *brace_open  = Chunk::NullChunkPtr;
-   auto  *where_start = get_where_start();
+   Chunk       *brace_open  = Chunk::NullChunkPtr;
+   Chunk const *where_start = get_where_start();
 
    if (where_start->IsNotNullChunk())
    {
@@ -1265,10 +1265,10 @@ void EnumStructUnionParser::initialize(Chunk *pc)
       return;
    }
    m_end = refine_end_chunk(pc);
-} // EnumStructUnionParser::initialize
+} // EnumStructUnionParser::initia
 
 
-bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
+bool EnumStructUnionParser::is_potential_end_chunk(Chunk const *pc) const
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
@@ -1611,7 +1611,7 @@ void EnumStructUnionParser::mark_constructors()
       log_pcf_flags(LFTOR, m_type->GetFlags());
 
       Chunk       *body_start = get_body_start();
-      Chunk       *body_end   = get_body_end();
+      Chunk const *body_end   = get_body_end();
       Chunk       *next       = Chunk::NullChunkPtr;
       std::size_t braceLevel  = m_type->GetBraceLevel() + 1;
 
@@ -1665,8 +1665,8 @@ void EnumStructUnionParser::mark_enum_integral_type(Chunk *colon)
    colon->SetType(E_Token::CT_ENUM_COLON);
    colon->SetParentType(m_start->GetType());
 
-   auto *body_start = get_body_start();
-   auto *pc         = colon->GetNextNcNnl();
+   Chunk const *body_start = get_body_start();
+   Chunk       *pc         = colon->GetNextNcNnl();
 
    /**
     * the chunk(s) between the colon and opening
@@ -1853,7 +1853,7 @@ void EnumStructUnionParser::mark_template(Chunk *start) const
 } // EnumStructUnionParser::mark_template
 
 
-void EnumStructUnionParser::mark_template_args(Chunk *start, Chunk *end) const
+void EnumStructUnionParser::mark_template_args(Chunk *start, Chunk const *end) const
 {
    LOG_FUNC_ENTRY();
 
@@ -2165,7 +2165,7 @@ Chunk *EnumStructUnionParser::parse_angles(Chunk *angle_open)
           * check to make sure that the template is the final chunk in a list
           * of scope-resolution qualifications
           */
-         auto *next = angle_close->GetNextNcNnl();
+         Chunk const *next = angle_close->GetNextNcNnl();
 
          if (next->IsNot(E_Token::CT_DC_MEMBER))
          {
@@ -2176,7 +2176,7 @@ Chunk *EnumStructUnionParser::parse_angles(Chunk *angle_open)
              * bracket should be preceded by a E_Token::CT_WORD token and we should have
              * found a closing angle bracket
              */
-            auto *prev = angle_open->GetPrevNcNnlNi();
+            Chunk const *prev = angle_open->GetPrevNcNnlNi();
 
             if (prev->IsNot(E_Token::CT_WORD))
             {
@@ -2262,10 +2262,10 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
           * or 'class' keywords appear as the return type preceding a pair of braces
           * and therefore may be associated with a function definition body
           */
-         auto *paren_close = prev;
+         Chunk const *paren_close = prev;
 
          // skip in reverse to the matching open paren
-         auto *paren_open = paren_close->GetOpeningParen();
+         Chunk const *paren_open = paren_close->GetOpeningParen();
 
          if (paren_open->IsNotNullChunk())
          {
@@ -2274,8 +2274,8 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
              * if so, the identifier is very likely to be associated with
              * a function definition
              */
-            auto *type       = m_start->GetNextNcNnl();
-            auto *identifier = paren_open->GetPrevNcNnlNi(E_Scope::PREPROC);
+            Chunk const *type       = m_start->GetNextNcNnl();
+            Chunk const *identifier = paren_open->GetPrevNcNnlNi(E_Scope::PREPROC);
             is_potential_function_definition = (  (  identifier->Is(E_Token::CT_FUNCTION)
                                                   || identifier->Is(E_Token::CT_FUNC_DEF)
                                                   || identifier->Is(E_Token::CT_WORD))
@@ -2590,8 +2590,8 @@ bool EnumStructUnionParser::template_detected() const
 {
    LOG_FUNC_ENTRY();
 
-   auto *template_end   = get_template_end();
-   auto *template_start = get_template_start();
+   Chunk const *template_end   = get_template_end();
+   Chunk const *template_start = get_template_start();
 
    return(  template_end->IsNotNullChunk()
          && template_start->IsNotNullChunk());
@@ -2714,7 +2714,7 @@ void EnumStructUnionParser::try_post_identify_type()
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *body_end = get_body_end();
+   Chunk const *body_end = get_body_end();
 
    if (  !type_identified()
       && body_end->IsNullChunk())
@@ -2857,7 +2857,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
          /**
           * search for some common patterns that may indicate a type
           */
-         Chunk *prev = m_start;
+         Chunk const *prev = m_start;
 
          while (  chunk_is_between(next, m_start, m_end)
                && (  (  next->IsNot(E_Token::CT_ASSIGN)
@@ -2944,8 +2944,8 @@ bool EnumStructUnionParser::where_clause_detected() const
 {
    LOG_FUNC_ENTRY();
 
-   auto *where_end   = get_where_end();
-   auto *where_start = get_where_start();
+   Chunk const *where_end   = get_where_end();
+   Chunk const *where_start = get_where_start();
 
    return(  where_end->IsNotNullChunk()
          && where_start->IsNotNullChunk());
