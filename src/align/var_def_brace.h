@@ -18,6 +18,6 @@ class Chunk;
  * variable def align column.  Also aligns bit-colons, but that assumes that
  * bit-types are the same! But that should always be the case...
  */
-Chunk *align_var_def_brace(Chunk *pc, size_t span, size_t *nl_count);
+Chunk *align_var_def_brace(Chunk const *pc, size_t span, size_t *nl_count);
 
 #endif /* ALIGN_VAR_DEF_BRACE_H_INCLUDED */

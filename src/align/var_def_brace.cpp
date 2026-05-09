@@ -20,7 +20,7 @@ constexpr static auto LCURRENT = LAVDB;
 using namespace uncrustify;
 
 
-Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
+Chunk *align_var_def_brace(Chunk const *start, size_t span, size_t *p_nl_count)
 {
    LOG_FUNC_ENTRY();
 
@@ -29,10 +29,10 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       return(Chunk::NullChunkPtr);
    }
    Chunk          *next;
-   size_t         myspan     = span;
-   size_t         mythresh   = 0;
-   size_t         mygap      = 0;
-   LineSkipConfig myskip_cfg = {};
+   size_t         myspan   = span;
+   size_t         mythresh = 0;
+   size_t         mygap    = 0;
+   LineSkipConfig myskip_cfg;
 
    // Override the span, if this is a struct/union
    if (  start->GetParentType() == E_Token::CT_STRUCT
@@ -85,14 +85,14 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    // Working copy of skip config - budgets are decremented as lines are skipped
    LineSkipConfig skip_budget = myskip_cfg;
    // can't be any variable definitions in a "= {" block
-   Chunk          *prev = start->GetPrevNcNnl();
+   Chunk const    *prev = start->GetPrevNcNnl();
 
    if (prev->Is(E_Token::CT_ASSIGN))
    {
       LOG_FMT(LAVDB, "%s(%d): start->text '%s', type is %s, on orig line %zu (abort due to assign)\n",
               __func__, __LINE__, start->GetLogText(), get_token_name(start->GetType()), start->GetOrigLine());
 
-      Chunk *pc = start->GetNextType(E_Token::CT_BRACE_CLOSE, start->GetLevel());
+      Chunk const *pc = start->GetNextType(E_Token::CT_BRACE_CLOSE, start->GetLevel());
       return(pc->GetNextNcNnl());
    }
    char copy[1000];
@@ -311,7 +311,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
                && (as.m_star_style == AlignStack::SS_INCLUDE))
             {
                // we must look after the previous token
-               Chunk *prev_local = pc->GetPrev();
+               Chunk const *prev_local = pc->GetPrev();
 
                while (  prev_local->Is(E_Token::CT_PTR_TYPE)
                      || prev_local->Is(E_Token::CT_ADDR))
@@ -325,7 +325,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
                        __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->GetLogText(), pc->GetLevel(), pc->GetBraceLevel());
             }
             // we must look after the previous token
-            Chunk *prev_local = pc->GetPrev();
+            Chunk const *prev_local = pc->GetPrev();
 
             if (prev_local->IsNot(E_Token::CT_DEREF))                // Issue #2971
             {
