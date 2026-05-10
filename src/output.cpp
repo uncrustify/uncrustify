@@ -275,7 +275,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc);
  *  2. There is exactly one newline between then
  *  3. They are indented to the same level
  */
-static bool can_combine_comment(Chunk *pc, const cmt_reflow &cmt);
+static bool can_combine_comment(Chunk const *pc, const cmt_reflow &cmt);
 
 
 #define LOG_CONTTEXT() \
@@ -2905,7 +2905,7 @@ static bool kw_fcn_filename(Chunk *cmt, UncText &out_txt)
 
 static bool kw_fcn_class(Chunk *cmt, UncText &out_txt)
 {
-   Chunk *tmp = Chunk::NullChunkPtr;
+   Chunk const *tmp = Chunk::NullChunkPtr;
 
    if ((  language_is_set(lang_flag_e::LANG_CPP)
        || language_is_set(lang_flag_e::LANG_OC)))
@@ -3091,7 +3091,8 @@ static bool kw_fcn_javaparam(Chunk *cmt, UncText &out_txt)
          }
          tmp = tmp->GetNextNcNnl();
       }
-      fpo = fpc = Chunk::NullChunkPtr;
+      fpo = Chunk::NullChunkPtr;
+      fpc = Chunk::NullChunkPtr;
    }
    else
    {

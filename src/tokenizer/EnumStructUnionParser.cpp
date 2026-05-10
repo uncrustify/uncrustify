@@ -864,9 +864,9 @@ void EnumStructUnionParser::analyze_identifiers()
 
    Chunk    *template_end      = get_template_end();
    auto     *body_end          = get_body_end();
-   auto     *body_start        = get_body_start();
+   auto     const *body_start        = get_body_start();
    PcfFlags flags              = PCF_VAR_1ST_DEF;
-   auto     *inheritance_start = get_inheritance_start();
+   auto     const *inheritance_start = get_inheritance_start();
    Chunk    *pc                = body_end->IsNotNullChunk() ? body_end : m_start;
 
    /**
@@ -1375,8 +1375,8 @@ bool EnumStructUnionParser::is_within_conditional(Chunk const *pc) const
       while (it_token_chunk_pair != question_operators.cend())
       {
          auto *question = it_token_chunk_pair->second;
-         auto *end      = skip_to_expression_end(question);
-         auto *start    = skip_to_expression_start(question);
+         auto const *end      = skip_to_expression_end(question);
+         auto const *start    = skip_to_expression_start(question);
 
          if (chunk_is_between(pc, start, end))
          {
@@ -1397,8 +1397,8 @@ bool EnumStructUnionParser::is_within_inheritance_list(Chunk const *pc) const
    {
       return(true);
    }
-   auto *inheritance_end   = get_inheritance_end();
-   auto *inheritance_start = get_inheritance_start();
+   auto const *inheritance_end   = get_inheritance_end();
+   auto const *inheritance_start = get_inheritance_start();
 
    if (  inheritance_end->IsNotNullChunk()
       && inheritance_start->IsNotNullChunk())
@@ -2863,7 +2863,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
                   || next->GetLevel() != m_start->GetLevel())
                && !next->IsSemicolon())
          {
-            prev = next;
+            Chunk const *prev = next;
             next = next->GetNextNcNnl();
 
             /**
