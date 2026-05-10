@@ -399,7 +399,7 @@ static bool chunk_is_before(Chunk const *pc, Chunk const *before, bool test_equa
  * @param test_equal if true, returns true when the first chunk tests equal to
  *                   either the second or third chunk
  */
-static bool chunk_is_between(Chunk const *pc, Chunk *after, Chunk *before, bool test_equal = true)
+static bool chunk_is_between(Chunk const *pc, Chunk const *after, Chunk const *before, bool test_equal = true)
 {
    LOG_FUNC_ENTRY();
 
@@ -471,7 +471,7 @@ static std::pair<Chunk *, Chunk *> match_qualified_identifier(Chunk *pc)
    if (  end->IsNotNullChunk()
       && start->IsNotNullChunk())
    {
-      auto *double_colon = start->GetNextType(E_Token::CT_DC_MEMBER);
+      Chunk const *double_colon = start->GetNextType(E_Token::CT_DC_MEMBER);
 
       if (  double_colon->IsNotNullChunk()
          && chunk_is_between(double_colon, start, end))
@@ -650,9 +650,9 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
       /**
        * skip any right-hand side assignments
        */
-      Chunk *before_rhs_exp_start = skip_expression_rev(pc);
-      Chunk *prev                 = Chunk::NullChunkPtr;
-      Chunk *next                 = pc;
+      Chunk const *before_rhs_exp_start = skip_expression_rev(pc);
+      Chunk       *prev                 = Chunk::NullChunkPtr;
+      Chunk const *next                 = pc;
 
       while (  chunk_is_after(next, before_rhs_exp_start)
             && pc != prev)
@@ -1362,7 +1362,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk const *pc) const
 } // EnumStructUnionParser::is_potential_end_chunk
 
 
-bool EnumStructUnionParser::is_within_conditional(Chunk *pc) const
+bool EnumStructUnionParser::is_within_conditional(Chunk const *pc) const
 {
    LOG_FUNC_ENTRY();
 
@@ -1389,7 +1389,7 @@ bool EnumStructUnionParser::is_within_conditional(Chunk *pc) const
 } // EnumStructUnionParser::is_within_conditional
 
 
-bool EnumStructUnionParser::is_within_inheritance_list(Chunk *pc) const
+bool EnumStructUnionParser::is_within_inheritance_list(Chunk const *pc) const
 {
    LOG_FUNC_ENTRY();
 
@@ -1409,7 +1409,7 @@ bool EnumStructUnionParser::is_within_inheritance_list(Chunk *pc) const
 } // EnumStructUnionParser::is_within_inheritance_list
 
 
-bool EnumStructUnionParser::is_within_where_clause(Chunk *pc) const
+bool EnumStructUnionParser::is_within_where_clause(Chunk const *pc) const
 {
    LOG_FUNC_ENTRY();
 
@@ -2226,7 +2226,7 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
        * assigned via direct-list initialization, hence the open brace
        * is NOT part of a class/struct type definition.
        */
-      auto *first_comma = get_first_top_level_comma();
+      Chunk const *first_comma = get_first_top_level_comma();
 
       if (chunk_is_after(pc, first_comma))
       {
@@ -2857,8 +2857,6 @@ bool EnumStructUnionParser::try_pre_identify_type()
          /**
           * search for some common patterns that may indicate a type
           */
-         Chunk const *prev = m_start;
-
          while (  chunk_is_between(next, m_start, m_end)
                && (  (  next->IsNot(E_Token::CT_ASSIGN)
                      && next->IsNot(E_Token::CT_COMMA))
