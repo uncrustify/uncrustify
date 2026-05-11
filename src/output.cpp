@@ -1576,7 +1576,7 @@ static Chunk *get_next_function(Chunk *pc)
 }
 
 
-static Chunk const *get_next_class(Chunk *pc)
+static Chunk const *get_next_class(Chunk const *pc)
 {
    return(pc->GetNextType(E_Token::CT_CLASS)->GetNext());
 }
