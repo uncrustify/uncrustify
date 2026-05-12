@@ -13,6 +13,6 @@ class Chunk;
 // namespace {
 // namespace word {
 // namespace type::word {
-void newlines_namespace(Chunk  const *start); // Issue #2186
+void newlines_namespace(Chunk const *start);  // Issue #2186
 
 #endif /* NEWLINES_NAMESPACE_H_INCLUDED */

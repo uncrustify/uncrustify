@@ -40,7 +40,7 @@ enum class comment_align_e : unsigned int
  */
 Chunk *align_trailing_comments(Chunk *start);
 
-comment_align_e get_comment_align_type(Chunk  const *cmt);
+comment_align_e get_comment_align_type(Chunk const *cmt);
 
 void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev);
 
