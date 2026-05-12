@@ -14,7 +14,7 @@
 using namespace uncrustify;
 
 
-static bool for_needs_rewrite(Chunk *pc, E_Token desired_type)
+static bool for_needs_rewrite(Chunk const *pc, E_Token desired_type)
 {
    // The 'for' statement needs to be rewritten if `for(;;)` is not the
    // preferred syntax for infinite loops and this 'for' is an infinite loop
@@ -52,15 +52,15 @@ static bool for_needs_rewrite(Chunk *pc, E_Token desired_type)
 }
 
 
-static bool while_needs_rewrite(Chunk *keyword, E_Token desired_type, const char *desired_condition)
+static bool while_needs_rewrite(Chunk const *keyword, E_Token desired_type, const char *desired_condition)
 {
    // The 'while' statement needs to be rewritten if it has only the tokens that
    // are strictly necessary (keyword, condition, two parentheses, and semicolon
    // if do-while) and either the keyword or the condition needs to be changed.
 
-   Chunk *oparen    = keyword->GetNext();
-   Chunk *condition = oparen->GetNext();
-   Chunk *cparen    = condition->GetNext();
+   Chunk const *oparen    = keyword->GetNext();
+   Chunk const *condition = oparen->GetNext();
+   Chunk const *cparen    = condition->GetNext();
 
    if (!oparen->Is(E_Token::CT_SPAREN_OPEN))
    {
@@ -80,7 +80,7 @@ static bool while_needs_rewrite(Chunk *keyword, E_Token desired_type, const char
 
    if (keyword->Is(E_Token::CT_WHILE_OF_DO))
    {
-      Chunk *semicolon = cparen->GetNext();
+      Chunk const *semicolon = cparen->GetNext();
 
       if (!semicolon->Is(E_Token::CT_SEMICOLON))
       {

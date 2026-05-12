@@ -105,7 +105,7 @@ void newlines_enum(Chunk *start)
    if (pc->Is(E_Token::CT_BRACE_OPEN))
    {
       // Skip over embedded C comments
-      Chunk *next = pc->GetNext();
+      Chunk const *next = pc->GetNext();
 
       while (next->Is(E_Token::CT_COMMENT))
       {
