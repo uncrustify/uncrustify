@@ -56,7 +56,7 @@ void remove_duplicate_include()
 
             for (auto itc = includes.begin(); itc != ite; ++itc)
             {
-               Chunk *current = *itc;
+               Chunk const *current = *itc;
 
                //LOG_FMT(LRMRETURN, "%s(%d): next->text    is '%s'\n",
                //        __func__, __LINE__, next->pc->GetLogText());

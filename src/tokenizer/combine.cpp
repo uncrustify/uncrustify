@@ -5621,7 +5621,7 @@ static void handle_oc_available(Chunk *os)
 }
 
 
-static void handle_oc_property_decl(Chunk *os)
+static void handle_oc_property_decl(Chunk const *os)
 {
    log_rule_B("mod_sort_oc_properties");
 
