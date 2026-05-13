@@ -10,6 +10,6 @@
 
 class Chunk;
 
-void collapse_empty_body(Chunk  const *br_open);
+void collapse_empty_body(Chunk const *br_open);
 
 #endif /* NEWLINES_COLLAPSE_EMPTY_BODY_H_INCLUDED */
