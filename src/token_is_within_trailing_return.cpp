@@ -18,7 +18,7 @@ bool token_is_within_trailing_return(Chunk *pc)
    // look back for '->' type is TRAILING_RET
    // until E_Token::CT_FPAREN_CLOSE
    //   or  E_Token::CT_FPAREN_OPEN is found
-   Chunk *prev = pc;
+   Chunk const *prev = pc;
 
    while (prev->IsNotNullChunk())
    {
