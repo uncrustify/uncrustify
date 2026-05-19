@@ -267,7 +267,7 @@ private:
     * Marks the arguments within a template argument list bounded by the
     * starting and ending chunks
     */
-   void mark_template_args(Chunk *start, Chunk *end) const;
+   void mark_template_args(Chunk *start, Chunk const *end) const;
 
 
    /**
