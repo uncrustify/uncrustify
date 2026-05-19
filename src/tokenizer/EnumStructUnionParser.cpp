@@ -1268,7 +1268,7 @@ void EnumStructUnionParser::initialize(Chunk *pc)
 } // EnumStructUnionParser::initia
 
 
-bool EnumStructUnionParser::is_potential_end_chunk(Chunk const *pc) const
+bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
@@ -1362,7 +1362,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk const *pc) const
 } // EnumStructUnionParser::is_potential_end_chunk
 
 
-bool EnumStructUnionParser::is_within_conditional(Chunk const *pc) const
+bool EnumStructUnionParser::is_within_conditional(Chunk *pc) const
 {
    LOG_FUNC_ENTRY();
 
@@ -1389,7 +1389,7 @@ bool EnumStructUnionParser::is_within_conditional(Chunk const *pc) const
 } // EnumStructUnionParser::is_within_conditional
 
 
-bool EnumStructUnionParser::is_within_inheritance_list(Chunk const *pc) const
+bool EnumStructUnionParser::is_within_inheritance_list(Chunk *pc) const
 {
    LOG_FUNC_ENTRY();
 
@@ -1409,7 +1409,7 @@ bool EnumStructUnionParser::is_within_inheritance_list(Chunk const *pc) const
 } // EnumStructUnionParser::is_within_inheritance_list
 
 
-bool EnumStructUnionParser::is_within_where_clause(Chunk const *pc) const
+bool EnumStructUnionParser::is_within_where_clause(Chunk *pc) const
 {
    LOG_FUNC_ENTRY();
 
