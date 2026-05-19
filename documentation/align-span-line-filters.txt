@@ -86,7 +86,8 @@ The following span options currently support line filters:
   | align_enum_equ_span              | Equal sign alignment in enums                 |
   | align_constr_value_span          | Constructor member initializer values (C++)   |
   | align_same_func_call_params_span | Parameters in same-name single-line           |
-  |                                  | function/method calls
+  |                                  | function/method calls                         |
+  | align_braced_init_list_span      | Braced initializer list alignment (C++)       |
   +----------------------------------+-----------------------------------------------+
 
 Each of these has the three associated filter options. For example:
