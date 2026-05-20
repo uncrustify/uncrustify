@@ -27,7 +27,7 @@ constexpr static auto LCURRENT = LTEMPL;
 using namespace uncrustify;
 
 
-bool invalid_open_angle_template(Chunk *prev)
+bool invalid_open_angle_template(Chunk const *prev)
 {
    if (prev->IsNullChunk())
    {
@@ -271,7 +271,7 @@ void check_template(Chunk *start, bool in_type_cast)
          if (pc->Is(E_Token::CT_BRACE_OPEN))                     // Issue #2886
          {
             // look for the closing brace
-            Chunk *A = pc->GetClosingParen();
+            Chunk const *A = pc->GetClosingParen();
             LOG_FMT(LTEMPL, "%s(%d): A orig line is %zu, orig col is %zu, type is %s\n",
                     __func__, __LINE__, A->GetOrigLine(), A->GetOrigCol(), get_token_name(A->GetType()));
             pc = A->GetNext();
@@ -428,7 +428,7 @@ void check_template(Chunk *start, bool in_type_cast)
 } // check_template
 
 
-void check_template_arg(Chunk *start, Chunk *end)
+void check_template_arg(Chunk *start, Chunk const *end)
 {
    LOG_FMT(LTEMPL, "%s(%d): Template argument detected\n", __func__, __LINE__);
    LOG_FMT(LTEMPL, "%s(%d):     from orig line %zu, orig col %zu\n",
@@ -486,8 +486,8 @@ void check_template_arg(Chunk *start, Chunk *end)
          Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
          pc->SetFlagBits(PCF_IN_TEMPLATE);
 
-         Chunk *prev  = pc->GetPrevNcNnl(E_Scope::PREPROC);
-         Chunk *prev2 = prev->GetPrevNcNnl(E_Scope::PREPROC);
+         Chunk const *prev  = pc->GetPrevNcNnl(E_Scope::PREPROC);
+         Chunk const *prev2 = prev->GetPrevNcNnl(E_Scope::PREPROC);
 
          if (  prev->Is(E_Token::CT_ELLIPSIS)                 // Issue #3309
             && prev2->Is(E_Token::CT_TYPENAME))

@@ -19,7 +19,7 @@ void align_struct_initializers()
 
    while (pc->IsNotNullChunk())
    {
-      Chunk *prev = pc->GetPrevNcNnl();
+      Chunk const *prev = pc->GetPrevNcNnl();
 
       if (  prev->Is(E_Token::CT_ASSIGN)
          && (  pc->Is(E_Token::CT_BRACE_OPEN)

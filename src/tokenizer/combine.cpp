@@ -133,7 +133,7 @@ static void handle_oc_message_send(Chunk *pc);
 
 
 //! Process @Property values and re-arrange them if necessary
-static void handle_oc_property_decl(Chunk *pc);
+static void handle_oc_property_decl(Chunk const *pc);
 
 //! Process @available annotation
 static void handle_oc_available(Chunk *pc);
@@ -1274,7 +1274,7 @@ static bool handle_rvalue_forwarding_ref(Chunk const *prev, Chunk *pc, Chunk con
       return(false);
    }
    // Check if we're inside a function parameter list
-   Chunk *open_paren = pc->GetParent();
+   Chunk const *open_paren = pc->GetParent();
 
    // If GetParent doesn't give us the paren, search for it
    if (  open_paren->IsNullChunk()
@@ -2887,7 +2887,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
             if (tmp->Is(E_Token::CT_AMP))
             {
-               Chunk *tmp2 = tmp->GetNextNcNnl();
+               Chunk const *tmp2 = tmp->GetNextNcNnl();
 
                if (tmp2->Is(E_Token::CT_WORD))
                {
@@ -2909,7 +2909,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             else if (  tmp->Is(E_Token::CT_BOOL)
                     && tmp->IsString("&&"))
             {
-               Chunk *tmp2 = tmp->GetNextNcNnl();
+               Chunk const *tmp2 = tmp->GetNextNcNnl();
 
                if (tmp2->Is(E_Token::CT_WORD))
                {
@@ -5621,7 +5621,7 @@ static void handle_oc_available(Chunk *os)
 }
 
 
-static void handle_oc_property_decl(Chunk *os)
+static void handle_oc_property_decl(Chunk const *os)
 {
    log_rule_B("mod_sort_oc_properties");
 
@@ -5629,20 +5629,19 @@ static void handle_oc_property_decl(Chunk *os)
    {
       typedef std::vector<Chunk *> ChunkGroup;
 
-      Chunk                   *next       = os->GetNext();
-      Chunk                   *open_paren = Chunk::NullChunkPtr;
-
-      std::vector<ChunkGroup> class_chunks;       // class
-      std::vector<ChunkGroup> thread_chunks;      // atomic, nonatomic
-      std::vector<ChunkGroup> readwrite_chunks;   // readwrite, readonly
-      std::vector<ChunkGroup> ref_chunks;         // retain, copy, assign, weak, strong, unsafe_unretained
-      std::vector<ChunkGroup> getter_chunks;      // getter
-      std::vector<ChunkGroup> setter_chunks;      // setter
-      std::vector<ChunkGroup> nullability_chunks; // nonnull, nullable, null_unspecified, null_resettable
-      std::vector<ChunkGroup> other_chunks;       // any words other than above
+      Chunk *next       = os->GetNext();
+      Chunk *open_paren = Chunk::NullChunkPtr;
 
       if (next->Is(E_Token::CT_PAREN_OPEN))
       {
+         std::vector<ChunkGroup> class_chunks;       // class
+         std::vector<ChunkGroup> thread_chunks;      // atomic, nonatomic
+         std::vector<ChunkGroup> readwrite_chunks;   // readwrite, readonly
+         std::vector<ChunkGroup> ref_chunks;         // retain, copy, assign, weak, strong, unsafe_unretained
+         std::vector<ChunkGroup> getter_chunks;      // getter
+         std::vector<ChunkGroup> setter_chunks;      // setter
+         std::vector<ChunkGroup> nullability_chunks; // nonnull, nullable, null_unspecified, null_resettable
+         std::vector<ChunkGroup> other_chunks;       // any words other than above
          open_paren = next;
          next       = next->GetNext();
 

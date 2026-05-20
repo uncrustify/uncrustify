@@ -17,7 +17,7 @@ constexpr static auto LCURRENT = LOCMSG;
 using namespace uncrustify;
 
 
-void align_oc_msg_colon(Chunk *so)
+void align_oc_msg_colon(Chunk const *so)
 {
    LOG_FUNC_ENTRY();
 
@@ -174,7 +174,7 @@ void align_oc_msg_colons()
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+   for (Chunk const *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (  pc->Is(E_Token::CT_SQUARE_OPEN)
          && pc->GetParentType() == E_Token::CT_OC_MSG)

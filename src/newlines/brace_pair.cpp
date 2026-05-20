@@ -63,7 +63,7 @@ void newlines_brace_pair(Chunk *br_open)
       && (br_open->GetParentType() == E_Token::CT_NAMESPACE)
       && br_open->GetPrev()->IsNewline())
    {
-      Chunk *chunk_brace_close = br_open->GetClosingParen();
+      Chunk const *chunk_brace_close = br_open->GetClosingParen();
 
       if (chunk_brace_close->IsNotNullChunk())
       {
@@ -128,8 +128,8 @@ void newlines_brace_pair(Chunk *br_open)
             if (options::code_width() > 0)
             {
                saved_chunk.reserve(16);
-               Chunk *current       = br_open->GetPrevNcNnlNi();
-               Chunk *next_br_close = br_close->GetNext();
+               Chunk       *current       = br_open->GetPrevNcNnlNi();
+               Chunk const *next_br_close = br_close->GetNext();
                current = current->GetNext();
 
                while (current->IsNotNullChunk())
@@ -403,7 +403,7 @@ void newlines_brace_pair(Chunk *br_open)
 
    if (br_open->Is(E_Token::CT_BRACE_OPEN))
    {
-      Chunk *chunk_closing_brace = br_open->GetClosingParen();
+      Chunk const *chunk_closing_brace = br_open->GetClosingParen();
 
       if (chunk_closing_brace->IsNotNullChunk())
       {
@@ -480,7 +480,7 @@ void newlines_brace_pair(Chunk *br_open)
        * E_Token::CT_COMMENT_CPP without hitting anything other than E_Token::CT_COMMENT, then
        * there should be a newline before the close brace.
        */
-      Chunk *pc = br_open->GetNext();
+      Chunk const *pc = br_open->GetNext();
 
       while (pc->Is(E_Token::CT_COMMENT))
       {

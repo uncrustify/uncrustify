@@ -15,11 +15,11 @@
 #include <cstdio>           // for fprintf
 
 
-Chunk *skip_c99_array(Chunk *sq_open)
+Chunk *skip_c99_array(Chunk const *sq_open)
 {
    if (sq_open->Is(E_Token::CT_SQUARE_OPEN))
    {
-      Chunk *tmp = sq_open->GetClosingParen()->GetNextNc();
+      Chunk const *tmp = sq_open->GetClosingParen()->GetNextNc();
 
       if (tmp->Is(E_Token::CT_ASSIGN))
       {
@@ -33,8 +33,8 @@ Chunk *skip_c99_array(Chunk *sq_open)
 Chunk *scan_ib_line(Chunk *start)
 {
    LOG_FUNC_ENTRY();
-   Chunk  *prev_match = Chunk::NullChunkPtr;
-   size_t idx         = 0;
+   Chunk const *prev_match = Chunk::NullChunkPtr;
+   size_t      idx         = 0;
 
    // Skip past C99 "[xx] =" stuff
    Chunk *tmp = skip_c99_array(start);
@@ -158,12 +158,12 @@ void ib_shift_out(size_t idx, size_t num)
 {
    while (idx < cpd.al_cnt)
    {
-      bool  is_empty = false;                  // Issue #3786
-      Chunk *tmp     = cpd.al[idx].ref;
+      bool        is_empty = false;            // Issue #3786
+      Chunk const *tmp     = cpd.al[idx].ref;
 
       if (tmp->Is(E_Token::CT_BRACE_CLOSE))
       {
-         Chunk *pre = tmp->GetPrev();
+         Chunk const *pre = tmp->GetPrev();
 
          if (pre->Is(E_Token::CT_COMMA))
          {
@@ -182,7 +182,7 @@ void ib_shift_out(size_t idx, size_t num)
 
 Chunk *step_back_over_member(Chunk *pc)
 {
-   Chunk *tmp = pc->GetPrevNcNnl();
+   Chunk const *tmp = pc->GetPrevNcNnl();
 
    // Skip over any class stuff: bool CFoo::bar()
    while (tmp->Is(E_Token::CT_DC_MEMBER))

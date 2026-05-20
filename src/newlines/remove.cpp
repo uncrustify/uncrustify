@@ -21,10 +21,10 @@ void newlines_remove_disallowed()
    LOG_FUNC_ENTRY();
 
    Chunk *pc = Chunk::GetHead();
-   Chunk *next;
 
    while ((pc = pc->GetNextNl())->IsNotNullChunk())
    {
+      Chunk const *next;
       LOG_FMT(LBLANKD, "%s(%d): orig line is %zu, orig col is %zu, <Newline>, nl is %zu\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetNlCount());
 
