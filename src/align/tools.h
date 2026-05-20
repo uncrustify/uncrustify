@@ -32,7 +32,7 @@ class Chunk;
  * @return the chunk after the '=' if the check succeeds
  * @return Chunk::NullChunkPtr in all other cases
  */
-Chunk *skip_c99_array(Chunk *sq_open);
+Chunk *skip_c99_array(Chunk const *sq_open);
 
 /**
  * Scans a line for stuff to align on.
