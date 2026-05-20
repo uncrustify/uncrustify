@@ -73,10 +73,10 @@ void mark_functor()
                LOG_FMT(LCOMBINE, "%s(%d): FOUND 3 Opening: orig line is %zu, orig col is %zu, level is %zu, text '%s'\n",
                        __func__, __LINE__, opening->GetOrigLine(), opening->GetOrigCol(), opening->GetLevel(), opening->GetLogText());
                // look for member function
-               Chunk *is_it_func = opening->GetPrevNcNnl();
+               Chunk const *is_it_func = opening->GetPrevNcNnl();
                LOG_FMT(LCOMBINE, "%s(%d): FOUND 4 func: orig line is %zu, orig col is %zu, level is %zu, text '%s'\n",
                        __func__, __LINE__, is_it_func->GetOrigLine(), is_it_func->GetOrigCol(), is_it_func->GetLevel(), is_it_func->GetLogText());
-               Chunk *is_it_member = is_it_func->GetPrevNcNnl();     // E_Token::CT_MEMBER
+               Chunk const *is_it_member = is_it_func->GetPrevNcNnl();     // E_Token::CT_MEMBER
                LOG_FMT(LCOMBINE, "%s(%d): FOUND 5 func: orig line is %zu, orig col is %zu, level is %zu, text '%s'\n",
                        __func__, __LINE__, is_it_member->GetOrigLine(), is_it_member->GetOrigCol(), is_it_member->GetLevel(), is_it_member->GetLogText());
 

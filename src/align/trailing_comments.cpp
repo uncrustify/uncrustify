@@ -149,7 +149,7 @@ Chunk *align_trailing_comments(Chunk *start)
 } // align_trailing_comments
 
 
-comment_align_e get_comment_align_type(Chunk *cmt)
+comment_align_e get_comment_align_type(Chunk const *cmt)
 {
    Chunk           *prev;
    comment_align_e cmt_type = comment_align_e::REGULAR;

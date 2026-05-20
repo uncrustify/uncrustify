@@ -41,7 +41,7 @@ void newline_template(Chunk *start)
    {
       return;
    }
-   Chunk *pc = start->GetNextNcNnl();
+   Chunk const *pc = start->GetNextNcNnl();
 
    while (  pc->IsNotNullChunk()
          && pc->GetLevel() > start->GetLevel())
@@ -90,9 +90,9 @@ void newline_template(Chunk *start)
 } // newline_template
 
 
-iarf_e newline_template_option(Chunk *pc, iarf_e special, iarf_e base, iarf_e fallback)
+iarf_e newline_template_option(Chunk const *pc, iarf_e special, iarf_e base, iarf_e fallback)
 {
-   Chunk *const prev = pc->GetPrevNcNnl();
+   Chunk const *prev = pc->GetPrevNcNnl();
 
    if (  prev->Is(E_Token::CT_ANGLE_OPEN)
       && special != IARF_IGNORE)
