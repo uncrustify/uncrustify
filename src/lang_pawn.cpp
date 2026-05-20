@@ -22,7 +22,7 @@ using namespace uncrustify;
  * We need to check for 'open' braces/paren/etc because the level doesn't
  * change until the token after the open.
  */
-static bool pawn_continued(Chunk *pc, size_t br_level);
+static bool pawn_continued(Chunk const *pc, size_t br_level);
 
 
 /**
@@ -45,7 +45,7 @@ static Chunk *pawn_process_line(Chunk *start);
 
 
 //! We are on a level 0 function proto of def
-static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn);
+static Chunk *pawn_mark_function0(Chunk const *start, Chunk *fcn);
 
 
 /**

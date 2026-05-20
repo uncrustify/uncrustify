@@ -5629,7 +5629,8 @@ static void handle_oc_property_decl(Chunk const *os)
    {
       typedef std::vector<Chunk *> ChunkGroup;
 
-      Chunk *next = os->GetNext();
+      Chunk *next       = os->GetNext();
+      Chunk *open_paren = Chunk::NullChunkPtr;
 
       if (next->Is(E_Token::CT_PAREN_OPEN))
       {
