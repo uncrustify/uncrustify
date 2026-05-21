@@ -7,6 +7,7 @@
 
 #include "align/braced_init_list.h"
 
+#include "align/span_num_resolve.h"
 #include "align/stack.h"
 #include "log_rules.h"
 
@@ -33,6 +34,16 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
 
    LOG_FMT(LALASS, "%s(%d): [my_level is %zu]: start checking with '%s', on orig line %zu, span is %zu, thresh is %zu\n",
            __func__, __LINE__, my_level, first->ElidedText(copy), first->GetOrigLine(), span, thresh);
+
+   // Set up the line-skip budget for empty/PP/comment lines
+   log_rule_B("align_braced_init_list_span_num_empty_lines");
+   log_rule_B("align_braced_init_list_span_num_pp_lines");
+   log_rule_B("align_braced_init_list_span_num_cmt_lines");
+   const LineSkipConfig skip_cfg = resolve_span_num_config(
+      options::align_braced_init_list_span_num_empty_lines(),
+      options::align_braced_init_list_span_num_pp_lines(),
+      options::align_braced_init_list_span_num_cmt_lines());
+   LineSkipConfig skip_budget = skip_cfg;
 
    // If we are aligning on a tabstop, we shouldn't right-align
 
@@ -106,11 +117,12 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
 
       if (pc->IsNewline())
       {
-         vdas.NewLines(pc->GetNlCount());
+         const size_t nl_cnt = pc->GetNlCountFiltered(skip_budget);
+         vdas.NewLines(nl_cnt);
 
          if (p_nl_count != nullptr)
          {
-            *p_nl_count += pc->GetNlCount();
+            *p_nl_count += nl_cnt;
          }
          var_def_cnt = 0;
          equ_count   = 0;
@@ -147,6 +159,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
             LOG_FMT(LALASS, "%s(%d)OK: vdas.Add on '%s' on orig line %zu, orig col is %zu\n",
                     __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
             vdas.Add(pc);
+            skip_budget = skip_cfg; // Reset budget for next candidate
          }
       }
       pc = pc->GetNext();
