@@ -165,7 +165,7 @@ void align_same_func_call_params()
             // gaps between non-matching calls.
             size_t nl_cnt = 0;
 
-            for (Chunk *tmp = align_cur->GetNext();
+            for (Chunk const *tmp = align_cur->GetNext();
                  tmp->IsNotNullChunk() && tmp != pc;
                  tmp = tmp->GetNext())
             {
