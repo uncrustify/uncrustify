@@ -104,9 +104,9 @@ void tokenize_trailing_return_types()
       if (  pc->Is(E_Token::CT_MEMBER)
          && (strcmp(pc->GetLogText(), "->") == 0))
       {
-         Chunk *tmp = pc->GetPrevNcNnl();
-         Chunk *tmp_2;
-         Chunk *open_paren;
+         Chunk const *tmp = pc->GetPrevNcNnl();
+         Chunk       *tmp_2;
+         Chunk       *open_paren;
 
          if (tmp->Is(E_Token::CT_QUALIFIER))
          {

@@ -399,7 +399,7 @@ static bool chunk_is_before(Chunk const *pc, Chunk const *before, bool test_equa
  * @param test_equal if true, returns true when the first chunk tests equal to
  *                   either the second or third chunk
  */
-static bool chunk_is_between(Chunk *pc, Chunk *after, Chunk *before, bool test_equal = true)
+static bool chunk_is_between(Chunk const *pc, Chunk const *after, Chunk const *before, bool test_equal = true)
 {
    LOG_FUNC_ENTRY();
 
@@ -650,9 +650,9 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
       /**
        * skip any right-hand side assignments
        */
-      Chunk *before_rhs_exp_start = skip_expression_rev(pc);
-      Chunk *prev                 = Chunk::NullChunkPtr;
-      Chunk *next                 = pc;
+      Chunk const *before_rhs_exp_start = skip_expression_rev(pc);
+      Chunk       *prev                 = Chunk::NullChunkPtr;
+      Chunk const *next                 = pc;
 
       while (  chunk_is_after(next, before_rhs_exp_start)
             && pc != prev)
@@ -1869,7 +1869,7 @@ void EnumStructUnionParser::mark_template_args(Chunk *start, Chunk *end) const
               start->GetOrigCol());
 
       PcfFlags flags = PCF_IN_TEMPLATE;
-      Chunk *next = start;
+      Chunk    *next = start;
 
       /**
        * TODO: for now, just mark the chunks within the template as PCF_IN_TEMPLATE;
@@ -2226,7 +2226,7 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
        * assigned via direct-list initialization, hence the open brace
        * is NOT part of a class/struct type definition.
        */
-      auto *first_comma = get_first_top_level_comma();
+      auto const *first_comma = get_first_top_level_comma();
 
       if (chunk_is_after(pc, first_comma))
       {
@@ -2590,8 +2590,8 @@ bool EnumStructUnionParser::template_detected() const
 {
    LOG_FUNC_ENTRY();
 
-   auto *template_end   = get_template_end();
-   auto *template_start = get_template_start();
+   auto const *template_end   = get_template_end();
+   auto const *template_start = get_template_start();
 
    return(  template_end->IsNotNullChunk()
          && template_start->IsNotNullChunk());
@@ -2857,7 +2857,6 @@ bool EnumStructUnionParser::try_pre_identify_type()
          /**
           * search for some common patterns that may indicate a type
           */
-         Chunk *prev = m_start;
 
          while (  chunk_is_between(next, m_start, m_end)
                && (  (  next->IsNot(E_Token::CT_ASSIGN)
