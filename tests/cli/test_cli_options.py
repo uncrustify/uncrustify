@@ -475,7 +475,7 @@ def string_replace(string_target, replacement):
 
 
 def s_path_join(path, *paths):
-    """
+    r"""
     Wrapper for the os.path.join function, splits every path component to
     replace it with a system specific path separator. This is for consistent
     path separators (and also systems that don't use either '\' or '/')
