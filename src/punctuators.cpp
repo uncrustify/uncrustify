@@ -48,7 +48,7 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
       const auto tmp = std::lower_bound(first, last, value,
                                         lookup_entry_t::comperator());
 
-      return((value == tmp->ch) ? tmp : nullptr);
+      return((tmp != last && value == tmp->ch) ? tmp : nullptr);
    };
 
    const chunk_tag_t *match  = nullptr;
@@ -59,7 +59,7 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
          && str[ch_idx] != '\0') //!< symbols6: max punc len = 6
    {
       // search for next parent node in all current child nodes
-      parent = binary_find(parent, next(parent, parent->left_in_group), str[ch_idx]);
+      parent = binary_find(parent, next(parent, parent->left_in_group + 1), str[ch_idx]);
 
       if (parent == nullptr)
       {
