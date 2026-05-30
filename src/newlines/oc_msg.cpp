@@ -24,11 +24,11 @@ constexpr static auto LCURRENT = LNEWLINE;
  * [myObject doFooWith:arg1 name:arg2  // some lines with >1 arg
  *            error:arg3];
  */
-void newline_oc_msg(Chunk *start)
+void newline_oc_msg(Chunk const *start)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *sq_c = start->GetClosingParen();
+   Chunk const *sq_c = start->GetClosingParen();
 
    if (sq_c->IsNullChunk())
    {
@@ -45,7 +45,7 @@ void newline_oc_msg(Chunk *start)
    // Get count of parameters
    size_t parameter_count = 0;
 
-   for (Chunk *pc = start->GetNextNcNnl(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
+   for (Chunk const *pc = start->GetNextNcNnl(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
       if (pc->GetLevel() <= start->GetLevel())
       {
@@ -68,7 +68,7 @@ void newline_oc_msg(Chunk *start)
    // Get length of longest line
    size_t longest_line = 0;
 
-   for (Chunk *pc = start->GetNextNcNnl(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
+   for (Chunk const *pc = start->GetNextNcNnl(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
       if (pc->GetLevel() <= start->GetLevel())
       {
@@ -94,7 +94,7 @@ void newline_oc_msg(Chunk *start)
    {
       size_t prev_line = 0;
 
-      for (Chunk *pc = start->GetNextNcNnl(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
+      for (Chunk const *pc = start->GetNextNcNnl(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
       {
          if (pc->GetLevel() <= start->GetLevel())
          {

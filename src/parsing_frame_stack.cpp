@@ -167,7 +167,7 @@ int ParsingFrameStack::check(ParsingFrame &frm, int &pp_level, Chunk *pc)
    {
       return(pp_level);
    }
-   Chunk *next = pc->GetNext();
+   Chunk const *next = pc->GetNext();
 
    if (next->IsNullChunk())
    {

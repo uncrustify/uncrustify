@@ -33,7 +33,7 @@ Chunk *flag_parens(Chunk *po, PcfFlags flags, E_Token opentype, E_Token parent_t
    log_func_stack_inline(LFLPAREN);
 
    // the last chunk must be also modified. Issue #2149
-   Chunk *after_paren_close = paren_close->GetNext();
+   Chunk const *after_paren_close = paren_close->GetNext();
 
    if (po != paren_close)
    {

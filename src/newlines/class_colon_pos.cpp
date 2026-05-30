@@ -65,7 +65,7 @@ void newlines_class_colon_pos(E_Token tok)
 
    LineSkipConfig acv_skip_cfg    = {};
    LineSkipConfig acv_skip_budget = {};
-   Chunk          *prev_acv_chunk = Chunk::NullChunkPtr;
+   Chunk const    *prev_acv_chunk = Chunk::NullChunkPtr;
 
    if (with_acv)
    {
@@ -121,7 +121,7 @@ void newlines_class_colon_pos(E_Token tok)
                        paren_vor_value->GetLogText(), get_token_name(paren_vor_value->GetType()));
                size_t nl_count = 0;
 
-               for (Chunk *tmp = prev_acv_chunk->GetNext();
+               for (Chunk const *tmp = prev_acv_chunk->GetNext();
                     tmp->IsNotNullChunk() && tmp != paren_vor_value;
                     tmp = tmp->GetNext())
                {
@@ -218,7 +218,7 @@ void newlines_class_colon_pos(E_Token tok)
                        paren_vor_value->GetLogText(), get_token_name(paren_vor_value->GetType()));
                size_t nl_count = 0;
 
-               for (Chunk *tmp = prev_acv_chunk->GetNext();
+               for (Chunk const *tmp = prev_acv_chunk->GetNext();
                     tmp->IsNotNullChunk() && tmp != paren_vor_value;
                     tmp = tmp->GetNext())
                {
@@ -241,7 +241,7 @@ void newlines_class_colon_pos(E_Token tok)
                {
                   if (ncia == IARF_FORCE)          // nl_class_init_args, nl_constr_init_args: 5
                   {
-                     Chunk *after = pc->GetNext();   // Issue #2759
+                     Chunk const *after = pc->GetNext();   // Issue #2759
 
                      if (after->IsNot(E_Token::CT_COMMENT_CPP))
                      {

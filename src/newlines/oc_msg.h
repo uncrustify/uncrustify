@@ -17,7 +17,7 @@ class Chunk;
  * [myObject doFooWith:arg1 name:arg2  // some lines with >1 arg
  *            error:arg3];
  */
-void newline_oc_msg(Chunk *start);
+void newline_oc_msg(Chunk const *start);
 
 
 #endif /* NEWLINES_OC_MSG_H_INCLUDED */

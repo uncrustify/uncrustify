@@ -270,7 +270,6 @@ void too_big_for_nl_max()
 
    if (stop_it)
    {
-      stop_it = true;
       fprintf(stdout, " is too big against the option 'nl_max'\n");
       log_flush(true);
       exit(EX_CONFIG);

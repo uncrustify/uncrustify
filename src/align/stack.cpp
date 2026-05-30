@@ -205,8 +205,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
 
       if (tmp_prev->Is(E_Token::CT_TPAREN_OPEN))
       {
-         ali      = tmp_prev;
-         tmp_prev = ali->GetPrev();
+         ali = tmp_prev;
          // this is correct, even Coverity says:
          // CID 76021 (#1 of 1): Unused value (UNUSED_VALUE)returned_pointer: Assigning value from
          // ali->GetPrev(nav_e::ALL) to prev here, but that stored value is overwritten before it can be used.
@@ -283,7 +282,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       {
          gap = ali->GetColumn() - ref->GetColumnEnd();
       }
-      Chunk *tmp = ali;
+      Chunk const *tmp = ali;
 
       if (tmp->Is(E_Token::CT_TPAREN_OPEN))
       {
@@ -411,8 +410,8 @@ void AlignStack::Flush()
    if (Len() == 1)
    {
       // check if we have *one* typedef in the line
-      Chunk *pc   = m_aligned.Get(0)->m_pc;
-      Chunk *temp = pc->GetPrevType(E_Token::CT_TYPEDEF, pc->GetLevel());
+      Chunk const *pc   = m_aligned.Get(0)->m_pc;
+      Chunk const *temp = pc->GetPrevType(E_Token::CT_TYPEDEF, pc->GetLevel());
 
       if (temp->IsNotNullChunk())
       {
@@ -432,7 +431,7 @@ void AlignStack::Flush()
 
    for (size_t idx = 0; idx < Len(); idx++)
    {
-      Chunk *pc = m_aligned.Get(idx)->m_pc;
+      Chunk const *pc = m_aligned.Get(idx)->m_pc;
       LOG_FMT(LAS, "AlignStack::%s(%d):   idx is %zu, text is '%s', orig line is %zu, orig col is %zu, alignment col_adj is %d\n",
               __func__, __LINE__, idx, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetAlignData().col_adj);
    }
@@ -453,7 +452,7 @@ void AlignStack::Flush()
 
       if (m_star_style == SS_DANGLE)
       {
-         Chunk *tmp = (pc->Is(E_Token::CT_TPAREN_OPEN)) ? pc->GetNext() : pc;
+         Chunk const *tmp = (pc->Is(E_Token::CT_TPAREN_OPEN)) ? pc->GetNext() : pc;
 
          if (tmp->IsPointerOperator())
          {
@@ -471,7 +470,7 @@ void AlignStack::Flush()
 
             if (pc->GetAlignData().start->GetType() == E_Token::CT_NEG)
             {
-               Chunk *next = pc->GetAlignData().start->GetNext();
+               Chunk const *next = pc->GetAlignData().start->GetNext();
 
                if (next->Is(E_Token::CT_NUMBER))
                {
@@ -505,7 +504,7 @@ void AlignStack::Flush()
 
    for (size_t idx = 0; idx < Len(); idx++)
    {
-      Chunk *pc = m_aligned.Get(idx)->m_pc;
+      Chunk const *pc = m_aligned.Get(idx)->m_pc;
       LOG_FMT(LAS, "AlignStack::%s(%d):   idx is %zu, text is '%s', orig line is %zu, orig col is %zu, alignment col_adj is %d\n",
               __func__, __LINE__, idx, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetAlignData().col_adj);
    }
@@ -627,7 +626,7 @@ void AlignStack::Debug()
 
       for (size_t idx = 0; idx < length; idx++)
       {
-         Chunk *pc = m_aligned.Get(idx)->m_pc;
+         Chunk const *pc = m_aligned.Get(idx)->m_pc;
 
          if (pc->Is(E_Token::CT_PTR_TYPE))
          {
