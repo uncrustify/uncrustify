@@ -65,7 +65,7 @@ static void mod_full_brace_if_chain();
  *  - less than a certain length
  *  - doesn't mess up if/else stuff
  */
-bool can_remove_braces(Chunk const *bopen);
+bool can_remove_braces(Chunk *bopen);
 
 
 /**

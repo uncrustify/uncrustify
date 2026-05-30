@@ -14,7 +14,7 @@
 using namespace uncrustify;
 
 
-Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk const *pc)
+Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
 {
    LOG_FMT(LMCB, "%s(%d): cl_colon->text is '%s', orig line %zu, orig col is %zu, level is %zu\n",
            __func__, __LINE__, cl_colon->GetLogText(), cl_colon->GetOrigLine(), cl_colon->GetOrigCol(), cl_colon->GetLevel());
