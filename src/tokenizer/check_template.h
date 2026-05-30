@@ -16,7 +16,7 @@ class Chunk;
  * @param start  chunk to start check at
  * @param end    chunk to end check at
  */
-void check_template_arg(Chunk *start, Chunk  const *end);
+void check_template_arg(Chunk *start, Chunk const *end);
 
 
 /**
@@ -46,7 +46,7 @@ void check_template(Chunk *start, bool in_type_cast);
 Chunk *handle_double_angle_close(Chunk *pc);
 
 
-bool invalid_open_angle_template(Chunk  const *prev);
+bool invalid_open_angle_template(Chunk *prev);
 
 
 #endif /* TOKENIZER_CHECK_TEMPLATE_H_INCLUDED */
