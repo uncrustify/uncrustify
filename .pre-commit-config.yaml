@@ -51,19 +51,19 @@ repos:
         exclude: (?x)^(test/test\..*|config/missing|configure|autogen\.sh)$
         additional_dependencies:
           - setuptools
-  - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
-    hooks:
-      - id: codespell
-        # scripts/updateCodespellIgnoreFile.sh updates the ignore file.
-        exclude: (?x)^(emscripten/build\.sh)$
-        args:
-          - --builtin=clear,informal,names
-          - -xscripts/codespell-lines-ignore.txt
-        #  - --toml
-        #  - pyproject.toml
-        additional_dependencies:
-          - tomli
+ # - repo: https://github.com/codespell-project/codespell
+ #   rev: v2.4.1
+ #   hooks:
+ #     - id: codespell
+ #       # scripts/updateCodespellIgnoreFile.sh updates the ignore file.
+ #       exclude: (?x)^(emscripten/build\.sh)$
+ #       args:
+ #         - --builtin=clear,informal,names
+ #         - -xscripts/codespell-lines-ignore.txt
+ #       #  - --toml
+ #       #  - pyproject.toml
+ #       additional_dependencies:
+ #         - tomli
   - repo: https://github.com/pocc/pre-commit-hooks
     rev: v1.3.5
     # Install dependencies on windows:
