@@ -69,9 +69,9 @@ repos:
     # Install dependencies on windows:
     #  choco install llvm uncrustify cppcheck
     hooks:
-      - id: uncrustify
-        exclude: ^(tests/.*|documentation/.*)$
-        args: [--replace, --no-backup, -c, forUncrustifySources.cfg, -l, CPP]
+ #     - id: uncrustify
+ #       exclude: ^(tests/.*|documentation/.*)$
+ #       args: [--replace, --no-backup, -c, forUncrustifySources.cfg, -l, CPP]
 #      deactivate for a short time, 27. 1. 2026 guy
       - id: cppcheck
         #files: align/align.h
