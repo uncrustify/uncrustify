@@ -9,6 +9,7 @@
 #include "align/trailing_comments.h"
 
 #include "align/add.h"
+#include "align/span_num_resolve.h"
 #include "align/tab_column.h"
 #include "chunk.h"
 #include "ChunkStack.h"
@@ -78,6 +79,18 @@ Chunk *align_trailing_comments(Chunk *start)
    // Find the max column
    log_rule_B("align_right_cmt_span");
    const size_t span = options::align_right_cmt_span();
+
+   log_rule_B("align_right_cmt_span_num_empty_lines");
+   log_rule_B("align_right_cmt_span_num_pp_lines");
+   log_rule_B("align_right_cmt_span_num_cmt_lines");
+   LineSkipConfig skip_cfg = resolve_span_num_config(
+      options::align_right_cmt_span_num_empty_lines(),
+      options::align_right_cmt_span_num_pp_lines(),
+      options::align_right_cmt_span_num_cmt_lines());
+
+   // Working copy of skip config - budget is decremented as lines are skipped
+   LineSkipConfig skip_budget = skip_cfg;
+
    while (  span
          && pc->IsNotNullChunk()
          && (nl_count <= span))
@@ -105,13 +118,14 @@ Chunk *align_trailing_comments(Chunk *start)
                min_orig = pc->GetColumn();
             }
             align_add(cs, pc, min_col); // (intended_col < col));
-            nl_count = 0;
+            nl_count    = 0;
+            skip_budget = skip_cfg;  // Reset budget after adding
          }
       }
 
       if (pc->IsNewline())
       {
-         nl_count += pc->GetNlCount();
+         nl_count += pc->GetNlCountFiltered(skip_budget);
       }
       pc = pc->GetNext();
    }
