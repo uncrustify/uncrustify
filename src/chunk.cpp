@@ -466,7 +466,7 @@ bool Chunk::IsLastChunkOnLine() const
 } // Chunk::IsLastChunkOnLine
 
 
-void Chunk::SwapLines(Chunk *other)
+void Chunk::SwapLines(Chunk const *other)
 {
    // to swap lines we need to find the first chunk of the lines
    Chunk *pc1 = GetFirstChunkOnLine();
