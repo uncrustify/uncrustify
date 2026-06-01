@@ -130,6 +130,93 @@ repos:
           - --suppress=noCopyConstructor
           - --suppress=noOperatorEq
 
+      - id: cppcheck
+        #files: align/align.h
+        #files: chunk.cpp
+        files: align/oc_decl_colon.cpp
+        #exclude: ^(tests/.*|documentation/.*)$
+        exclude: ^(tests/.*|src/detect.cpp|src/indent.cpp|documentation/.*)$
+        args:
+          - --quiet
+          - --force
+          - --language=c++
+          - -Isrc
+          - '--template={file}({line}): {severity} ({id}): {message}'
+          - --inline-suppr
+          - --check-level=exhaustive
+          - --suppress=returnDanglingLifetime
+          - --suppress=unusedFunction
+          - --suppress=missingIncludeSystem
+          - --suppress=missingInclude
+          - --suppress=noExplicitConstructor
+          - --suppress=unmatchedSuppression
+          - --suppress=checkersReport
+          - --suppress=useStlAlgorithm
+          - --suppress=unusedStructMember
+          - --suppress=useInitializationList
+          - --suppress=unusedPrivateFunction
+          - --suppress=constParameterCallback
+          - --suppress=noCopyConstructor
+          - --suppress=noOperatorEq
+
+      - id: cppcheck
+        #files: align/align.h
+        #files: chunk.cpp
+        files: align/eigen_comma_init.cpp
+        #exclude: ^(tests/.*|documentation/.*)$
+        exclude: ^(tests/.*|src/detect.cpp|src/indent.cpp|documentation/.*)$
+        args:
+          - --quiet
+          - --force
+          - --language=c++
+          - -Isrc
+          - '--template={file}({line}): {severity} ({id}): {message}'
+          - --inline-suppr
+          - --check-level=exhaustive
+          - --suppress=returnDanglingLifetime
+          - --suppress=unusedFunction
+          - --suppress=missingIncludeSystem
+          - --suppress=missingInclude
+          - --suppress=noExplicitConstructor
+          - --suppress=unmatchedSuppression
+          - --suppress=checkersReport
+          - --suppress=useStlAlgorithm
+          - --suppress=unusedStructMember
+          - --suppress=useInitializationList
+          - --suppress=unusedPrivateFunction
+          - --suppress=constParameterCallback
+          - --suppress=noCopyConstructor
+          - --suppress=noOperatorEq
+
+#      - id: cppcheck
+#        #files: align/align.h
+#        #files: chunk.cpp
+#        files: xyz
+#        #exclude: ^(tests/.*|documentation/.*)$
+#        exclude: ^(tests/.*|src/detect.cpp|src/indent.cpp|documentation/.*)$
+#        args:
+#          - --quiet
+#          - --force
+#          - --language=c++
+#          - -Isrc
+#          - '--template={file}({line}): {severity} ({id}): {message}'
+#          - --inline-suppr
+#          - --check-level=exhaustive
+#          - --suppress=returnDanglingLifetime
+#          - --suppress=unusedFunction
+#          - --suppress=missingIncludeSystem
+#          - --suppress=missingInclude
+#          - --suppress=noExplicitConstructor
+#          - --suppress=unmatchedSuppression
+#          - --suppress=checkersReport
+#          - --suppress=useStlAlgorithm
+#          - --suppress=unusedStructMember
+#          - --suppress=useInitializationList
+#          - --suppress=unusedPrivateFunction
+#          - --suppress=constParameterCallback
+#          - --suppress=noCopyConstructor
+#          - --suppress=noOperatorEq
+
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
     hooks:
