@@ -101,17 +101,46 @@ repos:
           - --suppress=noCopyConstructor
           - --suppress=noOperatorEq
 
-#  - repo: https://github.com/cpplint/cpplint
-#    rev: "2.0.2"
-#    hooks:
-#      - id: cpplint
-#        exclude: ^(tests/.*|documentation/.*)$
-#        args: ["--filter=-build/header_guard,-legal/copyright,-whitespace/indent,-whitespace/newline,-whitespace/braces,-whitespace/comments,-whitespace/line_length,-whitespace/parens,-build/include_order,-readability/todo,-readability/fn_size,-build/include_subdir,-runtime/int,-readability/multiline_comment,-build/namespaces,-runtime/references,-runtime/explicit,-runtime/threadsafe_fn","--exclude=src/space.cpp","--exclude=src/align/stack.h"]
-#        additional_dependencies:
-#          - cpplint>=1.6.1
-#  - repo: https://github.com/shellcheck-py/shellcheck-py
-#    rev: v0.11.0.1
-#    hooks:
-#      - id: shellcheck
-#        # exclude: (?x)^(__NONE__)$
-#        # args: [-x,-e1007,-e1009,-e1072,-e1073]
+      - id: cppcheck
+        #files: align/align.h
+        #files: chunk.cpp
+        files: newlines/struct_union.cpp
+        #exclude: ^(tests/.*|documentation/.*)$
+        exclude: ^(tests/.*|src/detect.cpp|src/indent.cpp|documentation/.*)$
+        args:
+          - --quiet
+          - --force
+          - --language=c++
+          - -Isrc
+          - '--template={file}({line}): {severity} ({id}): {message}'
+          - --inline-suppr
+          - --check-level=exhaustive
+          - --suppress=returnDanglingLifetime
+          - --suppress=unusedFunction
+          - --suppress=missingIncludeSystem
+          - --suppress=missingInclude
+          - --suppress=noExplicitConstructor
+          - --suppress=unmatchedSuppression
+          - --suppress=checkersReport
+          - --suppress=useStlAlgorithm
+          - --suppress=unusedStructMember
+          - --suppress=useInitializationList
+          - --suppress=unusedPrivateFunction
+          - --suppress=constParameterCallback
+          - --suppress=noCopyConstructor
+          - --suppress=noOperatorEq
+
+  - repo: https://github.com/cpplint/cpplint
+    rev: "2.0.2"
+    hooks:
+      - id: cpplint
+        exclude: ^(tests/.*|documentation/.*)$
+        args: ["--filter=-build/header_guard,-legal/copyright,-whitespace/indent,-whitespace/newline,-whitespace/braces,-whitespace/comments,-whitespace/line_length,-whitespace/parens,-build/include_order,-readability/todo,-readability/fn_size,-build/include_subdir,-runtime/int,-readability/multiline_comment,-build/namespaces,-runtime/references,-runtime/explicit,-runtime/threadsafe_fn","--exclude=src/space.cpp","--exclude=src/align/stack.h"]
+        additional_dependencies:
+          - cpplint>=1.6.1
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+        # exclude: (?x)^(__NONE__)$
+        # args: [-x,-e1007,-e1009,-e1072,-e1073]
