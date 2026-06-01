@@ -74,7 +74,8 @@ repos:
         args: [--replace, --no-backup, -c, forUncrustifySources.cfg, -l, CPP]
 #      deactivate for a short time, 27. 1. 2026 guy
       - id: cppcheck
-        files: align/align.h
+        #files: align/align.h
+        files: chunk.cpp
         #exclude: ^(tests/.*|documentation/.*)$
         exclude: ^(tests/.*|src/detect.cpp|src/indent.cpp|documentation/.*)$
         args:
