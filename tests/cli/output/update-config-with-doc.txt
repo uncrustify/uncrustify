@@ -3172,6 +3172,30 @@ align_typedef_amp_style         = 0        # unsigned number
 # 0: Don't align (default).
 align_right_cmt_span            = 0        # unsigned number
 
+# Maximum budget of empty lines to skip for align_right_cmt_span.
+#  -1: Use the global_span_num_empty_lines budget (default).
+#   0: No budget (don't skip any empty lines).
+#  >0: Skip up to this many empty lines between candidates.
+#
+# Default: -1
+align_right_cmt_span_num_empty_lines = -1       # number
+
+# Maximum budget of preprocessor lines to skip for align_right_cmt_span.
+#  -1: Use the global_span_num_pp_lines budget (default).
+#   0: No budget (don't skip any preprocessor lines).
+#  >0: Skip up to this many preprocessor lines between candidates.
+#
+# Default: -1
+align_right_cmt_span_num_pp_lines = -1       # number
+
+# Maximum budget of comment lines to skip for align_right_cmt_span.
+#  -1: Use the global_span_num_cmt_lines budget (default).
+#   0: No budget (don't skip any comment lines).
+#  >0: Skip up to this many comment lines between candidates.
+#
+# Default: -1
+align_right_cmt_span_num_cmt_lines = -1       # number
+
 # Minimum number of columns between preceding text and a trailing comment in
 # order for the comment to qualify for being aligned. Must be non-zero to have
 # an effect.

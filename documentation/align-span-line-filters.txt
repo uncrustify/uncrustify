@@ -88,6 +88,7 @@ The following span options currently support line filters:
   | align_same_func_call_params_span | Parameters in same-name single-line           |
   |                                  | function/method calls                         |
   | align_braced_init_list_span      | Braced initializer list alignment (C++)       |
+  | align_right_cmt_span             | Trailing (right-side) comment alignment       |
   +----------------------------------+-----------------------------------------------+
 
 Each of these has the three associated filter options. For example:
