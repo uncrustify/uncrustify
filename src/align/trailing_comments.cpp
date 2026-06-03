@@ -77,9 +77,10 @@ Chunk *align_trailing_comments(Chunk *start)
 
    // Find the max column
    log_rule_B("align_right_cmt_span");
-
-   while (  pc->IsNotNullChunk()
-         && (nl_count < options::align_right_cmt_span()))
+   const size_t span = options::align_right_cmt_span();
+   while (  span
+         && pc->IsNotNullChunk()
+         && (nl_count <= span))
    {
       if (  pc->TestFlags(PCF_RIGHT_COMMENT)
          && pc->GetColumn() > 1)
