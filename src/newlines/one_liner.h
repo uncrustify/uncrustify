@@ -10,7 +10,7 @@
 
 class Chunk;
 
-bool is_class_one_liner(Chunk const *pc);
+bool is_class_one_liner(Chunk *pc);
 void nl_create_list_liner(Chunk *brace_open);
 void nl_create_one_liner(Chunk *vbrace_open);
 

@@ -19,7 +19,7 @@ static void remove_semicolon(Chunk *pc);
  * Check for what is before the brace open.
  * Do not remove if it is a square close, word, type, or paren close.
  */
-static void check_unknown_brace_close(Chunk *semi, Chunk const *brace_close);
+static void check_unknown_brace_close(Chunk *semi, Chunk *brace_close);
 
 
 static void remove_semicolon(Chunk *pc)
@@ -71,16 +71,16 @@ void remove_extra_semicolons()
                     || prev->GetParentType() == E_Token::CT_WHILE))
          {
             // looking for code block vs. initialisation
-            bool        code_block_found = true;
-            Chunk const *closing_brace   = pc->GetPrevNcNnl();                   // Issue #3506
+            bool  code_block_found = true;
+            Chunk *closing_brace   = pc->GetPrevNcNnl();                   // Issue #3506
 
             if (closing_brace->IsNotNullChunk())
             {
-               Chunk const *opening_brace = closing_brace->GetOpeningParen();
+               Chunk *opening_brace = closing_brace->GetOpeningParen();
 
                if (opening_brace->IsNotNullChunk())
                {
-                  Chunk const *equal_sign = opening_brace->GetPrevNcNnl();
+                  Chunk *equal_sign = opening_brace->GetPrevNcNnl();
 
                   if (  equal_sign->IsNotNullChunk()
                      && equal_sign->Is(E_Token::CT_ASSIGN))
@@ -129,10 +129,10 @@ void remove_extra_semicolons()
 } // remove_extra_semicolons
 
 
-static void check_unknown_brace_close(Chunk *semi, Chunk const *brace_close)
+static void check_unknown_brace_close(Chunk *semi, Chunk *brace_close)
 {
    LOG_FUNC_ENTRY();
-   Chunk const *pc = brace_close->GetPrevType(E_Token::CT_BRACE_OPEN, brace_close->GetLevel());
+   Chunk *pc = brace_close->GetPrevType(E_Token::CT_BRACE_OPEN, brace_close->GetLevel());
 
    pc = pc->GetPrevNcNnl();
 

@@ -185,7 +185,7 @@ Chunk *align_func_param(Chunk *start)
          }
          else
          {
-            Chunk const *tmp_prev = pc->GetPrevNc();
+            Chunk *tmp_prev = pc->GetPrevNc();
 
             if (!tmp_prev->IsNewline())  // don't count leading commas
             {

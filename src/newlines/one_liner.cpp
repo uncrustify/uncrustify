@@ -22,7 +22,7 @@ using namespace uncrustify;
 constexpr static auto LCURRENT = LNEWLINE;
 
 
-bool is_class_one_liner(Chunk const *pc)
+bool is_class_one_liner(Chunk *pc)
 {
    if (  (  pc->Is(E_Token::CT_FUNC_CLASS_DEF)
          || pc->Is(E_Token::CT_FUNC_DEF))

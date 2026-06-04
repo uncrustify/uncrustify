@@ -41,7 +41,7 @@ Chunk *newline_var_def_blk(Chunk *start)
       if (  prev->IsNotNullChunk()
          && prev->Is(E_Token::CT_ASSIGN))
       {
-         Chunk const *tmp = start->GetClosingParen();
+         Chunk *tmp = start->GetClosingParen();
          return(tmp->GetNextNcNnl());
       }
       // check if we're at the top of a function definition, or function call with a
@@ -57,7 +57,7 @@ Chunk *newline_var_def_blk(Chunk *start)
    {
       LOG_CHUNK(LTOK, pc);
 
-      Chunk const *next_pc = pc->GetNext();
+      Chunk *next_pc = pc->GetNext();
       LOG_FMT(LVARDFBLK, "%s(%d): next_pc orig line is %zu, orig col is %zu, type is %s, text is '%s'\n",
               __func__, __LINE__, next_pc->GetOrigLine(), next_pc->GetOrigCol(), get_token_name(next_pc->GetType()), next_pc->GetLogText());
 
@@ -123,7 +123,7 @@ Chunk *newline_var_def_blk(Chunk *start)
             || pc->GetLevel() == 0))
       {
          // Find the "next" chunk for is_var_def()
-         Chunk const *next = pc->GetNextNcNnl();
+         Chunk *next = pc->GetNextNcNnl();
 
          LOG_FMT(LVARDFBLK, "%s(%d): next orig line is %zu, orig col is %zu, type is %s, text is '%s'\n",
                  __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()), next->GetLogText());
