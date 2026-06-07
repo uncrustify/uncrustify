@@ -44,7 +44,7 @@ repos:
       - id: check-case-conflict
       - id: check-toml
   - repo: https://github.com/lovesegfault/beautysh.git
-    rev: v6.4.1
+    rev: v6.4.3
     hooks:
       - id: beautysh
         args: [--indent-size=2]
@@ -52,7 +52,7 @@ repos:
         additional_dependencies:
           - setuptools
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
+    rev: v2.4.2
     hooks:
       - id: codespell
         # scripts/updateCodespellIgnoreFile.sh updates the ignore file.
