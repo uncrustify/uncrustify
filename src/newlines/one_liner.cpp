@@ -22,7 +22,7 @@ using namespace uncrustify;
 constexpr static auto LCURRENT = LNEWLINE;
 
 
-bool is_class_one_liner(Chunk *pc)
+bool is_class_one_liner(Chunk const *pc)
 {
    if (  (  pc->Is(E_Token::CT_FUNC_CLASS_DEF)
          || pc->Is(E_Token::CT_FUNC_DEF))
@@ -46,8 +46,8 @@ void nl_create_list_liner(Chunk *brace_open)
    {
       return;
    }
-   Chunk *closing = brace_open->GetNextType(E_Token::CT_BRACE_CLOSE, brace_open->GetLevel());
-   Chunk *tmp     = brace_open;
+   Chunk       *closing = brace_open->GetNextType(E_Token::CT_BRACE_CLOSE, brace_open->GetLevel());
+   Chunk const *tmp     = brace_open;
 
    do
    {
@@ -372,10 +372,10 @@ bool nl_collapse_braced_one_liner(Chunk *br_open)
       return(false);
    }
    // Count top-level statements inside the block
-   size_t stmt_count  = 0;
-   size_t brace_depth = 0;
-   size_t paren_depth = 0;
-   Chunk  *tmp        = br_open;
+   size_t      stmt_count  = 0;
+   size_t      brace_depth = 0;
+   size_t      paren_depth = 0;
+   Chunk const *tmp        = br_open;
 
    while ((tmp = tmp->GetNext()) != br_close)
    {
@@ -430,7 +430,7 @@ bool nl_collapse_braced_one_liner(Chunk *br_open)
    newline_del_between(before_brace, br_close);
 
    // Also remove newlines between br_close and anything after (for proper spacing)
-   Chunk *after_close = br_close->GetNext();
+   Chunk const *after_close = br_close->GetNext();
 
    if (  after_close->IsNotNullChunk()
       && after_close->IsNewline())

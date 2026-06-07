@@ -604,7 +604,7 @@ void do_blank_lines()
       if (  options::nl_after_whole_file_ifdef() != 0
          && options::nl_after_whole_file_ifdef() != pc->GetNlCount())
       {
-         Chunk *pp_start = prev->GetPpStart();
+         Chunk const *pp_start = prev->GetPpStart();
 
          if (  pp_start->IsNotNullChunk()
             && pp_start->GetParentType() == E_Token::CT_PP_IF
@@ -632,7 +632,7 @@ void do_blank_lines()
       if (  options::nl_after_whole_file_endif() != 0
          && options::nl_after_whole_file_endif() != pc->GetNlCount())
       {
-         Chunk *pp_start = prev->GetPpStart();
+         Chunk const *pp_start = prev->GetPpStart();
 
          if (  pp_start->IsNotNullChunk()
             && pp_start->GetParentType() == E_Token::CT_PP_ENDIF

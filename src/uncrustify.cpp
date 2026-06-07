@@ -357,7 +357,7 @@ static void version_exit()
 
 NODISCARD static int redir_stdout(const char *output_file)
 {
-   FILE *my_stdout = stdout;  // Reopen stdout
+   FILE const *my_stdout;  // Reopen stdout
 
    if (output_file != nullptr)
    {
@@ -1732,10 +1732,10 @@ static void add_file_footer()
 
 static void add_func_header(E_Token type, const MemoryFile &fm)
 {
-   Chunk *pc;
-   Chunk *ref;
-   Chunk *tmp;
-   bool  do_insert;
+   Chunk       *pc;
+   Chunk const *ref;
+   Chunk       *tmp;
+   bool        do_insert;
 
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnlNpp())
    {
@@ -1988,7 +1988,7 @@ static void uncrustify_start(const deque<int> &data)
    // Get the column for the fragment indent
    if (cpd.frag)
    {
-      Chunk *pc = Chunk::GetHead();
+      Chunk const *pc = Chunk::GetHead();
 
       cpd.frag_cols = pc->GetOrigCol();
    }
