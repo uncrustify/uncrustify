@@ -440,7 +440,7 @@ static void remove_blank_lines_between_imports(Chunk **chunks, size_t num_chunks
 /**
  * Delete chunks on line having chunk.
  */
-static void delete_chunks_on_line_having_chunk(Chunk *chunk)
+static void delete_chunks_on_line_having_chunk(Chunk const *chunk)
 {
    LOG_FUNC_ENTRY();
 
@@ -497,7 +497,7 @@ static void dedupe_imports(Chunk **chunks, size_t num_chunks)
 /**
  * Add blank line before the chunk.
  */
-static void blankline_add_before(Chunk *pc)
+static void blankline_add_before(Chunk const *pc)
 {
    Chunk *newline = newline_add_before(pc->GetFirstChunkOnLine());
 
@@ -516,7 +516,7 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
    LOG_FUNC_ENTRY();
 
    // Group imports based on first character, typically quote or angle.
-   int c_idx      = -1;
+   int c_idx;
    int c_idx_last = -1;
 
    for (size_t idx = 0; idx < num_chunks; idx++)
@@ -539,7 +539,7 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
    }
 
    // Group imports based on having extension.
-   bool chunk_has_dot      = false;
+   bool chunk_has_dot;
    bool chunk_last_has_dot = false;
 
    for (size_t idx = 0; idx < num_chunks; idx++)
@@ -555,7 +555,7 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
    }
 
    // Group imports based on priority defined by config.
-   int chunk_pri      = -1;
+   int chunk_pri;
    int chunk_pri_last = -1;
 
    for (size_t idx = 0; idx < num_chunks; idx++)
@@ -571,7 +571,7 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
    }
 
    // Group imports that contain filename pattern.
-   bool chunk_has_filename      = false;
+   bool chunk_has_filename;
    bool last_chunk_has_filename = false;
 
    for (size_t idx = 0; idx < num_chunks; idx++)
@@ -592,15 +592,15 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
 void sort_imports()
 {
    LOG_FUNC_ENTRY();
-   const int max_number_to_sort                        = 1024;
-   const int max_lines_to_check_for_sort_after_include = 128;
-   const int max_gap_threshold_between_include_to_sort = 32;
+   const int   max_number_to_sort                        = 1024;
+   const int   max_lines_to_check_for_sort_after_include = 128;
+   const int   max_gap_threshold_between_include_to_sort = 32;
 
-   Chunk     *chunks[max_number_to_sort];
-   size_t    num_chunks  = 0;
-   Chunk     *p_last     = Chunk::NullChunkPtr;
-   Chunk     *p_imp      = Chunk::NullChunkPtr;
-   Chunk     *p_imp_last = Chunk::NullChunkPtr;
+   Chunk       *chunks[max_number_to_sort];
+   size_t      num_chunks  = 0;
+   Chunk const *p_last     = Chunk::NullChunkPtr;
+   Chunk       *p_imp      = Chunk::NullChunkPtr;
+   Chunk const *p_imp_last = Chunk::NullChunkPtr;
 
    prepare_categories();
 

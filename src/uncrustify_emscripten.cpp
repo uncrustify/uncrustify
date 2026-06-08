@@ -58,6 +58,7 @@
 #include "uncrustify.h"
 #include "uncrustify_version.h"
 #include "unicode.h"
+#include "../build/uncrustify_version.h"
 
 #include <iostream>
 #include <map>
