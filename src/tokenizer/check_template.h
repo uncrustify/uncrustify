@@ -25,7 +25,7 @@ void check_template_arg(Chunk *start, Chunk const *end);
  * @param start  chunk to start check at
  * @param end    chunk to end check at
  */
-void check_template_args(Chunk *start, Chunk *end);
+void check_template_args(Chunk *start, Chunk const *end);
 
 
 /**

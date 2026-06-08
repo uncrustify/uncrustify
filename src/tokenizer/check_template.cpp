@@ -507,7 +507,7 @@ void check_template_arg(Chunk *start, Chunk const *end)
 } // check_template_arg
 
 
-void check_template_args(Chunk *start, Chunk *end)
+void check_template_args(Chunk *start, Chunk const *end)
 {
    std::vector<E_Token> tokens;
 
