@@ -48,6 +48,7 @@
 #if defined (__linux__)
 
 
+#include "../build/uncrustify_version.h"
 #include "keywords.h"
 #include "log_levels.h"
 #include "logger.h"
@@ -58,7 +59,6 @@
 #include "uncrustify.h"
 #include "uncrustify_version.h"
 #include "unicode.h"
-#include "../build/uncrustify_version.h"
 
 #include <iostream>
 #include <map>
