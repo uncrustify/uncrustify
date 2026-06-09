@@ -48,7 +48,7 @@ using namespace uncrustify;
  *
  * @return IARF_IGNORE, IARF_ADD, IARF_REMOVE or IARF_FORCE
  */
-static iarf_e ensure_force_space(Chunk *first, Chunk *second, iarf_e av);
+static iarf_e ensure_force_space(Chunk const *first, Chunk const *second, iarf_e av);
 
 
 /**
@@ -528,7 +528,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          if (  second->Is(E_Token::CT_VBRACE_CLOSE)
             && first->TestFlags(PCF_ONE_LINER))
          {
-            Chunk *tmp = second;
+            Chunk const *tmp = second;
 
             while (tmp->Is(E_Token::CT_VBRACE_CLOSE))
             {
@@ -784,7 +784,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (second->Is(E_Token::CT_ELLIPSIS))
    {
       // type followed by a ellipsis
-      Chunk *tmp = first;
+      Chunk const *tmp = first;
 
       if (  tmp->Is(E_Token::CT_PTR_TYPE)
          || tmp->Is(E_Token::CT_BYREF))
@@ -1438,7 +1438,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  second->Is(E_Token::CT_FPAREN_OPEN)
          || second->Is(E_Token::CT_PAREN_OPEN))
       {
-         Chunk *next = second->GetNextNcNnl();
+         Chunk const *next = second->GetNextNcNnl();
 
          if (next->Is(E_Token::CT_FPAREN_CLOSE))
          {
@@ -1537,7 +1537,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          log_rule("sp_between_ptr_ref");                           // ptr_ref 1
          return(options::sp_between_ptr_ref());
       }
-      Chunk *next = second->GetNext();
+      Chunk const *next = second->GetNext();
 
       if (  next->IsNotNullChunk()
          && (  next->Is(E_Token::CT_COMMA)
@@ -1625,7 +1625,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  (options::sp_after_operator_sym_empty() != IARF_IGNORE)
          && second->Is(E_Token::CT_FPAREN_OPEN))
       {
-         Chunk *next = second->GetNextNcNnl();
+         Chunk const *next = second->GetNextNcNnl();
 
          if (next->Is(E_Token::CT_FPAREN_CLOSE))
          {
@@ -1688,7 +1688,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  (options::sp_func_call_paren_empty() != IARF_IGNORE)
          && second->Is(E_Token::CT_FPAREN_OPEN))
       {
-         Chunk *next = second->GetNextNcNnl();
+         Chunk const *next = second->GetNextNcNnl();
 
          if (next->Is(E_Token::CT_FPAREN_CLOSE))
          {
@@ -1727,7 +1727,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  (options::sp_func_def_paren_empty() != IARF_IGNORE)
          && second->Is(E_Token::CT_FPAREN_OPEN))
       {
-         Chunk *next = second->GetNextNcNnl();
+         Chunk const *next = second->GetNextNcNnl();
 
          if (next->Is(E_Token::CT_FPAREN_CLOSE))
          {
@@ -1805,7 +1805,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  (options::sp_func_proto_paren_empty() != IARF_IGNORE)
          && second->Is(E_Token::CT_FPAREN_OPEN))
       {
-         Chunk *next = second->GetNextNcNnl();
+         Chunk const *next = second->GetNextNcNnl();
 
          if (next->Is(E_Token::CT_FPAREN_CLOSE))
          {
@@ -1836,7 +1836,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  (options::sp_func_class_paren_empty() != IARF_IGNORE)
          && second->Is(E_Token::CT_FPAREN_OPEN))
       {
-         Chunk *next = second->GetNextNcNnl();
+         Chunk const *next = second->GetNextNcNnl();
 
          if (next->Is(E_Token::CT_FPAREN_CLOSE))
          {
@@ -1857,7 +1857,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (  first->Is(E_Token::CT_DEDUCTION_GUIDE)
       && second->Is(E_Token::CT_FPAREN_OPEN))
    {
-      Chunk *next = second->GetNextNcNnl();
+      Chunk const *next = second->GetNextNcNnl();
 
       if (next->Is(E_Token::CT_FPAREN_CLOSE))
       {
@@ -1952,7 +1952,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          || second->GetParentType() == E_Token::CT_UNION)
       {
          // Fix for issue #1240  adding space in struct initializers
-         Chunk *tmp = second->GetOpeningParen()->GetPrevNcNnl();
+         Chunk const *tmp = second->GetOpeningParen()->GetPrevNcNnl();
 
          if (tmp->Is(E_Token::CT_ASSIGN))
          {
@@ -2099,7 +2099,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       // check for initializers and add space or ignore based on the option.
       if (first->GetParentType() == E_Token::CT_FUNC_CALL)
       {
-         Chunk *tmp = first->GetPrevType(first->GetParentType(), first->GetLevel());
+         Chunk const *tmp = first->GetPrevType(first->GetParentType(), first->GetLevel());
          tmp = tmp->GetPrevNcNnl();
 
          if (tmp->Is(E_Token::CT_NEW))
@@ -2778,7 +2778,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
       else if (CharTable::IsKw1(second->GetText()[0]))
       {
-         Chunk *prev = first->GetPrev();
+         Chunk const *prev = first->GetPrev();
 
          if (prev->Is(E_Token::CT_IN))
          {
@@ -2830,7 +2830,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          }
       }
       // Find the next non-'*' chunk
-      Chunk *next = second;
+      Chunk const *next = second;
 
       do
       {
@@ -2913,7 +2913,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
                }
                else
                {
-                  Chunk *next_next = next->GetNextNc();
+                  Chunk const *next_next = next->GetNextNc();
 
                   if (next_next->IsNotNullChunk() && next_next->Is(E_Token::CT_DC_MEMBER))
                   {
@@ -3024,7 +3024,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          || first->GetParentType() == E_Token::CT_UNION)
       {
          // Fix for issue #1240  adding space in struct initializers
-         Chunk *tmp = first->GetPrevNcNnl();
+         Chunk const *tmp = first->GetPrevNcNnl();
 
          if (tmp->Is(E_Token::CT_ASSIGN))
          {
@@ -3142,8 +3142,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
       if (second->Is(E_Token::CT_WORD))
       {
-         Chunk *open_paren = first->GetOpeningParen();
-         Chunk *type       = open_paren->GetPrev()->GetPrev();
+         Chunk const *open_paren = first->GetOpeningParen();
+         Chunk const *type       = open_paren->GetPrev()->GetPrev();
 
          if (type->Is(E_Token::CT_TYPE))
          {
@@ -3605,7 +3605,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 } // do_space
 
 
-static iarf_e ensure_force_space(Chunk *first, Chunk *second, iarf_e av)
+static iarf_e ensure_force_space(Chunk const *first, Chunk const *second, iarf_e av)
 {
    if (first->TestFlags(PCF_FORCE_SPACE))
    {
@@ -3746,7 +3746,7 @@ void space_text()
             && !pc->GetText().startswith("@\""))
          {
             // Find the next non-empty chunk on this line
-            Chunk *tmp = next;
+            Chunk const *tmp = next;
 
             while (  tmp->IsNotNullChunk()
                   && (tmp->Len() == 0)
