@@ -96,22 +96,22 @@ void print_numbering()
 static void output_comment_multi(Chunk *pc);
 
 
-static bool kw_fcn_filename(Chunk *cmt, UncText &out_txt);
+static bool kw_fcn_filename(Chunk const *cmt, UncText &out_txt);
 
 
-static bool kw_fcn_class(Chunk *cmt, UncText &out_txt);
+static bool kw_fcn_class(Chunk const *cmt, UncText &out_txt);
 
 
-static bool kw_fcn_message(Chunk *cmt, UncText &out_txt);
+static bool kw_fcn_message(Chunk const *cmt, UncText &out_txt);
 
 
-static bool kw_fcn_category(Chunk *cmt, UncText &out_txt);
+static bool kw_fcn_category(Chunk const *cmt, UncText &out_txt);
 
 
-static bool kw_fcn_scope(Chunk *cmt, UncText &out_txt);
+static bool kw_fcn_scope(Chunk const *cmt, UncText &out_txt);
 
 
-static bool kw_fcn_function(Chunk *cmt, UncText &out_txt);
+static bool kw_fcn_function(Chunk const *cmt, UncText &out_txt);
 
 
 /**
@@ -120,13 +120,13 @@ static bool kw_fcn_function(Chunk *cmt, UncText &out_txt);
  * If the arg list is '()' or '(void)', then no @params are added.
  * Likewise, if the return value is 'void', then no @return is added.
  */
-static bool kw_fcn_javaparam(Chunk *cmt, UncText &out_txt);
+static bool kw_fcn_javaparam(Chunk const *cmt, UncText &out_txt);
 
 
-static bool kw_fcn_fclass(Chunk *cmt, UncText &out_txt);
+static bool kw_fcn_fclass(Chunk const *cmt, UncText &out_txt);
 
 
-static bool kw_fcn_year(Chunk *cmt, UncText &out_txt);
+static bool kw_fcn_year(Chunk const *cmt, UncText &out_txt);
 
 
 /**
@@ -1559,7 +1559,7 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const UncText &str)
 
 
 // TODO: can we use search_next_chunk here?
-static Chunk *get_next_function(Chunk *pc)
+static Chunk const *get_next_function(Chunk const *pc)
 {
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
@@ -2895,7 +2895,7 @@ static void output_comment_multi(Chunk *pc)
 } // output_comment_multi
 
 
-static bool kw_fcn_filename(Chunk *cmt, UncText &out_txt)
+static bool kw_fcn_filename(Chunk const *cmt, UncText &out_txt)
 {
    UNUSED(cmt);
    out_txt.append(path_basename(cpd.filename.c_str()));
@@ -2903,7 +2903,7 @@ static bool kw_fcn_filename(Chunk *cmt, UncText &out_txt)
 }
 
 
-static bool kw_fcn_class(Chunk *cmt, UncText &out_txt)
+static bool kw_fcn_class(Chunk const *cmt, UncText &out_txt)
 {
    Chunk *tmp = Chunk::NullChunkPtr;
 
@@ -2955,7 +2955,7 @@ static bool kw_fcn_class(Chunk *cmt, UncText &out_txt)
 } // kw_fcn_class
 
 
-static bool kw_fcn_message(Chunk *cmt, UncText &out_txt)
+static bool kw_fcn_message(Chunk const *cmt, UncText &out_txt)
 {
    Chunk const *fcn = get_next_function(cmt);
 
@@ -2996,7 +2996,7 @@ static bool kw_fcn_message(Chunk *cmt, UncText &out_txt)
 } // kw_fcn_message
 
 
-static bool kw_fcn_category(Chunk *cmt, UncText &out_txt)
+static bool kw_fcn_category(Chunk const *cmt, UncText &out_txt)
 {
    Chunk const *category = get_prev_category(cmt);
 
@@ -3010,7 +3010,7 @@ static bool kw_fcn_category(Chunk *cmt, UncText &out_txt)
 } // kw_fcn_category
 
 
-static bool kw_fcn_scope(Chunk *cmt, UncText &out_txt)
+static bool kw_fcn_scope(Chunk const *cmt, UncText &out_txt)
 {
    Chunk const *scope = get_next_scope(cmt);
 
@@ -3023,7 +3023,7 @@ static bool kw_fcn_scope(Chunk *cmt, UncText &out_txt)
 } // kw_fcn_scope
 
 
-static bool kw_fcn_function(Chunk *cmt, UncText &out_txt)
+static bool kw_fcn_function(Chunk const *cmt, UncText &out_txt)
 {
    Chunk const *fcn = get_next_function(cmt);
 
@@ -3045,7 +3045,7 @@ static bool kw_fcn_function(Chunk *cmt, UncText &out_txt)
 }
 
 
-static bool kw_fcn_javaparam(Chunk *cmt, UncText &out_txt)
+static bool kw_fcn_javaparam(Chunk const *cmt, UncText &out_txt)
 {
    Chunk const *fcn = get_next_function(cmt);
 
@@ -3191,7 +3191,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, UncText &out_txt)
 } // kw_fcn_javaparam
 
 
-static bool kw_fcn_fclass(Chunk *cmt, UncText &out_txt)
+static bool kw_fcn_fclass(Chunk const *cmt, UncText &out_txt)
 {
    Chunk const *fcn = get_next_function(cmt);
 
@@ -3251,7 +3251,7 @@ static bool kw_fcn_fclass(Chunk *cmt, UncText &out_txt)
 } // kw_fcn_fclass
 
 
-static bool kw_fcn_year(Chunk *cmt, UncText &out_txt)
+static bool kw_fcn_year(Chunk const *cmt, UncText &out_txt)
 {
    UNUSED(cmt);
    time_t now = time(nullptr);
@@ -3263,8 +3263,8 @@ static bool kw_fcn_year(Chunk *cmt, UncText &out_txt)
 
 struct kw_subst_t
 {
-   const char *tag;
-   bool       (*func)(Chunk *cmt, UncText &out_txt);
+   char const *tag;
+   bool       (*func)(Chunk const *cmt, UncText &out_txt);
 };
 
 
