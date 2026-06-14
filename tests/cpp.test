@@ -1669,3 +1669,22 @@
 34940  cpp/global_align_span_braced_init_list_num_lines-1.cfg  cpp/align_braced_init_list_span_num_mixed.cpp
 34941  cpp/global_align_span_braced_init_list_num_lines-2.cfg  cpp/align_braced_init_list_span_num_mixed.cpp
 34942  cpp/global_align_span_braced_init_list_num_lines-3.cfg  cpp/align_braced_init_list_span_num_mixed.cpp
+
+34943  common/align_right_cmt_span_num_empty-1.cfg        cpp/align_right_cmt_span_num_mixed.cpp
+34944  common/align_right_cmt_span_num_empty-2.cfg        cpp/align_right_cmt_span_num_mixed.cpp
+34945  common/align_right_cmt_span_num_empty-3.cfg        cpp/align_right_cmt_span_num_mixed.cpp
+34946  common/align_right_cmt_span_num_pp-1.cfg           cpp/align_right_cmt_span_num_mixed.cpp
+34947  common/align_right_cmt_span_num_pp-2.cfg           cpp/align_right_cmt_span_num_mixed.cpp
+34948  common/align_right_cmt_span_num_pp-3.cfg           cpp/align_right_cmt_span_num_mixed.cpp
+34949  common/align_right_cmt_span_num_cmt-1.cfg          cpp/align_right_cmt_span_num_mixed.cpp
+34950  common/align_right_cmt_span_num_cmt-2.cfg          cpp/align_right_cmt_span_num_mixed.cpp
+34951  common/align_right_cmt_span_num_cmt-3.cfg          cpp/align_right_cmt_span_num_mixed.cpp
+34952  common/align_right_cmt_span_num_mixed-1.cfg        cpp/align_right_cmt_span_num_mixed.cpp
+34953  common/align_right_cmt_span_num_mixed-2.cfg        cpp/align_right_cmt_span_num_mixed.cpp
+34954  common/align_right_cmt_span_num_mixed-3.cfg        cpp/align_right_cmt_span_num_mixed.cpp
+34955  common/align_right_cmt_span_num_mixed-4.cfg        cpp/align_right_cmt_span_num_mixed.cpp
+34956  common/align_right_cmt_span_num_mixed-5.cfg        cpp/align_right_cmt_span_num_mixed.cpp
+34957  common/align_right_cmt_span_num_mixed-6.cfg        cpp/align_right_cmt_span_num_mixed.cpp
+34958  common/global_align_span_right_cmt_num_lines-1.cfg cpp/align_right_cmt_span_num_mixed.cpp
+34959  common/global_align_span_right_cmt_num_lines-2.cfg cpp/align_right_cmt_span_num_mixed.cpp
+34960  common/global_align_span_right_cmt_num_lines-3.cfg cpp/align_right_cmt_span_num_mixed.cpp

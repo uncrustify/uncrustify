@@ -3806,6 +3806,27 @@ align_typedef_amp_style;
 extern BoundedOption<unsigned, 0, 5000>
 align_right_cmt_span;
 
+// Maximum budget of empty lines to skip for align_right_cmt_span.
+//  -1: Use the global_span_num_empty_lines budget (default).
+//   0: No budget (don't skip any empty lines).
+//  >0: Skip up to this many empty lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_right_cmt_span_num_empty_lines; // = -1
+
+// Maximum budget of preprocessor lines to skip for align_right_cmt_span.
+//  -1: Use the global_span_num_pp_lines budget (default).
+//   0: No budget (don't skip any preprocessor lines).
+//  >0: Skip up to this many preprocessor lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_right_cmt_span_num_pp_lines; // = -1
+
+// Maximum budget of comment lines to skip for align_right_cmt_span.
+//  -1: Use the global_span_num_cmt_lines budget (default).
+//   0: No budget (don't skip any comment lines).
+//  >0: Skip up to this many comment lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_right_cmt_span_num_cmt_lines; // = -1
+
 // Minimum number of columns between preceding text and a trailing comment in
 // order for the comment to qualify for being aligned. Must be non-zero to have
 // an effect.
