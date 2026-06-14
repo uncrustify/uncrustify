@@ -42,7 +42,7 @@ void remove_extra_semicolons()
    while (pc->IsNotNullChunk())
    {
       Chunk *next = pc->GetNextNcNnl();
-      Chunk *prev;
+      Chunk *prev = Chunk::NullChunkPtr;
 
       if (  pc->Is(E_Token::CT_SEMICOLON)
          && !pc->TestFlags(PCF_IN_PREPROC)
