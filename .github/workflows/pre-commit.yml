@@ -9,7 +9,7 @@ jobs:
     env:
       RAW_LOG: pre-commit.log
       CS_XML: pre-commit.xml
-      CPPCHECK_VERSION: 2.20.1
+      CPPCHECK_VERSION: 2.21.0
     steps:
       # In case we are satisfied with cppcheck in ubuntu-latest
       # - run: sudo apt-get update && sudo apt-get install cppcheck uncrustify
