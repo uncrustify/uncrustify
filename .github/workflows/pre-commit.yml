@@ -9,7 +9,7 @@ jobs:
     env:
       RAW_LOG: pre-commit.log
       CS_XML: pre-commit.xml
-      CPPCHECK_VERSION: 2.18.3
+      CPPCHECK_VERSION: 2.21.0
     steps:
       # In case we are satisfied with cppcheck in ubuntu-latest
       # - run: sudo apt-get update && sudo apt-get install cppcheck uncrustify
@@ -50,22 +50,33 @@ jobs:
 
       # Project specific
       - uses: actions/checkout@v6
+
+      #
+      # Remove existing cache files (before restoring, after checkout)
+      #
+      - run: |
+          find .cache -type f ! -name .gitkeep -delete
+          find .cache -type d -empty -delete
+
       - run: python -m pip install pre-commit
       - uses: actions/cache/restore@v5
         if: github.event_name == 'pull_request'
         with:
           path: .cache/cppcheck
-          key: cppcheck-cache-${{ github.ref_name }}-${{ github.sha }}
+          key: cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.ref_name }}-${{ github.sha }}
           restore-keys: |
-            cppcheck-cache-${{ github.base_ref }}-
-            cppcheck-cache-
+            cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.ref_name }}-
+            cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.base_ref }}-
+            cppcheck-${{ env.CPPCHECK_VERSION }}-cache-
       - uses: actions/cache/restore@v5
         if: github.event_name != 'pull_request'
         with:
           path: .cache/cppcheck
-          key: cppcheck-cache-${{ github.ref_name }}-${{ github.sha }}
+          key: cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.ref_name }}-${{ github.sha }}
           restore-keys: |
-            cppcheck-cache-
+            cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.ref_name }}-
+            cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.base_ref }}-
+            cppcheck-${{ env.CPPCHECK_VERSION }}-cache-
       - uses: actions/cache/restore@v5
         with:
           path: ~/.cache/pre-commit/
@@ -82,7 +93,7 @@ jobs:
         if: ${{ ! cancelled() }}
         with:
           path: .cache/cppcheck
-          key: cppcheck-cache-${{ github.ref_name }}-${{ github.sha }}
+          key: cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.ref_name }}-${{ github.sha }}
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2025.1.1
         if: ${{ failure() }}
