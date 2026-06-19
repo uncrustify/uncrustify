@@ -1,7 +1,7 @@
 ---
 exclude:
-  (?x)^(
-  __NONE__)$
+  (?x)^(.cache/.*
+  |__NONE__)$
 repos:
   - repo: https://github.com/executablebooks/mdformat
     # Do this before other tools "fixing" the line endings
