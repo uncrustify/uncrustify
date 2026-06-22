@@ -357,10 +357,9 @@ static void version_exit()
 
 NODISCARD static int redir_stdout(const char *output_file)
 {
-   FILE const *my_stdout;  // Reopen stdout
-
    if (output_file != nullptr)
    {
+      FILE const *my_stdout;  // Reopen stdout
       my_stdout = freopen(output_file, "wb", stdout);
 
       if (my_stdout == nullptr)

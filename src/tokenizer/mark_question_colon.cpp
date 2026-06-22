@@ -151,16 +151,6 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
             colon_found = true;
          }
 
-         if (pc2->Is(E_Token::CT_COLON))
-         {
-            if (colon_found)
-            {
-               return(pc2);
-            }
-            else
-            {
-            }
-         }
       }
       else if (  pc2->Is(E_Token::CT_COLON)
               && square_bracket_depth <= 0
