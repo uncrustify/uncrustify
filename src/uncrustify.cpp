@@ -371,6 +371,7 @@ NODISCARD static int redir_stdout(const char *output_file)
          return(EX_IOERR);
       }
       LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
+      //close(my_stdout);
    }
    /* EXIT_FAILURE   1   Failing exit status.  */
    /* EXIT_SUCCESS   0   Successful exit status.  */
