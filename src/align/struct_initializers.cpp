@@ -15,7 +15,7 @@
 void align_struct_initializers()
 {
    LOG_FUNC_ENTRY();
-   Chunk *pc = Chunk::GetHead();
+   Chunk const *pc = Chunk::GetHead();
 
    while (pc->IsNotNullChunk())
    {
