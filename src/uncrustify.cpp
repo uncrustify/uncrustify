@@ -359,17 +359,17 @@ NODISCARD static int redir_stdout(const char *output_file)
 {
    if (output_file != nullptr)
    {
-      FILE const *my_stdout;  // Reopen stdout
-      my_stdout = freopen(output_file, "wb", stdout);
+      //FILE const *my_stdout;  // Reopen stdout
+      //my_stdout = freopen(output_file, "wb", stdout);
 
-      if (my_stdout == nullptr)
-      {
-         LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
-                 output_file, strerror(errno), errno);
-         usage_error();
-         /* EX_IOERR   74   input/output error */
-         return(EX_IOERR);
-      }
+      //if (my_stdout == nullptr)
+      //{
+      //   LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
+      //           output_file, strerror(errno), errno);
+      //   usage_error();
+      //   /* EX_IOERR   74   input/output error */
+      //   return(EX_IOERR);
+      //}
       LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
    }
    /* EXIT_FAILURE   1   Failing exit status.  */
