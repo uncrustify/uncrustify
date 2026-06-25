@@ -471,7 +471,7 @@ static std::pair<Chunk *, Chunk *> match_qualified_identifier(Chunk *pc)
    if (  end->IsNotNullChunk()
       && start->IsNotNullChunk())
    {
-      auto *double_colon = start->GetNextType(E_Token::CT_DC_MEMBER);
+      auto const *double_colon = start->GetNextType(E_Token::CT_DC_MEMBER);
 
       if (  double_colon->IsNotNullChunk()
          && chunk_is_between(double_colon, start, end))
@@ -862,12 +862,12 @@ void EnumStructUnionParser::analyze_identifiers()
     * "class/struct [macros/attributes ...] [: bases] { } x, ..."
     */
 
-   Chunk    *template_end      = get_template_end();
-   auto     *body_end          = get_body_end();
-   auto     *body_start        = get_body_start();
-   PcfFlags flags              = PCF_VAR_1ST_DEF;
-   auto     *inheritance_start = get_inheritance_start();
-   Chunk    *pc                = body_end->IsNotNullChunk() ? body_end : m_start;
+   Chunk      *template_end      = get_template_end();
+   auto       *body_end          = get_body_end();
+   auto const *body_start        = get_body_start();
+   PcfFlags   flags              = PCF_VAR_1ST_DEF;
+   auto const *inheritance_start = get_inheritance_start();
+   Chunk      *pc                = body_end->IsNotNullChunk() ? body_end : m_start;
 
    /**
     * first, try a simple approach to identify any associated type
@@ -1362,7 +1362,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk const *pc) const
 } // EnumStructUnionParser::is_potential_end_chunk
 
 
-bool EnumStructUnionParser::is_within_conditional(Chunk *pc) const
+bool EnumStructUnionParser::is_within_conditional(Chunk const *pc) const
 {
    LOG_FUNC_ENTRY();
 
@@ -1374,9 +1374,9 @@ bool EnumStructUnionParser::is_within_conditional(Chunk *pc) const
 
       while (it_token_chunk_pair != question_operators.cend())
       {
-         auto *question = it_token_chunk_pair->second;
-         auto *end      = skip_to_expression_end(question);
-         auto *start    = skip_to_expression_start(question);
+         auto       *question = it_token_chunk_pair->second;
+         auto const *end      = skip_to_expression_end(question);
+         auto const *start    = skip_to_expression_start(question);
 
          if (chunk_is_between(pc, start, end))
          {
@@ -1389,7 +1389,7 @@ bool EnumStructUnionParser::is_within_conditional(Chunk *pc) const
 } // EnumStructUnionParser::is_within_conditional
 
 
-bool EnumStructUnionParser::is_within_inheritance_list(Chunk *pc) const
+bool EnumStructUnionParser::is_within_inheritance_list(Chunk const *pc) const
 {
    LOG_FUNC_ENTRY();
 
@@ -1397,8 +1397,8 @@ bool EnumStructUnionParser::is_within_inheritance_list(Chunk *pc) const
    {
       return(true);
    }
-   auto *inheritance_end   = get_inheritance_end();
-   auto *inheritance_start = get_inheritance_start();
+   auto const *inheritance_end   = get_inheritance_end();
+   auto const *inheritance_start = get_inheritance_start();
 
    if (  inheritance_end->IsNotNullChunk()
       && inheritance_start->IsNotNullChunk())
@@ -1409,7 +1409,7 @@ bool EnumStructUnionParser::is_within_inheritance_list(Chunk *pc) const
 } // EnumStructUnionParser::is_within_inheritance_list
 
 
-bool EnumStructUnionParser::is_within_where_clause(Chunk *pc) const
+bool EnumStructUnionParser::is_within_where_clause(Chunk const *pc) const
 {
    LOG_FUNC_ENTRY();
 
@@ -1417,8 +1417,8 @@ bool EnumStructUnionParser::is_within_where_clause(Chunk *pc) const
    {
       return(true);
    }
-   auto *where_end   = get_where_end();
-   auto *where_start = get_where_start();
+   auto const *where_end   = get_where_end();
+   auto const *where_start = get_where_start();
 
    if (  where_end->IsNotNullChunk()
       && where_start->IsNotNullChunk())
@@ -1726,8 +1726,8 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
          next = prev;
       }
    }
-   Chunk *body_end   = get_body_end();
-   Chunk *body_start = get_body_start();
+   Chunk const *body_end   = get_body_end();
+   Chunk const *body_start = get_body_start();
 
    while (next != m_end)
    {
@@ -2241,9 +2241,9 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
       set_body_end(brace_close);
       set_body_start(brace_open);
 
-      auto *enum_base_start   = get_enum_base_start();
-      auto *inheritance_start = get_inheritance_start();
-      auto *prev              = pc->GetPrevNcNnlNi();
+      auto const *enum_base_start   = get_enum_base_start();
+      auto const *inheritance_start = get_inheritance_start();
+      auto       *prev              = pc->GetPrevNcNnlNi();
 
       /**
        * check to see if the open brace was preceded by a closing paren;
@@ -2674,10 +2674,10 @@ void EnumStructUnionParser::try_post_identify_macro_calls()
        * so is to avoid mis-interpretation by code executed at a later time
        */
 
-      auto  *body_start        = get_body_start();
-      auto  *inheritance_start = get_inheritance_start();
-      Chunk *pc                = m_start;
-      Chunk *prev              = Chunk::NullChunkPtr;
+      auto const *body_start        = get_body_start();
+      auto const *inheritance_start = get_inheritance_start();
+      Chunk      *pc                = m_start;
+      Chunk      *prev              = Chunk::NullChunkPtr;
 
       do
       {
