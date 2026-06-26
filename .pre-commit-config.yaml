@@ -104,6 +104,7 @@ repos:
           - --suppress=constParameterCallback
           - --suppress=noCopyConstructor
           - --suppress=noOperatorEq
+          - --suppress=unknownMacro:uncrustify_emscripten.cpp
 
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
