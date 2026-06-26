@@ -25,7 +25,7 @@ void parameter_pack_cleanup()
       // look for template
       if (pc->Is(E_Token::CT_TEMPLATE))                 // Issue #3309
       {
-         Chunk *template_end = pc->GetNextType(E_Token::CT_SEMICOLON, pc->GetLevel());
+         Chunk const *template_end = pc->GetNextType(E_Token::CT_SEMICOLON, pc->GetLevel());
 
          // look for a parameter pack
          while (pc->IsNotNullChunk())
@@ -34,7 +34,7 @@ void parameter_pack_cleanup()
 
             if (pc->Is(E_Token::CT_PARAMETER_PACK))
             {
-               Chunk *parameter_pack = pc;
+               Chunk const *parameter_pack = pc;
 
                // look for a token with the same text
                while (pc->IsNotNullChunk())
