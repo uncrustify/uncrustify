@@ -104,10 +104,10 @@ void do_blank_lines()
             continue;
          }
       }
-      Chunk *next = pc->GetNext();
-      Chunk *pcmt = pc->GetPrev();
+      Chunk       *next = pc->GetNext();
+      Chunk const *pcmt = pc->GetPrev();
 
-      bool  line_added = false;
+      bool        line_added = false;
 
       /*
        * If this is the first or the last token, pretend that there is an extra
