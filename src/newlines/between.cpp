@@ -9,7 +9,7 @@
 #include "newlines/between.h"
 
 
-bool newlines_between(Chunk *pc_start, Chunk *pc_end, size_t &newlines, E_Scope scope)
+bool newlines_between(Chunk *pc_start, Chunk const *pc_end, size_t &newlines, E_Scope scope)
 {
    if (  pc_start->IsNullChunk()
       || pc_end->IsNullChunk())
@@ -18,7 +18,7 @@ bool newlines_between(Chunk *pc_start, Chunk *pc_end, size_t &newlines, E_Scope 
    }
    newlines = 0;
 
-   Chunk *it = pc_start;
+   Chunk const *it = pc_start;
 
    for ( ; it->IsNotNullChunk() && it != pc_end; it = it->GetNext(scope))
    {

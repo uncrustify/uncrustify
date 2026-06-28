@@ -55,7 +55,6 @@ void newlines_squeeze_ifdef()
 
                if (pnl->IsNotNullChunk())
                {
-
                   if (pnl->GetNlCount() > 1)
                   {
                      Chunk const *tmp2;
