@@ -25,6 +25,11 @@ def scan_file(file_path):
             if idx > 0:
                 cur_token = line[25:idx].strip()
                 token_idx = 0
+        elif line.lstrip().startswith('//'):
+            continue
+        elif line.startswith('};'):
+            cur_token = ''
+            token_idx = 0
         else:
             if len(cur_token) > 0:
                 idx1 = line.find('{')

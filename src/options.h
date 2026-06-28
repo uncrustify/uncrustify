@@ -3494,6 +3494,27 @@ align_same_func_call_params_span;
 extern BoundedOption<signed, -1000, 5000>
 align_same_func_call_params_thresh;
 
+// Maximum budget of empty lines to skip for align_same_func_call_params_span.
+//  -1: Use the global_span_num_empty_lines budget (default).
+//   0: No budget (don't skip any empty lines).
+//  >0: Skip up to this many empty lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_same_func_call_params_span_num_empty_lines; // = -1
+
+// Maximum budget of preprocessor lines to skip for align_same_func_call_params_span.
+//  -1: Use the global_span_num_pp_lines budget (default).
+//   0: No budget (don't skip any preprocessor lines).
+//  >0: Skip up to this many preprocessor lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_same_func_call_params_span_num_pp_lines; // = -1
+
+// Maximum budget of comment lines to skip for align_same_func_call_params_span.
+//  -1: Use the global_span_num_cmt_lines budget (default).
+//   0: No budget (don't skip any comment lines).
+//  >0: Skip up to this many comment lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_same_func_call_params_span_num_cmt_lines; // = -1
+
 // The span for aligning variable definitions.
 //
 // 0: Don't align (default).
@@ -3624,6 +3645,27 @@ align_braced_init_list_span;
 // 0: No limit (default).
 extern BoundedOption<signed, -1000, 5000>
 align_braced_init_list_thresh;
+
+// Maximum budget of empty lines to skip for align_braced_init_list_span.
+//  -1: Use the global_span_num_empty_lines budget (default).
+//   0: No budget (don't skip any empty lines).
+//  >0: Skip up to this many empty lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_braced_init_list_span_num_empty_lines; // = -1
+
+// Maximum budget of preprocessor lines to skip for align_braced_init_list_span.
+//  -1: Use the global_span_num_pp_lines budget (default).
+//   0: No budget (don't skip any preprocessor lines).
+//  >0: Skip up to this many preprocessor lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_braced_init_list_span_num_pp_lines; // = -1
+
+// Maximum budget of comment lines to skip for align_braced_init_list_span.
+//  -1: Use the global_span_num_cmt_lines budget (default).
+//   0: No budget (don't skip any comment lines).
+//  >0: Skip up to this many comment lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_braced_init_list_span_num_cmt_lines; // = -1
 
 // How to apply align_assign_span to function declaration "assignments", i.e.
 // 'virtual void foo() = 0' or '~foo() = {default|delete}'.
@@ -3812,6 +3854,27 @@ align_typedef_amp_style;
 // 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_right_cmt_span;
+
+// Maximum budget of empty lines to skip for align_right_cmt_span.
+//  -1: Use the global_span_num_empty_lines budget (default).
+//   0: No budget (don't skip any empty lines).
+//  >0: Skip up to this many empty lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_right_cmt_span_num_empty_lines; // = -1
+
+// Maximum budget of preprocessor lines to skip for align_right_cmt_span.
+//  -1: Use the global_span_num_pp_lines budget (default).
+//   0: No budget (don't skip any preprocessor lines).
+//  >0: Skip up to this many preprocessor lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_right_cmt_span_num_pp_lines; // = -1
+
+// Maximum budget of comment lines to skip for align_right_cmt_span.
+//  -1: Use the global_span_num_cmt_lines budget (default).
+//   0: No budget (don't skip any comment lines).
+//  >0: Skip up to this many comment lines between candidates.
+extern BoundedOption<signed, -1, 5000>
+align_right_cmt_span_num_cmt_lines; // = -1
 
 // Minimum number of columns between preceding text and a trailing comment in
 // order for the comment to qualify for being aligned. Must be non-zero to have

@@ -72,20 +72,24 @@ Currently Supported Spans
 
 The following span options currently support line filters:
 
-  +--------------------------+-----------------------------------------------+
-  | Span Option              | Purpose                                       |
-  +--------------------------+-----------------------------------------------+
-  | align_var_def_span       | Local variable definitions in functions       |
-  | align_var_class_span     | Member variables in classes                   |
-  | align_var_struct_span    | Member variables in structs/unions            |
-  | align_func_proto_span    | Function prototypes/declarations              |
-  | align_func_params_span   | Function parameters within a definition       |
-  | align_typedef_span       | Typedef statements                            |
-  | align_assign_span        | Equal sign alignment for variables,           |
-  |                          | functions declarations and default parameters |
-  | align_enum_equ_span      | Equal sign alignment in enums                 |
-  | align_constr_value_span  | Constructor member initializer values (C++)   |
-  +--------------------------+-----------------------------------------------+
+  +----------------------------------+-----------------------------------------------+
+  | Span Option                      | Purpose                                       |
+  +----------------------------------+-----------------------------------------------+
+  | align_var_def_span               | Local variable definitions in functions       |
+  | align_var_class_span             | Member variables in classes                   |
+  | align_var_struct_span            | Member variables in structs/unions            |
+  | align_func_proto_span            | Function prototypes/declarations              |
+  | align_func_params_span           | Function parameters within a definition       |
+  | align_typedef_span               | Typedef statements                            |
+  | align_assign_span                | Equal sign alignment for variables,           |
+  |                                  | functions declarations and default parameters |
+  | align_enum_equ_span              | Equal sign alignment in enums                 |
+  | align_constr_value_span          | Constructor member initializer values (C++)   |
+  | align_same_func_call_params_span | Parameters in same-name single-line           |
+  |                                  | function/method calls                         |
+  | align_braced_init_list_span      | Braced initializer list alignment (C++)       |
+  | align_right_cmt_span             | Trailing (right-side) comment alignment       |
+  +----------------------------------+-----------------------------------------------+
 
 Each of these has the three associated filter options. For example:
   - align_var_def_span_num_empty_lines

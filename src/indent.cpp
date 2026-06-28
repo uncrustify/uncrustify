@@ -178,7 +178,7 @@ static size_t calc_indent_continue(const ParsingFrame &frm, size_t pse_tos);
 /**
  * Get candidate chunk first on line to which OC blocks can be indented against.
  */
-static Chunk *candidate_chunk_first_on_line(Chunk *pc);
+Chunk *candidate_chunk_first_on_line(Chunk const *pc);
 
 /**
  * We are on a '{' that has parent = OC_BLOCK_EXPR
@@ -198,13 +198,13 @@ static bool single_line_comment_indent_rule_applies(Chunk *start, bool forward);
  * returns true if semicolon on the same level ends any assign operations
  * false if next thing hit is not the end of an assign operation
  */
-static bool is_end_of_assignment(Chunk *pc, const ParsingFrame &frm);
+static bool is_end_of_assignment(Chunk const *pc, const ParsingFrame &frm);
 
 
-static void list_the_frm(Chunk *pc, const ParsingFrame &frm, int lineNumber);
+static void list_the_frm(Chunk const *pc, const ParsingFrame &frm, int lineNumber);
 
 
-static void list_the_frm(Chunk *pc, const ParsingFrame &frm, int lineNumber)
+static void list_the_frm(Chunk const *pc, const ParsingFrame &frm, int lineNumber)
 {
    LOG_FMT(LINDPC, "%s(%d): (%d)\n", __func__, __LINE__, lineNumber);
    LOG_FMT(LINDPC, "   -=[ pc orig line is %zu, orig col is %zu, text is '%s' ]=-, frm.size() is %zu\n",
@@ -371,10 +371,10 @@ static size_t token_indent(E_Token type)
    } while (false)
 
 
-static size_t get_indent_first_continue(Chunk *pc)
+static size_t get_indent_first_continue(Chunk const *pc)
 {
    log_rule_B("indent_ignore_first_continue");
-   Chunk *continuation = pc->GetNextType(E_Token::CT_NEWLINE, pc->GetLevel());
+   Chunk const *continuation = pc->GetNextType(E_Token::CT_NEWLINE, pc->GetLevel());
 
    if (continuation->IsNotNullChunk())
    {
@@ -409,7 +409,7 @@ static size_t calc_indent_continue(const ParsingFrame &frm)
 }
 
 
-static Chunk *candidate_chunk_first_on_line(Chunk *pc)
+Chunk *candidate_chunk_first_on_line(Chunk const *pc)
 {
    Chunk *first = pc->GetFirstChunkOnLine();
 
@@ -464,7 +464,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    if (  tmp->IsNotNullChunk()
       && tmp->GetType() == E_Token::CT_OC_BLOCK_CARET)
    {
-      caret_tmp = tmp;
+      //caret_tmp = tmp; style (unreadVariable): Variable 'caret_tmp' is assigned a value that is never used.
    }
    else
    {
@@ -565,7 +565,7 @@ static void quick_indent_again()
       {
          continue;
       }
-      Chunk *tmp = pc->GetPrev();
+      Chunk const *tmp = pc->GetPrev();
 
       if (!tmp->IsNewline())
       {
@@ -709,7 +709,7 @@ void indent_text()
       {
          if (!in_func_def)
          {
-            Chunk *next = pc->GetNextNcNnl();
+            Chunk const *next = pc->GetNextNcNnl();
 
             if (  pc->GetParentType() == E_Token::CT_FUNC_DEF
                || (  pc->Is(E_Token::CT_COMMENT)
@@ -725,7 +725,7 @@ void indent_text()
          }
          else
          {
-            Chunk *prev = pc->GetPrev();
+            Chunk const *prev = pc->GetPrev();
 
             if (  prev->Is(E_Token::CT_BRACE_CLOSE)
                && prev->GetParentType() == E_Token::CT_FUNC_DEF)
@@ -832,9 +832,9 @@ void indent_text()
             {
                break;
             }
-            int   should_indent_preproc = true;
-            int   should_ignore_preproc = false;
-            Chunk *preproc_next         = pc->GetNextNl();
+            int         should_indent_preproc = true;
+            int         should_ignore_preproc = false;
+            Chunk const *preproc_next         = pc->GetNextNl();
             preproc_next = preproc_next->GetNextNcNnlNet();
 
             /* Look ahead at what's on the line after the #if */
@@ -1119,7 +1119,7 @@ void indent_text()
             if (  pc->Is(E_Token::CT_BRACE_CLOSE)
                && pc->GetParentType() == E_Token::CT_ENUM)
             {
-               Chunk *prev_ncnl = pc->GetPrevNcNnl();
+               Chunk const *prev_ncnl = pc->GetPrevNcNnl();
                LOG_FMT(LINDLINE, "%s(%d): prev_ncnl is '%s', orig line is %zu, orig col is %zu\n",
                        __func__, __LINE__, prev_ncnl->GetLogText(), prev_ncnl->GetOrigLine(), prev_ncnl->GetOrigCol());
 
@@ -1615,13 +1615,13 @@ void indent_text()
             log_rule_B("indent_cpp_lambda_body");
             frm.top().SetBraceIndent(frm.prev().GetIndent());
 
-            Chunk *head         = frm.top().GetOpenChunk()->GetPrevNcNnlNpp();
-            Chunk *tail         = Chunk::NullChunkPtr;
-            Chunk *frm_prev     = frm.prev().GetOpenChunk();
-            Chunk *frmPrevClose = frm_prev->GetClosingParen();
-            bool  enclosure     = (  frm_prev->GetParentType() != E_Token::CT_FUNC_DEF       // Issue #3407
-                                  && frmPrevClose->IsNotNullChunk()
-                                  && frm_prev != frmPrevClose);
+            Chunk const *head         = frm.top().GetOpenChunk()->GetPrevNcNnlNpp();
+            Chunk const *tail         = Chunk::NullChunkPtr;
+            Chunk const *frm_prev     = frm.prev().GetOpenChunk();
+            Chunk const *frmPrevClose = frm_prev->GetClosingParen();
+            bool        enclosure     = (  frm_prev->GetParentType() != E_Token::CT_FUNC_DEF // Issue #3407
+                                        && frmPrevClose->IsNotNullChunk()
+                                        && frm_prev != frmPrevClose);
             bool linematch = true;
 
             for (auto it = frm.rbegin(); it != frm.rend() && tail->IsNullChunk(); ++it)
@@ -1630,7 +1630,7 @@ void indent_text()
                {
                   linematch &= it->GetOpenChunk()->IsOnSameLine(head);
                }
-               Chunk *match = it->GetOpenChunk()->GetClosingParen();
+               Chunk const *match = it->GetOpenChunk()->GetClosingParen();
 
                if (match->IsNullChunk())
                {
@@ -1678,12 +1678,12 @@ void indent_text()
             // 2a. If it's an assignment, check that both sides of the assignment operator are on the same line
             // 2b. If it's inside some closure, check that all the frames are on the same line,
             //     and it is in the top level closure, and indent_continue is non-zero
-            Chunk *frmPrevOpen = frm.prev().GetOpenChunk();
-            Chunk *frmTopOpen  = frm.top().GetOpenChunk();
-            Chunk *frmTopClose = frm.top().GetOpenChunk()->GetClosingParen();
-            bool  sameLine     = frmTopClose->IsNotNullChunk() && frmTopClose->IsOnSameLine(tail);
+            Chunk const *frmPrevOpen = frm.prev().GetOpenChunk();
+            Chunk const *frmTopOpen  = frm.top().GetOpenChunk();
+            Chunk const *frmTopClose = frm.top().GetOpenChunk()->GetClosingParen();
+            bool        sameLine     = frmTopClose->IsNotNullChunk() && frmTopClose->IsOnSameLine(tail);
 
-            bool  isAssignSameLine =
+            bool        isAssignSameLine =
                !enclosure
                && options::align_assign_span() == 0
                && !options::indent_align_assign()
@@ -1889,8 +1889,8 @@ void indent_text()
 
                   if (options::indent_oc_block_msg_xcode_style())
                   {
-                     Chunk *bbc           = pc->GetClosingParen(); // block brace close '}'
-                     Chunk *bbc_next_ncnl = bbc->GetNextNcNnl();
+                     Chunk const *bbc           = pc->GetClosingParen(); // block brace close '}'
+                     Chunk const *bbc_next_ncnl = bbc->GetNextNcNnl();
 
                      if (  bbc_next_ncnl->GetType() == E_Token::CT_OC_MSG_NAME
                         || bbc_next_ncnl->GetType() == E_Token::CT_OC_MSG_FUNC)
@@ -1908,10 +1908,10 @@ void indent_text()
                         indent_from_keyword = false;
                      }
                   }
-                  Chunk *ref = oc_msg_block_indent(pc, indent_from_brace,
-                                                   indent_from_caret,
-                                                   indent_from_colon,
-                                                   indent_from_keyword);
+                  Chunk const *ref = oc_msg_block_indent(pc, indent_from_brace,
+                                                         indent_from_caret,
+                                                         indent_from_colon,
+                                                         indent_from_keyword);
 
                   if (ref->IsNotNullChunk())
                   {
@@ -2190,13 +2190,13 @@ void indent_text()
              * { a++;
              *   b--; };
              */
-            Chunk *next = pc->GetNextNcNnl();
+            Chunk const *next = pc->GetNextNcNnl();
 
             if (next->IsNullChunk())
             {
                break;
             }
-            Chunk *prev = pc->GetPrev();
+            Chunk const *prev = pc->GetPrev();
 
             if (  pc->GetParentType() == E_Token::CT_BRACED_INIT_LIST
                && prev->Is(E_Token::CT_BRACE_OPEN)
@@ -2302,7 +2302,7 @@ void indent_text()
             while (  ((pct = pct->GetPrevNnl())->IsNotNullChunk())
                   && pct->IsComment())
             {
-               Chunk *t2 = pct->GetPrev();
+               Chunk const *t2 = pct->GetPrev();
 
                if (t2->IsNewline())
                {
@@ -2314,13 +2314,13 @@ void indent_text()
       }
       else if (pc->Is(E_Token::CT_BREAK))
       {
-         Chunk *prev = pc->GetPrevNcNnl();
+         Chunk const *prev = pc->GetPrevNcNnl();
 
          if (  prev->Is(E_Token::CT_BRACE_CLOSE)
             && prev->GetParentType() == E_Token::CT_CASE)
          {
             // issue #663 + issue #1366
-            Chunk *prev_prev_newline = pc->GetPrevNl()->GetPrevNl();
+            Chunk const *prev_prev_newline = pc->GetPrevNl()->GetPrevNl();
 
             if (prev_prev_newline->IsNotNullChunk())
             {
@@ -2394,7 +2394,7 @@ void indent_text()
                   && pct->IsComment()
                   && !pct->IsDoxygenComment())
             {
-               Chunk *t2 = pct->GetPrev();
+               Chunk const *t2 = pct->GetPrev();
 
                if (t2->IsNewline())
                {
@@ -2466,7 +2466,7 @@ void indent_text()
             }
             else
             {
-               Chunk *next = pc->GetNext();
+               Chunk const *next = pc->GetNext();
 
                if (  next->IsNotNullChunk()
                   && !next->IsNewline())
@@ -2488,7 +2488,7 @@ void indent_text()
             if (options::indent_constr_colon())
             {
                log_rule_B("indent_constr_colon");
-               Chunk *prev = pc->GetPrev();
+               Chunk const *prev = pc->GetPrev();
 
                if (prev->IsNewline())
                {
@@ -2522,7 +2522,7 @@ void indent_text()
                }
                else
                {
-                  Chunk *next = pc->GetNext();
+                  Chunk const *next = pc->GetNext();
 
                   if (  next->IsNotNullChunk()
                      && !next->IsNewline())
@@ -2541,9 +2541,8 @@ void indent_text()
               && options::indent_ignore_asm_block())
       {
          log_rule_B("indent_ignore_asm_block");
-         Chunk *tmp = pc->GetClosingParen();
-
-         int   move = 0;
+         Chunk const *tmp = pc->GetClosingParen();
+         int         move = 0;
 
          if (  pc->GetPrev()->IsNewline()
             && pc->GetColumn() != indent_column)
@@ -2581,7 +2580,7 @@ void indent_text()
           * unless right after a newline.
           */
 
-         Chunk *prev_ncnl = pc->GetPrevNcNnl();
+         Chunk const *prev_ncnl = pc->GetPrevNcNnl();
 
          // Check if this paren belongs to a macro-no-indent or macro-no-format-args - if so, skip indent changes
          if (  prev_ncnl->IsNotNullChunk()
@@ -2610,10 +2609,9 @@ void indent_text()
                        __func__, __LINE__, pc->GetOrigLine(), indent_column, pc->GetLogText());
                reindent_line(pc, indent_column);
             }
-            Chunk *open_paren  = pc;
-            Chunk *close_paren = pc->GetClosingParen();
-
-            bool  indent_bool_more = false;
+            Chunk const *open_paren      = pc;
+            Chunk const *close_paren     = pc->GetClosingParen();
+            bool        indent_bool_more = false;
 
             if (options::indent_bool_nested_all())
             {
@@ -2624,7 +2622,7 @@ void indent_text()
                {
                   indent_bool_more = true;
                }
-               Chunk *next = close_paren->GetNextNcNnl();
+               Chunk const *next = close_paren->GetNextNcNnl();
 
                // close paren is followed by a bool and that is preceded or followed by a new line
                if (next->Is(E_Token::CT_BOOL) && (next->GetNextNc()->IsNewline() || next->GetPrevNc()->IsNewline()))
@@ -2798,7 +2796,7 @@ void indent_text()
             {
                log_rule_B("indent_paren_nl");
                log_rule_B("indent_square_nl");
-               Chunk *next = pc->GetNextNc();
+               Chunk const *next = pc->GetNextNc();
 
                if (next->IsNullChunk())
                {
@@ -2997,7 +2995,7 @@ void indent_text()
          if (frm.top().GetOpenToken() != E_Token::CT_MEMBER)
          {
             frm.push(pc, __func__, __LINE__);
-            Chunk *tmp = frm.top().GetOpenChunk()->GetPrevNcNnlNpp();
+            Chunk const *tmp = frm.top().GetOpenChunk()->GetPrevNcNnlNpp();
 
             if (frm.prev().GetOpenChunk()->IsOnSameLine(tmp))
             {
@@ -3052,7 +3050,7 @@ void indent_text()
             {
                tmp = tmp->GetPrevNcNnlNpp();
             }
-            Chunk *local_prev = tmp->GetPrev();             // Issue #3294
+            Chunk const *local_prev = tmp->GetPrev();             // Issue #3294
 
             if (local_prev->IsComment())
             {
@@ -3099,7 +3097,7 @@ void indent_text()
                     __func__, __LINE__, pc->GetOrigLine(), indent_column, pc->GetLogText());
             reindent_line(pc, frm.top().GetIndentTmp());
          }
-         Chunk *next = pc->GetNext();
+         Chunk const *next = pc->GetNext();
 
          if (next->IsNotNullChunk())
          {
@@ -3201,7 +3199,7 @@ void indent_text()
          if (  pc->GetLevel() == pc->GetBraceLevel()
             || pc->TestFlags(PCF_IN_LAMBDA))
          {
-            Chunk *next = pc->GetNext();
+            Chunk const *next = pc->GetNext();
 
             // Avoid indentation on return token set by the option.
             log_rule_B("indent_off_after_return");
@@ -3367,7 +3365,7 @@ void indent_text()
       else if (pc->IsComment())
       {
          // Issue #3294
-         Chunk *next = pc->GetNext();
+         Chunk const *next = pc->GetNext();
 
          if (next->Is(E_Token::CT_COND_COLON))
          {
@@ -3434,7 +3432,7 @@ void indent_text()
          }
          LOG_FMT(LINDENT2, "%s(%d): in_shift is %s\n",
                  __func__, __LINE__, in_shift ? "TRUE" : "FALSE");
-         Chunk *prev2 = pc->GetPrevNc();
+         Chunk const *prev2 = pc->GetPrevNc();
          LOG_FMT(LINDENT2, "%s(%d): in_shift is %s\n",
                  __func__, __LINE__, in_shift ? "TRUE" : "FALSE");
 
@@ -3501,7 +3499,7 @@ void indent_text()
             // Issue #3010
             vardefcol = pc->GetColumn();
             // BUT, we need to skip backward over any '*'
-            Chunk *tmp = pc->GetPrevNc();
+            Chunk const *tmp = pc->GetPrevNc();
 
             while (tmp->Is(E_Token::CT_PTR_TYPE))
             {
@@ -3562,11 +3560,10 @@ void indent_text()
           * everything else
           */
 
-         Chunk *prev  = pc->GetPrevNcNnl();
-         Chunk *prevv = prev->GetPrevNcNnl();
-         Chunk *next  = pc->GetNextNcNnl();
-
-         bool  do_vardefcol = false;
+         Chunk       *prev        = pc->GetPrevNcNnl();
+         Chunk const *prevv       = prev->GetPrevNcNnl();
+         Chunk const *next        = pc->GetNextNcNnl();
+         bool        do_vardefcol = false;
 
          if (  vardefcol > 0
             && pc->GetLevel() == pc->GetBraceLevel()
@@ -3575,7 +3572,7 @@ void indent_text()
                || prev->Is(E_Token::CT_PTR_TYPE)
                || prev->Is(E_Token::CT_WORD)))
          {
-            Chunk *tmp = pc;
+            Chunk const *tmp = pc;
 
             while (tmp->Is(E_Token::CT_PTR_TYPE))
             {
@@ -3659,7 +3656,7 @@ void indent_text()
             }
             else
             {
-               Chunk *tmp = prev;
+               Chunk const *tmp = prev;
 
                while (  tmp->GetPrev()->IsNotNullChunk()
                      && (  tmp->GetPrev()->Is(E_Token::CT_WORD)
@@ -3700,10 +3697,10 @@ void indent_text()
                // Issue # 405
                LOG_FMT(LINDLINE, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
-               Chunk *ck1 = frm.lastPopped().GetOpenChunk();
+               Chunk const *ck1 = frm.lastPopped().GetOpenChunk();
                LOG_FMT(LINDLINE, "%s(%d): ck1 orig line is %zu, orig col is %zu, text is '%s', GetType() is %s\n",
                        __func__, __LINE__, ck1->GetOrigLine(), ck1->GetOrigCol(), ck1->GetLogText(), get_token_name(ck1->GetType()));
-               Chunk *ck2 = ck1->GetPrev();
+               Chunk const *ck2 = ck1->GetPrev();
                LOG_FMT(LINDLINE, "%s(%d): ck2 orig line is %zu, orig col is %zu, text is '%s', GetType() is %s\n",
                        __func__, __LINE__, ck2->GetOrigLine(), ck2->GetOrigCol(), ck2->GetLogText(), get_token_name(ck2->GetType()));
 
@@ -3775,13 +3772,13 @@ void indent_text()
                                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
                         LOG_FMT(LINDLINE, "%s(%d): prev is <newline>\n",
                                 __func__, __LINE__);
-                        Chunk *search = pc;
+                        Chunk const *search = pc;
 
                         while (search->GetNext()->IsParenClose())
                         {
                            search = search->GetNext();
                         }
-                        Chunk *searchNext = search->GetNext();
+                        Chunk const *searchNext = search->GetNext();
 
                         // Issue #3407 - Skip over a possible 'noexcept' keyword before going forward.
                         if (searchNext->GetType() == E_Token::CT_NOEXCEPT)
@@ -3833,10 +3830,10 @@ void indent_text()
             LOG_FMT(LINDENT, "%s(%d): [%s/%s]\n",
                     __func__, __LINE__,
                     get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
-            Chunk *prev2 = pc->GetPrev();                  // Issue #2930
+            Chunk const *prev2 = pc->GetPrev();                  // Issue #2930
             LOG_FMT(LINDENT, "%s(%d): prev2 is orig line is %zu, text is '%s'\n",
                     __func__, __LINE__, prev2->GetOrigLine(), prev2->GetLogText());
-            Chunk *next2 = pc->GetNext();
+            Chunk const *next2 = pc->GetNext();
             LOG_FMT(LINDENT, "%s(%d): next2 is orig line is %zu, text is '%s'\n",
                     __func__, __LINE__, next2->GetOrigLine(), next2->GetLogText());
 
@@ -4026,7 +4023,7 @@ void indent_text()
                  && prev->Is(E_Token::CT_COND_COLON))
          {
             log_rule_B("indent_ternary_operator");
-            Chunk *tmp = prev->GetPrevType(E_Token::CT_QUESTION);
+            Chunk const *tmp = prev->GetPrevType(E_Token::CT_QUESTION);
 
             if (tmp->IsNotNullChunk())
             {
@@ -4045,7 +4042,7 @@ void indent_text()
          {
             log_rule_B("indent_ternary_operator");
             // get the parent, the QUESTION
-            Chunk *question = pc->GetParent();
+            Chunk const *question = pc->GetParent();
 
             if (question->IsNotNullChunk())
             {
@@ -4114,7 +4111,7 @@ void indent_text()
                      && pc->GetTypeOfParent() == E_Token::CT_SWITCH)
                   {
                      // look for a case before Issue #2735
-                     Chunk *whereIsCase = pc->GetPrevType(E_Token::CT_CASE, pc->GetLevel());
+                     Chunk const *whereIsCase = pc->GetPrevType(E_Token::CT_CASE, pc->GetLevel());
 
                      if (whereIsCase->IsNotNullChunk())
                      {
@@ -4154,15 +4151,15 @@ void indent_text()
                   }
                   else
                   {
-                     Chunk *token_before = frm.at(temp_ttidx).GetOpenChunk();
+                     Chunk const *token_before = frm.at(temp_ttidx).GetOpenChunk();
                      LOG_FMT(LINDPC, "%s(%d): text is '%s', token_before->GetType() is %s\n",
                              __func__, __LINE__, token_before->GetLogText(), get_token_name(token_before->GetType()));
 
-                     size_t vor_col = 0;
+                     size_t vor_col;
 
                      if (token_before->Is(E_Token::CT_ASSIGN))
                      {
-                        Chunk *before_Assign = frm.at(temp_ttidx - 1).GetOpenChunk();
+                        Chunk const *before_Assign = frm.at(temp_ttidx - 1).GetOpenChunk();
 
                         if (before_Assign->IsNullChunk())
                         {
@@ -4185,7 +4182,7 @@ void indent_text()
                      }
                      else if (token_before->Is(E_Token::CT_RETURN))
                      {
-                        Chunk *before_Return = frm.at(temp_ttidx - 1).GetOpenChunk();
+                        Chunk const *before_Return = frm.at(temp_ttidx - 1).GetOpenChunk();
                         vor_col = before_Return->GetColumn();
                         LOG_FMT(LINDPC, "%s(%d): text is '%s', before_Return->GetType() is %s, column is %zu\n",
                                 __func__, __LINE__, before_Return->GetLogText(), get_token_name(before_Return->GetType()), vor_col);
@@ -4408,7 +4405,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start, bool forward)
 } // single_line_comment_indent_rule_applies
 
 
-static bool is_end_of_assignment(Chunk *pc, const ParsingFrame &frm)
+static bool is_end_of_assignment(Chunk const *pc, const ParsingFrame &frm)
 {
    return(  (  frm.top().GetOpenToken() == E_Token::CT_ASSIGN_NL
             || frm.top().GetOpenToken() == E_Token::CT_MEMBER
@@ -4425,7 +4422,7 @@ static bool is_end_of_assignment(Chunk *pc, const ParsingFrame &frm)
 
 static size_t calc_comment_next_col_diff(Chunk *pc)
 {
-   Chunk *next = pc; // assumes pc has a comment type
+   Chunk const *next = pc; // assumes pc has a comment type
 
    LOG_FMT(LCMTIND, "%s(%d): next->text is '%s'\n",
            __func__, __LINE__, next->GetLogText());
@@ -4435,7 +4432,7 @@ static size_t calc_comment_next_col_diff(Chunk *pc)
    // a newline token (unless there are no more tokens left)
    do
    {
-      Chunk *newline_token = next->GetNext();
+      Chunk const *newline_token = next->GetNext();
       LOG_FMT(LCMTIND, "%s(%d): newline_token->text is '%s', orig line is %zu, orig col is %zu\n",
               __func__, __LINE__, newline_token->GetLogText(), newline_token->GetOrigLine(), newline_token->GetOrigCol());
 
@@ -4485,7 +4482,7 @@ static void indent_comment(Chunk *pc, size_t col)
       reindent_line(pc, 1);
       return;
    }
-   Chunk *nl = pc->GetPrev();
+   Chunk const *nl = pc->GetPrev();
 
    if (nl->IsNotNullChunk())
    {
@@ -4495,7 +4492,7 @@ static void indent_comment(Chunk *pc, size_t col)
 
    if (pc->GetOrigCol() > 1)
    {
-      Chunk *prev = nl->GetPrev();
+      Chunk const *prev = nl->GetPrev();
 
       if (prev->IsNotNullChunk())
       {

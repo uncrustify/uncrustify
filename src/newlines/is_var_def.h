@@ -11,6 +11,6 @@
 class Chunk;
 
 //! Check if token starts a variable declaration
-bool is_var_def(Chunk *pc, Chunk *next);
+bool is_var_def(Chunk const *pc, Chunk const *next);
 
 #endif /* IS_VAR_DEF_H_INCLUDED */

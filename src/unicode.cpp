@@ -155,7 +155,10 @@ static bool decode_utf8(MemoryFile &fm)
 
    // skip UTF-8 BOM if present
    if (  (fm.hasBom && fm.encoding == E_CharEncoding::UTF8)
-      || (fm.raw[0] == 0xEF && fm.raw[1] == 0xBB && fm.raw[2] == 0xBF))
+      || (  fm.raw.size() >= 3
+         && fm.raw[0] == 0xEF
+         && fm.raw[1] == 0xBB
+         && fm.raw[2] == 0xBF))
    {
       idx = 3;
    }

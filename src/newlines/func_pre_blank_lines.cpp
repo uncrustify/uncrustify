@@ -25,7 +25,7 @@ constexpr static auto LCURRENT = LNEWLINE;
  * Doesn't do anything if open brace before it
  * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
  */
-void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
+void newlines_func_pre_blank_lines(Chunk const *start, E_Token start_type)
 {
    LOG_FUNC_ENTRY();
 
@@ -57,10 +57,10 @@ void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
     *   - a destructor
     *   - something else (don't remove)
     */
-   Chunk  *pc           = Chunk::NullChunkPtr;
-   Chunk  *last_nl      = Chunk::NullChunkPtr;
-   Chunk  *last_comment = Chunk::NullChunkPtr;
-   size_t first_line    = start->GetOrigLine();
+   Chunk       *pc           = Chunk::NullChunkPtr;
+   Chunk       *last_nl      = Chunk::NullChunkPtr;
+   Chunk const *last_comment = Chunk::NullChunkPtr;
+   size_t      first_line    = start->GetOrigLine();
 
    for (pc = start->GetPrev(); pc->IsNotNullChunk(); pc = pc->GetPrev())
    {

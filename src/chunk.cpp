@@ -805,7 +805,7 @@ bool Chunk::IsStringAndLevel(const char *str, const size_t len,
             || m_level == static_cast<size_t>(level))
          && Len() == len                                    // the length is as expected
          && (  (  caseSensitive
-               && memcmp(GetLogText(), str, len) == 0)
+               && strncmp(GetLogText(), str, len) == 0)
             || (  !caseSensitive
                && strncasecmp(GetLogText(), str, len) == 0)));   // the strings are equal
 } // Chunk::IsStringAndLevel

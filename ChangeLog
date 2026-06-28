@@ -1,3 +1,62 @@
+Change highlights in uncrustify-0.83.0 (May 2026)
+-------------------------------------------------------------------------------
+   21d9c2a7c19a20c1e659685f8e1b4c90f839d52b
+     Added   : align_var_def_span_num_empty_lines   Dec 14 2025
+     Added   : align_var_class_span_num_pp_lines    Dec 14 2025
+     Added   : align_var_def_span_num_cmt_lines     Dec 14 2025
+     Added   : align_var_class_span_num_cmt_lines   Dec 14 2025
+     Added   : align_var_def_span_num_pp_lines      Dec 14 2025
+     Added   : align_var_struct_span_num_pp_lines   Dec 14 2025
+     Added   : align_var_struct_span_num_cmt_lines  Dec 14 2025
+     Added   : align_var_class_span_num_empty_lines Dec 14 2025
+     Added   : align_var_struct_span_num_empty_lines Dec 14 2025
+   74a275b03b52f0d439fd16f7d3df32c3855fe34c
+     Added   : align_func_proto_span_num_empty_lines Dec 15 2025
+     Added   : align_func_proto_span_num_pp_lines   Dec 15 2025
+     Added   : align_func_proto_span_num_cmt_lines  Dec 15 2025
+   7a60c2d80af7497d200bf71069a97713284128bd
+     Added   : sp_paren_deref                       Jan 17 2026
+   a58e45ae2962964b3466f2f5522314885516b1cf
+     Added   : align_assign_span_num_pp_lines       Dec 19 2025
+     Added   : align_enum_equ_span_num_empty_lines  Dec 19 2025
+     Added   : align_assign_span_num_cmt_lines      Dec 19 2025
+     Added   : align_enum_equ_span_num_pp_lines     Dec 19 2025
+     Added   : align_enum_equ_span_num_cmt_lines    Dec 19 2025
+     Added   : align_assign_span_num_empty_lines    Dec 19 2025
+   4aa7854307789738ba08b372ad5ced5ed7fbd606
+     Added   : nl_collapse_do_one_liner             Jan 22 2026
+     Added   : nl_collapse_switch_one_liner         Jan 22 2026
+     Added   : nl_collapse_if_one_liner             Jan 22 2026
+     Added   : nl_collapse_for_one_liner            Jan 22 2026
+     Added   : nl_collapse_while_one_liner          Jan 22 2026
+   183b7b289f22081664b1c087774c372766dd5342
+     Added   : align_func_params_span_num_pp_lines  Dec 19 2025
+     Added   : align_func_params_span_num_cmt_lines Dec 19 2025
+     Added   : align_func_params_span_num_empty_lines Dec 19 2025
+   e183e750b3d46861a61b930ceebd25eeec18c3b9
+     Added   : align_typedef_span_num_empty_lines   Dec 19 2025
+     Added   : align_typedef_span_num_pp_lines      Dec 19 2025
+     Added   : align_typedef_span_num_cmt_lines     Dec 19 2025
+   6f42553448639a31dee3deea6de06e3bedc3803a
+     Added   : sp_after_ref_qualifier               Jul  9 2025
+     Added   : sp_before_ref_qualifier              Jul  9 2025
+   c78734859192520bd540c0fc5323cfd2196e7ca0
+     Added   : sp_deduction_guide_paren             Mar 29 2026
+     Added   : sp_deduction_guide_paren_empty       Mar 29 2026
+     Added   : sp_deduction_guide_arrow             Mar 29 2026
+   e0adbbcc70c7290aa3e441a9c68d351b4f91d11c
+     Added   : global_span_num_pp_lines             Apr 13 2026
+     Added   : global_span_num_cmt_lines            Apr 13 2026
+     Added   : global_span_num_empty_lines          Apr 13 2026
+   6ffe91165893aa33ac9135e16442b7266f1f2b02
+     Added   : align_constr_value_span_num_empty_lines Apr 20 2026
+     Added   : align_constr_value_span_num_pp_lines Apr 20 2026
+     Added   : align_constr_value_span_num_cmt_lines Apr 20 2026
+   72a92c7cbe8e49029f44e6ec4ec4fa6b9990b006
+     Added   : align_same_func_call_params_span_num_cmt_lines May  6 2026
+     Added   : align_same_func_call_params_span_num_empty_lines May  6 2026
+     Added   : align_same_func_call_params_span_num_pp_lines May  6 2026
+
 Change highlights in uncrustify-0.82.0 (November 2025)
 -------------------------------------------------------------------------------
    No changes to available options

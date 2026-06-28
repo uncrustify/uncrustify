@@ -13,9 +13,9 @@ jobs:
     strategy:
       matrix:
         configuration: [Debug, Release]
-        generator: ["Visual Studio 17 2022"]
+        generator: ["Visual Studio 18 2026"]
 
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
 
     steps:
       - name: Checkout repository
@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DUNCRUSTIFY_SEPARATE_TESTS=ON -G "Visual Studio 17 2022" ..
+          cmake -DUNCRUSTIFY_SEPARATE_TESTS=ON -G "Visual Studio 18 2026" ..
 
       - name: Build
         run: |

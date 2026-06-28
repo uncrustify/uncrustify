@@ -128,7 +128,7 @@ void combine_labels()
          // pop until we hit '['
          while (!cs.Empty())
          {
-            Chunk *t2 = cs.Top()->m_pc;
+            Chunk const *t2 = cs.Top()->m_pc;
             cs.Pop_Back();
 
             if (t2->Is(E_Token::CT_SQUARE_OPEN))
@@ -200,7 +200,7 @@ void combine_labels()
             if (  cur->Is(E_Token::CT_NUMBER)
                && prev->Is(E_Token::CT_ELLIPSIS))
             {
-               Chunk *pre_ellipsis = prev->GetPrevNcNnlNpp();
+               Chunk const *pre_ellipsis = prev->GetPrevNcNnlNpp();
 
                if (pre_ellipsis->Is(E_Token::CT_NUMBER))
                {
@@ -220,7 +220,7 @@ void combine_labels()
                     __func__, __LINE__, cur->GetLogText(), cur->GetOrigLine(), cur->GetOrigCol());
             LOG_FMT(LFCN, "%s(%d): next->text is '%s', orig line is %zu, orig col is %zu\n",
                     __func__, __LINE__, next->GetLogText(), next->GetOrigLine(), next->GetOrigCol());
-            Chunk *nextprev = chunk_get_prev_local(next);   // Issue #2279
+            Chunk const *nextprev = chunk_get_prev_local(next);   // Issue #2279
 
             if (nextprev->IsNullChunk())
             {
@@ -232,9 +232,9 @@ void combine_labels()
                if (  cur->Is(E_Token::CT_WORD)
                   || cur->Is(E_Token::CT_BRACE_CLOSE))
                {
-                  E_Token new_type = E_Token::CT_TAG;
+                  E_Token     new_type = E_Token::CT_TAG;
 
-                  Chunk   *tmp = next->GetNextNc();
+                  Chunk const *tmp = next->GetNextNc();
 
                   if (tmp->IsNullChunk())
                   {
@@ -272,7 +272,7 @@ void combine_labels()
             }
             else if (cur->Is(E_Token::CT_WORD))
             {
-               Chunk *tmp = next->GetNextNc(E_Scope::PREPROC);
+               Chunk const *tmp = next->GetNextNc(E_Scope::PREPROC);
 
                // Issue #1187
                if (tmp->IsNullChunk())
@@ -308,7 +308,7 @@ void combine_labels()
                         || language_is_set(lang_flag_e::LANG_CS))
                      && (!language_is_set(lang_flag_e::LANG_OC)))
                   {
-                     Chunk *labelPrev = prev;
+                     Chunk const *labelPrev = prev;
 
                      if (labelPrev->Is(E_Token::CT_NEWLINE))
                      {
@@ -413,7 +413,7 @@ void combine_labels()
             }
             else
             {
-               Chunk *tmp = next->GetNextNcNnl();
+               Chunk const *tmp = next->GetNextNcNnl();
 
                //tmp = chunk_get_next_local(next);
                if (tmp->IsNotNullChunk())

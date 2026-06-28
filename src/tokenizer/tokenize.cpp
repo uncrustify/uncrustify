@@ -503,9 +503,8 @@ static const char *str_search(const char *needle, const char *haystack, int hays
 
 static bool parse_comment(TokenContext &ctx, Chunk &pc)
 {
-   bool   is_d    = language_is_set(lang_flag_e::LANG_D);
-   bool   is_cs   = language_is_set(lang_flag_e::LANG_CS);
-   size_t d_level = 0;
+   bool is_d  = language_is_set(lang_flag_e::LANG_D);
+   bool is_cs = language_is_set(lang_flag_e::LANG_CS);
 
    // does this start with '/ /' or '/ *' or '/ +' (d)
    if (  (ctx.peek() != '/')
@@ -586,6 +585,7 @@ static bool parse_comment(TokenContext &ctx, Chunk &pc)
    else if (ch == '+')                         // 43
    {
       pc.SetType(E_Token::CT_COMMENT);
+      size_t d_level = 0;
       d_level++;
 
       while (  d_level > 0
@@ -2448,7 +2448,7 @@ static bool parse_next(TokenContext &ctx, Chunk &pc, const Chunk *prev_pc)
          }
       }
       /* Inside clang's __has_include() could be "path/to/file.h" or system-style <path/to/file.h> */
-      Chunk *tail = Chunk::GetTail();
+      Chunk const *tail = Chunk::GetTail();
 
       if (  (ch == '(')                 // 40
          && (tail->IsNotNullChunk())

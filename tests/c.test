@@ -730,3 +730,47 @@
 10238  common/global_align_span_typedef_num_lines-1.cfg  c/align_typedef_span_num_mixed.c
 10239  common/global_align_span_typedef_num_lines-2.cfg  c/align_typedef_span_num_mixed.c
 10240  common/global_align_span_typedef_num_lines-3.cfg  c/align_typedef_span_num_mixed.c
+
+# For the following tests, the input file has 2 copies that should remain the same:
+#    - input/c/align_sf_call_span_num_mixed.c
+#    - input/cpp/align_sf_call_span_num_mixed_c.cpp
+# It is a copy instead of a file in a 'common' directory so
+# it keeps expected outputs into separate directories.
+# If you modify this file, please modify the other.
+# (See https://github.com/uncrustify/uncrustify/pull/4714)
+10241  common/align_sf_call_span_num_empty-1.cfg        c/align_sf_call_span_num_mixed.c
+10242  common/align_sf_call_span_num_empty-2.cfg        c/align_sf_call_span_num_mixed.c
+10243  common/align_sf_call_span_num_empty-3.cfg        c/align_sf_call_span_num_mixed.c
+10244  common/align_sf_call_span_num_pp-1.cfg           c/align_sf_call_span_num_mixed.c
+10245  common/align_sf_call_span_num_pp-2.cfg           c/align_sf_call_span_num_mixed.c
+10246  common/align_sf_call_span_num_pp-3.cfg           c/align_sf_call_span_num_mixed.c
+10247  common/align_sf_call_span_num_cmt-1.cfg          c/align_sf_call_span_num_mixed.c
+10248  common/align_sf_call_span_num_cmt-2.cfg          c/align_sf_call_span_num_mixed.c
+10249  common/align_sf_call_span_num_cmt-3.cfg          c/align_sf_call_span_num_mixed.c
+10250  common/align_sf_call_span_num_mixed-1.cfg        c/align_sf_call_span_num_mixed.c
+10251  common/align_sf_call_span_num_mixed-2.cfg        c/align_sf_call_span_num_mixed.c
+10252  common/align_sf_call_span_num_mixed-3.cfg        c/align_sf_call_span_num_mixed.c
+10253  common/align_sf_call_span_num_mixed-4.cfg        c/align_sf_call_span_num_mixed.c
+10254  common/align_sf_call_span_num_mixed-5.cfg        c/align_sf_call_span_num_mixed.c
+10255  common/align_sf_call_span_num_mixed-6.cfg        c/align_sf_call_span_num_mixed.c
+10256  common/global_align_span_sf_call_num_lines-1.cfg c/align_sf_call_span_num_mixed.c
+10257  common/global_align_span_sf_call_num_lines-2.cfg c/align_sf_call_span_num_mixed.c
+10258  common/global_align_span_sf_call_num_lines-3.cfg c/align_sf_call_span_num_mixed.c
+10259  common/align_right_cmt_span_num_empty-1.cfg        c/align_right_cmt_span_num_mixed.c
+10260  common/align_right_cmt_span_num_empty-2.cfg        c/align_right_cmt_span_num_mixed.c
+10261  common/align_right_cmt_span_num_empty-3.cfg        c/align_right_cmt_span_num_mixed.c
+10262  common/align_right_cmt_span_num_pp-1.cfg           c/align_right_cmt_span_num_mixed.c
+10263  common/align_right_cmt_span_num_pp-2.cfg           c/align_right_cmt_span_num_mixed.c
+10264  common/align_right_cmt_span_num_pp-3.cfg           c/align_right_cmt_span_num_mixed.c
+10265  common/align_right_cmt_span_num_cmt-1.cfg          c/align_right_cmt_span_num_mixed.c
+10266  common/align_right_cmt_span_num_cmt-2.cfg          c/align_right_cmt_span_num_mixed.c
+10267  common/align_right_cmt_span_num_cmt-3.cfg          c/align_right_cmt_span_num_mixed.c
+10268  common/align_right_cmt_span_num_mixed-1.cfg        c/align_right_cmt_span_num_mixed.c
+10269  common/align_right_cmt_span_num_mixed-2.cfg        c/align_right_cmt_span_num_mixed.c
+10270  common/align_right_cmt_span_num_mixed-3.cfg        c/align_right_cmt_span_num_mixed.c
+10271  common/align_right_cmt_span_num_mixed-4.cfg        c/align_right_cmt_span_num_mixed.c
+10272  common/align_right_cmt_span_num_mixed-5.cfg        c/align_right_cmt_span_num_mixed.c
+10273  common/align_right_cmt_span_num_mixed-6.cfg        c/align_right_cmt_span_num_mixed.c
+10274  common/global_align_span_right_cmt_num_lines-1.cfg c/align_right_cmt_span_num_mixed.c
+10275  common/global_align_span_right_cmt_num_lines-2.cfg c/align_right_cmt_span_num_mixed.c
+10276  common/global_align_span_right_cmt_num_lines-3.cfg c/align_right_cmt_span_num_mixed.c

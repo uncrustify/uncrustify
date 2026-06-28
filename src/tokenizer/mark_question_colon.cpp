@@ -185,7 +185,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
          // reached the next OC message parameter and should terminate.
          if (colon_found)
          {
-            Chunk *prev = pc2->GetPrevNcNnl();
+            Chunk const *prev = pc2->GetPrevNcNnl();
 
             if (prev->Is(E_Token::CT_WORD) || prev->Is(E_Token::CT_TYPE) || prev->Is(E_Token::CT_OC_MSG_NAME))
             {
@@ -239,7 +239,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
       // Note: Parent type may not be set yet during search_for_colon, so check previous token
       else if (pc2->Is(E_Token::CT_BRACE_OPEN))
       {
-         Chunk *prev = pc2->GetPrevNcNnl();
+         Chunk const *prev = pc2->GetPrevNcNnl();
 
          if (prev->Is(E_Token::CT_OC_AT))
          {

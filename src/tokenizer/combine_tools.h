@@ -75,7 +75,7 @@ Chunk *get_d_template_types(ChunkStack &cs, Chunk const *open_paren);
 
 
 //! help function for mark_variable_definition...
-bool go_on(Chunk *pc, Chunk const *start);
+bool go_on(Chunk const *pc, Chunk const *start);
 
 
 bool is_ucase_str(const char *str, size_t len);
