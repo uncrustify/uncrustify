@@ -55,10 +55,10 @@ void newlines_squeeze_ifdef()
 
                if (pnl->IsNotNullChunk())
                {
-                  Chunk const *tmp2;
 
                   if (pnl->GetNlCount() > 1)
                   {
+                     Chunk const *tmp2;
                      pnl->SetNlCount(1);
                      MARK_CHANGE();
 
