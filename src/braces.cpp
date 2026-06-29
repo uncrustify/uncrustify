@@ -136,7 +136,7 @@ static bool paren_multiline_before_brace(Chunk const *brace)
 
    // find parenthesis pair of the if/for/while/...
    Chunk const *paren_close = brace->GetPrevType(paren_t, brace->GetLevel(), E_Scope::ALL);
-   Chunk       *paren_open   = paren_close->GetOpeningParen();
+   Chunk       *paren_open  = paren_close->GetOpeningParen();
 
    if (  paren_close->IsNullChunk()
       || paren_open->IsNullChunk()

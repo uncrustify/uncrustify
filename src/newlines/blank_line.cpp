@@ -91,7 +91,7 @@ void do_blank_lines()
       {
          continue;
       }
-      Chunk *prev = pc->GetPrevNc();
+      Chunk const *prev = pc->GetPrevNc();
 
       if (prev->IsNotNullChunk())
       {
@@ -104,7 +104,7 @@ void do_blank_lines()
             continue;
          }
       }
-      Chunk       *next = pc->GetNext();
+      Chunk const *next = pc->GetNext();
       Chunk const *pcmt = pc->GetPrev();
 
       bool        line_added = false;
