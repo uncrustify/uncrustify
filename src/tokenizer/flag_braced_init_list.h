@@ -12,13 +12,13 @@ class Chunk;
 /**
  * Detect a cpp braced init list
  */
-bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next);
+bool detect_cpp_braced_init_list(Chunk const *pc, Chunk const *next);
 
 /**
  * Flags the opening and closing braces of an expression deemed to be
  * a cpp braced initializer list; a call to detect_cpp_braced_init_list()
  * should first be made prior to calling this function
  */
-void flag_cpp_braced_init_list(Chunk *pc, Chunk *next);
+void flag_cpp_braced_init_list(Chunk const *pc, Chunk const *next);
 
 #endif
