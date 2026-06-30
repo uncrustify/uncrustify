@@ -193,6 +193,24 @@ sp_before_assign;
 extern Option<iarf_e>
 sp_after_assign;
 
+// Add or remove space around assignment operator '=', '+=', etc. inside the
+// control parens of a 'for' statement.
+//
+// Overrides sp_assign, sp_before_assign, sp_after_assign and sp_assign_default
+// when set to anything other than ignore.
+extern Option<iarf_e>
+sp_for_assign;
+
+// Add or remove space around operators '++', '--', '+=', etc. in the
+// increment expression of a 'for' statement (the third section, after the
+// second ';').
+//
+// Overrides sp_incdec, sp_assign, sp_for_assign, sp_before_assign,
+// sp_after_assign and sp_assign_default when set to anything other than
+// ignore.
+extern Option<iarf_e>
+sp_for_increment;
+
 // Add or remove space in 'enum {'.
 extern Option<iarf_e>
 sp_enum_brace; // = IARF_ADD
@@ -242,6 +260,21 @@ sp_bool;
 // Add or remove space around compare operator '<', '>', '==', etc.
 extern Option<iarf_e>
 sp_compare;
+
+// Add or remove space around compare operator '<', '>', '==', etc. inside the
+// control parens of a 'for' statement.
+//
+// Overrides sp_compare when set to anything other than ignore.
+extern Option<iarf_e>
+sp_for_compare;
+
+// Add or remove space around compare operator '<', '>', '==', etc. inside the
+// control parens of statements other than 'for' (i.e. 'while',
+// 'do { } while', 'if', 'switch', etc.).
+//
+// Overrides sp_compare when set to anything other than ignore.
+extern Option<iarf_e>
+sp_sparen_compare;
 
 // Add or remove space inside '(' and ')'.
 extern Option<iarf_e>
@@ -2233,6 +2266,22 @@ nl_getset_brace;
 // Add or remove newline between 'for' and '{'.
 extern Option<iarf_e>
 nl_for_brace;
+
+// Add or remove newline before assignment operator '=', '+=', etc. inside
+// the control parens of a 'for' statement.
+extern Option<iarf_e>
+nl_for_assign;
+
+// Add or remove newline before compare operator '<', '>', '==', etc. inside
+// the control parens of a 'for' statement.
+extern Option<iarf_e>
+nl_for_compare;
+
+// Add or remove newline before operators '++', '--', '+=', etc. in the
+// increment expression of a 'for' statement (the third section, after the
+// second ';').
+extern Option<iarf_e>
+nl_for_increment;
 
 // Add or remove newline before the '{' of a 'catch' statement, as in
 // 'catch (decl) <here> {'.

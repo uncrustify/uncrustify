@@ -1688,3 +1688,9 @@
 34958  common/global_align_span_right_cmt_num_lines-1.cfg cpp/align_right_cmt_span_num_mixed.cpp
 34959  common/global_align_span_right_cmt_num_lines-2.cfg cpp/align_right_cmt_span_num_mixed.cpp
 34960  common/global_align_span_right_cmt_num_lines-3.cfg cpp/align_right_cmt_span_num_mixed.cpp
+
+34961  cpp/sp_for_assign_compare.cfg                        cpp/sp_for_assign_compare.cpp
+34962  cpp/sp_for_increment.cfg                             cpp/sp_for_increment.cpp
+34963  cpp/sp_sparen_compare.cfg                            cpp/sp_sparen_compare.cpp
+34964  cpp/nl_for_operators.cfg                             cpp/nl_for_operators.cpp
+34965  cpp/sp_for_nested.cfg                                cpp/sp_for_nested.cpp
