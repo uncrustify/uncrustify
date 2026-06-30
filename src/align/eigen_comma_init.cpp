@@ -24,8 +24,8 @@ void align_eigen_comma_init()
 {
    LOG_FUNC_ENTRY();
 
-   Chunk const *start = Chunk::NullChunkPtr;
-   AlignStack  as;
+   Chunk      *start = Chunk::NullChunkPtr;
+   AlignStack as;
 
    as.Start(255);
 
@@ -81,7 +81,7 @@ void align_eigen_comma_init()
              *      cout
              *          << "something";
              */
-            Chunk const *prev = pc->GetPrev();
+            Chunk *prev = pc->GetPrev();
 
             if (  prev->IsNotNullChunk()
                && prev->IsNewline())
@@ -99,7 +99,7 @@ void align_eigen_comma_init()
       }
       else if (!as.m_aligned.Empty())
       {
-         Chunk const *prev = pc->GetPrev();
+         Chunk *prev = pc->GetPrev();
 
          if (  prev->IsNewline()
             && pc->GetPrevNcNnl()->Is(E_Token::CT_COMMA))

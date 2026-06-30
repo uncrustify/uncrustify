@@ -23,7 +23,7 @@
  * @return false  if pc_start or pc_end are null chunks or if pc_end is not reached
  * @return true   if above cases are not met
  */
-bool newlines_between(Chunk *pc_start, Chunk const *pc_end, size_t &newlines, E_Scope scope = E_Scope::ALL);
+bool newlines_between(Chunk *pc_start, Chunk *pc_end, size_t &newlines, E_Scope scope = E_Scope::ALL);
 
 
 #endif /* NEWLINES_BETWEEN_H_INCLUDED */

@@ -11,7 +11,7 @@
 #include "uncrustify.h"
 
 
-bool detect_cpp_braced_init_list(Chunk const *pc, Chunk const *next)
+bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
 {
    LOG_FUNC_ENTRY();
    // Issue #2332
@@ -20,7 +20,7 @@ bool detect_cpp_braced_init_list(Chunk const *pc, Chunk const *next)
    if (pc->Is(E_Token::CT_COLON))
    {
       // check if we have a case before
-      Chunk const *switch_before = pc->GetPrevType(E_Token::CT_CASE, pc->GetLevel());
+      Chunk *switch_before = pc->GetPrevType(E_Token::CT_CASE, pc->GetLevel());
 
       if (switch_before->IsNotNullChunk())
       {
@@ -51,7 +51,7 @@ bool detect_cpp_braced_init_list(Chunk const *pc, Chunk const *next)
       LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', type is %s\n   ",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
       log_pcf_flags(LFCNR, pc->GetFlags());
-      Chunk const *brace_open = pc->GetNextNcNnl();
+      auto brace_open = pc->GetNextNcNnl();
 
       if (  brace_open->Is(E_Token::CT_BRACE_OPEN)
          && (  brace_open->GetParentType() == E_Token::CT_NONE
@@ -60,7 +60,7 @@ bool detect_cpp_braced_init_list(Chunk const *pc, Chunk const *next)
             || brace_open->GetParentType() == E_Token::CT_BRACED_INIT_LIST))
       {
          log_pcf_flags(LFCNR, brace_open->GetFlags());
-         Chunk const *brace_close = next->GetClosingParen();
+         auto brace_close = next->GetClosingParen();
 
          if (brace_close->Is(E_Token::CT_BRACE_CLOSE))
          {
@@ -72,7 +72,7 @@ bool detect_cpp_braced_init_list(Chunk const *pc, Chunk const *next)
 } // detect_cpp_braced_init_list
 
 
-void flag_cpp_braced_init_list(Chunk const *pc, Chunk const *next)
+void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
 {
    Chunk *brace_open  = pc->GetNextNcNnl();
    Chunk *brace_close = next->GetClosingParen();
@@ -80,8 +80,7 @@ void flag_cpp_braced_init_list(Chunk const *pc, Chunk const *next)
    brace_open->SetParentType(E_Token::CT_BRACED_INIT_LIST);
    brace_close->SetParentType(E_Token::CT_BRACED_INIT_LIST);
 
-   Chunk       *tmp = brace_close->GetNextNcNnl();
-   Chunk const *abn = pc->GetNext();
+   Chunk *tmp = brace_close->GetNextNcNnl();
 
    if (tmp->IsNotNullChunk())
    {
@@ -108,9 +107,6 @@ void flag_cpp_braced_init_list(Chunk const *pc, Chunk const *next)
    if (  pc->Is(E_Token::CT_WORD)
       && pc->TestFlags(PCF_IN_FCN_CALL))
    {
-      // a workaround
-      Chunk *abp = abn->GetPrev();
-      abp->SetType(E_Token::CT_TYPE);
-      //pc->SetType(E_Token::CT_TYPE);
+      pc->SetType(E_Token::CT_TYPE);
    }
 } // flag_cpp_braced_init_list

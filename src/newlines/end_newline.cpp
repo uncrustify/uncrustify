@@ -17,8 +17,8 @@ void newline_end_newline(Chunk *br_close)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk const *next = br_close->GetNext();
-   Chunk       nl;
+   Chunk *next = br_close->GetNext();
+   Chunk nl;
 
    if (!next->IsCommentOrNewline())
    {

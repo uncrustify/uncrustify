@@ -20,6 +20,6 @@ class Chunk;
  * a definition of the same sort as surrounding prototypes. This checks against
  * either the function name, or the function closing brace.
  */
-bool is_func_proto_group(Chunk const *pc, E_Token one_liner_type);
+bool is_func_proto_group(Chunk *pc, E_Token one_liner_type);
 
 #endif /* IS_FUNC_PROTO_GROUP_H_INCLUDED */

@@ -81,7 +81,7 @@ void check_template(Chunk *start, bool in_type_cast)
    LOG_FMT(LTEMPL, "%s(%d): orig line %zu, orig col %zu:\n",
            __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol());
 
-   Chunk const *prev = start->GetPrevNcNnl(E_Scope::PREPROC);
+   Chunk *prev = start->GetPrevNcNnl(E_Scope::PREPROC);
 
    if (prev->IsNullChunk())
    {

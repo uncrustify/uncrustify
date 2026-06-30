@@ -11,6 +11,6 @@
 class Chunk;
 
 //! Put a blank line before a return statement, unless it is after an open brace
-void newline_before_return(Chunk const *start);
+void newline_before_return(Chunk *start);
 
 #endif /* NEWLINES_BEFORE_RETURN_H_INCLUDED */

@@ -26,7 +26,7 @@ using namespace uncrustify;
  * a definition of the same sort as surrounding prototypes. This checks against
  * either the function name, or the function closing brace.
  */
-bool is_func_proto_group(Chunk const *pc, E_Token one_liner_type)
+bool is_func_proto_group(Chunk *pc, E_Token one_liner_type)
 {
    if (  pc->IsNotNullChunk()
       && options::nl_class_leave_one_liner_groups()

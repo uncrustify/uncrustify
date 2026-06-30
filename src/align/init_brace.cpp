@@ -21,7 +21,7 @@ constexpr static auto LCURRENT = LALBR;
 using namespace uncrustify;
 
 
-void align_init_brace(Chunk const *start)
+void align_init_brace(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -33,8 +33,8 @@ void align_init_brace(Chunk const *start)
    LOG_FMT(LALBR, "%s(%d): start @ orig line is %zu, orig col is %zu\n",
            __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol());
 
-   Chunk       *pc       = start->GetNextNcNnl();
-   Chunk const *pcSingle = scan_ib_line(pc);
+   Chunk *pc       = start->GetNextNcNnl();
+   Chunk *pcSingle = scan_ib_line(pc);
 
    if (  pcSingle->IsNullChunk()
       || (  pcSingle->Is(E_Token::CT_BRACE_CLOSE)
@@ -101,7 +101,7 @@ void align_init_brace(Chunk const *start)
             if (  idx == 0
                && cpd.al_c99_array)
             {
-               Chunk const *prev = pc->GetPrev();
+               Chunk *prev = pc->GetPrev();
 
                if (prev->IsNewline())
                {

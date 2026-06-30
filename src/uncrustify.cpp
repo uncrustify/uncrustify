@@ -355,28 +355,29 @@ static void version_exit()
 }
 
 
-//NODISCARD static int redir_stdout(const char *output_file)
-//{
-//   if (output_file != nullptr)
-//   {
-//      //FILE const *my_stdout;  // Reopen stdout
-//      //my_stdout = freopen(output_file, "wb", stdout);
-//
-//      //if (my_stdout == nullptr)
-//      //{
-//      //   LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
-//      //           output_file, strerror(errno), errno);
-//      //   usage_error();
-//      //   /* EX_IOERR   74   input/output error */
-//      //   return(EX_IOERR);
-//      //}
-//      LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
-//   }
-//   /* EXIT_FAILURE   1   Failing exit status.  */
-//   /* EXIT_SUCCESS   0   Successful exit status.  */
-//
-//   return(EXIT_SUCCESS);
-//}
+NODISCARD static int redir_stdout(const char *output_file)
+{
+   FILE const *my_stdout;  // Reopen stdout
+
+   if (output_file != nullptr)
+   {
+      my_stdout = freopen(output_file, "wb", stdout);
+
+      if (my_stdout == nullptr)
+      {
+         LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
+                 output_file, strerror(errno), errno);
+         usage_error();
+         /* EX_IOERR   74   input/output error */
+         return(EX_IOERR);
+      }
+      LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
+   }
+   /* EXIT_FAILURE   1   Failing exit status.  */
+   /* EXIT_SUCCESS   0   Successful exit status.  */
+
+   return(EXIT_SUCCESS);
+}
 
 // Currently, the crash handler is only supported while building under MSVC
 #if defined (WIN32) && defined (_MSC_VER)
@@ -938,10 +939,10 @@ int main(int argc, char *argv[])
       detect_options();
       uncrustify_end();
 
-      //if (auto error = redir_stdout(output_file))
-      //{
-      //   return(error);
-      //}
+      if (auto error = redir_stdout(output_file))
+      {
+         return(error);
+      }
       save_option_file(stdout, update_config_wd);
       return(EXIT_SUCCESS);
    }
@@ -950,10 +951,10 @@ int main(int argc, char *argv[])
       || update_config_wd)
    {
       // TODO: complain if file-processing related options are present
-      //if (auto error = redir_stdout(output_file))
-      //{
-      //   return(error);
-      //}
+      if (auto error = redir_stdout(output_file))
+      {
+         return(error);
+      }
       save_option_file(stdout, update_config_wd);
       return(EXIT_SUCCESS);
    }
@@ -1029,10 +1030,10 @@ int main(int argc, char *argv[])
 
       if (!cpd.do_check)
       {
-         //if (auto error = redir_stdout(output_file))
-         //{
-         //   return(error);
-         //}
+         if (auto error = redir_stdout(output_file))
+         {
+            return(error);
+         }
       }
       MemoryFile fm;
 
