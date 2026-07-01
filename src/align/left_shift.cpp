@@ -23,8 +23,8 @@ void align_left_shift()
 {
    LOG_FUNC_ENTRY();
 
-   Chunk      *start = Chunk::NullChunkPtr;
-   AlignStack as;
+   Chunk const *start = Chunk::NullChunkPtr;
+   AlignStack  as;
 
    as.Start(255);
 
@@ -89,7 +89,7 @@ void align_left_shift()
              *      cout
              *          << "something";
              */
-            Chunk *prev = pc->GetPrev();
+            Chunk const *prev = pc->GetPrev();
 
             if (  prev->IsNotNullChunk()
                && prev->IsNewline())
@@ -118,7 +118,7 @@ void align_left_shift()
           *      cout <<
           *          "something";
           */
-         Chunk *prev = pc->GetPrev();
+         Chunk const *prev = pc->GetPrev();
 
          if (  prev->IsNotNullChunk()
             && prev->IsNewline())

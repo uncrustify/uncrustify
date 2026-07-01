@@ -12,7 +12,7 @@
 #include "mark_change.h"
 
 
-void newline_before_return(Chunk *start)
+void newline_before_return(Chunk const *start)
 {
    LOG_FUNC_ENTRY();
 

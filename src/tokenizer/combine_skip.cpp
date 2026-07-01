@@ -119,7 +119,7 @@ Chunk *skip_template_prev(Chunk *ang_close)
 {
    if (ang_close->Is(E_Token::CT_ANGLE_CLOSE))
    {
-      Chunk *pc = ang_close->GetPrevType(E_Token::CT_ANGLE_OPEN, ang_close->GetLevel());
+      Chunk const *pc = ang_close->GetPrevType(E_Token::CT_ANGLE_OPEN, ang_close->GetLevel());
       return(pc->GetPrevNcNnlNi());   // Issue #2279
    }
    return(ang_close);
@@ -156,7 +156,7 @@ Chunk *skip_attribute(Chunk *attr)
 
 Chunk *skip_attribute_next(Chunk *attr)
 {
-   Chunk *next = skip_attribute(attr);
+   Chunk const *next = skip_attribute(attr);
 
    if (  next != attr
       && next->Is(E_Token::CT_FPAREN_CLOSE))
@@ -210,7 +210,7 @@ Chunk *skip_declspec(Chunk *pc)
 
 Chunk *skip_declspec_next(Chunk *pc)
 {
-   Chunk *next = skip_declspec(pc);
+   Chunk const *next = skip_declspec(pc);
 
    if (  next != pc
       && next->Is(E_Token::CT_PAREN_CLOSE))

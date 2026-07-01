@@ -54,7 +54,7 @@ bool ifdef_over_whole_file()
          {
             break;
          }
-         Chunk *next = pc->GetNext();
+         Chunk const *next = pc->GetNext();
 
          if (  next->IsNullChunk()
             || next->IsNot(E_Token::CT_PP_IF))
