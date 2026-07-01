@@ -56,7 +56,7 @@ void newlines_struct_union(Chunk *start, iarf_e nl_opt, bool leave_trailing)
    if (pc->Is(E_Token::CT_BRACE_OPEN))
    {
       // Skip over embedded C comments
-      Chunk *next = pc->GetNext();
+      Chunk const *next = pc->GetNext();
 
       while (next->Is(E_Token::CT_COMMENT))
       {

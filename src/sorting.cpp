@@ -201,7 +201,7 @@ static bool has_dot(const UncText &chunk_text)
 /**
  * Returns chunk string required for sorting.
  */
-static UncText chunk_sort_str(Chunk *pc)
+static UncText chunk_sort_str(Chunk const *pc)
 {
    if (pc->GetParentType() == E_Token::CT_PP_INCLUDE)
    {
@@ -539,12 +539,11 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
    }
 
    // Group imports based on having extension.
-   bool chunk_has_dot;
    bool chunk_last_has_dot = false;
 
    for (size_t idx = 0; idx < num_chunks; idx++)
    {
-      chunk_has_dot = has_dot(chunks[idx]->GetText());
+      bool chunk_has_dot = has_dot(chunks[idx]->GetText());
 
       if (  chunk_last_has_dot != chunk_has_dot
          && idx > 0)
@@ -555,12 +554,11 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
    }
 
    // Group imports based on priority defined by config.
-   int chunk_pri;
    int chunk_pri_last = -1;
 
    for (size_t idx = 0; idx < num_chunks; idx++)
    {
-      chunk_pri = get_chunk_priority(chunks[idx]);
+      int chunk_pri = get_chunk_priority(chunks[idx]);
 
       if (  chunk_pri_last != chunk_pri
          && idx > 0)
@@ -571,13 +569,12 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
    }
 
    // Group imports that contain filename pattern.
-   bool chunk_has_filename;
    bool last_chunk_has_filename = false;
 
    for (size_t idx = 0; idx < num_chunks; idx++)
    {
-      auto const &chunk_text = chunk_sort_str(chunks[idx]);
-      chunk_has_filename = text_contains_filename_without_ext(chunk_text.GetLogText());
+      auto const &chunk_text        = chunk_sort_str(chunks[idx]);
+      bool       chunk_has_filename = text_contains_filename_without_ext(chunk_text.GetLogText());
 
       if (  !chunk_has_filename
          && last_chunk_has_filename)

@@ -81,7 +81,7 @@ void init_keywords_for_language()
 
    for (size_t idx = 0; idx < keywords_count; idx++)
    {
-      chunk_tag_t *tag = &keywords[idx];
+      chunk_tag_t const *tag = &keywords[idx];
 
       if ((tag->lang_flags & local_flags) != 0)
       {

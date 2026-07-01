@@ -26,7 +26,7 @@ int get_for_section(const Chunk *pc)
    const size_t my_level = pc->GetLevel();
    int          count    = 0;
 
-   for (Chunk *t = pc->GetPrev(); t->IsNotNullChunk(); t = t->GetPrev())
+   for (Chunk const *t = pc->GetPrev(); t->IsNotNullChunk(); t = t->GetPrev())
    {
       const size_t lvl = t->GetLevel();
 
