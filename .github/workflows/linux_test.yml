@@ -44,7 +44,7 @@ jobs:
           # -fsanitize=vla-bound
         run: |
           cmake -B build -G "${{ matrix.generator }}" \
-            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" \
             -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}" \
             -DUNCRUSTIFY_SEPARATE_TESTS=ON
 
@@ -52,11 +52,11 @@ jobs:
         run: |
           cores=$(nproc)
           echo "Detected CPU cores: $cores"
-          cmake --build build --parallel $cores
+          cmake --build build --parallel "$cores"
 
       - name: Run tests
         run: |
           cd build
           cores=$(nproc)
           echo "Detected CPU cores: $cores"
-          UNCRUSTIFY_TEST_JOBS=$cores ../scripts/run_ctest.py -j $cores
+          UNCRUSTIFY_TEST_JOBS=$cores ../scripts/run_ctest.py -j "$cores"

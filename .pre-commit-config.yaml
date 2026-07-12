@@ -44,7 +44,7 @@ repos:
       - id: check-case-conflict
       - id: check-toml
   - repo: https://github.com/lovesegfault/beautysh.git
-    rev: v6.4.1
+    rev: v6.4.3
     hooks:
       - id: beautysh
         args: [--indent-size=2]
@@ -52,7 +52,7 @@ repos:
         additional_dependencies:
           - setuptools
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
+    rev: v2.4.2
     hooks:
       - id: codespell
         # scripts/updateCodespellIgnoreFile.sh updates the ignore file.
@@ -64,8 +64,10 @@ repos:
         #  - pyproject.toml
         additional_dependencies:
           - tomli
-  - repo: https://github.com/pocc/pre-commit-hooks
-    rev: v1.3.5
+  #- repo: https://github.com/pocc/pre-commit-hooks
+  #  rev: v1.3.5
+  - repo: https://github.com/mdeweerd/pre-commit-hooks
+    rev: 3bdd7f1777427abf295953bdb2fa77772f0a641b  # v1.5.6-m-1.0
     # Install dependencies on windows:
     #  choco install llvm uncrustify cppcheck
     hooks:
@@ -74,7 +76,7 @@ repos:
         args: [--replace, --no-backup, -c, forUncrustifySources.cfg, -l, CPP]
 #
       - id: cppcheck
-# WARNING:
+# WARNING: (better with cache)
 # a run of cppcheck with all the files will be too long
 # these files need to be extra
 #       src/detect.cpp|src/indent.cpp|src/space.cpp
@@ -91,25 +93,38 @@ repos:
           - --quiet
           - --force
           - --language=c++
+          - --cppcheck-build-dir=.cache/cppcheck/  # Force cache location
           - -Isrc
           - '--template={file}({line}): {severity} ({id}): {message}'
           - --inline-suppr
           - --check-level=exhaustive
-          - --suppress=returnDanglingLifetime
-          - --suppress=unusedFunction
-          - --suppress=missingIncludeSystem
-          - --suppress=missingInclude
-          - --suppress=noExplicitConstructor
-          - --suppress=unmatchedSuppression
+          # Note: sort suppressions alphabetically for easier merges
           - --suppress=checkersReport
-          - --suppress=useStlAlgorithm
+          - --suppress=compareValueOutOfTypeRangeError ## Comparing expression of type 'signed int' against value 2147483647. Condition is always true.
+          - --suppress=constParameterCallback
+          - --suppress=constParameterPointer           ## Parameter 'xxx' can be declared as pointer to const
+          - --suppress=constParameterReference         ## Parameter 'x' can be declared as reference to const
+          - --suppress=constVariablePointer            ## Variable 'xxx' can be declared as pointer to const
+          - --suppress=containerOutOfBounds            ## Out of bounds access in expression 'xxx[idx]' because 'xxx' is empty.
+          - --suppress=functionStatic                  ## The member function 'xxx::yyy' can be static.
+          - --suppress=knownConditionTrueFalse         ## Condition 'xxx' is always false
+          - --suppress=missingInclude:*.h
+          - --suppress=missingInclude:uncrustify_emscripten.cpp
+          - --suppress=missingIncludeSystem
+          - --suppress=noCopyConstructor
+          - --suppress=noExplicitConstructor
+          - --suppress=noOperatorEq
+          - --suppress=passedByValueCallback  ## Function parameter 'xxx' should be passed by const reference. However it seems that 'yyy' is a callback function.
+          - --suppress=returnDanglingLifetime
+          - --suppress=uninitMemberVarNoCtor  ## Member variable 'xxx::yyy' has no initializer.
+          - --suppress=unknownMacro:uncrustify_emscripten.cpp
+          - --suppress=unmatchedSuppression
+          - --suppress=unusedFunction
+          - --suppress=unusedPrivateFunction
           - --suppress=unusedStructMember
           - --suppress=useInitializationList
-          - --suppress=unusedPrivateFunction
-          - --suppress=constParameterCallback
-          - --suppress=noCopyConstructor
-          - --suppress=noOperatorEq
-          - --suppress=unknownMacro:uncrustify_emscripten.cpp
+          - --suppress=useStlAlgorithm
+          - --suppress=variableScope          ## The scope of the variable 'xxx' can be reduced.
 
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
@@ -125,3 +140,8 @@ repos:
       - id: shellcheck
         # exclude: (?x)^(__NONE__)$
         # args: [-x,-e1007,-e1009,-e1072,-e1073]
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint

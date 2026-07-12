@@ -25,13 +25,17 @@ jobs:
         with:
           path: ~/cppcheck-install
           key: cppcheck-${{ env.CPPCHECK_VERSION }}-${{ runner.os }}-${{ hashFiles('~/cppcheck-install/cppcheck-build-stamp') }}
+          restore-keys: |
+            cppcheck-${{ env.CPPCHECK_VERSION }}-${{ runner.os }}-cache-${{ github.ref_name }}-
+            cppcheck-${{ env.CPPCHECK_VERSION }}-${{ runner.os }}-cache-${{ github.base_ref }}-
+            cppcheck-${{ env.CPPCHECK_VERSION }}-${{ runner.os }}-cache-
 
       - name: Build and install cppcheck
         if: steps.cache-cppcheck.outputs.cache-hit != 'true'
         run: |
-          git clone --depth 1 --branch ${{ env.CPPCHECK_VERSION }} https://github.com/danmar/cppcheck.git
+          git clone --depth 1 --branch "${{ env.CPPCHECK_VERSION }}" https://github.com/danmar/cppcheck.git
           cd cppcheck
-          make -j$(nproc) FILESDIR=/usr/local/share/cppcheck
+          make "-j$(nproc)" FILESDIR=/usr/local/share/cppcheck
           mkdir -p ~/cppcheck-install
           make DESTDIR=~/cppcheck-install install FILESDIR=/usr/local/share/cppcheck
           echo "$(date +%s)-$(uname -a)" > ~/cppcheck-install/usr/local/share/cppcheck/cppcheck-build-stamp
@@ -48,28 +52,42 @@ jobs:
           path: ~/cppcheck-install
           key: cppcheck-${{ env.CPPCHECK_VERSION }}-${{ runner.os }}-${{ hashFiles('~/cppcheck-install/cppcheck-build-stamp') }}
 
-      # Project specific
       - uses: actions/checkout@v6
+
+      # Install pre-commit & restore pre-commit hook cache
+
       - run: python -m pip install pre-commit
-      - uses: actions/cache/restore@v5
-        if: github.event_name == 'pull_request'
-        with:
-          path: .cache/cppcheck
-          key: cppcheck-cache-${{ github.ref_name }}-${{ github.sha }}
-          restore-keys: |
-            cppcheck-cache-${{ github.base_ref }}-
-            cppcheck-cache-
-      - uses: actions/cache/restore@v5
-        if: github.event_name != 'pull_request'
-        with:
-          path: .cache/cppcheck
-          key: cppcheck-cache-${{ github.ref_name }}-${{ github.sha }}
-          restore-keys: |
-            cppcheck-cache-
-      - uses: actions/cache/restore@v5
+
+      - name: Restore pre-commit hook installations
+        uses: actions/cache/restore@v5
+        if: ${{ ! cancelled() }}
         with:
           path: ~/.cache/pre-commit/
           key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+
+      # Restore cppcheck cache
+
+      - name: Restore cppcheck analysis cache (PR)
+        uses: actions/cache/restore@v5
+        if: github.event_name == 'pull_request'
+        with:
+          path: .cache/cppcheck
+          key: cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.base_ref }}-
+            cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.ref_name }}-
+            cppcheck-${{ env.CPPCHECK_VERSION }}-cache-
+
+      - name: Restore cppcheck analysis cache (when not a PR)
+        uses: actions/cache/restore@v5
+        if: github.event_name != 'pull_request'
+        with:
+          path: .cache/cppcheck
+          key: cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.base_ref }}-${{ github.sha }}
+          restore-keys: |
+            cppcheck-${{ env.CPPCHECK_VERSION }}-cache-${{ github.ref_name }}-
+            cppcheck-${{ env.CPPCHECK_VERSION }}-cache-
+
       - name: Run pre-commit hooks
         env:
           SKIP: no-commit-to-branch
@@ -77,23 +95,31 @@ jobs:
           set -o pipefail
           mkdir -p .cache/cppcheck
           pre-commit gc
-          pre-commit run --show-diff-on-failure --color=always --all-files | tee ${RAW_LOG}
+          pre-commit run --show-diff-on-failure --color=always --all-files | tee "${RAW_LOG}"
+
+      # Store caches
+
       - uses: actions/cache/save@v5
         if: ${{ ! cancelled() }}
         with:
           path: .cache/cppcheck
           key: cppcheck-cache-${{ github.ref_name }}-${{ github.sha }}
+
+      - uses: actions/cache/save@v5
+        if: ${{ ! cancelled() }}
+        with:
+          path: ~/.cache/pre-commit/
+          key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+
+      # Prepare logs, artifacts
+
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2025.1.1
         if: ${{ failure() }}
         with:
           in: ${{ env.RAW_LOG }}
           # out: ${{ env.CS_XML }}
-      - uses: actions/cache/save@v5
-        if: ${{ ! cancelled() }}
-        with:
-          path: ~/.cache/pre-commit/
-          key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+
       - name: Provide log as artifact
         uses: actions/upload-artifact@v7
         if: ${{ ! cancelled() }}
