@@ -1694,3 +1694,22 @@
 34963  cpp/sp_sparen_compare.cfg                            cpp/sp_sparen_compare.cpp
 34964  cpp/nl_for_operators.cfg                             cpp/nl_for_operators.cpp
 34965  cpp/sp_for_nested.cfg                                cpp/sp_for_nested.cpp
+
+34966  common/align_pp_define_span_num_empty-1.cfg        cpp/align_pp_define_span_mixed.cpp
+34967  common/align_pp_define_span_num_empty-2.cfg        cpp/align_pp_define_span_mixed.cpp
+34968  common/align_pp_define_span_num_empty-3.cfg        cpp/align_pp_define_span_mixed.cpp
+34969  common/align_pp_define_span_num_pp-1.cfg           cpp/align_pp_define_span_mixed.cpp
+34970  common/align_pp_define_span_num_pp-2.cfg           cpp/align_pp_define_span_mixed.cpp
+34971  common/align_pp_define_span_num_pp-3.cfg           cpp/align_pp_define_span_mixed.cpp
+34972  common/align_pp_define_span_num_cmt-1.cfg          cpp/align_pp_define_span_mixed.cpp
+34973  common/align_pp_define_span_num_cmt-2.cfg          cpp/align_pp_define_span_mixed.cpp
+34974  common/align_pp_define_span_num_cmt-3.cfg          cpp/align_pp_define_span_mixed.cpp
+34975  common/align_pp_define_span_num_mixed-1.cfg        cpp/align_pp_define_span_mixed.cpp
+34976  common/align_pp_define_span_num_mixed-2.cfg        cpp/align_pp_define_span_mixed.cpp
+34977  common/align_pp_define_span_num_mixed-3.cfg        cpp/align_pp_define_span_mixed.cpp
+34978  common/align_pp_define_span_num_mixed-4.cfg        cpp/align_pp_define_span_mixed.cpp
+34979  common/align_pp_define_span_num_mixed-5.cfg        cpp/align_pp_define_span_mixed.cpp
+34980  common/align_pp_define_span_num_mixed-6.cfg        cpp/align_pp_define_span_mixed.cpp
+34981  common/global_align_span_pp_define_num_lines-1.cfg cpp/align_pp_define_span_mixed.cpp
+34982  common/global_align_span_pp_define_num_lines-2.cfg cpp/align_pp_define_span_mixed.cpp
+34983  common/global_align_span_pp_define_num_lines-3.cfg cpp/align_pp_define_span_mixed.cpp
