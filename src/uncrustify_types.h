@@ -133,6 +133,7 @@ struct LineSkipConfig
    size_t empty_lines;
    size_t pp_lines;
    size_t cmt_lines;
+   bool   pp_excludes_define; ///< when true, CT_PP_DEFINE tokens are not counted as PP lines
 };
 
 
