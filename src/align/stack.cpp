@@ -53,7 +53,7 @@ void AlignStack::Start(size_t span, int thresh)
    m_nl_seqnum   = 0;
    m_seqnum      = 0;
    m_gap         = 0;
-   m_star_gap    = 0;
+   m_ptr_ref_gap = 0;
    m_right_align = false;
    m_star_style  = SS_IGNORE;
    m_amp_style   = SS_IGNORE;
@@ -220,6 +220,19 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       Chunk *tmp_prev = ali->GetPrev();
 
       while (tmp_prev->IsAddress())
+      {
+         ali      = tmp_prev;
+         tmp_prev = ali->GetPrev();
+      }
+   }
+
+   if (m_star_style != SS_IGNORE)
+   {
+      // Include stars preceding a reference in a mixed declarator.
+      Chunk *tmp_prev = ali->GetPrev();
+
+      while (  tmp_prev->IsStar()
+            || tmp_prev->IsMsRef())
       {
          ali      = tmp_prev;
          tmp_prev = ali->GetPrev();
@@ -393,8 +406,8 @@ void AlignStack::NewLines(size_t cnt)
 
 void AlignStack::Flush()
 {
-   size_t max_stars = 0;
-   size_t star_gap  = 0;
+   size_t max_ptr_ref_width = 0;
+   size_t ptr_ref_gap       = 0;
 
    // produces much more log output. Use it only debugging purpose
    // WITH_STACKID_DEBUG;
@@ -455,24 +468,27 @@ void AlignStack::Flush()
       {
          gap = pc->GetColumn() - pc->GetAlignData().ref->GetColumnEnd();
       }
+      Chunk const *tmp = (pc->Is(E_Token::CT_TPAREN_OPEN)) ? pc->GetNext() : pc;
 
-      if (m_star_style == SS_DANGLE)
+      const bool  is_dangling_ptr = m_star_style == SS_DANGLE
+                                    && (  tmp->IsStar()
+                                       || tmp->IsNullable()
+                                       || tmp->IsMsRef());
+      const bool is_dangling_ref = m_amp_style == SS_DANGLE
+                                   && tmp->IsAddress();
+
+      if (is_dangling_ptr || is_dangling_ref)
       {
-         Chunk const *tmp = (pc->Is(E_Token::CT_TPAREN_OPEN)) ? pc->GetNext() : pc;
+         col_adj = pc->GetAlignData().start->GetColumn() - pc->GetColumn();
+         gap     = pc->GetAlignData().start->GetColumn() - pc->GetAlignData().ref->GetColumnEnd();
 
-         if (tmp->IsPointerOperator())
+         if (m_ptr_ref_gap > 0)
          {
-            col_adj = pc->GetAlignData().start->GetColumn() - pc->GetColumn();
-            gap     = pc->GetAlignData().start->GetColumn() - pc->GetAlignData().ref->GetColumnEnd();
-
-            if (m_star_gap > 0)
+            if (col_adj + m_ptr_ref_gap > gap)
             {
-               if (col_adj + m_star_gap > gap)
-               {
-                  extra_gap = std::max(extra_gap, col_adj + m_star_gap - gap);
-               }
-               max_stars = std::max(max_stars, col_adj);
+               extra_gap = std::max(extra_gap, col_adj + m_ptr_ref_gap - gap);
             }
+            max_ptr_ref_width = std::max(max_ptr_ref_width, col_adj);
          }
       }
 
@@ -511,11 +527,11 @@ void AlignStack::Flush()
       }
    }
 
-   if (max_stars + m_star_gap > m_gap)
+   if (  max_ptr_ref_width > 0
+      && max_ptr_ref_width + m_ptr_ref_gap > m_gap)
    {
-      star_gap = max_stars + m_star_gap - m_gap;
+      ptr_ref_gap = max_ptr_ref_width + m_ptr_ref_gap - m_gap;
    }
-
    log_rule_B("align_on_tabstop");
 
    if (  options::align_on_tabstop()
@@ -561,7 +577,7 @@ void AlignStack::Flush()
          pc->AlignData().amp_style   = m_amp_style;
          pc->AlignData().star_style  = m_star_style;
       }
-      pc->AlignData().gap  = m_gap + star_gap;
+      pc->AlignData().gap  = m_gap + ptr_ref_gap;
       pc->AlignData().next = m_aligned.GetChunk(idx + 1);
 
       // Indent the token, taking col_adj into account

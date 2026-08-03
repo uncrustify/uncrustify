@@ -1,4 +1,4 @@
-# Uncrustify-0.83.0
+# Uncrustify-0.83.0-dev
 
 #
 # General options
@@ -2806,17 +2806,18 @@ align_func_params_span_num_cmt_lines = -1       # number
 # 0: No limit (default).
 align_func_params_thresh        = 0        # number
 
-# The minumum gap between parameter type and parameter name in function parameter
-# definitions. The actual gap may be somewhat bigger if align_var_def_star_style
-# is set to 1 and a parameter is a pointer type.
+# The minimum gap between parameter type and parameter name in function parameter
+# definitions. The actual gap may be somewhat bigger if either
+# align_var_def_star_style or align_var_def_amp_style is set to 1.
 # Note, align_func_params must be true and align_func_params_span must be at least
 # 1 for this option to have any effect.
 align_func_params_gap           = 0        # unsigned number
 
-# A minimum additional gap between parameter type and '*'s in function parameter
-# definitions.
-# Note, align_var_def_star_style must be set to 2 for this option to have any affect.
-align_func_params_star_gap      = 0        # unsigned number
+# The minimum gap between parameter type and a dangling pointer or reference in
+# function parameter definitions.
+# This option only affects '*' when align_var_def_star_style is set to 2 and '&'
+# when align_var_def_amp_style is set to 2. align_func_params must be true.
+align_func_params_ptr_ref_gap   = 0        # unsigned number
 
 # The span for aligning constructor value.
 #
@@ -2909,16 +2910,19 @@ align_var_def_span              = 0        # unsigned number
 # 2: Dangling             'void    *foo;'
 #
 # Note: when align_var_def_star_style=2 (Dangling), '*'s will not be taken into
-# account when performing alignment, instead they will be placed right justified
-# into the configured gap (see align_var_def_gap and align_func_params_gap)
+# account when performing alignment. Instead, they will be placed right justified
+# into the configured gap (see align_var_def_gap, align_func_params_gap and
+# align_func_params_ptr_ref_gap).
 align_var_def_star_style        = 0        # unsigned number
 
-# How to consider (or treat) the '&' in the alignment of variable definitions.
+# How to consider (or treat) the '&' in the alignment of variable definitions
+# and function parameters.
 #
 # 0: Part of the type     'long &   foo;' (default)
 # 1: Part of the variable 'long     &foo;'
 # 2: Dangling             'long    &foo;'
-# Dangling: the '&' will not be taken into account when aligning.
+# Dangling: the '&' will not be taken into account when aligning. See
+# align_func_params_ptr_ref_gap for the minimum gap used in function parameters.
 align_var_def_amp_style         = 0        # unsigned number
 
 # The threshold for aligning variable definitions.
@@ -3021,6 +3025,30 @@ align_braced_init_list_span     = 0        # unsigned number
 #
 # 0: No limit (default).
 align_braced_init_list_thresh   = 0        # number
+
+# Maximum budget of empty lines to skip for align_braced_init_list_span.
+#  -1: Use the global_span_num_empty_lines budget (default).
+#   0: No budget (don't skip any empty lines).
+#  >0: Skip up to this many empty lines between candidates.
+#
+# Default: -1
+align_braced_init_list_span_num_empty_lines = -1       # number
+
+# Maximum budget of preprocessor lines to skip for align_braced_init_list_span.
+#  -1: Use the global_span_num_pp_lines budget (default).
+#   0: No budget (don't skip any preprocessor lines).
+#  >0: Skip up to this many preprocessor lines between candidates.
+#
+# Default: -1
+align_braced_init_list_span_num_pp_lines = -1       # number
+
+# Maximum budget of comment lines to skip for align_braced_init_list_span.
+#  -1: Use the global_span_num_cmt_lines budget (default).
+#   0: No budget (don't skip any comment lines).
+#  >0: Skip up to this many comment lines between candidates.
+#
+# Default: -1
+align_braced_init_list_span_num_cmt_lines = -1       # number
 
 # How to apply align_assign_span to function declaration "assignments", i.e.
 # 'virtual void foo() = 0' or '~foo() = {default|delete}'.
@@ -3205,6 +3233,30 @@ align_typedef_amp_style         = 0        # unsigned number
 #
 # 0: Don't align (default).
 align_right_cmt_span            = 0        # unsigned number
+
+# Maximum budget of empty lines to skip for align_right_cmt_span.
+#  -1: Use the global_span_num_empty_lines budget (default).
+#   0: No budget (don't skip any empty lines).
+#  >0: Skip up to this many empty lines between candidates.
+#
+# Default: -1
+align_right_cmt_span_num_empty_lines = -1       # number
+
+# Maximum budget of preprocessor lines to skip for align_right_cmt_span.
+#  -1: Use the global_span_num_pp_lines budget (default).
+#   0: No budget (don't skip any preprocessor lines).
+#  >0: Skip up to this many preprocessor lines between candidates.
+#
+# Default: -1
+align_right_cmt_span_num_pp_lines = -1       # number
+
+# Maximum budget of comment lines to skip for align_right_cmt_span.
+#  -1: Use the global_span_num_cmt_lines budget (default).
+#   0: No budget (don't skip any comment lines).
+#  >0: Skip up to this many comment lines between candidates.
+#
+# Default: -1
+align_right_cmt_span_num_cmt_lines = -1       # number
 
 # Minimum number of columns between preceding text and a trailing comment in
 # order for the comment to qualify for being aligned. Must be non-zero to have

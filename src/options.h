@@ -3436,19 +3436,20 @@ align_func_params_span_num_cmt_lines; // = -1
 extern BoundedOption<signed, -1000, 5000>
 align_func_params_thresh;
 
-// The minumum gap between parameter type and parameter name in function parameter
-// definitions. The actual gap may be somewhat bigger if align_var_def_star_style
-// is set to 1 and a parameter is a pointer type.
+// The minimum gap between parameter type and parameter name in function parameter
+// definitions. The actual gap may be somewhat bigger if either
+// align_var_def_star_style or align_var_def_amp_style is set to 1.
 // Note, align_func_params must be true and align_func_params_span must be at least
 // 1 for this option to have any effect.
 extern BoundedOption<unsigned, 0, 16>
 align_func_params_gap;
 
-// A minimum additional gap between parameter type and '*'s in function parameter
-// definitions.
-// Note, align_var_def_star_style must be set to 2 for this option to have any affect.
+// The minimum gap between parameter type and a dangling pointer or reference in
+// function parameter definitions.
+// This option only affects '*' when align_var_def_star_style is set to 2 and '&'
+// when align_var_def_amp_style is set to 2. align_func_params must be true.
 extern BoundedOption<unsigned, 0, 16>
-align_func_params_star_gap;
+align_func_params_ptr_ref_gap;
 
 // The span for aligning constructor value.
 //
@@ -3542,17 +3543,20 @@ align_var_def_span;
 // 2: Dangling             'void    *foo;'
 //
 // Note: when align_var_def_star_style=2 (Dangling), '*'s will not be taken into
-// account when performing alignment, instead they will be placed right justified
-// into the configured gap (see align_var_def_gap and align_func_params_gap)
+// account when performing alignment. Instead, they will be placed right justified
+// into the configured gap (see align_var_def_gap, align_func_params_gap and
+// align_func_params_ptr_ref_gap).
 extern BoundedOption<unsigned, 0, 2>
 align_var_def_star_style;
 
-// How to consider (or treat) the '&' in the alignment of variable definitions.
+// How to consider (or treat) the '&' in the alignment of variable definitions
+// and function parameters.
 //
 // 0: Part of the type     'long &   foo;' (default)
 // 1: Part of the variable 'long     &foo;'
 // 2: Dangling             'long    &foo;'
-// Dangling: the '&' will not be taken into account when aligning.
+// Dangling: the '&' will not be taken into account when aligning. See
+// align_func_params_ptr_ref_gap for the minimum gap used in function parameters.
 extern BoundedOption<unsigned, 0, 2>
 align_var_def_amp_style;
 
