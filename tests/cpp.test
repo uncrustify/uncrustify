@@ -1574,6 +1574,7 @@
 60167  cpp/rvalue_and_ref_qualifiers.cfg                    cpp/rvalue_and_ref_qualifiers.cpp
 60170  cpp/nl_collapse_one_liner.cfg                       cpp/nl_collapse_one_liner.cpp
 60171  cpp/sp_deduction_guide_arrow.cfg                      cpp/deduction_guide.cpp
+60172  cpp/indent_paren_after_func_decl_template.cfg        cpp/indent_paren_after_func_decl_template.cpp
 
 # global_span_num_*_lines tests (mixed lines via global fallback)
 34860  common/global_align_span_var_class_num_lines-1.cfg   cpp/align_var_class_span_num_mixed.cpp

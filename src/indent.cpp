@@ -2895,7 +2895,8 @@ void indent_text()
                   && pc->GetPrev()->IsNewline())
                && (  (  (  pc->GetParentType() == E_Token::CT_FUNC_PROTO
                         || pc->GetParentType() == E_Token::CT_FUNC_CLASS_PROTO)
-                     && options::indent_paren_after_func_decl())
+                     && options::indent_paren_after_func_decl()
+                     && frm.prev().GetOpenToken() != E_Token::CT_ANGLE_OPEN)
                   || (  (  pc->GetParentType() == E_Token::CT_FUNC_DEF
                         || pc->GetParentType() == E_Token::CT_FUNC_CLASS_DEF)
                      && options::indent_paren_after_func_def())
