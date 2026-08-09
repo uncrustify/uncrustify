@@ -47,8 +47,6 @@
 
 #if defined (__linux__)
 
-
-#include "../build/uncrustify_version.h"
 #include "keywords.h"
 #include "log_levels.h"
 #include "logger.h"
