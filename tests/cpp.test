@@ -285,6 +285,7 @@
 30274  cpp/sp_cparen_oparen-r.cfg                           cpp/sp_cparen_oparen.cpp
 30275  common/empty.cfg                                     cpp/bug_1321.cpp
 30276  cpp/bug_4589.cfg                                     cpp/bug_4589.cpp
+30277  cpp/func-param-ptr-ref-gap.cfg                       cpp/func-param-ptr-ref-gap.cpp
 30278  cpp/bug_1439.cfg                                     cpp/bug_1439.cpp
 30279  common/indent_inside_ternary_operator.cfg            cpp/indent-inside-ternary-operator.cpp
 
@@ -1695,3 +1696,4 @@
 34963  cpp/sp_sparen_compare.cfg                            cpp/sp_sparen_compare.cpp
 34964  cpp/nl_for_operators.cfg                             cpp/nl_for_operators.cpp
 34965  cpp/sp_for_nested.cfg                                cpp/sp_for_nested.cpp
+34966  cpp/func-param-ptr-ref-gap-mixed.cfg                 cpp/func-param-ptr-ref-gap-mixed.cpp

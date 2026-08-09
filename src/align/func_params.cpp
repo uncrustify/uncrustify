@@ -63,14 +63,16 @@ Chunk *align_func_param(Chunk *start)
 
    log_rule_B("align_var_def_star_style");
    log_rule_B("align_var_def_amp_style");
+   log_rule_B("align_func_params_ptr_ref_gap");
 
    for (size_t idx = 0; idx <= HOW_MANY_AS; idx++)
    {
       many_as[idx].Start(myspan, mythresh);
-      many_as[idx].m_gap        = mygap;
-      many_as[idx].m_star_style = static_cast<AlignStack::StarStyle>(options::align_var_def_star_style());
-      many_as[idx].m_amp_style  = static_cast<AlignStack::StarStyle>(options::align_var_def_amp_style());
-      skip_budgets[idx]         = skip_cfg;
+      many_as[idx].m_gap         = mygap;
+      many_as[idx].m_star_style  = static_cast<AlignStack::StarStyle>(options::align_var_def_star_style());
+      many_as[idx].m_ptr_ref_gap = options::align_func_params_ptr_ref_gap();
+      many_as[idx].m_amp_style   = static_cast<AlignStack::StarStyle>(options::align_var_def_amp_style());
+      skip_budgets[idx]          = skip_cfg;
    }
 
    size_t comma_count = 0;
