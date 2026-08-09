@@ -2229,6 +2229,12 @@ void uncrustify_file(const MemoryFile &fm, FILE *pfout, const char *parsed_file,
       newlines_cleanup_braces(first);
       newlines_cleanup_angles();                           // Issue #1167
 
+      if (options::nl_after_c_comment())
+      {
+         log_rule_B("nl_after_c_comment");
+	 newline_after_singleline_comment();
+      }
+
       if (options::nl_after_multiline_comment())
       {
          log_rule_B("nl_after_multiline_comment");
