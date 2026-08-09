@@ -89,7 +89,9 @@ The following span options currently support line filters:
   |                                  | function/method calls                         |
   | align_braced_init_list_span      | Braced initializer list alignment (C++)       |
   | align_right_cmt_span             | Trailing (right-side) comment alignment       |
+  | align_pp_define_span             | Preprocessor define body alignment            |
   +----------------------------------+-----------------------------------------------+
+
 
 Each of these has the three associated filter options. For example:
   - align_var_def_span_num_empty_lines

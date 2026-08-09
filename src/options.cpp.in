@@ -13,14 +13,17 @@ namespace options
 ##DECLARATIONS##
 } // namespace options
 
+
 //END declarations of option object instances
 
+
 ///////////////////////////////////////////////////////////////////////////////
+
 
 //-----------------------------------------------------------------------------
 void register_options(void)
 {
 ##REGISTRATIONS##
-}
+} // register_options
 
 } // namespace uncrustify
