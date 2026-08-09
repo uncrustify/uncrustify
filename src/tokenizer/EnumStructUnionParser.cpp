@@ -1000,8 +1000,9 @@ void EnumStructUnionParser::analyze_identifiers()
    try_post_identify_macro_calls();
 
    if (  m_start->IsClassOrStruct()
-      && (  m_start->IsNot(E_Token::CT_STRUCT)
-         || !language_is_set(lang_flag_e::LANG_C)))
+      && (  language_is_set(lang_flag_e::LANG_CPP)
+         || language_is_set(lang_flag_e::LANG_CS)
+         || language_is_set(lang_flag_e::LANG_VALA)))
    {
       /**
        * if a type has been identified, mark any constructor matching constructor
