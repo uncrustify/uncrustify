@@ -178,6 +178,7 @@
 00408  c/star-style-1.cfg                               c/star-style.c
 00409  c/star-style-2.cfg                               c/star-style.c
 
+00410  c/align_typedef_gap-3_span-5.cfg                 c/align-typedef-multiline.c
 00411  c/align_typedef_gap-3_span-5.cfg                 c/align-typedef.c
 00412  c/align_typedef_gap-3_span-5.cfg                 c/align-typedef.c
 00413  c/align_typedef_func-1.cfg                       c/align-typedef.c
