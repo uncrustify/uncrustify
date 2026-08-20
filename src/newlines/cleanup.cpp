@@ -1271,7 +1271,20 @@ void newlines_cleanup_braces(bool first)
       }
    }
 
-   newline_var_def_blk(Chunk::GetHead());
+   // newline_var_def_blk() is a no-op unless one of these is enabled, so skip
+   // the full-file scan when they are all disabled
+   log_rule_B("nl_var_def_blk_end_func_top");
+   log_rule_B("nl_var_def_blk_start");
+   log_rule_B("nl_var_def_blk_end");
+   log_rule_B("nl_var_def_blk_in");
+
+   if (  options::nl_var_def_blk_end_func_top() > 0
+      || options::nl_var_def_blk_start() > 0
+      || options::nl_var_def_blk_end() > 0
+      || options::nl_var_def_blk_in() > 0)
+   {
+      newline_var_def_blk(Chunk::GetHead());
+   }
 } // newlines_cleanup_braces
 
 
