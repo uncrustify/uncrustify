@@ -426,5 +426,3 @@ parameter_pack_cleanup : orig line is 15, orig col is 1, text '}', type is BRACE
 parameter_pack_cleanup : orig line is 15, orig col is 2, text ';', type is SEMICOLON, PRE is false
 parameter_pack_cleanup : orig line is 15, orig col is 3, <Newline>, PRE is false
 log_rule(enum_cleanup : rule is 'mod_enum_last_comma'
-newline_var_def_blk : orig line is 1, orig col is 1, text 'struct', type is STRUCT, PRE is false
-newline_var_def_blk : orig line is 15, orig col is 3, <Newline>, PRE is false
