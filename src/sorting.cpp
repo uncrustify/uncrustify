@@ -13,9 +13,12 @@
 #include "mark_change.h"
 #include "newlines/add.h"
 #include "newlines/double_newline.h"
+#include "unc_ctype.h"
 
 #include <algorithm>
 #include <cstdio>  // to get fprintf
+#include <cstring>
+#include <memory>
 #include <regex>
 #include <string>
 #include <unordered_map>
@@ -42,16 +45,20 @@ constexpr static int kIncludeCategoriesCount = 3;
 struct include_category
 {
    include_category(const std::string &pattern)
-      : regex(pattern)
+      : pattern(pattern)
+      , regex(pattern)
    {
    }
-   std::regex regex;
+   std::string pattern;
+   std::regex  regex;
 };
 
 
-include_category                      *include_categories[kIncludeCategoriesCount];
+std::unique_ptr<include_category>     include_categories[kIncludeCategoriesCount];
 std::unordered_map<Chunk *, int>      chunk_priority_cache;
 std::unordered_map<std::string, bool> filename_without_ext_cache;
+std::string                           current_filename;
+std::string                           current_filename_without_ext;
 
 
 /**
@@ -81,11 +88,17 @@ static void prepare_categories()
 
       if (!cat_pattern.empty())
       {
-         include_categories[i] = new include_category(cat_pattern);
+         // compiling a std::regex is expensive, so keep the one built for a
+         // previous file unless the option it came from has changed
+         if (  include_categories[i] == nullptr
+            || include_categories[i]->pattern != cat_pattern)
+         {
+            include_categories[i] = std::make_unique<include_category>(cat_pattern);
+         }
       }
       else
       {
-         include_categories[i] = nullptr;
+         include_categories[i].reset();
       }
    }
 }
@@ -93,18 +106,12 @@ static void prepare_categories()
 
 static void cleanup_categories()
 {
+   // the compiled category regexes deliberately outlive the file; they are
+   // rebuilt by prepare_categories() if the options change
    chunk_priority_cache.clear();
    filename_without_ext_cache.clear();
-
-   for (auto &include_category : include_categories)
-   {
-      if (include_category == nullptr)
-      {
-         continue;
-      }
-      delete include_category;
-      include_category = NULL;
-   }
+   current_filename.clear();
+   current_filename_without_ext.clear();
 }
 
 
@@ -134,39 +141,100 @@ static int get_chunk_priority(Chunk *pc)
 
 
 /**
- * Returns true if the text contains filename without extension.
+ * Strip the directory and the extension off the file being formatted. The
+ * result is memoized, as it only changes when uncrustify moves on to the next
+ * file.
  */
-static bool text_contains_filename_without_ext(const char *text)
+static const std::string &get_current_filename_without_ext()
 {
-   if (filename_without_ext_cache.count(text) > 0)
+   if (current_filename == cpd.filename)
    {
-      return(filename_without_ext_cache[text]);
+      return(current_filename_without_ext);
    }
-   std::string filepath             = cpd.filename;
-   std::string filename_without_ext = filepath;
-   size_t      startIndex           = filepath.find_last_of("/\\");
+   current_filename             = cpd.filename;
+   current_filename_without_ext = current_filename;
 
-   if (startIndex == std::string::npos)
+   size_t start_idx = current_filename.find_last_of("/\\");
+
+   if (start_idx == std::string::npos)
    {
-      startIndex = 0;
+      start_idx = 0;
    }
    else
    {
-      startIndex += 1;
+      start_idx += 1;
    }
 
-   if (startIndex < filepath.size())
+   if (start_idx < current_filename.size())
    {
-      std::string filename = filepath.substr(startIndex);
-      size_t      dot_idx  = filename.find_last_of('.');
-      filename_without_ext = filename.substr(0, dot_idx);
-   }
-   const std::regex  special_chars      = std::regex(R"([-[\]{}()*+?.,\^$|#\s])");
-   const std::string sanitized_filename = std::regex_replace(filename_without_ext, special_chars, R"(\$&)");
-   const std::regex  filename_pattern   = std::regex("\\S?" + sanitized_filename + "\\b.*");
+      current_filename_without_ext = current_filename.substr(start_idx);
+      size_t dot_idx = current_filename_without_ext.find_last_of('.');
 
-   filename_without_ext_cache[text] = std::regex_match(text, filename_pattern);
-   return(filename_without_ext_cache[text]);
+      if (dot_idx != std::string::npos)
+      {
+         current_filename_without_ext.erase(dot_idx);
+      }
+   }
+   return(current_filename_without_ext);
+}
+
+
+//! Matches the character class the regex '\w' stands for.
+static bool is_regex_word_char(char ch)
+{
+   return(  (  ch >= 'a'
+            && ch <= 'z')
+         || (  ch >= 'A'
+            && ch <= 'Z')
+         || (  ch >= '0'
+            && ch <= '9')
+         || ch == '_');
+}
+
+
+//! Matches the regex '\b' assertion at the given offset into text.
+static bool has_word_boundary_at(const char *text, size_t pos)
+{
+   const bool before_is_word = (pos > 0) && is_regex_word_char(text[pos - 1]);
+   const bool after_is_word  = (text[pos] != '\0') && is_regex_word_char(text[pos]);
+
+   return(before_is_word != after_is_word);
+}
+
+
+//! Matches the regex 'filename\b' at the given offset into text.
+static bool matches_filename_at(const char *text, const std::string &filename, size_t offset)
+{
+   return(  std::strncmp(text + offset, filename.c_str(), filename.size()) == 0
+         && has_word_boundary_at(text, offset + filename.size()));
+}
+
+
+/**
+ * Returns true if the text contains filename without extension.
+ *
+ * This used to build the equivalent regex '\S?<filename>\b.*' and run
+ * std::regex_match() against it, which meant escaping the filename and
+ * compiling two regexes on every call. The pattern only allows the filename at
+ * offset 0, or at offset 1 behind a single non-space character, so match those
+ * two positions directly instead.
+ */
+static bool text_contains_filename_without_ext(const char *text)
+{
+   const auto cache_entry = filename_without_ext_cache.find(text);
+
+   if (cache_entry != filename_without_ext_cache.end())
+   {
+      return(cache_entry->second);
+   }
+   const std::string &filename_without_ext = get_current_filename_without_ext();
+   const bool        contains_filename     = matches_filename_at(text, filename_without_ext, 0)
+                                             || (  text[0] != '\0'
+                                                && !unc_isspace(text[0])
+                                                && matches_filename_at(text, filename_without_ext, 1));
+
+   filename_without_ext_cache[text] = contains_filename;
+   return(contains_filename);
 }
 
 
