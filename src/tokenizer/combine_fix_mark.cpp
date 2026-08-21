@@ -1196,6 +1196,48 @@ void mark_function_return_type(Chunk const *fname, Chunk *start, E_Token parent_
 } // mark_function_return_type
 
 
+/**
+ * Look for an assignment at the same level as pc, before the current statement
+ * ends. Issue #575 only cares about an assignment that pc itself is part of, so
+ * stop at a same-level semicolon or brace rather than running on into later
+ * statements.
+ */
+static Chunk const *find_assign_before_statement_end(Chunk const *pc)
+{
+   const size_t level = pc->GetLevel();
+
+   for (Chunk const *tmp = pc->GetNextNcNnl(); tmp->IsNotNullChunk(); tmp = tmp->GetNextNcNnl())
+   {
+      if (tmp->GetLevel() < level)
+      {
+         // left the enclosing scope without finding one
+         return(Chunk::NullChunkPtr);
+      }
+
+      if (tmp->GetLevel() != level)
+      {
+         // nested in a deeper scope, not our statement
+         continue;
+      }
+
+      if (tmp->Is(E_Token::CT_ASSIGN))
+      {
+         return(tmp);
+      }
+
+      if (  tmp->IsSemicolon()
+         || tmp->Is(E_Token::CT_BRACE_OPEN)
+         || tmp->Is(E_Token::CT_BRACE_CLOSE))
+      {
+         // the statement ended first
+         return(Chunk::NullChunkPtr);
+      }
+   }
+
+   return(Chunk::NullChunkPtr);
+}
+
+
 void mark_function(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
@@ -1466,7 +1508,7 @@ void mark_function(Chunk *pc)
       LOG_FMT(LFCN, "%s(%d): examine: text is '%s', orig line is %zu, orig col is %zu, type is %s\n",
               __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
       // look for an assignment. Issue #575
-      Chunk const *temp = pc->GetNextType(E_Token::CT_ASSIGN, pc->GetLevel());
+      Chunk const *temp = find_assign_before_statement_end(pc);
 
       if (temp->IsNotNullChunk())
       {
