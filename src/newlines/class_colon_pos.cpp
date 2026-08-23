@@ -67,6 +67,20 @@ void newlines_class_colon_pos(E_Token tok)
    LineSkipConfig acv_skip_budget = {};
    Chunk const    *prev_acv_chunk = Chunk::NullChunkPtr;
 
+   // Every edit the loop below can make is gated on one of these: the colon is
+   // only moved when pos_*_colon asks for LEAD or TRAIL, newlines are only
+   // added or removed when nl_*_colon or nl_*_init_args is not IGNORE, and the
+   // alignment stack is only fed when with_acv is set. pos_*_comma merely picks
+   // between branches that nl_*_init_args has already enabled. With all of them
+   // off the pass can only scan, so skip it.
+   if (  !(tpc & (TP_LEAD | TP_TRAIL))
+      && anc == IARF_IGNORE
+      && ncia == IARF_IGNORE
+      && !with_acv)
+   {
+      return;
+   }
+
    if (with_acv)
    {
       int    acv_thresh = options::align_constr_value_thresh();
