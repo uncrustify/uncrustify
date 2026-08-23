@@ -41,15 +41,22 @@ void log_rule3(log_sev_t sev, const char *func, size_t line, const char *rule)
 void log_rule3(log_sev_t sev, const char *func, const char *rule)
 #endif
 {
+   // log_rule_B() is called from hot loops all over the formatter, so bail out
+   // before doing any work when the severity is off. LOG_FMT() would test this
+   // too, but only after get_unqualified_func_name() has already run.
+   if (!log_sev_on(sev))
+   {
+      return;
+   }
    // some Windows platforms provide a qualified function name ("ABC::XYZ::function_Name")
    // as __func__; call get_unqualified_func_name() to return an unqualified function name
 
    func = get_unqualified_func_name(func);
 
 #ifdef SUPER_LOG
-   LOG_FMT(sev, "log_rule(%s:%zu): rule is '%s'\n", func, line, rule);
+   log_fmt(sev, "log_rule(%s:%zu): rule is '%s'\n", func, line, rule);
 #else
-   LOG_FMT(sev, "log_rule(%s): rule is '%s'\n", func, rule);
+   log_fmt(sev, "log_rule(%s): rule is '%s'\n", func, rule);
 #endif
 }
 
