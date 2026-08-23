@@ -64,10 +64,10 @@ xcuserdata
 cmake-build-*/
 
 # Vim
-*.swp
+*.sw?
 
-# Clangd
-/.cache/clangd/
+# Cache directory
+/.cache/
 
 # Compilation database
 compile_commands.json
