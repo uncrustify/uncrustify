@@ -1188,6 +1188,8 @@ void indent_text()
                   || pc->Is(E_Token::CT_TYPEDEF) // Issue #2675
                   || pc->Is(E_Token::CT_MACRO_OPEN)
                   || pc->Is(E_Token::CT_MACRO_CLOSE)
+                  || pc->Is(E_Token::CT_MACRO_NO_INDENT)
+                  || pc->Is(E_Token::CT_MACRO_NO_FMT_ARGS)
                   || (  language_is_set(lang_flag_e::LANG_OC)
                      && pc->IsComment()
                      && pc->GetParentType() == E_Token::CT_COMMENT_WHOLE) // Issue #2675

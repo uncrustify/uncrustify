@@ -187,6 +187,8 @@ void ParsingFrame::pop(const char *func, int line, Chunk const *pc)
       || pc->GetType() == E_Token::CT_LPAREN_OPEN
       || pc->GetType() == E_Token::CT_MACRO_CLOSE
       || pc->GetType() == E_Token::CT_MACRO_FUNC_CALL          // Issue #4026
+      || pc->GetType() == E_Token::CT_MACRO_NO_FMT_ARGS
+      || pc->GetType() == E_Token::CT_MACRO_NO_INDENT
       || pc->GetType() == E_Token::CT_MACRO_OPEN
       || pc->GetType() == E_Token::CT_MEMBER                   // Issue #3996
       || pc->GetType() == E_Token::CT_NEWLINE
