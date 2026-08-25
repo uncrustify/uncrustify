@@ -260,3 +260,4 @@
 60014  oc/60014.cfg                             oc/4309.mm
 60015  oc/60015.cfg                             oc/4310.mm
 60016  cpp/Issue_4556_safe.cfg                  oc/Issue_4556_safe.mm              OC+
+60017  oc/lambda_rvalue_ref.cfg                 oc/lambda_rvalue_ref.mm            OC+

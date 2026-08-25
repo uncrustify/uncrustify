@@ -612,6 +612,61 @@ static bool handle_rvalue_angle_close(Chunk const *prev, Chunk *pc)
          }
       }
 
+      // Detect a [...] (...) {...} lambda and exclude default arguments before
+      // preserving && as an rvalue reference in its parameter list.
+      if (  pc->GetLevel() > 0
+         && (  next->Is(E_Token::CT_WORD)
+            || next->Is(E_Token::CT_TYPE)))
+      {
+         Chunk const *after_name = next->GetNextNcNnl();
+
+         if (  after_name->Is(E_Token::CT_COMMA)
+            || after_name->IsParenClose()
+            || after_name->Is(E_Token::CT_ASSIGN))
+         {
+            Chunk const *paren_close = pc->GetNextType(E_Token::CT_FPAREN_CLOSE, pc->GetLevel() - 1);
+
+            if (paren_close->IsNullChunk())
+            {
+               paren_close = pc->GetNextType(E_Token::CT_PAREN_CLOSE, pc->GetLevel() - 1);
+            }
+            Chunk const *paren_open = paren_close->GetOpeningParen();
+            Chunk const *sq_close   = paren_open->GetPrevNcNnlNi();
+            Chunk const *br_open    = paren_close->GetNextNcNnl();
+
+            bool        is_default_arg = false;
+
+            for (Chunk const *tmp = pc->GetPrevNcNnlNi();
+                 tmp->IsNotNullChunk() && tmp != paren_open;
+                 tmp = tmp->GetPrevNcNnlNi())
+            {
+               if (tmp->GetLevel() != pc->GetLevel())
+               {
+                  continue;
+               }
+
+               if (tmp->Is(E_Token::CT_ASSIGN))
+               {
+                  is_default_arg = true;
+                  break;
+               }
+
+               if (tmp->Is(E_Token::CT_COMMA))
+               {
+                  break;
+               }
+            }
+
+            if (  !is_default_arg
+               && sq_close->Is(E_Token::CT_SQUARE_CLOSE)
+               && br_open->Is(E_Token::CT_BRACE_OPEN))
+            {
+               pc->SetType(E_Token::CT_BYREF);
+               return(true);
+            }
+         }
+      }
+
       // Don't convert && to BYREF if we're inside statement parentheses (if, while, for, etc.)
       // and not in a clear template type context
       if (pc->TestFlags(PCF_IN_SPAREN))
