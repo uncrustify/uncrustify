@@ -1695,3 +1695,4 @@
 34963  cpp/sp_sparen_compare.cfg                            cpp/sp_sparen_compare.cpp
 34964  cpp/nl_for_operators.cfg                             cpp/nl_for_operators.cpp
 34965  cpp/sp_for_nested.cfg                                cpp/sp_for_nested.cpp
+34966  cpp/bool_and_sizeof.cfg                              cpp/bool_and_sizeof.cpp

@@ -627,7 +627,9 @@ static bool handle_rvalue_angle_close(Chunk const *prev, Chunk *pc)
       if (  pc->GetLevel() > pc->GetBraceLevel()
          && (  next->Is(E_Token::CT_WORD)
             || next->Is(E_Token::CT_TYPE)
-            || next->Is(E_Token::CT_DC_MEMBER)))   // ::namespace
+            || next->Is(E_Token::CT_DC_MEMBER)   // ::namespace
+            || next->Is(E_Token::CT_DECLTYPE)
+            || next->Is(E_Token::CT_SIZEOF)))
       {
          LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig col is %zu - && after > inside parens followed by expression term, keeping as BOOL\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
