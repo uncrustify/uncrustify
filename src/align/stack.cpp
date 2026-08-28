@@ -410,15 +410,21 @@ void AlignStack::Flush()
    if (Len() == 1)
    {
       // check if we have *one* typedef in the line
-      Chunk const *pc   = m_aligned.Get(0)->m_pc;
-      Chunk const *temp = pc->GetPrevType(E_Token::CT_TYPEDEF, pc->GetLevel());
+      Chunk const *pc = m_aligned.Get(0)->m_pc;
 
-      if (temp->IsNotNullChunk())
+      // only a typedef on the same source line matters, so stop at the start
+      // of the line instead of scanning arbitrarily far back
+      for (Chunk const *temp = pc->GetPrev();
+           temp->IsNotNullChunk() && !temp->IsNewline();
+           temp = temp->GetPrev())
       {
-         if (pc->GetOrigLine() == temp->GetOrigLine())
+         if (  temp->Is(E_Token::CT_TYPEDEF)
+            && temp->GetLevel() == pc->GetLevel()
+            && temp->GetOrigLine() == pc->GetOrigLine())
          {
             // reset the gap only for *this* stack
             m_gap = 1;
+            break;
          }
       }
    }
