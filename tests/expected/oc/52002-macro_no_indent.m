@@ -46,6 +46,14 @@ INIT_AND_NEW_UNAVAILABLE;
 - (void)methodTwo;
 @end
 
+// Test 5b: Interface with macro without semicolon - properties and methods should align
+@interface OuterClass2 : NSObject
+INIT_AND_NEW_UNAVAILABLE
+@property (nonatomic) int value;
+- (void)methodOne NS_UNAVAILABLE;
+- (void)methodTwo;
+@end
+
 NS_ASSUME_NONNULL_END
 
 // Test 6: Code after NS_ASSUME_NONNULL_END should be at correct indent level
