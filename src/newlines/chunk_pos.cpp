@@ -42,8 +42,18 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
    {
       return;
    }
+   // The whole loop body is gated on pc being a chunk_type chunk, so jump from
+   // one match to the next instead of stepping over every token in the file.
+   // chunk_type is never a comment or a newline, so this reaches exactly the
+   // same chunks a GetNextNcNnl() walk would.
+   Chunk *pc = Chunk::GetHead();
 
-   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
+   if (pc->IsNot(chunk_type))
+   {
+      pc = pc->GetNextType(chunk_type);
+   }
+
+   for ( ; pc->IsNotNullChunk(); pc = pc->GetNextType(chunk_type))
    {
       char copy[1000];
       LOG_FMT(LNEWLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s'\n",
