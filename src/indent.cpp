@@ -1947,7 +1947,7 @@ void indent_text()
             }
             // Issue # 1620, UNI-24090.cs
             else if (  frm.prev().GetOpenChunk()->IsOnSameLine(frm.top().GetOpenChunk())
-                    && language_is_set(lang_flag_e::LANG_CS)             // Issue 4556
+                    && frm.prev().GetIndent() >= indent_size
                     && !options::indent_align_paren()
                     && frm.prev().GetOpenChunk()->IsParenOpen()
                     && !pc->TestFlags(PCF_ONE_LINER))
