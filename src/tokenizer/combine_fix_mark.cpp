@@ -2051,7 +2051,8 @@ void mark_function(Chunk *pc)
       bool  is_param = true;
       tmp = ref;
 
-      while (tmp != paren_close)
+      while (  tmp->IsNotNullChunk()
+            && tmp != paren_close)
       {
          // Use Npp to skip PP directives (#ifdef, #define, etc.) that may
          // appear inside function parameters at a lower level in nested contexts
@@ -2069,8 +2070,10 @@ void mark_function(Chunk *pc)
          }
          tmp = tmp2;
       }
+      const bool did_scan_params = tmp == paren_close;
 
-      if (  !is_extern
+      if (  did_scan_params
+         && !is_extern
          && is_param
          && ref != tmp)
       {
@@ -2087,7 +2090,8 @@ void mark_function(Chunk *pc)
          LOG_FMT(LFCN, "%s(%d):   3) Marked text '%s' as FUNC_CTOR_VAR on orig line %zu, orig col %zu\n",
                  __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
       }
-      else if (pc->GetBraceLevel() > 0)
+      else if (  did_scan_params
+              && pc->GetBraceLevel() > 0)
       {
          Chunk const *br_open = pc->GetPrevType(E_Token::CT_BRACE_OPEN, pc->GetBraceLevel() - 1);
 
