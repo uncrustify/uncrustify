@@ -73,6 +73,9 @@ enum class E_Token : unsigned short int
    CT_SIZEOF,
    CT_DECLTYPE,
    CT_RETURN,
+   CT_CO_AWAIT,            // C++20 co_await, also operator co_await
+   CT_CO_YIELD,            // C++20 co_yield
+   CT_CO_RETURN,           // C++20 co_return
    CT_BREAK,
    CT_UNION,
    CT_GOTO,

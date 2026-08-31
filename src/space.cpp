@@ -571,10 +571,19 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    // "return(a);" vs. "return (foo_t)a + 3;" vs. "return a;" vs. "return;"
-   if (first->Is(E_Token::CT_RETURN))
+   // co_return, co_yield and co_await take the same spacing options.
+   // sp_return_brace only ever applies to the first two: co_return and
+   // co_yield accept a braced-init-list, co_await does not
+   if (  first->Is(E_Token::CT_RETURN)
+      || first->Is(E_Token::CT_CO_RETURN)
+      || first->Is(E_Token::CT_CO_AWAIT)
+      || first->Is(E_Token::CT_CO_YIELD))
    {
       if (  second->Is(E_Token::CT_PAREN_OPEN)
-         && second->GetParentType() == E_Token::CT_RETURN)
+         && (  second->GetParentType() == E_Token::CT_RETURN
+            || second->GetParentType() == E_Token::CT_CO_RETURN
+            || second->GetParentType() == E_Token::CT_CO_AWAIT
+            || second->GetParentType() == E_Token::CT_CO_YIELD))
       {
          // Add or remove space between 'return' and '('.
          log_rule("sp_return_paren");
@@ -681,6 +690,9 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       case E_Token::CT_ACCESS:
       case E_Token::CT_QUALIFIER:
       case E_Token::CT_RETURN:
+      case E_Token::CT_CO_AWAIT:
+      case E_Token::CT_CO_YIELD:
+      case E_Token::CT_CO_RETURN:
       case E_Token::CT_SIZEOF:
       case E_Token::CT_DECLTYPE:
       case E_Token::CT_STRUCT:

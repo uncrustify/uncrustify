@@ -182,7 +182,8 @@ void do_parens_return()                         // Issue #3316
 
       while ((pc = pc->GetNextNcNnl())->IsNotNullChunk())
       {
-         if (pc->Is(E_Token::CT_RETURN))
+         if (  pc->Is(E_Token::CT_RETURN)
+            || pc->Is(E_Token::CT_CO_RETURN))
          {
             LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetLogText(), pc->GetLevel());

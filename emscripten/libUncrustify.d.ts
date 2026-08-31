@@ -232,6 +232,9 @@ declare namespace LibUncrustify
         SIZEOF : TokenTypeValue;
         DECLTYPE : TokenTypeValue;
         RETURN : TokenTypeValue;
+        CO_AWAIT : TokenTypeValue;
+        CO_YIELD : TokenTypeValue;
+        CO_RETURN : TokenTypeValue;
         BREAK : TokenTypeValue;
         UNION : TokenTypeValue;
         GOTO : TokenTypeValue;
