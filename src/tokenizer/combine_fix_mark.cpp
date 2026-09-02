@@ -681,10 +681,29 @@ Chunk *fix_variable_definition(Chunk *start)
          || pc->Is(E_Token::CT_DC_MEMBER)
          || pc->Is(E_Token::CT_MEMBER)
          || pc->Is(E_Token::CT_PP)                       // Issue #3169
+         || pc->Is(E_Token::CT_DECLSPEC)                 // '__declspec(...)' prefix
          || pc->IsPointerOperator())
    {
       LOG_FMT(LFVD, "%s(%d):   1:text '%s', type is %s\n",
               __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()));
+
+      // A '__declspec(...)' specifier isn't itself part of the type/name
+      // run -- skip it and its parens (pc must still be the DECLSPEC chunk
+      // itself for skip_declspec_next() to act) and re-check the loop
+      // condition against whatever follows.
+      if (pc->Is(E_Token::CT_DECLSPEC))
+      {
+         pc = skip_declspec_next(pc);
+
+         if (pc->IsNullChunk())
+         {
+            LOG_FMT(LFVD, "%s(%d): pc is null chunk\n", __func__, __LINE__);
+            return(Chunk::NullChunkPtr);
+         }
+         LOG_FMT(LFVD, "%s(%d):   1b:text '%s', type is %s\n",
+                 __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()));
+         continue;
+      }
       cs.Push_Back(pc);
       pc = pc->GetNextNcNnl();
 

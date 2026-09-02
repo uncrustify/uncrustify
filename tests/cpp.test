@@ -1697,3 +1697,9 @@
 34964  cpp/nl_for_operators.cfg                             cpp/nl_for_operators.cpp
 34965  cpp/sp_for_nested.cfg                                cpp/sp_for_nested.cpp
 34966  cpp/bool_and_sizeof.cfg                              cpp/bool_and_sizeof.cpp
+
+60180  cpp/declspec_var_def.cfg                             cpp/declspec_extern_c.cpp
+60181  cpp/declspec_var_def.cfg                             cpp/declspec_single.cpp
+60182  cpp/declspec_var_def.cfg                             cpp/declspec_func_decl.cpp
+60183  cpp/declspec_var_def.cfg                             cpp/declspec_class_namespace.cpp
+60184  cpp/declspec_var_def.cfg                             cpp/declspec_mixed_block.cpp

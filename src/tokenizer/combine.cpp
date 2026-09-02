@@ -4068,6 +4068,7 @@ void fix_symbols()
             || pc->Is(E_Token::CT_TYPE)
             || pc->Is(E_Token::CT_TYPENAME)
             || pc->Is(E_Token::CT_DC_MEMBER)          // Issue #2478
+            || pc->Is(E_Token::CT_DECLSPEC)            // a '__declspec(...)'-prefixed declaration is still a declaration
             || (  pc->Is(E_Token::CT_WORD)
                && !pc->TestFlags(PCF_IN_CONDITIONAL)  // Issue #3558
 //               && language_is_set(lang_flag_e::LANG_CPP)

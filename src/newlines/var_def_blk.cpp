@@ -12,6 +12,7 @@
 #include "newlines/is_func_call_or_def.h"
 #include "newlines/is_var_def.h"
 #include "newlines/min_after.h"
+#include "tokenizer/combine_skip.h"
 
 
 using namespace uncrustify;
@@ -71,6 +72,14 @@ Chunk *newline_var_def_blk(Chunk *start)
       if (pc->Is(E_Token::CT_QUALIFIER))
       {
          pc = pc->GetNext();
+         continue;
+      }
+
+      // skip '__declspec(...)' specifiers -- like a qualifier, they aren't
+      // themselves part of the variable definition that follows
+      if (pc->Is(E_Token::CT_DECLSPEC))
+      {
+         pc = skip_declspec_next(pc);
          continue;
       }
 
