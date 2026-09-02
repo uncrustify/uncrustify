@@ -15,4 +15,16 @@
 #define UNCRUSTIFY_VERSION    "Uncrustify-@UNCRUSTIFY_VERSION@"
 #endif
 
+/*
+ * VER_MAJOR/VER_MINOR/VER_PATCH and VER_STRING are derived from the same
+ * resolved UNCRUSTIFY_VERSION above (real git describe output, or the
+ * static fallback literal when built without git history/NoGitVersionString)
+ * -- see cmake/GenerateVersionHeader.cmake. VER_STRING additionally carries
+ * the current commit's short hash when one was actually available.
+ */
+#define VER_MAJOR    @VER_MAJOR@
+#define VER_MINOR    @VER_MINOR@
+#define VER_PATCH    @VER_PATCH@
+#define VER_STRING   "@VER_STRING@"
+
 #endif /* UNCRUSTIFY_VERSION_H_INCLUDED */

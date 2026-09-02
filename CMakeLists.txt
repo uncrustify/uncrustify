@@ -35,6 +35,25 @@ endif()
 if(MSVC)
   add_definitions(/D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS /wd4267)
   add_definitions(/utf-8)
+
+  # Match the official MinGW-w64 binaries, which are statically linked
+  # against the CRT (no runtime DLL dependency).
+  foreach(flag_var
+      CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+      CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO
+      CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+      CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO)
+    string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+  endforeach()
+
+  # Match the official MinGW-w64 binaries, which embed no manifest.
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MANIFEST:NO")
+
+  # Release builds must not carry debug information. /EMITPOGOPHASEINFO is
+  # an undocumented link.exe switch that strips the .debug section outright.
+  string(REGEX REPLACE "/Z[iI7]" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+  string(REGEX REPLACE "/Z[iI7]" "" CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
+  set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /debug:none /EMITPOGOPHASEINFO")
 elseif(CMAKE_COMPILER_IS_GNUCXX)
   set(gcc_warning_flags
     -Wall
@@ -140,6 +159,21 @@ set(UNCRUSTIFY_VERSION "0.83.0_f")
 
 option(NoGitVersionString "Do not use make_version.py and git to build a version string" OFF)
 if(NoGitVersionString)
+  # No git lookup in this mode, so VER_STRING can't carry a commit hash --
+  # derive VER_MAJOR/VER_MINOR/VER_PATCH/VER_STRING from the static fallback
+  # literal above, same as GenerateVersionHeader.cmake does for the git path.
+  string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" _ver_match "${UNCRUSTIFY_VERSION}")
+  if(NOT _ver_match)
+    message(FATAL_ERROR
+      "Could not parse major.minor.patch out of UNCRUSTIFY_VERSION "
+      "'${UNCRUSTIFY_VERSION}'; cannot derive VER_MAJOR/VER_MINOR/VER_PATCH "
+      "for uncrustify.rc")
+  endif()
+  set(VER_MAJOR ${CMAKE_MATCH_1})
+  set(VER_MINOR ${CMAKE_MATCH_2})
+  set(VER_PATCH ${CMAKE_MATCH_3})
+  set(VER_STRING "${VER_MAJOR}.${VER_MINOR}.${VER_PATCH}")
+
   configure_file(src/uncrustify_version.h.in uncrustify_version.h @ONLY)
   add_custom_target(generate_version_header) # Dummy target
 else()
@@ -543,6 +577,14 @@ set(uncrustify_docs
 
 add_executable(uncrustify ${uncrustify_sources} ${uncrustify_headers})
 add_dependencies(uncrustify generate_version_header)
+
+if(WIN32)
+  target_sources(uncrustify PRIVATE src/uncrustify.rc)
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    # cl.exe auto-defines _WIN64 for 64-bit targets; rc.exe does not.
+    set_source_files_properties(src/uncrustify.rc PROPERTIES COMPILE_DEFINITIONS "_WIN64")
+  endif()
+endif()
 target_compile_features(uncrustify PUBLIC cxx_std_17)
 
 set_property(TARGET uncrustify APPEND PROPERTY
