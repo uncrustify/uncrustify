@@ -775,3 +775,8 @@
 10274  common/global_align_span_right_cmt_num_lines-1.cfg c/align_right_cmt_span_num_mixed.c
 10275  common/global_align_span_right_cmt_num_lines-2.cfg c/align_right_cmt_span_num_mixed.c
 10276  common/global_align_span_right_cmt_num_lines-3.cfg c/align_right_cmt_span_num_mixed.c
+
+10280  c/Issue_4767.cfg                                   c/Issue_4767.c
+10281  c/Issue_4767.cfg                                   c/Issue_4767_mixed.c
+10282  c/Issue_4767.cfg                                   c/Issue_4767_union.c
+10283  c/Issue_4767.cfg                                   c/Issue_4767_enum.c
