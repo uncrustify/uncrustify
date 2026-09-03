@@ -4831,7 +4831,7 @@ Chunk *skip_template_next(Chunk *ang_open)
 
 static void handle_oc_class(Chunk *pc)
 {
-   enum class angle_state_e : unsigned int
+   enum class angle_state_e : size_t
    {
       NONE  = 0,
       OPEN  = 1, // '<' found

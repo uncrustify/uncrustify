@@ -16,7 +16,7 @@
 class Chunk;
 class ChunkStack;
 
-enum class comment_align_e : unsigned int
+enum class comment_align_e : size_t
 {
    REGULAR,
    BRACE,

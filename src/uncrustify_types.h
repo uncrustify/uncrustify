@@ -50,7 +50,7 @@
 
 
 //! Brace stage enum used in brace_cleanup
-enum class E_BraceStage : unsigned int
+enum class E_BraceStage : size_t
 {
    // see also: const char *get_brace_stage_name(E_BraceStage brace_stage)
    NONE,
@@ -68,7 +68,7 @@ enum class E_BraceStage : unsigned int
 };
 
 
-enum class E_CharEncoding : unsigned int
+enum class E_CharEncoding : size_t
 {
    // see also: const char *get_char_encoding(E_CharEncoding encoding)
    ASCII,     //! 0-127
@@ -78,7 +78,7 @@ enum class E_CharEncoding : unsigned int
    UTF16_BE   //! utf 16 bit wide, big endian
 };
 
-enum class tracking_type_e : unsigned int
+enum class tracking_type_e : size_t
 {
    // see also: const char *get_tracking_type_e_name(tracking_type_e type)
    TT_NONE,
@@ -163,7 +163,7 @@ typedef std::vector<TrackNumber>    TrackList;     // list of tracks
 //};
 
 //! Pattern classes for special keywords
-enum class pattern_class_e : unsigned int
+enum class pattern_class_e : size_t
 {
    // see also: const char *get_pattern_class(pattern_class_e p_class)
    NONE,
@@ -220,7 +220,7 @@ struct MemoryFile
       , encoding(E_CharEncoding::ASCII) {}
 };
 
-enum class unc_stage_e : unsigned int
+enum class unc_stage_e : size_t
 {
    // see also: const char *get_unc_stage_name(unc_stage_e unc_stage)
    TOKENIZE,
