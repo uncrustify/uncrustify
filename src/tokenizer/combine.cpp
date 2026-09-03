@@ -98,6 +98,54 @@ static void handle_oc_block_type(Chunk *pc);
 
 
 /**
+ * Issue #4782: test whether the template argument list closed by
+ * 'angle_close' (a CT_ANGLE_CLOSE chunk) genuinely begins its enclosing
+ * statement -- i.e. this is a declaration ('array<int>^ Name', optionally
+ * behind a bounded run of declaration-prefix qualifiers like 'static'),
+ * as opposed to being embedded inside an expression that already started
+ * elsewhere ('int y = Mask<4> ^ Mask<8>;', 'return Mask<4> ^ Mask<8>;').
+ *
+ * Both shapes present the exact same immediate token sequence at the '^'
+ * that may follow (CT_ANGLE_CLOSE, then CT_CARET) -- PCF_EXPR_START alone
+ * cannot tell them apart, since it is (correctly) set on the token after
+ * *any* '>', including one that merely continues an already-open
+ * expression. PCF_STMT_START, in contrast, is only ever set on the one
+ * token that truly begins a statement, so walking back from the template
+ * name to see whether it (or a qualifier ahead of it) carries that flag
+ * is sufficient to distinguish the two cases without any semantic
+ * (type-vs-value) knowledge of the template itself.
+ *
+ * @param angle_close  the CT_ANGLE_CLOSE chunk that a '^' or '%' may
+ *                     immediately follow
+ */
+static bool angle_close_starts_declaration(Chunk const *angle_close)
+{
+   Chunk const *angle_open = angle_close->GetOpeningParen();
+
+   if (angle_open->IsNullChunk())
+   {
+      return(false);
+   }
+   Chunk const *pc = angle_open->GetPrevNcNnlNi();   // the template name itself
+
+   while (pc->IsNotNullChunk())
+   {
+      if (pc->TestFlags(PCF_STMT_START))
+      {
+         return(true);
+      }
+      pc = pc->GetPrevNcNnlNi();
+
+      if (pc->IsNot(E_Token::CT_QUALIFIER))
+      {
+         return(false);
+      }
+   }
+   return(false);
+} // angle_close_starts_declaration
+
+
+/**
  * Process an ObjC message spec/dec
  *
  * Specs:
@@ -2445,8 +2493,19 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    {
       if (pc->Is(E_Token::CT_CARET))
       {
-         if (  pc->TestFlags(PCF_EXPR_START)
-            || pc->TestFlags(PCF_IN_PREPROC))
+         // Issue #4782: a '^' immediately following the closing '>' of a
+         // template argument list (e.g. 'array<int>^', a C++/CLI handle
+         // suffix, or 'Mask<4> ^ [](){ ... }()' in plain C++14) is not a
+         // fresh expression -- it's continuing the type/value that the
+         // template-close just finished. The generic post-'>' expression-
+         // boundary reset stamps PCF_EXPR_START on it anyway, which would
+         // otherwise make it look like a legitimate Objective-C block
+         // literal start ('^ RTYPE ( ARGS ) { BODY }').
+         Chunk const *prev_nc = pc->GetPrevNcNnlNi();
+
+         if (  (  pc->TestFlags(PCF_EXPR_START)
+               || pc->TestFlags(PCF_IN_PREPROC))
+            && prev_nc->IsNot(E_Token::CT_ANGLE_CLOSE))
          {
             handle_oc_block_literal(pc);
             return;
@@ -3233,7 +3292,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
       if (  language_is_set(lang_flag_e::LANG_CPP)
          && pc->Is(E_Token::CT_CARET)
-         && prev->Is(E_Token::CT_ANGLE_CLOSE))
+         && prev->Is(E_Token::CT_ANGLE_CLOSE)
+         && angle_close_starts_declaration(prev))   // Issue #4782
       {
          pc->SetType(E_Token::CT_PTR_TYPE);
       }
@@ -3275,9 +3335,10 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
       else if (pc->Is(E_Token::CT_CARET))
       {
-         if (  language_is_set(lang_flag_e::LANG_C)
-            || language_is_set(lang_flag_e::LANG_CPP)
-            || language_is_set(lang_flag_e::LANG_OC))
+         if (  (  language_is_set(lang_flag_e::LANG_C)
+               || language_is_set(lang_flag_e::LANG_CPP)
+               || language_is_set(lang_flag_e::LANG_OC))
+            && prev->IsNot(E_Token::CT_ANGLE_CLOSE))   // Issue #4782
          {
             // This is likely the start of a block literal
             handle_oc_block_literal(pc);
