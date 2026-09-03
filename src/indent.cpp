@@ -242,7 +242,7 @@ void indent_to_column(Chunk *pc, size_t column)
 }
 
 
-enum class align_mode_e : unsigned int
+enum class align_mode_e : size_t
 {
    SHIFT,     //! shift relative to the current column
    KEEP_ABS,  //! try to keep the original absolute column
