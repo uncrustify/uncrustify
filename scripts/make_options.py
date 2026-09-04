@@ -47,11 +47,11 @@ class Option(object):
 
     # -------------------------------------------------------------------------
     def write_declaration(self, out):
-        out.write(u'{} {} = {{\n'.format(self.decl, self.name))
-        out.write(u'  "{}",\n'.format(self.name))
-        out.write(u'  R"__(\n{}\n)__"'.format(self.desc))
+        out.write(u'{} {} =\n{{\n'.format(self.decl, self.name))
+        out.write(u'   "{}",\n'.format(self.name))
+        out.write(u'   R"__(\n{}\n)__"'.format(self.desc))
         if self.dval is not None:
-            out.write(u',\n  {}'.format(self.dval))
+            out.write(u',\n   {}'.format(self.dval))
         out.write(u'\n};\n\n')
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -89,15 +89,17 @@ def write_declarations(out, args):
 
 # -----------------------------------------------------------------------------
 def write_registrations(out, args):
+    first = True
+
     for group in groups:
-        out.write(u'\n  begin_option_group(R"__(\n{}\n)__");\n\n'.format(
-            group.desc))
+        lead = '' if first else '\n'
+        out.write(u'{}   begin_option_group(R"__(\n{}\n)__");\n\n'.format(
+            lead, group.desc))
+        first = False
 
         for option in group.options:
-            out.write(u'  register_option(&options::{});\n'.format(
+            out.write(u'   register_option(&options::{});\n'.format(
                 option.name))
-
-
 # -----------------------------------------------------------------------------
 def main():
     parser = argparse.ArgumentParser(description='Generate options.cpp')
