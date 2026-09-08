@@ -89,7 +89,9 @@ The following span options currently support line filters:
   |                                  | function/method calls                         |
   | align_braced_init_list_span      | Braced initializer list alignment (C++)       |
   | align_right_cmt_span             | Trailing (right-side) comment alignment       |
+  | align_pp_define_span             | Preprocessor define body alignment            |
   +----------------------------------+-----------------------------------------------+
+
 
 Each of these has the three associated filter options. For example:
   - align_var_def_span_num_empty_lines
@@ -286,3 +288,52 @@ See Also
 
 - documentation/align-thresholds.txt - Span and threshold concepts
 - etc/defaults.cfg - All options with default values
+
+-------------------------------------------------
+(historical) Implementation notes about `align_pp_define_span`
+-------------------------------------------------
+
+The original `align_preprocessor()` loop called `pc->GetNextNc()` to skip
+past comments.  This made it impossible to count comment lines individually.
+The loop now advances token-by-token with `pc->GetNext()` and processes
+`CT_NEWLINE` and comment chunks through `GetNlCountFiltered()`, exactly as
+other recently-updated alignment families do.  The budget is reset
+(`skip_budget = skip_cfg`) each time a `#define` candidate is added to the
+alignment stack, so each pair of adjacent defines starts with a fresh budget.
+
+Both the value-macro stack (`as`) and the function-macro stack (`asf`) share
+the same budget, consistent with the fact that they share the same span.
+
+A new `pp_excludes_define` flag has been added to `LineSkipConfig`.
+When set (as it is in the preprocessor aligner), `CT_PP_DEFINE` tokens are
+**not** counted as PP lines in `GetNlCountFiltered()`.  This is necessary
+because `CT_PP_DEFINE` is also `IsPreproc()`, so without this flag the
+newline immediately before any `#define` would consume one unit of the
+`pp_lines` budget — making the effective budget for non-`#define` PP
+directives (`#ifdef`, `#endif`, `#pragma`, …) one less than the configured
+value.  The flag defaults to `false` for all other alignment families, so
+their behaviour is unchanged.
+
+Behavioral change
+-----------------
+
+Switching from `GetNextNc()` to `GetNext()` has a side effect on **multi-line
+block comments** (`/* ... */` spanning several lines) that appear between
+`#define` groups when `align_pp_define_span > 0`.
+
+Previously only the two surrounding newlines (before and after the comment
+block) were counted toward the span; the internal newlines of the comment were
+invisible to the span counter.  Now those internal newlines are also counted.
+
+Impact by case:
+
+| Situation | Behavior |
+|-----------|----------|
+| `align_pp_define_span = 0` (the default) | **No change** — alignment is disabled |
+| Single-line comments (`//` or `/* */` on one line) | **No change** — `GetNlCount()` returns 0 for such chunks |
+| Multi-line `/* ... */` with `align_pp_define_span > 0` | **Changed** — internal newlines now count toward the span |
+
+Users who relied on multi-line block comments being "transparent" to the span
+counter can restore the previous behaviour by setting
+`align_pp_define_span_num_cmt_lines` to an appropriate budget, or by raising
+the span value.

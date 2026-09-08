@@ -31,7 +31,7 @@ static constexpr int ANY_LEVEL = -1;
  *  - If not in a preprocessor, skip over any encountered preprocessor stuff
  *  - If in a preprocessor, fail to leave (return Chunk::NullChunkPtr)
  */
-enum class E_Scope : unsigned int
+enum class E_Scope : size_t
 {
    ALL,      //! search in all kind of chunks
    PREPROC,  //! search only in preprocessor chunks
@@ -41,7 +41,7 @@ enum class E_Scope : unsigned int
 /**
  * Specifies which direction or location an operation shall be performed.
  */
-enum class E_Direction : unsigned int
+enum class E_Direction : size_t
 {
    FORWARD,
    BACKWARD

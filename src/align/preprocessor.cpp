@@ -8,6 +8,7 @@
 
 #include "align/preprocessor.h"
 
+#include "align/span_num_resolve.h"
 #include "align/stack.h"
 #include "log_rules.h"
 
@@ -37,21 +38,41 @@ void align_preprocessor()
    log_rule_B("align_pp_define_gap");
    asf.m_gap = options::align_pp_define_gap();
 
-   Chunk *pc = Chunk::GetHead();
+   log_rule_B("align_pp_define_span_num_empty_lines");
+   log_rule_B("align_pp_define_span_num_pp_lines");
+   log_rule_B("align_pp_define_span_num_cmt_lines");
+   LineSkipConfig skip_cfg = resolve_span_num_config(
+      options::align_pp_define_span_num_empty_lines(),
+      options::align_pp_define_span_num_pp_lines(),
+      options::align_pp_define_span_num_cmt_lines());
+   // #define tokens are alignment targets, not intervening PP directives.
+   // Exclude them from the pp_lines budget so that the budget only counts
+   // non-#define PP lines (e.g. #ifdef, #endif, #pragma).
+   skip_cfg.pp_excludes_define = true;
+   LineSkipConfig skip_budget = skip_cfg;
+
+   Chunk          *pc = Chunk::GetHead();
 
    while (pc->IsNotNullChunk())
    {
       // Note: not counting back-slash newline combos
       if (pc->Is(E_Token::CT_NEWLINE))   // mind the gap: pc->IsNewline() is NOT the same!
       {
-         as.NewLines(pc->GetNlCount());
-         asf.NewLines(pc->GetNlCount());
+         size_t nl_cnt = pc->GetNlCountFiltered(skip_budget);
+         as.NewLines(nl_cnt);
+         asf.NewLines(nl_cnt);
+      }
+      else if (pc->IsComment())
+      {
+         size_t nl_cnt = pc->GetNlCountFiltered(skip_budget);
+         as.NewLines(nl_cnt);
+         asf.NewLines(nl_cnt);
       }
 
-      // If we aren't on a 'define', then skip to the next non-comment
+      // If we aren't on a 'define', then skip to the next token
       if (pc->IsNot(E_Token::CT_PP_DEFINE))
       {
-         pc = pc->GetNextNc();
+         pc = pc->GetNext();
          continue;
       }
       // step past the 'define'
@@ -103,6 +124,7 @@ void align_preprocessor()
                  __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
 
          cur_as->Add(pc);
+         skip_budget = skip_cfg;
       }
    }
    as.End();

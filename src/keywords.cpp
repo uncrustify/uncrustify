@@ -74,8 +74,8 @@ static size_t      language_count;
 // Issue #3353
 void init_keywords_for_language()
 {
-   unsigned int local_flags    = cpd.lang_flags;
-   size_t       keywords_count = ARRAY_SIZE(keywords);
+   size_t local_flags    = cpd.lang_flags;
+   size_t keywords_count = ARRAY_SIZE(keywords);
 
    language_count = 0;
 

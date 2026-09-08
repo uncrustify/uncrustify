@@ -22,7 +22,7 @@ constexpr static auto LCURRENT = LNEWLINE;
 
 
 // enum {
-// enum class angle_state_e : unsigned int {
+// enum class angle_state_e : size_t {
 // enum-key attr(optional) identifier(optional) enum-base(optional) { enumerator-list(optional) }
 // enum-key attr(optional) nested-name-specifier(optional) identifier enum-base(optional) ; TODO
 // enum-key         - one of enum, enum class or enum struct  TODO

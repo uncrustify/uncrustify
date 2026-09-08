@@ -190,7 +190,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
       return;
    }
    // Issue #1203
-   unsigned int length = strlen(fmt);
+   size_t length = strlen(fmt);
 
    if (length == 0)
    {
@@ -205,7 +205,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
    if (length >= buffer_length)
    {
       fprintf(stderr, "FATAL(1): The variable 'buf' is too small,\n");
-      fprintf(stderr, "   it should be bigger than %u.\n", length);
+      fprintf(stderr, "   it should be bigger than %zu.\n", length);
       fprintf(stderr, "Please report this to the uncrustify project.\n");
       fflush(stderr);
       exit(EX_SOFTWARE);

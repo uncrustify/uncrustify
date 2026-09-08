@@ -949,7 +949,17 @@ size_t Chunk::GetNlCountFiltered(LineSkipConfig &skip) const
 
       // 2. Handle preprocessor lines (the line *after* the newline chunk)
       // We assume a newline precedes a single line type (PP, Comment, or regular code).
-      if (next->IsPreproc() && skip.pp_lines > 0)
+      // When pp_excludes_define is set, #define lines are NOT counted as PP lines because
+      // they are the alignment target itself, not an intervening directive.
+      // In the token stream a #define line starts with CT_PREPROC (#) followed by
+      // CT_PP_DEFINE (define), so we look one token ahead to distinguish it from other
+      // PP lines (#ifdef, #endif, #pragma, …).
+      const bool is_define_line = skip.pp_excludes_define
+                                  && next->Is(E_Token::CT_PREPROC)
+                                  && next->GetNext()->Is(E_Token::CT_PP_DEFINE);
+      const bool is_pp_line = next->IsPreproc() && !is_define_line;
+
+      if (is_pp_line && skip.pp_lines > 0)
       {
          --skip.pp_lines;
          --nl_count; // Consume this newline from the count
