@@ -793,3 +793,4 @@
 10292  common/global_align_span_pp_define_num_lines-1.cfg c/align_pp_define_span_mixed.c
 10293  common/global_align_span_pp_define_num_lines-2.cfg c/align_pp_define_span_mixed.c
 10294  common/global_align_span_pp_define_num_lines-3.cfg c/align_pp_define_span_mixed.c
+10295  common/sort_include_delimiters.cfg                 c/sort_include_delimiters.c

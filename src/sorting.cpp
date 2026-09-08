@@ -163,7 +163,7 @@ static bool text_contains_filename_without_ext(const char *text)
    }
    const std::regex  special_chars      = std::regex(R"([-[\]{}()*+?.,\^$|#\s])");
    const std::string sanitized_filename = std::regex_replace(filename_without_ext, special_chars, R"(\$&)");
-   const std::regex  filename_pattern   = std::regex("\\S?" + sanitized_filename + "\\b.*");
+   const std::regex  filename_pattern   = std::regex(sanitized_filename + "\\b.*");
 
    filename_without_ext_cache[text] = std::regex_match(text, filename_pattern);
    return(filename_without_ext_cache[text]);
@@ -203,9 +203,10 @@ static bool has_dot(const UncText &chunk_text)
  */
 static UncText chunk_sort_str(Chunk const *pc)
 {
-   if (pc->GetParentType() == E_Token::CT_PP_INCLUDE)
+   if (  pc->GetParentType() == E_Token::CT_PP_INCLUDE
+      && pc->Len() >= 2)
    {
-      return(UncText{ pc->GetText(), 0, pc->Len() - 1 });
+      return(UncText{ pc->GetText(), 1, pc->Len() - 2 });
    }
    return(pc->GetText());
 }
@@ -275,13 +276,13 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
       {
          log_rule_B("mod_sort_incl_import_prioritize_angle_over_quotes");
 
-         if (  s1.startswith("<")
-            && s2.startswith("\""))
+         if (  pc1->GetText().startswith("<")
+            && pc2->GetText().startswith("\""))
          {
             return(-1);
          }
-         else if (  s1.startswith("\"")
-                 && s2.startswith("<"))
+         else if (  pc1->GetText().startswith("\"")
+                 && pc2->GetText().startswith("<"))
          {
             return(1);
          }
@@ -292,6 +293,20 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
       if (ppc1 != ppc2)
       {
          return(ppc1 - ppc2);
+      }
+
+      // Preserve the existing ordering between quoted and angled includes.
+      // The sort key itself omits those delimiters so filename matching can
+      // operate on the include target directly.
+      if (  pc1->GetParentType() == E_Token::CT_PP_INCLUDE
+         || pc2->GetParentType() == E_Token::CT_PP_INCLUDE)
+      {
+         const int delimiter_cmp = UncText::compare(pc1->GetText(), pc2->GetText(), 1, tcare);
+
+         if (delimiter_cmp != 0)
+         {
+            return(delimiter_cmp);
+         }
       }
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc1->GetLogText(), pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
@@ -477,8 +492,8 @@ static void dedupe_imports(Chunk **chunks, size_t num_chunks)
 
    for (size_t idx = 1; idx < num_chunks; idx++)
    {
-      auto const &s1 = chunk_sort_str(chunks[idx - 1]);
-      auto const &s2 = chunk_sort_str(chunks[idx]);
+      auto const &s1 = chunks[idx - 1]->GetText();
+      auto const &s2 = chunks[idx]->GetText();
 
       if (s1.size() != s2.size())
       {
