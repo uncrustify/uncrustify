@@ -670,6 +670,14 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
             {
                parentType = E_Token::CT_RETURN;
             }
+            // C++20 coroutine keywords keep themselves as the parent type
+            else if (  (  prev->Is(E_Token::CT_CO_RETURN)
+                       || prev->Is(E_Token::CT_CO_AWAIT)
+                       || prev->Is(E_Token::CT_CO_YIELD))
+                    && language_is_set(lang_flag_e::LANG_CPP))
+            {
+               parentType = prev->GetType();
+            }
             // Carry through E_Token::CT_ENUM parent in NS_ENUM (type, name) {
             // only to help the vim command }
             else if (  prev->Is(E_Token::CT_FPAREN_CLOSE)
@@ -906,6 +914,9 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
       || pc->Is(E_Token::CT_ANGLE_OPEN)
       || pc->Is(E_Token::CT_ANGLE_CLOSE)
       || pc->Is(E_Token::CT_RETURN)
+      || pc->Is(E_Token::CT_CO_AWAIT)
+      || pc->Is(E_Token::CT_CO_YIELD)
+      || pc->Is(E_Token::CT_CO_RETURN)
       || pc->Is(E_Token::CT_THROW)
       || pc->Is(E_Token::CT_GOTO)
       || pc->Is(E_Token::CT_CONTINUE)

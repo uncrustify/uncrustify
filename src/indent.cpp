@@ -1321,6 +1321,9 @@ void indent_text()
             // return & throw are ended with a semicolon
             if (  pc->IsSemicolon()
                && (  (frm.top().GetOpenToken() == E_Token::CT_RETURN)
+                  || (frm.top().GetOpenToken() == E_Token::CT_CO_RETURN)
+                  || (frm.top().GetOpenToken() == E_Token::CT_CO_AWAIT)
+                  || (frm.top().GetOpenToken() == E_Token::CT_CO_YIELD)
                   || (frm.top().GetOpenToken() == E_Token::CT_THROW)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
@@ -3194,6 +3197,9 @@ void indent_text()
          }
       }
       else if (  pc->Is(E_Token::CT_RETURN)
+              || pc->Is(E_Token::CT_CO_RETURN)
+              || pc->Is(E_Token::CT_CO_AWAIT)
+              || pc->Is(E_Token::CT_CO_YIELD)
               || (  pc->Is(E_Token::CT_THROW)
                  && pc->GetParentType() == E_Token::CT_NONE))
       {
@@ -3222,7 +3228,10 @@ void indent_text()
                log_rule_B("indent_single_after_return");
 
                if (  next->IsNewline()
-                  || (  pc->Is(E_Token::CT_RETURN)
+                  || (  (  pc->Is(E_Token::CT_RETURN)
+                        || pc->Is(E_Token::CT_CO_RETURN)
+                        || pc->Is(E_Token::CT_CO_AWAIT)
+                        || pc->Is(E_Token::CT_CO_YIELD))
                      && options::indent_single_after_return()))
                {
                   // apply normal single indentation
@@ -3454,6 +3463,9 @@ void indent_text()
             for (int i = frm.size() - 1; i >= 0; i--)
             {
                if (  frm.at(i).GetOpenToken() == E_Token::CT_RETURN
+                  || frm.at(i).GetOpenToken() == E_Token::CT_CO_RETURN
+                  || frm.at(i).GetOpenToken() == E_Token::CT_CO_AWAIT
+                  || frm.at(i).GetOpenToken() == E_Token::CT_CO_YIELD
                   || frm.at(i).GetOpenToken() == E_Token::CT_ASSIGN)
                {
                   need_workaround = true;

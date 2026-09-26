@@ -36,6 +36,7 @@ bool detect_cpp_braced_init_list(Chunk const *pc, Chunk const *next)
       || pc->Is(E_Token::CT_TYPE)
       || pc->Is(E_Token::CT_ASSIGN)
       || pc->Is(E_Token::CT_RETURN)
+      || pc->Is(E_Token::CT_CO_RETURN)
       || pc->Is(E_Token::CT_COMMA)
       || pc->Is(E_Token::CT_ANGLE_CLOSE)
       || pc->Is(E_Token::CT_SQUARE_CLOSE)
@@ -57,6 +58,7 @@ bool detect_cpp_braced_init_list(Chunk const *pc, Chunk const *next)
          && (  brace_open->GetParentType() == E_Token::CT_NONE
             || brace_open->GetParentType() == E_Token::CT_ASSIGN
             || brace_open->GetParentType() == E_Token::CT_RETURN
+            || brace_open->GetParentType() == E_Token::CT_CO_RETURN
             || brace_open->GetParentType() == E_Token::CT_BRACED_INIT_LIST))
       {
          log_pcf_flags(LFCNR, brace_open->GetFlags());

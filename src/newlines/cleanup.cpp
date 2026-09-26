@@ -859,7 +859,9 @@ void newlines_cleanup_braces(bool first)
              */
          }
       }
-      else if (pc->Is(E_Token::CT_RETURN))
+      else if (  pc->Is(E_Token::CT_RETURN)
+              || pc->Is(E_Token::CT_CO_RETURN)
+              || pc->Is(E_Token::CT_CO_YIELD))
       {
          log_rule_B("nl_before_return");
 

@@ -140,6 +140,7 @@ static void check_unknown_brace_close(Chunk *semi, Chunk const *brace_close)
       && pc->IsNot(E_Token::CT_ANGLE_CLOSE)
       && pc->IsNot(E_Token::CT_COND_COLON)                      // Issue #3920
       && pc->IsNot(E_Token::CT_RETURN)
+      && pc->IsNot(E_Token::CT_CO_RETURN)
       && pc->IsNot(E_Token::CT_SQUARE_CLOSE)
       && pc->IsNot(E_Token::CT_TSQUARE)
       && pc->IsNot(E_Token::CT_TYPE)

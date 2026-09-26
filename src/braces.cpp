@@ -1259,7 +1259,8 @@ static void move_case_return()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      if (  pc->Is(E_Token::CT_RETURN)
+      if (  (  pc->Is(E_Token::CT_RETURN)
+            || pc->Is(E_Token::CT_CO_RETURN))
          && prev->Is(E_Token::CT_BRACE_CLOSE)
          && prev->GetParentType() == E_Token::CT_CASE
          && pc->GetPrev()->IsNewline()
@@ -1321,6 +1322,7 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
    if (  pc->IsNullChunk()
       || (  pc->IsNot(E_Token::CT_BREAK)
          && pc->IsNot(E_Token::CT_RETURN)
+         && pc->IsNot(E_Token::CT_CO_RETURN)
          && pc->IsNot(E_Token::CT_CASE)
          && pc->IsNot(E_Token::CT_GOTO)
          && pc->IsNot(E_Token::CT_BRACE_CLOSE)))

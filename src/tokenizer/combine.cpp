@@ -1299,7 +1299,10 @@ static bool handle_rvalue_namespace_qualified(Chunk const *prev, Chunk *pc, Chun
       || chain_start->Is(E_Token::CT_ARITH)        // +, -, *, /, %, etc.
       || chain_start->Is(E_Token::CT_BOOL)         // ||, &&
       || chain_start->Is(E_Token::CT_ASSIGN)       // =, +=, -=, etc.
-      || chain_start->Is(E_Token::CT_RETURN))      // return Foo::a && bar
+      || chain_start->Is(E_Token::CT_RETURN)       // return Foo::a && bar
+      || chain_start->Is(E_Token::CT_CO_RETURN)
+      || chain_start->Is(E_Token::CT_CO_AWAIT)
+      || chain_start->Is(E_Token::CT_CO_YIELD))
    {
       return(false);
    }
@@ -2702,6 +2705,22 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       return;
    }
 
+   // C++20 co_await / co_yield are operators, not function calls:
+   // the parenthesis of co_await (x) must stay a plain parenthesis so that
+   // sp_return_paren applies instead of sp_func_call_paren
+   if (  (  pc->Is(E_Token::CT_CO_AWAIT)
+         || pc->Is(E_Token::CT_CO_YIELD))
+      && language_is_set(lang_flag_e::LANG_CPP))
+   {
+      Chunk *tmp = pc->GetNextNcNnl();
+
+      if (tmp->IsParenOpen())
+      {
+         set_paren_parent(tmp, pc->GetType());
+      }
+      return;
+   }
+
    if (  pc->Is(E_Token::CT_DECLTYPE)
       && pc->GetParentType() != E_Token::CT_FUNC_DEF)
    {
@@ -3393,6 +3412,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       else if (  prev->Is(E_Token::CT_DECLTYPE)
               || prev->Is(E_Token::CT_SIZEOF)
               || prev->Is(E_Token::CT_DELETE)
+              || prev->Is(E_Token::CT_CO_AWAIT)
+              || prev->Is(E_Token::CT_CO_YIELD)
+              || prev->Is(E_Token::CT_CO_RETURN)
               || pc->GetParentType() == E_Token::CT_SIZEOF)
       {
          pc->SetType(E_Token::CT_DEREF);
@@ -3467,7 +3489,10 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                }
                else if (  tmp->Is(E_Token::CT_ASSIGN)
                        || tmp->Is(E_Token::CT_FUNC_CALL)
-                       || tmp->Is(E_Token::CT_RETURN))
+                       || tmp->Is(E_Token::CT_RETURN)
+                       || tmp->Is(E_Token::CT_CO_RETURN)
+                       || tmp->Is(E_Token::CT_CO_AWAIT)
+                       || tmp->Is(E_Token::CT_CO_YIELD))
                {
                   is_multiplication = true;
                   break;
@@ -4154,6 +4179,8 @@ static void process_returns_and_throws()
    while (pc->IsNotNullChunk())
    {
       if (  pc->Is(E_Token::CT_RETURN)
+         || pc->Is(E_Token::CT_CO_RETURN)
+         || pc->Is(E_Token::CT_CO_YIELD)
          || pc->Is(E_Token::CT_THROW))
       {
          pc = process_return_or_throw(pc);
@@ -4175,7 +4202,11 @@ static Chunk *process_return_or_throw(Chunk *pc)
    const char *mod_paren_name;
    iarf_e     mod_paren_value;
 
-   if (pc->Is(E_Token::CT_RETURN))
+   // co_yield is a statement like return and reuses the same options.
+   // co_await is an expression operator and is handled elsewhere
+   if (  pc->Is(E_Token::CT_RETURN)
+      || pc->Is(E_Token::CT_CO_RETURN)
+      || pc->Is(E_Token::CT_CO_YIELD))
    {
       nl_expr_name    = "nl_return_expr";
       nl_expr_value   = options::nl_return_expr();
@@ -4599,6 +4630,9 @@ static void handle_cpp_lambda(Chunk *sq_o)
          && prev->IsNot(E_Token::CT_BRACE_OPEN)
          && prev->IsNot(E_Token::CT_SEMICOLON)
          && prev->IsNot(E_Token::CT_RETURN)
+         && prev->IsNot(E_Token::CT_CO_RETURN)
+         && prev->IsNot(E_Token::CT_CO_AWAIT)
+         && prev->IsNot(E_Token::CT_CO_YIELD)
          && prev->IsNot(E_Token::CT_ARITH)
          && prev->IsNot(E_Token::CT_POS)))
    {
