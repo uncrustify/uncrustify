@@ -1699,6 +1699,9 @@
 34966  cpp/bool_and_sizeof.cfg                              cpp/bool_and_sizeof.cpp
 34967  common/empty.cfg                                     cpp/preproc_function_macro_alias.cpp
 
+34967  cpp/Issue_4782.cfg                                   cpp/Issue_4782_decl.cpp
+34968  cpp/Issue_4782.cfg                                   cpp/Issue_4782_xor.cpp
+
 34970  common/align_pp_define_span_num_empty-1.cfg        cpp/align_pp_define_span_mixed.cpp
 34971  common/align_pp_define_span_num_empty-2.cfg        cpp/align_pp_define_span_mixed.cpp
 34972  common/align_pp_define_span_num_empty-3.cfg        cpp/align_pp_define_span_mixed.cpp
