@@ -15,7 +15,7 @@ from __future__ import print_function
 
 import sys
 from sys import stderr, argv, exit as sys_exit
-from os import makedirs, remove, name as os_name
+from os import makedirs, remove, name as os_name, environ
 from os.path import dirname, relpath, abspath, isdir, isfile, join as path_join, split as path_split
 from shutil import rmtree, copyfile
 from subprocess import Popen, PIPE
@@ -55,7 +55,7 @@ def decode_out(text):
     return text
 
 
-def proc(bin_path, args_arr=()):
+def proc(bin_path, args_arr=(), cwd=None):
     """
     simple Popen wrapper to return std out/err utf8 strings
 
@@ -67,6 +67,9 @@ def proc(bin_path, args_arr=()):
 
     :param args_arr : list/tuple
         all needed arguments
+
+    :param cwd : string or None
+        working directory the process should be started in
 
 
     :return: string, string
@@ -83,7 +86,7 @@ def proc(bin_path, args_arr=()):
     # call uncrustify, hold output in memory
     call_arr = [bin_path]
     call_arr.extend(args_arr)
-    proc = Popen(call_arr, stdout=PIPE, stderr=PIPE)
+    proc = Popen(call_arr, stdout=PIPE, stderr=PIPE, cwd=cwd)
 
     out_txt, err_txt = proc.communicate()
 
@@ -305,6 +308,7 @@ def check_uncrustify_output(
         uncr_bin,
         program_args,
         args_arr=(),
+        cwd=None,
         out_expected_path=None, out_result_manip=None, out_result_path=None,
         err_expected_path=None, err_result_manip=None, err_result_path=None,
         gen_expected_path=None, gen_result_manip=None, gen_result_path=None):
@@ -322,6 +326,9 @@ def check_uncrustify_output(
 
     :param args_arr: list/tuple
         Uncrustify commandline arguments
+
+    :param cwd: string
+        the working directory in which the Uncrustify command will be executed
 
     :param out_expected_path: string
         file that will be compared with Uncrustifys stdout output
@@ -386,7 +393,7 @@ def check_uncrustify_output(
     if gen_result_manip and not gen_result_path:
         eprint("Set up 'gen_result_path' if 'gen_result_manip' is used")
 
-    out_res_txt, err_res_txt = proc(uncr_bin, args_arr)
+    out_res_txt, err_res_txt = proc(uncr_bin, args_arr, cwd=cwd)
     #print(err_res_txt)
 
     ret_flag = True
@@ -541,6 +548,7 @@ def main(args):
             eprint("is 3 not a file: %s" % uncr_bin)
         else:
             print("Uncrustify binary found: %s" % uncr_bin)
+            uncr_bin = abspath(uncr_bin)
             bin_found = True
             break
     if not bin_found:
@@ -550,6 +558,9 @@ def main(args):
     print("Python version is: "+sys.version)
     print("OS is: %s" % os_name)
     print("")
+
+    # Make sure the env variable does not interfere with tests.
+    environ.pop("UNCRUSTIFY_CONFIG", None)
 
     clear_dir(s_path_join(test_dir, 'results'))
     clear_dir(s_path_join(script_dir, 'results'))
@@ -1083,6 +1094,37 @@ def main(args):
         sys_exit(EX_SOFTWARE)
 
     print("Test string escaping round-trip in --update-config is OK")
+
+    print("Test config file discovery via directory traversal ...")
+    #
+    # When neither '-c'/'--config' nor UNCRUSTIFY_CONFIG env variable is set
+    # the configuration file is discovered by walking up the directory tree.
+    #
+    discovery_root = s_path_join(test_dir, 'results', 'config_discovery')
+    nested_dir = s_path_join(discovery_root, 'a', 'b', 'c')
+    makedirs(nested_dir)
+
+    copyfile(s_path_join(script_dir, 'config/replace.cfg'),
+             s_path_join(discovery_root, '.uncrustify.cfg'))
+    copyfile(s_path_join(script_dir, 'input/backup.h-save'),
+             s_path_join(nested_dir, 'backup.h'))
+
+    return_value = check_uncrustify_output(
+        uncr_bin,
+        parsed_args,
+        cwd=nested_dir,
+        args_arr=['-f', 'backup.h'],
+        out_expected_path=s_path_join(script_dir, 'output/backup.h'),
+        out_result_path=s_path_join(script_dir, 'results/config-discovery.h'),
+        err_expected_path=s_path_join(script_dir, 'output/config-discovery.txt'),
+        err_result_path=s_path_join(script_dir, 'results/config-discovery.txt'),
+        )
+
+    if not return_value:
+        sys_exit(EX_SOFTWARE)
+
+    print("Test config file discovery via directory traversal is OK")
+
 
 if __name__ == "__main__":
     main(argv[1:])
