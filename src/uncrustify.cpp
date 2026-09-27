@@ -227,6 +227,72 @@ int path_dirname_len(const char *filename)
 }
 
 
+/**
+ * Searches for a config file starting in the current working directory and
+ * walking up towards the filesystem root. The search stops at the first match.
+ * If no config file is found using such method, then the alternate locations
+ * is checked - the user's home directory.
+ *
+ * @param cfg_file  Receives the path of the found config file
+ * @return          true if a config file was found
+ */
+static bool find_config_file(string &cfg_file)
+{
+   static constexpr const char *cfg_names[] =
+   {
+      "/.uncrustify",
+      "/.uncrustify.cfg",
+      "/uncrustify.cfg",
+   };
+
+   struct stat tmp_stat = {};
+   string      dir;
+
+   if (unc_getcwd(dir))
+   {
+      while (true)
+      {
+         for (const auto &name : cfg_names)
+         {
+            const auto path = dir + name;
+
+            if (stat(path.c_str(), &tmp_stat) == 0)
+            {
+               cfg_file = path;
+               return(true);
+            }
+         }
+
+         // Move up to the parent directory, stop if the root is reached
+         size_t slash = dir.find_last_of("/\\");
+
+         if (  slash == string::npos || slash == 0
+            || (slash == 2 && dir[1] == ':'))
+         {
+            break;
+         }
+         dir.erase(slash);
+      }
+   }
+
+   // Try to find a config file at an alternate location
+   if (unc_homedir(dir))
+   {
+      for (const auto &name : cfg_names)
+      {
+         const auto path = dir + name;
+
+         if (stat(path.c_str(), &tmp_stat) == 0)
+         {
+            cfg_file = path;
+            return(true);
+         }
+      }
+   }
+   return(false);
+} // find_config_file
+
+
 void usage_error(const char *msg)
 {
    if (msg != nullptr)
@@ -546,6 +612,9 @@ int main(int argc, char *argv[])
    // Get the config file name
    string cfg_file;
 
+   // If config was given on the command line, use it. Otherwise, try to
+   // get it from the environment. If neither is available use the built-in
+   // discovery mechanism.
    if (  ((p_arg = arg.Param("--config")) != nullptr)
       || ((p_arg = arg.Param("-c")) != nullptr))
    {
@@ -553,25 +622,7 @@ int main(int argc, char *argv[])
    }
    else if (!unc_getenv("UNCRUSTIFY_CONFIG", cfg_file))
    {
-      // Try to find a config file at an alternate location
-      string home;
-
-      if (unc_homedir(home))
-      {
-         struct stat tmp_stat = {};
-
-         const auto  path0 = home + "/.uncrustify.cfg";
-         const auto  path1 = home + "/uncrustify.cfg";
-
-         if (stat(path0.c_str(), &tmp_stat) == 0)
-         {
-            cfg_file = path0;
-         }
-         else if (stat(path1.c_str(), &tmp_stat) == 0)
-         {
-            cfg_file = path1;
-         }
-      }
+      find_config_file(cfg_file);
    }
    // Get the parsed file name
    const char *parsed_file;
