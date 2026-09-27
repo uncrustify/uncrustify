@@ -261,3 +261,5 @@
 60015  oc/60015.cfg                             oc/4310.mm
 60016  cpp/Issue_4556_safe.cfg                  oc/Issue_4556_safe.mm              OC+
 60017  oc/lambda_rvalue_ref.cfg                 oc/lambda_rvalue_ref.mm            OC+
+60018  common/empty.cfg                         oc/preproc_function_macro_alias.mm  OC+
+60019  oc/constructor_var_with_block.cfg        oc/constructor_var_with_block.mm    OC+
