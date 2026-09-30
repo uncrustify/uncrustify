@@ -15,6 +15,19 @@
 #include <string>
 
 
+bool unc_getcwd(std::string &cwd)
+{
+   char buf[MAX_PATH];
+
+   if (GetCurrentDirectoryA(sizeof(buf), buf) != 0)
+   {
+      cwd = buf;
+      return(true);
+   }
+   return(false);
+}
+
+
 bool unc_getenv(const char *name, std::string &str)
 {
    DWORD len = GetEnvironmentVariableA(name, NULL, 0);

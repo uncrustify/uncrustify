@@ -8,9 +8,24 @@
 
 #ifndef WIN32
 
+#include <limits.h>
 #include <string>
+#include <unistd.h>
 
 #include "uncrustify_types.h"
+
+
+bool unc_getcwd(std::string &cwd)
+{
+   char buf[PATH_MAX];
+
+   if (getcwd(buf, sizeof(buf)) != nullptr)
+   {
+      cwd = buf;
+      return(true);
+   }
+   return(false);
+}
 
 
 bool unc_getenv(const char *name, std::string &str)
