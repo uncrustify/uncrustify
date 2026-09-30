@@ -794,3 +794,7 @@
 10293  common/global_align_span_pp_define_num_lines-2.cfg c/align_pp_define_span_mixed.c
 10294  common/global_align_span_pp_define_num_lines-3.cfg c/align_pp_define_span_mixed.c
 10295  common/sort_include_delimiters.cfg                 c/sort_include_delimiters.c
+10296  c/Issue_4767.cfg                                   c/Issue_4767.c
+10297  c/Issue_4767.cfg                                   c/Issue_4767_mixed.c
+10298  c/Issue_4767.cfg                                   c/Issue_4767_union.c
+10299  c/Issue_4767.cfg                                   c/Issue_4767_enum.c

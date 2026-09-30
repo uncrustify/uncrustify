@@ -485,6 +485,34 @@ void fix_typedef(Chunk const *start)
    Chunk *the_type = Chunk::NullChunkPtr;
    Chunk *last_op  = Chunk::NullChunkPtr;
 
+   // Look ahead for a nested class/enum/struct/union body, so its member
+   // declarations can be excluded from PCF_IN_TYPEDEF below (Issue #4767).
+   Chunk *body_open  = Chunk::NullChunkPtr;
+   Chunk *body_close = Chunk::NullChunkPtr;
+
+   {
+      Chunk *look = start->GetNextNcNnl(E_Scope::PREPROC);
+
+      if (  look->Is(E_Token::CT_ENUM)
+         || look->Is(E_Token::CT_STRUCT)
+         || look->Is(E_Token::CT_UNION)
+         || look->Is(E_Token::CT_CLASS))
+      {
+         Chunk *tag_next = look->GetNextNcNnl(E_Scope::PREPROC);
+
+         if (tag_next->Is(E_Token::CT_TYPE))
+         {
+            tag_next = tag_next->GetNextNcNnl(E_Scope::PREPROC);
+         }
+
+         if (tag_next->Is(E_Token::CT_BRACE_OPEN))
+         {
+            body_open  = tag_next;
+            body_close = body_open->GetClosingParen(E_Scope::PREPROC);
+         }
+      }
+   }
+
    /*
     * Mark everything in the typedef and scan for ")(", which makes it a
     * function type
@@ -494,6 +522,19 @@ void fix_typedef(Chunk const *start)
         ; next = next->GetNextNcNnl(E_Scope::PREPROC))
    {
       next->SetFlagBits(PCF_IN_TYPEDEF);
+
+      if (  next == body_open
+         && body_close->IsNotNullChunk())
+      {
+         // Members of a nested class/enum/struct/union body are independent
+         // declarations, not part of the typedef's own declarator — do not
+         // propagate PCF_IN_TYPEDEF into them (Issue #4767). The delimiting
+         // braces themselves keep the flag (sp_brace_typedef and friends
+         // rely on it), only their contents are excluded.
+         body_close->SetFlagBits(PCF_IN_TYPEDEF);
+         next = body_close;
+         continue;
+      }
 
       if (start->GetLevel() == next->GetLevel())
       {
