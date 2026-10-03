@@ -1730,3 +1730,5 @@
 60186  cpp/attr_prefix_func_proto_group.cfg                 cpp/attr_prefix_func_proto_group.cpp
 60187  cpp/attr_prefix_var_def.cfg                          cpp/attr_prefix_var_def.cpp
 60188  cpp/attr_prefix_func_pre_blank.cfg                   cpp/attr_prefix_func_pre_blank.cpp
+60189  cpp/Issue_4794_var_def_blk.cfg                       cpp/Issue_4794_multiword_proto.cpp
+60190  cpp/Issue_4794_var_def_blk.cfg                       cpp/attr_prefix_func_proto_group.cpp
