@@ -133,4 +133,27 @@ Chunk *skip_declspec(Chunk *pc);
 Chunk *skip_declspec_next(Chunk *pc);
 
 
+/**
+ * Skips a run of attribute-like prefixes, in any order and any number:
+ *   - E_Token::CT_ATTRIBUTE ('[[...]]', '__attribute__((...))', '__unused', ...)
+ *   - E_Token::CT_DECLSPEC  ('__declspec(...)')
+ *   - 'alignas(...)' / '_Alignas(...)'
+ * and returns the first chunk after the run.
+ * If pc doesn't start such a prefix, then it is returned.
+ *
+ * This deliberately does NOT skip qualifiers, storage class specifiers,
+ * unknown macro words or type words: those belong to the declaration proper.
+ */
+Chunk *skip_attr_prefix(Chunk *pc);
+
+
+/**
+ * Backward counterpart of skip_attr_prefix(): if last is the final chunk of an
+ * attribute-like prefix (see skip_attr_prefix()), then walk back over the whole
+ * run of such prefixes and return its first chunk.
+ * If last doesn't end such a prefix, then it is returned.
+ */
+Chunk *skip_attr_prefix_prev(Chunk *last);
+
+
 #endif /* TOKENIZER_COMBINE_SKIP_H_INCLUDED */

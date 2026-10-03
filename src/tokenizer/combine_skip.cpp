@@ -219,3 +219,122 @@ Chunk *skip_declspec_next(Chunk *pc)
    }
    return(pc);
 }
+
+
+//! Is pc the 'alignas' / '_Alignas' keyword? It has no token type of its own
+//! and is turned into a CT_FUNC_CALL by mark_function(), so go by the text.
+static bool is_alignas_keyword(Chunk const *pc)
+{
+   return(  (  pc->Is(E_Token::CT_WORD)
+            || pc->Is(E_Token::CT_TYPE)
+            || pc->Is(E_Token::CT_FUNC_CALL))
+         && (  pc->IsString("alignas")
+            || pc->IsString("_Alignas")));
+}
+
+
+//! If pc starts a single attribute-like prefix, return the chunk after it,
+//! otherwise return pc.
+static Chunk *skip_one_attr_prefix(Chunk *pc)
+{
+   if (pc->Is(E_Token::CT_ATTRIBUTE))
+   {
+      // '[[...]]' and '__unused' are a single chunk,
+      // '__attribute__' is followed by a parenthesized argument list
+      Chunk *next = pc->GetNextNcNnl();
+
+      if (next->Is(E_Token::CT_FPAREN_OPEN))
+      {
+         Chunk *close = next->GetClosingParen();
+
+         if (close->IsNullChunk())
+         {
+            return(pc);
+         }
+         return(close->GetNextNcNnl());
+      }
+      return(next);
+   }
+
+   if (  pc->Is(E_Token::CT_DECLSPEC)
+      || is_alignas_keyword(pc))
+   {
+      Chunk *open = pc->GetNextNcNnl();
+
+      if (open->IsParenOpen())
+      {
+         Chunk *close = open->GetClosingParen();
+
+         if (close->IsNotNullChunk())
+         {
+            return(close->GetNextNcNnl());
+         }
+      }
+   }
+   return(pc);
+}
+
+
+Chunk *skip_attr_prefix(Chunk *pc)
+{
+   while (true)
+   {
+      Chunk *next = skip_one_attr_prefix(pc);
+
+      if (next == pc)
+      {
+         break;
+      }
+      pc = next;
+   }
+   return(pc);
+}
+
+
+//! If last is the final chunk of a single attribute-like prefix, set begin to
+//! the first chunk of that prefix and return true, otherwise return false.
+static bool attr_prefix_begin(Chunk *last, Chunk *&begin)
+{
+   if (last->Is(E_Token::CT_ATTRIBUTE))
+   {
+      begin = last;
+      return(true);
+   }
+
+   if (last->IsParenClose())
+   {
+      Chunk *open = last->GetOpeningParen();
+
+      if (open->IsNotNullChunk())
+      {
+         Chunk *keyword = open->GetPrevNcNnlNi();
+
+         if (  keyword->IsNotNullChunk()
+            && (  keyword->Is(E_Token::CT_ATTRIBUTE)
+               || keyword->Is(E_Token::CT_DECLSPEC)
+               || is_alignas_keyword(keyword)))
+         {
+            begin = keyword;
+            return(true);
+         }
+      }
+   }
+   return(false);
+}
+
+
+Chunk *skip_attr_prefix_prev(Chunk *last)
+{
+   Chunk *result = last;
+   Chunk *begin  = Chunk::NullChunkPtr;
+
+   // keep walking back while the chunk before the run ends another prefix
+   for (Chunk *pc = last;
+        pc->IsNotNullChunk() && attr_prefix_begin(pc, begin);
+        pc = begin->GetPrevNcNnlNi())
+   {
+      result = begin;
+   }
+
+   return(result);
+}

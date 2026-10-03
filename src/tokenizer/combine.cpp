@@ -4159,6 +4159,29 @@ void fix_symbols()
             tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
             log_ruleStart("start statement/ expression", tmp);
          }
+         // Issue #4777: brace_cleanup() gives the statement start to whatever
+         // follows an attribute chunk. For '[[...]]' that is the declaration
+         // itself, but for '__attribute__((...))' it is the '(' -- so hand the
+         // statement start to the first chunk after the whole prefix, as for
+         // '[[...]]', or a declaration introduced by it is never recognized.
+         Chunk *first = pc->GetNextNcNnl();
+
+         if (first->TestFlags(PCF_STMT_START))
+         {
+            Chunk *after = skip_attr_prefix(pc);
+
+            if (  after->IsNotNullChunk()
+               && !after->TestFlags(PCF_STMT_START)
+               && (  after->Is(E_Token::CT_TYPE)
+                  || after->Is(E_Token::CT_QUALIFIER)
+                  || after->Is(E_Token::CT_TYPENAME)
+                  || after->Is(E_Token::CT_DC_MEMBER)
+                  || after->Is(E_Token::CT_WORD)))
+            {
+               after->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
+               log_ruleStart("start statement/ expression", after);
+            }
+         }
       }
 
       if (  pc->Is(E_Token::CT_BRACE_OPEN)                       // Issue #2332
@@ -4178,14 +4201,18 @@ void fix_symbols()
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
       log_pcf_flags(LFCNR, pc->GetFlags());
 
+      // Issue #4777: '__declspec(...)' and 'alignas(...)' lead the statement,
+      // so judge it by what follows such a prefix
+      Chunk *decl_start = skip_attr_prefix(pc);
+
       if (  (square_level < 0)
          && pc->TestFlags(PCF_STMT_START)
-         && (  pc->Is(E_Token::CT_QUALIFIER)
-            || pc->Is(E_Token::CT_TYPE)
-            || pc->Is(E_Token::CT_TYPENAME)
-            || pc->Is(E_Token::CT_DC_MEMBER)          // Issue #2478
-            || (  pc->Is(E_Token::CT_WORD)
-               && !pc->TestFlags(PCF_IN_CONDITIONAL)  // Issue #3558
+         && (  decl_start->Is(E_Token::CT_QUALIFIER)
+            || decl_start->Is(E_Token::CT_TYPE)
+            || decl_start->Is(E_Token::CT_TYPENAME)
+            || decl_start->Is(E_Token::CT_DC_MEMBER)          // Issue #2478
+            || (  decl_start->Is(E_Token::CT_WORD)
+               && !decl_start->TestFlags(PCF_IN_CONDITIONAL)  // Issue #3558
 //               && language_is_set(lang_flag_e::LANG_CPP)
                   )
                )

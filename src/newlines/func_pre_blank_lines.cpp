@@ -10,6 +10,7 @@
 #include "chunk.h"
 #include "log_rules.h"
 #include "newlines/do_it_newlines_func_pre_blank_lines.h"
+#include "tokenizer/combine_skip.h"
 
 
 using namespace uncrustify;
@@ -122,12 +123,23 @@ void newlines_func_pre_blank_lines(Chunk const *start, E_Token start_type)
               || pc->Is(E_Token::CT_BYREF)                  // Issue #2163
               || pc->Is(E_Token::CT_DC_MEMBER)
               || pc->Is(E_Token::CT_EXTERN)
+              || pc->Is(E_Token::CT_FRIEND)
               || (  pc->Is(E_Token::CT_STRING)
                  && pc->GetParentType() == E_Token::CT_EXTERN))
       {
          LOG_FMT(LNLFUNCT, "%s(%d): first_line set to %zu\n",
                  __func__, __LINE__, pc->GetOrigLine());
          first_line = pc->GetOrigLine();
+         continue;
+      }
+      else if (skip_attr_prefix(skip_attr_prefix_prev(pc)) != skip_attr_prefix_prev(pc))
+      {
+         // Issue #4777: step back over '[[...]]', '__attribute__((...))',
+         // '__declspec(...)' and 'alignas(...)' to the start of the declaration
+         pc         = skip_attr_prefix_prev(pc);
+         first_line = pc->GetOrigLine();
+         LOG_FMT(LNLFUNCT, "%s(%d): first_line set to %zu\n",
+                 __func__, __LINE__, first_line);
          continue;
       }
       else if (  pc->Is(E_Token::CT_ANGLE_CLOSE)
