@@ -805,3 +805,10 @@
 10304  c/Issue_4795_union_c.cfg                           c/Issue_4795_union_c.c
 10305  c/Issue_4790.cfg                                   c/Issue_4790.c
 10306  c/Issue_4790-2.cfg                                 c/Issue_4790.c
+
+# align_right_cmt_doxygen_cont
+10307  common/align_right_cmt_doxygen_cont-1.cfg          c/align_right_cmt_doxygen_cont.c
+10308  common/align_right_cmt_doxygen_cont-2.cfg          c/align_right_cmt_doxygen_cont.c
+10309  common/align_right_cmt_doxygen_cont-3.cfg          c/align_right_cmt_doxygen_cont.c
+10310  common/align_right_cmt_doxygen_cont-4.cfg          c/align_right_cmt_doxygen_cont.c
+10311  common/align_right_cmt_doxygen_cont-5.cfg          c/align_right_cmt_doxygen_cont.c
