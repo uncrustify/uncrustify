@@ -276,10 +276,11 @@ bool can_be_full_param(Chunk *start, Chunk const *end)
 
       if (  brace->IsNotNullChunk()
          && (  brace->GetParentType() == E_Token::CT_CLASS
-            || brace->GetParentType() == E_Token::CT_STRUCT))
+            || brace->GetParentType() == E_Token::CT_STRUCT
+            || brace->GetParentType() == E_Token::CT_UNION))   // Issue #4795
       {
          // A Most Vexing Parse variable declaration cannot occur in the body
-         // of a struct/class, so we probably have a function prototype
+         // of a struct/class/union, so we probably have a function prototype
          LOG_FMT(LFPARAM, "%s(%d): <== type is %s, Likely!\n",
                  __func__, __LINE__, (pc->IsNullChunk() ? "null chunk" : get_token_name(pc->GetType())));
          return(true);
