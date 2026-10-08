@@ -1,0 +1,107 @@
+===============================================================================
+Doxygen 'after member' Continuation Lines
+===============================================================================
+
+A Doxygen 'after member' comment ('//!<', '///<', '/*!<' or '/**<') alone on
+its line, just below a trailing comment of the same kind, continues it:
+
+  int bb = 2;  //!< comment bb...
+               //!< ...continued
+
+align_right_cmt_doxygen_cont sets where such continuation lines go:
+
+  0: usual comment indentation rules (default)
+  1: aligned with the comment they continue
+  2: at the brace level
+
+  input                   1                       2
+
+  int bb = 2; //!< bb     int bb = 2; //!< bb     int bb = 2; //!< bb
+  //!< ...                            //!< ...    //!< ...
+
+With 1 and 2, a continuation line belongs to the line it continues: it
+never breaks the align_right_cmt_span group of the trailing comments, and
+uses none of the align_right_cmt_span_num_*_lines budgets.  Empty,
+preprocessor and other comment lines between the members still use their
+budget as usual.  Both values therefore align the trailing comments the same
+way.  With 0, a continuation is an ordinary comment line and uses the
+align_right_cmt_span_num_cmt_lines budget.
+
+For instance, with align_right_cmt_span = 1 and every budget at 1:
+
+  0                                  1
+
+  int a = 1; //!< a...               int a = 1;         //!< a...
+  //!< ...                                              //!< ...
+  //!< ...                                              //!< ...
+
+  int bb_longer = 2; //!< bb         int bb_longer = 2; //!< bb
+
+With 0, the two continuations are comment lines: the first one uses the
+comment budget and the second one ends the group.  With 1, they cost
+nothing and the empty line uses the empty line budget: a and bb are
+aligned.  With an empty line budget of 0, they would not be.
+
+A continuation must be on the line just below the trailing comment it
+continues, or below another continuation, and be of the same kind (C or
+C++).  Any line in between ends the chain, whatever the budgets.  The
+trailing comment does not need an 'after member' marker itself.
+
+With 1 and align_right_cmt_span = 0, the trailing comments are not aligned
+and each continuation is aligned with the comment it continues.
+
+With 0, the result depends on the input column: a continuation within
+indent_comment_align_thresh columns of the comment above stays aligned with
+it, one in column 1 stays there (unless indent_col1_comment is set), and one
+further right goes back to the brace level.
+
+
+Effect on Doxygen
+-----------------
+
+Tested with doxygen 1.8.14 and 1.18.0, default settings.
+
+C++ comments ('//!<', '///<'):
+
+Doxygen groups consecutive '//' lines into one block only when their markers
+are in the same column, so 2 splits the comment in two blocks:
+
+  struct Demo
+  {
+      int aligned;     //!< AAA ...
+                       //!< BBB ...
+
+      int not_aligned; //!< CCC ...
+      //!< DDD ...
+  };
+
+  member        brief      detailed
+  aligned       (empty)    AAA ... BBB ...
+  not_aligned   DDD ...    CCC ...
+
+- A multi-line block has no brief description (MULTILINE_CPP_IS_BRIEF = NO).
+  Use \brief if one is wanted.
+- A split comment gets its second block as brief and its first as detailed:
+  the text is rendered in reverse order.
+- With MULTILINE_CPP_IS_BRIEF = YES, both forms give the same result.
+
+C comments ('/*!<', '/**<'):
+
+Each '/* ... */' is a block of its own.  Consecutive blocks are appended to
+the detailed description of the member, in source order, whatever their
+column (also checked in column 1 and further right):
+
+  struct Demo
+  {
+      int a; /*!< AAA first block. */
+             /*!< BBB second block. */
+      int b; /*!< CCC first block. */
+      /*!< DDD second block. */
+  };
+
+  member   brief      detailed
+  a        (empty)    AAA first block. BBB second block.
+  b        (empty)    CCC first block. DDD second block.
+
+A single C block does not become a brief description either.  For C comments,
+the option only changes the layout.
