@@ -801,3 +801,4 @@
 10301  c/attr_prefix.cfg                                  c/attr_prefix.c
 10302  c/attr_prefix_func_pre_blank.cfg                   c/attr_prefix_func_pre_blank.c
 10303  c/Issue_4794_var_def_blk.cfg                       c/Issue_4794_multiword_proto.c
+10304  c/Issue_4795_union_c.cfg                           c/Issue_4795_union_c.c

@@ -1732,3 +1732,6 @@
 60188  cpp/attr_prefix_func_pre_blank.cfg                   cpp/attr_prefix_func_pre_blank.cpp
 60189  cpp/Issue_4794_var_def_blk.cfg                       cpp/Issue_4794_multiword_proto.cpp
 60190  cpp/Issue_4794_var_def_blk.cfg                       cpp/attr_prefix_func_proto_group.cpp
+60191  cpp/Issue_4795_union_blank_lines.cfg                 cpp/Issue_4795_union_blank_lines.cpp
+60192  cpp/Issue_4795_union_spacing.cfg                     cpp/Issue_4795_union_spacing.cpp
+60193  cpp/Issue_4795_union_var_align.cfg                   cpp/Issue_4795_union_var_align.cpp

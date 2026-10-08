@@ -2165,6 +2165,7 @@ void mark_function(Chunk *pc)
                if (  p_op->IsNotNullChunk()
                   && p_op->GetParentType() != E_Token::CT_CLASS
                   && p_op->GetParentType() != E_Token::CT_STRUCT
+                  && p_op->GetParentType() != E_Token::CT_UNION    // Issue #4795
                   && p_op->GetParentType() != E_Token::CT_NAMESPACE)
                {
                   pc->SetType(E_Token::CT_FUNC_CTOR_VAR);

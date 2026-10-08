@@ -999,7 +999,7 @@ void EnumStructUnionParser::analyze_identifiers()
     */
    try_post_identify_macro_calls();
 
-   if (  m_start->IsClassOrStruct()
+   if (  m_start->IsClassStructOrUnion()   // Issue #4795
       && (  language_is_set(lang_flag_e::LANG_CPP)
          || language_is_set(lang_flag_e::LANG_CS)
          || language_is_set(lang_flag_e::LANG_VALA)))
@@ -1589,7 +1589,7 @@ void EnumStructUnionParser::mark_constructors()
     */
    if (  body_detected()
       && type_identified()
-      && m_start->IsClassOrStruct())
+      && m_start->IsClassStructOrUnion())   // Issue #4795
    {
       LOG_FMT(LFTOR,
               "%s(%d): orig line is %zu, orig col is %zu, start is '%s', parent type is %s\n",
