@@ -1,3 +1,4 @@
+#pragma /* guard */ once
 #ifndef FOO
 	#define FOO
 

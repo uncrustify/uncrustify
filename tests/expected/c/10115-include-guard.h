@@ -5,7 +5,7 @@
 int foo();
 
 #ifdef BAR
-#define BAZ
+	#define BAZ
 int bar();
 #endif
 #endif
