@@ -73,13 +73,17 @@ def main(args):
         print("Regex version match failed on: '%s' (%s)" % (txt, error_txt))
         exit(EX_IOERR)
 
-    if r_match.group(2) is not None:
-        string_groups = [r_match.group(2)]
-        if r_match.group(5) is not None and r_match.group(6) is not None:
-            string_groups.append(r_match.group(5))
-            string_groups.append(r_match.group(6))
-    else:
-        string_groups = [r_match.group(7)]
+    if r_match.group(2) is None:
+        # Commit hash only: no version tag is reachable (shallow clone,
+        # --no-tags, ...), so there is no version to report. Fail the same way
+        # as a tarball build so the caller uses its fallback version.
+        print("No version tag reachable from HEAD: '%s' (%s)" % (txt, error_txt))
+        exit(EX_IOERR)
+
+    string_groups = [r_match.group(2)]
+    if r_match.group(5) is not None and r_match.group(6) is not None:
+        string_groups.append(r_match.group(5))
+        string_groups.append(r_match.group(6))
 
     if r_match.group(9) is not None:
         string_groups.append(r_match.group(9))
