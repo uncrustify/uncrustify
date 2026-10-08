@@ -10,6 +10,7 @@
 
 #include "align/align.h"
 #include "align/quick_align_again.h"
+#include "align/trailing_comments.h"
 #include "ifdef_over_whole_file.h"
 #include "options.h"
 #include "options_for_QT.h"
@@ -4485,6 +4486,18 @@ static void indent_comment(Chunk *pc, size_t col)
    LOG_FMT(LCMTIND, "%s(%d): text is '%s', orig line %zu, orig col %zu, level %zu\n",
            __func__, __LINE__, pc->ElidedText(copy), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
 
+   // indent a Doxygen 'after member' continuation at the brace level
+   log_rule_B("align_right_cmt_doxygen_cont");
+
+   if (  options::align_right_cmt_doxygen_cont() == 2
+      && is_right_comment_cont(pc))
+   {
+      LOG_FMT(LCMTIND, "%s(%d): rule 0 - Doxygen continuation at the brace level, col %zu\n",
+              __func__, __LINE__, col);
+      pc->SetFlagBits(PCF_RIGHT_COMMENT_CONT);
+      reindent_line(pc, col);
+      return;
+   }
    // force column 1 comment to column 1 if not changing them
    log_rule_B("indent_col1_comment");
 
