@@ -1720,3 +1720,15 @@
 34985  common/global_align_span_pp_define_num_lines-1.cfg cpp/align_pp_define_span_mixed.cpp
 34986  common/global_align_span_pp_define_num_lines-2.cfg cpp/align_pp_define_span_mixed.cpp
 34987  common/global_align_span_pp_define_num_lines-3.cfg cpp/align_pp_define_span_mixed.cpp
+
+60180  cpp/declspec_var_def.cfg                             cpp/declspec_extern_c.cpp
+60181  cpp/declspec_var_def.cfg                             cpp/declspec_single.cpp
+60182  cpp/declspec_var_def.cfg                             cpp/declspec_func_decl.cpp
+60183  cpp/declspec_var_def.cfg                             cpp/declspec_class_namespace.cpp
+60184  cpp/declspec_var_def.cfg                             cpp/declspec_mixed_block.cpp
+60185  cpp/declspec_func_proto_group.cfg                    cpp/declspec_func_proto_group.cpp
+60186  cpp/attr_prefix_func_proto_group.cfg                 cpp/attr_prefix_func_proto_group.cpp
+60187  cpp/attr_prefix_var_def.cfg                          cpp/attr_prefix_var_def.cpp
+60188  cpp/attr_prefix_func_pre_blank.cfg                   cpp/attr_prefix_func_pre_blank.cpp
+60189  cpp/Issue_4794_var_def_blk.cfg                       cpp/Issue_4794_multiword_proto.cpp
+60190  cpp/Issue_4794_var_def_blk.cfg                       cpp/attr_prefix_func_proto_group.cpp

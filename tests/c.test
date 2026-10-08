@@ -798,3 +798,6 @@
 10297  c/Issue_4767.cfg                                   c/Issue_4767_mixed.c
 10298  c/Issue_4767.cfg                                   c/Issue_4767_union.c
 10299  c/Issue_4767.cfg                                   c/Issue_4767_enum.c
+10301  c/attr_prefix.cfg                                  c/attr_prefix.c
+10302  c/attr_prefix_func_pre_blank.cfg                   c/attr_prefix_func_pre_blank.c
+10303  c/Issue_4794_var_def_blk.cfg                       c/Issue_4794_multiword_proto.c

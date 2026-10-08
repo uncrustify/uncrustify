@@ -714,6 +714,16 @@ Chunk *fix_variable_definition(Chunk *start)
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
    log_pcf_flags(LFCNR, pc->GetFlags());
 
+   // Issue #4777: a leading '__declspec(...)', '[[...]]', '__attribute__((...))'
+   // or 'alignas(...)' isn't part of the type/name run
+   pc = skip_attr_prefix(pc);
+
+   if (pc->IsNullChunk())
+   {
+      LOG_FMT(LFVD, "%s(%d): pc is null chunk\n", __func__, __LINE__);
+      return(Chunk::NullChunkPtr);
+   }
+
    // Scan for words and types and stars oh my!
    while (  pc->Is(E_Token::CT_TYPE)
          || pc->Is(E_Token::CT_WORD)
@@ -748,7 +758,7 @@ Chunk *fix_variable_definition(Chunk *start)
       LOG_FMT(LFVD, "%s(%d):   3:text '%s', type is %s\n",
               __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()));
 
-      pc = skip_attribute_next(pc);
+      pc = skip_attr_prefix(pc);
 
       if (pc->IsNullChunk())
       {
@@ -1158,7 +1168,11 @@ void mark_function_return_type(Chunk const *fname, Chunk *start, E_Token parent_
       // Changing words to types into tuple return types in CS.
       bool is_return_tuple = false;
 
+      // Issue #4777: the ')' of a '__declspec(...)' in front of the return type
+      // isn't a tuple return type; treating it as one left an unknown word
+      // between it and the type ('__declspec(dllexport) WINAPI int f();') a WORD.
       if (  pc->Is(E_Token::CT_PAREN_CLOSE)
+         && pc->GetParentType() != E_Token::CT_DECLSPEC
          && !pc->TestFlags(PCF_IN_PREPROC))
       {
          first           = pc->GetOpeningParen();
@@ -2193,7 +2207,14 @@ void mark_function(Chunk *pc)
 
          if (a->GetParentType() == E_Token::CT_NONE)
          {
-            a->SetParentType(E_Token::CT_FUNC_DEF);
+            // Issue #4777: use the actual declaration kind (FUNC_PROTO,
+            // FUNC_DEF, FUNC_CLASS_PROTO, ...) instead of hardcoding
+            // FUNC_DEF -- otherwise a prefix specifier that this loop
+            // reaches before mark_function_return_type() gets a chance to
+            // re-stamp it correctly (e.g. '__declspec(...)' or a preceding
+            // 'template<...>' clause) is left mismatched with the rest of
+            // the declaration whenever it's actually a prototype.
+            a->SetParentType(pc->GetType());
          }
          // if token has PCF_STMT_START set, exit the loop
          PcfFlags f = a->GetFlags();
@@ -2205,6 +2226,42 @@ void mark_function(Chunk *pc)
             break;
          }
          a = a->GetPrevNcNnl();
+      }
+
+      // Issue #4777: brace_cleanup() skips attribute chunks when it assigns the
+      // statement start, so the walk above stops at the chunk *after* a leading
+      // '[[...]]' (or at the '(' of '__attribute__((...))') and never stamps the
+      // attribute itself -- which is the real first chunk of the statement and
+      // what the blank-line logic inspects. Stamp those prefixes as well.
+      if (a->IsNotNullChunk())
+      {
+         Chunk *before = a->GetPrevNcNnl();
+
+         if (  a->Is(E_Token::CT_FPAREN_OPEN)
+            && a->GetParentType() == E_Token::CT_ATTRIBUTE
+            && before->Is(E_Token::CT_ATTRIBUTE))
+         {
+            // the '__attribute__' keyword belonging to that '('
+            if (before->GetParentType() == E_Token::CT_NONE)
+            {
+               before->SetParentType(pc->GetType());
+            }
+            before = before->GetPrevNcNnl();
+         }
+         Chunk *begin = skip_attr_prefix_prev(before);
+
+         if (skip_attr_prefix(begin) != begin)
+         {
+            Chunk const *stop = before->GetNextNcNnl();
+
+            for (Chunk *tmp_a = begin; tmp_a->IsNotNullChunk() && tmp_a != stop; tmp_a = tmp_a->GetNextNcNnl())
+            {
+               if (tmp_a->GetParentType() == E_Token::CT_NONE)
+               {
+                  tmp_a->SetParentType(pc->GetType());
+               }
+            }
+         }
       }
       flag_parens(paren_open, PCF_IN_FCN_DEF, E_Token::CT_FPAREN_OPEN, pc->GetType(), false);
    }
