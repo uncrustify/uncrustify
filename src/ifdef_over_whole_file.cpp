@@ -56,8 +56,26 @@ bool ifdef_over_whole_file()
          }
          Chunk const *next = pc->GetNext();
 
-         if (  next->IsNullChunk()
-            || next->IsNot(E_Token::CT_PP_IF))
+         if (next->IsNullChunk())
+         {
+            break;
+         }
+
+         if (next->Is(E_Token::CT_PP_PRAGMA))
+         {
+            // '#pragma once' is an equivalent to an include guard, so it may
+            // precede the '#if' of a classic guard: skip it and keep looking
+            Chunk *arg = next->GetNextNcNnl(E_Scope::PREPROC);
+
+            if (arg->IsString("once"))
+            {
+               pc = arg;
+               continue;
+            }
+            break;
+         }
+
+         if (next->IsNot(E_Token::CT_PP_IF))
          {
             break;
          }
