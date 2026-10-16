@@ -44,9 +44,9 @@ constexpr static int kIncludeCategoriesCount = 3;
 
 struct include_category
 {
-   include_category(const std::string &pattern)
-      : pattern(pattern)
-      , regex(pattern)
+   include_category(const std::string &pattern_)
+      : pattern(pattern_)
+      , regex(pattern_)
    {
    }
    std::string pattern;
