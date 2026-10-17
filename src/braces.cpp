@@ -786,6 +786,20 @@ static void convert_brace(Chunk *br)
    {
       br->SetType(E_Token::CT_VBRACE_CLOSE);
       br->Text().clear();
+
+      // Issue #4790
+      // The blank lines before a removed close brace are no longer
+      // checked by eat_blanks_before_close_brace, so apply it here.
+      Chunk *prev = br->GetPrev();
+
+      log_rule_B("eat_blanks_before_close_brace");
+
+      if (  options::eat_blanks_before_close_brace()
+         && prev->IsNewline()
+         && prev->GetNlCount() > 1)
+      {
+         prev->SetNlCount(1);
+      }
       tmp = br->GetNext();
 
       if (tmp->IsNullChunk())
@@ -836,6 +850,27 @@ static void convert_brace(Chunk *br)
             if (tmp->SafeToDeleteNl())
             {
                Chunk::Delete(tmp);
+            }
+            else if (br->Is(E_Token::CT_VBRACE_CLOSE))
+            {
+               // Issue #4790
+               // The newline after the brace must stay, for example
+               // before a preprocessor line, so remove the line the
+               // brace was on by using the newline before it.
+               Chunk *prev = br->GetPrev();
+
+               if (  prev->IsNewline()
+                  && prev->SafeToDeleteNl())
+               {
+                  if (prev->GetNlCount() > 1)
+                  {
+                     prev->SetNlCount(prev->GetNlCount() - 1);
+                  }
+                  else
+                  {
+                     Chunk::Delete(prev);
+                  }
+               }
             }
          }
       }
