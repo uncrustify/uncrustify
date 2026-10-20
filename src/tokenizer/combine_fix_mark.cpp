@@ -710,6 +710,11 @@ Chunk *fix_variable_definition(Chunk *start)
    ChunkStack cs;
    int        ref_idx;
 
+   // Issue #4750: a definition that starts inside a preprocessor directive,
+   // e.g. in the body of a #define, ends with that directive
+   const bool in_preproc   = start->TestFlags(PCF_IN_PREPROC);
+   bool       left_preproc = false;
+
    LOG_FMT(LFVD, "%s(%d): start at pc orig line is %zu, orig col is %zu\n",
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
    log_pcf_flags(LFCNR, pc->GetFlags());
@@ -737,6 +742,7 @@ Chunk *fix_variable_definition(Chunk *start)
       LOG_FMT(LFVD, "%s(%d):   1:text '%s', type is %s\n",
               __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()));
       cs.Push_Back(pc);
+      Chunk const *last = pc;
       pc = pc->GetNextNcNnl();
 
       if (pc->IsNullChunk())
@@ -746,6 +752,16 @@ Chunk *fix_variable_definition(Chunk *start)
       }
       LOG_FMT(LFVD, "%s(%d):   2:text '%s', type is %s\n",
               __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()));
+
+      // Issue #4750: do not scan on from the end of a directive into the
+      // code that follows it
+      if (  in_preproc
+         && last->GetNextNcNnl(E_Scope::PREPROC)->IsNullChunk())
+      {
+         LOG_FMT(LFVD, "%s(%d): end of the preprocessor directive\n", __func__, __LINE__);
+         left_preproc = true;
+         break;
+      }
 
       // Skip templates and attributes
       pc = skip_template_next(pc);
@@ -796,7 +812,8 @@ Chunk *fix_variable_definition(Chunk *start)
       return(end);
    }
 
-   if (  cs.Len() == 1
+   if (  !left_preproc
+      && cs.Len() == 1
       && end->Is(E_Token::CT_BRACE_OPEN)
       && end->GetParentType() == E_Token::CT_BRACED_INIT_LIST)
    {
@@ -811,7 +828,7 @@ Chunk *fix_variable_definition(Chunk *start)
       || end->Is(E_Token::CT_FUNC_CLASS_PROTO)
       || end->Is(E_Token::CT_OPERATOR))
    {
-      return(skip_to_next_statement(end));
+      return(left_preproc ? end : skip_to_next_statement(end));
    }
    // ref_idx points to the alignable part of the variable definition
    ref_idx = cs.Len() - 1;
@@ -851,7 +868,7 @@ Chunk *fix_variable_definition(Chunk *start)
    // No type part found!
    if (ref_idx <= 0)
    {
-      return(skip_to_next_statement(end));
+      return(left_preproc ? end : skip_to_next_statement(end));
    }
    LOG_FMT(LFVD2, "%s(%d): orig line is %zu, TYPE : ", __func__, __LINE__, start->GetOrigLine());
 
@@ -869,6 +886,11 @@ Chunk *fix_variable_definition(Chunk *start)
    LOG_FMT(LFVD, "%s(%d): pc orig line is %zu, orig col is %zu\n",
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
    mark_variable_definition(cs.Get(cs.Len() - 1)->m_pc);
+
+   if (left_preproc)
+   {
+      return(end);
+   }
 
    if (end->Is(E_Token::CT_COMMA))
    {
