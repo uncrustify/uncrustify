@@ -108,6 +108,9 @@
 12107  cs/mod_full_paren_if_bool.cfg                cs/mod_full_paren_if_bool.cs
 12108  cs/Issue_2705.cfg                            cs/Issue_2705.cs
 
+12109  common/sp_before_sparen-r.cfg                cs/using-statement-spacing.cs
+12110  common/sp_before_sparen-f.cfg                cs/using-statement-spacing.cs
+
 12200  cs/comma-cs-f.cfg                            cs/comma.cs
 12201  cs/comma-cs-i.cfg                            cs/comma.cs
 12202  cs/comma-cs-r.cfg                            cs/comma.cs
