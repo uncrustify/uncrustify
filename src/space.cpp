@@ -3754,9 +3754,12 @@ void space_text()
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy), get_token_name(pc->GetType()));
       }
 
+      // Issue #4758: only a call such as SIGNAL(x) is a Qt macro, not an
+      // enumerator, variable or other identifier that is spelled SIGNAL or SLOT
       if (  (options::use_options_overriding_for_qt_macros())
          && (  (strcmp(pc->GetLogText(), "SIGNAL") == 0)
-            || (strcmp(pc->GetLogText(), "SLOT") == 0)))
+            || (strcmp(pc->GetLogText(), "SLOT") == 0))
+         && pc->GetNextNcNnl()->IsParenOpen())
       {
          LOG_FMT(LSPACE, "%s(%d): orig col is %zu, type is %s SIGNAL/SLOT found\n",
                  __func__, __LINE__, pc->GetOrigLine(), get_token_name(pc->GetType()));
