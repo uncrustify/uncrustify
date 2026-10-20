@@ -836,7 +836,8 @@ void split_bool_expr(Chunk *start)
          }
       }
 
-      if (pc->Is(E_Token::CT_RETURN))
+      if (  pc->Is(E_Token::CT_RETURN)
+         || pc->Is(E_Token::CT_CO_RETURN))
       {
          return_statement = pc;
       }

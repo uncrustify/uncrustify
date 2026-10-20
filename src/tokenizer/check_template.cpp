@@ -238,6 +238,9 @@ void check_template(Chunk *start, bool in_type_cast)
 
          if (  (  (  pc->Is(E_Token::CT_IF)
                   || pc->Is(E_Token::CT_RETURN)
+                  || pc->Is(E_Token::CT_CO_RETURN)
+                  || pc->Is(E_Token::CT_CO_AWAIT)
+                  || pc->Is(E_Token::CT_CO_YIELD)
                   || pc->Is(E_Token::CT_WHILE)
                   || pc->Is(E_Token::CT_WHILE_OF_DO))
                && !hit_semicolon)
@@ -455,7 +458,10 @@ void check_template_arg(Chunk *start, Chunk const *end)
       pc->SetFlagBits(PCF_IN_TEMPLATE);
 
       if (  pc->Is(E_Token::CT_DECLTYPE)
-         || pc->Is(E_Token::CT_SIZEOF))
+         || pc->Is(E_Token::CT_SIZEOF)
+         || pc->Is(E_Token::CT_CO_AWAIT)
+         || pc->Is(E_Token::CT_CO_YIELD)
+         || pc->Is(E_Token::CT_CO_RETURN))
       {
          expressionIsNumeric = true;
          break;
