@@ -46,4 +46,10 @@ void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev);
 
 void align_right_comments();
 
+/**
+ * Whether a Doxygen 'after member' comment alone on its line continues the
+ * trailing comment of the line above.
+ */
+bool is_right_comment_cont(Chunk const *pc);
+
 #endif /* ALIGN_TRAILING_COMMENTS_H_INCLUDED */

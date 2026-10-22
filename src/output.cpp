@@ -1822,7 +1822,8 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
 
       if (  !options::indent_col1_comment()
          && pc->GetOrigCol() == 1
-         && !pc->TestFlags(PCF_INSERTED))
+         && !pc->TestFlags(PCF_INSERTED)
+         && !pc->TestFlags(PCF_RIGHT_COMMENT_CONT))
       {
          cmt.column    = 1;
          cmt.base_col  = 1;

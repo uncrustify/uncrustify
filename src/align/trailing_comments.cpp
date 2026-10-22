@@ -54,6 +54,30 @@ void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev)
 } // align_stack
 
 
+bool is_right_comment_cont(Chunk const *pc)
+{
+   if (  pc->GetParentType() != E_Token::CT_COMMENT_WHOLE
+      || !pc->IsDoxygenAfterMemberComment())
+   {
+      return(false);
+   }
+   Chunk *nl = pc->GetPrev();
+
+   // on the very next line
+   if (nl->GetNlCount() != 1)
+   {
+      return(false);
+   }
+   Chunk *prev = nl->GetPrev();
+
+   // below a trailing comment of the same kind or another continuation
+   return(  prev->IsComment()
+         && prev->Is(E_Token::CT_COMMENT_CPP) == pc->Is(E_Token::CT_COMMENT_CPP)
+         && (  prev->GetParentType() == E_Token::CT_COMMENT_END
+            || prev->TestFlags(PCF_RIGHT_COMMENT_CONT)));
+} // is_right_comment_cont
+
+
 Chunk *align_trailing_comments(Chunk *start)
 {
    LOG_FUNC_ENTRY();
@@ -121,6 +145,12 @@ Chunk *align_trailing_comments(Chunk *start)
             nl_count    = 0;
             skip_budget = skip_cfg;  // Reset budget after adding
          }
+      }
+      else if (pc->TestFlags(PCF_RIGHT_COMMENT_CONT))
+      {
+         // a continuation does not break the group
+         nl_count    = 0;
+         skip_budget = skip_cfg;
       }
 
       if (pc->IsNewline())
@@ -195,6 +225,9 @@ void align_right_comments()
 {
    LOG_FUNC_ENTRY();
 
+   log_rule_B("align_right_cmt_doxygen_cont");
+   const bool align_cont = (options::align_right_cmt_doxygen_cont() == 1);
+
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (  pc->Is(E_Token::CT_COMMENT)
@@ -234,6 +267,16 @@ void align_right_comments()
                pc->SetFlagBits(PCF_RIGHT_COMMENT);
             }
          }
+
+         // Mark a Doxygen 'after member' continuation
+         if (  align_cont
+            && is_right_comment_cont(pc))
+         {
+            LOG_FMT(LALTC, "Marking WHOLE comment on line %zu as a continuation\n",
+                    pc->GetOrigLine());
+
+            pc->SetFlagBits(PCF_RIGHT_COMMENT_CONT);
+         }
       }
    }
 
@@ -249,5 +292,25 @@ void align_right_comments()
       {
          pc = pc->GetNext();
       }
+   }
+
+   if (!align_cont)
+   {
+      return;
+   }
+
+   // put each continuation in the column of the comment above it
+   for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+   {
+      if (!pc->TestFlags(PCF_RIGHT_COMMENT_CONT))
+      {
+         continue;
+      }
+      Chunk const *prev = pc->GetPrev()->GetPrev();
+
+      LOG_FMT(LALTC, "%s(%d): continuation on line %zu follows the comment above, col %zu => %zu\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetColumn(), prev->GetColumn());
+      align_to_column(pc, prev->GetColumn());
+      pc->SetFlagBits(PCF_WAS_ALIGNED);
    }
 } // align_right_comments
