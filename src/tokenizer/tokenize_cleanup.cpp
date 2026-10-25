@@ -199,14 +199,35 @@ void tokenize_trailing_return_types()
             // noptr-declarator ( parameter-list ) cv(optional) ref(optional) except(optional) attr(optional) -> trailing
             Chunk *next = pc->GetNextNcNnl();
 
+            if (next->Is(E_Token::CT_DC_MEMBER))                          // Issue #4689
+            {
+               // auto f() -> ::Type &;
+               next = next->GetNextNcNnl();
+            }
+
             if (next->Is(E_Token::CT_DECLTYPE))
             {
                // TODO
             }
-            else if (next->Is(E_Token::CT_WORD))
+            else if (  next->Is(E_Token::CT_WORD)
+                    || next->Is(E_Token::CT_TYPE))                    // Issue #4689
             {
                next->SetType(E_Token::CT_TYPE);                         // Issue #3222
                next = next->GetNextNcNnl();
+
+               // Issue #4689: auto f() -> ns::Type &;
+               while (next->Is(E_Token::CT_DC_MEMBER))
+               {
+                  Chunk *name = next->GetNextNcNnl();
+
+                  if (  name->IsNot(E_Token::CT_WORD)
+                     && name->IsNot(E_Token::CT_TYPE))
+                  {
+                     break;
+                  }
+                  name->SetType(E_Token::CT_TYPE);
+                  next = name->GetNextNcNnl();
+               }
 
                if (next->Is(E_Token::CT_ARITH))
                {
