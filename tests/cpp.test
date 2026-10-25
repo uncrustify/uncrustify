@@ -581,6 +581,8 @@
 31402  cpp/sp_assign_default.cfg                            cpp/trailing_return.cpp
 31403  cpp/sp_trailing_return_byref_ptr-left.cfg            cpp/trailing_return_byref_ptr.cpp
 31404  cpp/sp_trailing_return_byref_ptr-right.cfg           cpp/trailing_return_byref_ptr.cpp
+31405  cpp/sp_trailing_return_byref_ptr-left.cfg            cpp/trailing_return_qualified_byref.cpp
+31406  cpp/sp_trailing_return_byref_ptr-right.cfg           cpp/trailing_return_qualified_byref.cpp
 
 31450  cpp/indent_paren_close_0.cfg                         cpp/indent_func_alias_prototype.cpp
 31451  cpp/indent_paren_close_1.cfg                         cpp/indent_func_alias_prototype.cpp
