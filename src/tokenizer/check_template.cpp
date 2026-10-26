@@ -33,6 +33,19 @@ bool invalid_open_angle_template(Chunk const *prev)
    {
       return(false);
    }
+
+   // The outer template scan can reach operator() before tokenize_cleanup()
+   // combines its parentheses into a CT_OPERATOR_VAL token.
+   if (prev->Is(E_Token::CT_PAREN_CLOSE))
+   {
+      Chunk const *paren_open = prev->GetPrevNcNnl(E_Scope::PREPROC);
+
+      if (  paren_open->Is(E_Token::CT_PAREN_OPEN)
+         && paren_open->GetPrevNcNnl(E_Scope::PREPROC)->Is(E_Token::CT_OPERATOR))
+      {
+         return(false);
+      }
+   }
    // A template requires a word/type right before the open angle
    // It can also appear after the square brackets of a lambda
    return(  prev->IsNot(E_Token::CT_WORD)
@@ -300,7 +313,7 @@ void check_template(Chunk *start, bool in_type_cast)
          if (pc->IsString("<"))
          {
             if (  num_tokens > 0 && (tokens[num_tokens - 1] == E_Token::CT_PAREN_OPEN)
-               && invalid_open_angle_template(pc->GetPrev()))
+               && invalid_open_angle_template(pc->GetPrevNcNnl(E_Scope::PREPROC)))
             {
                pc->SetType(E_Token::CT_COMPARE); // Issue #3127
             }
