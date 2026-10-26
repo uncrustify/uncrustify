@@ -642,6 +642,8 @@
 31639  cpp/sp_between_ptr_ref-r.cfg                         cpp/misc2.cpp
 31640  cpp/sp_between_ptr_ref-f.cfg                         cpp/misc2.cpp
 31641  cpp/sp_between_ptr_ref-i.cfg                         cpp/misc2.cpp
+31642  common/sp_compare-f.cfg                              cpp/call_operator_template.cpp
+31643  cpp/templates-r.cfg                                  cpp/call_operator_template.cpp
 
 31660  cpp/var_def_blks-1.cfg                               cpp/issue_1919.cpp
 31661  cpp/Issue_3097.cfg                                   cpp/Issue_3097.cpp
