@@ -81,6 +81,14 @@ bool go_on(Chunk const *pc, Chunk const *start);
 bool is_ucase_str(const char *str, size_t len);
 
 
+/**
+ * Checks whether the closing paren could end a fold expression, as in '(args && ...)'.
+ * A fold needs parentheses of its own. Parentheses that follow a name or a type
+ * as in void(Args&&...) or f(args...) cannot be a fold.
+ */
+bool can_close_fold_expression(Chunk const *paren_close);
+
+
 void make_type(Chunk *pc);
 
 Chunk *set_paren_parent(Chunk *start, E_Token parent);
