@@ -12,6 +12,7 @@ class Chunk;
 
 void newline_after_label_colon();
 void newline_after_multiline_comment();
+void newline_after_singleline_comment();
 
 /**
  * Put a empty line after a return statement, unless it is followed by a

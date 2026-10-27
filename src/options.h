@@ -3129,6 +3129,10 @@ nl_before_c_comment;
 extern BoundedOption<unsigned, 0, 16>
 nl_before_cpp_comment;
 
+// Whether to force a newline after a single-line comment.
+extern Option<bool>
+nl_after_c_comment;
+
 // Whether to force a newline after a multi-line comment.
 extern Option<bool>
 nl_after_multiline_comment;
