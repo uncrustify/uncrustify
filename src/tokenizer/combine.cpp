@@ -808,11 +808,13 @@ static bool handle_fold_expression(Chunk const *prev, Chunk const *pc, Chunk con
       // Check what comes after the ellipsis
       // In fold expression: (args && ...) - next after ellipsis is ) or &&
       // In variadic param:  Args&&... args - next after ellipsis is the param name (WORD)
+      // In function type:  void(Args&&...) - the parens belong to void, not to a fold
       Chunk const *after_ellipsis = next->GetNextNcNnl();
 
       if (  after_ellipsis->IsNotNullChunk()
-         && (  after_ellipsis->Is(E_Token::CT_PAREN_CLOSE)
-            || after_ellipsis->Is(E_Token::CT_FPAREN_CLOSE)
+         && (  (  (  after_ellipsis->Is(E_Token::CT_PAREN_CLOSE)
+                  || after_ellipsis->Is(E_Token::CT_FPAREN_CLOSE))
+               && can_close_fold_expression(after_ellipsis))
             || after_ellipsis->Is(E_Token::CT_BOOL)
             || after_ellipsis->Is(E_Token::CT_SEMICOLON)))
       {
@@ -844,11 +846,16 @@ static bool handle_rvalue_in_template(Chunk const *prev, Chunk *pc, Chunk const 
    {
       return(false);
    }
-
    // Accept TYPE, WORD (user-defined types) or PARAMETER_PACK (template parameters like T)
-   if (  !prev->Is(E_Token::CT_TYPE)
-      && !prev->Is(E_Token::CT_WORD)
-      && !prev->Is(E_Token::CT_PARAMETER_PACK))
+   bool const after_type_name = (  prev->Is(E_Token::CT_TYPE)
+                                || prev->Is(E_Token::CT_WORD)
+                                || prev->Is(E_Token::CT_PARAMETER_PACK));
+   // In 'Bar const&&' and 'Bar*&&' the type ends with a qualifier or a pointer
+   bool const after_cv_or_ptr = (  prev->Is(E_Token::CT_QUALIFIER)
+                                || prev->Is(E_Token::CT_PTR_TYPE));
+
+   if (  !after_type_name
+      && !after_cv_or_ptr)
    {
       return(false);
    }
@@ -874,7 +881,9 @@ static bool handle_rvalue_in_template(Chunk const *prev, Chunk *pc, Chunk const 
       // Pattern: ns1::ns2::Type - we need to find what's before ns1
       while (  before_type->Is(E_Token::CT_DC_MEMBER)
             || before_type->Is(E_Token::CT_TYPE)
-            || before_type->Is(E_Token::CT_WORD))
+            || before_type->Is(E_Token::CT_WORD)
+            || before_type->Is(E_Token::CT_QUALIFIER)
+            || before_type->Is(E_Token::CT_PTR_TYPE))
       {
          Chunk *tmp = before_type->GetPrevNcNnlNi();
 
@@ -892,6 +901,11 @@ static bool handle_rvalue_in_template(Chunk const *prev, Chunk *pc, Chunk const 
          pc->SetType(E_Token::CT_BYREF);
          return(true);
       }
+   }
+
+   if (!after_type_name)
+   {
+      return(false);
    }
 
    // Handle && in function return type inside template (e.g, std::function<T&&()>)
