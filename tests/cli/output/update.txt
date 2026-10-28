@@ -399,6 +399,7 @@ indent_oc_block_msg_from_caret  = false
 indent_oc_block_msg_from_brace  = false
 indent_min_vbrace_open          = 0
 indent_vbrace_open_on_tabstop   = false
+indent_unbraced_body            = 0
 indent_token_after_brace        = true
 indent_cpp_lambda_body          = false
 indent_compound_literal_return  = true

@@ -1653,6 +1653,10 @@ indent_min_vbrace_open          = 0        # unsigned number
 # when indenting after virtual brace open and newline.
 indent_vbrace_open_on_tabstop   = false    # true/false
 
+# The number of columns to indent the body of an unbraced
+# if/for/while statement. If zero, use indent_columns.
+indent_unbraced_body            = 0        # unsigned number
+
 # How to indent after a brace followed by another token (not a newline).
 # true:  indent all contained lines to match the token
 # false: indent all contained lines to match the brace
