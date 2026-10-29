@@ -155,12 +155,12 @@ public:
    /**
     * @brief Returns the tracking data of the chunk as a const reference
     */
-   const TrackList *GetTrackingData() const;
+   const TrackList_SP *GetTrackingData_SP() const;
 
    /**
     * @brief Returns the tracking data of the chunk as a modifiable reference
     */
-   TrackList * &TrackingData();
+   TrackList_SP * &TrackingData_SP();
 
    /**
     * @brief Returns the type of the parent chunk
@@ -1090,7 +1090,7 @@ protected:
    Chunk           *m_parent;               //! pointer to parent chunk (not always set)
 
    UncText         m_text;                  //! the token text
-   TrackList       *m_trackingList;         //! for debugging purpose only
+   TrackList_SP    *m_trackingList_SP;      //! for debugging purpose only, for Space option(s)
 
 
 private:
@@ -1190,15 +1190,15 @@ inline UncText &Chunk::Text()
 }
 
 
-inline const TrackList *Chunk::GetTrackingData() const
+inline const TrackList_SP *Chunk::GetTrackingData_SP() const
 {
-   return(m_trackingList);
+   return(m_trackingList_SP);
 }
 
 
-inline TrackList * &Chunk::TrackingData()
+inline TrackList_SP * &Chunk::TrackingData_SP()
 {
-   return(m_trackingList);
+   return(m_trackingList_SP);
 }
 
 

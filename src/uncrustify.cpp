@@ -778,10 +778,6 @@ int main(int argc, char *argv[])
          {
             cpd.html_type = tracking_type_e::TT_NEWLINE;
          }
-         else if (strcmp(tracking_art, "start") == 0)
-         {
-            cpd.html_type = tracking_type_e::TT_START;
-         }
          else
          {
             fprintf(stderr, "tracking_art '%s' not implemented\n",

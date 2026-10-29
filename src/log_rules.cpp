@@ -68,9 +68,9 @@ void log_rule4(const char *rule, Chunk *first)
       return;
    }
 
-   if (first->GetTrackingData() == nullptr)
+   if (first->GetTrackingData_SP() == nullptr)
    {
-      first->TrackingData() = new TrackList;
+      first->TrackingData_SP() = new TrackList_SP;
    }
    // copy the rule
    size_t length = strlen(rule) + 1;
@@ -84,80 +84,46 @@ void log_rule4(const char *rule, Chunk *first)
       exit(EX_SOFTWARE);
    }
    snprintf(r, length, "%s", rule);
-   size_t      a_number = get_A_Number();
-   TrackNumber A        = std::make_pair(a_number, r);
+   size_t         a_number = get_A_Number();
+   TrackNumber_SP A        = std::make_pair(a_number, r);
 
-   first->TrackingData()->push_back(A);
-   size_t sizeOfTrack = first->GetTrackingData()->size();
+   first->TrackingData_SP()->push_back(A);
+   size_t sizeOfTrack = first->GetTrackingData_SP()->size();
 
    LOG_FMT(LSPACE, "log_rule4(%d): rule is '%s', after '%s', at line %zu, tracking number is %zu, size is %zu\n",
            __LINE__, rule, first->GetLogText(), first->GetOrigLine(), a_number, sizeOfTrack);
 } // void log_rule4
 
 
-void log_ruleStart(const char *rule, Chunk *first)
-{
-   if (!(cpd.html_type == tracking_type_e::TT_START))
-   {
-      return;
-   }
-
-   if (first->GetTrackingData() == nullptr)
-   {
-      first->TrackingData() = new TrackList;
-   }
-   // copy the rule
-   size_t length = strlen(rule) + 1;
-   char   *r     = reinterpret_cast<char *>(malloc(length));
-
-   if (r == NULL)
-   {
-      fprintf(stderr, "%s(%d): Not enough memory for log_ruleStart\n",
-              __func__, __LINE__);
-      log_flush(true);
-      exit(EX_SOFTWARE);
-   }
-   snprintf(r, length, "%s", rule);
-   size_t      a_number = get_A_Number();
-   TrackNumber A        = std::make_pair(a_number, r);
-
-   first->TrackingData()->push_back(A);
-   size_t sizeOfTrack = first->GetTrackingData()->size();
-
-   LOG_FMT(LSPACE, "log_ruleStart(%d): rule is '%s', '%s', at line %zu, tracking number is %zu, size is %zu\n",
-           __LINE__, rule, first->GetLogText(), first->GetOrigLine(), a_number, sizeOfTrack);
-} // log_ruleStart
-
-
-void log_ruleNL(const char *rule, Chunk *pc)
-{
-   if (!(cpd.html_type == tracking_type_e::TT_NEWLINE))
-   {
-      return;
-   }
-
-   if (pc->GetTrackingData() == nullptr)
-   {
-      pc->TrackingData() = new TrackList;
-   }
-   // copy the rule
-   size_t length = strlen(rule) + 1;
-   char   *r     = reinterpret_cast<char *>(malloc(length));
-
-   if (r == NULL)
-   {
-      fprintf(stderr, "%s(%d): Not enough memory for log_ruleNL\n",
-              __func__, __LINE__);
-      log_flush(true);
-      exit(EX_SOFTWARE);
-   }
-   snprintf(r, length, "%s", rule);
-   size_t      a_number = get_A_Number();
-   TrackNumber A        = std::make_pair(a_number, r);
-
-   pc->TrackingData()->push_back(A);
-   size_t sizeOfTrack = pc->GetTrackingData()->size();
-
-   LOG_FMT(LSPACE, "log_ruleNL(%d): rule is '%s', after '%s', at line %zu, tracking number is %zu, size is %zu\n",
-           __LINE__, rule, pc->GetLogText(), pc->GetOrigLine(), a_number, sizeOfTrack);
-} // void log_ruleNL
+//void log_ruleNL(const char *rule, Chunk *pc)
+//{
+//   if (!(cpd.html_type == tracking_type_e::TT_NEWLINE))
+//   {
+//      return;
+//   }
+//
+//   if (pc->GetTrackingData() == nullptr)
+//   {
+//      pc->TrackingData() = new TrackList;
+//   }
+//   // copy the rule
+//   size_t length = strlen(rule) + 1;
+//   char   *r     = reinterpret_cast<char *>(malloc(length));
+//
+//   if (r == NULL)
+//   {
+//      fprintf(stderr, "%s(%d): Not enough memory for log_ruleNL\n",
+//              __func__, __LINE__);
+//      log_flush(true);
+//      exit(EX_SOFTWARE);
+//   }
+//   snprintf(r, length, "%s", rule);
+//   size_t      a_number = get_A_Number();
+//   TrackNumber A        = std::make_pair(a_number, r);
+//
+//   pc->TrackingData()->push_back(A);
+//   size_t sizeOfTrack = pc->GetTrackingData()->size();
+//
+//   LOG_FMT(LSPACE, "log_ruleNL(%d): rule is '%s', after '%s', at line %zu, tracking number is %zu, size is %zu\n",
+//           __LINE__, rule, pc->GetLogText(), pc->GetOrigLine(), a_number, sizeOfTrack);
+//} // void log_ruleNL

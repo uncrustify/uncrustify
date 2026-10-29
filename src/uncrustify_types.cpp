@@ -6,6 +6,7 @@
  * @license GPL v2+
  */
 
+#include "chunk.h"
 #include "uncrustify_types.h"
 
 
@@ -65,9 +66,6 @@ const char *get_tracking_type_e_name(tracking_type_e type)
 
    case tracking_type_e::TT_NEWLINE:
       return("newline");
-
-   case tracking_type_e::TT_START:
-      return("start");
    }
    return("?????");
 } // get_tracking_type_e_name
@@ -161,3 +159,26 @@ const char *get_pattern_class(pattern_class_e p_class)
    }
    return("?????");
 } // get_pattern_class
+
+
+// make a protocol of the track
+void protocol_track_SP(Chunk *pc)
+{
+   if (pc->GetTrackingData_SP() == nullptr)
+   {
+      return;
+   }
+   LOG_FMT(LGUY, " Tracking info are: \n");
+   LOG_FMT(LGUY, "  number of track(s) %zu\n", pc->GetTrackingData_SP()->size());
+
+   for (size_t track = 0; track < pc->GetTrackingData_SP()->size(); track++)
+   {
+      const TrackList_SP   *A       = pc->GetTrackingData_SP();
+      const TrackNumber_SP B        = A->at(track);
+      size_t               Bfirst   = B.first;
+      char                 *Bsecond = B.second;
+
+      LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
+      LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
+   }
+} // void protocol_track_SP

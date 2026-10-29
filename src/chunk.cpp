@@ -52,8 +52,8 @@ void Chunk::CopyFrom(const Chunk &o)
    m_prev   = Chunk::NullChunkPtr;
    m_parent = Chunk::NullChunkPtr;
 
-   m_text         = o.m_text;
-   m_trackingList = o.m_trackingList;
+   m_text            = o.m_text;
+   m_trackingList_SP = o.m_trackingList_SP;
 } // Chunk::CopyFrom
 
 
@@ -87,7 +87,7 @@ void Chunk::Reset()
 
    // for debugging purpose only
    m_text.clear();
-   m_trackingList = nullptr;
+   m_trackingList_SP = nullptr;
 } // Chunk::Reset
 
 

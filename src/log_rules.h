@@ -27,13 +27,15 @@
    log_rule3(LCURRENT, __func__, (rule))
 #endif
 
-#ifdef SUPER_LOG
-#define log_rule_NL(rule) \
-   log_ruleNL((rule), pc)
-#else
-#define log_rule_NL(rule) \
-   log_ruleNL(LCURRENT, __func__, (rule))
-#endif
+/*
+ #ifdef SUPER_LOG
+ #define log_rule_NL(rule) \
+ * log_ruleNL((rule), pc)
+ #else
+ #define log_rule_NL(rule) \
+ * log_ruleNL(LCURRENT, __func__, (rule))
+ #endif
+ */
 
 void log_rule2(const char *func, size_t line, const char *rule, Chunk const *first, Chunk const *second);
 
@@ -50,6 +52,6 @@ void log_rule4(const char *rule, Chunk *first);
 
 void log_ruleStart(const char *rule, Chunk *first);
 
-void log_ruleNL(const char *rule, Chunk *pc);
+//void log_ruleNL(const char *rule, Chunk *pc);
 
 #endif /* LOG_RULES_H_INCLUDED */

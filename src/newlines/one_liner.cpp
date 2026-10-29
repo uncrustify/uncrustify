@@ -220,7 +220,7 @@ bool one_liner_nl_ok(Chunk *pc)
          return(false);
       }
       log_rule_B("nl_func_leave_one_liners");
-      log_ruleNL("nl_func_leave_one_liners", pc);
+      //log_ruleNL("nl_func_leave_one_liners", pc);
 
       if (  options::nl_func_leave_one_liners()
          && (  pc->GetParentType() == E_Token::CT_FUNC_DEF

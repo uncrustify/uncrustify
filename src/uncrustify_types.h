@@ -83,8 +83,7 @@ enum class tracking_type_e : size_t
    // see also: const char *get_tracking_type_e_name(tracking_type_e type)
    TT_NONE,
    TT_SPACE,
-   TT_NEWLINE,
-   TT_START
+   TT_NEWLINE
 };
 
 class Chunk; //forward declaration
@@ -138,8 +137,13 @@ struct LineSkipConfig
 
 
 // for debugging purpose only
-typedef std::pair<size_t, char *>   TrackNumber;   // track for "trackNumber" and "rule"
-typedef std::vector<TrackNumber>    TrackList;     // list of tracks
+// for Space option(s)
+typedef std::pair<size_t, char *>     TrackNumber_SP; // track for "trackNumber" and "rule"
+typedef std::vector<TrackNumber_SP>   TrackList_SP;   // list of tracks
+
+// make a protocol of the track
+void protocol_track_SP(Chunk *pc);
+
 
 ////! list of all programming languages Uncrustify supports
 //enum lang_flag_e
