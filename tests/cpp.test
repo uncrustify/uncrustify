@@ -1737,3 +1737,4 @@
 60191  cpp/Issue_4795_union_blank_lines.cfg                 cpp/Issue_4795_union_blank_lines.cpp
 60192  cpp/Issue_4795_union_spacing.cfg                     cpp/Issue_4795_union_spacing.cpp
 60193  cpp/Issue_4795_union_var_align.cfg                   cpp/Issue_4795_union_var_align.cpp
+60195  cpp/Issue_4692.cfg                                   cpp/Issue_4692.cpp

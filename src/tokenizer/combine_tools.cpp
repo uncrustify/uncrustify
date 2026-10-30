@@ -11,6 +11,24 @@
 #include "uncrustify.h"
 
 
+/**
+ * Checks whether a parameter pack is followed by an ellipsis, with at most
+ * some pointer or reference operators in between, as in 'Args&& ... args'.
+ */
+static bool is_expanded_pack(Chunk const *pack)
+{
+   Chunk const *next = pack->GetNextNcNnl(E_Scope::PREPROC);
+
+   while (  next->IsNotNullChunk()
+         && (  next->IsPointerOperator()
+            || next->IsString("&&")))
+   {
+      next = next->GetNextNcNnl(E_Scope::PREPROC);
+   }
+   return(next->Is(E_Token::CT_ELLIPSIS));
+}
+
+
 bool can_be_full_param(Chunk *start, Chunk const *end)
 {
    LOG_FUNC_ENTRY();
@@ -89,6 +107,14 @@ bool can_be_full_param(Chunk *start, Chunk const *end)
       else if (pc->Is(E_Token::CT_ELLIPSIS))
       {
          LOG_FMT(LFPARAM, "%s(%d): <== ellipsis\n",
+                 __func__, __LINE__);
+
+         return(true);
+      }
+      else if (  pc->Is(E_Token::CT_PARAMETER_PACK)
+              && is_expanded_pack(pc))                       // Issue #4692
+      {
+         LOG_FMT(LFPARAM, "%s(%d): <== parameter pack\n",
                  __func__, __LINE__);
 
          return(true);
