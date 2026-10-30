@@ -1581,6 +1581,12 @@ void indent_text()
          {
             iMinIndent = indent_size;
          }
+
+         if (options::indent_unbraced_body() != 0)
+         {
+            log_rule_B("indent_unbraced_body");
+            iMinIndent = options::indent_unbraced_body();
+         }
          size_t iNewIndent = frm.prev().GetIndent() + iMinIndent;
 
          log_rule_B("indent_vbrace_open_on_tabstop");

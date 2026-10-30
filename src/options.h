@@ -2001,6 +2001,11 @@ indent_min_vbrace_open;
 extern Option<bool>
 indent_vbrace_open_on_tabstop;
 
+// The number of columns to indent the body of an unbraced
+// if/for/while statement. If zero, use indent_columns.
+extern BoundedOption<unsigned, 0, 16>
+indent_unbraced_body; // = 0
+
 // How to indent after a brace followed by another token (not a newline).
 // true:  indent all contained lines to match the token
 // false: indent all contained lines to match the brace
