@@ -379,7 +379,7 @@ void newlines_brace_pair(Chunk *br_open)
       {
          // Braces belong to a function definition
          log_rule_B("nl_collapse_empty_body_functions");
-         log_ruleNL("nl_collapse_empty_body_functions", br_open);
+         //log_ruleNL("nl_collapse_empty_body_functions", br_open);
 
          if (options::nl_collapse_empty_body_functions())
          {
@@ -390,7 +390,7 @@ void newlines_brace_pair(Chunk *br_open)
       else
       {
          log_rule_B("nl_collapse_empty_body");
-         log_ruleNL("nl_collapse_empty_body", br_open);
+         //log_ruleNL("nl_collapse_empty_body", br_open);
 
          if (options::nl_collapse_empty_body())
          {

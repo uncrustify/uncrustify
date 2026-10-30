@@ -74,3 +74,6 @@ compile_commands.json
 
 # macOS
 .DS_Store
+
+# cppcheck
+/.cache/cppcheck/

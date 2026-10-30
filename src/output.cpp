@@ -636,7 +636,8 @@ void output_parsed_csv(FILE *pfile)
 
 
 // Compares two tracks according to second in descending order.
-bool compareTrack(TrackNumber t1, TrackNumber t2)
+// for the sp_ options
+bool compareTrack_SP(TrackNumber_SP t1, TrackNumber_SP t2)
 {
    char const *t1s          = t1.second;
    char const *t2s          = t2.second;
@@ -644,12 +645,12 @@ bool compareTrack(TrackNumber t1, TrackNumber t2)
    bool       int_vergleich = vergleich > 0;
 
    return(int_vergleich);
-}
+} // bool compareTrack_SP
 
 
-void DecodeTrackingData(Chunk *pc)
+void DecodeTrackingData_SP(Chunk *pc)
 {
-   if (pc->GetTrackingData() == nullptr)
+   if (pc->GetTrackingData_SP() == nullptr)
    {
       return;
    }
@@ -657,9 +658,9 @@ void DecodeTrackingData(Chunk *pc)
    LOG_FMT(LGUY, "%s(%d): Text is %s, orig_line is %zu, column is %zu\n",
            __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetColumn());
    LOG_FMT(LGUY, " Tracking info are: \n");
-   LOG_FMT(LGUY, "  number of track(s) %zu\n", pc->GetTrackingData()->size());
+   LOG_FMT(LGUY, "  number of track(s) %zu\n", pc->GetTrackingData_SP()->size());
    // is sorting necessary?
-   size_t many = pc->GetTrackingData()->size();
+   size_t many = pc->GetTrackingData_SP()->size();
 
    if (many > 1)                                  // there is only one track
    {
@@ -667,22 +668,13 @@ void DecodeTrackingData(Chunk *pc)
       LOG_FMT(LGUY, "  tracking before\n");
 
       // protocol before sort
-      for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
-      {
-         const TrackList   *A       = pc->GetTrackingData();
-         const TrackNumber B        = A->at(track);
-         size_t            Bfirst   = B.first;
-         char              *Bsecond = B.second;
-
-         LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
-         LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
-      }
+      protocol_track_SP(pc);
 #endif
 
       if (options::debug_sort_the_tracks())
       {
-         TrackList *A1 = pc->TrackingData();
-         sort(A1->begin(), A1->end(), compareTrack);
+         TrackList_SP *A1 = pc->TrackingData_SP();
+         sort(A1->begin(), A1->end(), compareTrack_SP);
       }
    }
    else
@@ -693,16 +685,7 @@ void DecodeTrackingData(Chunk *pc)
    LOG_FMT(LGUY, "  tracking after\n");
 
    // protocol ( after sort )
-   for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
-   {
-      const TrackList   *A       = pc->GetTrackingData();
-      const TrackNumber B        = A->at(track);
-      size_t            Bfirst   = B.first;
-      char              *Bsecond = B.second;
-
-      LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
-      LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
-   }
+   protocol_track_SP(pc);
 #endif
    char const *old_one   = nullptr;
    bool       first_text = true;
@@ -710,12 +693,12 @@ void DecodeTrackingData(Chunk *pc)
 
    add_text("<a title=\"");
 
-   for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
+   for (size_t track = 0; track < pc->GetTrackingData_SP()->size(); track++)
    {
-      const TrackList   *A       = pc->GetTrackingData();
-      const TrackNumber B        = A->at(track);
-      size_t            Bfirst   = B.first;
-      char              *Bsecond = B.second;
+      const TrackList_SP   *A       = pc->GetTrackingData_SP();
+      const TrackNumber_SP B        = A->at(track);
+      size_t               Bfirst   = B.first;
+      char                 *Bsecond = B.second;
 
       if (  old_one == nullptr
          || strcmp(old_one, Bsecond) != 0)
@@ -747,7 +730,7 @@ void DecodeTrackingData(Chunk *pc)
    }     // for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
 
    add_text("\"><font color=\"red\">M</font></a>");
-} // DecodeTrackingData(
+} // DecodeTrackingData
 
 
 void output_text(FILE *pfile)
@@ -826,7 +809,8 @@ void output_text(FILE *pfile)
    {
       char copy[1000];
       LOG_FMT(LCONTTEXT, "%s(%d): text is '%s', type is %s, orig line is %zu, column is %zu, nl is %zu\n",
-              __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetColumn(), pc->GetNlCount());
+              __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->GetOrigLine(),
+              pc->GetColumn(), pc->GetNlCount());
       cpd.output_tab_as_space = false;
 
       if (  pc->Is(E_Token::CT_STRING)
@@ -859,7 +843,7 @@ void output_text(FILE *pfile)
 
       if (pc->Is(E_Token::CT_NEWLINE))
       {
-         DecodeTrackingData(pc);
+         DecodeTrackingData_SP(pc);
 
          for (size_t cnt = 0; cnt < pc->GetNlCount(); cnt++)
          {
@@ -1123,7 +1107,7 @@ void output_text(FILE *pfile)
                add_text(pc->GetText(), false, pc->Is(E_Token::CT_STRING));
             }
             // insert <here> the HTML code for the tracking
-            DecodeTrackingData(pc);
+            DecodeTrackingData_SP(pc);
          }
          else              // standard output
          {

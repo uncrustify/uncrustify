@@ -137,23 +137,6 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine_of_code,
                Chunk const *pa = pc->GetParent();
                LOG_FMT(LGUY, "<> pa-type is %s, orig_line is %zu\n", get_token_name(pa->GetType()), pa->GetOrigLine());
             }
-
-            if (pc->GetTrackingData() != nullptr)
-            {
-               LOG_FMT(LGUY, " Tracking info are: \n");
-               LOG_FMT(LGUY, "  number of track(s) %zu\n", pc->GetTrackingData()->size());
-
-               for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
-               {
-                  const TrackList   *A       = pc->GetTrackingData();
-                  const TrackNumber B        = A->at(track);
-                  size_t            Bfirst   = B.first;
-                  char              *Bsecond = B.second;
-
-                  LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
-                  LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
-               }
-            }
          }
       }
       else if (pc->GetOrigLine() > the_line_to_be_prot)
@@ -379,23 +362,6 @@ void prot_some_lines(const char *func_name, int theLine_of_code, size_t from_lin
          {
             Chunk const *pa = pc->GetParent();
             LOG_FMT(LGUY, "<> pa-type is %s, orig_line is %zu\n", get_token_name(pa->GetType()), pa->GetOrigLine());
-         }
-
-         if (pc->GetTrackingData() != nullptr)
-         {
-            LOG_FMT(LGUY, " Tracking info are: \n");
-            LOG_FMT(LGUY, "  number of track(s) %zu\n", pc->GetTrackingData()->size());
-
-            for (size_t track = 0; track < pc->GetTrackingData()->size(); track++)
-            {
-               const TrackList   *A       = pc->GetTrackingData();
-               const TrackNumber B        = A->at(track);
-               size_t            Bfirst   = B.first;
-               char              *Bsecond = B.second;
-
-               LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
-               LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
-            }
          }
       }
    }

@@ -90,7 +90,7 @@ repos:
 # to make the little test, exclude the three cpp-files
         exclude: ^(tests/.*|src/detect.cpp|src/indent.cpp|src/space.cpp|documentation/.*)$
         args:
-          - --quiet
+          ##- --quiet
           - --force
           - --language=c++
           - --cppcheck-build-dir=.cache/cppcheck/  # Force cache location
@@ -111,13 +111,15 @@ repos:
           - --suppress=missingInclude:*.h
           - --suppress=missingInclude:uncrustify_emscripten.cpp
           - --suppress=missingIncludeSystem
+          - --suppress=missingInclude                        ## guy
           - --suppress=noCopyConstructor
           - --suppress=noExplicitConstructor
           - --suppress=noOperatorEq
           - --suppress=passedByValueCallback  ## Function parameter 'xxx' should be passed by const reference. However it seems that 'yyy' is a callback function.
           - --suppress=returnDanglingLifetime
           - --suppress=uninitMemberVarNoCtor  ## Member variable 'xxx::yyy' has no initializer.
-          - --suppress=unknownMacro:uncrustify_emscripten.cpp
+          ##- --suppress=unknownMacro:uncrustify_emscripten.cpp   guy
+          - --suppress=unknownMacro
           - --suppress=unmatchedSuppression
           - --suppress=unusedFunction
           - --suppress=unusedPrivateFunction

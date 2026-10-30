@@ -4166,7 +4166,7 @@ void fix_symbols()
                if (tmp->Is(E_Token::CT_WORD))
                {
                   tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
-                  log_ruleStart("start statement/ expression", tmp);
+                  //log_ruleStart("start statement/ expression", tmp);
                   break;
                }
                tmp = tmp->GetNextNcNnl();
@@ -4182,7 +4182,7 @@ void fix_symbols()
          if (tmp->Is(E_Token::CT_WORD))
          {
             tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
-            log_ruleStart("start statement/ expression", tmp);
+            //log_ruleStart("start statement/ expression", tmp);
          }
          // Issue #4777: brace_cleanup() gives the statement start to whatever
          // follows an attribute chunk. For '[[...]]' that is the declaration
@@ -4204,7 +4204,7 @@ void fix_symbols()
                   || after->Is(E_Token::CT_WORD)))
             {
                after->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
-               log_ruleStart("start statement/ expression", after);
+               //log_ruleStart("start statement/ expression", after);
             }
          }
       }
@@ -5158,7 +5158,7 @@ static void handle_oc_class(Chunk *pc)
          {
             tmp->SetType(E_Token::CT_OC_SCOPE);
             tmp->SetFlagBits(PCF_STMT_START);
-            log_ruleStart("start statement", tmp);
+            //log_ruleStart("start statement", tmp);
             hit_scope = true;
          }
       }
@@ -6067,7 +6067,7 @@ static void handle_cs_square_stmt(Chunk *os)
    if (tmp->IsNotNullChunk())
    {
       tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
-      log_ruleStart("start statement/ expression", tmp);
+      //log_ruleStart("start statement/ expression", tmp);
    }
 } // handle_cs_square_stmt
 
