@@ -540,6 +540,16 @@ bool is_ucase_str(const char *str, size_t len)
 } // is_ucase_str
 
 
+bool can_close_fold_expression(Chunk const *paren_close)
+{
+   Chunk const *prev = paren_close->GetOpeningParen()->GetPrevNcNnlNi();
+
+   return(  prev->IsNot(E_Token::CT_WORD)
+         && prev->IsNot(E_Token::CT_TYPE)
+         && prev->IsNot(E_Token::CT_CPP_CAST));
+}
+
+
 void make_type(Chunk *pc)
 {
    LOG_FUNC_ENTRY();

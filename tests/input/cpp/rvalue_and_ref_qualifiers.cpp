@@ -409,7 +409,7 @@ class NoexceptClass {
 template<typename T>
 class ExplicitSfinaeClass {
     template<typename U = T,
-        std::enable_if_t<sizeof(U) > 8 && std::is_trivially_copyable<U>::value, int> = 0>
+        std::enable_if_t<(sizeof(U) > 8) && std::is_trivially_copyable<U>::value, int> = 0>
     explicit ExplicitSfinaeClass(U&& val);
 
     template<typename U = T,
@@ -805,6 +805,25 @@ ns2::Inner2&& ns2::Inner2::move() && { return std::move(*this); }
 MyClass4&& MyClass4::moveNoexcept() && noexcept { return std::move(*this); }
 MyClass4&& MyClass4::create(MyClass4&& src) { return std::move(src); }
 MyClass4&& operator+(MyClass4&& lhs, MyClass4&& rhs) { return std::move(lhs); }
+
+void templateArgs()
+{
+    std::function<void(const Bar&&, Bar*&&, Args&&...)> fn;
+    auto x = Foo<const Bar&&, Bar const&&, Bar*&&>{};
+    if (Foo<Bar&&>{}) {}
+    return Foo<Bar&&>{Bar()};
+    return Foo<Baz<Bar&&>>(Bar());
+    return Foo<const Bar&&, Bar const&&, Bar*&&>{};
+    return Foo<void(Bar&&)>{};
+    return Foo<void(int, Args&&...)>{};
+    return Foo<void(const int& a, Args&&... args)>{};
+    return f<Args&&...>(x);
+    co_return Foo<Bar&&>{};
+    return a < b && c > d;
+    return a < (b && c) > d;
+    return a < (args && ...) > b;
+    return (args && ...);
+}
 
 ///>>
 // Make sure detecting && as CT_BOOL works in nested parens and braces

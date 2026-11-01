@@ -13,6 +13,7 @@
 #include "log_rules.h"
 #include "tokenizer/check_template.h"
 #include "tokenizer/combine.h"
+#include "tokenizer/combine_tools.h"
 #include "tokenizer/flag_braced_init_list.h"
 #include "tokenizer/flag_decltype.h"
 #include "uncrustify.h"
@@ -73,6 +74,35 @@ Chunk *handle_double_angle_close(Chunk *pc)
       }
    }
    return(next);
+}
+
+
+/**
+ * In 'Foo<Bar&&>', 'Foo<Bar&&, Baz>', 'Foo<void(Bar&&)>', 'f<Args&&...>' and
+ * 'Foo<void(Args&&... args)>' nothing follows the && that could be its right
+ * operand, so it is a reference, not a logical-and.
+ */
+static bool is_rvalue_ref_in_template(Chunk const *pc)
+{
+   if (!pc->IsString("&&"))
+   {
+      return(false);
+   }
+   Chunk const *next = pc->GetNextNcNnl(E_Scope::PREPROC);
+
+   if (next->Is(E_Token::CT_ELLIPSIS))
+   {
+      next = next->GetNextNcNnl(E_Scope::PREPROC);
+
+      return(  next->Is(E_Token::CT_COMMA)
+            || next->Is(E_Token::CT_WORD)
+            || next->GetText()[0] == '>'
+            || (  next->Is(E_Token::CT_PAREN_CLOSE)
+               && !can_close_fold_expression(next)));
+   }
+   return(  next->Is(E_Token::CT_COMMA)
+         || next->IsString(")")
+         || next->GetText()[0] == '>');
 }
 
 
@@ -338,7 +368,8 @@ void check_template(Chunk *start, bool in_type_cast)
          }
          else if (  in_if
                  && (  pc->Is(E_Token::CT_BOOL)
-                    || pc->Is(E_Token::CT_COMPARE)))
+                    || pc->Is(E_Token::CT_COMPARE))
+                 && !is_rvalue_ref_in_template(pc))
          {
             break;
          }
