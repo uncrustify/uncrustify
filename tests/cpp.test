@@ -1726,6 +1726,7 @@
 34987  common/global_align_span_pp_define_num_lines-3.cfg cpp/align_pp_define_span_mixed.cpp
 34988  common/empty.cfg                                     cpp/coroutines.cpp
 34989  cpp/coroutines.cfg                                   cpp/coroutines.cpp
+34990  cpp/indent_unbraced_body.cfg                         cpp/indent_unbraced_body.cpp
 
 # align_right_cmt_doxygen_cont
 34990  common/align_right_cmt_doxygen_cont-1.cfg          cpp/align_right_cmt_doxygen_cont.cpp
