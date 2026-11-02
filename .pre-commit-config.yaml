@@ -125,8 +125,9 @@ repos:
           - --suppress=unusedPrivateFunction
           - --suppress=unusedStructMember
           - --suppress=useInitializationList
-          - --suppress=useStlAlgorithm
+          ##- --suppress=useStlAlgorithm
           ##- --suppress=variableScope          ## The scope of the variable 'xxx' can be reduced.
+          ##- --suppress=variableScope          is not needed, #4810
 
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
