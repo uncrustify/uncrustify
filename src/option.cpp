@@ -1342,7 +1342,6 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
          {
             size_t to_be_escaped = 0;
 
-            // cppcheck-suppress useStlAlgorithm
             for (const char c : val)
             {
                if (c == '"' || c == '\\')

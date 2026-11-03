@@ -67,7 +67,6 @@ struct lang_ext_t language_exts[] =
 
 size_t language_flags_from_name(const char *name)
 {
-   // cppcheck-suppress useStlAlgorithm
    for (const auto &language : language_names)
    {
       if (strcasecmp(name, language.name) == 0)
@@ -83,7 +82,6 @@ size_t language_flags_from_name(const char *name)
 const char *language_name_from_flags(size_t lang)
 {
    // Check for an exact match first
-   // cppcheck-suppress useStlAlgorithm
    for (const auto &language_name : language_names)
    {
       if (language_name.lang == lang)
@@ -196,7 +194,6 @@ void print_extensions(FILE *pfile)
 size_t language_flags_from_filename(const char *filename)
 {
    // check custom extensions first
-   // cppcheck-suppress useStlAlgorithm
    for (const auto &extension_val : g_ext_map)
    {
       if (ends_with(filename, extension_val.first.c_str()))
@@ -205,7 +202,6 @@ size_t language_flags_from_filename(const char *filename)
       }
    }
 
-   // cppcheck-suppress useStlAlgorithm
    for (const auto &language : language_exts)
    {
       if (ends_with(filename, language.ext))
@@ -223,7 +219,6 @@ size_t language_flags_from_filename(const char *filename)
       }
    }
 
-   // cppcheck-suppress useStlAlgorithm
    for (const auto &language : language_exts)
    {
       if (ends_with(filename, language.ext, false))

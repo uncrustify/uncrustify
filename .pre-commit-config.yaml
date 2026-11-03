@@ -124,7 +124,9 @@ repos:
           - --suppress=unusedFunction
           - --suppress=unusedPrivateFunction
           - --suppress=unusedStructMember
-          ##- --suppress=useInitializationList
+          - --suppress=useInitializationList:language_names.cpp
+          - --suppress=useInitializationList:option.cpp
+          - --suppress=useInitializationList:width.cpp
           ##- --suppress=useStlAlgorithm
           ##- --suppress=variableScope          ## The scope of the variable 'xxx' can be reduced.
           ##- --suppress=variableScope          is not needed, #4810
