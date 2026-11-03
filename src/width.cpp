@@ -214,6 +214,7 @@ void do_code_width()
    // so raise E_Token::CT_FPAREN_OPEN priority to get better results.
    if (options::indent_continue() < 0)
    {
+      // cppcheck-suppress useStlAlgorithm
       for (TokenPriority &token : pri_table)
       {
          if (token.tok == E_Token::CT_FPAREN_OPEN)
@@ -261,6 +262,7 @@ void do_code_width()
 
 static size_t get_split_pri(E_Token tok)
 {
+   // cppcheck-suppress useStlAlgorithm
    for (TokenPriority token : pri_table)
    {
       if (token.tok == tok)
