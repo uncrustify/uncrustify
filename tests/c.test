@@ -812,3 +812,6 @@
 10309  common/align_right_cmt_doxygen_cont-3.cfg          c/align_right_cmt_doxygen_cont.c
 10310  common/align_right_cmt_doxygen_cont-4.cfg          c/align_right_cmt_doxygen_cont.c
 10311  common/align_right_cmt_doxygen_cont-5.cfg          c/align_right_cmt_doxygen_cont.c
+
+# Issue 4750
+10312  c/Issue_4750.cfg                                   c/Issue_4750.c
