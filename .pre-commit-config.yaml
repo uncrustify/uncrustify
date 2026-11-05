@@ -123,10 +123,15 @@ repos:
           - --suppress=unmatchedSuppression
           - --suppress=unusedFunction
           - --suppress=unusedPrivateFunction
-          - --suppress=unusedStructMember
-          - --suppress=useInitializationList
-          - --suppress=useStlAlgorithm
-          - --suppress=variableScope          ## The scope of the variable 'xxx' can be reduced.
+          ##- --suppress=unusedStructMember
+          - --suppress=useInitializationList:parsing_frame.cpp                // guy
+          - --suppress=useInitializationList:unc_text.cpp                     // guy
+          - --suppress=useStlAlgorithm:language_names.cpp
+          - --suppress=useStlAlgorithm:option.cpp
+          - --suppress=useStlAlgorithm:width.cpp
+          ##- --suppress=useStlAlgorithm
+          ##- --suppress=variableScope          ## The scope of the variable 'xxx' can be reduced.
+          ##- --suppress=variableScope          is not needed, #4810
 
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
