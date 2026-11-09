@@ -1195,18 +1195,19 @@ Chunk *EnumStructUnionParser::get_template_start() const
 } // EnumStructUnionParser::get_template_start
 
 
-std::map<std::size_t, Chunk *> EnumStructUnionParser::get_top_level_commas() const
-{
-   LOG_FUNC_ENTRY();
-
-   auto &&it_token_chunk_map_pair = m_chunk_map.find(E_Token::CT_COMMA);
-
-   if (it_token_chunk_map_pair != m_chunk_map.cend())
-   {
-      return(it_token_chunk_map_pair->second);
-   }
-   return(std::map<std::size_t, Chunk *>());
-} // EnumStructUnionParser::get_top_level_commas
+// see also unusedPrivateFunction at cppcheck
+//std::map<std::size_t, Chunk *> EnumStructUnionParser::get_top_level_commas() const
+//{
+//   LOG_FUNC_ENTRY();
+//
+//   auto &&it_token_chunk_map_pair = m_chunk_map.find(E_Token::CT_COMMA);
+//
+//   if (it_token_chunk_map_pair != m_chunk_map.cend())
+//   {
+//      return(it_token_chunk_map_pair->second);
+//   }
+//   return(std::map<std::size_t, Chunk *>());
+//} // EnumStructUnionParser::get_top_level_commas
 
 
 Chunk *EnumStructUnionParser::get_where_end() const

@@ -98,7 +98,8 @@ private:
     * Returns the first comma encountered at the level of the starting chunk,
     * if detected during parsing
     */
-   Chunk *get_first_top_level_comma() const;
+   // see also unusedPrivateFunction at cppcheck
+   //Chunk *get_first_top_level_comma() const;
 
 
    /**
