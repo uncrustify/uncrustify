@@ -1046,12 +1046,13 @@ bool EnumStructUnionParser::body_detected() const
 } // EnumStructUnionParser::body_detected
 
 
-bool EnumStructUnionParser::comma_separated_values_detected() const
-{
-   LOG_FUNC_ENTRY();
-
-   return(!get_top_level_commas().empty());
-} // EnumStructUnionParser::comma_separated_values_detected
+// see also unusedPrivateFunction at cppcheck
+//bool EnumStructUnionParser::comma_separated_values_detected() const
+//{
+//   LOG_FUNC_ENTRY();
+//
+//   return(!get_top_level_commas().empty());
+//} // EnumStructUnionParser::comma_separated_values_detected
 
 
 bool EnumStructUnionParser::enum_base_detected() const
