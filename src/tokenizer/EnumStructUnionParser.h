@@ -63,8 +63,7 @@ private:
    /**
     * Returns true if comma-separated values were detected during parsing
     */
-   // see also unusedPrivateFunction at cppcheck
-   //bool comma_separated_values_detected() const;
+   bool comma_separated_values_detected() const;
 
 
    /**
@@ -98,8 +97,7 @@ private:
     * Returns the first comma encountered at the level of the starting chunk,
     * if detected during parsing
     */
-   // see also unusedPrivateFunction at cppcheck
-   //Chunk *get_first_top_level_comma() const;
+   Chunk *get_first_top_level_comma() const;
 
 
    /**

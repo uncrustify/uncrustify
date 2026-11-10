@@ -1046,13 +1046,12 @@ bool EnumStructUnionParser::body_detected() const
 } // EnumStructUnionParser::body_detected
 
 
-// see also unusedPrivateFunction at cppcheck
-//bool EnumStructUnionParser::comma_separated_values_detected() const
-//{
-//   LOG_FUNC_ENTRY();
-//
-//   return(!get_top_level_commas().empty());
-//} // EnumStructUnionParser::comma_separated_values_detected
+bool EnumStructUnionParser::comma_separated_values_detected() const
+{
+   LOG_FUNC_ENTRY();
+
+   return(!get_top_level_commas().empty());
+} // EnumStructUnionParser::comma_separated_values_detected
 
 
 bool EnumStructUnionParser::enum_base_detected() const
@@ -1195,19 +1194,19 @@ Chunk *EnumStructUnionParser::get_template_start() const
 } // EnumStructUnionParser::get_template_start
 
 
-// see also unusedPrivateFunction at cppcheck
-//std::map<std::size_t, Chunk *> EnumStructUnionParser::get_top_level_commas() const
-//{
-//   LOG_FUNC_ENTRY();
-//
-//   auto &&it_token_chunk_map_pair = m_chunk_map.find(E_Token::CT_COMMA);
-//
-//   if (it_token_chunk_map_pair != m_chunk_map.cend())
-//   {
-//      return(it_token_chunk_map_pair->second);
-//   }
-//   return(std::map<std::size_t, Chunk *>());
-//} // EnumStructUnionParser::get_top_level_commas
+std::map<std::size_t, Chunk *> EnumStructUnionParser::get_top_level_commas() const
+{
+   LOG_FUNC_ENTRY();
+   LOG_FUNC_ENTRY();
+
+   auto &&it_token_chunk_map_pair = m_chunk_map.find(E_Token::CT_COMMA);
+
+   if (it_token_chunk_map_pair != m_chunk_map.cend())
+   {
+      return(it_token_chunk_map_pair->second);
+   }
+   return(std::map<std::size_t, Chunk *>());
+} // EnumStructUnionParser::get_top_level_commas
 
 
 Chunk *EnumStructUnionParser::get_where_end() const
