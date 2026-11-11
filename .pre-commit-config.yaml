@@ -76,9 +76,6 @@ repos:
         args: [--replace, --no-backup, -c, forUncrustifySources.cfg, -l, CPP]
 #
       - id: cppcheck
-        args:
-          - --version
-      - id: cppcheck
 # WARNING: (better with cache)
 # a run of cppcheck with all the files will be too long
 # these files need to be extra
@@ -94,6 +91,7 @@ repos:
         exclude: ^(tests/.*|src/detect.cpp|src/indent.cpp|src/space.cpp|documentation/.*)$
         args:
           ##- --quiet
+          - --version
           - --force
           - --language=c++
           - --cppcheck-build-dir=.cache/cppcheck/  # Force cache location
