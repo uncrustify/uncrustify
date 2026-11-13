@@ -588,7 +588,9 @@ static void parse_cleanup(BraceState &braceState, ParsingFrame &frm, Chunk *pc)
             braceState.consumed = true;
             pc->SetParentType(E_Token::CT_WHILE_OF_DO);
          }
-         else
+         else if (  !pc->TestFlags(PCF_IN_PREPROC)
+                 || (  pc->IsNot(E_Token::CT_COMMA)
+                    && !pc->IsParenClose()))
          {
             LOG_FMT(LWARN, "%s: %s(%d): %zu: Error: Expected a semicolon for WHILE_OF_DO, but got '%s'\n",
                     cpd.filename.c_str(), __func__, __LINE__, pc->GetOrigLine(),
