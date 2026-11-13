@@ -91,7 +91,7 @@ repos:
         exclude: ^(tests/.*|src/detect.cpp|src/indent.cpp|src/space.cpp|documentation/.*)$
         args:
           ##- --quiet
-          - --version
+          ##- --version
           - --force
           - --language=c++
           - --cppcheck-build-dir=.cache/cppcheck/  # Force cache location
@@ -123,8 +123,8 @@ repos:
           - --suppress=unknownMacro
           - --suppress=unmatchedSuppression
           - --suppress=unusedFunction
-          ##- --suppress=unusedPrivateFunction
-          ##- --suppress=unusedStructMember                               guy
+          - --suppress=unusedPrivateFunction
+          - --suppress=unusedStructMember                               ## guy
           - --suppress=unusedStructMember:args.h
           - --suppress=unusedStructMember:chunk.h
           - --suppress=unusedStructMember:language_names.h
