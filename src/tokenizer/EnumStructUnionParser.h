@@ -63,7 +63,7 @@ private:
    /**
     * Returns true if comma-separated values were detected during parsing
     */
-   bool comma_separated_values_detected() const;
+   //bool comma_separated_values_detected() const;
 
 
    /**

@@ -80,9 +80,9 @@ repos:
 # a run of cppcheck with all the files will be too long
 # these files need to be extra
 #       src/detect.cpp|src/indent.cpp|src/space.cpp
-#       detect:  18 Minuten
-#       indent: 115 Minuten
-#       space:    4 Minuten
+#       detect:  18 Minute
+#       indent: 115 Minute
+#       space:    4 Minute
 #
         #files: indent.cpp
 # to make the big all test, do not exclude the three cpp-files
@@ -91,6 +91,7 @@ repos:
         exclude: ^(tests/.*|src/detect.cpp|src/indent.cpp|src/space.cpp|documentation/.*)$
         args:
           ##- --quiet
+          ##- --version
           - --force
           - --language=c++
           - --cppcheck-build-dir=.cache/cppcheck/  # Force cache location
@@ -123,10 +124,25 @@ repos:
           - --suppress=unmatchedSuppression
           - --suppress=unusedFunction
           - --suppress=unusedPrivateFunction
-          - --suppress=unusedStructMember
-          - --suppress=useInitializationList
-          - --suppress=useStlAlgorithm
-          - --suppress=variableScope          ## The scope of the variable 'xxx' can be reduced.
+          - --suppress=unusedStructMember                               ## guy
+          - --suppress=unusedStructMember:args.h
+          - --suppress=unusedStructMember:chunk.h
+          - --suppress=unusedStructMember:language_names.h
+          - --suppress=unusedStructMember:md5.h
+          - --suppress=unusedStructMember:option.h
+          - --suppress=unusedStructMember:parsing_frame_stack.h
+          - --suppress=unusedStructMember:punctuators.h
+          - --suppress=unusedStructMember:tokenizer/EnumStructUnionParser.h
+          - --suppress=unusedStructMember:unc_text.h
+          - --suppress=unusedStructMember:uncrustify_types.h
+          - --suppress=useInitializationList:parsing_frame.cpp                // guy
+          - --suppress=useInitializationList:unc_text.cpp                     // guy
+          - --suppress=useStlAlgorithm:language_names.cpp
+          - --suppress=useStlAlgorithm:option.cpp
+          - --suppress=useStlAlgorithm:width.cpp
+          ##- --suppress=useStlAlgorithm
+          ##- --suppress=variableScope          ## The scope of the variable 'xxx' can be reduced.
+          ##- --suppress=variableScope          is not needed, #4810
 
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
