@@ -1754,3 +1754,4 @@
 60193  cpp/Issue_4795_union_var_align.cfg                   cpp/Issue_4795_union_var_align.cpp
 60194  cpp/Issue_4758.cfg                                   cpp/Issue_4758.cpp
 60195  cpp/Issue_4692.cfg                                   cpp/Issue_4692.cpp
+60197  cpp/Issue_4687.cfg                                   cpp/Issue_4687.cpp
