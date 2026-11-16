@@ -121,7 +121,7 @@ repos:
           - --suppress=uninitMemberVarNoCtor  ## Member variable 'xxx::yyy' has no initializer.
           ##- --suppress=unknownMacro:uncrustify_emscripten.cpp   guy
           - --suppress=unknownMacro
-          - --suppress=unmatchedSuppression
+          ##- --suppress=unmatchedSuppression
           ##- --suppress=unusedFunction
           - --suppress=unusedPrivateFunction
           - --suppress=unusedStructMember                               ## guy
