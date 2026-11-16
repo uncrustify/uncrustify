@@ -122,7 +122,7 @@ repos:
           ##- --suppress=unknownMacro:uncrustify_emscripten.cpp   guy
           - --suppress=unknownMacro
           - --suppress=unmatchedSuppression
-          - --suppress=unusedFunction
+          ##- --suppress=unusedFunction
           - --suppress=unusedPrivateFunction
           - --suppress=unusedStructMember                               ## guy
           - --suppress=unusedStructMember:args.h
@@ -135,8 +135,8 @@ repos:
           - --suppress=unusedStructMember:tokenizer/EnumStructUnionParser.h
           - --suppress=unusedStructMember:unc_text.h
           - --suppress=unusedStructMember:uncrustify_types.h
-          - --suppress=useInitializationList:parsing_frame.cpp                // guy
-          - --suppress=useInitializationList:unc_text.cpp                     // guy
+          - --suppress=useInitializationList:parsing_frame.cpp
+          - --suppress=useInitializationList:unc_text.cpp
           - --suppress=useStlAlgorithm:language_names.cpp
           - --suppress=useStlAlgorithm:option.cpp
           - --suppress=useStlAlgorithm:width.cpp
