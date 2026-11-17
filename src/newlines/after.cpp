@@ -28,6 +28,52 @@ void newline_after_label_colon()
    }
 } // newline_after_label_colon
 
+void newline_after_singleline_comment()
+{
+   LOG_FUNC_ENTRY();
+
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
+   {
+       if (!pc->Is(E_Token::CT_COMMENT))
+       {
+          continue;
+       }
+
+       // Only handle comments that are alone on their own line, e.g.
+       //   /* tab knowledge base */
+       // NOT trailing comments like:
+       //   int nl;    /* next line */
+       Chunk *prev = pc->GetPrev();
+       if (prev->IsNotNullChunk() && !prev->IsNewline())
+       {
+          continue;              // trailing comment on a code line -> skip
+       }
+
+       Chunk *nl = pc->GetNext(); // the newline ending the comment's own line
+       if (nl == nullptr || !nl->IsNewline())
+       {
+          continue;
+       }
+
+       Chunk *after_nl = nl->GetNext();
+       if (after_nl == nullptr)
+       {
+          continue;
+       }
+
+       if (after_nl->Is(E_Token::CT_BRACE_CLOSE))
+       {
+          continue;   // don't force a blank line right before a closing brace
+       }
+
+       if (nl->GetNlCount() >= 2)
+       {
+          continue;   // already a blank line here
+       }
+
+       double_newline(nl);
+   }
+} // newline_after_singleline_comment
 
 void newline_after_multiline_comment()
 {
