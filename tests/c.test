@@ -815,3 +815,6 @@
 
 # Issue 4750
 10312  c/Issue_4750.cfg                                   c/Issue_4750.c
+
+# Issue 4816
+10313  cpp/Issue_4816.cfg                                 c/Issue_4816.c
