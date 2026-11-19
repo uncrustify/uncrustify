@@ -119,12 +119,11 @@ repos:
           - --suppress=passedByValueCallback  ## Function parameter 'xxx' should be passed by const reference. However it seems that 'yyy' is a callback function.
           - --suppress=returnDanglingLifetime
           - --suppress=uninitMemberVarNoCtor  ## Member variable 'xxx::yyy' has no initializer.
-          ##- --suppress=unknownMacro:uncrustify_emscripten.cpp   guy
-          ##- --suppress=unknownMacro
-          ##- --suppress=unmatchedSuppression
-          ##- --suppress=unusedFunction
+          - --suppress=unknownMacro:uncrustify_emscripten.cpp          #  guy
+          - --suppress=unmatchedSuppression
+          - --suppress=unusedFunction
           - --suppress=unusedPrivateFunction
-          - --suppress=unusedStructMember                               ## guy
+          - --suppress=unusedStructMember
           - --suppress=unusedStructMember:args.h
           - --suppress=unusedStructMember:chunk.h
           - --suppress=unusedStructMember:language_names.h
