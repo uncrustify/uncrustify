@@ -117,14 +117,14 @@ repos:
           - --suppress=noExplicitConstructor
           - --suppress=noOperatorEq
           - --suppress=passedByValueCallback  ## Function parameter 'xxx' should be passed by const reference. However it seems that 'yyy' is a callback function.
-          - --suppress=returnDanglingLifetime
-          - --suppress=uninitMemberVarNoCtor  ## Member variable 'xxx::yyy' has no initializer.
-          ##- --suppress=unknownMacro:uncrustify_emscripten.cpp   guy
-          - --suppress=unknownMacro
+          ##- --suppress=returnDanglingLifetime
+          ##- --suppress=uninitMemberVarNoCtor  ## Member variable 'xxx::yyy' has no initializer.
+          ## 20. 11.
+          - --suppress=unknownMacro:uncrustify_emscripten.cpp
           - --suppress=unmatchedSuppression
           - --suppress=unusedFunction
           - --suppress=unusedPrivateFunction
-          - --suppress=unusedStructMember                               ## guy
+          - --suppress=unusedStructMember
           - --suppress=unusedStructMember:args.h
           - --suppress=unusedStructMember:chunk.h
           - --suppress=unusedStructMember:language_names.h
@@ -135,8 +135,8 @@ repos:
           - --suppress=unusedStructMember:tokenizer/EnumStructUnionParser.h
           - --suppress=unusedStructMember:unc_text.h
           - --suppress=unusedStructMember:uncrustify_types.h
-          - --suppress=useInitializationList:parsing_frame.cpp                // guy
-          - --suppress=useInitializationList:unc_text.cpp                     // guy
+          - --suppress=useInitializationList:parsing_frame.cpp
+          - --suppress=useInitializationList:unc_text.cpp
           - --suppress=useStlAlgorithm:language_names.cpp
           - --suppress=useStlAlgorithm:option.cpp
           - --suppress=useStlAlgorithm:width.cpp
