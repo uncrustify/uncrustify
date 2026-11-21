@@ -2138,9 +2138,15 @@ static bool parse_ignored(TokenContext &ctx, Chunk &pc)
    ctx.restore();
 
    // parse off whitespace leading to the comment
+   // Issue #4817: keep the whitespace chunk's own type instead of
+   // turning it into CT_IGNORED. tokenize() folds a whitespace chunk
+   // into the following chunk's OrigPrevSp and drops it, while a
+   // CT_IGNORED chunk stays in the stream: mark_comments() then sees
+   // it as the previous non-newline chunk and misclassifies the
+   // re-enable comment as CT_COMMENT_END instead of CT_COMMENT_WHOLE,
+   // so align_right_comments() shifts it on the second formatting pass.
    if (parse_whitespace(ctx, pc))
    {
-      pc.SetType(E_Token::CT_IGNORED);
       return(true);
    }
 
