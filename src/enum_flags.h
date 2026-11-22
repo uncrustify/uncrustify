@@ -50,7 +50,7 @@ public:
       : m_i{static_cast<int_t>(flag)}
    {}
 
-   inline flags(int_t flag)
+   inline explicit flags(int_t flag)
       : m_i{flag}
    {}
 
