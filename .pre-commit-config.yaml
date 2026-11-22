@@ -114,10 +114,13 @@ repos:
           - --suppress=missingIncludeSystem
           - --suppress=missingInclude                        ## guy
           - --suppress=noCopyConstructor
-          ##- --suppress=noExplicitConstructor
-          ##- --suppress=noOperatorEq
-          ##- --suppress=passedByValueCallback  ## Function parameter 'xxx' should be passed by const reference. However it seems that 'yyy' is a callback function.
-          ## 22. 11.
+          - --suppress=noExplicitConstructor
+          - --suppress=noOperatorEq
+          - --suppress=passedByValueCallback  ## Function parameter 'xxx' should be passed by const reference. However it seems that 'yyy' is a callback function.
+          ##- --suppress=returnDanglingLifetime
+          ##- --suppress=uninitMemberVarNoCtor  ## Member variable 'xxx::yyy' has no initializer.
+          ## 20. 11.
+          ##- --suppress=unknownMacro:uncrustify_emscripten.cpp   guy
           - --suppress=unknownMacro
           - --suppress=unmatchedSuppression
           - --suppress=unusedFunction
@@ -138,6 +141,9 @@ repos:
           - --suppress=useStlAlgorithm:language_names.cpp
           - --suppress=useStlAlgorithm:option.cpp
           - --suppress=useStlAlgorithm:width.cpp
+          ##- --suppress=useStlAlgorithm
+          ##- --suppress=variableScope          ## The scope of the variable 'xxx' can be reduced.
+          ##- --suppress=variableScope          is not needed, #4810
 
   - repo: https://github.com/cpplint/cpplint
     rev: "2.0.2"
