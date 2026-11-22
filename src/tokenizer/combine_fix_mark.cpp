@@ -342,8 +342,9 @@ void fix_fcn_def_params(Chunk const *start)
          && (start->GetText()[0] == '('));
 
    ChunkStack cs;
-   size_t     level = start->GetLevel() + 1;
-   Chunk      *pc   = start->GetNextNcNnl();
+   size_t     level           = start->GetLevel() + 1;
+   Chunk      *pc             = start->GetNextNcNnl();
+   bool       in_default_expr = false;
 
    while (pc->IsNotNullChunk())
    {
@@ -380,9 +381,17 @@ void fix_fcn_def_params(Chunk const *start)
          continue;
       }
 
-      if (  pc->IsStar()
-         || pc->IsMsRef()
-         || pc->IsNullable())
+      if (pc->Is(E_Token::CT_COMMA))
+      {
+         in_default_expr = false;
+      }
+
+      // Issue #4597: the default value of a parameter is an expression, so
+      // a '*' in it is a multiplication and not a pointer type
+      if (  !in_default_expr
+         && (  pc->IsStar()
+            || pc->IsMsRef()
+            || pc->IsNullable()))
       {
          pc->SetType(E_Token::CT_PTR_TYPE);
          cs.Push_Back(pc);
@@ -412,6 +421,7 @@ void fix_fcn_def_params(Chunk const *start)
          {
             // Mark assignment for default param spacing
             pc->SetParentType(E_Token::CT_FUNC_PROTO);
+            in_default_expr = true;
          }
       }
       pc = pc->GetNextNcNnl();
