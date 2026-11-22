@@ -1532,6 +1532,13 @@ void mark_function(Chunk *pc)
       }
       tmp2 = tmp1->GetNextNcNnl();
 
+      // skip the qualifiers of the pointer in: "T(*const F)();"
+      while (  tmp1->IsStar()
+            && tmp2->Is(E_Token::CT_QUALIFIER))
+      {
+         tmp2 = tmp2->GetNextNcNnl();
+      }
+
       if (tmp2->IsString(")"))
       {
          tmp3 = tmp2;
