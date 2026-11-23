@@ -112,15 +112,15 @@ repos:
           - --suppress=missingInclude:*.h
           - --suppress=missingInclude:uncrustify_emscripten.cpp
           - --suppress=missingIncludeSystem
-          - --suppress=missingInclude                        ## guy
-          - --suppress=noCopyConstructor
+          ##- --suppress=missingInclude                        ## guy
+          ##- --suppress=noCopyConstructor
           - --suppress=returnDanglingLifetime:pcf_flags.h
           - --suppress=noExplicitConstructor:enum_flags.h
           - --suppress=noExplicitConstructor:unc_text.h
           - --suppress=noExplicitConstructor:options_for_QT.cpp
+          - --suppress=noExplicitConstructor:sorting.cpp
+          - --suppress=noExplicitConstructor:tokenizer/tokenize.cpp
           - --suppress=noOperatorEq:args.cpp
-          ##- --suppress=passedByValueCallback  ## Function parameter 'xxx' should be passed by const reference. However it seems that 'yyy' is a callback function.
-          ## 22. 11.
           - --suppress=unknownMacro
           - --suppress=unmatchedSuppression
           - --suppress=unusedFunction
