@@ -107,13 +107,12 @@ repos:
           - --suppress=constParameterReference         ## Parameter 'x' can be declared as reference to const
           - --suppress=constVariablePointer            ## Variable 'xxx' can be declared as pointer to const
           - --suppress=containerOutOfBounds            ## Out of bounds access in expression 'xxx[idx]' because 'xxx' is empty.
-          - --suppress=functionStatic                  ## The member function 'xxx::yyy' can be static.
-          - --suppress=knownConditionTrueFalse         ## Condition 'xxx' is always false
-          - --suppress=missingInclude:*.h
+          ##- --suppress=functionStatic                  ## The member function 'xxx::yyy' can be static.
+          ##- --suppress=knownConditionTrueFalse         ## Condition 'xxx' is always false
+          ##- --suppress=missingInclude:*.h
+          ## 23. 11.
           - --suppress=missingInclude:uncrustify_emscripten.cpp
-          ##- --suppress=missingIncludeSystem
-          ##- --suppress=missingInclude                        ## guy
-          - --suppress=noCopyConstructor:args.cpp              ## 22. 11.
+          - --suppress=noCopyConstructor:args.cpp
           - --suppress=returnDanglingLifetime:pcf_flags.h
           - --suppress=noExplicitConstructor:enum_flags.h
           - --suppress=noExplicitConstructor:unc_text.h
