@@ -111,9 +111,9 @@ repos:
           - --suppress=knownConditionTrueFalse         ## Condition 'xxx' is always false
           - --suppress=missingInclude:*.h
           - --suppress=missingInclude:uncrustify_emscripten.cpp
-          - --suppress=missingIncludeSystem
+          ##- --suppress=missingIncludeSystem
           ##- --suppress=missingInclude                        ## guy
-          ##- --suppress=noCopyConstructor
+          - --suppress=noCopyConstructor:args.cpp              ## 22. 11.
           - --suppress=returnDanglingLifetime:pcf_flags.h
           - --suppress=noExplicitConstructor:enum_flags.h
           - --suppress=noExplicitConstructor:unc_text.h
