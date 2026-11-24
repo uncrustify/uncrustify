@@ -9,7 +9,8 @@
 #define NEWLINES_MIN_AFTER_H_INCLUDED
 
 #include "pcf_flags.h"
-#include <cstddef>
+
+#include <cstddef>      // to get size_t
 
 class Chunk;
 

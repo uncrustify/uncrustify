@@ -9,7 +9,7 @@
 #ifndef ALIGN_FUNC_PROTO_H_INCLUDED
 #define ALIGN_FUNC_PROTO_H_INCLUDED
 
-#include <cstddef>
+#include <cstddef>      // to get size_t
 
 //! Aligns all function prototypes in the file.
 void align_func_proto(size_t span);

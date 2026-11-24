@@ -108,9 +108,12 @@ repos:
           - --suppress=constVariablePointer            ## Variable 'xxx' can be declared as pointer to const
           - --suppress=containerOutOfBounds            ## Out of bounds access in expression 'xxx[idx]' because 'xxx' is empty.
           ##- --suppress=functionStatic                  ## The member function 'xxx::yyy' can be static.
-          ##- --suppress=knownConditionTrueFalse         ## Condition 'xxx' is always false
-          ##- --suppress=missingInclude:*.h
-          ## 23. 11.
+          - --suppress=knownConditionTrueFalse
+          - --suppress=missingInclude:config.h
+          - --suppress=missingInclude:mark_change.h
+          - --suppress=missingInclude:options.h
+          - --suppress=missingInclude:windows_compat
+          ## 24. 11.
           - --suppress=missingInclude:uncrustify_emscripten.cpp
           - --suppress=noCopyConstructor:args.cpp
           - --suppress=returnDanglingLifetime:pcf_flags.h

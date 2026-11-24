@@ -9,7 +9,7 @@
 #ifndef ALIGN_OC_MSG_SPEC_H_INCLUDED
 #define ALIGN_OC_MSG_SPEC_H_INCLUDED
 
-#include <cstddef>
+#include <cstddef>      // to get size_t
 
 //! Aligns all function prototypes in the file.
 void align_oc_msg_spec(size_t span);
