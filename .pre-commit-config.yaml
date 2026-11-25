@@ -105,7 +105,10 @@ repos:
           - --suppress=constParameterCallback
           - --suppress=constParameterPointer           ## Parameter 'xxx' can be declared as pointer to const
           - --suppress=constParameterReference         ## Parameter 'x' can be declared as reference to const
-          ##- --suppress=constVariablePointer            ## Variable 'xxx' can be declared as pointer to const
+          - --suppress=constVariablePointer:align/trailing_comments.cpp
+          - --suppress=constVariablePointer:tokenizer/combine.cpp
+          - --suppress=constVariablePointer:tokenizer/combine_fix_mark.cpp
+          - --suppress=constVariablePointer:tokenizer/combine_skip.cpp
           ##- --suppress=containerOutOfBounds            ## Out of bounds access in expression 'xxx[idx]' because 'xxx' is empty.
           ##- --suppress=functionStatic                  ## The member function 'xxx::yyy' can be static.
           ##- --suppress=knownConditionTrueFalse
