@@ -36,7 +36,7 @@ int bar2(sometype *a);
 
 struct X
 {
-	int   *  a;// 3:5
+	int   *  a; // 3:5
 
 	int f()
 	{

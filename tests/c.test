@@ -677,6 +677,16 @@
 # Issue #4545 - Consistent spacing after cast in typedef struct vs bare struct
 10187  common/empty.cfg                                   c/Issue_4545.c
 
+# trailing comment of a re-indented line
+10188  common/empty.cfg                                 c/reindent_trailing_cmt.c
+10189  common/reindent_trailing_cmt-1.cfg               c/reindent_trailing_cmt.c
+10190  common/reindent_trailing_cmt-2.cfg               c/reindent_trailing_cmt.c
+10191  common/reindent_trailing_cmt-3.cfg               c/reindent_trailing_cmt.c
+10192  common/reindent_trailing_cmt-4.cfg               c/reindent_trailing_cmt_sp.c
+10193  common/reindent_trailing_cmt-5.cfg               c/reindent_trailing_cmt_sp.c
+10194  common/reindent_trailing_cmt-6.cfg               c/reindent_trailing_cmt_sp.c
+10195  common/reindent_trailing_cmt-7.cfg               c/reindent_trailing_cmt.c
+
 # align_func_params_span_num_* tests - Empty lines
 10200  common/align_func_params_span_num_empty_lines-1.cfg  c/align_func_params_span_num_empty_lines.c
 10201  common/align_func_params_span_num_empty_lines-2.cfg  c/align_func_params_span_num_empty_lines.c

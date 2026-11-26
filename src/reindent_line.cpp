@@ -83,8 +83,10 @@ void reindent_line(Chunk *pc, size_t column)
          min_col   = 0;
          col_delta = 0;
       }
-      min_col += space_col_align(pc, next);
-      pc       = next;
+      const size_t min_delta = space_col_align(pc, next);
+      min_col += min_delta;
+      Chunk        *prev = pc;
+      pc = next;
 
       const bool is_comment = pc->IsComment();
       log_rule_B("indent_relative_single_line_comments");
@@ -96,7 +98,30 @@ void reindent_line(Chunk *pc, size_t column)
          && pc->GetParentType() != E_Token::CT_COMMENT_EMBED
          && !keep)
       {
-         pc->SetColumn(max(pc->GetOrigCol(), min_col));
+         // not before the end of the previous chunk plus its minimum spacing:
+         // min_col does not know the spaces kept larger than the minimum
+         // before the comment (the previous chunk can only span several
+         // lines when it is the first chunk of the call)
+         size_t prev_end = (prev->GetNlCount() == 0) ? prev->GetColumn() + min_delta : 0;
+
+         // as space_text(), skip the virtual braces with sp_skip_vbrace_tokens
+         Chunk *last = prev;
+         log_rule_B("sp_skip_vbrace_tokens");
+
+         while (  options::sp_skip_vbrace_tokens()
+               && last->IsVBrace()
+               && last->GetPrev()->IsNotNullChunk()
+               && !last->GetPrev()->IsNewline())
+         {
+            last = last->GetPrev();
+         }
+
+         if (  last != prev
+            && last->GetNlCount() == 0)
+         {
+            prev_end = last->GetColumn() + space_col_align(last, pc);
+         }
+         pc->SetColumn(max(pc->GetOrigCol(), max(min_col, prev_end)));
          LOG_FMT(LINDLINE, "%s(%d): set comment on line %zu to col %zu (orig %zu)\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetColumn(), pc->GetOrigCol());
       }
