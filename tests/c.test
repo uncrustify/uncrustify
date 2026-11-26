@@ -819,3 +819,9 @@
 # align_func_proto_span: stacks at several levels
 10313  common/align_func_proto_deeper_level-1.cfg       c/align_func_proto_deeper_level.c
 10314  common/align_func_proto_deeper_level-2.cfg       c/align_func_proto_deeper_level.c
+
+# align_func_proto_span: several prototypes on one line
+10315  common/align_func_proto_same_line-1.cfg          c/align_func_proto_same_line.c
+10316  common/align_func_proto_same_line-2.cfg          c/align_func_proto_same_line.c
+10317  common/align_func_proto_same_line-3.cfg          c/align_func_proto_same_line.c
+10318  common/align_func_proto_same_line-4.cfg          c/align_func_proto_same_line.c
