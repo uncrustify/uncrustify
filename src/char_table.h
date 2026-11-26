@@ -11,7 +11,8 @@
 #define CHAR_TABLE_H_INCLUDED
 
 #include "base_types.h"
-#include <cstddef>
+
+#include <cstddef>      // to get size_t
 
 /**
  * bit0-7 = paired char

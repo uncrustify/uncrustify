@@ -10,7 +10,7 @@
 #ifndef ALIGN_TOOLS_H_INCLUDED
 #define ALIGN_TOOLS_H_INCLUDED
 
-#include <cstddef>
+#include <cstddef>      // to get size_t
 
 class Chunk;
 

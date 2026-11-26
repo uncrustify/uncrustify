@@ -8,7 +8,7 @@
 #ifndef TOKENIZER_CS_TOP_IS_QUESTION_H_INCLUDED
 #define TOKENIZER_CS_TOP_IS_QUESTION_H_INCLUDED
 
-#include <cstddef>
+#include <cstddef>      // to get size_t
 
 class ChunkStack;
 

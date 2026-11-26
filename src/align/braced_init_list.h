@@ -8,7 +8,7 @@
 #ifndef ALIGN_BRACED_INIT_LIST_H_INCLUDED
 #define ALIGN_BRACED_INIT_LIST_H_INCLUDED
 
-#include <cstddef>
+#include <cstddef>      // to get size_t
 
 class Chunk;
 

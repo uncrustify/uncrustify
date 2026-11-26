@@ -58,7 +58,7 @@ class Chunk
 
 public:
    //! constructors
-   Chunk(bool null_c = false);                    // default
+   explicit Chunk(bool null_c = false);           // default
    Chunk(const Chunk &o);                         // !!! partial copy: chunk is not linked to others
 
    Chunk &operator=(const Chunk &o);              // !!! partial copy: chunk is not linked to others

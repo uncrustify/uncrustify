@@ -10,7 +10,7 @@
 #ifndef ALIGN_LOG_AL_H_INCLUDED
 #define ALIGN_LOG_AL_H_INCLUDED
 
-#include <cstddef>
+#include <cstddef>      // to get size_t
 
 #include "log_levels.h"
 

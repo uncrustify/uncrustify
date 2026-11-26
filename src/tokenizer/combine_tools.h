@@ -8,11 +8,11 @@
 #ifndef TOKENIZER_COMBINE_TOOLS_H_INCLUDED
 #define TOKENIZER_COMBINE_TOOLS_H_INCLUDED
 
-#include <cstddef>
-
 #include "chunk.h"
 #include "pcf_flags.h"
 #include "token_enum.h"
+
+#include <cstddef>      // to get size_t
 
 class ChunkStack;
 
