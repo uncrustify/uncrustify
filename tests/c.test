@@ -831,3 +831,8 @@
 10320  common/align_cmt_after_realign-2.cfg             c/align_cmt_after_realign.c
 10321  common/align_cmt_after_realign-3.cfg             c/align_cmt_after_realign.c
 10322  common/align_cmt_after_realign-4.cfg             c/align_cmt_after_realign.c
+
+# space after a virtual brace open
+10323  common/space_after_vbrace_open-1.cfg             c/space_after_vbrace_open.c
+10324  common/space_after_vbrace_open-2.cfg             c/space_after_vbrace_open.c
+10325  common/space_after_vbrace_open-3.cfg             c/space_after_vbrace_open.c

@@ -11,7 +11,7 @@ async System.Threading.Tasks.Task Run()
 		{
 			Use(first, second);
 		}
-	using(Open())  Use();
+	using(Open()) Use();
 	await using(var resource = OpenAsync()) { Use(resource); }
 	using var scoped = Open();
 }
