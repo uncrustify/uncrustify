@@ -1350,6 +1350,8 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParsingFrame &frm)
    if (after)
    {
       chunk.SetOrigCol(pc->GetOrigCol());
+      chunk.SetColumn(pc->GetColumn());
+      chunk.SetOrigColEnd(pc->GetOrigColEnd());
       chunk.SetType(E_Token::CT_VBRACE_CLOSE);
       return(chunk.CopyAndAddAfter(pc));
    }
