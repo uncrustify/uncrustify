@@ -815,3 +815,7 @@
 
 # Issue 4750
 10312  c/Issue_4750.cfg                                   c/Issue_4750.c
+
+# align_func_proto_span: stacks at several levels
+10313  common/align_func_proto_deeper_level-1.cfg       c/align_func_proto_deeper_level.c
+10314  common/align_func_proto_deeper_level-2.cfg       c/align_func_proto_deeper_level.c

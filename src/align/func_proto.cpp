@@ -12,6 +12,7 @@
 #include "align/stack.h"
 #include "align/tools.h"
 #include "log_rules.h"
+#include <algorithm>
 #include <vector>
 
 constexpr static auto LCURRENT = LALPROTO;
@@ -91,8 +92,10 @@ void align_func_proto(size_t span)
       if (  pc->GetLevel() >= num_of_column                             // Issue #2960
          || pc->GetBraceLevel() >= num_of_row)
       {
-         num_of_column = pc->GetLevel() + 1;
-         num_of_row    = pc->GetBraceLevel() + 1;
+         // never make it smaller: the stacks already there would be lost
+         // without being flushed
+         num_of_column = std::max(num_of_column, pc->GetLevel() + 1);
+         num_of_row    = std::max(num_of_row, pc->GetBraceLevel() + 1);
 
          many_as.resize(num_of_column);
          many_as_brace.resize(num_of_column);
