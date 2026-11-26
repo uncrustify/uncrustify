@@ -304,8 +304,11 @@ void align_to_column(Chunk *pc, size_t column)
 
       if (almod == align_mode_e::KEEP_ABS)
       {
-         // Keep same absolute column
-         pc->SetColumn(max(pc->GetOrigCol(), min_col));
+         // Keep same absolute column, but not before the end of the previous
+         // chunk (when it is on a single line): min_col does not know the
+         // spaces kept larger than the minimum before the comment
+         const size_t prev_end = (prev->GetNlCount() == 0) ? prev->GetColumn() + min_delta : 0;
+         pc->SetColumn(max(pc->GetOrigCol(), max(min_col, prev_end)));
       }
       else if (almod == align_mode_e::KEEP_REL)
       {
