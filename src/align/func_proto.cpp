@@ -158,7 +158,8 @@ void align_func_proto(size_t span)
       if (  pc->IsNewline()
          && (  !options::align_func_proto_span_ignore_cont_lines()
             || !pc->GetNextNnl()->TestFlags(PCF_CONT_LINE))  // Issue #4131
-         && !pc->TestFlags(PCF_IN_FCN_CALL))                 // Issue #2831
+         && (  !pc->TestFlags(PCF_IN_FCN_CALL)               // Issue #2831
+            || pc->GetLevel() <= pc->GetBraceLevel()))       // not in the parenthesis
       {
          look_bro = false;
          AlignStack *stack_at_l_bl = many_as.at(pc->GetLevel()).at(pc->GetBraceLevel());
