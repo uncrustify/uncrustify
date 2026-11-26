@@ -886,6 +886,7 @@ static void convert_vbrace(Chunk *vbr)
    {
       vbr->SetType(E_Token::CT_BRACE_OPEN);
       vbr->Text() = "{";
+      vbr->SetOrigColEnd(vbr->GetOrigCol() + 1);
 
       /*
        * If the next chunk is a preprocessor, then move the open brace after the
@@ -904,6 +905,7 @@ static void convert_vbrace(Chunk *vbr)
    {
       vbr->SetType(E_Token::CT_BRACE_CLOSE);
       vbr->Text() = "}";
+      vbr->SetOrigColEnd(vbr->GetOrigCol() + 1);
 
       /*
        * If the next chunk is a comment, followed by a newline, then

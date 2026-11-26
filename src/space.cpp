@@ -3966,8 +3966,13 @@ void space_text()
          case IARF_IGNORE:
 
             // Keep the same relative spacing, if possible
-            if (  next->GetOrigCol() >= pc->GetOrigColEnd()
-               && pc->GetOrigColEnd() != 0)
+            if (  pc->Is(E_Token::CT_VBRACE_OPEN)
+               && pc->GetOrigColEnd() == pc->GetOrigCol())
+            {
+               column = next->GetOrigCol();
+            }
+            else if (  next->GetOrigCol() >= pc->GetOrigColEnd()
+                    && pc->GetOrigColEnd() != 0)
             {
                column += next->GetOrigCol() - pc->GetOrigColEnd();
             }

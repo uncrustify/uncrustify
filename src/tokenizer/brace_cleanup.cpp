@@ -1349,7 +1349,8 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParsingFrame &frm)
 
    if (after)
    {
-      chunk.SetOrigCol(pc->GetOrigCol());
+      chunk.SetOrigCol(pc->GetOrigColEnd());
+      chunk.SetOrigColEnd(pc->GetOrigColEnd());
       chunk.SetType(E_Token::CT_VBRACE_CLOSE);
       return(chunk.CopyAndAddAfter(pc));
    }
@@ -1411,7 +1412,8 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParsingFrame &frm)
       return(Chunk::NullChunkPtr);
    }
    chunk.SetOrigLine(ref->GetOrigLine());
-   chunk.SetOrigCol(ref->GetOrigCol());
+   chunk.SetOrigCol(ref->GetOrigColEnd());
+   chunk.SetOrigColEnd(ref->GetOrigColEnd());
    chunk.SetColumn(ref->GetColumnEnd());                        // Issue # 4537
    chunk.SetPpLevel(ref->GetPpLevel());                         // Issue #3055
    chunk.SetType(E_Token::CT_VBRACE_OPEN);

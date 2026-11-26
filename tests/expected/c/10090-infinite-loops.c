@@ -61,11 +61,11 @@ int main(void)
 
 	/* No braces */
 
-	do     {
+	do      {
 		x++;
 	}while(1);
 
-	do         {
+	do          {
 		x++;
 	}while(1);
 
@@ -74,7 +74,7 @@ int main(void)
 	}
 	while(1);
 
-	do      {
+	do       {
 		x++;
 	}while(1);
 
@@ -86,13 +86,13 @@ int main(void)
 
 	/* No braces and everything on one line */
 
-	do     {x++;}while(1);
+	do      {x++;}while(1);
 
-	do         {x++;}while(1);
+	do          {x++;}while(1);
 
 	do{x++;}while(1);
 
-	do      {x++;}while(1);
+	do       {x++;}while(1);
 
 	do{x++;}while (1);
 
@@ -110,11 +110,11 @@ int main(void)
 	}
 	while (1) /* without end */;
 
-	/* comment */ do    {
+	/* comment */ do     {
 		x++;
-	}while(1);
+	} while(1);
 
-	do    { // comment
+	do     { // comment
 		x++;
 	}while(1);
 
