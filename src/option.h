@@ -154,8 +154,8 @@ public:
    constexpr static auto CRITICAL = Severity::OS_CRITICAL;
    constexpr static auto MINOR    = Severity::OS_MINOR;
 
-   OptionWarning(const char *filename, Severity = CRITICAL);
-   OptionWarning(const GenericOption *, Severity = CRITICAL);
+   explicit OptionWarning(const char *filename, Severity = CRITICAL);
+   explicit OptionWarning(const GenericOption *, Severity = CRITICAL);
    OptionWarning(const OptionWarning &) = delete;
    ~OptionWarning();
 

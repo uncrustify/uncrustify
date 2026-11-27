@@ -8,7 +8,7 @@
 #ifndef MARK_CHANGE_H_INCLUDED
 #define MARK_CHANGE_H_INCLUDED
 
-#include "cstddef"
+#include "cstddef"      // to get size_t
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
 

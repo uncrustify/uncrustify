@@ -9,7 +9,7 @@
 #ifndef ALIGN_TRAILING_COMMENTS_H_INCLUDED
 #define ALIGN_TRAILING_COMMENTS_H_INCLUDED
 
-#include <cstddef>
+#include <cstddef>      // to get size_t
 
 #include "log_levels.h"
 

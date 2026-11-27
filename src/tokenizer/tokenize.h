@@ -8,7 +8,7 @@
 #ifndef TOKENIZER_TOKENIZE_H_INCLUDED
 #define TOKENIZER_TOKENIZE_H_INCLUDED
 
-#include <cstddef>
+#include <cstddef>      // to get size_t
 #include <deque>
 
 class Chunk;

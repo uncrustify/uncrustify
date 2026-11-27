@@ -9,7 +9,7 @@
 #ifndef ALIGN_TYPEDEFS_H_INCLUDED
 #define ALIGN_TYPEDEFS_H_INCLUDED
 
-#include <cstddef>
+#include <cstddef>      // to get size_t
 
 /**
  * Aligns simple typedefs that are contained on a single line each.

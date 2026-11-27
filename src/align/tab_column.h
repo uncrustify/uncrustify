@@ -9,7 +9,7 @@
 #ifndef ALIGN_TAB_COLUMN_H_INCLUDED
 #define ALIGN_TAB_COLUMN_H_INCLUDED
 
-#include <cstddef>
+#include <cstddef>      // to get size_t
 
 /**
  * Advances to the next tab stop if not currently on one.
