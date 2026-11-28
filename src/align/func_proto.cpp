@@ -36,7 +36,7 @@ static bool is_after_decl_on_line(Chunk *pc)
    // 'string' in 'static std::string&& get();'
    bool after_end = false;
 
-   for (Chunk *tmp = pc->GetPrev(); tmp->IsNotNullChunk(); tmp = tmp->GetPrev())
+   for (const Chunk *tmp = pc->GetPrev(); tmp->IsNotNullChunk(); tmp = tmp->GetPrev())
    {
       if (  tmp->IsNewline()
          && tmp->GetLevel() <= pc->GetLevel())
