@@ -12,12 +12,59 @@
 #include "align/stack.h"
 #include "align/tools.h"
 #include "log_rules.h"
+#include <algorithm>
 #include <vector>
 
 constexpr static auto LCURRENT = LALPROTO;
 
 
 using namespace uncrustify;
+
+
+/**
+ * Whether 'pc' follows another function name or a variable definition on its
+ * line, at the same level and brace level: aligning both names on the same
+ * line would glue the second one to its return type ('int g(); inthh();'),
+ * or move it further on each run with align_var_def ('int x; long yy();').
+ * A newline at a deeper level than 'pc', as in a parameter list or in a
+ * function body, does not end the line.
+ */
+static bool is_after_decl_on_line(Chunk *pc)
+{
+   // whether a statement ends between 'tmp' and 'pc': the tokenizer can also
+   // mark the return type of a prototype as a variable definition, as
+   // 'string' in 'static std::string&& get();'
+   bool after_end = false;
+
+   for (Chunk *tmp = pc->GetPrev(); tmp->IsNotNullChunk(); tmp = tmp->GetPrev())
+   {
+      if (  tmp->IsNewline()
+         && tmp->GetLevel() <= pc->GetLevel())
+      {
+         break;
+      }
+
+      if (  tmp->GetLevel() == pc->GetLevel()
+         && (  tmp->IsSemicolon()
+            || tmp->IsBraceClose()))
+      {
+         after_end = true;
+      }
+
+      if (  (  tmp->Is(E_Token::CT_FUNC_PROTO)
+            || (  tmp->Is(E_Token::CT_FUNC_DEF)
+               && options::align_single_line_func())
+            || (  after_end
+               && tmp->TestFlags(PCF_VAR_1ST)))
+         && tmp->GetLevel() == pc->GetLevel()
+         && tmp->GetBraceLevel() == pc->GetBraceLevel())
+      {
+         return(true);
+      }
+   }
+
+   return(false);
+}
 
 
 void align_func_proto(size_t span)
@@ -91,8 +138,10 @@ void align_func_proto(size_t span)
       if (  pc->GetLevel() >= num_of_column                             // Issue #2960
          || pc->GetBraceLevel() >= num_of_row)
       {
-         num_of_column = pc->GetLevel() + 1;
-         num_of_row    = pc->GetBraceLevel() + 1;
+         // never make it smaller: the stacks already there would be lost
+         // without being flushed
+         num_of_column = std::max(num_of_column, pc->GetLevel() + 1);
+         num_of_row    = std::max(num_of_row, pc->GetBraceLevel() + 1);
 
          many_as.resize(num_of_column);
          many_as_brace.resize(num_of_column);
@@ -109,7 +158,8 @@ void align_func_proto(size_t span)
       if (  pc->IsNewline()
          && (  !options::align_func_proto_span_ignore_cont_lines()
             || !pc->GetNextNnl()->TestFlags(PCF_CONT_LINE))  // Issue #4131
-         && !pc->TestFlags(PCF_IN_FCN_CALL))                 // Issue #2831
+         && (  !pc->TestFlags(PCF_IN_FCN_CALL)               // Issue #2831
+            || pc->GetLevel() <= pc->GetBraceLevel()))       // not in the parenthesis
       {
          look_bro = false;
          AlignStack *stack_at_l_bl = many_as.at(pc->GetLevel()).at(pc->GetBraceLevel());
@@ -162,9 +212,10 @@ void align_func_proto(size_t span)
          stack_at_l_bl_brace->Debug();
          stack_at_l_bl_brace->NewLines(nl_cnt);
       }
-      else if (  pc->Is(E_Token::CT_FUNC_PROTO)
-              || (  pc->Is(E_Token::CT_FUNC_DEF)
-                 && options::align_single_line_func()))
+      else if (  (  pc->Is(E_Token::CT_FUNC_PROTO)
+                 || (  pc->Is(E_Token::CT_FUNC_DEF)
+                    && options::align_single_line_func()))
+              && !is_after_decl_on_line(pc))
       {
          log_rule_B("align_single_line_func");
          log_rule_B("align_on_operator");

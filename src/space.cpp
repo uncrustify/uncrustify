@@ -3969,7 +3969,19 @@ void space_text()
             if (  pc->Is(E_Token::CT_VBRACE_OPEN)
                && pc->GetOrigColEnd() == pc->GetOrigCol())
             {
-               column = next->GetOrigCol();
+               // The virtual brace is where the chunk before it ended: keep the
+               // original spacing from there. The original column of the next
+               // chunk would not take into account the spaces changed before it
+               // on the line.
+               if (  next->GetOrigLine() == pc->GetOrigLine()
+                  && next->GetOrigCol() >= pc->GetOrigCol())
+               {
+                  column += next->GetOrigCol() - pc->GetOrigCol();
+               }
+               else
+               {
+                  column = next->GetOrigCol();
+               }
             }
             else if (  next->GetOrigCol() >= pc->GetOrigColEnd()
                     && pc->GetOrigColEnd() != 0)

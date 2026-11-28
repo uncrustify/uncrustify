@@ -815,3 +815,24 @@
 
 # Issue 4750
 10312  c/Issue_4750.cfg                                   c/Issue_4750.c
+
+# align_func_proto_span: stacks at several levels
+10313  common/align_func_proto_deeper_level-1.cfg       c/align_func_proto_deeper_level.c
+10314  common/align_func_proto_deeper_level-2.cfg       c/align_func_proto_deeper_level.c
+
+# align_func_proto_span: several prototypes on one line
+10315  common/align_func_proto_same_line-1.cfg          c/align_func_proto_same_line.c
+10316  common/align_func_proto_same_line-2.cfg          c/align_func_proto_same_line.c
+10317  common/align_func_proto_same_line-3.cfg          c/align_func_proto_same_line.c
+10318  common/align_func_proto_same_line-4.cfg          c/align_func_proto_same_line.c
+
+# trailing comment of a line aligned again
+10319  common/align_cmt_after_realign-1.cfg             c/align_cmt_after_realign.c
+10320  common/align_cmt_after_realign-2.cfg             c/align_cmt_after_realign.c
+10321  common/align_cmt_after_realign-3.cfg             c/align_cmt_after_realign.c
+10322  common/align_cmt_after_realign-4.cfg             c/align_cmt_after_realign.c
+
+# space after a virtual brace open
+10323  common/space_after_vbrace_open-1.cfg             c/space_after_vbrace_open.c
+10324  common/space_after_vbrace_open-2.cfg             c/space_after_vbrace_open.c
+10325  common/space_after_vbrace_open-3.cfg             c/space_after_vbrace_open.c
