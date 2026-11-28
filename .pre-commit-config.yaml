@@ -100,19 +100,12 @@ repos:
           - --inline-suppr
           - --check-level=exhaustive
           # Note: sort suppressions alphabetically for easier merges
-          - --suppress=checkersReport
-          - --suppress=compareValueOutOfTypeRangeError ## Comparing expression of type 'signed int' against value 2147483647. Condition is always true.
-          - --suppress=constParameterCallback
-          - --suppress=constParameterPointer           ## Parameter 'xxx' can be declared as pointer to const
-          - --suppress=constParameterReference         ## Parameter 'x' can be declared as reference to const
-          ##- --suppress=constVariablePointer:align/trailing_comments.cpp
-          ##- --suppress=constVariablePointer:tokenizer/combine.cpp
-          ##- --suppress=constVariablePointer:tokenizer/combine_fix_mark.cpp
-          ##- --suppress=constVariablePointer:tokenizer/combine_skip.cpp
-          ##- --suppress=containerOutOfBounds
-          ##- --suppress=functionStatic
-          ##- --suppress=knownConditionTrueFalse
-          ## 27. 11.
+          ##- --suppress=checkersReport
+          ##- --suppress=compareValueOutOfTypeRangeError ## Comparing expression of type 'signed int' against value 2147483647. Condition is always true.
+          ##- --suppress=constParameterCallback
+          ##- --suppress=constParameterPointer           ## Parameter 'xxx' can be declared as pointer to const
+          ##- --suppress=constParameterReference         ## Parameter 'x' can be declared as reference to const
+          ## 28. 11.
           - --suppress=missingInclude:base_types.h
           - --suppress=missingInclude:config.h
           - --suppress=missingInclude:mark_change.h
