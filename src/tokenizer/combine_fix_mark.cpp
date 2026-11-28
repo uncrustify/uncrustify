@@ -501,7 +501,7 @@ void fix_typedef(Chunk const *start)
    Chunk *body_close = Chunk::NullChunkPtr;
 
    {
-      Chunk *look = start->GetNextNcNnl(E_Scope::PREPROC);
+      Chunk const *look = start->GetNextNcNnl(E_Scope::PREPROC);
 
       if (  look->Is(E_Token::CT_ENUM)
          || look->Is(E_Token::CT_STRUCT)

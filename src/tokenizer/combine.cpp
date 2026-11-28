@@ -4189,7 +4189,7 @@ void fix_symbols()
          // itself, but for '__attribute__((...))' it is the '(' -- so hand the
          // statement start to the first chunk after the whole prefix, as for
          // '[[...]]', or a declaration introduced by it is never recognized.
-         Chunk *first = pc->GetNextNcNnl();
+         Chunk const *first = pc->GetNextNcNnl();
 
          if (first->TestFlags(PCF_STMT_START))
          {
@@ -4228,7 +4228,7 @@ void fix_symbols()
 
       // Issue #4777: '__declspec(...)' and 'alignas(...)' lead the statement,
       // so judge it by what follows such a prefix
-      Chunk *decl_start = skip_attr_prefix(pc);
+      Chunk const *decl_start = skip_attr_prefix(pc);
 
       if (  (square_level < 0)
          && pc->TestFlags(PCF_STMT_START)

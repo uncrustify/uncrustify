@@ -245,7 +245,7 @@ static Chunk *skip_one_attr_prefix(Chunk *pc)
 
       if (next->Is(E_Token::CT_FPAREN_OPEN))
       {
-         Chunk *close = next->GetClosingParen();
+         Chunk const *close = next->GetClosingParen();
 
          if (close->IsNullChunk())
          {
@@ -259,11 +259,11 @@ static Chunk *skip_one_attr_prefix(Chunk *pc)
    if (  pc->Is(E_Token::CT_DECLSPEC)
       || is_alignas_keyword(pc))
    {
-      Chunk *open = pc->GetNextNcNnl();
+      Chunk const *open = pc->GetNextNcNnl();
 
       if (open->IsParenOpen())
       {
-         Chunk *close = open->GetClosingParen();
+         Chunk const *close = open->GetClosingParen();
 
          if (close->IsNotNullChunk())
          {
@@ -303,7 +303,7 @@ static bool attr_prefix_begin(Chunk *last, Chunk *&begin)
 
    if (last->IsParenClose())
    {
-      Chunk *open = last->GetOpeningParen();
+      Chunk const *open = last->GetOpeningParen();
 
       if (open->IsNotNullChunk())
       {
