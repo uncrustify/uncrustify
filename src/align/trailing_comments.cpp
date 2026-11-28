@@ -61,14 +61,14 @@ bool is_right_comment_cont(Chunk const *pc)
    {
       return(false);
    }
-   Chunk *nl = pc->GetPrev();
+   Chunk const *nl = pc->GetPrev();
 
    // on the very next line
    if (nl->GetNlCount() != 1)
    {
       return(false);
    }
-   Chunk *prev = nl->GetPrev();
+   Chunk const *prev = nl->GetPrev();
 
    // below a trailing comment of the same kind or another continuation
    return(  prev->IsComment()
