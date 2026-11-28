@@ -1,3 +1,30 @@
+Change highlights in uncrustify-0.84.0 (Nov 2026)
+-------------------------------------------------------------------------------
+   9792a3e6a97148bbec6053aee64507c68b83c8f0
+     Added   : nl_for_increment                     May  6 2026
+     Added   : sp_for_compare                       May  6 2026
+     Added   : sp_for_increment                     May  6 2026
+     Added   : nl_for_compare                       May  6 2026
+     Added   : nl_for_assign                        May  6 2026
+     Added   : sp_for_assign                        May  6 2026
+     Added   : sp_sparen_compare                    May  6 2026
+   b677b12c6470762c6e85f99191a16d7bf1528e66
+     Added   : align_braced_init_list_span_num_pp_lines May 19 2026
+     Added   : align_braced_init_list_span_num_cmt_lines May 19 2026
+     Added   : align_braced_init_list_span_num_empty_lines May 19 2026
+   bbc8959fb9b68ee44f3430bcdbd2cb97e524e583
+     Added   : align_right_cmt_span_num_empty_lines Jun  1 2026
+     Added   : align_right_cmt_span_num_pp_lines    Jun  1 2026
+     Added   : align_right_cmt_span_num_cmt_lines   Jun  1 2026
+   f1db4938a0ff6b97591ffd0ec3757b16651cddb4
+     Added   : align_pp_define_span_num_cmt_lines   Jul 13 2026
+     Added   : align_pp_define_span_num_pp_lines    Jul 13 2026
+     Added   : align_pp_define_span_num_empty_lines Jul 13 2026
+   a3a7b10432cd32adad3d81e013cc168af403dd90
+     Added   : align_right_cmt_doxygen_cont         Oct  8 2026
+   6df08883816e10833c573546db446b6f76860f87
+     Added   : indent_unbraced_body                 Oct 28 2026
+
 Change highlights in uncrustify-0.83.0 (May 2026)
 -------------------------------------------------------------------------------
    21d9c2a7c19a20c1e659685f8e1b4c90f839d52b

@@ -1,4 +1,4 @@
-# Uncrustify-0.83.0
+# Uncrustify-0.84.0
 
 #
 # General options
@@ -3010,6 +3010,30 @@ align_braced_init_list_span     = 0        # unsigned number
 # 0: No limit (default).
 align_braced_init_list_thresh   = 0        # number
 
+# Maximum budget of empty lines to skip for align_braced_init_list_span.
+#  -1: Use the global_span_num_empty_lines budget (default).
+#   0: No budget (don't skip any empty lines).
+#  >0: Skip up to this many empty lines between candidates.
+#
+# Default: -1
+align_braced_init_list_span_num_empty_lines = -1       # number
+
+# Maximum budget of preprocessor lines to skip for align_braced_init_list_span.
+#  -1: Use the global_span_num_pp_lines budget (default).
+#   0: No budget (don't skip any preprocessor lines).
+#  >0: Skip up to this many preprocessor lines between candidates.
+#
+# Default: -1
+align_braced_init_list_span_num_pp_lines = -1       # number
+
+# Maximum budget of comment lines to skip for align_braced_init_list_span.
+#  -1: Use the global_span_num_cmt_lines budget (default).
+#   0: No budget (don't skip any comment lines).
+#  >0: Skip up to this many comment lines between candidates.
+#
+# Default: -1
+align_braced_init_list_span_num_cmt_lines = -1       # number
+
 # How to apply align_assign_span to function declaration "assignments", i.e.
 # 'virtual void foo() = 0' or '~foo() = {default|delete}'.
 #
@@ -3194,6 +3218,30 @@ align_typedef_amp_style         = 0        # unsigned number
 # 0: Don't align (default).
 align_right_cmt_span            = 0        # unsigned number
 
+# Maximum budget of empty lines to skip for align_right_cmt_span.
+#  -1: Use the global_span_num_empty_lines budget (default).
+#   0: No budget (don't skip any empty lines).
+#  >0: Skip up to this many empty lines between candidates.
+#
+# Default: -1
+align_right_cmt_span_num_empty_lines = -1       # number
+
+# Maximum budget of preprocessor lines to skip for align_right_cmt_span.
+#  -1: Use the global_span_num_pp_lines budget (default).
+#   0: No budget (don't skip any preprocessor lines).
+#  >0: Skip up to this many preprocessor lines between candidates.
+#
+# Default: -1
+align_right_cmt_span_num_pp_lines = -1       # number
+
+# Maximum budget of comment lines to skip for align_right_cmt_span.
+#  -1: Use the global_span_num_cmt_lines budget (default).
+#   0: No budget (don't skip any comment lines).
+#  >0: Skip up to this many comment lines between candidates.
+#
+# Default: -1
+align_right_cmt_span_num_cmt_lines = -1       # number
+
 # Minimum number of columns between preceding text and a trailing comment in
 # order for the comment to qualify for being aligned. Must be non-zero to have
 # an effect.
@@ -3212,6 +3260,18 @@ align_right_cmt_same_level      = false    # true/false
 #
 # 0: Ignore (default).
 align_right_cmt_at_col          = 0        # unsigned number
+
+# How to align a Doxygen 'after member' comment ('//!<', '///<', '/*!<' or
+# '/**<') alone on its line, continuing the trailing comment above it.
+#
+# 0: Usual comment indentation rules (default).
+# 1: Align with the comment it continues.
+# 2: Indent at the brace level.
+#
+# With 1 and 2, continuation lines count neither in align_right_cmt_span nor
+# in its budgets.
+# See documentation/align-right-cmt-doxygen-cont.txt.
+align_right_cmt_doxygen_cont    = 0        # unsigned number
 
 # The span for aligning function prototypes.
 #
@@ -3323,6 +3383,30 @@ align_pp_define_together        = false    # true/false
 # =0: Don't align (default)
 # >0: Number of lines (including comments) between blocks
 align_pp_define_span            = 0        # unsigned number
+
+# Maximum budget of empty lines to skip for align_pp_define_span.
+#  -1: Use the global_span_num_empty_lines budget (default).
+#   0: No budget (don't skip any empty lines).
+#  >0: Skip up to this many empty lines between candidates.
+#
+# Default: -1
+align_pp_define_span_num_empty_lines = -1       # number
+
+# Maximum budget of preprocessor lines to skip for align_pp_define_span.
+#  -1: Use the global_span_num_pp_lines budget (default).
+#   0: No budget (don't skip any preprocessor lines).
+#  >0: Skip up to this many preprocessor lines between candidates.
+#
+# Default: -1
+align_pp_define_span_num_pp_lines = -1       # number
+
+# Maximum budget of comment lines to skip for align_pp_define_span.
+#  -1: Use the global_span_num_cmt_lines budget (default).
+#   0: No budget (don't skip any comment lines).
+#  >0: Skip up to this many comment lines between candidates.
+#
+# Default: -1
+align_pp_define_span_num_cmt_lines = -1       # number
 
 # The minimum space between label and value of a preprocessor define.
 align_pp_define_gap             = 0        # unsigned number
