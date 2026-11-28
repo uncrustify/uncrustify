@@ -954,6 +954,12 @@
 34211  cpp/anonymous_enum.cfg                               cpp/anonymous_enum.cpp
 34212  cpp/mod_add_long_class_closebrace_comment.cfg        cpp/func_class.h
 
+# trailing comment of a re-indented line
+34213  common/empty.cfg                                     cpp/reindent_trailing_cmt.cpp
+34214  common/reindent_trailing_cmt-1.cfg                   cpp/reindent_trailing_cmt.cpp
+34215  common/reindent_trailing_cmt-2.cfg                   cpp/reindent_trailing_cmt.cpp
+34216  common/reindent_trailing_cmt-3.cfg                   cpp/reindent_trailing_cmt.cpp
+
 34250  common/empty.cfg                                     cpp/bug_1607.cpp
 34251  cpp/bug_1649.cfg                                     cpp/bug_1649.cpp
 34252  cpp/nl_after_func_proto_group-3.cfg                  cpp/issue_2001.cpp
